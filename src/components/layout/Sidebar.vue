@@ -1,20 +1,9 @@
 <template>
   <div>
-    <v-app-bar
-      flat
-      absolute
-      :clipped-left="clipped"
-      fixed
-      app
-      color="transparent"
-    >
+    <v-app-bar flat absolute fixed app color="transparent">
       <v-icon style="padding: 4px" @click="drawer = !drawer"
         >mdi-order-bool-descending
       </v-icon>
-      <v-btn icon @click.stop="miniVariant = !miniVariant">
-        <v-icon>mdi-{{ `chevron-${miniVariant ? "right" : "left"}` }}</v-icon>
-      </v-btn>
-      <v-toolbar-title v-text="title" />
       <v-spacer></v-spacer>
       <v-menu bottom min-width="200px" rounded offset-y>
         <template v-slot:activator="{ on }">
@@ -33,7 +22,9 @@
               <h4>Monetip Sengthong</h4>
               <p class="text-caption mt-1">monethip1299@gmail.com <br /></p>
               <v-divider class="my-3"></v-divider>
-              <v-btn depressed rounded text> Sign out </v-btn>
+              <v-btn depressed rounded text @click="userLogout">
+                Sign out
+              </v-btn>
             </div>
           </v-list-item-content>
         </v-card>
@@ -41,8 +32,6 @@
     </v-app-bar>
     <v-navigation-drawer
       v-model="drawer"
-      :mini-variant="miniVariant"
-      :clipped="clipped"
       fixed
       app
       floating
@@ -64,7 +53,34 @@
           </v-slide-x-transition>
         </router-link>
       </div>
+
       <v-list expand shaped>
+        <!--User groups-->
+        <v-list-group
+          :prepend-icon="'mdi-account-group'"
+          no-action
+          color="indigo darken-4"
+        >
+          <template v-slot:activator>
+            <v-list-item-content>
+              <v-list-item-title>ຈັດການຂໍ້ມູນ</v-list-item-title>
+            </v-list-item-content>
+          </template>
+          <v-list-item
+            exact
+            color="indigo darken-4"
+            v-for="(item, k) in setting"
+            :key="k"
+            :to="item.to"
+          >
+            <v-list-item-action>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title v-text="item.title" />
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-group>
         <v-list-item
           v-for="(item, i) in items"
           :key="i"
@@ -82,11 +98,11 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-
   </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -118,11 +134,31 @@ export default {
           to: "/inspire",
         },
       ],
+
+      setting: [
+        {
+          icon: "mdi-account",
+          title: "Roles",
+          to: "/role",
+        },
+        {
+          icon: "mdi-account",
+          title: "Users",
+          to: "/user",
+        },
+      ],
     };
+  },
+  methods: {
+    ...mapActions({
+      Logout: "User/destroyToken",
+    }),
+    userLogout() {
+      this.Logout();
+    },
   },
 };
 </script>
-
 <style lang="scss" scoped>
 .app-navigation-menu {
   .v-list-item {

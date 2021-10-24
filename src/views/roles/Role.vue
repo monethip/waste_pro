@@ -1,0 +1,332 @@
+<template>
+  <v-container>
+    <v-row>
+      <v-col>
+        <v-btn @click="openAddModal()" class="btn-primary"
+          ><v-icon>mdi-plus</v-icon>
+        </v-btn>
+      </v-col>
+    </v-row>
+    <v-row justify="center">
+      <v-col>
+        <v-card class="pa-2">
+          <v-card-title>
+            ຂໍ້ມູນ Roles
+            <v-spacer></v-spacer>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-card-title>
+          <v-data-table :headers="headers" :items="roles" :search="search">
+            <!--Role -->
+
+            <template v-slot:item.actions="{ item }">
+              <v-icon small class="mr-2" @click="OpenModalEdit(item)">
+                mdi-pencil
+              </v-icon>
+              <v-icon small @click="deleteItem(item.id)"> mdi-delete </v-icon>
+            </template>
+          </v-data-table>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <!-- Modal Add-->
+    <ModalAdd>
+      <template @close="close">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Add Role</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-form ref="form" lazy-validation>
+                <v-row>
+                  <v-col cols="12">
+                    <v-text-field
+                      label="Name *"
+                      required
+                      v-model="role"
+                      :rules="nameRules"
+                    ></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.name }}
+                    </p>
+                  </v-col>
+                </v-row>
+              </v-form>
+            </v-container>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeAddModal()">
+                Close
+              </v-btn>
+              <v-btn
+                color="blue darken-1"
+                text
+                :loading="loading"
+                :disabled="loading"
+                @click="AddItem()"
+              >
+                Save
+              </v-btn>
+            </v-card-actions>
+          </v-card-text>
+        </v-card>
+      </template>
+    </ModalAdd>
+
+    <!--Edit Modal-->
+
+    <ModalEdit>
+      <template @close="close" v-slot="">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Update Role</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-form ref="form" lazy-validation>
+                <v-row>
+                  <v-col cols="12">
+                    <v-text-field
+                      label="Name *"
+                      required
+                      v-model="edit_role.name"
+                      :rules="nameRules"
+                    ></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.name }}
+                    </p>
+                  </v-col>
+                </v-row>
+              </v-form>
+            </v-container>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeUpdateModal()">
+                Close
+              </v-btn>
+              <v-btn
+                color="blue darken-1"
+                text
+                :loading="loading"
+                :disabled="loading"
+                @click="updateItem()"
+              >
+                Update
+              </v-btn>
+            </v-card-actions>
+          </v-card-text>
+        </v-card>
+      </template>
+    </ModalEdit>
+
+    <!--Delete Modal-->
+    <ModalDelete>
+      <template>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            :loading="loading"
+            :disabled="loading"
+            @click="deleteItemConfirm"
+            >OK</v-btn
+          >
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </template>
+    </ModalDelete>
+  </v-container>
+</template>
+
+<script>
+export default {
+  name: "Package",
+  data() {
+    return {
+      search: "",
+      headers: [
+        { text: "Role Name", value: "name" },
+        { text: "", value: "actions", sortable: false },
+      ],
+      loading: false,
+      roles: [],
+      role: "",
+      edit_role: {},
+      roleID: "",
+      server_errors: {},
+      //Validation
+      nameRules: [
+        (v) => !!v || "Name is required",
+        (v) => (v && v.length >= 2) || "Name must be less than 2 characters",
+      ],
+
+      toast: {
+        value: true,
+        color: "success",
+        msg: "Success",
+      },
+      toast_error: {
+        value: true,
+        color: "error",
+        msg: "Something when wrong!",
+      },
+    };
+  },
+  methods: {
+    openAddModal() {
+      this.$store.commit("modalAdd_State", true);
+    },
+    AddItem() {
+      if (this.$refs.form.validate() == true) {
+        this.loading = true;
+        this.$axios
+          .post("user-setting/role", { name: this.role })
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.loading = false;
+                this.closeAddModal();
+                this.role = "";
+                this.fetchData();
+                this.reset();
+                this.$store.commit("Toast_State", this.toast);
+              }, 300);
+            }
+          })
+          .catch((error) => {
+            this.loading = false;
+            this.$store.commit("Toast_State", this.toast_error);
+            this.fetchData();
+            if (error.response.status == 422) {
+              var obj = error.response.data.errors;
+              for (let [key, customer] of Object.entries(obj)) {
+                this.server_errors[key] = customer[0];
+              }
+            }
+          });
+      }
+    },
+    fetchData() {
+      this.loading = true;
+      this.$axios
+        .get("user-setting/role")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.loading = false;
+              this.roles = res.data.data;
+            }, 300);
+          }
+        })
+        .catch((error) => {
+          this.loading = false;
+          this.fetchData();
+          if (error.response.status == 422) {
+            var obj = error.response.data.errors;
+            for (let [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
+            }
+          }
+        });
+    },
+    closeAddModal() {
+      this.$store.commit("modalAdd_State", false);
+    },
+    OpenModalEdit(item) {
+      this.edit_role = item;
+      this.$store.commit("modalEdit_State", true);
+    },
+    updateItem() {
+      if (this.$refs.form.validate() == true) {
+        this.loading = true;
+        this.$axios
+          .put("user-setting/role/" + this.edit_role.id, this.edit_role)
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.loading = false;
+                this.closeUpdateModal();
+                this.edit_user = {};
+                this.reset();
+                this.fetchData();
+                this.$store.commit("Toast_State", this.toast);
+              }, 300);
+            }
+          })
+          .catch((error) => {
+            this.loading = false;
+            this.$store.commit("Toast_State", this.toast_error);
+            this.fetchData();
+            if (error.response.status == 422) {
+              var obj = error.response.data.errors;
+              for (let [key, message] of Object.entries(obj)) {
+                this.server_errors[key] = message[0];
+              }
+            }
+          });
+      }
+    },
+    closeUpdateModal() {
+      this.$store.commit("modalEdit_State", false);
+    },
+
+    closeDelete() {
+      this.$store.commit("modalDelete_State", false);
+    },
+
+    deleteItem(id) {
+      this.roleID = id;
+      this.$store.commit("modalDelete_State", true);
+    },
+
+    deleteItemConfirm() {
+      this.loading = true;
+      this.$axios
+        .delete("user-setting/role/" + this.roleID)
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.loading = false;
+              this.$store.commit("Toast_State", this.toast);
+              this.$store.commit("modalDelete_State", false);
+              this.fetchData();
+            }, 300);
+          }
+        })
+        .catch(() => {
+          this.fetchData();
+          this.$store.commit("Toast_State", this.toast_error);
+          this.$store.commit("modalDelete_State", false);
+          this.loading = false;
+        });
+    },
+    reset() {
+      this.$refs.form.reset();
+    },
+  },
+  watch: {
+    role: function () {
+      this.server_errors.name = "";
+    },
+    "edit_role.name": function () {
+      this.server_errors.name = "";
+    },
+  },
+  created() {
+    this.fetchData();
+  },
+};
+</script>
+
+<style lang="scss">
+@import "../../../public/scss/main.scss";
+</style>
