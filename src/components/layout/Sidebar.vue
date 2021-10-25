@@ -124,15 +124,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.app-navigation-menu {
-  .v-list-item {
-    &.vertical-nav-menu-link {
-      ::v-deep .v-list-item__icon {
-        .v-icon {
-          transition: none !important;
-        }
-      }
-    }
-  }
-}
+
 </style>
