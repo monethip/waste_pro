@@ -137,7 +137,7 @@ export default {
 
       setting: [
         {
-          icon: "mdi-account",
+          icon: "mdi-account-key",
           title: "Roles",
           to: "/role",
         },
