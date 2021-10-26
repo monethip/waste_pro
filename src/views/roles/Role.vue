@@ -34,6 +34,7 @@
                 </span>
               </div>
             </template>
+
             <!--Role -->
             <template v-slot:item.actions="{ item }">
               <v-icon small class="mr-2" @click="OpenModalEdit(item)">
