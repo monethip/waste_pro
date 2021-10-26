@@ -24,21 +24,6 @@
       </v-card>
     </v-col>
   </v-container>
-  <!-- <v-card class="mx-auto my-12" elevation="8" max-width="1000">
-    <v-simple-table fixed-header max-width="800">
-      <template v-slot:default>
-        <thead>
-          <tr>
-            <th class="text-left">ຊື່</th>
-            <th class="text-left">ໄລຍະເວລາ</th>
-            <th class="text-left">ຈໍານວນ</th>
-            <th class="text-left">ລາຄາ Package</th>
-            <th class="text-left">ລາຄາຕໍ່ຖົງ</th>
-          </tr>
-        </thead>
-      </template>
-    </v-simple-table>
-  </v-card> -->
 </template>
 
 <script>
