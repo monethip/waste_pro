@@ -114,7 +114,12 @@
       <template @close="close" v-slot="">
         <v-card>
           <v-card-title>
-            <span class="headline">Update Role</span>
+            <span class="headline"
+              >Update Role
+              <span
+                ><a>{{ edit_role.name }}</a></span
+              ></span
+            >
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -177,7 +182,12 @@
     <v-dialog v-model="roleDialog" max-width="720px">
       <v-card>
         <v-card-title>
-          <span class="headline">Add Permission to Role</span>
+          <span class="headline"
+            >Add Permission to Role
+            <span
+              ><a>{{ edit_role.name }}</a></span
+            ></span
+          >
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -223,7 +233,12 @@
     <v-dialog v-model="updateRoleDialog" max-width="720px">
       <v-card>
         <v-card-title>
-          <span class="headline">Remove Permission</span>
+          <span class="headline"
+            >Remove Permission from role
+            <span
+              ><a>{{ edit_role.name }}</a></span
+            ></span
+          >
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -232,7 +247,7 @@
                 <v-col cols="12">
                   <v-select
                     required
-                    v-model="selectedPermission"
+                    v-model="selectRevokePermission"
                     :items="revokes"
                     item-text="name"
                     item-value="name"
@@ -291,6 +306,7 @@ export default {
       server_errors: {},
       errormsg: "",
       selectedPermission: "",
+      selectRevokePermission: "",
       permissions: [],
       edit_permission: {},
       revokes: [],
@@ -515,14 +531,17 @@ export default {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .post("user-setting/role/" + this.roleID + "/revoke-permission", {
-            permissions: this.selectedPermission,
-          })
+          .post(
+            "user-setting/role/" + this.edit_role.id + "/revoke-permission",
+            {
+              permissions: this.selectRevokePermission,
+            }
+          )
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
                 this.loading = false;
-                this.selectedPermission = "";
+                this.selectRevokePermission = "";
                 this.fetchData();
                 this.reset();
                 this.updateRoleDialog = false;

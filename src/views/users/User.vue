@@ -314,7 +314,12 @@
     <v-dialog v-model="updateRoleDialog" max-width="720px">
       <v-card>
         <v-card-title>
-          <span class="headline">Remove Role</span>
+          <span class="headline"
+            >Remove Role
+            <span
+              ><a>{{ edit_user.name }}</a></span
+            ></span
+          >
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -361,7 +366,12 @@
     <v-dialog v-model="permissionDialog" max-width="720px">
       <v-card>
         <v-card-title>
-          <span class="headline">Add Permission</span>
+          <span class="headline"
+            >Add Permission to
+            <span
+              ><a>{{ edit_user.name }}</a></span
+            ></span
+          >
         </v-card-title>
         <v-card-text>
           <v-container>
