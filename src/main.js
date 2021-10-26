@@ -5,6 +5,7 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import './plugins/Axios';
+import moment from 'moment';
 
 import ModalAdd from './components/modals/Add';
 import ModalEdit from './components/modals/Edit';
@@ -16,6 +17,7 @@ Vue.config.productionTip = false,
 Vue.component('ModalEdit', ModalEdit);
 Vue.component('ModalView', ModalView);
 Vue.component('ModalDelete', ModalDelete);
+Vue.prototype.moment = moment;
 
 new Vue({
   router,

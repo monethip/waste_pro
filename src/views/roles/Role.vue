@@ -22,13 +22,40 @@
             ></v-text-field>
           </v-card-title>
           <v-data-table :headers="headers" :items="roles" :search="search">
+            <template v-slot:item.created_at="{ item }">
+              {{ moment(item.create_at).format("DD-MM-YYYY") }}
+              <!-- {{item.created_at}} -->
+            </template>
+            <!--Permission -->
+            <template v-slot:item.permissions="{ item }">
+              <div>
+                <span v-for="(ps, index) in item.permissions" :key="index">
+                  <span>{{ ps.name }}, </span>
+                </span>
+              </div>
+            </template>
             <!--Role -->
-
             <template v-slot:item.actions="{ item }">
               <v-icon small class="mr-2" @click="OpenModalEdit(item)">
                 mdi-pencil
               </v-icon>
               <v-icon small @click="deleteItem(item.id)"> mdi-delete </v-icon>
+            </template>
+            <template v-slot:item.role="{ item }">
+              <v-icon
+                medium
+                class="mr-2"
+                @click="openModalPermissionRole(item)"
+              >
+                mdi-plus
+              </v-icon>
+              <v-icon
+                small
+                class="mr-2"
+                @click="openModalUpdatePermissionRole(item)"
+              >
+                mdi-key-remove
+              </v-icon>
             </template>
           </v-data-table>
         </v-card>
@@ -144,6 +171,99 @@
         </v-card-actions>
       </template>
     </ModalDelete>
+
+    <!--Add Permission to Role -->
+    <v-dialog v-model="roleDialog" max-width="720px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Add Permission to Role</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-form ref="form" lazy-validation>
+              <v-row>
+                <v-col cols="12">
+                  <v-select
+                    required
+                    v-model="selectedPermission"
+                    :items="permissions"
+                    item-text="name"
+                    item-value="name"
+                    label="Permission *"
+                    multiple
+                    :rules="rulePermission"
+                  ></v-select>
+                  <p class="errors">
+                    {{ errormsg }}
+                  </p>
+                </v-col>
+              </v-row>
+            </v-form>
+          </v-container>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="roleDialog = false">
+              Close
+            </v-btn>
+            <v-btn
+              color="blue darken-1"
+              text
+              :loading="loading"
+              :disabled="loading"
+              @click="AddPermissionRole"
+            >
+              Add
+            </v-btn>
+          </v-card-actions>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+    <!--Update Permission Role -->
+    <v-dialog v-model="updateRoleDialog" max-width="720px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Remove Permission</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-form ref="form" lazy-validation>
+              <v-row>
+                <v-col cols="12">
+                  <v-select
+                    required
+                    v-model="selectedPermission"
+                    :items="revokes"
+                    item-text="name"
+                    item-value="name"
+                    label="Permission"
+                    multiple
+                    :rules="rulePermission"
+                  ></v-select>
+                  <p class="errors">
+                    {{ errormsg }}
+                  </p>
+                </v-col>
+              </v-row>
+            </v-form>
+          </v-container>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="updateRoleDialog = false">
+              Close
+            </v-btn>
+            <v-btn
+              color="blue darken-1"
+              text
+              :loading="loading"
+              :disabled="loading"
+              @click="updatePermissionRole"
+            >
+              Remove
+            </v-btn>
+          </v-card-actions>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -155,19 +275,30 @@ export default {
       search: "",
       headers: [
         { text: "Role Name", value: "name" },
-        { text: "", value: "actions", sortable: false },
+        { text: "Permission", value: "permissions" },
+        { text: "Created", value: "created_at", sortable: false },
+        { text: "Add Role", value: "role", sortable: false, align: "center" },
+        { text: "", value: "actions", sortable: false, align: "center" },
       ],
       loading: false,
+      roleDialog: false,
+      updateRoleDialog: false,
       roles: [],
       role: "",
       edit_role: {},
       roleID: "",
       server_errors: {},
+      errormsg: "",
+      selectedPermission: "",
+      permissions: [],
+      edit_permission: {},
+      revokes: [],
       //Validation
       nameRules: [
         (v) => !!v || "Name is required",
         (v) => (v && v.length >= 2) || "Name must be less than 2 characters",
       ],
+      rulePermission: [(v) => !!v || "Permission is required"],
 
       toast: {
         value: true,
@@ -224,6 +355,37 @@ export default {
             setTimeout(() => {
               this.loading = false;
               this.roles = res.data.data;
+            }, 300);
+          }
+        })
+        .catch((error) => {
+          this.loading = false;
+          this.fetchData();
+          if (error.response.status == 422) {
+            var obj = error.response.data.errors;
+            for (let [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
+            }
+          }
+        });
+    },
+    fetchPermission() {
+      //Permission
+      var permissions = [];
+      this.$axios
+        .get("user-setting/permission")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.loading = false;
+              this.permissions = res.data.data;
+              this.edit_role.permissions.map((item) => {
+                permissions.push(item.name);
+                this.selectedPermission = permissions;
+              });
+              this.revokes = res.data.data.filter((item) =>
+                permissions.includes(item.name)
+              );
             }, 300);
           }
         })
@@ -309,6 +471,75 @@ export default {
           this.loading = false;
         });
     },
+    openModalPermissionRole(item) {
+      this.edit_role = item;
+      this.fetchPermission();
+      this.roleDialog = true;
+    },
+    AddPermissionRole() {
+      if (this.$refs.form.validate() == true) {
+        this.loading = true;
+        this.$axios
+          .post("user-setting/role/" + this.edit_role.id + "/give-permission", {
+            permissions: this.selectedPermission,
+          })
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.loading = false;
+                this.fetchData();
+                this.selectedPermission = "";
+                this.reset();
+                this.roleDialog = false;
+                this.$store.commit("Toast_State", this.toast);
+              }, 300);
+            }
+          })
+          .catch((error) => {
+            if (error.response.data.code == 422) {
+              this.errormsg = error.response.data.message;
+            }
+            this.$store.commit("Toast_State", this.toast_error);
+            this.fetchData();
+          });
+        this.loading = false;
+      }
+    },
+    openModalUpdatePermissionRole(item) {
+      this.edit_role = item;
+      this.fetchPermission();
+      this.updateRoleDialog = true;
+    },
+    updatePermissionRole() {
+      if (this.$refs.form.validate() == true) {
+        this.loading = true;
+        this.$axios
+          .post("user-setting/role/" + this.roleID + "/revoke-permission", {
+            permissions: this.selectedPermission,
+          })
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.loading = false;
+                this.selectedPermission = "";
+                this.fetchData();
+                this.reset();
+                this.updateRoleDialog = false;
+                this.$store.commit("Toast_State", this.toast);
+              }, 300);
+            }
+          })
+          .catch((error) => {
+            if (error.response.data.code == 422) {
+              this.errormsg = error.response.data.message;
+            }
+            this.$store.commit("Toast_State", this.toast_error);
+            this.fetchData();
+          });
+        this.updateRoleDialog = false;
+      }
+    },
+
     reset() {
       this.$refs.form.reset();
     },
@@ -319,6 +550,12 @@ export default {
     },
     "edit_role.name": function () {
       this.server_errors.name = "";
+    },
+    selectedPermission: function () {
+      this.errormsg = "";
+    },
+    "edit_role.permissions": function () {
+      this.errormsg = "";
     },
   },
   created() {
