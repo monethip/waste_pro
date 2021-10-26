@@ -1,8 +1,8 @@
 <template>
   <div>
     <v-app-bar flat absolute fixed app color="transparent">
-      <v-icon style="padding: 4px" @click="drawer = !drawer"
-        >mdi-order-bool-descending
+      <v-icon style="padding: 4px" @click="drawer = !drawer">
+        mdi-order-bool-descending
       </v-icon>
       <v-spacer></v-spacer>
       <v-menu bottom min-width="200px" rounded offset-y>
@@ -19,11 +19,11 @@
               <v-avatar color="grey" size="46px">
                 <span class="white--text text-h5">M</span>
               </v-avatar>
-              <h4>Monetip Sengthong</h4>
+              <h4> {{userProfile}} </h4>
               <p class="text-caption mt-1">monethip1299@gmail.com <br /></p>
               <v-divider class="my-3"></v-divider>
               <v-btn depressed rounded text @click="userLogout">
-                Sign out
+                Log out
               </v-btn>
             </div>
           </v-list-item-content>
@@ -102,11 +102,12 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
       drawer: true,
+      userProfile: {},
       items: [
         {
           icon: "mdi-apps",
@@ -120,7 +121,7 @@ export default {
         },
         {
           icon: "mdi-home-account",
-          title: "ບ້ານ",
+          title: "ທີ່ຢູ່",
           to: "/village",
         },
         {
@@ -149,6 +150,21 @@ export default {
       ],
     };
   },
+
+  computed: {
+    user(){
+      return this.$store.getters["User/getUsertype"]
+    },
+    profile(){
+      return this.$store.getters["User/getUserProfile"]
+    },
+    ...mapGetters({
+      userRole: "User/getUserType"
+    })
+  },
+  created(){
+    this.userProfile = JSON.parse(window.localStorage.getItem("User"))
+  },
   methods: {
     ...mapActions({
       Logout: "User/destroyToken",
@@ -160,5 +176,4 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-
 </style>
