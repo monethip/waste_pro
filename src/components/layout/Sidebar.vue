@@ -9,7 +9,7 @@
         <template v-slot:activator="{ on }">
           <v-btn icon x-large v-on="on">
             <v-avatar color="grey" size="46px">
-              <span class="white--text text-h5">M</span>
+              <span class="white--text text-h5 text-break">{{ name }}</span>
             </v-avatar>
           </v-btn>
         </template>
@@ -17,10 +17,10 @@
           <v-list-item-content class="justify-center">
             <div class="mx-auto text-center">
               <v-avatar color="grey" size="46px">
-                <span class="white--text text-h5">M</span>
+                <span class="white--text text-h5 text-break">{{ name }}</span>
               </v-avatar>
-              <h4> {{userProfile}} </h4>
-              <p class="text-caption mt-1">monethip1299@gmail.com <br /></p>
+              <h4>{{ userProfile.name }}</h4>
+              <p class="text-caption mt-1">{{ userProfile.email }}<br /></p>
               <v-divider class="my-3"></v-divider>
               <v-btn depressed rounded text @click="userLogout">
                 Log out
@@ -108,6 +108,7 @@ export default {
     return {
       drawer: true,
       userProfile: {},
+      name: "",
       items: [
         {
           icon: "mdi-apps",
@@ -123,11 +124,6 @@ export default {
           icon: "mdi-home-account",
           title: "ທີ່ຢູ່",
           to: "/village",
-        },
-        {
-          icon: "mdi-account-star-outline",
-          title: "ລູກຄ້າ",
-          to: "/customer",
         },
         {
           icon: "mdi-chart-bubble",
@@ -147,23 +143,29 @@ export default {
           title: "Users",
           to: "/user",
         },
+        {
+          icon: "mdi-account-group",
+          title: "Customer",
+          to: "/customer",
+        },
       ],
     };
   },
 
   computed: {
-    user(){
-      return this.$store.getters["User/getUsertype"]
+    user() {
+      return this.$store.getters["User/getUsertype"];
     },
-    profile(){
-      return this.$store.getters["User/getUserProfile"]
+    profile() {
+      return this.$store.getters["User/getUserProfile"];
     },
     ...mapGetters({
-      userRole: "User/getUserType"
-    })
+      userRole: "User/getUserRole",
+    }),
   },
-  created(){
-    this.userProfile = JSON.parse(window.localStorage.getItem("User"))
+  created() {
+    this.userProfile = JSON.parse(window.localStorage.getItem("user"));
+    this.name = this.userProfile.name.slice(0, 1);
   },
   methods: {
     ...mapActions({

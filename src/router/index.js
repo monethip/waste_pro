@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 //import Package from '../views/package/PackageInfo.vue'
 //import Village from '../views/village/VillageManage.vue'
 
+import Middlewares from '@/Middlewares/Index'
 Vue.use(VueRouter)
 
 const routes = [
@@ -60,7 +61,8 @@ const routes = [
     name: 'Dashboard',
     component: () => import('../views/dashboard/Dashboard.vue'),
     meta: {
-      layout: "admin"
+      layout: "admin",
+      middleware: [Middlewares.auth],
     }
   },
   {
@@ -68,7 +70,8 @@ const routes = [
     name: 'User',
     component: () => import('../views/users/User.vue'),
     meta: {
-      layout: "admin"
+      layout: "admin",
+      middleware: [Middlewares.auth],
     }
   },
   {
@@ -76,7 +79,35 @@ const routes = [
     name: 'Role',
     component: () => import('../views/roles/Role.vue'),
     meta: {
-      layout: "admin"
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/customer',
+    name: 'Customer',
+    component: () => import('../views/customer/Customer.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/create/customer',
+    name: 'CreateCustomer',
+    component: () => import('../views/customer/CreateCustomer.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/edit/customer/:id',
+    name: 'EditCustomer',
+    component: () => import('../views/customer/EditCustomer.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
     }
   },
 ]
@@ -86,5 +117,36 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+
+function nextCheck(context, middleware, index) {
+  const nextMiddleware = middleware[index];
+
+  if (!nextMiddleware) return context.next();
+
+  return (...parameters) => {
+    context.next(...parameters);
+    const nextMidd = nextCheck(context, middleware, index + 1);
+
+    nextMiddleware({ ...context, nextMidd });
+  }
+}
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.middleware) {
+    const middleware = Array.isArray(to.meta.middleware) ? to.meta.middleware : [to.meta.middleware];
+    const ctx = {
+      from,
+      next,
+      router,
+      to
+    }
+
+    const nextMiddleware = nextCheck(ctx, middleware, 1);
+    return middleware[0]({ ...ctx, nextMiddleware });
+
+  }
+  return next();
+});
 
 export default router

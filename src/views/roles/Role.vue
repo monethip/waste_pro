@@ -15,13 +15,22 @@
             <v-spacer></v-spacer>
             <v-text-field
               v-model="search"
-              append-icon="mdi-magnify"
+              clearable
+              prepend-inner-icon="mdi-magnify"
               label="Search"
               single-line
               hide-details
             ></v-text-field>
           </v-card-title>
-          <v-data-table :headers="headers" :items="roles" :search="search">
+          <v-data-table
+            :headers="headers"
+            :items="roles"
+            :search="search"
+            :disable-pagination="true"
+            hide-default-footer
+            :loading="loading"
+            :disabled="loading"
+          >
             <template v-slot:item.created_at="{ item }">
               {{ moment(item.create_at).format("DD-MM-YYYY") }}
               <!-- {{item.created_at}} -->
@@ -59,6 +68,15 @@
               </v-icon>
             </template>
           </v-data-table>
+          <br />
+          <template>
+            <Pagination
+              v-if="pagination.total_pages > 1"
+              :pagination="pagination"
+              :offset="offset"
+              @paginate="fetchData()"
+            ></Pagination>
+          </template>
         </v-card>
       </v-col>
     </v-row>
@@ -284,11 +302,11 @@
 </template>
 
 <script>
+import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
   name: "Package",
   data() {
     return {
-      search: "",
       headers: [
         { text: "Role Name", value: "name" },
         { text: "Permission", value: "permissions" },
@@ -310,6 +328,12 @@ export default {
       permissions: [],
       edit_permission: {},
       revokes: [],
+      //Pagination
+      offset: 12,
+      pagination: {},
+      per_page: 12,
+      search: "",
+      oldVal: "",
       //Validation
       nameRules: [
         (v) => !!v || "Name is required",
@@ -366,12 +390,19 @@ export default {
     fetchData() {
       this.loading = true;
       this.$axios
-        .get("user-setting/role")
+        .get("user-setting/role", {
+          params: {
+            page: this.pagination.current_page,
+            per_page: this.per_page,
+            filter: this.search,
+          },
+        })
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.loading = false;
-              this.roles = res.data.data;
+              this.roles = res.data.data.data;
+              this.pagination = res.data.data.pagination;
             }, 300);
           }
         })
@@ -563,6 +594,9 @@ export default {
     reset() {
       this.$refs.form.reset();
     },
+    Search() {
+      GetOldValueOnInput(this);
+    },
   },
   watch: {
     role: function () {
@@ -576,6 +610,11 @@ export default {
     },
     "edit_role.permissions": function () {
       this.errormsg = "";
+    },
+    search: function (value) {
+      if (value == "") {
+        this.fetchData();
+      }
     },
   },
   created() {

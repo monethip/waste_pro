@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row>
+    <v-row class="mb-n6">
       <v-col>
         <v-btn @click="openAddModal()" class="btn-primary"
           ><v-icon>mdi-plus</v-icon>
@@ -15,13 +15,23 @@
             <v-spacer></v-spacer>
             <v-text-field
               v-model="search"
-              append-icon="mdi-magnify"
+              clearable
+              prepend-inner-icon="mdi-magnify"
               label="Search"
               single-line
               hide-details
+              @keyup.enter="Search()"
             ></v-text-field>
           </v-card-title>
-          <v-data-table :headers="headers" :items="users" :search="search">
+          <v-data-table
+            :headers="headers"
+            :items="users"
+            :search="search"
+            :disable-pagination="true"
+            hide-default-footer
+            :loading="loading"
+            :disabled="loading"
+          >
             <!--Role -->
             <template v-slot:item.roles="{ item }">
               <div>
@@ -68,6 +78,15 @@
               </v-icon>
             </template>
           </v-data-table>
+          <br />
+          <template>
+            <Pagination
+              v-if="pagination.total_pages > 1"
+              :pagination="pagination"
+              :offset="offset"
+              @paginate="fetchData()"
+            ></Pagination>
+          </template>
         </v-card>
       </v-col>
     </v-row>
@@ -497,11 +516,11 @@
 </template>
 
 <script>
+import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
   name: "User",
   data() {
     return {
-      search: "",
       headers: [
         { text: "User Name", value: "name" },
         { text: "Phone", value: "phone", sortable: false },
@@ -542,6 +561,12 @@ export default {
       selectedPermission: "",
       permissions: [],
       revokes: [],
+      //Pagination
+      offset: 12,
+      pagination: {},
+      per_page: 12,
+      search: "",
+      oldVal: "",
 
       //Validation
       emailRules: [
@@ -619,12 +644,21 @@ export default {
     fetchData() {
       this.loading = true;
       this.$axios
-        .get("user-setting/user")
+        .get("user-setting/user", {
+          params: {
+            page: this.pagination.current_page,
+            per_page: this.per_page,
+            filter: this.search,
+          },
+        })
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.loading = false;
-              this.users = res.data.data;
+              // this.users = res.data.data;
+              this.users = res.data.data.data;
+              console.log(this.users);
+              this.pagination = res.data.data.pagination;
             }, 300);
           }
         })
@@ -926,6 +960,9 @@ export default {
     reset() {
       this.$refs.form.reset();
     },
+    Search() {
+      GetOldValueOnInput(this);
+    },
   },
   watch: {
     "user.name": function () {
@@ -939,6 +976,11 @@ export default {
     },
     "user.password": function () {
       this.server_errors.password = "";
+    },
+    search: function (value) {
+      if (value == "") {
+        this.fetchData();
+      }
     },
   },
   created() {
