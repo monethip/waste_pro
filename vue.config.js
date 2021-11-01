@@ -1,5 +1,5 @@
 const path = require('path');
-const deployPath = '/Volumes/Xone/web/Varilao/Laravel-Vari/public';
+const deployPath = 'dist';
 const isProd = process.env.NODE_ENV === 'production';
 
 module.exports = {
