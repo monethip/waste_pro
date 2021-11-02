@@ -18,8 +18,8 @@ const getters = {
     LoggedIn(state) {
         return state.token !== null;
     },
-    getUserType(state) {
-        let user_Role = window.localStorage.getItem('RoleUser');
+    getUserRole(state) {
+        let user_Role = window.localStorage.getItem('roles');
         if (user_Role) {
             try {
                 user_Role = JSON.parse(user_Role);
@@ -36,7 +36,7 @@ const getters = {
         return user_Role.role_user;
     },
     getUserProfile(state) {
-        let profile = window.localStorage.getItem('User');
+        let profile = window.localStorage.getItem('user');
         if (profile) {
             try {
                 profile = JSON.parse(profile);
@@ -83,7 +83,6 @@ const mutations = {
 
 const actions = {
     LoginUser(context, data) {
-        console.log(data)
         return new Promise((resolve, reject) => {
             axios.post('auth/login', {
                 credential: data.credential,
@@ -93,14 +92,13 @@ const actions = {
                     resolve(response)
                     const token = (response.data.data.access_token);
                     localStorage.setItem('access_token', token);   // ເກັບ Token ໄວ້ໃນ Localstorage ເພື່ອຈະນຳໄປໃຊ້ຂໍຂໍ້ມູນ
+                    window.localStorage.setItem('user', JSON.stringify(response.data.data.user));
+                    // window.localStorage.setItem('roles', JSON.stringify(response.data.data.user.roles));
+                    // window.localStorage.setItem('permissions', JSON.stringify(response.data.data.user.role_permissions));
 
-                    // window.localStorage.setItem('User', JSON.stringify(response.data.user));
-                    // window.localStorage.setItem('RoleUser', JSON.stringify(response.data.roleUser));
                     context.commit('AdminSignin', token);
-                    // context.commit('setUserProfile', response.data.user);
-
+                    context.commit('setUserProfile', response.data.data.user);
                     router.push({ name: 'Dashboard' });
-                    // router.push({ name: 'Report' });
                     // const userProfile = window.localStorage.getItem('user');
                     // const user_role = window.localStorage.getItem('RoleUser');
                     // const roleUsers = JSON.parse(user_role);
@@ -145,6 +143,7 @@ const actions = {
                     .finally(response => {
                         resolve(response)
                         localStorage.removeItem('access_token')     // Remove Item Of Localstorage...    // Remove Item Of Localstorage...
+                        localStorage.removeItem('user')
                         context.commit('destroyToken')
                         router.push({
                             name: 'Login'

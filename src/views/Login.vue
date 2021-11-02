@@ -36,6 +36,7 @@
                 :type="show1 ? 'text' : 'password'"
                 :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                 @click:append="show1 = !show1"
+                @keyup.enter="SubmitLogin"
               ></v-text-field>
               <p class="errors">
                 {{ errors }}
