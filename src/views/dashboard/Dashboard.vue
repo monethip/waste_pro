@@ -1,3 +1,51 @@
 <template>
-  <h1>Dashboard Page</h1>
+  <div>
+    <v-container>
+      <v-row>
+        <v-col>
+          <v-icon>mdi-account</v-icon>
+          <h3>Users</h3>
+          <h4>200</h4>
+        </v-col>
+        <v-col>
+          <v-icon>mdi-account-tie</v-icon>
+          <h3>Drivers</h3>
+          <h4>150</h4>
+        </v-col>
+        <v-col>
+          <v-icon>mdi-account-multiple</v-icon>
+          <h3>Customers</h3>
+          <h4>10,500</h4>
+        </v-col>
+        <v-col>
+          <v-icon>mdi-account-multiple</v-icon>
+          <h3>Customers VIP</h3>
+          <h4>1,500</h4>
+        </v-col>
+      </v-row>
+      <v-row> <h3>Customer Select Package</h3></v-row>
+      <v-row>
+        <v-col>
+          <v-icon>mdi-account</v-icon>
+          <h3>Users</h3>
+          <h4>200</h4>
+        </v-col>
+        <v-col>
+          <v-icon>mdi-account-tie</v-icon>
+          <h3>Drivers</h3>
+          <h4>150</h4>
+        </v-col>
+        <v-col>
+          <v-icon>mdi-account-multiple</v-icon>
+          <h3>Customers</h3>
+          <h4>10,500</h4>
+        </v-col>
+        <v-col>
+          <v-icon>mdi-account-multiple</v-icon>
+          <h3>Customers VIP</h3>
+          <h4>1,500</h4>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
 </template>

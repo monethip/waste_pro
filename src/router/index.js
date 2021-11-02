@@ -45,7 +45,8 @@ const routes = [
     name: 'Login',
     component: () => import('../views/Login.vue'),
     meta: {
-      layout: "none"
+      layout: "none",
+      middleware: [Middlewares.guest],
     }
   },
   {
@@ -83,6 +84,15 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
+  // {
+  //   path: '/customer',
+  //   name: 'Customer',
+  //   component: () => import('../views/customer/Customer.vue'),
+  //   meta: {
+  //     layout: "admin",
+  //     middleware: [Middlewares.auth],
+  //   }
+  // },
   {
     path: '/customer',
     name: 'Customer',

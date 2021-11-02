@@ -15,3 +15,16 @@
 .text-primary{
     color: $primary-color !important;
 }
+.input-file-image {
+    display: none;
+    bottom: 100px;
+    height: 100%;
+    left: 0;
+    opacity: 0;
+    outline: none;
+    top: 0;
+    width: 100%;
+    cursor: pointer;
+    background-color: red;
+    z-index: 9;
+  }

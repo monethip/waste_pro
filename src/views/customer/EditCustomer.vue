@@ -235,7 +235,7 @@ export default {
       villages: [],
       selectedVillage: "",
       village_details: [],
-      selectedVillageDetail: "",
+      selectedVillageDetail: [],
 
       address: [],
       errormsg: "",
@@ -401,45 +401,22 @@ export default {
       this.$router.go(-1);
     },
     UpdateData() {
-      //   console.log(this.data);
-      // (this.data.village_id = this.selectedVillage),
-      //   (this.data.vilage_details = this.selectedVillageDetail),
-      //   (this.data.latitude = this.latlng.lat),
-      //   (this.data.longitude = this.latlng.lng),
-      //   (this.data.longitude = this.latlng.lng),
-      //   (this.data.phone = this.data.user.phone),
-      //   (this.data.email = this.data.user.email),
-      //   (this.data.images = this.files);
-
       let formData = new FormData();
-      console.log(this.files);
       this.files.map((item) => {
-        formData.append("name", this.data.name);
-        formData.append("surname", this.data.surname);
-        formData.append("village_id", this.selectedVillage);
-        formData.append("house_number", this.data.house_number);
-        // formData.append("vilage_details[]", this.selectedVillageDetail);
-        formData.append("vilage_details[]", this.selectedVillageDetail);
-        formData.append("phone", this.data.user.phone);
-        formData.append("email", this.data.user.email);
-        formData.append("latitude", this.latlng.lat);
-        formData.append("longitude", this.latlng.lng);
         formData.append("images[]", item);
-
-        // formData.append("name", "Xonee");
-        // formData.append("surname", "spssp");
-        // formData.append("village_id", 1);
-        // formData.append("house_number", 1231);
-        // // formData.append("vilage_details[]", this.selectedVillageDetail);
-        // formData.append("vilage_details[]", 1);
-        // formData.append("phone", 34222222);
-        // formData.append("email", "xoness@gmail.com");
-        // formData.append("latitude", 123131);
-        // formData.append("longitude", 13131313);
-        // formData.append("images[]", item);
-        formData.append("_method", "PUT");
       });
-      // formData.append("_method", "PUT");
+      this.selectedVillageDetail.map((item) => {
+        formData.append("vilage_details[]", item);
+      });
+      formData.append("name", this.data.name);
+      formData.append("surname", this.data.surname);
+      formData.append("village_id", this.selectedVillage);
+      formData.append("house_number", this.data.house_number);
+      formData.append("phone", this.data.user.phone);
+      formData.append("email", this.data.user.email);
+      formData.append("latitude", this.latlng.lat);
+      formData.append("longitude", this.latlng.lng);
+      formData.append("_method", "PUT");
       // console.log(formData);
       // console.log(this.data);
 
