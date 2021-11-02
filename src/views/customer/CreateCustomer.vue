@@ -1,6 +1,11 @@
 <template>
   <v-container>
-    <v-breadcrumbs large>Update Customer</v-breadcrumbs>
+    <v-breadcrumbs large>
+      <v-btn text class="text-primary" @click="backPrevios()"
+        ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
+      >
+      Create Customer</v-breadcrumbs
+    >
     <v-card>
       <v-card-title>
         <span class="headline">Add User</span>
@@ -203,7 +208,7 @@
                   item-text="name"
                   item-value="id"
                   label="District *"
-                  :rulesDistrict="rulePermission"
+                  :rulesDistrict="rulesDistrict"
                 ></v-autocomplete>
                 <p class="errors">
                   {{ server_errors.district_id }}
@@ -217,7 +222,7 @@
                   item-text="name"
                   item-value="id"
                   label="Village *"
-                  :rules="rulePermission"
+                  :rules="ruleVillage"
                 ></v-autocomplete>
                 <p class="errors">
                   {{ server_errors.village_id }}
@@ -230,9 +235,8 @@
                   :items="village_details"
                   item-text="name"
                   item-value="id"
-                  label="Village Detail *"
+                  label="Village Detail"
                   multiple
-                  :rules="rulePermission"
                 ></v-select>
                 <p class="errors">
                   {{ errormsg }}
@@ -409,8 +413,7 @@ export default {
           "Phone number must be  4 - 11 numbers",
       ],
       houseNumberRules: [(v) => !!v || "House number is required"],
-      rulePermission: [(v) => !!v || "Permission is required"],
-      rulePermissionRole: [(v) => !!v || "Role is required"],
+      ruleVillage: [(v) => !!v || "Village is required"],
       rulesDistrict: [(v) => !!v || "District is required"],
       rules: [
         (v) => !!v || "File is required",

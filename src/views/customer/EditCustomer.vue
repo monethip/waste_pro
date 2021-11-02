@@ -1,33 +1,26 @@
 <template>
   <v-container>
-    <v-breadcrumbs large>Add Customer</v-breadcrumbs>
+    <v-breadcrumbs large>
+      <v-btn text class="text-primary" @click="backPrevios()"
+        ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
+      >
+      Update Customer</v-breadcrumbs
+    >
     <v-card>
       <v-card-title>
-        <span class="headline">Add User</span>
+        <span class="headline">Update Customer</span>
       </v-card-title>
       <v-card-text>
         <v-container>
           <v-form ref="form" lazy-validation>
             <v-row>
-              <!-- 
               <v-col cols="12">
                 <v-file-input
-                  :rules="rules"
-                  accept="image/png, image/jpeg, image/svg"
-                  placeholder="Pick an avatar"
-                  prepend-icon="mdi-camera"
-                  multiple
-                  label="Profile"
-                ></v-file-input>
-              </v-col>
--->
-              <v-col cols="12">
-                <v-file-input
-                  v-model="data.media.id"
+                  v-model="files"
                   placeholder="Upload your image"
                   label="Image input"
                   multiple
-                  prepend-icon="mdi-paperclip"
+                  prepend-icon="mdi-camera"
                   accept="image/png, image/jpeg, image/svg"
                   type="file"
                   ref="file"
@@ -38,6 +31,16 @@
                     </v-chip>
                   </template>
                 </v-file-input>
+                <template>
+                  <v-avatar
+                    class="avatar rounded"
+                    size="52px"
+                    v-for="(img, index) in data.media"
+                    :key="index"
+                  >
+                    <img v-if="img.thumb" :src="img.thumb" />
+                  </v-avatar>
+                </template>
                 <p class="errors">
                   {{ server_errors.images }}
                 </p>
@@ -78,6 +81,7 @@
                   {{ server_errors.house_number }}
                 </p>
               </v-col>
+
               <v-col cols="4">
                 <v-text-field
                   label="ເບີໂທ *"
@@ -91,12 +95,11 @@
                   {{ server_errors.phone }}
                 </p>
               </v-col>
+
               <v-col cols="4">
                 <v-text-field
-                  label="Email *"
-                  required
+                  label="Email"
                   v-model="data.user.email"
-                  :rules="emailRules"
                 ></v-text-field>
                 <p class="errors">
                   {{ server_errors.email }}
@@ -110,12 +113,13 @@
                   item-text="name"
                   item-value="id"
                   label="District *"
-                  :rulesDistrict="rulePermission"
+                  :rulesDistrict="rulesDistrict"
                 ></v-autocomplete>
                 <p class="errors">
                   {{ errormsg }}
                 </p>
               </v-col>
+
               <v-col cols="4">
                 <v-autocomplete
                   required
@@ -124,7 +128,7 @@
                   item-text="name"
                   item-value="id"
                   label="Village *"
-                  :rules="rulePermission"
+                  :rules="ruleVillage"
                 ></v-autocomplete>
                 <p class="errors">
                   {{ errormsg }}
@@ -132,14 +136,12 @@
               </v-col>
               <v-col cols="4">
                 <v-select
-                  required
                   v-model="selectedVillageDetail"
                   :items="village_details"
                   item-text="name"
                   item-value="id"
-                  label="Village Detail *"
+                  label="Village Detail"
                   multiple
-                  :rules="rulePermission"
                 ></v-select>
                 <p class="errors">
                   {{ errormsg }}
@@ -263,10 +265,10 @@ export default {
       },
 
       //Validation
-      emailRules: [
-        (v) => !!v || "E-mail is required",
-        (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
-      ],
+      // emailRules: [
+      //   (v) => !!v || "E-mail is required",
+      //   (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+      // ],
       passwordRules: [
         (v) => !!v || "Password is required",
         (v) =>
@@ -288,8 +290,7 @@ export default {
           "Phone number must be  4 - 11 numbers",
       ],
       houseNumberRules: [(v) => !!v || "House number is required"],
-      rulePermission: [(v) => !!v || "Permission is required"],
-      rulePermissionRole: [(v) => !!v || "Role is required"],
+      ruleVillage: [(v) => !!v || "Village is required"],
       rulesDistrict: [(v) => !!v || "District is required"],
       rules: [
         (v) => !!v || "File is required",
@@ -307,6 +308,11 @@ export default {
             setTimeout(() => {
               this.loading = false;
               this.data = res.data.data;
+              this.data.map((item) => {
+                this.files = item.media;
+                console.log(this.files);
+              });
+              console.log(this.data);
             }, 300);
           }
         })
@@ -406,33 +412,50 @@ export default {
       //   (this.data.images = this.files);
 
       let formData = new FormData();
+      console.log(this.files);
       this.files.map((item) => {
         formData.append("name", this.data.name);
         formData.append("surname", this.data.surname);
         formData.append("village_id", this.selectedVillage);
         formData.append("house_number", this.data.house_number);
+        // formData.append("vilage_details[]", this.selectedVillageDetail);
         formData.append("vilage_details[]", this.selectedVillageDetail);
-        formData.append("vilage_details[]", this.selectedVillageDetail);
-        formData.append("latitude", this.latlng.lat);
-        formData.append("longitude", this.latlng.lng);
         formData.append("phone", this.data.user.phone);
         formData.append("email", this.data.user.email);
+        formData.append("latitude", this.latlng.lat);
+        formData.append("longitude", this.latlng.lng);
         formData.append("images[]", item);
+
+        // formData.append("name", "Xonee");
+        // formData.append("surname", "spssp");
+        // formData.append("village_id", 1);
+        // formData.append("house_number", 1231);
+        // // formData.append("vilage_details[]", this.selectedVillageDetail);
+        // formData.append("vilage_details[]", 1);
+        // formData.append("phone", 34222222);
+        // formData.append("email", "xoness@gmail.com");
+        // formData.append("latitude", 123131);
+        // formData.append("longitude", 13131313);
+        // formData.append("images[]", item);
+        formData.append("_method", "PUT");
       });
+      // formData.append("_method", "PUT");
+      // console.log(formData);
+      // console.log(this.data);
 
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .put("customer/" + this.$route.params.id, formData, {
+          .post("customer/" + this.$route.params.id, formData, {
             headers: { "Content-Type": "multipart/form-data" },
           })
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                // this.loading = false;
                 // this.data = {};
                 // this.fetchData();
-                this.$store.commit("Toast_State", res.data.message);
+                // this.$store.commit("Toast_State", res.data.message);
+                this.loading = false;
                 this.$router.push({
                   name: "Customer",
                 });
