@@ -346,7 +346,7 @@ export default {
         })
         .catch(() => {});
     },
-
+ 
     fetchVillage() {
       this.$axios
         .get("info/district/" + this.selectedDistrict + "/village")
@@ -569,6 +569,7 @@ export default {
   mounted() {
     this.geolocate();
   },
+
   created() {
     this.fetchAddress();
     this.fetchData();
