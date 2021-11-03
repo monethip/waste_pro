@@ -186,7 +186,6 @@
     </ModalAdd>
 
     <!--Edit Modal-->
-
     <ModalEdit>
       <template @close="close" v-slot="">
         <v-card>
@@ -528,11 +527,7 @@ export default {
         { text: "Role", value: "roles", sortable: false },
         { text: "Permission", value: "permissions", sortable: false },
         {
-          text: "Role",
-          value: "role",
-          sortable: false,
-          align: "center",
-        },
+          text: "Role", value: "role", sortable: false, align: "center",},
         {
           text: "Permission",
           value: "permission",
@@ -561,6 +556,7 @@ export default {
       selectedPermission: "",
       permissions: [],
       revokes: [],
+      
       //Pagination
       offset: 12,
       pagination: {},

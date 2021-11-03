@@ -20,7 +20,7 @@
                   label="Profile"
                 ></v-file-input>
               </v-col>
--->
+              -->
               <v-col cols="12">
                 <v-file-input
                   v-model="data.media.id"
