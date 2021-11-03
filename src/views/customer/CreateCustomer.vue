@@ -449,9 +449,6 @@ export default {
             if (res.data.code == 200) {
               setTimeout(() => {
                 this.loading = false;
-                // this.data = {};
-                // this.fetchData();
-                // this.reset();
                 this.$store.commit("Toast_State", res.data.message);
                 this.$router.push({
                   name: "Customer",

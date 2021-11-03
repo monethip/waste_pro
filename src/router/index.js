@@ -120,6 +120,15 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
+  {
+    path: '/view/customer/:id',
+    name: 'ViewCustomer',
+    component: () => import('@/views/customer/ViewCustomer.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
 ]
 
 const router = new VueRouter({

@@ -16,6 +16,7 @@ export default new Vuex.Store({
     progressLoading: false,
     message: '',
     color: '',
+    isLoading: false,
   },
   mutations: {
     SET_LOGGED_IN(state) {
@@ -39,6 +40,9 @@ export default new Vuex.Store({
       state.notificationToastState = result.value;
       state.message = result.msg;
       state.color = result.color;
+    },
+    Loading_State(state, value) {
+      state.isLoading = value;
     },
   },
   actions: {

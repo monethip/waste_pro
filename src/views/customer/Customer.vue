@@ -42,8 +42,6 @@
                   :search="search"
                   :disable-pagination="true"
                   hide-default-footer
-                  :loading="DataLoading"
-                  :disabled="DataLoading"
                 >
                   <template v-slot:item.media="{ item }">
                     <v-avatar
@@ -75,7 +73,9 @@
                   </template>
 
                   <template v-slot:item.actions="{ item }">
-                    <!--  <v-icon small class="mr-2"> mdi-key </v-icon> -->
+                    <v-icon small class="mr-2" @click="viewPage(item.id)">
+                      mdi-eye
+                    </v-icon>
                     <v-icon small class="mr-2" @click="editPage(item.id)">
                       mdi-pencil
                     </v-icon>
@@ -129,7 +129,6 @@ export default {
       tab: null,
       customers: [],
       loading: false,
-      DataLoading: false,
       customerId: "",
       //Pagination
       offset: 12,
@@ -163,7 +162,7 @@ export default {
   },
   methods: {
     fetchData() {
-      this.DataLoading = true;
+      this.$store.commit("Loading_State", true);
       this.$axios
         .get("customer", {
           params: {
@@ -175,7 +174,7 @@ export default {
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.DataLoading = false;
+              this.$store.commit("Loading_State", false);
               this.customers = res.data.data.data;
               this.pagination = res.data.data.pagination;
               // console.log(this.customers);
@@ -183,7 +182,7 @@ export default {
           }
         })
         .catch((error) => {
-          this.DataLoading = false;
+          this.$store.commit("Loading_State", false);
           this.fetchData();
           if (error.response.status == 422) {
             var obj = error.response.data.errors;
@@ -231,6 +230,13 @@ export default {
     editPage(id) {
       this.$router.push({
         name: "EditCustomer",
+        params: { id },
+      });
+    },
+    viewPage(id) {
+      console.log(id);
+      this.$router.push({
+        name: "ViewCustomer",
         params: { id },
       });
     },
