@@ -7,6 +7,8 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import './plugins/Axios';
 import moment from 'moment';
 import * as VueGoogleMaps from 'vue2-google-maps';
+//Plugin
+import VueApexCharts from 'vue-apexcharts';
 
 import ModalAdd from './components/modals/Add';
 import ModalEdit from './components/modals/Edit';
@@ -33,6 +35,8 @@ Vue.component('ModalView', ModalView);
 Vue.component('ModalDelete', ModalDelete);
 Vue.component('Pagination', Pagination);
 Vue.prototype.moment = moment;
+Vue.use(VueApexCharts)
+Vue.component('apexchart', VueApexCharts);
 
 new Vue({
   router,

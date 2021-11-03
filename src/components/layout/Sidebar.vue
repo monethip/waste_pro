@@ -55,6 +55,21 @@
       </div>
 
       <v-list expand shaped>
+        <v-list-item
+          v-for="(item, i) in items"
+          :key="i"
+          :to="item.to"
+          router
+          exact
+          color="indigo darken-4"
+        >
+          <v-list-item-action>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title v-text="item.title" />
+          </v-list-item-content>
+        </v-list-item>
         <!--User groups-->
         <v-list-group
           :prepend-icon="'mdi-account-group'"
@@ -81,21 +96,32 @@
             </v-list-item-content>
           </v-list-item>
         </v-list-group>
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          exact
+        <!--Report groups-->
+        <v-list-group
+          :prepend-icon="'mdi-chart-bubble'"
+          no-action
           color="indigo darken-4"
         >
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
+          <template v-slot:activator>
+            <v-list-item-content>
+              <v-list-item-title>ລາຍງານ</v-list-item-title>
+            </v-list-item-content>
+          </template>
+          <v-list-item
+            exact
+            color="indigo darken-4"
+            v-for="(item, k) in reports"
+            :key="k"
+            :to="item.to"
+          >
+            <v-list-item-action>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title v-text="item.title" />
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-group>
       </v-list>
     </v-navigation-drawer>
   </div>
@@ -125,11 +151,6 @@ export default {
           title: "ທີ່ຢູ່",
           to: "/village",
         },
-        {
-          icon: "mdi-chart-bubble",
-          title: "ລາຍງານ",
-          to: "/inspire",
-        },
       ],
 
       setting: [
@@ -147,6 +168,23 @@ export default {
           icon: "mdi-account-group",
           title: "Customer",
           to: "/customer",
+        },
+      ],
+      reports: [
+        {
+          icon: "mdi-chart-bubble",
+          title: "ລາຍງານການເກັບຂີ້ເຫຍື້ອ",
+          to: "/report/trash",
+        },
+        {
+          icon: "mdi-cash",
+          title: "ລາຍງານຂໍ້ມູນບັນຊີ",
+          to: "/report/invoice",
+        },
+        {
+          icon: "mdi-account-group",
+          title: "ລາຍງານຂໍ້ມູນລູກຄ້າ",
+          to: "/report/customer",
         },
       ],
     };
@@ -178,4 +216,10 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.v-application--is-ltr
+  .v-list-group--no-action
+  > .v-list-group__items
+  > .v-list-item {
+  padding-left: 28px !important;
+}
 </style>

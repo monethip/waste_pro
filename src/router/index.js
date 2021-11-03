@@ -129,6 +129,34 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
+  //Report 
+  {
+    path: '/report/trash',
+    name: 'Report-Trash',
+    component: () => import('@/views/report/Trash.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/report/customer',
+    name: 'Report-Customer',
+    component: () => import('@/views/report/Customer.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/report/invoice',
+    name: 'Report-Invoice',
+    component: () => import('@/views/report/ReportInvoice.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
 ]
 
 const router = new VueRouter({

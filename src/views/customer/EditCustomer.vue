@@ -345,19 +345,19 @@ export default {
   },
   methods: {
     fetchData() {
-      this.loading = true;
+      this.$store.commit("Loading_State", true);
       this.$axios
         .get("customer/" + this.$route.params.id)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit("Loading_State", false);
               this.data = res.data.data;
             }, 300);
           }
         })
         .catch((error) => {
-          this.loading = false;
+          this.$store.commit("Loading_State", false);
           this.fetchData();
           if (error.response.status == 422) {
             var obj = error.response.data.errors;
