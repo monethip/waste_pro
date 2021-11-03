@@ -25,5 +25,6 @@ export default {
 @import "../public/css/style.css";
 @import "../public/css/font.css";
 @import "../public/scss/main.scss";
+/*\@import "../public/css/bulma.css";*/
 </style>
 

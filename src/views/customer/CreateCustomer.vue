@@ -288,9 +288,6 @@ export default {
 
       address: [],
       errormsg: "",
-      files: [],
-      imageUrl: [],
-      // image: null,
       //Map
       latlng: {
         lat: 18.1189434,
@@ -358,16 +355,6 @@ export default {
       this.preview_list.splice(this.preview_list.indexOf(item), 1);
     },
 
-    preview_image() {
-      // this.imageUrl = URL.createObjectURL(this.files);
-      // console.log(this.files);
-      // console.log(this.imageUrl);
-      this.files.forEach((element) => {
-        this.imageUrl.push({ src: URL.createObjectURL(element) });
-      });
-      console.log(this.imageUrl);
-    },
-
     previewMultiImage: function (event) {
       let input = event.target;
       let count = input.files.length;
@@ -429,39 +416,16 @@ export default {
         })
         .catch(() => {});
     },
-
-    // FilterVillagesDetail(selected) {
-    //   //   console.log(districtId);
-    //   const result_checking = this.villages.filter((item) => {
-    //     // console.log(districtId);
-    //     // console.log(item.villages[selected]);
-    //     return item.village_details;
-    //   });
-    //   this.village_details = result_checking;
-    //   //   console.log(this.villages);
-    //   this.selectedVillageDetail = { ...this.village_details[0] };
-    // },
-
-    // listFiles() {
-    //   this.files = [];
-    //   for (let i = 0; i < this.$refs.files.files.length; i++)
-    //     this.files.push(this.$refs.files.files[i].name);
-    // },
-    // uploadHere() {
-    //   let formData = new FormData();
-    //   formData.append("imageFile", this.files);
-    //   console.log("Uploaded");
-    //   this.files = formData;
-    // },
     backPrevios() {
       this.$router.go(-1);
     },
     AddData() {
+      console.log(this.selectedVillageDetail);
       let formData = new FormData();
-      this.files.map((item) => {
+      this.image_list.map((item) => {
         formData.append("images[]", item);
       });
-      this.files.map((item) => {
+      this.selectedVillageDetail.map((item) => {
         formData.append("vilage_details[]", item);
       });
       formData.append("name", this.data.name);
@@ -484,7 +448,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                // this.loading = false;
+                this.loading = false;
                 // this.data = {};
                 // this.fetchData();
                 // this.reset();

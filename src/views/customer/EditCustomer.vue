@@ -14,38 +14,83 @@
         <v-container>
           <v-form ref="form" lazy-validation>
             <v-row>
-              <v-col cols="12">
-                <v-file-input
-                  v-model="files"
-                  placeholder="Upload your image"
-                  label="Image input"
-                  multiple
-                  prepend-icon="mdi-camera"
-                  accept="image/png, image/jpeg, image/svg"
-                  type="file"
-                  ref="file"
-                >
-                  <template v-slot:selection="{ text }">
-                    <v-chip small label color="primary">
-                      {{ text }}
-                    </v-chip>
-                  </template>
-                </v-file-input>
-                <template>
-                  <v-avatar
-                    class="avatar rounded"
-                    size="52px"
-                    v-for="(img, index) in data.media"
-                    :key="index"
-                  >
-                    <img v-if="img.thumb" :src="img.thumb" />
-                  </v-avatar>
-                </template>
-                <p class="errors">
-                  {{ server_errors.images }}
-                </p>
+              <v-col align="center">
+                <div class="field">
+                  <div class="file is-large is-boxed">
+                    <label class="file-label">
+                      <input
+                        @change="previewMultiImage"
+                        class="file-input input-file-image"
+                        type="file"
+                        name="resume"
+                        multiple
+                      />
+                      <span class="file-cta">
+                        <span class="file-icon">
+                          <v-icon
+                            style="
+                              font-size: 60px !important;
+                              color: #719aff;
+                              cursor: pointer;
+                            "
+                            class="fas fa-cloud-upload"
+                            >mdi-cloud-upload</v-icon
+                          >
+                        </span>
+                        <span
+                          class="file-label"
+                          style="
+                            margin-top: 10px;
+                            text-transform: uppercase;
+                            padding-top: 20px;
+                          "
+                        >
+                          Choose Image
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
               </v-col>
-
+            </v-row>
+            <v-row>
+              <div v-if="image_list.length > 0" style="display: inline-flex">
+                <v-col
+                  align="center"
+                  v-for="(item, index) in preview_list"
+                  :key="index"
+                  class="mt-5"
+                >
+                  <div>
+                    <v-avatar class="avatar rounded mr-6" size="94px">
+                      <img :src="item" alt="Image" />
+                    </v-avatar>
+                    <p class="mb-0 body-2">
+                      Name: {{ image_list[index].name }}
+                    </p>
+                    <span class="body-2"
+                      >size: {{ image_list[index].size / 1024 }}KB</span
+                    >
+                    <div @click="RemoveItem(item)" class="mt-2">
+                      <v-icon style="cursor: pointer">mdi-delete</v-icon>
+                    </div>
+                  </div>
+                </v-col>
+              </div>
+              <div v-else>
+                <v-col align="center" class="mt-5">
+                  <v-avatar
+                    v-for="(item, index) in data.media"
+                    :key="index"
+                    class="avatar rounded mr-6"
+                    size="94px"
+                  >
+                    <img :src="item.thumb" alt="Image" />
+                  </v-avatar>
+                </v-col>
+              </div>
+            </v-row>
+            <v-row>
               <v-col cols="6">
                 <v-text-field
                   label="Name *"
@@ -84,6 +129,7 @@
 
               <v-col cols="4">
                 <v-text-field
+                  v-if="data.user"
                   label="ເບີໂທ *"
                   required
                   v-model="data.user.phone"
@@ -98,6 +144,7 @@
 
               <v-col cols="4">
                 <v-text-field
+                  v-if="data.user"
                   label="Email"
                   v-model="data.user.email"
                 ></v-text-field>
@@ -239,7 +286,9 @@ export default {
 
       address: [],
       errormsg: "",
-      files: [],
+      preview_list: [],
+      image_list: [],
+      image: [],
       //Map
       latlng: {
         lat: 18.1189434,
@@ -308,11 +357,6 @@ export default {
             setTimeout(() => {
               this.loading = false;
               this.data = res.data.data;
-              this.data.map((item) => {
-                this.files = item.media;
-                console.log(this.files);
-              });
-              console.log(this.data);
             }, 300);
           }
         })
@@ -346,7 +390,7 @@ export default {
         })
         .catch(() => {});
     },
- 
+
     fetchVillage() {
       this.$axios
         .get("info/district/" + this.selectedDistrict + "/village")
@@ -386,23 +430,34 @@ export default {
     //   this.selectedVillageDetail = { ...this.village_details[0] };
     // },
 
-    listFiles() {
-      this.files = [];
-      for (let i = 0; i < this.$refs.files.files.length; i++)
-        this.files.push(this.$refs.files.files[i].name);
-    },
-    uploadHere() {
-      let formData = new FormData();
-      formData.append("imageFile", this.files);
-      console.log("Uploaded");
-      this.files = formData;
-    },
     backPrevios() {
       this.$router.go(-1);
     },
+    RemoveItem(item) {
+      this.preview_list.splice(this.preview_list.indexOf(item), 1);
+    },
+
+    previewMultiImage: function (event) {
+      console.log(this.image_list);
+      let input = event.target;
+      let count = input.files.length;
+      let index = 0;
+      if (input.files) {
+        while (count--) {
+          let reader = new FileReader();
+          reader.onload = (e) => {
+            this.preview_list.push(e.target.result);
+          };
+          this.image_list.push(input.files[index]);
+          reader.readAsDataURL(input.files[index]);
+          index++;
+        }
+      }
+    },
+
     UpdateData() {
       let formData = new FormData();
-      this.files.map((item) => {
+      this.image_list.map((item) => {
         formData.append("images[]", item);
       });
       this.selectedVillageDetail.map((item) => {
@@ -429,9 +484,8 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                // this.data = {};
-                // this.fetchData();
-                // this.$store.commit("Toast_State", res.data.message);
+                this.data = {};
+                this.$store.commit("Toast_State", res.data.message);
                 this.loading = false;
                 this.$router.push({
                   name: "Customer",
@@ -573,6 +627,7 @@ export default {
   created() {
     this.fetchAddress();
     this.fetchData();
+    console.log(this.image_list.length);
   },
 };
 </script>

@@ -178,7 +178,6 @@ export default {
               this.DataLoading = false;
               this.customers = res.data.data.data;
               this.pagination = res.data.data.pagination;
-              console.log(this.pagination);
               // console.log(this.customers);
             }, 300);
           }

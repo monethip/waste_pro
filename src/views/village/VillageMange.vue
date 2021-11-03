@@ -4,17 +4,17 @@
       <v-card-title>
         ທີ່ຢູ່
         <v-spacer></v-spacer>
-         <v-autocomplete
-                  required
-                  :items="districts"
-                  v-model="selectedDistrict"
-                  item-text="name"
-                  item-value="id"
-                  label="District"
-                  :rulesDistrict="rulePermission"
-                  outlined
+        <v-autocomplete
+          required
+          :items="districts"
+          v-model="selectedDistrict"
+          item-text="name"
+          item-value="id"
+          label="District"
+          :rulesDistrict="rulePermission"
+          outlined
           dense
-                ></v-autocomplete>
+        ></v-autocomplete>
         <v-spacer></v-spacer>
         <v-text-field
           v-model="search"
@@ -138,13 +138,13 @@ export default {
   name: "Village",
   data() {
     return {
-      loading:false,
+      loading: false,
       getAddress: [],
       districts: [],
       selectedDistrict: "",
       listVillage: [],
-      address:[],
-      
+      address: [],
+
       //test
       test: [],
       test2: [],
@@ -228,7 +228,7 @@ export default {
           });
       }
     },
-   
+
     fetchData() {
       this.$axios
         .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
@@ -241,24 +241,22 @@ export default {
                 this.districts = item.districts;
                 // this.selectedDistrict
                 this.selectedDistrict = this.districts[0].id;
-                console.log(this.selectedDistrict)
+                console.log(this.selectedDistrict);
                 // console.log(this.districts)
                 //console.log('village'+this.village);
 
-                 this.fetchVillage();
+                this.fetchVillage();
                 //  for (var i in this.districts) {
-                  // this.village=this.districts[i].villages
-                  // console.log(this.village);                 
+                // this.village=this.districts[i].villages
+                // console.log(this.village);
                 // }
-                
-                }
-                );
+              });
             }, 300);
           }
         })
         .catch(() => {});
     },
-       fetchVillage() {
+    fetchVillage() {
       this.$axios
         .get("info/district/" + this.selectedDistrict + "/village")
         .then((res) => {
@@ -278,17 +276,16 @@ export default {
         this.$store.commit("modalEdit_State", false);
     },
   },
-  watch:{
-        selectedDistrict: function () {
+  watch: {
+    selectedDistrict: function () {
       this.fetchVillage();
     },
-    computed:{
+    computed: {
       selectedDistrict: function () {
-      this.fetchVillage();
+        this.fetchVillage();
+      },
     },
-    }
-  }
-  
+  },
 };
 </script>
 
