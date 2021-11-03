@@ -7,6 +7,8 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import './plugins/Axios';
 import moment from 'moment';
 import * as VueGoogleMaps from 'vue2-google-maps';
+//Plugin
+import VueApexCharts from 'vue-apexcharts';
 
 import ModalAdd from './components/modals/Add';
 import ModalEdit from './components/modals/Edit';
@@ -17,8 +19,10 @@ import Pagination from "@/plugins/pagination/pagination";
 // Google Map
 Vue.use(VueGoogleMaps, {
   load: {
-    key: 'AIzaSyCgUsajH7cANXTJDpXJCT9x2n2Hj9kN0OE',
-    // key: 'AIzaSyBhAiyxlGO0Hb4-Vpu7iEYTt7KQASNO-Sk',
+    // key: 'AIzaSyCgUsajH7cANXTJDpXJCT9x2n2Hj9kN0OE',
+    // key: 'AIzaSyDgBlbWTL1oWewA-0nH--M19Dadtzlq3ew',
+    // key: 'AIzaSyCgUsajH7cANXTJDpXJCT9x2n2Hj9kN0OE',
+    key: 'AIzaSyDLoUKYiwbjoybRZxuLf_uY022RQ6QakSk',
     libraries: 'places', // This is required if you use the Autocomplete plugin
   }
 });
@@ -31,6 +35,8 @@ Vue.component('ModalView', ModalView);
 Vue.component('ModalDelete', ModalDelete);
 Vue.component('Pagination', Pagination);
 Vue.prototype.moment = moment;
+Vue.use(VueApexCharts)
+Vue.component('apexchart', VueApexCharts);
 
 new Vue({
   router,

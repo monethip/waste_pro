@@ -28,8 +28,6 @@
             :search="search"
             :disable-pagination="true"
             hide-default-footer
-            :loading="loading"
-            :disabled="loading"
           >
             <template v-slot:item.created_at="{ item }">
               {{ moment(item.create_at).format("DD-MM-YYYY") }}
@@ -388,7 +386,7 @@ export default {
       }
     },
     fetchData() {
-      this.loading = true;
+      this.$store.commit("Loading_State", true);
       this.$axios
         .get("user-setting/role", {
           params: {
@@ -400,14 +398,14 @@ export default {
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit("Loading_State", false);
               this.roles = res.data.data.data;
               this.pagination = res.data.data.pagination;
             }, 300);
           }
         })
         .catch((error) => {
-          this.loading = false;
+          this.$store.commit("Loading_State", false);
           this.fetchData();
           if (error.response.status == 422) {
             var obj = error.response.data.errors;

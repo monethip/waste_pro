@@ -45,7 +45,8 @@ const routes = [
     name: 'Login',
     component: () => import('../views/Login.vue'),
     meta: {
-      layout: "none"
+      layout: "none",
+      middleware: [Middlewares.guest],
     }
   },
   {
@@ -83,6 +84,15 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
+  // {
+  //   path: '/customer',
+  //   name: 'Customer',
+  //   component: () => import('../views/customer/Customer.vue'),
+  //   meta: {
+  //     layout: "admin",
+  //     middleware: [Middlewares.auth],
+  //   }
+  // },
   {
     path: '/customer',
     name: 'Customer',
@@ -105,6 +115,43 @@ const routes = [
     path: '/edit/customer/:id',
     name: 'EditCustomer',
     component: () => import('../views/customer/EditCustomer.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/view/customer/:id',
+    name: 'ViewCustomer',
+    component: () => import('@/views/customer/ViewCustomer.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  //Report 
+  {
+    path: '/report/trash',
+    name: 'Report-Trash',
+    component: () => import('@/views/report/Trash.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/report/customer',
+    name: 'Report-Customer',
+    component: () => import('@/views/report/Customer.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/report/invoice',
+    name: 'Report-Invoice',
+    component: () => import('@/views/report/ReportInvoice.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],

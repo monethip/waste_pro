@@ -197,18 +197,15 @@ export default {
   data() {
     return {
       loading: false,
-
+      getAddress: [],
       districts: [],
       selectedDistrict: "",
       listVillage: [],
       address: [],
 
-      ban: "",
-      server_errors: {},
-
-      offset: 10,
-      pagination: {},
-      per_page: 15,
+      //test
+      test: [],
+      test2: [],
 
       //getlistofdistrict
       getVillage: [],
@@ -373,12 +370,6 @@ export default {
   watch: {
     selectedDistrict: function () {
       this.fetchVillage();
-    },
-
-    computed: {
-      selectedDistrict: function () {
-        this.fetchVillage();
-      },
     },
   },
 };
