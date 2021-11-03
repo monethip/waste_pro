@@ -181,7 +181,7 @@
             text
             :loading="loading"
             :disabled="loading"
-            @click="deleteItemConfirm"
+           
             >OK</v-btn
           >
           <v-spacer></v-spacer>
@@ -216,7 +216,14 @@ export default {
 
       update_village: {},
       search: "",
+           //Pagination
+      offset: 12,
+      pagination: {},
+      per_page: 15,
+      oldVal: "",
+      server_errors:{
 
+      },
       rulesDistrict: [(v) => !!v || "District is required"],
       rulePermission: [(v) => !!v || "Permission is required"],
 
@@ -287,6 +294,7 @@ export default {
     },
 
     fetchData() {
+       this.$store.commit("Loading_State", true);
       this.$axios
         .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
         .then((res) => {
@@ -296,7 +304,7 @@ export default {
               this.getVillage.map((item) => {
                 this.districts = item.districts;
                 this.selectedDistrict = this.districts[0].id;
-                console.log(this.selectedDistrict);
+              this.$store.commit("Loading_State", false);
                 this.fetchVillage();
               });
             }, 300);
@@ -305,6 +313,8 @@ export default {
         .catch(() => {});
     },
     fetchVillage() {
+       this.$store.commit("Loading_State", true);
+       console.log(this.search)
       this.$axios
         .get("info/district/" + this.selectedDistrict + "/village",{          params: {
             page: this.pagination.current_page,
@@ -316,6 +326,7 @@ export default {
             setTimeout(() => {
               this.villages = res.data.data.data;
               this.pagination = res.data.data.pagination;
+               this.$store.commit("Loading_State", false);
             }, 300);
           }
         })
@@ -333,7 +344,6 @@ export default {
     },
 
     AddItem() {
-      console.log(this.ban)
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
@@ -353,7 +363,6 @@ export default {
             }
           })
           .catch((error) => {
-            console.log(error);
             this.loading = false;
             this.$store.commit("Toast_State", this.toast_error);
             this.fetchData();
@@ -370,6 +379,11 @@ export default {
   watch: {
     selectedDistrict: function () {
       this.fetchVillage();
+    },
+     search: function (value) {
+      if (value == "") {
+        this.fetchData();
+      }
     },
   },
 };
