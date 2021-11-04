@@ -29,8 +29,6 @@
             :search="search"
             :disable-pagination="true"
             hide-default-footer
-            :loading="loading"
-            :disabled="loading"
           >
             <!--Role -->
             <template v-slot:item.roles="{ item }">
@@ -186,7 +184,6 @@
     </ModalAdd>
 
     <!--Edit Modal-->
-
     <ModalEdit>
       <template @close="close" v-slot="">
         <v-card>
@@ -528,11 +525,7 @@ export default {
         { text: "Role", value: "roles", sortable: false },
         { text: "Permission", value: "permissions", sortable: false },
         {
-          text: "Role",
-          value: "role",
-          sortable: false,
-          align: "center",
-        },
+          text: "Role", value: "role", sortable: false, align: "center",},
         {
           text: "Permission",
           value: "permission",
@@ -561,6 +554,7 @@ export default {
       selectedPermission: "",
       permissions: [],
       revokes: [],
+      
       //Pagination
       offset: 12,
       pagination: {},
@@ -642,7 +636,7 @@ export default {
       }
     },
     fetchData() {
-      this.loading = true;
+      this.$store.commit("Loading_State", true);
       this.$axios
         .get("user-setting/user", {
           params: {
@@ -655,15 +649,14 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.loading = false;
-              // this.users = res.data.data;
+              this.$store.commit("Loading_State", false);
               this.users = res.data.data.data;
-              console.log(this.users);
               this.pagination = res.data.data.pagination;
             }, 300);
           }
         })
         .catch((error) => {
-          this.loading = false;
+          this.$store.commit("Loading_State", false);
           this.fetchData();
           if (error.response.status == 422) {
             var obj = error.response.data.errors;

@@ -4,262 +4,120 @@
       <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
-      Update Customer</v-breadcrumbs
+      ລາຍລະອຽດລູກຄ້າ</v-breadcrumbs
     >
     <v-card>
-      <v-card-title>
-        <span class="headline">Update Customer</span>
-      </v-card-title>
       <v-card-text>
         <v-container>
-          <v-form ref="form" lazy-validation>
-            <v-row>
-              <v-col align="center">
-                <div class="field">
-                  <div class="file is-large is-boxed">
-                    <label class="file-label">
-                      <input
-                        @change="previewMultiImage"
-                        class="file-input input-file-image"
-                        type="file"
-                        name="resume"
-                        multiple
-                      />
-                      <span class="file-cta">
-                        <span class="file-icon">
-                          <v-icon
-                            style="
-                              font-size: 60px !important;
-                              color: #719aff;
-                              cursor: pointer;
-                            "
-                            class="fas fa-cloud-upload"
-                            >mdi-cloud-upload</v-icon
-                          >
-                        </span>
-                        <span
-                          class="file-label"
-                          style="
-                            margin-top: 10px;
-                            text-transform: uppercase;
-                            padding-top: 20px;
-                          "
-                        >
-                          Choose Image
-                        </span>
-                      </span>
-                    </label>
-                  </div>
-                </div>
-              </v-col>
-            </v-row>
-            <v-row>
-              <div v-if="image_list.length > 0" style="display: inline-flex">
-                <v-col
-                  align="center"
-                  v-for="(item, index) in preview_list"
+          <v-row>
+            <v-col align="center" class="mt-5">
+              <v-avatar
+                v-for="(item, index) in data.media"
+                :key="index"
+                class="avatar rounded mr-6"
+                size="94px"
+              >
+                <img :src="item.thumb" alt="Image" />
+              </v-avatar>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="6">
+              <p class="text-h6">
+                ຊື່ລູກຄ້າ:
+                {{ data.name }}
+              </p>
+            </v-col>
+            <v-col cols="6">
+              <p class="text-h6">
+                ນາມສະກຸນ:
+                {{ data.surname }}
+              </p>
+            </v-col>
+            <v-col cols="4">
+              <p class="text-h6">
+                ເຮືອນເລກທີ:
+                {{ data.house_number }}
+              </p>
+            </v-col>
+
+            <v-col cols="4">
+              <p class="text-h6" v-if="data.user">
+                ເບີໂທ:
+                {{ data.user.phone }}
+              </p>
+            </v-col>
+
+            <v-col cols="4">
+              <p class="text-h6" v-if="data.user">
+                Email:
+                {{ data.user.email }}
+              </p>
+            </v-col>
+            <v-col cols="4">
+              <v-autocomplete
+                required
+                disabled
+                :items="districts"
+                v-model="selectedDistrict"
+                item-text="name"
+                item-value="id"
+                label="ເມືອງ"
+              ></v-autocomplete>
+            </v-col>
+
+            <v-col cols="4">
+              <v-autocomplete
+                :items="villages"
+                v-model="data.village_id"
+                item-text="name"
+                item-value="id"
+                label="ບ້ານ"
+                disabled
+              ></v-autocomplete>
+            </v-col>
+            <v-col cols="4">
+              <v-select
+                disabled
+                v-model="selectedVillageDetail"
+                :items="village_details"
+                item-text="name"
+                item-value="id"
+                label="ລາຍລະອຽດທີ່ຢູ່"
+                multiple
+              ></v-select>
+            </v-col>
+
+            <v-col cols="12" class="mb-4">
+              <GmapMap
+                :center="latlng"
+                :zoom="16"
+                style="width: 100%; height: 450px"
+                :disableDefaultUI="true"
+              >
+                <GmapMarker
                   :key="index"
-                  class="mt-5"
-                >
-                  <div>
-                    <v-avatar class="avatar rounded mr-6" size="94px">
-                      <img :src="item" alt="Image" />
-                    </v-avatar>
-                    <p class="mb-0 body-2">
-                      Name: {{ image_list[index].name }}
-                    </p>
-                    <span class="body-2"
-                      >size: {{ image_list[index].size / 1024 }}KB</span
-                    >
-                    <div @click="RemoveItem(item)" class="mt-2">
-                      <v-icon style="cursor: pointer">mdi-delete</v-icon>
-                    </div>
-                  </div>
-                </v-col>
-              </div>
-              <div v-else>
-                <v-col align="center" class="mt-5">
-                  <v-avatar
-                    v-for="(item, index) in data.media"
-                    :key="index"
-                    class="avatar rounded mr-6"
-                    size="94px"
-                  >
-                    <img :src="item.thumb" alt="Image" />
-                  </v-avatar>
-                </v-col>
-              </div>
-            </v-row>
-            <v-row>
-              <v-col cols="6">
-                <v-text-field
-                  label="Name *"
-                  required
-                  v-model="data.name"
-                  :rules="nameRules"
-                ></v-text-field>
-                <p class="errors">
-                  {{ server_errors.name }}
-                </p>
-              </v-col>
-              <v-col cols="6">
-                <v-text-field
-                  label="Surname *"
-                  required
-                  v-model="data.surname"
-                  :rules="nameRules"
-                ></v-text-field>
-                <p class="errors">
-                  {{ server_errors.surname }}
-                </p>
-              </v-col>
-              <v-col cols="4">
-                <v-text-field
-                  label="ເຮືອນເລກທີ *"
-                  required
-                  v-model="data.house_number"
-                  :rules="houseNumberRules"
-                  type="number"
-                  class="input-number"
-                ></v-text-field>
-                <p class="errors">
-                  {{ server_errors.house_number }}
-                </p>
-              </v-col>
-
-              <v-col cols="4">
-                <v-text-field
-                  v-if="data.user"
-                  label="ເບີໂທ *"
-                  required
-                  v-model="data.user.phone"
-                  :rules="phoneRules"
-                  type="number"
-                  class="input-number"
-                ></v-text-field>
-                <p class="errors">
-                  {{ server_errors.phone }}
-                </p>
-              </v-col>
-
-              <v-col cols="4">
-                <v-text-field
-                  v-if="data.user"
-                  label="Email"
-                  v-model="data.user.email"
-                ></v-text-field>
-                <p class="errors">
-                  {{ server_errors.email }}
-                </p>
-              </v-col>
-              <v-col cols="4">
-                <v-autocomplete
-                  required
-                  :items="districts"
-                  v-model="selectedDistrict"
-                  item-text="name"
-                  item-value="id"
-                  label="District *"
-                  :rulesDistrict="rulesDistrict"
-                ></v-autocomplete>
-                <p class="errors">
-                  {{ errormsg }}
-                </p>
-              </v-col>
-
-              <v-col cols="4">
-                <v-autocomplete
-                  required
-                  :items="villages"
-                  v-model="data.village_id"
-                  item-text="name"
-                  item-value="id"
-                  label="Village *"
-                  :rules="ruleVillage"
-                ></v-autocomplete>
-                <p class="errors">
-                  {{ errormsg }}
-                </p>
-              </v-col>
-              <v-col cols="4">
-                <v-select
-                  v-model="selectedVillageDetail"
-                  :items="village_details"
-                  item-text="name"
-                  item-value="id"
-                  label="Village Detail"
-                  multiple
-                ></v-select>
-                <p class="errors">
-                  {{ errormsg }}
-                </p>
-              </v-col>
-
-              <!-- Gogle map-->
-              <v-col cols="6">
-                <v-text-field
-                  label="Latitude"
-                  v-model="data.latitude"
-                  type="number"
-                  class="input-number"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="6">
-                <v-text-field
-                  label="Longitude"
-                  v-model="data.longitude"
-                  type="number"
-                  class="input-number"
-                ></v-text-field>
-              </v-col>
-
-              <v-col cols="12">
-                <gmap-autocomplete
-                  ref="searchInput"
-                  class="input text-field"
-                  placeholder="ຄົ້ນຫາເເຜນທີ່..."
-                  @place_changed="setPlace"
-                  :options="{
-                    fields: ['geometry', 'formatted_address', 'name'],
-                  }"
-                >
-                </gmap-autocomplete>
-                <span class="horizontal-divider"></span>
-              </v-col>
-              <v-col cols="12" class="mb-4">
-                <GmapMap
-                  :center="latlng"
-                  :zoom="16"
-                  style="width: 100%; height: 450px"
-                  :disableDefaultUI="true"
-                >
-                  <GmapMarker
-                    :key="index"
-                    v-for="(m, index) in markers"
-                    :position="m.position"
-                    @click="latlng = m.position"
-                    :draggable="true"
-                    @dragend="onLocation"
-                    :icon="markerOptions"
-                    :animation="2"
-                    ref="markers"
-                  />
-                </GmapMap>
-              </v-col>
-            </v-row>
-          </v-form>
+                  v-for="(m, index) in markers"
+                  :position="m.position"
+                  @click="latlng = m.position"
+                  :draggable="true"
+                  @dragend="onLocation"
+                  :icon="markerOptions"
+                  :animation="2"
+                  ref="markers"
+                />
+              </GmapMap>
+            </v-col>
+          </v-row>
         </v-container>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="backPrevios()">
-            Back
-          </v-btn>
           <v-btn
             color="blue darken-1"
             text
             :loading="loading"
             :disabled="loading"
-            @click="UpdateData()"
+            @click="editPage(data.id)"
           >
             Update
           </v-btn>
@@ -569,6 +427,12 @@ export default {
         isCreate: this.isCreate,
       });
     },
+    editPage(id) {
+      this.$router.push({
+        name: "EditCustomer",
+        params: { id },
+      });
+    },
   },
   watch: {
     selectedDistrict: function () {
@@ -576,29 +440,6 @@ export default {
     },
     selectedVillage: function () {
       this.fetchVillageDetail();
-    },
-    //Clear error change
-    "data.name": function () {
-      this.server_errors.name = "";
-    },
-    "data.surname": function () {
-      this.server_errors.surname = "";
-    },
-    "data.house_number": function () {
-      this.server_errors.house_number = "";
-    },
-    "data.phone": function () {
-      this.server_errors.phone = "";
-      this.server_errors.email = "";
-    },
-    "data.email": function () {
-      this.server_errors.email = "";
-    },
-    "data.password": function () {
-      this.server_errors.password = "";
-    },
-    "data.password_confirmation": function () {
-      this.server_errors.password = "";
     },
   },
   mounted() {

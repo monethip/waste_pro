@@ -1,6 +1,11 @@
 <template>
   <v-container>
-    <v-breadcrumbs large>Update Customer</v-breadcrumbs>
+    <v-breadcrumbs large>
+      <v-btn text class="text-primary" @click="backPrevios()"
+        ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
+      >
+      Create Customer</v-breadcrumbs
+    >
     <v-card>
       <v-card-title>
         <span class="headline">Add User</span>
@@ -9,74 +14,28 @@
         <v-container>
           <v-form ref="form" lazy-validation>
             <v-row>
-              <!-- 
-              <v-col cols="12">
-                <v-file-input
-                  :rules="rules"
-                  accept="image/png, image/jpeg, image/svg"
-                  placeholder="Pick an avatar"
-                  prepend-icon="mdi-camera"
-                  multiple
-                  label="Profile"
-                ></v-file-input>
-              </v-col>
-
-        
-                <v-file-input
-                  type="file"
-                  hidden
-                  multiple
-                  ref="files"
-                  @change="listFiles"
-                  accept="image/png, image/jpeg, image/svg"
-                  prepend-icon="mdi-paperclip"
-                  :show-size="1000"
-                  placeholder="Upload your image"
-                >
-                  <template v-slot:selection="{ files }">
-                    <v-chip small label color="primary">
-                      {{ files }}
-                    </v-chip>
-                  </template>
-                </v-file-input>
-        
-                <v-select
-                  v-model="files"
-                  :items="files"
-                  chips
-                  readonly
-                  prepend-icon="mdi-camera"
-                  multiple
-                  @click="$refs.files.click()"
-                  @click:prepend="$refs.files.click()"
-                  @click:append-outer="uploadHere"
-                  label="Upload Image"
-                  append-icon
-                  append-outer-icon="mdi-close"
-                ></v-select>
-                -->
-              <!--
-              <v-col
-                cols="12"
-                md="12"
-                class="d-flex justify-content-center mt-10"
-              >
+              <v-col align="center">
                 <div class="field">
                   <div class="file is-large is-boxed">
                     <label class="file-label">
                       <input
                         @change="previewMultiImage"
-                        class="file-input"
+                        class="file-input input-file-image"
                         type="file"
                         name="resume"
                         multiple
                       />
                       <span class="file-cta">
                         <span class="file-icon">
-                          <i
-                            style="font-size: 60px !important; color: #719aff"
+                          <v-icon
+                            style="
+                              font-size: 60px !important;
+                              color: #719aff;
+                              cursor: pointer;
+                            "
                             class="fas fa-cloud-upload"
-                          ></i>
+                            >mdi-cloud-upload</v-icon
+                          >
                         </span>
                         <span
                           class="file-label"
@@ -93,49 +52,25 @@
                   </div>
                 </div>
               </v-col>
-            
+            </v-row>
+            <v-row>
               <v-col
-                class="mt-5 text-left"
-                cols="6"
-                v-for="(item, index) in image_list"
+                align="center"
+                class="mt-5"
+                v-for="(item, index) in preview_list"
                 :key="index"
               >
-                <div class="section-image-detail">
-                  <div class="image-left">
-                    <img :src="item" class="img-fluid" alt="" />
-                  </div>
-                  <div class="context-image-right">
-                    <p class="mb-0">file name: {{ image_list[index].name }}</p>
-                    <span>size: {{ image_list[index].size / 1024 }}KB</span>
-                  </div>
-                  <div class="delete-ic" @click="RemoveItem(item)">
-                    <i class="fal fa-times-circle"></i>
-                  </div>
+                <v-avatar class="avatar rounded mr-2" size="94px">
+                  <img :src="item" alt="Image" />
+                </v-avatar>
+                <p class="mb-0">File name: {{ image_list[index].name }}</p>
+                <span>size: {{ image_list[index].size / 1024 }}KB</span>
+                <div @click="RemoveItem(item)">
+                  <v-icon style="cursor: pointer">mdi-delete</v-icon>
                 </div>
               </v-col>
-  -->
-              <v-col cols="12">
-                <v-file-input
-                  v-model="files"
-                  placeholder="Upload your image"
-                  label="Image input"
-                  multiple
-                  prepend-icon="mdi-paperclip"
-                  accept="image/png, image/jpeg, image/svg"
-                  type="file"
-                  ref="file"
-                >
-                  <template v-slot:selection="{ text }">
-                    <v-chip small label color="primary">
-                      {{ text }}
-                    </v-chip>
-                  </template>
-                </v-file-input>
-                <p class="errors">
-                  {{ server_errors.images }}
-                </p>
-              </v-col>
-
+            </v-row>
+            <v-row>
               <v-col cols="6">
                 <v-text-field
                   label="Name *"
@@ -203,7 +138,7 @@
                   item-text="name"
                   item-value="id"
                   label="District *"
-                  :rulesDistrict="rulePermission"
+                  :rulesDistrict="rulesDistrict"
                 ></v-autocomplete>
                 <p class="errors">
                   {{ server_errors.district_id }}
@@ -217,7 +152,7 @@
                   item-text="name"
                   item-value="id"
                   label="Village *"
-                  :rules="rulePermission"
+                  :rules="ruleVillage"
                 ></v-autocomplete>
                 <p class="errors">
                   {{ server_errors.village_id }}
@@ -230,9 +165,8 @@
                   :items="village_details"
                   item-text="name"
                   item-value="id"
-                  label="Village Detail *"
+                  label="Village Detail"
                   multiple
-                  :rules="rulePermission"
                 ></v-select>
                 <p class="errors">
                   {{ errormsg }}
@@ -350,11 +284,10 @@ export default {
       villages: [],
       selectedVillage: "",
       village_details: [],
-      selectedVillageDetail: "",
+      selectedVillageDetail: [],
 
       address: [],
       errormsg: "",
-      files: [],
       //Map
       latlng: {
         lat: 18.1189434,
@@ -409,8 +342,7 @@ export default {
           "Phone number must be  4 - 11 numbers",
       ],
       houseNumberRules: [(v) => !!v || "House number is required"],
-      rulePermission: [(v) => !!v || "Permission is required"],
-      rulePermissionRole: [(v) => !!v || "Role is required"],
+      ruleVillage: [(v) => !!v || "Village is required"],
       rulesDistrict: [(v) => !!v || "District is required"],
       rules: [
         (v) => !!v || "File is required",
@@ -419,25 +351,26 @@ export default {
     };
   },
   methods: {
-    // RemoveItem(item) {
-    //   this.preview_list.splice(this.preview_list.indexOf(item), 1);
-    // },
-    // previewMultiImage: function (event) {
-    //   let input = event.target;
-    //   let count = input.files.length;
-    //   let index = 0;
-    //   if (input.files) {
-    //     while (count--) {
-    //       let reader = new FileReader();
-    //       reader.onload = (e) => {
-    //         this.preview_list.push(e.target.result);
-    //       };
-    //       this.image_list.push(input.files[index]);
-    //       reader.readAsDataURL(input.files[index]);
-    //       index++;
-    //     }
-    //   }
-    // },
+    RemoveItem(item) {
+      this.preview_list.splice(this.preview_list.indexOf(item), 1);
+    },
+
+    previewMultiImage: function (event) {
+      let input = event.target;
+      let count = input.files.length;
+      let index = 0;
+      if (input.files) {
+        while (count--) {
+          let reader = new FileReader();
+          reader.onload = (e) => {
+            this.preview_list.push(e.target.result);
+          };
+          this.image_list.push(input.files[index]);
+          reader.readAsDataURL(input.files[index]);
+          index++;
+        }
+      }
+    },
 
     fetchAddress() {
       this.$axios
@@ -483,53 +416,28 @@ export default {
         })
         .catch(() => {});
     },
-
-    // FilterVillagesDetail(selected) {
-    //   //   console.log(districtId);
-    //   const result_checking = this.villages.filter((item) => {
-    //     // console.log(districtId);
-    //     // console.log(item.villages[selected]);
-    //     return item.village_details;
-    //   });
-    //   this.village_details = result_checking;
-    //   //   console.log(this.villages);
-    //   this.selectedVillageDetail = { ...this.village_details[0] };
-    // },
-
-    // listFiles() {
-    //   this.files = [];
-    //   for (let i = 0; i < this.$refs.files.files.length; i++)
-    //     this.files.push(this.$refs.files.files[i].name);
-    // },
-    // uploadHere() {
-    //   let formData = new FormData();
-    //   formData.append("imageFile", this.files);
-    //   console.log("Uploaded");
-    //   this.files = formData;
-    // },
     backPrevios() {
       this.$router.go(-1);
     },
     AddData() {
+      console.log(this.selectedVillageDetail);
       let formData = new FormData();
-      this.files.map((item) => {
-        formData.append("name", this.data.name);
-        formData.append("surname", this.data.surname);
-        formData.append("village_id", this.selectedVillage);
-        formData.append("house_number", this.data.house_number);
-        formData.append("vilage_details[]", this.selectedVillageDetail);
-        formData.append("vilage_details[]", this.selectedVillageDetail);
-        formData.append("latitude", this.latlng.lat);
-        formData.append("longitude", this.latlng.lng);
-        formData.append("phone", this.data.phone);
-        formData.append("email", this.data.email);
-        formData.append("password", this.data.password);
-        formData.append(
-          "password_confirmation",
-          this.data.password_confirmation
-        );
+      this.image_list.map((item) => {
         formData.append("images[]", item);
       });
+      this.selectedVillageDetail.map((item) => {
+        formData.append("vilage_details[]", item);
+      });
+      formData.append("name", this.data.name);
+      formData.append("surname", this.data.surname);
+      formData.append("village_id", this.selectedVillage);
+      formData.append("house_number", this.data.house_number);
+      formData.append("latitude", this.latlng.lat);
+      formData.append("longitude", this.latlng.lng);
+      formData.append("phone", this.data.phone);
+      formData.append("email", this.data.email);
+      formData.append("password", this.data.password);
+      formData.append("password_confirmation", this.data.password_confirmation);
 
       if (this.$refs.form.validate() == true) {
         this.loading = true;
@@ -540,10 +448,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                // this.loading = false;
-                // this.data = {};
-                // this.fetchData();
-                // this.reset();
+                this.loading = false;
                 this.$store.commit("Toast_State", res.data.message);
                 this.$router.push({
                   name: "Customer",

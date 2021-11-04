@@ -20,7 +20,16 @@
           :headers="headers"
           :items="desserts"
           :search="search"
-        ></v-data-table>
+        >
+        <template v-slot:[`item.actions`]="{ item }">
+          <v-icon small color="green" class="mr-2" @click="OpenModalEdit(item)">
+            mdi-account-edit
+          </v-icon>
+          <v-icon small color="red" @click="deleteItem(item.id)">
+            mdi-trash-can-outline
+          </v-icon>
+        </template>
+        </v-data-table>
       </v-card>
     </v-col>
   </v-container>
@@ -43,6 +52,7 @@ export default {
         { text: "ໄລຍະເວລາ(ອາທິດ)", value: "duration" },
         { text: "ຈໍານວນ/ຖົງ", value: "amount" },
         { text: "ລາຄາ/ແພັກເກັດ", value: "price" },
+        { text: "ແກ້ໄຂ", value: "actions" },
       ],
       desserts: [
         {
