@@ -220,6 +220,8 @@
                   ref="searchInput"
                   class="input text-field"
                   placeholder="ຄົ້ນຫາເເຜນທີ່..."
+                  label="Prepend inner"
+                  prepend-inner-icon="mdi-map-marker"
                   @place_changed="setPlace"
                   :options="{
                     fields: ['geometry', 'formatted_address', 'name'],
@@ -592,4 +594,16 @@ export default {
 
 <style lang="scss">
 @import "../../../public/scss/main.scss";
+.primary-color {
+  color: $primary-color;
+}
+.text-field {
+  border-color: $primary-color;
+  padding: 12px 8px 12px 8px;
+  width: 100%;
+  margin-bottom: 12px;
+  font-size: 16px;
+  background: #eee;
+  border-radius: 2 px;
+}
 </style>

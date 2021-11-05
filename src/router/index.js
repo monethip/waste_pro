@@ -33,14 +33,6 @@ const routes = [
     }
   },
   {
-    path: '/customer',
-    name: 'Customer',
-    component: () => import('../views/customer/Customer.vue'),
-    meta: {
-      layout: "admin"
-    }
-  },
-  {
     path: '/login',
     name: 'Login',
     component: () => import('../views/Login.vue'),
@@ -129,6 +121,26 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
+  //Route plan 
+  {
+    path: '/route',
+    name: 'Route',
+    component: () => import('@/views/routeplan/Route.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/plan',
+    name: 'Plan',
+    component: () => import('@/views/routeplan/Plan.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+
   //Report 
   {
     path: '/report/trash',

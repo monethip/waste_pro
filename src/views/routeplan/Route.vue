@@ -4,154 +4,23 @@
       <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
-      Update Customer</v-breadcrumbs
+      Route Map</v-breadcrumbs
     >
     <v-card>
-      <v-card-title>
-        <span class="headline">Update Customer</span>
-      </v-card-title>
       <v-card-text>
-        <v-container>
-          <v-form ref="form" lazy-validation>
-            <v-row>
-              <v-col align="center">
-                <div class="field">
-                  <div class="file is-large is-boxed">
-                    <label class="file-label">
-                      <input
-                        @change="previewMultiImage"
-                        class="file-input input-file-image"
-                        type="file"
-                        name="resume"
-                        multiple
-                      />
-                      <span class="file-cta">
-                        <span class="file-icon">
-                          <v-icon
-                            style="
-                              font-size: 60px !important;
-                              color: #719aff;
-                              cursor: pointer;
-                            "
-                            class="fas fa-cloud-upload"
-                            >mdi-cloud-upload</v-icon
-                          >
-                        </span>
-                        <span
-                          class="file-label"
-                          style="
-                            margin-top: 10px;
-                            text-transform: uppercase;
-                            padding-top: 20px;
-                          "
-                        >
-                          Choose Image
-                        </span>
-                      </span>
-                    </label>
-                  </div>
-                </div>
-              </v-col>
-            </v-row>
-            <v-row>
-              <div v-if="image_list.length > 0" style="display: inline-flex">
-                <v-col
-                  align="center"
-                  v-for="(item, index) in preview_list"
-                  :key="index"
-                  class="mt-5"
-                >
-                  <div>
-                    <v-avatar class="avatar rounded mr-6" size="94px">
-                      <img :src="item" alt="Image" />
-                    </v-avatar>
-                    <p class="mb-0 body-2">
-                      Name: {{ image_list[index].name }}
-                    </p>
-                    <span class="body-2"
-                      >size: {{ image_list[index].size / 1024 }}KB</span
-                    >
-                    <div @click="RemoveItem(item)" class="mt-2">
-                      <v-icon style="cursor: pointer">mdi-delete</v-icon>
-                    </div>
-                  </div>
-                </v-col>
+        <v-form ref="form" lazy-validation>
+          <v-row>
+            <v-col>
+              <div class="iframe-container">
+                <iframe
+                  src="https://www.google.com/maps/d/u/0/embed?mid=17RC0v9KFrIxwNd8eI-ft8Sr7eKkSCMbp"
+                ></iframe>
               </div>
-              <div v-else>
-                <v-col align="center" class="mt-5">
-                  <v-avatar
-                    v-for="(item, index) in data.media"
-                    :key="index"
-                    class="avatar rounded mr-6"
-                    size="94px"
-                  >
-                    <img :src="item.thumb" alt="Image" />
-                  </v-avatar>
-                </v-col>
-              </div>
-            </v-row>
-            <v-row>
-              <v-col cols="6">
-                <v-text-field
-                  label="Name *"
-                  required
-                  v-model="data.name"
-                  :rules="nameRules"
-                ></v-text-field>
-                <p class="errors">
-                  {{ server_errors.name }}
-                </p>
-              </v-col>
-              <v-col cols="6">
-                <v-text-field
-                  label="Surname *"
-                  required
-                  v-model="data.surname"
-                  :rules="nameRules"
-                ></v-text-field>
-                <p class="errors">
-                  {{ server_errors.surname }}
-                </p>
-              </v-col>
-              <v-col cols="4">
-                <v-text-field
-                  label="ເຮືອນເລກທີ *"
-                  required
-                  v-model="data.house_number"
-                  :rules="houseNumberRules"
-                  type="number"
-                  class="input-number"
-                ></v-text-field>
-                <p class="errors">
-                  {{ server_errors.house_number }}
-                </p>
-              </v-col>
+            </v-col>
+          </v-row>
 
-              <v-col cols="4">
-                <v-text-field
-                  v-if="data.user"
-                  label="ເບີໂທ *"
-                  required
-                  v-model="data.user.phone"
-                  :rules="phoneRules"
-                  type="number"
-                  class="input-number"
-                ></v-text-field>
-                <p class="errors">
-                  {{ server_errors.phone }}
-                </p>
-              </v-col>
-
-              <v-col cols="4">
-                <v-text-field
-                  v-if="data.user"
-                  label="Email"
-                  v-model="data.user.email"
-                ></v-text-field>
-                <p class="errors">
-                  {{ server_errors.email }}
-                </p>
-              </v-col>
+          <v-row>
+            <!--
               <v-col cols="4">
                 <v-autocomplete
                   required
@@ -163,26 +32,26 @@
                   :rulesDistrict="rulesDistrict"
                 ></v-autocomplete>
                 <p class="errors">
-                  {{ errormsg }}
+                  {{ server_errors.district_id }}
                 </p>
               </v-col>
-
               <v-col cols="4">
                 <v-autocomplete
                   required
                   :items="villages"
-                  v-model="data.village_id"
+                  v-model="selectedVillage"
                   item-text="name"
                   item-value="id"
                   label="Village *"
                   :rules="ruleVillage"
                 ></v-autocomplete>
                 <p class="errors">
-                  {{ errormsg }}
+                  {{ server_errors.village_id }}
                 </p>
               </v-col>
               <v-col cols="4">
                 <v-select
+                  required
                   v-model="selectedVillageDetail"
                   :items="village_details"
                   item-text="name"
@@ -194,12 +63,13 @@
                   {{ errormsg }}
                 </p>
               </v-col>
-
-              <!-- Gogle map-->
+              -->
+            <!-- Gogle map-->
+            <!--
               <v-col cols="6">
                 <v-text-field
                   label="Latitude"
-                  v-model="data.latitude"
+                  v-model="latlng.lat"
                   type="number"
                   class="input-number"
                 ></v-text-field>
@@ -207,17 +77,20 @@
               <v-col cols="6">
                 <v-text-field
                   label="Longitude"
-                  v-model="data.longitude"
+                  v-model="latlng.lng"
                   type="number"
                   class="input-number"
                 ></v-text-field>
               </v-col>
-
-              <v-col cols="12">
+              -->
+            <!--
+              <v-col cols="10">
                 <gmap-autocomplete
                   ref="searchInput"
-                  class="input text-field map"
+                  class="input text-field"
                   placeholder="ຄົ້ນຫາເເຜນທີ່..."
+                  label="Prepend inner"
+                  prepend-inner-icon="mdi-map-marker"
                   @place_changed="setPlace"
                   :options="{
                     fields: ['geometry', 'formatted_address', 'name'],
@@ -226,16 +99,27 @@
                 </gmap-autocomplete>
                 <span class="horizontal-divider"></span>
               </v-col>
+              <v-col cols="2">
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  :loading="loading"
+                  :disabled="loading"
+                  @click="addMarker()"
+                >
+                  Save
+                </v-btn>
+              </v-col>
               <v-col cols="12" class="mb-4">
                 <GmapMap
                   :center="latlng"
                   :zoom="16"
-                  style="width: 100%; height: 450px"
+                  style="width: 100%; height: 850px"
                   :disableDefaultUI="true"
                 >
                   <GmapMarker
                     :key="index"
-                    v-for="(m, index) in markers"
+                    v-for="(m, index) in getMarkers()"
                     :position="m.position"
                     @click="latlng = m.position"
                     :draggable="true"
@@ -246,24 +130,9 @@
                   />
                 </GmapMap>
               </v-col>
-            </v-row>
-          </v-form>
-        </v-container>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="backPrevios()">
-            Back
-          </v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            :loading="loading"
-            :disabled="loading"
-            @click="UpdateData()"
-          >
-            Update
-          </v-btn>
-        </v-card-actions>
+              -->
+          </v-row>
+        </v-form>
       </v-card-text>
     </v-card>
   </v-container>
@@ -286,19 +155,24 @@ export default {
 
       address: [],
       errormsg: "",
-      preview_list: [],
-      image_list: [],
-      image: [],
       //Map
       latlng: {
         lat: 18.1189434,
         lng: 102.290218,
       },
       markers: [],
+      places: [],
       currentPlace: null,
       markerOptions: {
         // eslint-disable-next-line global-require
         url: require("@coms/../../src/assets/pin.png"),
+        zoomControl: true,
+        mapTypeControl: false,
+        scaleControl: false,
+        streetViewControl: false,
+        rotateControl: false,
+        fullscreenControl: false,
+        disableDefaultUi: false,
         size: {
           width: 35,
           height: 55,
@@ -314,26 +188,6 @@ export default {
       },
 
       //Validation
-      passwordRules: [
-        (v) => !!v || "Password is required",
-        (v) =>
-          (v && v.length >= 8) || "Password must be more than 8 characters",
-      ],
-      passwordConfirmRules: [
-        (v) => !!v || "Password Confirm is required",
-        (v) =>
-          (v && v.length >= 8) || "Password must be more than 8 characters",
-      ],
-      nameRules: [
-        (v) => !!v || "Name is required",
-        (v) => (v && v.length >= 2) || "Name must be less than 2 characters",
-      ],
-      phoneRules: [
-        (v) => !!v || "Phone is required",
-        (v) =>
-          (v && v.length >= 4 && v.length <= 11) ||
-          "Phone number must be  4 - 11 numbers",
-      ],
       houseNumberRules: [(v) => !!v || "House number is required"],
       ruleVillage: [(v) => !!v || "Village is required"],
       rulesDistrict: [(v) => !!v || "District is required"],
@@ -344,30 +198,6 @@ export default {
     };
   },
   methods: {
-    fetchData() {
-      this.$store.commit("Loading_State", true);
-      this.$axios
-        .get("customer/" + this.$route.params.id)
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.$store.commit("Loading_State", false);
-              this.data = res.data.data;
-            }, 300);
-          }
-        })
-        .catch((error) => {
-          this.$store.commit("Loading_State", false);
-          this.fetchData();
-          if (error.response.status == 422) {
-            var obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
-              this.server_errors[key] = message[0];
-            }
-          }
-        });
-    },
-
     fetchAddress() {
       this.$axios
         .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
@@ -412,33 +242,11 @@ export default {
         })
         .catch(() => {});
     },
-
     backPrevios() {
       this.$router.go(-1);
     },
-    RemoveItem(item) {
-      this.preview_list.splice(this.preview_list.indexOf(item), 1);
-    },
-
-    previewMultiImage: function (event) {
-      console.log(this.image_list);
-      let input = event.target;
-      let count = input.files.length;
-      let index = 0;
-      if (input.files) {
-        while (count--) {
-          let reader = new FileReader();
-          reader.onload = (e) => {
-            this.preview_list.push(e.target.result);
-          };
-          this.image_list.push(input.files[index]);
-          reader.readAsDataURL(input.files[index]);
-          index++;
-        }
-      }
-    },
-
-    UpdateData() {
+    AddData() {
+      console.log(this.selectedVillageDetail);
       let formData = new FormData();
       this.image_list.map((item) => {
         formData.append("images[]", item);
@@ -450,28 +258,27 @@ export default {
       formData.append("surname", this.data.surname);
       formData.append("village_id", this.selectedVillage);
       formData.append("house_number", this.data.house_number);
-      formData.append("phone", this.data.user.phone);
-      formData.append("email", this.data.user.email);
       formData.append("latitude", this.latlng.lat);
       formData.append("longitude", this.latlng.lng);
-      formData.append("_method", "PUT");
+      formData.append("phone", this.data.phone);
+      formData.append("email", this.data.email);
+      formData.append("password", this.data.password);
+      formData.append("password_confirmation", this.data.password_confirmation);
 
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .post("customer/" + this.$route.params.id, formData, {
+          .post("customer", formData, {
             headers: { "Content-Type": "multipart/form-data" },
           })
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.data = {};
-                this.$store.commit("Toast_State", res.data.message);
                 this.loading = false;
+                this.$store.commit("Toast_State", res.data.message);
                 this.$router.push({
                   name: "Customer",
                 });
-                // this.reset();
               }, 300);
             }
           })
@@ -500,12 +307,25 @@ export default {
       this.latlng.lat = evt.latLng.lat();
       this.latlng.lng = evt.latLng.lng();
       this.address = this.createNewAddressName();
-      this.data.latitude = this.center.lat;
-      this.data.longitude = this.center.lng;
+      console.log(this.latlng);
+      //   this.customer_edit.latitude = this.center.lat;
+      //   this.customer_edit.longitude = this.center.lng;
     },
     setPlace(place) {
       this.currentPlace = place;
       this.placeMarker();
+    },
+    addMarker() {
+      if (this.currentPlace) {
+        const marker = {
+          lat: this.currentPlace.geometry.location.lat(),
+          lng: this.currentPlace.geometry.location.lng(),
+        };
+        this.markers.push({ position: marker });
+        this.places.push(this.currentPlace);
+        this.latlng = marker;
+        this.currentPlace = null;
+      }
     },
     placeMarker() {
       this.markers = [];
@@ -569,6 +389,49 @@ export default {
         isCreate: this.isCreate,
       });
     },
+
+    getMarkers() {
+      // generating markers for site map
+      var markers = [];
+      // remove this after lat long received from api.
+      const tempLatLong = [
+        { lat: 18.1189434, lng: 102.290218 },
+        { lat: 18.1189434, lng: 102.240218 },
+        { lat: 18.1189434, lng: 102.230218 },
+        { lat: 18.1189434, lng: 102.220218 },
+        { lat: 18.1189434, lng: 102.210218 },
+        { lat: 18.1189434, lng: 102.200218 },
+        { lat: 18.1189434, lng: 102.190218 },
+        { lat: 18.1189434, lng: 102.180218 },
+      ];
+      for (let i = 0; i < tempLatLong.length; i++) {
+        markers.push({
+          position: tempLatLong[i],
+          title: "test title",
+          icon: this.getSiteIcon(1), // if you want to show different as per the condition.
+        });
+      }
+      return markers;
+    },
+    getSiteIcon(status) {
+      try {
+        switch (status) {
+          case 1:
+            return require("@coms/../../src/assets/pin.png");
+
+          case 2:
+            return require("@coms/../../src/assets/pin.png");
+
+          case 3:
+            return require("@coms/../../src/assets/pin.png");
+
+          default:
+            return require("@coms/../../src/assets/pin.png");
+        }
+      } catch (e) {
+        return null;
+      }
+    },
   },
   watch: {
     selectedDistrict: function () {
@@ -584,30 +447,13 @@ export default {
     "data.surname": function () {
       this.server_errors.surname = "";
     },
-    "data.house_number": function () {
-      this.server_errors.house_number = "";
-    },
-    "data.phone": function () {
-      this.server_errors.phone = "";
-      this.server_errors.email = "";
-    },
-    "data.email": function () {
-      this.server_errors.email = "";
-    },
-    "data.password": function () {
-      this.server_errors.password = "";
-    },
-    "data.password_confirmation": function () {
-      this.server_errors.password = "";
-    },
   },
   mounted() {
     this.geolocate();
   },
-
   created() {
     this.fetchAddress();
-    this.fetchData();
+    console.log(this.getMarkers());
   },
 };
 </script>
@@ -625,5 +471,16 @@ export default {
   font-size: 16px;
   background: #eee;
   border-radius: 2 px;
+}
+.iframe-container {
+  overflow: hidden;
+}
+.iframe-container iframe {
+  border: 0;
+  min-height: 720px;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
 }
 </style>

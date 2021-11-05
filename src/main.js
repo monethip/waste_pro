@@ -19,10 +19,8 @@ import Pagination from "@/plugins/pagination/pagination";
 // Google Map
 Vue.use(VueGoogleMaps, {
   load: {
-    // key: 'AIzaSyCgUsajH7cANXTJDpXJCT9x2n2Hj9kN0OE',
-    // key: 'AIzaSyDgBlbWTL1oWewA-0nH--M19Dadtzlq3ew',
-    // key: 'AIzaSyCgUsajH7cANXTJDpXJCT9x2n2Hj9kN0OE',
-    key: 'AIzaSyDLoUKYiwbjoybRZxuLf_uY022RQ6QakSk',
+    key: 'AIzaSyCgUsajH7cANXTJDpXJCT9x2n2Hj9kN0OE',
+    // key: 'AIzaSyDLoUKYiwbjoybRZxuLf_uY022RQ6QakSk',
     libraries: 'places', // This is required if you use the Autocomplete plugin
   }
 });

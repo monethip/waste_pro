@@ -96,6 +96,33 @@
             </v-list-item-content>
           </v-list-item>
         </v-list-group>
+        <!--Route plan-->
+        <v-list-group
+          :prepend-icon="'mdi-map'"
+          no-action
+          color="indigo darken-4"
+        >
+          <template v-slot:activator>
+            <v-list-item-content>
+              <v-list-item-title>Route Plan</v-list-item-title>
+            </v-list-item-content>
+          </template>
+          <v-list-item
+            exact
+            color="indigo darken-4"
+            v-for="(item, k) in routes"
+            :key="k"
+            :to="item.to"
+          >
+            <v-list-item-action>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title v-text="item.title" />
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-group>
+
         <!--Report groups-->
         <v-list-group
           :prepend-icon="'mdi-chart-bubble'"
@@ -150,6 +177,19 @@ export default {
           icon: "mdi-home-account",
           title: "ທີ່ຢູ່",
           to: "/village",
+        },
+      ],
+
+      routes: [
+        {
+          icon: "mdi-sitemap",
+          title: "Plan",
+          to: "/plan",
+        },
+        {
+          icon: "mdi-map-marker-path",
+          title: "Route",
+          to: "/route",
         },
       ],
 
