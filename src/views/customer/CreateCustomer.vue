@@ -22,7 +22,7 @@
                         @change="previewMultiImage"
                         class="file-input input-file-image"
                         type="file"
-                        name="resume"
+                        accept="image/*"
                         multiple
                       />
                       <span class="file-cta">

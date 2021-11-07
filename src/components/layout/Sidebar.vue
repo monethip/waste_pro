@@ -205,6 +205,11 @@ export default {
           to: "/user",
         },
         {
+          icon: "mdi-dump-truck",
+          title: "Drivers",
+          to: "/driver",
+        },
+        {
           icon: "mdi-account-group",
           title: "Customer",
           to: "/customer",

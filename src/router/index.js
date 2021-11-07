@@ -68,6 +68,15 @@ const routes = [
     }
   },
   {
+    path: '/driver',
+    name: 'Driver',
+    component: () => import('../views/driver/Driver.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
     path: '/role',
     name: 'Role',
     component: () => import('../views/roles/Role.vue'),
