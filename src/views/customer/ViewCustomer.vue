@@ -1,93 +1,85 @@
 <template>
   <v-container>
     <v-breadcrumbs large>
-      <v-btn text class="text-primary" @click="backPrevios()"
-        ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
+      <v-btn text class="text-primary" @click="backPrevios()">
+        <v-icon>mdi-chevron-left</v-icon></v-btn
       >
       ລາຍລະອຽດລູກຄ້າ</v-breadcrumbs
     >
     <v-card>
+      <div v-for="(item, index) in data.media" :key="index">
+        <v-img :src="item.thumb" alt="Image" height="500px" dark> </v-img>
+      </div>
+
       <v-card-text>
         <v-container>
           <v-row>
-            <v-col align="center" class="mt-5">
-              <v-avatar
-                v-for="(item, index) in data.media"
-                :key="index"
-                class="avatar rounded mr-6"
-                size="94px"
-              >
-                <img :src="item.thumb" alt="Image" />
-              </v-avatar>
-            </v-col>
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon color="indigo"> mdi-account-circle-outline </v-icon>
+              </v-list-item-icon>
+
+              <v-list-item-content>
+                <v-list-item-title
+                  >{{ data.name }} {{ data.surname }}</v-list-item-title
+                >
+                <v-list-item-subtitle>ຊື່ ແລະ ນາມສະກຸນ</v-list-item-subtitle>
+              </v-list-item-content>
+
+              <v-spacer></v-spacer>
+              <v-list-item-icon>
+                <v-icon class="mr-6" color="indigo">mdi-home</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title v-if="data.user">
+                  {{ data.house_number }}</v-list-item-title
+                >
+                <v-list-item-subtitle>ເຮືອນເລກທີ</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+            <v-divider inset></v-divider>
           </v-row>
           <v-row>
-            <v-col cols="6">
-              <p class="text-h6">
-                ຊື່ລູກຄ້າ:
-                {{ data.name }}
-              </p>
-            </v-col>
-            <v-col cols="6">
-              <p class="text-h6">
-                ນາມສະກຸນ:
-                {{ data.surname }}
-              </p>
-            </v-col>
-            <v-col cols="4">
-              <p class="text-h6">
-                ເຮືອນເລກທີ:
-                {{ data.house_number }}
-              </p>
-            </v-col>
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon color="indigo"> mdi-phone </v-icon>
+              </v-list-item-icon>
 
-            <v-col cols="4">
-              <p class="text-h6" v-if="data.user">
-                ເບີໂທ:
-                {{ data.user.phone }}
-              </p>
-            </v-col>
+              <v-list-item-content>
+                <v-list-item-title v-if="data.user">
+                  {{ data.user.phone }}</v-list-item-title
+                >
+                <v-list-item-subtitle>ເບີໂທ</v-list-item-subtitle>
+              </v-list-item-content>
+              <v-spacer></v-spacer>
+              <v-list-item-icon>
+                <v-icon class="mr-6" color="indigo">mdi-email</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title v-if="data.user">
+                  {{ data.user.phone }}</v-list-item-title
+                >
+                <v-list-item-subtitle>Email</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+            <v-divider inset></v-divider>
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon color="indigo"> mdi-map-marker </v-icon>
+              </v-list-item-icon>
 
-            <v-col cols="4">
-              <p class="text-h6" v-if="data.user">
-                Email:
-                {{ data.user.email }}
-              </p>
-            </v-col>
-            <v-col cols="4">
-              <v-autocomplete
-                required
-                disabled
-                :items="districts"
-                v-model="selectedDistrict"
-                item-text="name"
-                item-value="id"
-                label="ເມືອງ"
-              ></v-autocomplete>
-            </v-col>
+              <v-list-item-content>
+                <v-list-item-title
+                  v-for="dist in data.customer_village_details"
+                  :key="dist.id"
+                  ><span>{{ dist.name }}</span></v-list-item-title
+                >
+                <v-list-item-subtitle>Orlando, FL 79938</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </v-row>
 
-            <v-col cols="4">
-              <v-autocomplete
-                :items="villages"
-                v-model="data.village_id"
-                item-text="name"
-                item-value="id"
-                label="ບ້ານ"
-                disabled
-              ></v-autocomplete>
-            </v-col>
-            <v-col cols="4">
-              <v-select
-                disabled
-                v-model="selectedVillageDetail"
-                :items="village_details"
-                item-text="name"
-                item-value="id"
-                label="ລາຍລະອຽດທີ່ຢູ່"
-                multiple
-              ></v-select>
-            </v-col>
-
+          <v-row>
             <v-col cols="12" class="mb-4">
               <GmapMap
                 :center="latlng"
@@ -226,134 +218,56 @@ export default {
         });
     },
 
-    fetchAddress() {
-      this.$axios
-        .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.address = res.data.data;
-              this.address.map((item) => {
-                this.districts = item.districts;
-                this.selectedDistrict = this.districts[0].id;
-              });
-              this.fetchVillage();
-            }, 300);
-          }
-        })
-        .catch(() => {});
-    },
+    // fetchAddress() {
+    //   this.$axios
+    //     .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
+    //     .then((res) => {
+    //       if (res.data.code == 200) {
+    //         setTimeout(() => {
+    //           this.address = res.data.data;
+    //           this.address.map((item) => {
+    //             this.districts = item.districts;
+    //             this.selectedDistrict = this.districts[0].id;
+    //           });
+    //           this.fetchVillage();
+    //         }, 300);
+    //       }
+    //     })
+    //     .catch(() => {});
+    // },
 
-    fetchVillage() {
-      this.$axios
-        .get("info/district/" + this.selectedDistrict + "/village")
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.villages = res.data.data;
-              this.selectedVillage = this.villages[0].id;
-              this.fetchVillageDetail();
-            }, 300);
-          }
-        })
-        .catch(() => {});
-    },
-    fetchVillageDetail() {
-      this.$axios
-        .get("info/village/" + this.selectedVillage + "/village-detail")
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.village_details = res.data.data;
-            }, 300);
-          }
-        })
-        .catch(() => {});
-    },
+    // fetchVillage() {
+    //   this.$axios
+    //     .get("info/district/" + this.selectedDistrict + "/village")
+    //     .then((res) => {
+    //       if (res.data.code == 200) {
+    //         setTimeout(() => {
+    //           this.villages = res.data.data;
+    //           this.selectedVillage = this.villages[0].id;
+    //           this.fetchVillageDetail();
+    //         }, 300);
+    //       }
+    //     })
+    //     .catch(() => {});
+    // },
+    // fetchVillageDetail() {
+    //   this.$axios
+    //     .get("info/village/" + this.selectedVillage + "/village-detail")
+    //     .then((res) => {
+    //       if (res.data.code == 200) {
+    //         setTimeout(() => {
+    //           this.village_details = res.data.data;
+    //         }, 300);
+    //       }
+    //     })
+    //     .catch(() => {});
+    // },
 
     backPrevios() {
       this.$router.go(-1);
     },
-    RemoveItem(item) {
-      this.preview_list.splice(this.preview_list.indexOf(item), 1);
-    },
-
-    previewMultiImage: function (event) {
-      console.log(this.image_list);
-      let input = event.target;
-      let count = input.files.length;
-      let index = 0;
-      if (input.files) {
-        while (count--) {
-          let reader = new FileReader();
-          reader.onload = (e) => {
-            this.preview_list.push(e.target.result);
-          };
-          this.image_list.push(input.files[index]);
-          reader.readAsDataURL(input.files[index]);
-          index++;
-        }
-      }
-    },
-
-    UpdateData() {
-      let formData = new FormData();
-      this.image_list.map((item) => {
-        formData.append("images[]", item);
-      });
-      this.selectedVillageDetail.map((item) => {
-        formData.append("vilage_details[]", item);
-      });
-      formData.append("name", this.data.name);
-      formData.append("surname", this.data.surname);
-      formData.append("village_id", this.selectedVillage);
-      formData.append("house_number", this.data.house_number);
-      formData.append("phone", this.data.user.phone);
-      formData.append("email", this.data.user.email);
-      formData.append("latitude", this.latlng.lat);
-      formData.append("longitude", this.latlng.lng);
-      formData.append("_method", "PUT");
-
-      if (this.$refs.form.validate() == true) {
-        this.loading = true;
-        this.$axios
-          .post("customer/" + this.$route.params.id, formData, {
-            headers: { "Content-Type": "multipart/form-data" },
-          })
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.data = {};
-                this.$store.commit("Toast_State", res.data.message);
-                this.loading = false;
-                this.$router.push({
-                  name: "Customer",
-                });
-                // this.reset();
-              }, 300);
-            }
-          })
-          .catch((error) => {
-            if (error.response.status == 422) {
-              var obj = error.response.data.errors;
-              for (let [key, customer] of Object.entries(obj)) {
-                this.server_errors[key] = customer[0];
-              }
-            }
-            this.loading = false;
-            this.fetchData();
-            this.$store.commit("Toast_State", this.toast_error);
-          });
-      }
-    },
 
     //Set Googlemap Api
-    createNewAddressName() {
-      const CUSTOMIZE = "#CUSTOM ADDRESS:";
-      return this.isCreate
-        ? this.currentAddress
-        : `${CUSTOMIZE} ${this.latlng.lat}, ${this.latlng.lng}`;
-    },
     onLocation(evt) {
       this.latlng.lat = evt.latLng.lat();
       this.latlng.lng = evt.latLng.lng();
@@ -375,14 +289,13 @@ export default {
         };
         this.markers.push({ position: marker });
         this.latlng = marker;
-        this.animateMarker();
       } else {
         const marker = {
-          lat: this.latlng.lat,
-          lng: this.latlng.lng,
+          lat: this.data.latitude,
+          lng: this.data.longitude,
         };
         this.markers.push({ position: marker });
-        this.animateMarker();
+        console.log(this.markers);
       }
       // set address
       if (this.$refs.searchInput) {
@@ -390,20 +303,8 @@ export default {
       } else {
         // this.address = this.currentPlace.formatted_address;
       }
-      this.onDataChange();
     },
-    animateMarker() {
-      this.$nextTick(() => {
-        // const obj = this.$refs.markers[0].$markerObject;
-        // if (obj) {
-        //     obj.setAnimation(1);
-        //     clearTimeout(this.timer);
-        //     this.timer = setTimeout(() => {
-        //         obj.setAnimation(null);
-        //     }, 800);
-        // }
-      });
-    },
+
     geolocate() {
       navigator.geolocation.getCurrentPosition((position) => {
         this.latlng = {
@@ -413,20 +314,7 @@ export default {
         this.placeMarker();
       });
     },
-    onDataChange() {
-      this.$emit("onDataChange", {
-        address: this.address,
-        position: this.latlng,
-      });
-      // console.log(this.center);
-    },
-    onSave() {
-      this.$emit("onSave", {
-        address: this.address || this.currentAddress || "Unnamed Location",
-        position: this.latlng,
-        isCreate: this.isCreate,
-      });
-    },
+
     editPage(id) {
       this.$router.push({
         name: "EditCustomer",
@@ -447,7 +335,7 @@ export default {
   },
 
   created() {
-    this.fetchAddress();
+    // this.fetchAddress();
     this.fetchData();
   },
 };
