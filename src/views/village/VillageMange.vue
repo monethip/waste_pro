@@ -31,9 +31,31 @@
           dense
         ></v-text-field>
       </v-card-title>
-      <v-data-table :headers="headers" :items="villages" :search="search"
-          :disable-pagination="true"
-            hide-default-footer>
+      <v-data-table
+        :headers="headers"
+        :items="villages"
+        :search="search"
+        :disable-pagination="true"
+        hide-default-footer
+      >
+
+        <template v-slot:[`item.variation`]="{ item }">
+          <v-icon
+            medium
+            class="mr-2"
+            color="green"
+            @click="openModalVariation(item)"
+          >
+            mdi-plus
+          </v-icon>
+           <v-icon small class="mr-2" color="blue darken-4" @click="openModalUpdateVariation(item)">
+            mdi-pencil
+          </v-icon>
+          <v-icon small class="mr-2" color="red" @click="openModaldeleteVariation(item)">
+            mdi-key-remove
+          </v-icon>
+        </template>
+
         <template v-slot:[`item.actions`]="{ item }">
           <v-icon small color="green" class="mr-2" @click="OpenModalEdit(item)">
             mdi-account-edit
@@ -116,7 +138,6 @@
     </ModalAdd>
 
     <!--Edit Modal-->
-
     <ModalEdit>
       <template @close="close">
         <v-card>
@@ -136,6 +157,9 @@
                       item-value="id"
                       label="District *"
                     ></v-autocomplete>
+                    <p class="errors">
+                      {{ server_errors.district_id }}
+                    </p>
                   </v-col>
                 </v-row>
                 <v-row>
@@ -143,8 +167,7 @@
                     <v-text-field
                       v-model="update_village.name"
                       label="village"
-                      item-text="name"
-                      item-value="id"
+                      required
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -181,13 +204,80 @@
             text
             :loading="loading"
             :disabled="loading"
-           
+            @click="DeleteItemConfirm"
             >OK</v-btn
           >
           <v-spacer></v-spacer>
         </v-card-actions>
       </template>
     </ModalDelete>
+
+    <!--Add Variation -->
+    <v-dialog v-model="variationDialog" max-width="720px">
+      <v-card>
+        <v-card-title>
+          <span class="text-h5">Add Village Variation</span>
+          <v-spacer></v-spacer>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-form ref="form" lazy-validation>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                    v-model="update_village.name" 
+                    label="village"
+                    required
+                    readonly
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-select
+                    required
+                    v-model="SelectedVillageVariation"
+                    :items="variation"
+                    item-text="name"
+                    item-value="id"
+                    label="variation name*"
+                  ></v-select>
+                  <p class="errors">
+                    {{ errormsg }}
+                  </p>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                    v-model="number"
+                    label="number*"
+                    required
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-form>
+          </v-container>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="variationDialog = false">
+              Close
+            </v-btn>
+            <v-btn
+              color="blue darken-1"
+              text
+              :loading="loading"
+              :disabled="loading"
+              @click="AddVariation"
+            >
+              Add
+            </v-btn>
+          </v-card-actions>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
+
   </v-container>
 </template>
 
@@ -197,33 +287,33 @@ export default {
   data() {
     return {
       loading: false,
-      getAddress: [],
       districts: [],
       selectedDistrict: "",
+      selectedVillage: "",
       listVillage: [],
-      address: [],
 
-      //test
-      test: [],
-      test2: [],
+      SelectedVillageVariation: '',
+
+      //
+      variation: [],
+      edit_villagevariation: {},
+      variationDialog: false,
 
       //getlistofdistrict
       getVillage: [],
       villages: [],
       addvillage: {},
 
-      getDistricts: [],
-
       update_village: {},
       search: "",
-           //Pagination
+
+      //Pagination
       offset: 12,
       pagination: {},
       per_page: 15,
-      oldVal: "",
-      server_errors:{
 
-      },
+      oldVal: "",
+      server_errors: {},
       rulesDistrict: [(v) => !!v || "District is required"],
       rulePermission: [(v) => !!v || "Permission is required"],
 
@@ -240,7 +330,8 @@ export default {
           value: "name",
           sortable: false,
         },
-        { text: "ແກ້ໄຂ/ລຶບ", value: "actions", sortable: false },
+        { text: "Add Variation ", value: "variation", sortable: false },
+        { text: "", value: "actions", sortable: false },
       ],
     };
   },
@@ -253,6 +344,37 @@ export default {
       this.$store.commit("modalAdd_State", true);
     },
 
+    closeDelete() {
+      this.$store.commit("modalDelete_State", false);
+    },
+
+    deleteItem(id) {
+      this.village_id = id;
+      this.$store.commit("modalDelete_State", true);
+    },
+    DeleteItemConfirm() {
+      this.loading = true;
+      this.$axios
+        .delete("address/village/" + this.village_id)
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.loading = false;
+              this.toast.msg = res.data.message;
+              this.$store.commi("Toast_State", this.toast);
+              this.$store.commit("modalDelete_State", false);
+              this.fetchData();
+            }, 300);
+          }
+        })
+        .catch(() => {
+          this.fetchData();
+          this.$store.commit("Toast_State", this.toast_error);
+          this.$store.commit("modalDelete_State", false);
+          this.loading = false;
+        });
+    },
+
     reset() {
       this.$refs.form.reset();
     },
@@ -262,17 +384,20 @@ export default {
       this.$store.commit("modalEdit_State", true);
     },
 
-    UpdateItem() {
+    updateItem() {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
-        this.$admin
-          .put("address/village/" + this.update_village.id, this.update_village)
+        this.$axios
+          .put("address/village/" + this.update_village.id, {
+            name: this.update_village.name,
+            district_id: this.selectedDistrict,
+          })
           .then((res) => {
             if (res.data.success == true) {
               setTimeout(() => {
                 this.loading = false;
                 this.CloseModalEdit();
-                this.village_edit = {};
+                this.update_village = {};
                 this.reset();
                 this.fetchData();
                 this.$store.commit("Toast_State", this.toast);
@@ -282,11 +407,11 @@ export default {
           .catch((error) => {
             this.loading = false;
             this.$store.commit("Toast_State", this.toast_error);
-            this.fetchData();
+            this.fetchVillage();
             if (error.response.status == 422) {
               var obj = error.response.data.errors;
-              for (let [key, village] of Object.entries(obj)) {
-                this.server_errors[key] = village[0];
+              for (let [key, villages] of Object.entries(obj)) {
+                this.server_errors[key] = villages[0];
               }
             }
           });
@@ -294,7 +419,7 @@ export default {
     },
 
     fetchData() {
-       this.$store.commit("Loading_State", true);
+      this.$store.commit("Loading_State", true);
       this.$axios
         .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
         .then((res) => {
@@ -304,7 +429,7 @@ export default {
               this.getVillage.map((item) => {
                 this.districts = item.districts;
                 this.selectedDistrict = this.districts[0].id;
-              this.$store.commit("Loading_State", false);
+                this.$store.commit("Loading_State", false);
                 this.fetchVillage();
               });
             }, 300);
@@ -312,25 +437,92 @@ export default {
         })
         .catch(() => {});
     },
+
     fetchVillage() {
-       this.$store.commit("Loading_State", true);
-       console.log(this.search)
+      this.$store.commit("Loading_State", true);
+      console.log(this.search);
       this.$axios
-        .get("info/district/" + this.selectedDistrict + "/village",{          params: {
+        .get("info/district/" + this.selectedDistrict + "/village", {
+          params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
             filter: this.search,
-          },})
+          },
+        })
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.villages = res.data.data.data;
               this.pagination = res.data.data.pagination;
-               this.$store.commit("Loading_State", false);
+              this.$store.commit("Loading_State", false);
             }, 300);
           }
         })
         .catch(() => {});
+    },
+
+    fetchVariation() {
+      var variation = [];
+      this.$axios
+        .get("info/village-variation")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.loading = false;
+              this.variation = res.data.data;
+              this.edit_villagevariation.variation.map((item) => {
+                variation.push(item.name);
+              });
+            }, 300);
+          }
+        })
+        .catch((error) => {
+          this.loading = false;
+          this.fetchData();
+          if (error.response.status == 422) {
+            var obj = error.response.data.errors;
+            for (let [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
+            }
+          }
+        });
+    },
+
+  AddVariation() {
+      if (this.$refs.form.validate() == true) {
+        this.loading = true;
+        this.$axios
+          .post("address/village/"+ this.update_village.id + "/village-detail",{
+            name: this.number,
+            village_variation_id: this.SelectedVillageVariation
+          })
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.loading = false;
+                this.fetchData();
+                this.reset();
+                this.variationDialog = false;
+                this.$store.commit("Toast_State", this.toast);
+              }, 300);
+            }
+          })
+          .catch((error) => {
+            if (error.response.data.code == 422) {
+              this.errormsg = error.response.data.message;
+            }
+            this.$store.commit("Toast_State", this.toast_error);
+            this.fetchData();
+          });
+        this.loading = false;
+      }
+    },
+
+    openModalVariation(item) {
+      this.edit_villagevariation = item;
+      this.update_village = item;
+      this.fetchVariation();
+      this.variationDialog = true;
     },
 
     closeUpdateVillage() {
@@ -339,6 +531,7 @@ export default {
         this.fetchData(),
         this.$store.commit("modalEdit_State", false);
     },
+
     closeAddModal() {
       this.$store.commit("modalAdd_State", false);
     },
@@ -347,9 +540,10 @@ export default {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .post("address/village", 
-          {name:this.ban,
-          district_id:this.selectedDistrict})
+          .post("address/village", {
+            name: this.ban,
+            district_id: this.selectedDistrict,
+          })
 
           .then((res) => {
             if (res.data.code == 200) {
@@ -380,9 +574,10 @@ export default {
     selectedDistrict: function () {
       this.fetchVillage();
     },
-     search: function (value) {
+
+    search: function (value) {
       if (value == "") {
-        this.fetchData();
+        this.fetchVillage();
       }
     },
   },
