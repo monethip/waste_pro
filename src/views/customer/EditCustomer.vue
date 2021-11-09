@@ -353,6 +353,9 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data;
+              res.data.data.customer_village_details.map((item) => {
+                this.selectedVillageDetail.push(item.customer_id);
+              });
             }, 300);
           }
         })
@@ -444,7 +447,7 @@ export default {
         formData.append("images[]", item);
       });
       this.selectedVillageDetail.map((item) => {
-        formData.append("vilage_details[]", item);
+        formData.append("village_details[]", item);
       });
       formData.append("name", this.data.name);
       formData.append("surname", this.data.surname);

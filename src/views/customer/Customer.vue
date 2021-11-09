@@ -53,23 +53,15 @@
                     </v-avatar>
                   </template>
                   <!--Role -->
-                  <template v-slot:item.roles="{ item }">
+                  <template v-slot:item.status="{ item }">
                     <div>
                       <span v-for="(role, index) in item.roles" :key="index">
                         {{ role.name }},
                       </span>
                     </div>
-                  </template>
-                  <!--Permission -->
-                  <template v-slot:item.permissions="{ item }">
-                    <div>
-                      <span
-                        v-for="(ps, index) in item.permissions"
-                        :key="index"
-                      >
-                        <span>{{ ps.name }}, </span>
-                      </span>
-                    </div>
+                    <v-chip :color="statusColor(item.status)">{{
+                      item.status
+                    }}</v-chip>
                   </template>
 
                   <template v-slot:item.actions="{ item }">
@@ -144,6 +136,7 @@ export default {
         { text: "Email", value: "user.email", sortable: false },
         { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
         { text: "Image", value: "media" },
+        { text: "ສະຖານະ", value: "status" },
         { text: "Lat", value: "latitude", sortable: false },
         { text: "Lng", value: "longitude", sortable: false },
         { text: "", value: "actions", sortable: false },
@@ -241,6 +234,11 @@ export default {
     },
     Search() {
       GetOldValueOnInput(this);
+    },
+    statusColor(value) {
+      if (value == "active") return "success";
+      else if (value == "inactive") return "error";
+      else return "info";
     },
   },
   watch: {
