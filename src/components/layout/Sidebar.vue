@@ -169,6 +169,16 @@ export default {
           title: "Customer",
           to: "/customer",
         },
+        {
+          icon: "mdi-calendar-month-outline",
+          title: "Package",
+          to: "/package",
+        },
+        {
+          icon: "mdi-home-account",
+          title: "Address",
+          to: "/village-variation",
+        },
       ],
       reports: [
         {
