@@ -1,5 +1,27 @@
 <template>
   <v-container>
+    <v-row>
+      <v-col cols="12" class="mb-4">
+        <GmapMap
+          :center="latlng"
+          :zoom="16"
+          style="width: 100%; height: 450px"
+          :disableDefaultUI="true"
+        >
+          <GmapMarker
+            :key="index"
+            v-for="(m, index) in getMarkers()"
+            :position="m.position"
+            @click="latlng = m.position"
+            :draggable="true"
+            @dragend="onLocation"
+            :icon="markerOptions"
+            :animation="2"
+            ref="markers"
+          />
+        </GmapMap>
+      </v-col>
+    </v-row>
     <v-row class="mb-n6">
       <v-col>
         <v-btn class="btn-primary" @click="createPage()"
@@ -10,9 +32,9 @@
         <v-text-field
           outlined
           dense
-          clearables
+          clearable
           prepend-inner-icon="mdi-magnify"
-          label="Name"
+          label="ຊື່ລູກຄ້າ"
           type="text"
           v-model="search"
           @keyup.enter="Search()"
@@ -26,7 +48,7 @@
           <v-card-text>
             <v-data-table
               :headers="headers"
-              :items="data"
+              :items="customers"
               :search="search"
               :disable-pagination="true"
               hide-default-footer
@@ -80,60 +102,6 @@
       </v-card>
     </div>
 
-    <!-- Modal Add-->
-    <ModalAdd>
-      <template @close="close">
-        <v-card>
-          <v-card-title>
-            <span class="headline">Add Route Plan</span>
-          </v-card-title>
-          <v-card-text>
-            <v-container>
-              <v-form ref="form" lazy-validation>
-                <v-row>
-                  <v-col cols="12">
-                    <v-text-field
-                      label="Name *"
-                      required
-                      v-model="plan.name"
-                      :rules="nameRules"
-                    ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.name }}
-                    </p>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      label="ລາຍລະອຽດ "
-                      required
-                      v-model="plan.description"
-                      type="text"
-                      class="input-number"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-form>
-            </v-container>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeAddModal()">
-                Close
-              </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                :loading="loading"
-                :disabled="loading"
-                @click="AddItem()"
-              >
-                Save
-              </v-btn>
-            </v-card-actions>
-          </v-card-text>
-        </v-card>
-      </template>
-    </ModalAdd>
-
     <!--Delete Modal-->
     <ModalDelete>
       <template>
@@ -163,17 +131,6 @@ export default {
     return {
       tab: null,
       customers: [],
-      data: [
-        {
-          name: "Plan A",
-          village: "Hongkhar",
-          district: "Chanthabury",
-          description: "Form Chanthabury to Sykhodthabong",
-          customer: "200",
-          driver: "5",
-        },
-      ],
-      plan: {},
       loading: false,
       customerId: "",
       //Pagination
@@ -185,18 +142,13 @@ export default {
 
       headers: [
         { text: "ຊື່", value: "name" },
-        { text: "ບ້ານ", value: "village" },
-        { text: "ເມືອງ", value: "district" },
-        { text: "ລາຍລະອຽດ", value: "description" },
-        { text: "ຈຳນວນລູກຄ້າ", value: "customer", sortable: false },
-        { text: "ຈຳນວນລົດ", value: "driver", sortable: false },
+        { text: "ນາມສະກຸນ", value: "surname" },
+        { text: "Phone", value: "user.phone", sortable: false },
+        { text: "Email", value: "user.email", sortable: false },
+        { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
+        { text: "Image", value: "media" },
         { text: "", value: "actions", sortable: false },
       ],
-      nameRules: [
-        (v) => !!v || "Name is required",
-        (v) => (v && v.length >= 2) || "Name must be less than 2 characters",
-      ],
-      server_errors: {},
       toast: {
         value: true,
         color: "success",
@@ -206,6 +158,38 @@ export default {
         value: true,
         color: "error",
         msg: "Something when wrong!",
+      },
+
+      //Map
+      latlng: {
+        lat: 18.1189434,
+        lng: 102.290218,
+      },
+      markers: [],
+      places: [],
+      currentPlace: null,
+      markerOptions: {
+        // eslint-disable-next-line global-require
+        url: require("@coms/../../src/assets/pin1.svg"),
+        zoomControl: true,
+        mapTypeControl: false,
+        scaleControl: false,
+        streetViewControl: false,
+        rotateControl: false,
+        fullscreenControl: false,
+        disableDefaultUi: false,
+        size: {
+          width: 35,
+          height: 55,
+          f: "px",
+          b: "px",
+        },
+        scaledSize: {
+          width: 35,
+          height: 55,
+          f: "px",
+          b: "px",
+        },
       },
     };
   },
@@ -224,8 +208,8 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
-              //   this.customers = res.data.data.data;
-              //   this.pagination = res.data.data.pagination;
+              this.customers = res.data.data.data;
+              this.pagination = res.data.data.pagination;
             }, 300);
           }
         })
@@ -240,44 +224,6 @@ export default {
           }
         });
     },
-
-    openAddModal() {
-      this.$store.commit("modalAdd_State", true);
-    },
-    AddItem() {
-      if (this.$refs.form.validate() == true) {
-        this.loading = true;
-        this.$axios
-          .post("user-setting/user", this.plan)
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.loading = false;
-                this.closeAddModal();
-                this.user = {};
-                this.fetchData();
-                this.reset();
-                this.$store.commit("Toast_State", this.toast);
-              }, 300);
-            }
-          })
-          .catch((error) => {
-            this.loading = false;
-            this.$store.commit("Toast_State", this.toast_error);
-            this.fetchData();
-            if (error.response.status == 422) {
-              var obj = error.response.data.errors;
-              for (let [key, customer] of Object.entries(obj)) {
-                this.server_errors[key] = customer[0];
-              }
-            }
-          });
-      }
-    },
-    closeAddModal() {
-      this.$store.commit("modalAdd_State", false);
-    },
-
     closeDelete() {
       this.$store.commit("modalDelete_State", false);
     },
@@ -310,7 +256,7 @@ export default {
     },
     createPage() {
       this.$router.push({
-        name: "Export-Plan",
+        name: "CreateCustomer",
       });
     },
     editPage(id) {
@@ -329,6 +275,137 @@ export default {
     Search() {
       GetOldValueOnInput(this);
     },
+
+    //Google map
+
+    //Set Googlemap Api
+    createNewAddressName() {
+      const CUSTOMIZE = "#CUSTOM ADDRESS:";
+      return this.isCreate
+        ? this.currentAddress
+        : `${CUSTOMIZE} ${this.latlng.lat}, ${this.latlng.lng}`;
+    },
+    onLocation(evt) {
+      this.latlng.lat = evt.latLng.lat();
+      this.latlng.lng = evt.latLng.lng();
+      this.address = this.createNewAddressName();
+      console.log(this.latlng);
+      //   this.customer_edit.latitude = this.center.lat;
+      //   this.customer_edit.longitude = this.center.lng;
+    },
+    setPlace(place) {
+      this.currentPlace = place;
+      this.placeMarker();
+    },
+    addMarker() {
+      console.log("Heee");
+      if (this.currentPlace) {
+        const marker = {
+          lat: this.currentPlace.geometry.location.lat(),
+          lng: this.currentPlace.geometry.location.lng(),
+        };
+        this.markers.push({ position: marker });
+        this.places.push(this.currentPlace);
+        this.latlng = marker;
+        this.currentPlace = null;
+      }
+    },
+    placeMarker() {
+      this.markers = [];
+      this.places = [];
+      if (this.currentPlace) {
+        const marker = {
+          lat: this.currentPlace.geometry.location.lat(),
+          lng: this.currentPlace.geometry.location.lng(),
+        };
+        this.markers.push({ position: marker });
+        this.latlng = marker;
+        this.animateMarker();
+      } else {
+        const marker = {
+          lat: this.latlng.lat,
+          lng: this.latlng.lng,
+        };
+        this.markers.push({ position: marker });
+        this.animateMarker();
+      }
+      // set address
+      if (this.$refs.searchInput) {
+        this.address = this.$refs.searchInput.$el.value;
+      } else {
+        // this.address = this.currentPlace.formatted_address;
+      }
+      this.onDataChange();
+    },
+
+    geolocate() {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.latlng = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        this.placeMarker();
+      });
+    },
+    onDataChange() {
+      this.$emit("onDataChange", {
+        address: this.address,
+        position: this.latlng,
+      });
+      // console.log(this.center);
+    },
+
+    onSave() {
+      this.$emit("onSave", {
+        address: this.address || this.currentAddress || "Unnamed Location",
+        position: this.latlng,
+        isCreate: this.isCreate,
+      });
+    },
+
+    getMarkers() {
+      // generating markers for site map
+      var markers = [];
+      // remove this after lat long received from api.
+      const tempLatLong = [
+        { lat: 18.1189434, lng: 102.290218 },
+        { lat: 18.1189434, lng: 102.240218 },
+        { lat: 18.1189434, lng: 102.230218 },
+        { lat: 18.1189434, lng: 102.220218 },
+        { lat: 18.1189434, lng: 102.210218 },
+        { lat: 18.1189434, lng: 102.200218 },
+        { lat: 18.1189434, lng: 102.190218 },
+        { lat: 18.1189434, lng: 102.180218 },
+      ];
+
+      for (let i = 0; i < tempLatLong.length; i++) {
+        markers.push({
+          position: tempLatLong[i],
+          title: "test title",
+          icon: this.getSiteIcon(1), // if you want to show different as per the condition.
+        });
+      }
+      return markers;
+    },
+    getSiteIcon(status) {
+      try {
+        switch (status) {
+          case 1:
+            return require("@coms/../../src/assets/pin1.svg");
+
+          case 2:
+            return require("@coms/../../src/assets/pin2.svg");
+
+          case 3:
+            return require("@coms/../../src/assets/pin3.svg");
+
+          default:
+            return require("@coms/../../src/assets/pin1.svg");
+        }
+      } catch (e) {
+        return null;
+      }
+    },
   },
   watch: {
     search: function (value) {
@@ -337,8 +414,13 @@ export default {
       }
     },
   },
+  mounted() {
+    this.geolocate();
+  },
   created() {
     this.fetchData();
+    this.getMarkers();
+    console.log(this.getMarkers());
   },
 };
 </script>
