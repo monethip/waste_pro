@@ -38,7 +38,6 @@
         :disable-pagination="true"
         hide-default-footer
       >
-
         <template v-slot:[`item.variation`]="{ item }">
           <v-icon
             medium
@@ -48,10 +47,20 @@
           >
             mdi-plus
           </v-icon>
-           <v-icon small class="mr-2" color="blue darken-4" @click="openModalUpdateVariation(item)">
+          <v-icon
+            small
+            class="mr-2"
+            color="blue darken-4"
+            @click="openModalUpdateVariation(item)"
+          >
             mdi-pencil
           </v-icon>
-          <v-icon small class="mr-2" color="red" @click="openModaldeleteVariation(item)">
+          <v-icon
+            small
+            class="mr-2"
+            color="red"
+            @click="openModaldeleteVariation(item)"
+          >
             mdi-key-remove
           </v-icon>
         </template>
@@ -95,7 +104,7 @@
                       item-text="name"
                       item-value="id"
                       label="District *"
-                      :rulesDistrict="rulePermission"
+                      :rulesDistrict="rulesDistrict"
                     ></v-autocomplete>
                     <p class="errors">
                       {{ server_errors.district_id }}
@@ -109,10 +118,11 @@
                       label="village*"
                       required
                       prepend-inner-icon="mdi-home"
+                      :rules="nameRules"
                     ></v-text-field>
-                    <!-- <p class="errors">
+                    <p class="errors">
                       {{ server_errors.name }}
-                    </p> -->
+                    </p>
                   </v-col>
                 </v-row>
               </v-form>
@@ -156,9 +166,10 @@
                       item-text="name"
                       item-value="id"
                       label="District *"
+                      :rulesDistrict="rulesDistrict"
                     ></v-autocomplete>
                     <p class="errors">
-                      {{ server_errors.district_id }}
+                  {{ server_errors.district_id }}
                     </p>
                   </v-col>
                 </v-row>
@@ -168,7 +179,11 @@
                       v-model="update_village.name"
                       label="village"
                       required
+                      :rules="nameRules"
                     ></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.name }}
+                    </p>
                   </v-col>
                 </v-row>
               </v-form>
@@ -225,7 +240,7 @@
               <v-row>
                 <v-col>
                   <v-text-field
-                    v-model="update_village.name" 
+                    v-model="update_village.name"
                     label="village"
                     required
                     readonly
@@ -276,8 +291,6 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-
-
   </v-container>
 </template>
 
@@ -292,7 +305,7 @@ export default {
       selectedVillage: "",
       listVillage: [],
 
-      SelectedVillageVariation: '',
+      SelectedVillageVariation: "",
 
       //
       variation: [],
@@ -315,6 +328,8 @@ export default {
       oldVal: "",
       server_errors: {},
       rulesDistrict: [(v) => !!v || "District is required"],
+      //Validation
+      nameRules: [(v) => !!v || "Name is required"],
       rulePermission: [(v) => !!v || "Permission is required"],
 
       headers: [
@@ -488,14 +503,17 @@ export default {
         });
     },
 
-  AddVariation() {
+    AddVariation() {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .post("address/village/"+ this.update_village.id + "/village-detail",{
-            name: this.number,
-            village_variation_id: this.SelectedVillageVariation
-          })
+          .post(
+            "address/village/" + this.update_village.id + "/village-detail",
+            {
+              name: this.number,
+              village_variation_id: this.SelectedVillageVariation,
+            }
+          )
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {

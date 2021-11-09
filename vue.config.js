@@ -1,6 +1,4 @@
 const path = require('path');
-const deployPath = 'dist';
-const isProd = process.env.NODE_ENV === 'production';
 
 module.exports = {
   transpileDependencies: [
@@ -16,8 +14,5 @@ module.exports = {
         '@views': path.resolve(__dirname, 'src/views'),
       }
     }
-  },
-
-  publicPath: isProd ? '/generated' : '/',
-  outputDir: `${deployPath}/generated`,
+  }
 }

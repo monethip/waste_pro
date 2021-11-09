@@ -216,7 +216,7 @@
               <v-col cols="12">
                 <gmap-autocomplete
                   ref="searchInput"
-                  class="input text-field"
+                  class="input text-field map"
                   placeholder="ຄົ້ນຫາເເຜນທີ່..."
                   @place_changed="setPlace"
                   :options="{
@@ -353,6 +353,9 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data;
+              res.data.data.customer_village_details.map((item) => {
+                this.selectedVillageDetail.push(item.customer_id);
+              });
             }, 300);
           }
         })
@@ -444,7 +447,7 @@ export default {
         formData.append("images[]", item);
       });
       this.selectedVillageDetail.map((item) => {
-        formData.append("vilage_details[]", item);
+        formData.append("village_details[]", item);
       });
       formData.append("name", this.data.name);
       formData.append("surname", this.data.surname);
@@ -614,4 +617,16 @@ export default {
 
 <style lang="scss">
 @import "../../../public/scss/main.scss";
+.primary-color {
+  color: $primary-color;
+}
+.text-field {
+  border-color: $primary-color;
+  padding: 12px 8px 12px 8px;
+  width: 100%;
+  margin-bottom: 12px;
+  font-size: 16px;
+  background: #eee;
+  border-radius: 2 px;
+}
 </style>

@@ -27,20 +27,6 @@
           :disable-pagination="true"
           hide-default-footer
         >
-          <template v-slot:[`item.variation`]="{ item }">
-            <v-icon
-              medium
-              class="mr-2"
-              color="green"
-              @click="openModalVariation(item)"
-            >
-              mdi-plus
-            </v-icon>
-            <v-icon small class="mr-2" @click="openModalUpdateVariation(item)">
-              mdi-key-remove
-            </v-icon>
-          </template>
-
           <template v-slot:[`item.actions`]="{ item }">
             <v-icon
               small
@@ -83,7 +69,11 @@
                       v-model="addvillagevariation"
                       label="name*"
                       required
+                      :rules="nameRules"
                     ></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.name }}
+                    </p>
                   </v-col>
                 </v-row>
               </v-form>
@@ -168,74 +158,6 @@
         </v-card-actions>
       </template>
     </ModalDelete>
-
-    <!--Add Variation -->
-    <v-dialog v-model="variationDialog" max-width="720px">
-      <v-card>
-        <v-card-title>
-          <span class="text-h5">Add detail</span>
-          <v-spacer></v-spacer>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-form ref="form" lazy-validation>
-              <v-row>
-                <v-col>
-                  <v-text-field
-                    v-model="editVillagevariation.name"
-                    label="name*"
-                    required
-                    readonly
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-              <!-- <v-row>
-                <v-col>
-                  <v-select
-                    required
-                    v-model="edit_villagevariation.variation"
-                    :items="variation"
-                    item-text="name"
-                    item-value="id"
-                    label="variation name*"
-                  ></v-select>
-                  <p class="errors">
-                    {{ errormsg }}
-                  </p>
-                </v-col>
-              </v-row> -->
-              <v-row>
-                <v-col>
-                  <v-text-field
-                    v-model="addvillagedetail"
-                    label="number*"
-                    required
-                  ></v-text-field>
-                  <p class="errors">
-                    {{ errormsg }}
-                  </p>
-                </v-col>
-              </v-row>
-            </v-form>
-          </v-container>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="variationDialog = false">
-              Close
-            </v-btn>
-            <v-btn
-              color="blue darken-1"
-              text
-              :loading="loading"
-              :disabled="loading"
-              @click="AddVariation"
-            >
-              Add
-            </v-btn>
-          </v-card-actions>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
   </v-container>
 </template>
 
@@ -252,8 +174,7 @@ export default {
 
       VillageVariation_id: "",
       editVillagevariation: {},
-      //number: '',
-      village_variation_id: '',
+      village_variation_id: "",
 
       //
       variation: [],
@@ -265,9 +186,12 @@ export default {
       pagination: {},
       per_page: 15,
 
+      //validation
+      server_errors: {},
+      nameRules: [(v) => !!v || "Name is required"],
+
       headers: [
         { text: "name", value: "name" },
-        { text: "Add Variation ", value: "variation", sortable: false },
         { text: "actions", value: "actions" },
       ],
 
@@ -374,39 +298,10 @@ export default {
           }
         });
     },
-// .post("user-setting/user/" + this.userID + "/give-role", {
-//             roles: this.edit_user.roles,
-//           })
-    AddVariation() {
-      if (this.$refs.form.validate() == true) {
-        this.loading = true;
-        this.$axios
-          .post("address/village/"+ this.editVillagevariation.id + "/village-detail", this.addvillagedetail
-          )
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.loading = false;
-                this.fetchData();
-                this.reset();
-                this.$store.commit("Toast_State", this.toast);
-              }, 300);
-            }
-          })
-          .catch((error) => {
-            if (error.response.data.code == 422) {
-              this.errormsg = error.response.data.message;
-            }
-            this.$store.commit("Toast_State", this.toast_error);
-            this.fetchData();
-          });
-        this.loading = false;
-      }
-    },
 
     openModalVariation(item) {
       //this.village_variation_id = item.id
-     // this.edit_villagevariation = item;
+      // this.edit_villagevariation = item;
       this.editVillagevariation = item;
       this.fetchVariation();
       this.variationDialog = true;

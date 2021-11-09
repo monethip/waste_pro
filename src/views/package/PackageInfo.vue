@@ -69,7 +69,11 @@
                       v-model="addpackage.size"
                       label="size*"
                       required
+                      :rules="sizeRules"
                     ></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.size }}
+                    </p>
                   </v-col>
                 </v-row>
                 <v-row>
@@ -80,7 +84,11 @@
                       type="number"
                       class="input-number"
                       required
+                      :rules="bagRules"
                     ></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.bag }}
+                    </p>
                   </v-col>
                 </v-row>
               </v-form>
@@ -192,10 +200,19 @@ export default {
       PackageSize_id: "",
       editPackageSize: {},
 
+      server_errors: {},
+
       //pagination
       offset: 12,
       pagination: {},
       per_page: 15,
+
+      //validation
+      sizeRules: [(v) => !!v || "Size is required"],
+      bagRules: [
+        (v) => !!v || "bag is required",
+        (v) => /.+@.+\..+/.test(v) || "bag must be number",
+      ],
 
       headers: [
         { text: "Size", value: "size" },
@@ -235,7 +252,7 @@ export default {
         this.fetchData(),
         this.$store.commit("modalEdit_State", false);
     },
-    
+
     OpenModalEdit(item) {
       this.editPackageSize = item;
       this.$store.commit("modalEdit_State", true);
@@ -291,7 +308,7 @@ export default {
               this.loading = false;
               this.closeDelete();
               this.$store.commi("Toast_State", this.toast);
-             // this.$store.commit("modalDelete_State", false);
+              // this.$store.commit("modalDelete_State", false);
               this.fetchData();
             }, 300);
           }
