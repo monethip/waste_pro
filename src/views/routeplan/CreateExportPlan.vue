@@ -29,28 +29,6 @@
         </v-btn>
       </v-col>
       <v-col>
-        <v-autocomplete
-          outlined
-          dense
-          :items="districts"
-          v-model="selectedDistrict"
-          item-text="name"
-          item-value="id"
-          label="ເມືອງ"
-        ></v-autocomplete>
-      </v-col>
-      <v-col>
-        <v-autocomplete
-          outlined
-          dense
-          :items="villages"
-          v-model="selectedVillage"
-          item-text="name"
-          item-value="id"
-          label="ບ້ານ"
-        ></v-autocomplete>
-      </v-col>
-      <v-col>
         <v-text-field
           outlined
           dense
@@ -89,6 +67,10 @@
                 <v-icon small class="mr-2" @click="viewPage(item.id)">
                   mdi-eye
                 </v-icon>
+                <v-icon small class="mr-2" @click="editPage(item.id)">
+                  mdi-pencil
+                </v-icon>
+                <v-icon small @click="deleteItem(item.id)"> mdi-delete </v-icon>
               </template> </v-data-table
             ><br />
             <template>
@@ -103,6 +85,25 @@
         </v-card>
       </v-card>
     </div>
+
+    <!--Delete Modal-->
+    <ModalDelete>
+      <template>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            :loading="loading"
+            :disabled="loading"
+            @click="deleteItemConfirm"
+            >OK</v-btn
+          >
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </template>
+    </ModalDelete>
   </v-container>
 </template>
 
@@ -122,11 +123,6 @@ export default {
       per_page: 15,
       search: "",
       oldVal: "",
-      //Filter
-      districts: [],
-      selectedDistrict: "",
-      villages: [],
-      selectedVillage: "",
 
       headers: [
         { text: "ຊື່", value: "name" },
@@ -218,36 +214,36 @@ export default {
           }
         });
     },
+    closeDelete() {
+      this.$store.commit("modalDelete_State", false);
+    },
+    deleteItem(id) {
+      this.customerId = id;
+      this.$store.commit("modalDelete_State", true);
+    },
 
-    fetchAddress() {
+    deleteItemConfirm() {
+      this.loading = true;
       this.$axios
-        .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
+        .delete("customer/" + this.customerId)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.address = res.data.data;
-              this.address.map((item) => {
-                this.districts = item.districts;
-              });
+              this.loading = false;
+              this.toast.msg = res.data.message;
+              this.$store.commit("Toast_State", this.toast);
+              this.$store.commit("modalDelete_State", false);
+              this.fetchData();
             }, 300);
           }
         })
-        .catch(() => {});
+        .catch(() => {
+          this.fetchData();
+          this.$store.commit("Toast_State", this.toast_error);
+          this.$store.commit("modalDelete_State", false);
+          this.loading = false;
+        });
     },
-
-    fetchVillage() {
-      this.$axios
-        .get("info/district/" + this.selectedDistrict + "/village")
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.villages = res.data.data;
-            }, 300);
-          }
-        })
-        .catch(() => {});
-    },
-
     createPage() {
       this.$router.push({
         name: "CreateCustomer",
@@ -461,12 +457,6 @@ export default {
         this.fetchData();
       }
     },
-    selectedVillage: function () {
-      this.fetchData();
-    },
-    selectedDistrict: function () {
-      this.fetchVillage();
-    },
   },
   mounted() {
     this.geolocate();
@@ -474,7 +464,7 @@ export default {
   created() {
     this.fetchData();
     this.getMarkers();
-    this.fetchAddress();
+    console.log("Mark" + this.getMarkers());
   },
 };
 </script>

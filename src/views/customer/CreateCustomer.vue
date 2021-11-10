@@ -130,7 +130,7 @@
                   {{ server_errors.email }}
                 </p>
               </v-col>
-              <v-col cols="4">
+              <v-col cols="6">
                 <v-autocomplete
                   required
                   :items="districts"
@@ -144,6 +144,47 @@
                   {{ server_errors.district_id }}
                 </p>
               </v-col>
+              <v-col cols="6">
+                <v-autocomplete
+                  required
+                  :items="villages"
+                  v-model="selectedVillage"
+                  item-text="name"
+                  item-value="id"
+                  label="Village *"
+                  :rules="ruleVillage"
+                ></v-autocomplete>
+                <p class="errors">
+                  {{ server_errors.village_id }}
+                </p>
+              </v-col>
+              <v-col cols="6">
+                <v-select
+                  v-model="village_variation_id"
+                  :items="village_details"
+                  item-text="name"
+                  item-value="id"
+                  label="ກຸ່ມ / ຄຸ້ມ"
+                ></v-select>
+                <p class="errors">
+                  {{ server_errors.village_details }}
+                </p>
+              </v-col>
+
+              <v-col cols="6">
+                <v-select
+                  v-model="selectedVillageDetail"
+                  :items="units"
+                  item-text="name"
+                  item-value="id"
+                  label="ຮ່ອມ / ໜ່ວຍ"
+                  multiple
+                ></v-select>
+                <p class="errors">
+                  {{ server_errors.village_details }}
+                </p>
+              </v-col>
+              <!--
               <v-col cols="4">
                 <v-autocomplete
                   required
@@ -172,6 +213,7 @@
                   {{ errormsg }}
                 </p>
               </v-col>
+              -->
               <v-col cols="6">
                 <v-text-field
                   label="Password *"
@@ -286,7 +328,9 @@ export default {
       villages: [],
       selectedVillage: "",
       village_details: [],
+      village_variation_id: "",
       selectedVillageDetail: [],
+      units: [],
 
       address: [],
       errormsg: "",
@@ -413,6 +457,9 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.village_details = res.data.data;
+              res.data.data.map((item) => {
+                this.units = item.village_details;
+              });
             }, 300);
           }
         })

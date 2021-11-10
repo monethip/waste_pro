@@ -45,7 +45,6 @@ export default {
   props: ["pagination", "offset"],
   methods: {
     isCurrentPage(page) {
-      console.log(page);
       return this.pagination.current_page === page;
     },
     changePage(page) {
@@ -58,7 +57,6 @@ export default {
   },
   computed: {
     pages() {
-      console.log(this.pagination);
       let pages = [];
       let from = this.pagination.current_page - Math.floor(this.offset / 2);
 
