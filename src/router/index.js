@@ -17,17 +17,9 @@ const routes = [
     }
   },
   {
-    path: '/package',
-    name: 'Package',
-    component: () => import('../views/package/PackageInfo.vue'),
-    meta: {
-      layout: "admin"
-    }
-  },
-  {
-    path: '/village',
-    name: 'Village',
-    component: () => import('../views/village/VillageMange.vue'),
+    path: '/customer',
+    name: 'Customer',
+    component: () => import('../views/customer/Customer.vue'),
     meta: {
       layout: "admin"
     }
@@ -85,15 +77,6 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
-  // {
-  //   path: '/customer',
-  //   name: 'Customer',
-  //   component: () => import('../views/customer/Customer.vue'),
-  //   meta: {
-  //     layout: "admin",
-  //     middleware: [Middlewares.auth],
-  //   }
-  // },
   {
     path: '/customer',
     name: 'Customer',
@@ -130,29 +113,28 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
-  //Route plan 
   {
-    path: '/route',
-    name: 'Route',
-    component: () => import('@/views/routeplan/Route.vue'),
+    path: '/village',
+    name: 'Village',
+    component: () => import('../views/village/VillageMange.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
     }
   },
   {
-    path: '/plan',
-    name: 'Plan',
-    component: () => import('@/views/routeplan/Plan.vue'),
+    path: '/package',
+    name: 'Package',
+    component: () => import('../views/package/PackageInfo.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
     }
   },
   {
-    path: '/export/plan',
-    name: 'Export-Plan',
-    component: () => import('@/views/routeplan/ExportPlan.vue'),
+    path: '/village-variation',
+    name: 'VillageVariation',
+    component: () => import('../views/village/VillageVariation.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],

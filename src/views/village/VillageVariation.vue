@@ -3,14 +3,14 @@
     <v-row class="mb-n6 text-right">
       <v-col>
         <v-btn color="teal" dark large @click="OpenModalAdd()"
-          ><v-icon color>mdi-plus</v-icon>Add Package
+          ><v-icon color>mdi-plus</v-icon>Add name
         </v-btn>
       </v-col>
     </v-row>
     <v-col justify="center">
       <v-card class="mx-auto my-12" elevation="2">
         <v-card-title>
-          ຂໍ້ມູນ Package
+          ຂໍ້ມູນ Village
           <v-spacer></v-spacer>
           <v-text-field
             v-model="search"
@@ -22,7 +22,7 @@
         </v-card-title>
         <v-data-table
           :headers="headers"
-          :items="packagessize"
+          :items="villagevariation"
           :search="search"
           :disable-pagination="true"
           hide-default-footer
@@ -57,7 +57,7 @@
       <template @close="close">
         <v-card>
           <v-card-title>
-            <span class="text-h5">Add Package Size</span>
+            <span class="text-h5">Add Village Variation</span>
             <v-spacer></v-spacer>
           </v-card-title>
           <v-card-text>
@@ -66,28 +66,13 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      v-model="addpackage.size"
-                      label="size*"
+                      v-model="addvillagevariation"
+                      label="name*"
                       required
-                      :rules="sizeRules"
+                      :rules="nameRules"
                     ></v-text-field>
                     <p class="errors">
-                      {{ server_errors.size }}
-                    </p>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col>
-                    <v-text-field
-                      v-model="addpackage.bag"
-                      label="bag*"
-                      type="number"
-                      class="input-number"
-                      required
-                      :rules="bagRules"
-                    ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.bag }}
+                      {{ server_errors.name }}
                     </p>
                   </v-col>
                 </v-row>
@@ -119,7 +104,7 @@
       <template @close="close">
         <v-card>
           <v-card-title>
-            <span class="headline">ແກ້ໄຂຂໍ້ມູນບ້ານ</span>
+            <span class="headline">ແກ້ໄຂຂໍ້ມູນຍ່ອຍຂອງບ້ານ</span>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -127,20 +112,9 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      v-model="editPackageSize.size"
-                      label="size*"
+                      v-model="editVillagevariation.name"
+                      label="name*"
                       required
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col>
-                    <v-text-field
-                      v-model="editPackageSize.bag"
-                      label="bag*"
-                      required
-                      type="number"
-                      class="input-number"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -189,18 +163,23 @@
 
 <script>
 export default {
-  name: "Package",
+  name: "VillageVariation",
   data() {
     return {
       search: "",
-      packagessize: [],
-      addpackage: {},
+      villagevariation: [],
+      addvillagevariation: "",
+      addvillagedetail: "",
       loading: false,
 
-      PackageSize_id: "",
-      editPackageSize: {},
+      VillageVariation_id: "",
+      editVillagevariation: {},
+      village_variation_id: "",
 
-      server_errors: {},
+      //
+      variation: [],
+      edit_villagevariation: {},
+      variationDialog: false,
 
       //pagination
       offset: 12,
@@ -208,15 +187,11 @@ export default {
       per_page: 15,
 
       //validation
-      sizeRules: [(v) => !!v || "Size is required"],
-      bagRules: [
-        (v) => !!v || "bag is required",
-        (v) => /.+@.+\..+/.test(v) || "bag must be number",
-      ],
+      server_errors: {},
+      nameRules: [(v) => !!v || "Name is required"],
 
       headers: [
-        { text: "Size", value: "size" },
-        { text: "ຈໍານວນ(ຖົງ)", value: "bag" },
+        { text: "name", value: "name" },
         { text: "actions", value: "actions" },
       ],
 
@@ -248,13 +223,13 @@ export default {
 
     closeUpdate() {
       this.reset(),
-        (this.editPackageSize = {}),
+        (this.editVillagevariation = {}),
         this.fetchData(),
         this.$store.commit("modalEdit_State", false);
     },
 
     OpenModalEdit(item) {
-      this.editPackageSize = item;
+      this.editVillagevariation = item;
       this.$store.commit("modalEdit_State", true);
     },
 
@@ -262,13 +237,16 @@ export default {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .put("package-size/" + this.editPackageSize.id, this.editPackageSize)
+          .put(
+            "address/village-variation/" + this.editVillagevariation.id,
+            this.editVillagevariation
+          )
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
                 this.loading = false;
                 this.closeUpdate();
-                this.editPackageSize = {};
+                this.editVillagevariation = {};
                 this.reset();
                 this.fetchData();
                 this.$store.commit("Toast_State", this.toast);
@@ -289,26 +267,66 @@ export default {
       }
     },
 
+    fetchVariation() {
+      var variation = [];
+      var villagedetail = [];
+      this.$axios
+        .get("info/village-variation")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.loading = false;
+              this.variation = res.data.data;
+              this.villagedetail = res.data.data;
+              this.edit_villagevariation.variation.map((item) => {
+                variation.push(item.name);
+              });
+              this.villagedetail.map((item) => {
+                villagedetail.push(item.name);
+              });
+            }, 300);
+          }
+        })
+        .catch((error) => {
+          this.loading = false;
+          this.fetchData();
+          if (error.response.status == 422) {
+            var obj = error.response.data.errors;
+            for (let [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
+            }
+          }
+        });
+    },
+
+    openModalVariation(item) {
+      //this.village_variation_id = item.id
+      // this.edit_villagevariation = item;
+      this.editVillagevariation = item;
+      this.fetchVariation();
+      this.variationDialog = true;
+    },
+
     closeDelete() {
       this.$store.commit("modalDelete_State", false);
     },
 
     deleteItem(id) {
-      this.PackageSize_id = id;
+      this.VillageVariation_id = id;
       this.$store.commit("modalDelete_State", true);
     },
 
     DeleteItemConfirm() {
       this.loading = true;
       this.$axios
-        .delete("package-size/" + this.PackageSize_id)
+        .delete("address/village-variation/" + this.VillageVariation_id)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.loading = false;
-              this.closeDelete();
+              this.toast.msg = res.data.message;
               this.$store.commi("Toast_State", this.toast);
-              // this.$store.commit("modalDelete_State", false);
+              this.$store.commit("modalDelete_State", false);
               this.fetchData();
             }, 300);
           }
@@ -325,7 +343,9 @@ export default {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .post("package-size", this.addpackage)
+          .post("address/village-variation/", {
+            name: this.addvillagevariation,
+          })
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
@@ -354,7 +374,7 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("package-size", {
+        .get("info/village-variation", {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
@@ -365,7 +385,7 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
-              this.packagessize = res.data.data.data;
+              this.villagevariation = res.data.data.data;
               this.pagination = res.data.data.pagination;
             }, 300);
           }
