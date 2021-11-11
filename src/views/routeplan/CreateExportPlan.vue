@@ -1,10 +1,16 @@
 <template>
   <v-container>
+    <v-breadcrumbs large>
+      <v-btn text class="text-primary" @click="backPrevios()"
+        ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
+      >
+      Create Route Plan</v-breadcrumbs
+    >
     <v-row>
       <v-col cols="12" class="mb-4">
         <GmapMap
-          :center="latlng"
-          :zoom="16"
+          :center="getCenter()"
+          :zoom="14"
           style="width: 100%; height: 450px"
           :disableDefaultUI="true"
         >
@@ -24,9 +30,16 @@
     </v-row>
     <v-row class="mb-n6">
       <v-col>
-        <v-btn class="btn-primary" @click="createPage()"
-          ><v-icon>mdi-plus</v-icon>
+        <v-btn
+          class="btn-primary"
+          @click="exportRoutePlan()"
+          :loading="loading"
+          :disabled="loading"
+          ><v-icon>mdi-arrow-right-bold-circle-outline</v-icon>
         </v-btn>
+      </v-col>
+      <v-col>
+        <p>ຈຳນວນ {{ customers.length }}</p>
       </v-col>
       <v-col>
         <v-text-field
@@ -50,8 +63,7 @@
               :headers="headers"
               :items="customers"
               :search="search"
-              :disable-pagination="true"
-              hide-default-footer
+              :items-per-page="15"
             >
               <template v-slot:item.media="{ item }">
                 <v-avatar
@@ -67,20 +79,9 @@
                 <v-icon small class="mr-2" @click="viewPage(item.id)">
                   mdi-eye
                 </v-icon>
-                <v-icon small class="mr-2" @click="editPage(item.id)">
-                  mdi-pencil
-                </v-icon>
                 <v-icon small @click="deleteItem(item.id)"> mdi-delete </v-icon>
-              </template> </v-data-table
-            ><br />
-            <template>
-              <Pagination
-                v-if="pagination.total_pages > 1"
-                :pagination="pagination"
-                :offset="offset"
-                @paginate="fetchData()"
-              ></Pagination>
-            </template>
+              </template>
+            </v-data-table>
           </v-card-text>
         </v-card>
       </v-card>
@@ -115,6 +116,7 @@ export default {
     return {
       tab: null,
       customers: [],
+      countcutomer: 0,
       loading: false,
       customerId: "",
       //Pagination
@@ -178,9 +180,10 @@ export default {
     };
   },
   methods: {
+    backPrevios() {
+      this.$router.go(-1);
+    },
     fetchData() {
-      //   const mkers = [];
-      //   const LatLong = [{ lat: "", lng: "" }];
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("customer", {
@@ -244,19 +247,43 @@ export default {
           this.loading = false;
         });
     },
-    createPage() {
-      this.$router.push({
-        name: "CreateCustomer",
-      });
+    exportRoutePlan() {
+      console.log(this.customers);
+      this.loading = true;
+      this.$axios
+        .get(
+          "export-customer-location/",
+          {
+            params: {
+              exclude_customers: [10, 11, 12, 20],
+              villages: [10101],
+            },
+          },
+          { responseType: "blob" }
+        )
+        .then((res) => {
+          if (res.status == 200) {
+            setTimeout(() => {
+              this.loading = false;
+              const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
+              const fileLink = document.createElement("a");
+              fileLink.href = fileUrl;
+              fileLink.setAttribute("download", "customer-location" + ".xlsx");
+              document.body.appendChild(fileLink);
+              fileLink.click();
+              document.body.removeChild(fileLink);
+            }, 300);
+          }
+        })
+        .catch(() => {
+          this.fetchData();
+          this.$store.commit("Toast_State", this.toast_error);
+          this.$store.commit("modalDelete_State", false);
+          this.loading = false;
+        });
     },
-    editPage(id) {
-      this.$router.push({
-        name: "EditCustomer",
-        params: { id },
-      });
-    },
+
     viewPage(id) {
-      console.log(id);
       this.$router.push({
         name: "ViewCustomer",
         params: { id },
@@ -275,14 +302,7 @@ export default {
         ? this.currentAddress
         : `${CUSTOMIZE} ${this.latlng.lat}, ${this.latlng.lng}`;
     },
-    onLocation(evt) {
-      this.latlng.lat = evt.latLng.lat();
-      this.latlng.lng = evt.latLng.lng();
-      this.address = this.createNewAddressName();
-      console.log(this.latlng);
-      //   this.customer_edit.latitude = this.center.lat;
-      //   this.customer_edit.longitude = this.center.lng;
-    },
+
     setPlace(place) {
       this.currentPlace = place;
       this.placeMarker();
@@ -339,7 +359,6 @@ export default {
         address: this.address,
         position: this.latlng,
       });
-      // console.log(this.center);
     },
 
     onSave() {
@@ -349,86 +368,32 @@ export default {
         isCreate: this.isCreate,
       });
     },
-
+    getCenter() {
+      if (this.customers.length) {
+        const latlng = {
+          lat: parseFloat(this.customers[0].latitude),
+          lng: parseFloat(this.customers[0].longitude),
+        };
+        return latlng;
+      }
+      return this.latlng;
+    },
     getMarkers() {
-      const fakeLocation = [
-        {
-          title: "Location A",
-          lat: 15.9182808,
-          lng: 108.3470323,
-          description: "this is Location A",
-        },
-        {
-          title: "Location B",
-          lat: 16.0471659,
-          lng: 108.1716864,
-          description: "this is Location B",
-        },
-        {
-          title: "Location C",
-          lat: 20.8467333,
-          lng: 106.6637271,
-          description: "this is Location C",
-        },
-        {
-          title: "Location D",
-          lat: 10.823099,
-          lng: 106.629664,
-          description: "this is Location D",
-        },
-      ];
-
-      // generating markers for site map
       var markers = [];
-      //   // remove this after lat long received from api.
-      //   const LatLong = [];
-      //    var latlng = new google.maps.LatLng(-24.397, 140.644);
-      //   this.customers.push(thhis.customers)
-      // this.customers.map((item) => {
-      //   // console.log(this.item.length);
-      //   // console.log(item.latitude);
-      //   LatLong.lat.push(item[0].latitude);
-      //   LatLong.lng.push(item[0].longitude);
-      // });
-      //   this.customers.forEach((item) => {
-      //     // console.log(item);
-      //     LatLong.push(item);
-      //     markers.push({
-      //       position: LatLong,
-      //       //   position: LatLong[i],
-      //       title: "test title",
-      //       icon: this.getSiteIcon(1), // if you want to show different as per the condition.
-      //     });
-      //   });
-      console.log(fakeLocation);
+
       const LatLong = this.customers.map((item) => {
         return {
           lat: parseFloat(item.latitude),
           lng: parseFloat(item.longitude),
         };
       });
-      console.log(LatLong);
-      //   console.log(LatLong);
-      //   for (var i = 0; i < this.customers.length; i++) {
-      //     // console.log(this.customers[i].latitude);
-      //     // console.log(this.customers[i].longitude);
-      //     const lat = this.customers[i].latitude;
-      //     console.log("lat" + lat);
-      //     LatLong.lat.push(lat);
-      //     // LatLong[0].lng.push(this.customers[0].longitude);
-      //   }
-      //   console.log(LatLong[i].lat);
-      //   console.log(this.customers[0].latitude);
       for (var i = 0; i < LatLong.length; i++) {
-        //     // console.log(this.customers[i].latitude);
-        //     // console.log(this.customers[i].longitude);
         markers.push({
           position: LatLong[i],
           title: "Test title",
           icon: this.getSiteIcon(2), // if you want to show different as per the condition.
         });
       }
-      console.log("Markers" + markers);
       return markers;
     },
     getSiteIcon(status) {
@@ -464,7 +429,7 @@ export default {
   created() {
     this.fetchData();
     this.getMarkers();
-    console.log("Mark" + this.getMarkers());
+    console.log(this.data);
   },
 };
 </script>

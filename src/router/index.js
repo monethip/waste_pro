@@ -158,6 +158,15 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
+  {
+    path: '/create/export/plan',
+    name: 'CreateExportPlan',
+    component: () => import('@/views/routeplan/CreateExportPlan.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
 
   //Report 
   {

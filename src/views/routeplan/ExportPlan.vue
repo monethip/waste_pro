@@ -1,10 +1,16 @@
 <template>
   <v-container>
+    <v-breadcrumbs large>
+      <v-btn text class="text-primary" @click="backPrevios()"
+        ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
+      >
+      Select Customer to Route Plan</v-breadcrumbs
+    >
     <v-row>
       <v-col cols="12" class="mb-4">
         <GmapMap
-          :center="latlng"
-          :zoom="16"
+          :center="getCenter()"
+          :zoom="14"
           style="width: 100%; height: 450px"
           :disableDefaultUI="true"
         >
@@ -13,10 +19,11 @@
             v-for="(m, index) in getMarkers()"
             :position="m.position"
             @click="latlng = m.position"
-            :draggable="true"
-            @dragend="m.icon"
+            :draggable="false"
+            @dragend="onLocation"
             :icon="markerOptions"
             :animation="2"
+            :clickable="true"
             ref="getMarkers()"
           />
         </GmapMap>
@@ -25,7 +32,7 @@
     <v-row class="mb-n6">
       <v-col>
         <v-btn class="btn-primary" @click="createPage()"
-          ><v-icon>mdi-plus</v-icon>
+          ><v-icon>mdi-arrow-right-bold-circle-outline</v-icon>
         </v-btn>
       </v-col>
       <v-col>
@@ -110,6 +117,7 @@
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
   name: "Customer",
+  props: ["data"],
   data() {
     return {
       tab: null,
@@ -167,14 +175,14 @@ export default {
         fullscreenControl: false,
         disableDefaultUi: false,
         size: {
-          width: 35,
-          height: 55,
+          width: 28,
+          height: 48,
           f: "px",
           b: "px",
         },
         scaledSize: {
-          width: 35,
-          height: 55,
+          width: 28,
+          height: 48,
           f: "px",
           b: "px",
         },
@@ -182,6 +190,9 @@ export default {
     };
   },
   methods: {
+    backPrevios() {
+      this.$router.go(-1);
+    },
     fetchData() {
       //   const mkers = [];
       //   const LatLong = [{ lat: "", lng: "" }];
@@ -201,9 +212,18 @@ export default {
               this.customers = res.data.data.data;
               //   console.log(this.customers);
               this.pagination = res.data.data.pagination;
-              this.customers.map((item) => {
-                return { lat: item.latitude, lng: item.longitude };
-              });
+              // this.customers.map((item) => {
+              //   this.latlng.lat.push(parseFloat(item[0].latitude)),
+              //     this.latlng.lng.push(parseFloat(item[0].longitude));
+              //   return { lat: item.latitude, lng: item.longitude };
+              // });
+              // this.customers.forEach((item) => {
+              //   console.log(item);
+              //   this.latlng.lat.push(parseFloat(item[0].latitude)),
+              //     this.latlng.lng.push(parseFloat(item[0].longitude));
+              // });
+              // console.log(this.latlng);
+              this.getCenter();
             }, 300);
           }
         })
@@ -250,7 +270,8 @@ export default {
 
     createPage() {
       this.$router.push({
-        name: "CreateCustomer",
+        name: "CreateExportPlan",
+        params: {},
       });
     },
     editPage(id) {
@@ -354,87 +375,36 @@ export default {
       });
     },
 
+    getCenter() {
+      if (this.customers.length) {
+        const latlng = {
+          lat: parseFloat(this.customers[0].latitude),
+          lng: parseFloat(this.customers[0].longitude),
+        };
+        return latlng;
+      }
+      return this.latlng;
+    },
     getMarkers() {
-      const fakeLocation = [
-        {
-          title: "Location A",
-          lat: 15.9182808,
-          lng: 108.3470323,
-          description: "this is Location A",
-        },
-        {
-          title: "Location B",
-          lat: 16.0471659,
-          lng: 108.1716864,
-          description: "this is Location B",
-        },
-        {
-          title: "Location C",
-          lat: 20.8467333,
-          lng: 106.6637271,
-          description: "this is Location C",
-        },
-        {
-          title: "Location D",
-          lat: 10.823099,
-          lng: 106.629664,
-          description: "this is Location D",
-        },
-      ];
-
       // generating markers for site map
       var markers = [];
-      //   // remove this after lat long received from api.
-      //   const LatLong = [];
-      //    var latlng = new google.maps.LatLng(-24.397, 140.644);
-      //   this.customers.push(thhis.customers)
-      // this.customers.map((item) => {
-      //   // console.log(this.item.length);
-      //   // console.log(item.latitude);
-      //   LatLong.lat.push(item[0].latitude);
-      //   LatLong.lng.push(item[0].longitude);
-      // });
-      //   this.customers.forEach((item) => {
-      //     // console.log(item);
-      //     LatLong.push(item);
-      //     markers.push({
-      //       position: LatLong,
-      //       //   position: LatLong[i],
-      //       title: "test title",
-      //       icon: this.getSiteIcon(1), // if you want to show different as per the condition.
-      //     });
-      //   });
-      console.log(fakeLocation);
       const LatLong = this.customers.map((item) => {
         return {
           lat: parseFloat(item.latitude),
           lng: parseFloat(item.longitude),
         };
       });
-      console.log(LatLong);
-      //   console.log(LatLong);
-      //   for (var i = 0; i < this.customers.length; i++) {
-      //     // console.log(this.customers[i].latitude);
-      //     // console.log(this.customers[i].longitude);
-      //     const lat = this.customers[i].latitude;
-      //     console.log("lat" + lat);
-      //     LatLong.lat.push(lat);
-      //     // LatLong[0].lng.push(this.customers[0].longitude);
-      //   }
-      //   console.log(LatLong[i].lat);
-      //   console.log(this.customers[0].latitude);
+
       for (var i = 0; i < LatLong.length; i++) {
-        //     // console.log(this.customers[i].latitude);
-        //     // console.log(this.customers[i].longitude);
         markers.push({
           position: LatLong[i],
-          title: "Test title",
+          title: "Title",
           icon: this.getSiteIcon(2), // if you want to show different as per the condition.
         });
       }
-      console.log("Markers" + markers);
       return markers;
     },
+
     getSiteIcon(status) {
       try {
         switch (status) {
