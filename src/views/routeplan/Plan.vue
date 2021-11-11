@@ -40,22 +40,6 @@
                   <img v-if="img.thumb" :src="img.thumb" />
                 </v-avatar>
               </template>
-              <!--Role -->
-              <template v-slot:item.roles="{ item }">
-                <div>
-                  <span v-for="(role, index) in item.roles" :key="index">
-                    {{ role.name }},
-                  </span>
-                </div>
-              </template>
-              <!--Permission -->
-              <template v-slot:item.permissions="{ item }">
-                <div>
-                  <span v-for="(ps, index) in item.permissions" :key="index">
-                    <span>{{ ps.name }}, </span>
-                  </span>
-                </div>
-              </template>
 
               <template v-slot:item.actions="{ item }">
                 <v-icon small class="mr-2" @click="viewPage(item.id)">

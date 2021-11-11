@@ -152,7 +152,7 @@
                   {{ server_errors.email }}
                 </p>
               </v-col>
-              <v-col cols="4">
+              <v-col cols="6">
                 <v-autocomplete
                   required
                   :items="districts"
@@ -167,11 +167,11 @@
                 </p>
               </v-col>
 
-              <v-col cols="4">
+              <v-col cols="6">
                 <v-autocomplete
                   required
                   :items="villages"
-                  v-model="data.village_id"
+                  v-model="selectedVillage"
                   item-text="name"
                   item-value="id"
                   label="Village *"
@@ -181,17 +181,30 @@
                   {{ errormsg }}
                 </p>
               </v-col>
-              <v-col cols="4">
+              <v-col cols="6">
                 <v-select
-                  v-model="selectedVillageDetail"
+                  v-model="village_variation_id"
                   :items="village_details"
                   item-text="name"
                   item-value="id"
-                  label="Village Detail"
+                  label="ກຸ່ມ / ຄຸ້ມ"
+                ></v-select>
+                <p class="errors">
+                  {{ server_errors.village_details }}
+                </p>
+              </v-col>
+
+              <v-col cols="6">
+                <v-select
+                  v-model="selectedVillageDetail"
+                  :items="units"
+                  item-text="name"
+                  item-value="id"
+                  label="ຮ່ອມ / ໜ່ວຍ"
                   multiple
                 ></v-select>
                 <p class="errors">
-                  {{ errormsg }}
+                  {{ server_errors.village_details }}
                 </p>
               </v-col>
 
@@ -228,14 +241,14 @@
               </v-col>
               <v-col cols="12" class="mb-4">
                 <GmapMap
-                  :center="latlng"
+                  :center="getCenter()"
                   :zoom="16"
                   style="width: 100%; height: 450px"
                   :disableDefaultUI="true"
                 >
                   <GmapMarker
                     :key="index"
-                    v-for="(m, index) in markers"
+                    v-for="(m, index) in getMarkers()"
                     :position="m.position"
                     @click="latlng = m.position"
                     :draggable="true"
@@ -282,7 +295,9 @@ export default {
       villages: [],
       selectedVillage: "",
       village_details: [],
+      village_variation_id: "",
       selectedVillageDetail: [],
+      units: [],
 
       address: [],
       errormsg: "",
@@ -291,14 +306,14 @@ export default {
       image: [],
       //Map
       latlng: {
-        lat: 18.1189434,
-        lng: 102.290218,
+        lat: 0,
+        lng: 0,
       },
       markers: [],
       currentPlace: null,
       markerOptions: {
         // eslint-disable-next-line global-require
-        url: require("@coms/../../src/assets/pin.png"),
+        url: require("@coms/../../src/assets/pin1.svg"),
         size: {
           width: 35,
           height: 55,
@@ -353,21 +368,18 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data;
-              res.data.data.customer_village_details.map((item) => {
-                this.selectedVillageDetail.push(item.customer_id);
+              this.selectedVillage = res.data.data.village_id;
+              res.data.data.village_details.map((item) => {
+                this.village_variation_id.push(item[0].village_variation_id);
               });
+              console.log(this.village_variation_id);
+              this.getCenter();
+              this.getMarkers();
             }, 300);
           }
         })
-        .catch((error) => {
+        .catch(() => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
-          if (error.response.status == 422) {
-            var obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
-              this.server_errors[key] = message[0];
-            }
-          }
         });
     },
 
@@ -410,6 +422,9 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.village_details = res.data.data;
+              res.data.data.map((item) => {
+                this.units = item.village_details;
+              });
             }, 300);
           }
         })
@@ -424,7 +439,6 @@ export default {
     },
 
     previewMultiImage: function (event) {
-      console.log(this.image_list);
       let input = event.target;
       let count = input.files.length;
       let index = 0;
@@ -442,6 +456,7 @@ export default {
     },
 
     UpdateData() {
+      console.log(this.selectedVillageDetail);
       let formData = new FormData();
       this.image_list.map((item) => {
         formData.append("images[]", item);
@@ -503,8 +518,8 @@ export default {
       this.latlng.lat = evt.latLng.lat();
       this.latlng.lng = evt.latLng.lng();
       this.address = this.createNewAddressName();
-      this.data.latitude = this.center.lat;
-      this.data.longitude = this.center.lng;
+      this.data.latitude = this.latlng.lat;
+      this.data.longitude = this.latlng.lng;
     },
     setPlace(place) {
       this.currentPlace = place;
@@ -520,14 +535,12 @@ export default {
         };
         this.markers.push({ position: marker });
         this.latlng = marker;
-        this.animateMarker();
       } else {
         const marker = {
-          lat: this.latlng.lat,
-          lng: this.latlng.lng,
+          lat: parseFloat(this.data.latitude),
+          lng: parseFloat(this.data.longitude),
         };
         this.markers.push({ position: marker });
-        this.animateMarker();
       }
       // set address
       if (this.$refs.searchInput) {
@@ -536,18 +549,6 @@ export default {
         // this.address = this.currentPlace.formatted_address;
       }
       this.onDataChange();
-    },
-    animateMarker() {
-      this.$nextTick(() => {
-        // const obj = this.$refs.markers[0].$markerObject;
-        // if (obj) {
-        //     obj.setAnimation(1);
-        //     clearTimeout(this.timer);
-        //     this.timer = setTimeout(() => {
-        //         obj.setAnimation(null);
-        //     }, 800);
-        // }
-      });
     },
     geolocate() {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -571,6 +572,29 @@ export default {
         position: this.latlng,
         isCreate: this.isCreate,
       });
+    },
+    getMarkers() {
+      // generating markers for site map
+      var markers = [];
+      const marker = {
+        lat: parseFloat(this.data.latitude),
+        lng: parseFloat(this.data.longitude),
+      };
+      markers.push({
+        position: marker,
+        title: this.data.name, // if you want to show different as per the condition.
+      });
+      return markers;
+    },
+    getCenter() {
+      if (this.data.latitude) {
+        const latlng = {
+          lat: parseFloat(this.data.latitude),
+          lng: parseFloat(this.data.longitude),
+        };
+        return latlng;
+      }
+      return this.latlng;
     },
   },
   watch: {
@@ -602,6 +626,13 @@ export default {
     },
     "data.password_confirmation": function () {
       this.server_errors.password = "";
+    },
+    village_variation_id: function () {
+      if (this.village_variation_id) {
+        // this.selectedVillageDetail = this.village_variation_id;
+      }
+      console.log(this.selectedVillageDetail);
+      // this.fetchUnits();
     },
   },
   mounted() {

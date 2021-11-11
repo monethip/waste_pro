@@ -4,7 +4,7 @@
       <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
-      Select Customer to Route Plan</v-breadcrumbs
+      Create Route Plan</v-breadcrumbs
     >
     <v-row>
       <v-col cols="12" class="mb-4">
@@ -19,11 +19,10 @@
             v-for="(m, index) in getMarkers()"
             :position="m.position"
             @click="latlng = m.position"
-            :draggable="false"
-            @dragend="onLocation"
+            :draggable="true"
+            @dragend="m.icon"
             :icon="markerOptions"
             :animation="2"
-            :clickable="true"
             ref="getMarkers()"
           />
         </GmapMap>
@@ -31,31 +30,16 @@
     </v-row>
     <v-row class="mb-n6">
       <v-col>
-        <v-btn class="btn-primary" @click="createPage()"
+        <v-btn
+          class="btn-primary"
+          @click="exportRoutePlan()"
+          :loading="loading"
+          :disabled="loading"
           ><v-icon>mdi-arrow-right-bold-circle-outline</v-icon>
         </v-btn>
       </v-col>
       <v-col>
-        <v-autocomplete
-          outlined
-          dense
-          :items="districts"
-          v-model="selectedDistrict"
-          item-text="name"
-          item-value="id"
-          label="ເມືອງ"
-        ></v-autocomplete>
-      </v-col>
-      <v-col>
-        <v-autocomplete
-          outlined
-          dense
-          :items="villages"
-          v-model="selectedVillage"
-          item-text="name"
-          item-value="id"
-          label="ບ້ານ"
-        ></v-autocomplete>
+        <p>ຈຳນວນ {{ customers.length }}</p>
       </v-col>
       <v-col>
         <v-text-field
@@ -79,8 +63,7 @@
               :headers="headers"
               :items="customers"
               :search="search"
-              :disable-pagination="true"
-              hide-default-footer
+              :items-per-page="15"
             >
               <template v-slot:item.media="{ item }">
                 <v-avatar
@@ -96,20 +79,32 @@
                 <v-icon small class="mr-2" @click="viewPage(item.id)">
                   mdi-eye
                 </v-icon>
-              </template> </v-data-table
-            ><br />
-            <template>
-              <Pagination
-                v-if="pagination.total_pages > 1"
-                :pagination="pagination"
-                :offset="offset"
-                @paginate="fetchData()"
-              ></Pagination>
-            </template>
+                <v-icon small @click="deleteItem(item.id)"> mdi-delete </v-icon>
+              </template>
+            </v-data-table>
           </v-card-text>
         </v-card>
       </v-card>
     </div>
+
+    <!--Delete Modal-->
+    <ModalDelete>
+      <template>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            :loading="loading"
+            :disabled="loading"
+            @click="deleteItemConfirm"
+            >OK</v-btn
+          >
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </template>
+    </ModalDelete>
   </v-container>
 </template>
 
@@ -117,11 +112,11 @@
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
   name: "Customer",
-  props: ["data"],
   data() {
     return {
       tab: null,
       customers: [],
+      countcutomer: 0,
       loading: false,
       customerId: "",
       //Pagination
@@ -130,11 +125,6 @@ export default {
       per_page: 15,
       search: "",
       oldVal: "",
-      //Filter
-      districts: [],
-      selectedDistrict: "",
-      villages: [],
-      selectedVillage: "",
 
       headers: [
         { text: "ຊື່", value: "name" },
@@ -175,14 +165,14 @@ export default {
         fullscreenControl: false,
         disableDefaultUi: false,
         size: {
-          width: 28,
-          height: 48,
+          width: 35,
+          height: 55,
           f: "px",
           b: "px",
         },
         scaledSize: {
-          width: 28,
-          height: 48,
+          width: 35,
+          height: 55,
           f: "px",
           b: "px",
         },
@@ -194,8 +184,6 @@ export default {
       this.$router.go(-1);
     },
     fetchData() {
-      //   const mkers = [];
-      //   const LatLong = [{ lat: "", lng: "" }];
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("customer", {
@@ -212,18 +200,9 @@ export default {
               this.customers = res.data.data.data;
               //   console.log(this.customers);
               this.pagination = res.data.data.pagination;
-              // this.customers.map((item) => {
-              //   this.latlng.lat.push(parseFloat(item[0].latitude)),
-              //     this.latlng.lng.push(parseFloat(item[0].longitude));
-              //   return { lat: item.latitude, lng: item.longitude };
-              // });
-              // this.customers.forEach((item) => {
-              //   console.log(item);
-              //   this.latlng.lat.push(parseFloat(item[0].latitude)),
-              //     this.latlng.lng.push(parseFloat(item[0].longitude));
-              // });
-              // console.log(this.latlng);
-              this.getCenter();
+              this.customers.map((item) => {
+                return { lat: item.latitude, lng: item.longitude };
+              });
             }, 300);
           }
         })
@@ -238,50 +217,73 @@ export default {
           }
         });
     },
+    closeDelete() {
+      this.$store.commit("modalDelete_State", false);
+    },
+    deleteItem(id) {
+      this.customerId = id;
+      this.$store.commit("modalDelete_State", true);
+    },
 
-    fetchAddress() {
+    deleteItemConfirm() {
+      this.loading = true;
       this.$axios
-        .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
+        .delete("customer/" + this.customerId)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.address = res.data.data;
-              this.address.map((item) => {
-                this.districts = item.districts;
-              });
+              this.loading = false;
+              this.toast.msg = res.data.message;
+              this.$store.commit("Toast_State", this.toast);
+              this.$store.commit("modalDelete_State", false);
+              this.fetchData();
             }, 300);
           }
         })
-        .catch(() => {});
+        .catch(() => {
+          this.fetchData();
+          this.$store.commit("Toast_State", this.toast_error);
+          this.$store.commit("modalDelete_State", false);
+          this.loading = false;
+        });
     },
-
-    fetchVillage() {
+    exportRoutePlan() {
+      console.log(this.customers);
+      this.loading = true;
       this.$axios
-        .get("info/district/" + this.selectedDistrict + "/village")
+        .get(
+          "export-customer-location/",
+          {
+            params: {
+              exclude_customers: [10, 11, 12, 20],
+              villages: [10101],
+            },
+          },
+          { responseType: "blob" }
+        )
         .then((res) => {
-          if (res.data.code == 200) {
+          if (res.status == 200) {
             setTimeout(() => {
-              this.villages = res.data.data;
+              this.loading = false;
+              const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
+              const fileLink = document.createElement("a");
+              fileLink.href = fileUrl;
+              fileLink.setAttribute("download", "customer-location" + ".xlsx");
+              document.body.appendChild(fileLink);
+              fileLink.click();
+              document.body.removeChild(fileLink);
             }, 300);
           }
         })
-        .catch(() => {});
+        .catch(() => {
+          this.fetchData();
+          this.$store.commit("Toast_State", this.toast_error);
+          this.$store.commit("modalDelete_State", false);
+          this.loading = false;
+        });
     },
 
-    createPage() {
-      this.$router.push({
-        name: "CreateExportPlan",
-        params: {},
-      });
-    },
-    editPage(id) {
-      this.$router.push({
-        name: "EditCustomer",
-        params: { id },
-      });
-    },
     viewPage(id) {
-      console.log(id);
       this.$router.push({
         name: "ViewCustomer",
         params: { id },
@@ -300,14 +302,7 @@ export default {
         ? this.currentAddress
         : `${CUSTOMIZE} ${this.latlng.lat}, ${this.latlng.lng}`;
     },
-    onLocation(evt) {
-      this.latlng.lat = evt.latLng.lat();
-      this.latlng.lng = evt.latLng.lng();
-      this.address = this.createNewAddressName();
-      console.log(this.latlng);
-      //   this.customer_edit.latitude = this.center.lat;
-      //   this.customer_edit.longitude = this.center.lng;
-    },
+
     setPlace(place) {
       this.currentPlace = place;
       this.placeMarker();
@@ -364,7 +359,6 @@ export default {
         address: this.address,
         position: this.latlng,
       });
-      // console.log(this.center);
     },
 
     onSave() {
@@ -374,7 +368,6 @@ export default {
         isCreate: this.isCreate,
       });
     },
-
     getCenter() {
       if (this.customers.length) {
         const latlng = {
@@ -386,25 +379,23 @@ export default {
       return this.latlng;
     },
     getMarkers() {
-      // generating markers for site map
       var markers = [];
+
       const LatLong = this.customers.map((item) => {
         return {
           lat: parseFloat(item.latitude),
           lng: parseFloat(item.longitude),
         };
       });
-
       for (var i = 0; i < LatLong.length; i++) {
         markers.push({
           position: LatLong[i],
-          title: "Title",
+          title: "Test title",
           icon: this.getSiteIcon(2), // if you want to show different as per the condition.
         });
       }
       return markers;
     },
-
     getSiteIcon(status) {
       try {
         switch (status) {
@@ -431,12 +422,6 @@ export default {
         this.fetchData();
       }
     },
-    selectedVillage: function () {
-      this.fetchData();
-    },
-    selectedDistrict: function () {
-      this.fetchVillage();
-    },
   },
   mounted() {
     this.geolocate();
@@ -444,7 +429,7 @@ export default {
   created() {
     this.fetchData();
     this.getMarkers();
-    this.fetchAddress();
+    console.log(this.data);
   },
 };
 </script>
