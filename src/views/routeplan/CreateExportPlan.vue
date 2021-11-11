@@ -268,7 +268,7 @@ export default {
               const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
               const fileLink = document.createElement("a");
               fileLink.href = fileUrl;
-              fileLink.setAttribute("download", "customer-location" + ".xlsx");
+              fileLink.setAttribute("download", "customer_location" + ".xlsx");
               document.body.appendChild(fileLink);
               fileLink.click();
               document.body.removeChild(fileLink);
