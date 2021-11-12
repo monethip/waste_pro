@@ -237,6 +237,11 @@ export default {
           to: "/report/invoice",
         },
         {
+          icon: "mdi-account",
+          title: "ລາຍງານຂໍ້ມູນຄົນຂັບລົດ",
+          to: "/report/driver",
+        },
+        {
           icon: "mdi-account-group",
           title: "ລາຍງານຂໍ້ມູນລູກຄ້າ",
           to: "/report/customer",

@@ -144,6 +144,34 @@ const routes = [
     path: '/create/export/plan',
     name: 'CreateExportPlan',
     component: () => import('@/views/routeplan/CreateExportPlan.vue'),
+    props: true,
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/plan',
+    name: 'ExportPlan',
+    component: () => import('@/views/routeplan/Plan.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/export/plan',
+    name: 'Export-Plan',
+    component: () => import('@/views/routeplan/ExportPlan.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/route',
+    name: 'Route',
+    component: () => import('@/views/routeplan/Route.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
@@ -164,6 +192,15 @@ const routes = [
     path: '/report/customer',
     name: 'Report-Customer',
     component: () => import('@/views/report/Customer.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/report/driver',
+    name: 'Report-Driver',
+    component: () => import('@/views/report/ReportDriver.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],

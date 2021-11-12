@@ -26,6 +26,7 @@
           item-text="name"
           item-value="id"
           label="ບ້ານ"
+          multiple
         ></v-autocomplete>
       </v-col>
       <v-col>
@@ -37,6 +38,7 @@
           item-text="name"
           item-value="name"
           label="ສະຖານະ"
+          multiple
         ></v-select>
       </v-col>
       <v-col>
@@ -87,11 +89,6 @@
                   </template>
                   <!--Role -->
                   <template v-slot:item.status="{ item }">
-                    <div>
-                      <span v-for="(role, index) in item.roles" :key="index">
-                        {{ role.name }},
-                      </span>
-                    </div>
                     <v-chip
                       :color="statusColor(item.status)"
                       @click="switchStatus(item.id)"
@@ -254,8 +251,8 @@ export default {
       districts: [],
       selectedDistrict: "",
       villages: [],
-      selectedVillage: "",
-      selectedStatus: "",
+      selectedVillage: [],
+      selectedStatus: [],
       status: [
         {
           id: 1,

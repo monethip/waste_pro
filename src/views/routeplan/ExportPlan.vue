@@ -55,6 +55,7 @@
           item-text="name"
           item-value="id"
           label="ບ້ານ"
+          multiple
         ></v-autocomplete>
       </v-col>
       <v-col>
@@ -117,7 +118,6 @@
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
   name: "Customer",
-  props: ["data"],
   data() {
     return {
       tab: null,
@@ -134,7 +134,7 @@ export default {
       districts: [],
       selectedDistrict: "",
       villages: [],
-      selectedVillage: "",
+      selectedVillage: [],
 
       headers: [
         { text: "ຊື່", value: "name" },
@@ -196,6 +196,7 @@ export default {
     fetchData() {
       //   const mkers = [];
       //   const LatLong = [{ lat: "", lng: "" }];
+      console.log(this.villages);
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("customer", {
@@ -203,6 +204,7 @@ export default {
             page: this.pagination.current_page,
             per_page: this.per_page,
             filter: this.search,
+            villages: this.selectedVillage,
           },
         })
         .then((res) => {
@@ -269,10 +271,14 @@ export default {
     },
 
     createPage() {
+      // console.log(this.customers);
       this.$router.push({
         name: "CreateExportPlan",
-        params: {},
+        params: {
+          items: [this.customers, this.selectedVillage],
+        },
       });
+      this.$emit("create-plan", this.customers, this.selectedVillage);
     },
     editPage(id) {
       this.$router.push({

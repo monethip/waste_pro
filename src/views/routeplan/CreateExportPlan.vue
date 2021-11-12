@@ -38,9 +38,11 @@
           ><v-icon>mdi-arrow-right-bold-circle-outline</v-icon>
         </v-btn>
       </v-col>
+      <!--
       <v-col>
         <p>ຈຳນວນ {{ customers.length }}</p>
       </v-col>
+-->
       <v-col>
         <v-text-field
           outlined
@@ -112,6 +114,7 @@
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
   name: "Customer",
+  props: ["items", "villages"],
   data() {
     return {
       tab: null,
@@ -184,38 +187,8 @@ export default {
       this.$router.go(-1);
     },
     fetchData() {
-      this.$store.commit("Loading_State", true);
-      this.$axios
-        .get("customer", {
-          params: {
-            page: this.pagination.current_page,
-            per_page: this.per_page,
-            filter: this.search,
-          },
-        })
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.$store.commit("Loading_State", false);
-              this.customers = res.data.data.data;
-              //   console.log(this.customers);
-              this.pagination = res.data.data.pagination;
-              this.customers.map((item) => {
-                return { lat: item.latitude, lng: item.longitude };
-              });
-            }, 300);
-          }
-        })
-        .catch((error) => {
-          this.$store.commit("Loading_State", false);
-          this.fetchData();
-          if (error.response.status == 422) {
-            var obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
-              this.server_errors[key] = message[0];
-            }
-          }
-        });
+      console.log(this.villages);
+      // console.log("create-plan");
     },
     closeDelete() {
       this.$store.commit("modalDelete_State", false);
@@ -428,8 +401,15 @@ export default {
   },
   created() {
     this.fetchData();
-    this.getMarkers();
-    console.log(this.data);
+    // this.getMarkers();
+    this.items.map((item) => {
+      console.log("Item" + item[0]);
+      this.customers.push(item[0]);
+    });
+
+    // console.log(this.customers);
+    // console.log(this.items);
+    // console.log(this.villages);
   },
 };
 </script>

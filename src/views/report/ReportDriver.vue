@@ -11,27 +11,56 @@
         </v-btn>
       </v-col>
       <v-col>
-        <v-autocomplete
-          outlined
-          dense
-          :items="districts"
-          v-model="selectedDistrict"
-          item-text="name"
-          item-value="id"
-          label="ເມືອງ"
-        ></v-autocomplete>
+        <v-menu
+          v-model="start_menu"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="start_date"
+              label="ເລີ່ມວັນທີ"
+              readonly
+              outlined
+              v-bind="attrs"
+              v-on="on"
+              dense
+            ></v-text-field>
+          </template>
+          <v-date-picker
+            v-model="start_date"
+            @input="fetchData()"
+          ></v-date-picker>
+        </v-menu>
       </v-col>
       <v-col>
-        <v-autocomplete
-          outlined
-          dense
-          :items="villages"
-          v-model="selectedVillage"
-          item-text="name"
-          item-value="id"
-          label="ບ້ານ"
-          multiple
-        ></v-autocomplete>
+        <v-menu
+          v-model="end_menu"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="end_date"
+              label="ຫາວັນທີ"
+              readonly
+              outlined
+              v-bind="attrs"
+              v-on="on"
+              dense
+            ></v-text-field>
+          </template>
+          <v-date-picker
+            v-model="end_date"
+            @input="fetchData()"
+          ></v-date-picker>
+        </v-menu>
       </v-col>
       <v-col>
         <v-select
@@ -42,7 +71,6 @@
           item-text="name"
           item-value="name"
           label="ສະຖານະ"
-          multiple
         ></v-select>
       </v-col>
       <v-col>
@@ -106,12 +134,13 @@
                   </span>
                 </div>
               </template>
-
+              <!--
               <template v-slot:item.actions="{ item }">
                 <v-icon small class="mr-2" @click="viewPage(item.id)">
                   mdi-eye
                 </v-icon>
-              </template> </v-data-table
+              </template>
+              --> </v-data-table
             ><br />
             <template>
               <Pagination
@@ -134,7 +163,11 @@ export default {
   name: "Customer",
   data() {
     return {
-      tab: null,
+      start_date: "",
+      end_date: "",
+      start_menu: false,
+      end_menu: false,
+
       customers: [],
       loading: false,
       customerId: "",
@@ -149,30 +182,26 @@ export default {
       selectedDistrict: "",
       villages: [],
       selectedVillage: [],
-      selectedStatus: [],
+      selectedStatus: "",
       status: [
         {
           id: 1,
           name: "active",
         },
         {
-          id: 1,
+          id: 2,
           name: "inactive",
-        },
-        {
-          id: 1,
-          name: "trial",
         },
       ],
 
       headers: [
         { text: "ຊື່", value: "name" },
         { text: "ນາມສະກຸນ", value: "surname" },
-        { text: "Phone", value: "user.phone", sortable: false },
-        { text: "ວັນທີ", value: "district.name", sortable: false },
-        { text: "ແພັກເກດ", value: "package.name" },
-        { text: "ວັນທີສະໝັກແພັກເກດ", value: "start_month", sortable: false },
+        { text: "ເບີໂທ", value: "user.phone", sortable: false },
+        { text: "Email", value: "user.email", sortable: false },
+        { text: "ທະບຽນລົດ", value: "car_number" },
         { text: "ສະຖານະ", value: "status", sortable: false },
+        { text: "Profile", value: "media", sortable: false },
         { text: "", value: "actions", sortable: false },
       ],
       toast: {
@@ -191,13 +220,14 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("customer", {
+        .get("driver", {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
             filter: this.search,
-            statuses: this.selectedStatus,
-            villages: this.selectedVillage,
+            status: this.selectedStatus,
+            date_from: this.start_date,
+            date_end: this.end_date,
           },
         })
         .then((res) => {
@@ -206,6 +236,8 @@ export default {
               this.$store.commit("Loading_State", false);
               this.customers = res.data.data.data;
               this.pagination = res.data.data.pagination;
+              this.start_menu = false;
+              this.end_menu = false;
             }, 300);
             this.fetchAddress();
           }
@@ -213,6 +245,8 @@ export default {
         .catch((error) => {
           this.$store.commit("Loading_State", false);
           this.fetchData();
+          this.start_menu = false;
+          this.end_menu = false;
           if (error.response.status == 422) {
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
@@ -270,12 +304,13 @@ export default {
       this.loading = true;
       this.$axios
         .get(
-          "export-customer/",
+          "export-driver/",
           {
             params: {
               filter: this.search,
-              statuses: this.selectedStatus,
-              villages: this.selectedVillage,
+              status: this.selectedStatus,
+              date_from: this.start_date,
+              date_end: this.end_date,
             },
           },
           { responseType: "blob" }
@@ -287,8 +322,9 @@ export default {
               const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
               const fileLink = document.createElement("a");
               fileLink.href = fileUrl;
-              fileLink.setAttribute("download", "customer" + ".xlsx");
+              fileLink.setAttribute("download", "driver" + ".xlsx");
               document.body.appendChild(fileLink);
+              console.log(fileLink);
               fileLink.click();
               document.body.removeChild(fileLink);
             }, 300);
