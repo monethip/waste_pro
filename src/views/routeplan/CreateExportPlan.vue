@@ -16,11 +16,10 @@
         >
           <GmapMarker
             :key="index"
-            v-for="(m, index) in getMarkers()"
-            :position="m.position"
-            @click="latlng = m.position"
+            v-for="(m, index) in customers"
+            :position="getMarkers(m)"
+            @click="latlng = m"
             :draggable="true"
-            @dragend="m.icon"
             :icon="markerOptions"
             :animation="2"
             ref="getMarkers()"
@@ -137,6 +136,8 @@ export default {
       per_page: 15,
       search: "",
       oldVal: "",
+      selectedVillage: [],
+      selectedCutomer: [],
 
       headers: [
         { text: "", value: "index" },
@@ -197,9 +198,13 @@ export default {
       this.$router.go(-1);
     },
     fetchData() {
-      console.log(this.villages);
-      // console.log("create-plan");
+      this.customers = this.items;
+      this.selectedVillage = this.villages;
+      this.customers.filter((item) => {
+        this.selectedCutomer.push(item.id);
+      });
     },
+
     closeDelete() {
       this.$store.commit("modalDelete_State", false);
     },
@@ -235,17 +240,14 @@ export default {
       //   });
     },
     exportRoutePlan() {
-      console.log(this.customers);
       this.loading = true;
       this.$axios
-        .get(
+        .post(
           "export-customer-location/",
-          // {
-          //   params: {
-          //     exclude_customers: [10, 11, 12, 20],
-          //     villages: [10101],
-          //   },
-          // },
+          {
+            exclude_customers: this.selectedCutomer,
+            villages: this.selectedvillage,
+          },
           { responseType: "blob" }
         )
         .then((res) => {
@@ -358,30 +360,18 @@ export default {
     getCenter() {
       if (this.customers.length) {
         const latlng = {
-          lat: parseFloat(this.customers[0].latitude),
-          lng: parseFloat(this.customers[0].longitude),
+          lat: parseFloat(this.customers[0].lat),
+          lng: parseFloat(this.customers[0].lng),
         };
         return latlng;
       }
       return this.latlng;
     },
-    getMarkers() {
-      var markers = [];
-
-      const LatLong = this.customers.map((item) => {
-        return {
-          lat: parseFloat(item.latitude),
-          lng: parseFloat(item.longitude),
-        };
-      });
-      for (var i = 0; i < LatLong.length; i++) {
-        markers.push({
-          position: LatLong[i],
-          title: "Test title",
-          icon: this.getSiteIcon(2), // if you want to show different as per the condition.
-        });
-      }
-      return markers;
+    getMarkers(m) {
+      return {
+        lat: parseFloat(m.lat),
+        lng: parseFloat(m.lng),
+      };
     },
     getSiteIcon(status) {
       try {
@@ -415,9 +405,6 @@ export default {
   },
   created() {
     this.fetchData();
-    this.getMarkers();
-    this.customers = this.items;
-    console.log(this.customers);
   },
 };
 </script>

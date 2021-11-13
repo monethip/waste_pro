@@ -16,8 +16,8 @@
         >
           <GmapMarker
             :key="index"
-            v-for="(m, index) in getMarkers()"
-            :position="m.position"
+            v-for="(m, index) in customers"
+            :position="getMarkers(m)"
             @click="latlng = m.position"
             :draggable="false"
             @dragend="onLocation"
@@ -276,6 +276,7 @@ export default {
         name: "CreateExportPlan",
         params: {
           items: this.customers,
+          villages: this.selectedVillage,
         },
       });
       this.$emit("create-plan", this.customers, this.selectedVillage);
@@ -384,31 +385,35 @@ export default {
     getCenter() {
       if (this.customers.length) {
         const latlng = {
-          lat: parseFloat(this.customers[0].latitude),
-          lng: parseFloat(this.customers[0].longitude),
+          lat: parseFloat(this.customers[0].lat),
+          lng: parseFloat(this.customers[0].lng),
         };
         return latlng;
       }
       return this.latlng;
     },
-    getMarkers() {
+    getMarkers(m) {
+      return {
+        lat: parseFloat(m.lat),
+        lng: parseFloat(m.lng),
+      };
       // generating markers for site map
-      var markers = [];
-      const LatLong = this.customers.map((item) => {
-        return {
-          lat: parseFloat(item.latitude),
-          lng: parseFloat(item.longitude),
-        };
-      });
+      // var markers = [];
+      // const LatLong = this.customers.map((item) => {
+      //   return {
+      //     lat: parseFloat(m.latitude),
+      //     lng: parseFloat(m.longitude),
+      //   };
+      // });
 
-      for (var i = 0; i < LatLong.length; i++) {
-        markers.push({
-          position: LatLong[i],
-          title: "Title",
-          icon: this.getSiteIcon(2), // if you want to show different as per the condition.
-        });
-      }
-      return markers;
+      // for (var i = 0; i < LatLong.length; i++) {
+      //   markers.push({
+      //     position: LatLong[i],
+      //     title: "Title",
+      //     icon: this.getSiteIcon(2), // if you want to show different as per the condition.
+      //   });
+      // }
+      // return markers;
     },
 
     getSiteIcon(status) {
@@ -449,7 +454,6 @@ export default {
   },
   created() {
     this.fetchData();
-    this.getMarkers();
     this.fetchAddress();
   },
 };
