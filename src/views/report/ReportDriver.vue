@@ -71,6 +71,7 @@
           item-text="name"
           item-value="name"
           label="ສະຖານະ"
+          @input="fetchData()"
         ></v-select>
       </v-col>
       <v-col>
@@ -218,13 +219,14 @@ export default {
   },
   methods: {
     fetchData() {
+      console.log(this.selectedStatus);
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("driver", {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
-            filter: this.search,
+            // filter: this.search,
             status: this.selectedStatus,
             date_from: this.start_date,
             date_end: this.end_date,

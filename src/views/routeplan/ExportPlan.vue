@@ -275,7 +275,7 @@ export default {
       this.$router.push({
         name: "CreateExportPlan",
         params: {
-          items: [this.customers, this.selectedVillage],
+          items: this.customers,
         },
       });
       this.$emit("create-plan", this.customers, this.selectedVillage);

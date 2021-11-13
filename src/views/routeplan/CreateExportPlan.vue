@@ -67,6 +67,7 @@
               :search="search"
               :items-per-page="15"
             >
+              <!--
               <template v-slot:item.media="{ item }">
                 <v-avatar
                   size="36px"
@@ -76,7 +77,15 @@
                   <img v-if="img.thumb" :src="img.thumb" />
                 </v-avatar>
               </template>
-
+              -->
+              <template slot="item.index" scope="props">
+                <div>{{ props.index + 1 }}</div>
+              </template>
+              <template v-slot:item.address="{ item }">
+                <div v-if="item.district && item.village">
+                  {{ item.district.name }}, {{ item.village.name }}
+                </div>
+              </template>
               <template v-slot:item.actions="{ item }">
                 <v-icon small class="mr-2" @click="viewPage(item.id)">
                   mdi-eye
@@ -130,12 +139,13 @@ export default {
       oldVal: "",
 
       headers: [
+        { text: "", value: "index" },
         { text: "ຊື່", value: "name" },
         { text: "ນາມສະກຸນ", value: "surname" },
         { text: "Phone", value: "user.phone", sortable: false },
-        { text: "Email", value: "user.email", sortable: false },
+        { text: "ທີ່ຢູ່", value: "address", sortable: false },
         { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
-        { text: "Image", value: "media" },
+        // { text: "Image", value: "media" },
         { text: "", value: "actions", sortable: false },
       ],
       toast: {
@@ -194,31 +204,35 @@ export default {
       this.$store.commit("modalDelete_State", false);
     },
     deleteItem(id) {
+      console.log(id);
       this.customerId = id;
       this.$store.commit("modalDelete_State", true);
     },
 
     deleteItemConfirm() {
       this.loading = true;
-      this.$axios
-        .delete("customer/" + this.customerId)
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.loading = false;
-              this.toast.msg = res.data.message;
-              this.$store.commit("Toast_State", this.toast);
-              this.$store.commit("modalDelete_State", false);
-              this.fetchData();
-            }, 300);
-          }
-        })
-        .catch(() => {
-          this.fetchData();
-          this.$store.commit("Toast_State", this.toast_error);
-          this.$store.commit("modalDelete_State", false);
-          this.loading = false;
-        });
+      this.customers.splice(this.customerId, 1);
+      this.loading = false;
+      this.$store.commit("modalDelete_State", false);
+      // this.$axios
+      //   .delete("customer/" + this.customerId)
+      //   .then((res) => {
+      //     if (res.data.code == 200) {
+      //       setTimeout(() => {
+      //         this.loading = false;
+      //         this.toast.msg = res.data.message;
+      //         this.$store.commit("Toast_State", this.toast);
+      //         this.$store.commit("modalDelete_State", false);
+      //         this.fetchData();
+      //       }, 300);
+      //     }
+      //   })
+      //   .catch(() => {
+      //     this.fetchData();
+      //     this.$store.commit("Toast_State", this.toast_error);
+      //     this.$store.commit("modalDelete_State", false);
+      //     this.loading = false;
+      //   });
     },
     exportRoutePlan() {
       console.log(this.customers);
@@ -226,12 +240,12 @@ export default {
       this.$axios
         .get(
           "export-customer-location/",
-          {
-            params: {
-              exclude_customers: [10, 11, 12, 20],
-              villages: [10101],
-            },
-          },
+          // {
+          //   params: {
+          //     exclude_customers: [10, 11, 12, 20],
+          //     villages: [10101],
+          //   },
+          // },
           { responseType: "blob" }
         )
         .then((res) => {
@@ -401,15 +415,9 @@ export default {
   },
   created() {
     this.fetchData();
-    // this.getMarkers();
-    this.items.map((item) => {
-      console.log("Item" + item[0]);
-      this.customers.push(item[0]);
-    });
-
-    // console.log(this.customers);
-    // console.log(this.items);
-    // console.log(this.villages);
+    this.getMarkers();
+    this.customers = this.items;
+    console.log(this.customers);
   },
 };
 </script>

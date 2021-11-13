@@ -195,7 +195,7 @@ export default {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
-            filter: this.search,
+            // filter: this.search,
             statuses: this.selectedStatus,
             villages: this.selectedVillage,
           },
@@ -268,12 +268,14 @@ export default {
 
     exportData() {
       this.loading = true;
+      console.log(this.selectedStatus);
+      console.log(this.selectedVillage);
       this.$axios
         .get(
           "export-customer/",
           {
             params: {
-              filter: this.search,
+              // filter: this.search,
               statuses: this.selectedStatus,
               villages: this.selectedVillage,
             },
