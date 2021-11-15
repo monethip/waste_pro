@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-breadcrumbs large>
+    <v-breadcrumbs large class="pt-0">
       <v-btn text class="text-primary" @click="backPrevios()">
         <v-icon>mdi-chevron-left</v-icon></v-btn
       >
@@ -91,10 +91,8 @@
                 :disableDefaultUI="true"
               >
                 <GmapMarker
-                  :key="index"
-                  v-for="(m, index) in getMarkers()"
-                  :position="m.position"
-                  @click="latlng = m.title"
+                  :position="getMarkers(data)"
+                  @click="latlng = data"
                   :draggable="false"
                   :icon="markerOptions"
                   :animation="2"
@@ -176,8 +174,6 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data;
-              this.getMarkers();
-              this.getCenter();
             }, 300);
           }
         })
@@ -196,58 +192,21 @@ export default {
     backPrevios() {
       this.$router.go(-1);
     },
-
-    placeMarker() {
-      this.markers = [];
-      this.places = [];
-      if (this.currentPlace) {
-        const marker = {
-          lat: parseFloat(this.data.latitude),
-          lng: parseFloat(this.data.longitude),
-        };
-        this.markers.push({ position: marker });
-        this.latlng = marker;
-      } else {
-        const marker = {
-          lat: parseFloat(this.data.latitude),
-          lng: parseFloat(this.data.longitude),
-        };
-        this.markers.push({ position: marker });
-      }
-    },
-
-    geolocate() {
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.latlng = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-        this.placeMarker();
-      });
-    },
-
-    getMarkers() {
-      // generating markers for site map
-      var markers = [];
-      const marker = {
-        lat: parseFloat(this.data.latitude),
-        lng: parseFloat(this.data.longitude),
-      };
-      markers.push({
-        position: marker,
-        title: this.data.name, // if you want to show different as per the condition.
-      });
-      return markers;
-    },
     getCenter() {
-      if (this.data.latitude) {
+      if (this.data.lat) {
         const latlng = {
-          lat: parseFloat(this.data.latitude),
-          lng: parseFloat(this.data.longitude),
+          lat: parseFloat(this.data.lat),
+          lng: parseFloat(this.data.lng),
         };
         return latlng;
       }
       return this.latlng;
+    },
+    getMarkers(data) {
+      return {
+        lat: parseFloat(data.lat),
+        lng: parseFloat(data.lng),
+      };
     },
     editPage(id) {
       this.$router.push({
@@ -264,10 +223,6 @@ export default {
       this.fetchVillageDetail();
     },
   },
-  mounted() {
-    this.geolocate();
-  },
-
   created() {
     this.fetchData();
   },

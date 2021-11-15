@@ -140,6 +140,26 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
+
+  //Plan
+  {
+    path: '/create/plan',
+    name: 'CreatePlan',
+    component: () => import('@/views/routeplan/CreatePlan.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/edit/plan/:id',
+    name: 'EditPlan',
+    component: () => import('@/views/routeplan/EditPlan.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
   {
     path: '/create/export/plan',
     name: 'CreateExportPlan',
@@ -152,8 +172,17 @@ const routes = [
   },
   {
     path: '/plan',
-    name: 'ExportPlan',
+    name: 'Plan',
     component: () => import('@/views/routeplan/Plan.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/plan/:id',
+    name: 'ViewPlan',
+    component: () => import('@/views/routeplan/ViewPlan.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
@@ -169,9 +198,19 @@ const routes = [
     }
   },
   {
-    path: '/route',
-    name: 'Route',
-    component: () => import('@/views/routeplan/Route.vue'),
+    path: '/plan-month/:id/plan-calendar',
+    name: 'PlanCalendar',
+    component: () => import('@/views/calendar/PlanCalendar.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  //Carendar
+  {
+    path: '/calendar',
+    name: 'Calendar',
+    component: () => import('@/views/calendar/Calendar.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],

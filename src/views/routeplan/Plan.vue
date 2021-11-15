@@ -2,8 +2,11 @@
   <v-container>
     <v-row class="mb-n6">
       <v-col>
-        <v-btn class="btn-primary" @click="createPage()"
+        <v-btn class="btn-primary mr-6" @click="createPlan()"
           ><v-icon>mdi-plus</v-icon>
+        </v-btn>
+        <v-btn class="btn-primary" @click="createPage()"
+          ><v-icon>mdi-application-export</v-icon>
         </v-btn>
       </v-col>
       <v-col>
@@ -26,7 +29,7 @@
           <v-card-text>
             <v-data-table
               :headers="headers"
-              :items="data"
+              :items="plans"
               :search="search"
               :disable-pagination="true"
               hide-default-footer
@@ -45,6 +48,13 @@
                 <v-icon small class="mr-2" @click="viewPage(item.id)">
                   mdi-eye
                 </v-icon>
+                <a
+                  v-for="(data, index) in item.media"
+                  :key="index"
+                  :href="data.url"
+                >
+                  <v-icon small class="mr-2"> mdi-download </v-icon>
+                </a>
                 <v-icon small class="mr-2" @click="editPage(item.id)">
                   mdi-pencil
                 </v-icon>
@@ -146,20 +156,10 @@ export default {
   data() {
     return {
       tab: null,
-      customers: [],
-      data: [
-        {
-          name: "Plan A",
-          village: "Hongkhar",
-          district: "Chanthabury",
-          description: "Form Chanthabury to Sykhodthabong",
-          customer: "200",
-          driver: "5",
-        },
-      ],
+      plans: [],
       plan: {},
       loading: false,
-      customerId: "",
+      planId: "",
       //Pagination
       offset: 12,
       pagination: {},
@@ -169,11 +169,6 @@ export default {
 
       headers: [
         { text: "ຊື່", value: "name" },
-        { text: "ບ້ານ", value: "village" },
-        { text: "ເມືອງ", value: "district" },
-        { text: "ລາຍລະອຽດ", value: "description" },
-        { text: "ຈຳນວນລູກຄ້າ", value: "customer", sortable: false },
-        { text: "ຈຳນວນລົດ", value: "driver", sortable: false },
         { text: "", value: "actions", sortable: false },
       ],
       nameRules: [
@@ -197,7 +192,7 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("customer", {
+        .get("route-plan", {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
@@ -208,8 +203,8 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
-              //   this.customers = res.data.data.data;
-              //   this.pagination = res.data.data.pagination;
+              this.plans = res.data.data.data;
+              this.pagination = res.data.data.pagination;
             }, 300);
           }
         })
@@ -266,14 +261,14 @@ export default {
       this.$store.commit("modalDelete_State", false);
     },
     deleteItem(id) {
-      this.customerId = id;
+      this.planId = id;
       this.$store.commit("modalDelete_State", true);
     },
 
     deleteItemConfirm() {
       this.loading = true;
       this.$axios
-        .delete("customer/" + this.customerId)
+        .delete("route-plan/" + this.planId)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
@@ -297,16 +292,21 @@ export default {
         name: "Export-Plan",
       });
     },
+    createPlan() {
+      this.$router.push({
+        name: "CreatePlan",
+      });
+    },
+
     editPage(id) {
       this.$router.push({
-        name: "EditCustomer",
+        name: "EditPlan",
         params: { id },
       });
     },
     viewPage(id) {
-      console.log(id);
       this.$router.push({
-        name: "ViewCustomer",
+        name: "ViewPlan",
         params: { id },
       });
     },

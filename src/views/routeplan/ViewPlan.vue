@@ -4,13 +4,13 @@
       <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
-      Select Customer to Route Plan</v-breadcrumbs
+      Plan Detail</v-breadcrumbs
     >
     <v-row>
-      <v-col cols="12" class="mb-4">
+      <v-col cols="12" class="mb-4" v-if="switchMap">
         <GmapMap
           :center="getCenter()"
-          :zoom="14"
+          :zoom="16"
           style="width: 100%; height: 450px"
           :disableDefaultUI="true"
         >
@@ -28,38 +28,27 @@
           />
         </GmapMap>
       </v-col>
+
+      <v-col v-if="!switchMap">
+        <v-card>
+          <v-card-text>
+            <div class="iframe-container">
+              <div v-html="plan.embed"></div>
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
     </v-row>
+
     <v-row class="mb-n6">
       <v-col>
-        <v-btn class="btn-primary" @click="createPage()"
-          ><v-icon>mdi-arrow-right-bold-circle-outline</v-icon>
+        <v-btn class="btn-primary" @click="viewMap()"
+          ><v-icon>mdi-map</v-icon>
         </v-btn>
       </v-col>
       <v-col>
-        <v-autocomplete
-          outlined
-          dense
-          :items="districts"
-          v-model="selectedDistrict"
-          item-text="name"
-          item-value="id"
-          label="ເມືອງ"
-        ></v-autocomplete>
+        <h4>ລວມລູກຄ້າ {{ pagination.total }} ຄົນ</h4>
       </v-col>
-      <!--
-      <v-col>
-        <v-autocomplete
-          outlined
-          dense
-          :items="villages"
-          v-model="selectedVillage"
-          item-text="name"
-          item-value="id"
-          label="ບ້ານ"
-          multiple
-        ></v-autocomplete>
-      </v-col>
-      -->
       <v-col>
         <v-text-field
           outlined
@@ -72,37 +61,6 @@
           @keyup.enter="Search()"
         >
         </v-text-field>
-      </v-col>
-    </v-row>
-
-    <v-row class="mb-n4">
-      <v-col>
-        <v-autocomplete
-          outlined
-          dense
-          v-model="selectedVillage"
-          :items="villages"
-          item-text="name"
-          item-value="id"
-          label="Favorite Fruits"
-          multiple
-        >
-          <template v-slot:prepend-item>
-            <v-list-item ripple @click="toggle">
-              <v-list-item-action>
-                <v-icon
-                  :color="selectedVillage.length > 0 ? 'indigo darken-4' : ''"
-                >
-                  {{ icon }}
-                </v-icon>
-              </v-list-item-action>
-              <v-list-item-content>
-                <v-list-item-title> Select All </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider class="mt-2"></v-divider>
-          </template>
-        </v-autocomplete>
       </v-col>
     </v-row>
 
@@ -125,6 +83,11 @@
                 >
                   <img v-if="img.thumb" :src="img.thumb" />
                 </v-avatar>
+              </template>
+              <template v-slot:item.status="{ item }">
+                <v-chip :color="statusColor(item.customer.status)">{{
+                  item.customer.status
+                }}</v-chip>
               </template>
 
               <template v-slot:item.actions="{ item }">
@@ -157,6 +120,7 @@ export default {
       tab: null,
       customers: [],
       loading: false,
+      switchMap: true,
       customerId: "",
       //Pagination
       offset: 12,
@@ -169,14 +133,14 @@ export default {
       selectedDistrict: "",
       villages: [],
       selectedVillage: [],
+      plan: {},
 
       headers: [
-        { text: "ຊື່", value: "name" },
-        { text: "ນາມສະກຸນ", value: "surname" },
-        { text: "Phone", value: "user.phone", sortable: false },
-        { text: "Email", value: "user.email", sortable: false },
-        { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
-        { text: "Image", value: "media" },
+        { text: "ລຳດັບ", value: "priority", sortable: false, align: "center" },
+        { text: "ຊື່", value: "customer.name" },
+        { text: "ນາມສະກຸນ", value: "customer.surname" },
+        { text: "ສະຖານະ", value: "status", sortable: false },
+        { text: "ເຮືອນເລກທີ", value: "customer.house_number", sortable: false },
         { text: "", value: "actions", sortable: false },
       ],
       toast: {
@@ -228,12 +192,9 @@ export default {
       this.$router.go(-1);
     },
     fetchData() {
-      //   const mkers = [];
-      //   const LatLong = [{ lat: "", lng: "" }];
-      console.log(this.selectedVillage);
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("customer", {
+        .get("route-plan/" + this.$route.params.id + "/route-plan-detail", {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
@@ -246,19 +207,7 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.customers = res.data.data.data;
-              //   console.log(this.customers);
               this.pagination = res.data.data.pagination;
-              // this.customers.map((item) => {
-              //   this.latlng.lat.push(parseFloat(item[0].latitude)),
-              //     this.latlng.lng.push(parseFloat(item[0].longitude));
-              //   return { lat: item.latitude, lng: item.longitude };
-              // });
-              // this.customers.forEach((item) => {
-              //   console.log(item);
-              //   this.latlng.lat.push(parseFloat(item[0].latitude)),
-              //     this.latlng.lng.push(parseFloat(item[0].longitude));
-              // });
-              // console.log(this.latlng);
               this.getCenter();
             }, 300);
           }
@@ -273,6 +222,18 @@ export default {
             }
           }
         });
+    },
+    fetchDetail() {
+      this.$axios
+        .get("route-plan/" + this.$route.params.id)
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.plan = res.data.data;
+            }, 300);
+          }
+        })
+        .catch(() => {});
     },
 
     fetchAddress() {
@@ -315,18 +276,20 @@ export default {
       });
       this.$emit("create-plan", this.customers, this.selectedVillage);
     },
-    editPage(id) {
-      this.$router.push({
-        name: "EditCustomer",
-        params: { id },
-      });
-    },
+
     viewPage(id) {
-      console.log(id);
       this.$router.push({
         name: "ViewCustomer",
         params: { id },
       });
+    },
+    viewMap() {
+      this.switchMap = !this.switchMap;
+      // if (this.switchMap == true) {
+      //   this.switchMap = false;
+      // } else{
+
+      // }
     },
     Search() {
       GetOldValueOnInput(this);
@@ -345,7 +308,6 @@ export default {
       this.latlng.lat = evt.latLng.lat();
       this.latlng.lng = evt.latLng.lng();
       this.address = this.createNewAddressName();
-      console.log(this.latlng);
       //   this.customer_edit.latitude = this.center.lat;
       //   this.customer_edit.longitude = this.center.lng;
     },
@@ -419,8 +381,8 @@ export default {
     getCenter() {
       if (this.customers.length) {
         const latlng = {
-          lat: parseFloat(this.customers[0].lat),
-          lng: parseFloat(this.customers[0].lng),
+          lat: parseFloat(this.customers[0].customer.lat),
+          lng: parseFloat(this.customers[0].customer.lng),
         };
         return latlng;
       }
@@ -428,26 +390,9 @@ export default {
     },
     getMarkers(m) {
       return {
-        lat: parseFloat(m.lat),
-        lng: parseFloat(m.lng),
+        lat: parseFloat(m.customer.lat),
+        lng: parseFloat(m.customer.lng),
       };
-      // generating markers for site map
-      // var markers = [];
-      // const LatLong = this.customers.map((item) => {
-      //   return {
-      //     lat: parseFloat(m.latitude),
-      //     lng: parseFloat(m.longitude),
-      //   };
-      // });
-
-      // for (var i = 0; i < LatLong.length; i++) {
-      //   markers.push({
-      //     position: LatLong[i],
-      //     title: "Title",
-      //     icon: this.getSiteIcon(2), // if you want to show different as per the condition.
-      //   });
-      // }
-      // return markers;
     },
 
     getSiteIcon(status) {
@@ -474,7 +419,6 @@ export default {
       console.log(this.likesAllFruit);
       this.$nextTick(() => {
         if (this.likesAllFruit) {
-          console.log("Hei");
           this.selectedVillage = [];
         } else {
           // this.selectedVillage = this.villages.slice();
@@ -484,6 +428,11 @@ export default {
           console.log(this.selectedVillage);
         }
       });
+    },
+    statusColor(value) {
+      if (value == "active") return "success";
+      else if (value == "inactive") return "error";
+      else return "info";
     },
   },
   computed: {
@@ -517,6 +466,7 @@ export default {
   },
   created() {
     this.fetchData();
+    this.fetchDetail();
     this.fetchAddress();
   },
 };

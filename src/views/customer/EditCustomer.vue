@@ -212,7 +212,7 @@
               <v-col cols="6">
                 <v-text-field
                   label="Latitude"
-                  v-model="data.latitude"
+                  v-model="data.lat"
                   type="number"
                   class="input-number"
                 ></v-text-field>
@@ -220,7 +220,7 @@
               <v-col cols="6">
                 <v-text-field
                   label="Longitude"
-                  v-model="data.longitude"
+                  v-model="data.lng"
                   type="number"
                   class="input-number"
                 ></v-text-field>
@@ -248,7 +248,7 @@
                 >
                   <GmapMarker
                     :key="index"
-                    v-for="(m, index) in getMarkers()"
+                    v-for="(m, index) in markers"
                     :position="m.position"
                     @click="latlng = m.position"
                     :draggable="true"
@@ -372,9 +372,7 @@ export default {
               res.data.data.village_details.map((item) => {
                 this.village_variation_id.push(item[0].village_variation_id);
               });
-              console.log(this.village_variation_id);
               this.getCenter();
-              this.getMarkers();
             }, 300);
           }
         })
@@ -456,7 +454,6 @@ export default {
     },
 
     UpdateData() {
-      console.log(this.selectedVillageDetail);
       let formData = new FormData();
       this.image_list.map((item) => {
         formData.append("images[]", item);
@@ -470,8 +467,8 @@ export default {
       formData.append("house_number", this.data.house_number);
       formData.append("phone", this.data.user.phone);
       formData.append("email", this.data.user.email);
-      formData.append("latitude", this.latlng.lat);
-      formData.append("longitude", this.latlng.lng);
+      formData.append("lat", this.latlng.lat);
+      formData.append("lng", this.latlng.lng);
       formData.append("_method", "PUT");
 
       if (this.$refs.form.validate() == true) {
@@ -518,8 +515,8 @@ export default {
       this.latlng.lat = evt.latLng.lat();
       this.latlng.lng = evt.latLng.lng();
       this.address = this.createNewAddressName();
-      this.data.latitude = this.latlng.lat;
-      this.data.longitude = this.latlng.lng;
+      this.data.lat = this.latlng.lat;
+      this.data.lat = this.latlng.lng;
     },
     setPlace(place) {
       this.currentPlace = place;
@@ -537,8 +534,8 @@ export default {
         this.latlng = marker;
       } else {
         const marker = {
-          lat: parseFloat(this.data.latitude),
-          lng: parseFloat(this.data.longitude),
+          lat: parseFloat(this.data.lat),
+          lng: parseFloat(this.data.lng),
         };
         this.markers.push({ position: marker });
       }
@@ -553,8 +550,8 @@ export default {
     geolocate() {
       navigator.geolocation.getCurrentPosition((position) => {
         this.latlng = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
+          lat: position.coords.lat,
+          lng: position.coords.lng,
         };
         this.placeMarker();
       });
@@ -573,28 +570,21 @@ export default {
         isCreate: this.isCreate,
       });
     },
-    getMarkers() {
-      // generating markers for site map
-      var markers = [];
-      const marker = {
-        lat: parseFloat(this.data.latitude),
-        lng: parseFloat(this.data.longitude),
-      };
-      markers.push({
-        position: marker,
-        title: this.data.name, // if you want to show different as per the condition.
-      });
-      return markers;
-    },
     getCenter() {
-      if (this.data.latitude) {
+      if (this.data.lat) {
         const latlng = {
-          lat: parseFloat(this.data.latitude),
-          lng: parseFloat(this.data.longitude),
+          lat: parseFloat(this.data.lat),
+          lng: parseFloat(this.data.lng),
         };
         return latlng;
       }
       return this.latlng;
+    },
+    getMarkers(data) {
+      return {
+        lat: parseFloat(data.lat),
+        lng: parseFloat(data.lng),
+      };
     },
   },
   watch: {

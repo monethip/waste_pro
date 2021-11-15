@@ -480,8 +480,8 @@ export default {
       formData.append("surname", this.data.surname);
       formData.append("village_id", this.selectedVillage);
       formData.append("house_number", this.data.house_number);
-      formData.append("latitude", this.latlng.lat);
-      formData.append("longitude", this.latlng.lng);
+      formData.append("lat", this.latlng.lat);
+      formData.append("lng", this.latlng.lng);
       formData.append("phone", this.data.phone);
       formData.append("email", this.data.email);
       formData.append("password", this.data.password);

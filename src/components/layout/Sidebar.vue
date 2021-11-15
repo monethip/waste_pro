@@ -168,16 +168,16 @@ export default {
           title: "ໜ້າຫຼັກ",
           to: "/",
         },
-        {
-          icon: "mdi-calendar-month-outline",
-          title: "ແພັກເກັດ",
-          to: "/package",
-        },
-        {
-          icon: "mdi-home-account",
-          title: "ທີ່ຢູ່",
-          to: "/village",
-        },
+        // {
+        //   icon: "mdi-calendar-month-outline",
+        //   title: "ແພັກເກັດ",
+        //   to: "/package",
+        // },
+        // {
+        //   icon: "mdi-home-account",
+        //   title: "ທີ່ຢູ່",
+        //   to: "/village",
+        // },
       ],
 
       routes: [
@@ -187,9 +187,9 @@ export default {
           to: "/plan",
         },
         {
-          icon: "mdi-map-marker-path",
-          title: "Route",
-          to: "/route",
+          icon: "mdi-calendar-month",
+          title: "Calendar",
+          to: "/calendar",
         },
       ],
 
