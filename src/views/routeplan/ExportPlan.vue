@@ -4,7 +4,7 @@
       <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
-      Select Customer to Route Plan</v-breadcrumbs
+      ເລືອກລູກຄ້າເຂົ້າແຜນເສັ້ນທາງ</v-breadcrumbs
     >
     <v-row>
       <v-col cols="12" class="mb-4">
@@ -34,6 +34,9 @@
         <v-btn class="btn-primary" @click="createPage()"
           ><v-icon>mdi-arrow-right-bold-circle-outline</v-icon>
         </v-btn>
+      </v-col>
+      <v-col>
+        <h4>ລວມລູກຄ້າ {{ pagination.total }} ຄົນ</h4>
       </v-col>
       <v-col>
         <v-autocomplete
@@ -84,7 +87,7 @@
           :items="villages"
           item-text="name"
           item-value="id"
-          label="Favorite Fruits"
+          label="ເລືອກບ້ານ"
           multiple
         >
           <template v-slot:prepend-item>
@@ -103,6 +106,13 @@
             <v-divider class="mt-2"></v-divider>
           </template>
         </v-autocomplete>
+      </v-col>
+    </v-row>
+    <v-row class="my-n4">
+      <v-col>
+        <div>
+          <span>{{ selectedVillage }}, </span>
+        </div>
       </v-col>
     </v-row>
 
@@ -161,7 +171,7 @@ export default {
       //Pagination
       offset: 12,
       pagination: {},
-      per_page: 15,
+      per_page: 50,
       search: "",
       oldVal: "",
       //Filter
@@ -169,6 +179,7 @@ export default {
       selectedDistrict: "",
       villages: [],
       selectedVillage: [],
+      selectedAllVillage: [],
 
       headers: [
         { text: "ຊື່", value: "name" },
@@ -474,7 +485,6 @@ export default {
       console.log(this.likesAllFruit);
       this.$nextTick(() => {
         if (this.likesAllFruit) {
-          console.log("Hei");
           this.selectedVillage = [];
         } else {
           // this.selectedVillage = this.villages.slice();
@@ -507,6 +517,19 @@ export default {
     },
     selectedVillage: function () {
       this.fetchData();
+      // var data = {};
+      // this.villages.filter((item) => {
+      //   // this.selectedVillage.includes(item.id);
+      //   if (this.selectedVillage) {
+      //     data.push(item);
+      //   }
+      // });
+      // console.log(data);
+      // // console.log("Hi" + selectedAllVillage);
+      // // // this.villages.filter((item) => {
+      // // this.selectedAllVillage.push(this.selectedVillage);
+      // // console.log(this.selectedAllVillage);
+      // // });
     },
     selectedDistrict: function () {
       this.fetchVillage();

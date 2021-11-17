@@ -43,6 +43,11 @@
                 mdi-pencil
               </v-icon>
               <v-icon small @click="deleteItem(item.id)"> mdi-delete </v-icon>
+            </template>
+            <template v-slot:item.plan="{ item }">
+              <v-icon small class="mr-2" @click="editModal(item)">
+                mdi-pencil
+              </v-icon>
             </template> </v-data-table
           ><br />
           <template>
@@ -62,52 +67,91 @@
       <template @close="close">
         <v-card>
           <v-card-title>
-            <span class="headline">Add Calendar</span>
+            <span class="headline">Add Plan Calendar</span>
           </v-card-title>
           <v-card-text>
             <v-container>
               <v-form ref="form" lazy-validation>
                 <v-row>
                   <v-col cols="12">
-                    <v-text-field
-                      :rules="nameRules"
-                      v-model="plan.name"
-                      label="ຊື່"
+                    <v-select
+                      v-model="selectedDriver"
+                      :items="drivers"
+                      item-text="name"
+                      item-value="id"
+                      label="ຄົນຂົບລົດ"
                       outlined
                       dense
-                    >
-                    </v-text-field>
+                    ></v-select>
                     <p class="errors">
-                      {{ server_errors.name }}
+                      {{ server_errors.driver_id }}
+                    </p>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="12">
+                    <v-select
+                      v-model="selectedRoutePlan"
+                      :items="routeplans"
+                      item-text="name"
+                      item-value="id"
+                      label="ເລືອກແຜນເສັ້ນທາງ"
+                      outlined
+                      dense
+                    ></v-select>
+                    <p class="errors">
+                      {{ server_errors.route_plan_id }}
                     </p>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col cols="12">
                     <v-menu
-                      :rules="monthRules"
-                      v-model="start_menu"
+                      ref="menu"
+                      v-model="menu"
                       :close-on-content-click="false"
-                      :nudge-right="40"
+                      :return-value.sync="dates"
                       transition="scale-transition"
                       offset-y
                       min-width="auto"
                     >
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="start_date"
-                          label="ເລີ່ມວັນທີ"
+                        <v-combobox
+                          v-model="dates"
+                          multiple
+                          chips
+                          small-chips
+                          label="ວັນທີ"
+                          prepend-icon="mdi-calendar"
                           readonly
-                          outlined
                           v-bind="attrs"
                           v-on="on"
-                          dense
-                        ></v-text-field>
+                        ></v-combobox>
                       </template>
-                      <v-date-picker v-model="start_date"></v-date-picker>
+                      <v-date-picker
+                        v-model="dates"
+                        multiple
+                        no-title
+                        scrollable
+                      >
+                        <v-spacer></v-spacer>
+                        <v-btn text color="primary" @click="menu = false">
+                          Cancel
+                        </v-btn>
+                        <v-btn
+                          text
+                          color="primary"
+                          @click="$refs.menu.save(dates)"
+                        >
+                          OK
+                        </v-btn>
+                      </v-date-picker>
                     </v-menu>
                     <p class="errors">
-                      {{ server_errors.month }}
+                      {{ server_errors.date }}
+                    </p>
+                    <p class="errors">
+                      {{ server_errors.date[0] }}
                     </p>
                   </v-col>
                 </v-row>
@@ -137,54 +181,88 @@
       <template @close="close">
         <v-card>
           <v-card-title>
-            <span class="headline">Update Calendar</span>
+            <span class="headline">Update Plan Calendar</span>
           </v-card-title>
           <v-card-text>
             <v-container>
               <v-form ref="form" lazy-validation>
                 <v-row>
                   <v-col cols="12">
-                    <v-text-field
-                      v-model="calendarEdit.name"
-                      label="ຊື່"
+                    <v-select
+                      v-model="calendarEdit.driver_id"
+                      :items="drivers"
+                      item-text="name"
+                      item-value="id"
+                      label="ຄົນຂົບລົດ"
                       outlined
                       dense
-                      :rules="nameRules"
-                    >
-                    </v-text-field>
+                    ></v-select>
                     <p class="errors">
-                      {{ server_errors.name }}
+                      {{ server_errors.driver_id }}
+                    </p>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="12">
+                    <v-select
+                      v-model="calendarEdit.route_plan_id"
+                      :items="routeplans"
+                      item-text="name"
+                      item-value="id"
+                      label="ເລືອກແຜນເສັ້ນທາງ"
+                      outlined
+                      dense
+                    ></v-select>
+                    <p class="errors">
+                      {{ server_errors.route_plan_id }}
                     </p>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col cols="12">
                     <v-menu
-                      v-model="start_menu"
+                      ref="menu"
+                      v-model="menu"
                       :close-on-content-click="false"
-                      :nudge-right="40"
+                      :return-value.sync="dates"
                       transition="scale-transition"
                       offset-y
                       min-width="auto"
                     >
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="calendarEdit.month"
-                          label="ເລີ່ມວັນທີ"
+                        <v-combobox
+                          v-model="dates"
+                          multiple
+                          chips
+                          small-chips
+                          label="ວັນທີ"
+                          prepend-icon="mdi-calendar"
                           readonly
-                          outlined
                           v-bind="attrs"
                           v-on="on"
-                          dense
-                          :rules="monthRules"
-                        ></v-text-field>
+                        ></v-combobox>
                       </template>
                       <v-date-picker
-                        v-model="calendarEdit.month"
-                      ></v-date-picker>
+                        v-model="dates"
+                        multiple
+                        no-title
+                        scrollable
+                      >
+                        <v-spacer></v-spacer>
+                        <v-btn text color="primary" @click="menu = false">
+                          Cancel
+                        </v-btn>
+                        <v-btn
+                          text
+                          color="primary"
+                          @click="$refs.menu.save(dates)"
+                        >
+                          OK
+                        </v-btn>
+                      </v-date-picker>
                     </v-menu>
                     <p class="errors">
-                      {{ server_errors.month }}
+                      {{ server_errors.date }}
                     </p>
                   </v-col>
                 </v-row>
@@ -248,10 +326,13 @@ export default {
       search: "",
       oldVal: "",
       //Add Package
-      start_date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-        .toISOString()
-        .substr(0, 10),
-      start_menu: false,
+      // start_date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+      //   .toISOString()
+      //   .substr(0, 10),
+      // start_menu: false,
+
+      dates: [],
+      menu: false,
       packages: [],
       selectedPackage: "",
       server_errors: {},
@@ -264,10 +345,19 @@ export default {
       plan: {},
       calendarEdit: {},
 
+      routeplans: [],
+      selectedRoutePlan: "",
+      drivers: [],
+      selectedDriver: "",
+
       headers: [
-        { text: "ຊື່", value: "name" },
-        { text: "ວັນທີ", value: "month" },
-        { text: "ຈຳນວນ", value: "plan_calendars_count", sortable: false },
+        { text: "ຊື່ພະນັກງານ", value: "driver.name" },
+        { text: "ວັນທີ", value: "date" },
+        {
+          text: "ຈຳນວນ",
+          value: "plan_calendar_details_count",
+          sortable: false,
+        },
         { text: "", value: "actions", sortable: false },
       ],
       toast: {
@@ -294,7 +384,7 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("plan-month", {
+        .get("plan-month/" + this.$route.params.id + "/plan-calendar", {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
@@ -313,6 +403,7 @@ export default {
           this.$store.commit("Loading_State", false);
           this.fetchData();
           if (error.response.status == 422) {
+            this.toast.msg = error.message;
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
@@ -320,8 +411,34 @@ export default {
           }
         });
     },
+    fetchRoutePlan() {
+      this.$axios
+        .get("route-plan")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.routeplans = res.data.data;
+            }, 300);
+          }
+        })
+        .catch(() => {});
+    },
+    fetchDriver() {
+      this.$axios
+        .get("driver")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.drivers = res.data.data;
+            }, 300);
+          }
+        })
+        .catch(() => {});
+    },
 
     AddPlan() {
+      this.fetchRoutePlan();
+      this.fetchDriver();
       this.$store.commit("modalAdd_State", true);
     },
     closeDelete() {
@@ -335,7 +452,12 @@ export default {
     deleteItemConfirm() {
       this.loading = true;
       this.$axios
-        .delete("plan-month/" + this.calendarId)
+        .delete(
+          "plan-month/" +
+            this.$route.params.id +
+            "/plan-calendar" +
+            this.calendarId
+        )
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
@@ -359,9 +481,10 @@ export default {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .post("plan-month/", {
-            name: this.plan.name,
-            month: this.start_date,
+          .post("plan-month/" + this.$route.params.id + "/plan-calendar", {
+            driver_id: this.selectedDriver,
+            route_plan_id: this.selectedRoutePlan,
+            date: this.dates,
           })
           .then((res) => {
             if (res.data.code == 200) {
@@ -369,6 +492,9 @@ export default {
                 this.loading = false;
                 this.closeAddModal();
                 this.fetchData();
+                this.dates = [];
+                this.selectedRoutePlan = "";
+                this.selectedDriver = "";
                 this.reset();
                 this.$store.commit("Toast_State", this.toast);
               }, 300);
@@ -380,8 +506,10 @@ export default {
             this.fetchData();
             if (error.response.status == 422) {
               var obj = error.response.data.errors;
+              console.log(obj);
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
+                console.log(this.server_errors);
               }
             }
           });
@@ -391,6 +519,8 @@ export default {
       this.$store.commit("modalAdd_State", false);
     },
     editModal(item) {
+      this.fetchRoutePlan();
+      this.fetchDriver();
       this.calendarEdit = item;
       this.$store.commit("modalEdit_State", true);
     },
@@ -398,16 +528,24 @@ export default {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .put("plan-month/" + this.calendarEdit.id, {
-            name: this.calendarEdit.name,
-            month: this.calendarEdit.month,
-          })
+          .put(
+            "plan-month/" +
+              this.$route.params.id +
+              "/plan-calendar/" +
+              this.calendarEdit.id,
+            {
+              driver_id: this.calendarEdit.driver_id,
+              route_plan_id: this.calendarEdit.route_plan_id,
+              date: this.calendarEdit.date,
+            }
+          )
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
                 this.loading = false;
                 this.closeEditModal();
                 this.fetchData();
+                this.dates = [];
                 this.reset();
                 this.$store.commit("Toast_State", this.toast);
               }, 300);
@@ -432,11 +570,6 @@ export default {
     Search() {
       GetOldValueOnInput(this);
     },
-    statusColor(value) {
-      if (value == "active") return "success";
-      else if (value == "inactive") return "error";
-      else return "info";
-    },
   },
   watch: {
     search: function (value) {
@@ -444,20 +577,14 @@ export default {
         this.fetchData();
       }
     },
-    selectedVillage: function () {
-      this.fetchData();
+    selectedDriver: function () {
+      this.server_errors.driver_id = "";
     },
-    "plan.name": function () {
-      this.server_errors.name = "";
+    selectedRoutePlan: function () {
+      this.server_errors.route_plan_id = "";
     },
-    start_date: function () {
-      this.server_errors.month = "";
-    },
-    "calendarEdit.name": function () {
-      this.server_errors.name = "";
-    },
-    "calendarEdit.month": function () {
-      this.server_errors.month = "";
+    dates: function () {
+      this.server_errors.date = "";
     },
   },
   created() {

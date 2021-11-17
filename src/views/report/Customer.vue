@@ -271,15 +271,9 @@ export default {
       console.log(this.selectedStatus);
       console.log(this.selectedVillage);
       this.$axios
-        .get(
+        .post(
           "export-customer/",
-          {
-            params: {
-              // filter: this.search,
-              statuses: this.selectedStatus,
-              villages: this.selectedVillage,
-            },
-          },
+          { statuses: this.selectedStatus, villages: this.selectedVillage },
           { responseType: "blob" }
         )
         .then((res) => {

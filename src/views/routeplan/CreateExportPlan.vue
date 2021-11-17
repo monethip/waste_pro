@@ -4,11 +4,12 @@
       <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
-      Create Route Plan</v-breadcrumbs
+      Export ຂໍ້ມູນລູກຄ້າໃນແຜນເສັ້ນທາງ</v-breadcrumbs
     >
     <v-row>
       <v-col cols="12" class="mb-4">
         <GmapMap
+          v-if="customers"
           :center="getCenter()"
           :zoom="14"
           style="width: 100%; height: 450px"
@@ -37,11 +38,9 @@
           ><v-icon>mdi-arrow-right-bold-circle-outline</v-icon>
         </v-btn>
       </v-col>
-      <!--
       <v-col>
-        <p>ຈຳນວນ {{ customers.length }}</p>
+        <h4 v-if="customers">ລວມລູກຄ້າ {{ customers.length }} ຄົນ</h4>
       </v-col>
--->
       <v-col>
         <v-text-field
           outlined
@@ -64,7 +63,7 @@
               :headers="headers"
               :items="customers"
               :search="search"
-              :items-per-page="15"
+              :items-per-page="25"
             >
               <!--
               <template v-slot:item.media="{ item }">
@@ -89,7 +88,12 @@
                 <v-icon small class="mr-2" @click="viewPage(item.id)">
                   mdi-eye
                 </v-icon>
-                <v-icon small @click="deleteItem(item.id)"> mdi-delete </v-icon>
+                <!--  <v-icon small @click="deleteItem(item.id)"> mdi-delete </v-icon> -->
+              </template>
+              <template slot="item.delete" slot-scope="props">
+                <v-icon small @click="deleteItem(props.index)">
+                  mdi-delete
+                </v-icon>
               </template>
             </v-data-table>
           </v-card-text>
@@ -125,7 +129,6 @@ export default {
   props: ["items", "villages"],
   data() {
     return {
-      tab: null,
       customers: [],
       countcutomer: 0,
       loading: false,
@@ -146,7 +149,7 @@ export default {
         { text: "Phone", value: "user.phone", sortable: false },
         { text: "ທີ່ຢູ່", value: "address", sortable: false },
         { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
-        // { text: "Image", value: "media" },
+        { text: "", value: "delete" },
         { text: "", value: "actions", sortable: false },
       ],
       toast: {
@@ -200,23 +203,28 @@ export default {
     fetchData() {
       this.customers = this.items;
       this.selectedVillage = this.villages;
-      this.customers.filter((item) => {
-        this.selectedCutomer.push(item.id);
-      });
+      console.log(this.customers);
+      this.selectedCutomer = [];
+      if (this.customers) {
+        this.customers.filter((item) => {
+          this.selectedCutomer.push(item.id);
+        });
+      }
     },
 
     closeDelete() {
       this.$store.commit("modalDelete_State", false);
     },
     deleteItem(id) {
-      console.log(id);
       this.customerId = id;
       this.$store.commit("modalDelete_State", true);
     },
 
     deleteItemConfirm() {
+      console.log(this.customerId);
       this.loading = true;
       this.customers.splice(this.customerId, 1);
+      this.fetchData();
       this.loading = false;
       this.$store.commit("modalDelete_State", false);
       // this.$axios
@@ -240,13 +248,15 @@ export default {
       //   });
     },
     exportRoutePlan() {
+      console.log(this.selectedCutomer);
+      console.log(this.selectedVillage);
       this.loading = true;
       this.$axios
         .post(
           "export-customer-location/",
           {
-            exclude_customers: this.selectedCutomer,
-            villages: this.selectedvillage,
+            exclude_customers: [10650],
+            villages: [1, 2, 3, 4, 5],
           },
           { responseType: "blob" }
         )
@@ -358,7 +368,7 @@ export default {
       });
     },
     getCenter() {
-      if (this.customers.length) {
+      if (this.customers.length > 0) {
         const latlng = {
           lat: parseFloat(this.customers[0].lat),
           lng: parseFloat(this.customers[0].lng),

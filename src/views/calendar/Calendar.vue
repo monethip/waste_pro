@@ -30,10 +30,12 @@
             :disable-pagination="true"
             hide-default-footer
           >
-            <template v-slot:item.actions="{ item }">
-              <v-icon small class="mr-2" @click="gotoPlanCalendar(item.id)"
-                >mdi-eye</v-icon
+            <template v-slot:item.plan="{ item }">
+              <v-icon medium class="mr-2" @click="gotoPlanCalendar(item.id)"
+                >mdi-map-marker-path</v-icon
               >
+            </template>
+            <template v-slot:item.actions="{ item }">
               <v-icon small class="mr-2" @click="editModal(item)">
                 mdi-pencil
               </v-icon>
@@ -263,6 +265,12 @@ export default {
         { text: "ຊື່", value: "name" },
         { text: "ວັນທີ", value: "month" },
         { text: "ຈຳນວນ", value: "plan_calendars_count", sortable: false },
+        {
+          text: "ລາຍລະອຽດແຜນ",
+          value: "plan",
+          sortable: false,
+          align: "center",
+        },
         { text: "", value: "actions", sortable: false },
       ],
       toast: {
