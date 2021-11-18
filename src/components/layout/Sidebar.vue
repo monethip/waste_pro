@@ -188,7 +188,7 @@ export default {
         },
         {
           icon: "mdi-calendar-month",
-          title: "Calendar",
+          title: "Plan Calendar",
           to: "/calendar",
         },
       ],
@@ -221,7 +221,12 @@ export default {
         },
         {
           icon: "mdi-home-account",
-          title: "Address",
+          title: "ທີ່ຢູ່",
+          to: "/village",
+        },
+        {
+          icon: "mdi-home-account",
+          title: "ຈັດການລາຍລະອຽດທີ່ຢູ່",
           to: "/village-variation",
         },
       ],

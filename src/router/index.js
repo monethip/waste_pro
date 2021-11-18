@@ -206,7 +206,17 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
-  //Carendar
+  //Plan Calendar Detail
+  {
+    path: '/plan-calendar/:id/detail',
+    name: 'PlanCalendarDetail',
+    component: () => import('@/views/calendar/PlanCalendarDetail.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  //Calendar
   {
     path: '/calendar',
     name: 'Calendar',

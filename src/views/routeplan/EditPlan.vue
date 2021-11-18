@@ -4,7 +4,7 @@
       <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
-      Update Plan</v-breadcrumbs
+      ແກ້ໄຂແຜນເສັ້ນທາງ</v-breadcrumbs
     >
     <v-card>
       <v-card-title>
@@ -23,19 +23,6 @@
                 ></v-text-field>
                 <p class="errors">
                   {{ server_errors.name }}
-                </p>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col align="12">
-                <v-file-input
-                  label="File input (.kml)"
-                  v-model="selectedFile"
-                  :rules="rulesFile"
-                  type="file"
-                ></v-file-input>
-                <p class="errors">
-                  {{ server_errors.file }}
                 </p>
               </v-col>
             </v-row>
@@ -66,7 +53,7 @@
             :disabled="loading"
             @click="UpdateData()"
           >
-            Save
+            Update
           </v-btn>
         </v-card-actions>
       </v-card-text>
@@ -89,10 +76,6 @@ export default {
       nameRules: [
         (v) => !!v || "Name is required",
         (v) => (v && v.length >= 2) || "Name must be less than 2 characters",
-      ],
-      rulesFile: [
-        (v) => !!v || "File is required",
-        (v) => (v && v.size > 0) || "File is required",
       ],
     };
   },
@@ -118,7 +101,6 @@ export default {
       let formData = new FormData();
       formData.append("name", this.plan.name);
       formData.append("embed", this.plan.embed);
-      formData.append("file", this.selectedFile);
       formData.append("_method", "PUT");
       if (this.$refs.form.validate() == true) {
         this.loading = true;
@@ -156,8 +138,8 @@ export default {
     "data.embed": function () {
       this.server_errors.embed = "";
     },
-    "data.file": function () {
-      this.server_errors.file = "";
+    "data.name": function () {
+      this.server_errors.name = "";
     },
   },
   created() {

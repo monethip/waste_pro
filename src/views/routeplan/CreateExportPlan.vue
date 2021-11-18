@@ -15,15 +15,23 @@
           style="width: 100%; height: 450px"
           :disableDefaultUI="true"
         >
+          <gmap-info-window
+            :options="infoOptions"
+            :position="infoPosition"
+            :opened="infoOpened"
+            :conent="infoContent"
+            @closeclick="infoOpened = false"
+            >{{ infoContent }}
+          </gmap-info-window>
           <GmapMarker
             :key="index"
             v-for="(m, index) in customers"
             :position="getMarkers(m)"
-            @click="latlng = m"
-            :draggable="true"
+            @click="toggleInfo(m, index)"
+            :draggable="false"
             :icon="markerOptions"
             :animation="2"
-            ref="getMarkers()"
+            :clickable="true"
           />
         </GmapMap>
       </v-col>
@@ -64,6 +72,7 @@
               :items="customers"
               :search="search"
               :items-per-page="25"
+              v-model="selectedRows"
             >
               <!--
               <template v-slot:item.media="{ item }">
@@ -76,6 +85,7 @@
                 </v-avatar>
               </template>
               -->
+
               <template slot="item.index" scope="props">
                 <div>{{ props.index + 1 }}</div>
               </template>
@@ -88,13 +98,27 @@
                 <v-icon small class="mr-2" @click="viewPage(item.id)">
                   mdi-eye
                 </v-icon>
-                <!--  <v-icon small @click="deleteItem(item.id)"> mdi-delete </v-icon> -->
               </template>
               <template slot="item.delete" slot-scope="props">
-                <v-icon small @click="deleteItem(props.index)">
-                  mdi-delete
-                </v-icon>
+                <v-icon small @click="deleteItem(props)"> mdi-delete </v-icon>
               </template>
+
+              <!--
+              <template v-slot:item="{ item }">
+                <tr :class="selectedRows.indexOf(item.id) - 1 ? 'cyan' : ''">
+                  <td>{{ item.id + 1 }}</td>
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.surname }}</td>
+                  <td>{{ item.user.phone }}</td>
+                  <td>{{ item.house_number }}</td>
+                  <td>
+                    <v-icon small @click="deleteItem(item.index)">
+                      mdi-delete
+                    </v-icon>
+                  </td>
+                </tr>
+              </template>
+              -->
             </v-data-table>
           </v-card-text>
         </v-card>
@@ -141,6 +165,8 @@ export default {
       oldVal: "",
       selectedVillage: [],
       selectedCutomer: [],
+      selectedRows: [],
+      customer: {},
 
       headers: [
         { text: "", value: "index" },
@@ -194,6 +220,17 @@ export default {
           b: "px",
         },
       },
+
+      infoPosition: null,
+      infoContent: null,
+      infoOpened: false,
+      infoCurrentKey: null,
+      infoOptions: {
+        pixelOffset: {
+          width: 0,
+          height: -35,
+        },
+      },
     };
   },
   methods: {
@@ -203,49 +240,31 @@ export default {
     fetchData() {
       this.customers = this.items;
       this.selectedVillage = this.villages;
-      console.log(this.customers);
-      this.selectedCutomer = [];
-      if (this.customers) {
-        this.customers.filter((item) => {
-          this.selectedCutomer.push(item.id);
-        });
-      }
+      // if (this.customers) {
+      //   this.customers.filter((item) => {
+      //     this.selectedCutomer.push(item.id);
+      //   });
+      // }
     },
 
     closeDelete() {
       this.$store.commit("modalDelete_State", false);
     },
-    deleteItem(id) {
-      this.customerId = id;
+    deleteItem(item) {
+      console.log(item);
+      this.customer = item;
       this.$store.commit("modalDelete_State", true);
     },
 
     deleteItemConfirm() {
-      console.log(this.customerId);
+      console.log(this.customer.item.id);
       this.loading = true;
-      this.customers.splice(this.customerId, 1);
+      this.customers.splice(this.customer.index, 1);
+      this.selectedCutomer.push(this.customer.item.id);
       this.fetchData();
+      this.customer = {};
       this.loading = false;
       this.$store.commit("modalDelete_State", false);
-      // this.$axios
-      //   .delete("customer/" + this.customerId)
-      //   .then((res) => {
-      //     if (res.data.code == 200) {
-      //       setTimeout(() => {
-      //         this.loading = false;
-      //         this.toast.msg = res.data.message;
-      //         this.$store.commit("Toast_State", this.toast);
-      //         this.$store.commit("modalDelete_State", false);
-      //         this.fetchData();
-      //       }, 300);
-      //     }
-      //   })
-      //   .catch(() => {
-      //     this.fetchData();
-      //     this.$store.commit("Toast_State", this.toast_error);
-      //     this.$store.commit("modalDelete_State", false);
-      //     this.loading = false;
-      //   });
     },
     exportRoutePlan() {
       console.log(this.selectedCutomer);
@@ -255,8 +274,8 @@ export default {
         .post(
           "export-customer-location/",
           {
-            // exclude_customers: [10650],
-            // villages: [1, 2, 3, 4, 5],
+            exclude_customers: this.selectedCutomer,
+            villages: this.selectedVillage,
           },
           { responseType: "blob" }
         )
@@ -275,9 +294,7 @@ export default {
           }
         })
         .catch(() => {
-          this.fetchData();
           this.$store.commit("Toast_State", this.toast_error);
-          this.$store.commit("modalDelete_State", false);
           this.loading = false;
         });
     },
@@ -293,80 +310,6 @@ export default {
     },
 
     //Google map
-
-    //Set Googlemap Api
-    createNewAddressName() {
-      const CUSTOMIZE = "#CUSTOM ADDRESS:";
-      return this.isCreate
-        ? this.currentAddress
-        : `${CUSTOMIZE} ${this.latlng.lat}, ${this.latlng.lng}`;
-    },
-
-    setPlace(place) {
-      this.currentPlace = place;
-      this.placeMarker();
-    },
-    addMarker() {
-      if (this.currentPlace) {
-        const marker = {
-          lat: this.currentPlace.geometry.location.lat(),
-          lng: this.currentPlace.geometry.location.lng(),
-        };
-        this.markers.push({ position: marker });
-        this.latlng = marker;
-        this.currentPlace = null;
-      }
-    },
-    placeMarker() {
-      this.markers = [];
-      this.places = [];
-      if (this.currentPlace) {
-        const marker = {
-          lat: this.currentPlace.geometry.location.lat(),
-          lng: this.currentPlace.geometry.location.lng(),
-        };
-        this.markers.push({ position: marker });
-        this.latlng = marker;
-        this.animateMarker();
-      } else {
-        const marker = {
-          lat: this.latlng.lat,
-          lng: this.latlng.lng,
-        };
-        this.markers.push({ position: marker });
-      }
-      // set address
-      if (this.$refs.searchInput) {
-        this.address = this.$refs.searchInput.$el.value;
-      } else {
-        // this.address = this.currentPlace.formatted_address;
-      }
-      this.onDataChange();
-    },
-
-    geolocate() {
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.latlng = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-        this.placeMarker();
-      });
-    },
-    onDataChange() {
-      this.$emit("onDataChange", {
-        address: this.address,
-        position: this.latlng,
-      });
-    },
-
-    onSave() {
-      this.$emit("onSave", {
-        address: this.address || this.currentAddress || "Unnamed Location",
-        position: this.latlng,
-        isCreate: this.isCreate,
-      });
-    },
     getCenter() {
       if (this.customers.length > 0) {
         const latlng = {
@@ -383,23 +326,14 @@ export default {
         lng: parseFloat(m.lng),
       };
     },
-    getSiteIcon(status) {
-      try {
-        switch (status) {
-          case 1:
-            return require("@coms/../../src/assets/pin1.svg");
-
-          case 2:
-            return require("@coms/../../src/assets/pin2.svg");
-
-          case 3:
-            return require("@coms/../../src/assets/pin3.svg");
-
-          default:
-            return require("@coms/../../src/assets/pin1.svg");
-        }
-      } catch (e) {
-        return null;
+    toggleInfo(m, key) {
+      this.infoPosition = this.getMarkers(m);
+      this.infoContent = m.name + " (" + m.house_number + ") ";
+      if (this.infoCurrentKey == key) {
+        this.infoOpened = !this.infoOpened;
+      } else {
+        this.infoOpened = true;
+        this.infoCurrentKey = key;
       }
     },
   },
@@ -409,9 +343,6 @@ export default {
         this.fetchData();
       }
     },
-  },
-  mounted() {
-    this.geolocate();
   },
   created() {
     this.fetchData();

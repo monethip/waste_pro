@@ -4,7 +4,7 @@
       <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
-      Plan Detail</v-breadcrumbs
+      ລາຍລະອຽດແຜນເສັ້ນທາງ</v-breadcrumbs
     >
     <v-row>
       <v-col cols="12" class="mb-4" v-if="switchMap">
@@ -14,29 +14,32 @@
           style="width: 100%; height: 450px"
           :disableDefaultUI="true"
         >
+          <gmap-info-window
+            :options="infoOptions"
+            :position="infoPosition"
+            :opened="infoOpened"
+            :conent="infoContent"
+            @closeclick="infoOpened = false"
+            >{{ infoContent }}
+          </gmap-info-window>
           <GmapMarker
             :key="index"
             v-for="(m, index) in customers"
             :position="getMarkers(m)"
-            @click="latlng = m.position"
+            @click="toggleInfo(m, index)"
             :draggable="false"
             @dragend="onLocation"
             :icon="markerOptions"
             :animation="2"
             :clickable="true"
-            ref="getMarkers()"
           />
         </GmapMap>
       </v-col>
 
       <v-col v-if="!switchMap">
-        <v-card>
-          <v-card-text>
-            <div class="iframe-container">
-              <div v-html="plan.embed"></div>
-            </div>
-          </v-card-text>
-        </v-card>
+        <div class="iframe-container">
+          <div v-html="plan.embed"></div>
+        </div>
       </v-col>
     </v-row>
 
@@ -183,6 +186,17 @@ export default {
           height: 48,
           f: "px",
           b: "px",
+        },
+      },
+
+      infoPosition: null,
+      infoContent: null,
+      infoOpened: false,
+      infoCurrentKey: null,
+      infoOptions: {
+        pixelOffset: {
+          width: 0,
+          height: -35,
         },
       },
     };
@@ -395,23 +409,20 @@ export default {
       };
     },
 
-    getSiteIcon(status) {
-      try {
-        switch (status) {
-          case 1:
-            return require("@coms/../../src/assets/pin1.svg");
-
-          case 2:
-            return require("@coms/../../src/assets/pin2.svg");
-
-          case 3:
-            return require("@coms/../../src/assets/pin3.svg");
-
-          default:
-            return require("@coms/../../src/assets/pin1.svg");
-        }
-      } catch (e) {
-        return null;
+    toggleInfo(m, key) {
+      this.infoPosition = this.getMarkers(m);
+      this.infoContent =
+        m.priority +
+        " " +
+        m.customer.name +
+        " (" +
+        m.customer.house_number +
+        ") ";
+      if (this.infoCurrentKey == key) {
+        this.infoOpened = !this.infoOpened;
+      } else {
+        this.infoOpened = true;
+        this.infoCurrentKey = key;
       }
     },
 

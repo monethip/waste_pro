@@ -7,6 +7,9 @@
         </v-btn>
       </v-col>
       <v-col>
+        <p>ແຜນຕາຕະລາງວຽກແຕ່ລະເດືອນ</p>
+      </v-col>
+      <v-col>
         <v-text-field
           outlined
           dense
@@ -264,7 +267,12 @@ export default {
       headers: [
         { text: "ຊື່", value: "name" },
         { text: "ວັນທີ", value: "month" },
-        { text: "ຈຳນວນ", value: "plan_calendars_count", sortable: false },
+        {
+          text: "ຈຳນວນຮອບ",
+          value: "plan_calendars_count",
+          align: "center",
+          sortable: false,
+        },
         {
           text: "ລາຍລະອຽດແຜນ",
           value: "plan",

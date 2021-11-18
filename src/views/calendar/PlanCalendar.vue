@@ -6,7 +6,7 @@
           <v-btn text class="text-primary" @click="backPrevios()">
             <v-icon>mdi-chevron-left</v-icon></v-btn
           >
-          ລາຍລະການຈັດເວລາ</v-breadcrumbs
+          ລາຍການຈັດເວລາໃຫ້ພະນັກງານເກັບຂີ້ເຫຍື້ຍອ</v-breadcrumbs
         >
       </v-col>
       <v-col cols="1">
@@ -32,12 +32,18 @@
       <v-card>
         <v-card-text>
           <v-data-table
+            v-if="calendars"
             :headers="headers"
             :items="calendars"
             :search="search"
             :disable-pagination="true"
             hide-default-footer
           >
+            <template v-slot:item.detail="{ item }">
+              <v-icon medium class="mr-2" @click="gotoPlanCalendar(item.id)"
+                >mdi-map-marker-path</v-icon
+              >
+            </template>
             <template v-slot:item.actions="{ item }">
               <v-icon small class="mr-2" @click="editModal(item)">
                 mdi-pencil
@@ -151,7 +157,7 @@
                       {{ server_errors.date }}
                     </p>
                     <p class="errors">
-                      {{ server_errors.date[0] }}
+                      {{ server_errors.date }}
                     </p>
                   </v-col>
                 </v-row>
@@ -351,11 +357,18 @@ export default {
       selectedDriver: "",
 
       headers: [
-        { text: "ຊື່ພະນັກງານ", value: "driver.name" },
         { text: "ວັນທີ", value: "date" },
+        { text: "ຊື່ພະນັກງານ", value: "driver.name" },
         {
-          text: "ຈຳນວນ",
+          text: "ຈຳນວນລູກຄ້າ",
           value: "plan_calendar_details_count",
+          align: "center",
+          sortable: false,
+        },
+        {
+          text: "ລາຍລະອຽດ",
+          value: "detail",
+          align: "center",
           sortable: false,
         },
         { text: "", value: "actions", sortable: false },
@@ -395,6 +408,7 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.calendars = res.data.data.data;
+              console.log(this.calendars);
               this.pagination = res.data.data.pagination;
             }, 300);
           }
@@ -569,6 +583,12 @@ export default {
     },
     Search() {
       GetOldValueOnInput(this);
+    },
+    gotoPlanCalendar(id) {
+      this.$router.push({
+        name: "PlanCalendarDetail",
+        params: { id },
+      });
     },
   },
   watch: {

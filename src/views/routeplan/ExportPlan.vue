@@ -14,17 +14,23 @@
           style="width: 100%; height: 450px"
           :disableDefaultUI="true"
         >
+          <gmap-info-window
+            :options="infoOptions"
+            :position="infoPosition"
+            :opened="infoOpened"
+            :conent="infoContent"
+            @closeclick="infoOpened = false"
+            >{{ infoContent }}
+          </gmap-info-window>
           <GmapMarker
             :key="index"
             v-for="(m, index) in customers"
             :position="getMarkers(m)"
-            @click="latlng = m.position"
+            @click="toggleInfo(m, index)"
             :draggable="false"
-            @dragend="onLocation"
             :icon="markerOptions"
             :animation="2"
             :clickable="true"
-            ref="getMarkers()"
           />
         </GmapMap>
       </v-col>
@@ -108,13 +114,6 @@
         </v-autocomplete>
       </v-col>
     </v-row>
-    <v-row class="my-n4">
-      <v-col>
-        <div>
-          <span>{{ selectedVillage }}, </span>
-        </div>
-      </v-col>
-    </v-row>
 
     <div>
       <v-card>
@@ -166,6 +165,7 @@ export default {
     return {
       tab: null,
       customers: [],
+      selectedAllCustomer: [],
       loading: false,
       customerId: "",
       //Pagination
@@ -232,6 +232,17 @@ export default {
           b: "px",
         },
       },
+
+      infoPosition: null,
+      infoContent: null,
+      infoOpened: false,
+      infoCurrentKey: null,
+      infoOptions: {
+        pixelOffset: {
+          width: 0,
+          height: -35,
+        },
+      },
     };
   },
   methods: {
@@ -239,9 +250,6 @@ export default {
       this.$router.go(-1);
     },
     fetchData() {
-      //   const mkers = [];
-      //   const LatLong = [{ lat: "", lng: "" }];
-      console.log(this.selectedVillage);
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("customer", {
@@ -257,19 +265,8 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.customers = res.data.data.data;
-              //   console.log(this.customers);
+              this.selectedAllCustomer = res.data.data;
               this.pagination = res.data.data.pagination;
-              // this.customers.map((item) => {
-              //   this.latlng.lat.push(parseFloat(item[0].latitude)),
-              //     this.latlng.lng.push(parseFloat(item[0].longitude));
-              //   return { lat: item.latitude, lng: item.longitude };
-              // });
-              // this.customers.forEach((item) => {
-              //   console.log(item);
-              //   this.latlng.lat.push(parseFloat(item[0].latitude)),
-              //     this.latlng.lng.push(parseFloat(item[0].longitude));
-              // });
-              // console.log(this.latlng);
               this.getCenter();
             }, 300);
           }
@@ -345,88 +342,6 @@ export default {
 
     //Google map
 
-    //Set Googlemap Api
-    createNewAddressName() {
-      const CUSTOMIZE = "#CUSTOM ADDRESS:";
-      return this.isCreate
-        ? this.currentAddress
-        : `${CUSTOMIZE} ${this.latlng.lat}, ${this.latlng.lng}`;
-    },
-    onLocation(evt) {
-      this.latlng.lat = evt.latLng.lat();
-      this.latlng.lng = evt.latLng.lng();
-      this.address = this.createNewAddressName();
-      console.log(this.latlng);
-      //   this.customer_edit.latitude = this.center.lat;
-      //   this.customer_edit.longitude = this.center.lng;
-    },
-    setPlace(place) {
-      this.currentPlace = place;
-      this.placeMarker();
-    },
-    addMarker() {
-      if (this.currentPlace) {
-        const marker = {
-          lat: this.currentPlace.geometry.location.lat(),
-          lng: this.currentPlace.geometry.location.lng(),
-        };
-        this.markers.push({ position: marker });
-        this.latlng = marker;
-        this.currentPlace = null;
-      }
-    },
-    placeMarker() {
-      this.markers = [];
-      this.places = [];
-      if (this.currentPlace) {
-        const marker = {
-          lat: this.currentPlace.geometry.location.lat(),
-          lng: this.currentPlace.geometry.location.lng(),
-        };
-        this.markers.push({ position: marker });
-        this.latlng = marker;
-        this.animateMarker();
-      } else {
-        const marker = {
-          lat: this.latlng.lat,
-          lng: this.latlng.lng,
-        };
-        this.markers.push({ position: marker });
-      }
-      // set address
-      if (this.$refs.searchInput) {
-        this.address = this.$refs.searchInput.$el.value;
-      } else {
-        // this.address = this.currentPlace.formatted_address;
-      }
-      this.onDataChange();
-    },
-
-    geolocate() {
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.latlng = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-        this.placeMarker();
-      });
-    },
-    onDataChange() {
-      this.$emit("onDataChange", {
-        address: this.address,
-        position: this.latlng,
-      });
-      // console.log(this.center);
-    },
-
-    onSave() {
-      this.$emit("onSave", {
-        address: this.address || this.currentAddress || "Unnamed Location",
-        position: this.latlng,
-        isCreate: this.isCreate,
-      });
-    },
-
     getCenter() {
       if (this.customers.length) {
         const latlng = {
@@ -442,42 +357,36 @@ export default {
         lat: parseFloat(m.lat),
         lng: parseFloat(m.lng),
       };
-      // generating markers for site map
-      // var markers = [];
-      // const LatLong = this.customers.map((item) => {
-      //   return {
-      //     lat: parseFloat(m.latitude),
-      //     lng: parseFloat(m.longitude),
-      //   };
-      // });
-
-      // for (var i = 0; i < LatLong.length; i++) {
-      //   markers.push({
-      //     position: LatLong[i],
-      //     title: "Title",
-      //     icon: this.getSiteIcon(2), // if you want to show different as per the condition.
-      //   });
-      // }
-      // return markers;
     },
 
-    getSiteIcon(status) {
-      try {
-        switch (status) {
-          case 1:
-            return require("@coms/../../src/assets/pin1.svg");
+    // getSiteIcon(status) {
+    //   try {
+    //     switch (status) {
+    //       case 1:
+    //         return require("@coms/../../src/assets/pin1.svg");
 
-          case 2:
-            return require("@coms/../../src/assets/pin2.svg");
+    //       case 2:
+    //         return require("@coms/../../src/assets/pin2.svg");
 
-          case 3:
-            return require("@coms/../../src/assets/pin3.svg");
+    //       case 3:
+    //         return require("@coms/../../src/assets/pin3.svg");
 
-          default:
-            return require("@coms/../../src/assets/pin1.svg");
-        }
-      } catch (e) {
-        return null;
+    //       default:
+    //         return require("@coms/../../src/assets/pin1.svg");
+    //     }
+    //   } catch (e) {
+    //     return null;
+    //   }
+    // },
+    toggleInfo(m, key) {
+      console.log(m);
+      this.infoPosition = this.getMarkers(m);
+      this.infoContent = m.name + " (" + m.house_number + ") ";
+      if (this.infoCurrentKey == key) {
+        this.infoOpened = !this.infoOpened;
+      } else {
+        this.infoOpened = true;
+        this.infoCurrentKey = key;
       }
     },
 
@@ -487,11 +396,9 @@ export default {
         if (this.likesAllFruit) {
           this.selectedVillage = [];
         } else {
-          // this.selectedVillage = this.villages.slice();
           this.villages.filter((item) => {
             this.selectedVillage.push(item.id);
           });
-          console.log(this.selectedVillage);
         }
       });
     },
@@ -534,9 +441,6 @@ export default {
     selectedDistrict: function () {
       this.fetchVillage();
     },
-  },
-  mounted() {
-    this.geolocate();
   },
   created() {
     this.fetchData();
