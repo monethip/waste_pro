@@ -305,15 +305,13 @@ export default {
     exportData() {
       this.loading = true;
       this.$axios
-        .get(
+        .post(
           "export-driver/",
           {
-            params: {
-              filter: this.search,
-              status: this.selectedStatus,
-              date_from: this.start_date,
-              date_end: this.end_date,
-            },
+            filter: this.search,
+            status: this.selectedStatus,
+            date_from: this.start_date,
+            date_end: this.end_date,
           },
           { responseType: "blob" }
         )

@@ -255,8 +255,8 @@ export default {
         .post(
           "export-customer-location/",
           {
-            exclude_customers: [10650],
-            villages: [1, 2, 3, 4, 5],
+            // exclude_customers: [10650],
+            // villages: [1, 2, 3, 4, 5],
           },
           { responseType: "blob" }
         )

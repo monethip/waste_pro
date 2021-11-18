@@ -11,6 +11,58 @@
         </v-btn>
       </v-col>
       <v-col>
+        <v-menu
+          v-model="start_menu"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="start_date"
+              label="ເລີ່ມວັນທີ"
+              readonly
+              outlined
+              v-bind="attrs"
+              v-on="on"
+              dense
+            ></v-text-field>
+          </template>
+          <v-date-picker
+            v-model="start_date"
+            @input="fetchData()"
+          ></v-date-picker>
+        </v-menu>
+      </v-col>
+      <v-col>
+        <v-menu
+          v-model="end_menu"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="end_date"
+              label="ຫາວັນທີ"
+              readonly
+              outlined
+              v-bind="attrs"
+              v-on="on"
+              dense
+            ></v-text-field>
+          </template>
+          <v-date-picker
+            v-model="end_date"
+            @input="fetchData()"
+          ></v-date-picker>
+        </v-menu>
+      </v-col>
+      <v-col>
         <v-autocomplete
           outlined
           dense
@@ -134,7 +186,10 @@ export default {
   name: "Customer",
   data() {
     return {
-      tab: null,
+      start_date: "",
+      end_date: "",
+      start_menu: false,
+      end_menu: false,
       customers: [],
       loading: false,
       customerId: "",
@@ -196,6 +251,8 @@ export default {
             page: this.pagination.current_page,
             per_page: this.per_page,
             // filter: this.search,
+            date_from: this.start_date,
+            date_end: this.end_date,
             statuses: this.selectedStatus,
             villages: this.selectedVillage,
           },
@@ -206,6 +263,8 @@ export default {
               this.$store.commit("Loading_State", false);
               this.customers = res.data.data.data;
               this.pagination = res.data.data.pagination;
+              this.start_menu = false;
+              this.end_menu = false;
             }, 300);
             this.fetchAddress();
           }
@@ -213,6 +272,8 @@ export default {
         .catch((error) => {
           this.$store.commit("Loading_State", false);
           this.fetchData();
+          this.start_menu = false;
+          this.end_menu = false;
           if (error.response.status == 422) {
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
@@ -273,7 +334,13 @@ export default {
       this.$axios
         .post(
           "export-customer/",
-          { statuses: this.selectedStatus, villages: this.selectedVillage },
+          {
+            // filter: this.search,
+            // date_from: this.start_date,
+            // date_end: this.end_date,
+            // statuses: this.selectedStatus,
+            // villages: this.selectedVillage,
+          },
           { responseType: "blob" }
         )
         .then((res) => {
