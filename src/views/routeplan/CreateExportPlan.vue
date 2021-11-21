@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-breadcrumbs large>
+    <v-breadcrumbs large class="mt-n4">
       <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
@@ -67,12 +67,18 @@
       <v-card>
         <v-card flat>
           <v-card-text>
+            <div>
+              <v-btn text color="grey" @click="deleteItem"
+                ><v-icon medium> mdi-delete </v-icon></v-btn
+              >
+            </div>
             <v-data-table
               :headers="headers"
               :items="customers"
               :search="search"
-              :items-per-page="25"
+              :items-per-page="15"
               v-model="selectedRows"
+              show-select
             >
               <!--
               <template v-slot:item.media="{ item }">
@@ -89,6 +95,11 @@
               <template slot="item.index" scope="props">
                 <div>{{ props.index + 1 }}</div>
               </template>
+              <template v-slot:item.address_detail="{ item }">
+                <div v-for="(data, index) in item.village_details" :key="index">
+                  <span>{{ data.name }}</span>
+                </div>
+              </template>
               <template v-slot:item.address="{ item }">
                 <div v-if="item.district && item.village">
                   {{ item.district.name }}, {{ item.village.name }}
@@ -99,10 +110,11 @@
                   mdi-eye
                 </v-icon>
               </template>
+              <!--
               <template slot="item.delete" slot-scope="props">
                 <v-icon small @click="deleteItem(props)"> mdi-delete </v-icon>
               </template>
-
+-->
               <!--
               <template v-slot:item="{ item }">
                 <tr :class="selectedRows.indexOf(item.id) - 1 ? 'cyan' : ''">
@@ -158,13 +170,10 @@ export default {
       loading: false,
       customerId: "",
       //Pagination
-      offset: 12,
-      pagination: {},
-      per_page: 15,
       search: "",
       oldVal: "",
       selectedVillage: [],
-      selectedCutomer: [],
+      selectedCustomer: [],
       selectedRows: [],
       customer: {},
 
@@ -173,9 +182,9 @@ export default {
         { text: "ຊື່", value: "name" },
         { text: "ນາມສະກຸນ", value: "surname" },
         { text: "Phone", value: "user.phone", sortable: false },
-        { text: "ທີ່ຢູ່", value: "address", sortable: false },
-        { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
-        { text: "", value: "delete" },
+        { text: "ລາຍລະອຽດທີ່ຢູ່", value: "address_detail" },
+        { text: "ບ້ານ", value: "village.name", sortable: true },
+        { text: "ເມືອງ", value: "district.name", sortable: true },
         { text: "", value: "actions", sortable: false },
       ],
       toast: {
@@ -250,53 +259,68 @@ export default {
     closeDelete() {
       this.$store.commit("modalDelete_State", false);
     },
-    deleteItem(item) {
-      console.log(item);
-      this.customer = item;
-      this.$store.commit("modalDelete_State", true);
+    deleteItem() {
+      if (this.selectedRows.length > 0) {
+        this.$store.commit("modalDelete_State", true);
+      }
     },
 
     deleteItemConfirm() {
-      console.log(this.customer.item.id);
       this.loading = true;
-      this.customers.splice(this.customer.index, 1);
-      this.selectedCutomer.push(this.customer.item.id);
+      for (var i = 0; i < this.selectedRows.length; i++) {
+        const index = this.customers.indexOf(this.selectedRows[i]);
+        this.customers.splice(index, 1);
+        this.fetchData();
+        console.log("Hei");
+      }
+      this.selectedRows = [];
       this.fetchData();
-      this.customer = {};
       this.loading = false;
       this.$store.commit("modalDelete_State", false);
     },
+
     exportRoutePlan() {
-      console.log(this.selectedCutomer);
-      console.log(this.selectedVillage);
-      this.loading = true;
-      this.$axios
-        .post(
-          "export-customer-location/",
-          {
-            exclude_customers: this.selectedCutomer,
-            villages: this.selectedVillage,
-          },
-          { responseType: "blob" }
-        )
-        .then((res) => {
-          if (res.status == 200) {
-            setTimeout(() => {
-              this.loading = false;
-              const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
-              const fileLink = document.createElement("a");
-              fileLink.href = fileUrl;
-              fileLink.setAttribute("download", "customer_location" + ".xlsx");
-              document.body.appendChild(fileLink);
-              fileLink.click();
-              document.body.removeChild(fileLink);
-            }, 300);
-          }
-        })
-        .catch(() => {
-          this.$store.commit("Toast_State", this.toast_error);
-          this.loading = false;
+      if (this.selectedCustomer.length > 0) {
+        this.loading = true;
+        this.$axios
+          .post(
+            "export-customer-location/",
+            {
+              exclude_customers: this.selectedCustomer,
+              villages: this.selectedVillage,
+            },
+            { responseType: "blob" }
+          )
+          .then((res) => {
+            if (res.status == 200) {
+              setTimeout(() => {
+                this.loading = false;
+                const fileUrl = window.URL.createObjectURL(
+                  new Blob([res.data])
+                );
+                const fileLink = document.createElement("a");
+                fileLink.href = fileUrl;
+                fileLink.setAttribute(
+                  "download",
+                  "customer_location" + ".xlsx"
+                );
+                document.body.appendChild(fileLink);
+                fileLink.click();
+                document.body.removeChild(fileLink);
+              }, 300);
+            }
+          })
+          .catch(() => {
+            this.$store.commit("Toast_State", this.toast_error);
+            this.loading = false;
+          });
+      } else {
+        this.$store.commit("Toast_State", {
+          value: true,
+          color: "error",
+          msg: "ກາລຸນາເລືອກລູກຄ້າກ່ອນ",
         });
+      }
     },
 
     viewPage(id) {

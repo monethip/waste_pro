@@ -5,6 +5,13 @@
         mdi-order-bool-descending
       </v-icon>
       <v-spacer></v-spacer>
+      <v-btn text fab dark small class="mr-8">
+        <v-badge overlap color="orange">
+          <template v-slot:badge> 4 </template>
+          <v-icon large color="grey darken-1"> notifications </v-icon>
+        </v-badge>
+      </v-btn>
+
       <v-menu bottom min-width="200px" rounded offset-y>
         <template v-slot:activator="{ on }">
           <v-btn icon x-large v-on="on">

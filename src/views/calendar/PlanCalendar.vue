@@ -39,9 +39,20 @@
             :disable-pagination="true"
             hide-default-footer
           >
+            <template v-slot:item.driver="{ item }">
+              <div>
+                {{ item.driver.name }} {{ item.driver.surname }}
+                <span class="primary--text"
+                  >- {{ item.driver.car_number }}</span
+                >
+              </div>
+            </template>
+            <template v-slot:item.date="{ item }">
+              <v-chip color="success">{{ item.date }}</v-chip>
+            </template>
             <template v-slot:item.detail="{ item }">
-              <v-icon medium class="mr-2" @click="gotoPlanCalendar(item.id)"
-                >mdi-map-marker-path</v-icon
+              <v-icon small class="mr-2" @click="gotoPlanCalendar(item.id)"
+                >mdi-eye</v-icon
               >
             </template>
             <template v-slot:item.actions="{ item }">
@@ -358,7 +369,13 @@ export default {
 
       headers: [
         { text: "ວັນທີ", value: "date" },
-        { text: "ຊື່ພະນັກງານ", value: "driver.name" },
+        { text: "ຊື່ພະນັກງານ(ທະບຽນລົດ)", value: "driver" },
+        {
+          text: "ເສັ້ນທາງ",
+          value: "route_plan.name",
+          sortable: true,
+        },
+
         {
           text: "ຈຳນວນລູກຄ້າ",
           value: "plan_calendar_details_count",
