@@ -353,6 +353,7 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data;
+              console.log(this.data);
               res.data.data.customer_village_details.map((item) => {
                 this.selectedVillageDetail.push(item.customer_id);
               });
