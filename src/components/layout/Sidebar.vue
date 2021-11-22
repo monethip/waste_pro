@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar flat absolute fixed app color="transparent">
+    <v-app-bar flat fixed app color="transparent">
       <v-icon style="padding: 4px" @click="drawer = !drawer">
         mdi-order-bool-descending
       </v-icon>

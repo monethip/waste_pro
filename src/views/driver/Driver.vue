@@ -45,6 +45,13 @@
                 @click="switchStatus(item.id)"
                 >{{ item.status }}</v-chip
               >
+              <v-switch
+                v-model="status"
+                @click="switchStatus(item.id)"
+                inset
+                :value="item.status"
+                :label="`Switch 1: ${status.toString()}`"
+              ></v-switch>
             </template>
 
             <template v-slot:item.actions="{ item }">
@@ -444,6 +451,7 @@ export default {
         { text: "", value: "actions", sortable: false },
       ],
       loading: false,
+      status: false,
       data: [],
       user: {},
       edit_driver: {},
@@ -577,6 +585,14 @@ export default {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data.data;
               this.pagination = res.data.data.pagination;
+              this.data.map((item) => {
+                if (item.status == "active") {
+                  console.log(item);
+                  this.status = true;
+                } else {
+                  this.status = false;
+                }
+              });
             }, 300);
           }
         })
@@ -693,9 +709,11 @@ export default {
           this.fetchData();
         });
     },
-    statusColor(value) {
-      if (value == "active") return "success";
-      else if (value == "inactive") return "error";
+    statusColor() {
+      // console.log(value);
+      // if (value == "active") {
+      //   return true;
+      // } else if (value == "inactive") return false;
     },
 
     reset() {
@@ -704,6 +722,29 @@ export default {
     Search() {
       GetOldValueOnInput(this);
     },
+  },
+  computed: {
+    // statuss() {
+    //   this.data.filter((item) => {
+    //     if (item == "active") {
+    //       console.log(item);
+    //       // return true;
+    //     } else if (item.status == "inactive") {
+    //       // return false;
+    //     }
+    //   });
+    // },
+    // selectedAllVillage() {
+    //   return this.selectedVillage.length === this.villages.length;
+    // },
+    // selectedSomeVillage() {
+    //   return this.selectedVillage.length > 0 && !this.selectedAllVillage;
+    // },
+    // icon() {
+    //   if (this.selectedAllVillage) return "mdi-close-box";
+    //   if (this.selectedSomeVillage) return "mdi-minus-box";
+    //   return "mdi-checkbox-blank-outline";
+    // },
   },
   watch: {
     "user.name": function () {
@@ -739,6 +780,10 @@ export default {
     "edit_driver.car_number": function () {
       this.server_errors.car_number = "";
     },
+    // status: function () {
+    //   console.log("hi");
+    // },
+
     search: function (value) {
       if (value == "") {
         this.fetchData();
@@ -746,6 +791,7 @@ export default {
     },
   },
   created() {
+    this.statusColor();
     this.fetchData();
   },
 };
