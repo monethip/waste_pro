@@ -2,7 +2,100 @@
   <v-container>
     <v-row class="mb-n6">
       <v-col>
-        <v-btn class="btn-primary">Export </v-btn>
+        <v-btn
+          class="btn-primary"
+          :loading="loading"
+          :disabled="loading"
+          @click="exportData"
+          >Export
+        </v-btn>
+      </v-col>
+      <v-col>
+        <v-menu
+          v-model="start_menu"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="start_date"
+              label="ເລີ່ມວັນທີ"
+              readonly
+              outlined
+              v-bind="attrs"
+              v-on="on"
+              dense
+            ></v-text-field>
+          </template>
+          <v-date-picker
+            v-model="start_date"
+            @input="fetchData()"
+          ></v-date-picker>
+        </v-menu>
+      </v-col>
+      <v-col>
+        <v-menu
+          v-model="end_menu"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="end_date"
+              label="ຫາວັນທີ"
+              readonly
+              outlined
+              v-bind="attrs"
+              v-on="on"
+              dense
+            ></v-text-field>
+          </template>
+          <v-date-picker
+            v-model="end_date"
+            @input="fetchData()"
+          ></v-date-picker>
+        </v-menu>
+      </v-col>
+      <v-col>
+        <v-autocomplete
+          outlined
+          dense
+          :items="districts"
+          v-model="selectedDistrict"
+          item-text="name"
+          item-value="id"
+          label="ເມືອງ"
+        ></v-autocomplete>
+      </v-col>
+      <v-col>
+        <v-autocomplete
+          outlined
+          dense
+          :items="villages"
+          v-model="selectedVillage"
+          item-text="name"
+          item-value="id"
+          label="ບ້ານ"
+          multiple
+        ></v-autocomplete>
+      </v-col>
+      <v-col>
+        <v-select
+          outlined
+          dense
+          :items="status"
+          v-model="selectedStatus"
+          item-text="name"
+          item-value="name"
+          label="ສະຖານະ"
+          multiple
+        ></v-select>
       </v-col>
       <v-col>
         <v-text-field
@@ -16,6 +109,11 @@
           @keyup.enter="Search()"
         >
         </v-text-field>
+      </v-col>
+    </v-row>
+    <v-row class="my-n4">
+      <v-col>
+        <p class="text">ລວມ {{ pagination.total }} ຄົນ</p>
       </v-col>
     </v-row>
     <div>
@@ -38,6 +136,12 @@
                   <img v-if="img.thumb" :src="img.thumb" />
                 </v-avatar>
               </template>
+
+              <template v-slot:item.status="{ item }">
+                <v-chip :color="statusColor(item.status)">{{
+                  item.status
+                }}</v-chip>
+              </template>
               <!--Role -->
               <template v-slot:item.roles="{ item }">
                 <div>
@@ -59,10 +163,6 @@
                 <v-icon small class="mr-2" @click="viewPage(item.id)">
                   mdi-eye
                 </v-icon>
-                <v-icon small class="mr-2" @click="editPage(item.id)">
-                  mdi-pencil
-                </v-icon>
-                <v-icon small @click="deleteItem(item.id)"> mdi-delete </v-icon>
               </template> </v-data-table
             ><br />
             <template>
@@ -86,7 +186,10 @@ export default {
   name: "Customer",
   data() {
     return {
-      tab: null,
+      start_date: "",
+      end_date: "",
+      start_menu: false,
+      end_menu: false,
       customers: [],
       loading: false,
       customerId: "",
@@ -96,16 +199,35 @@ export default {
       per_page: 15,
       search: "",
       oldVal: "",
+      //Filter
+      districts: [],
+      selectedDistrict: "",
+      villages: [],
+      selectedVillage: [],
+      selectedStatus: [],
+      status: [
+        {
+          id: 1,
+          name: "active",
+        },
+        {
+          id: 1,
+          name: "inactive",
+        },
+        {
+          id: 1,
+          name: "trial",
+        },
+      ],
 
       headers: [
         { text: "ຊື່", value: "name" },
         { text: "ນາມສະກຸນ", value: "surname" },
         { text: "Phone", value: "user.phone", sortable: false },
-        { text: "Email", value: "user.email", sortable: false },
-        { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
-        { text: "ຈຳນວນຖັງ", value: "media" },
-        { text: "ສະຖານະ", value: "longitude", sortable: false },
-        { text: "ວັນທີ", value: "latitude", sortable: false },
+        { text: "ວັນທີ", value: "district.name", sortable: false },
+        { text: "ແພັກເກດ", value: "package.name" },
+        { text: "ວັນທີສະໝັກແພັກເກດ", value: "start_month", sortable: false },
+        { text: "ສະຖານະ", value: "status", sortable: false },
         { text: "", value: "actions", sortable: false },
       ],
       toast: {
@@ -128,21 +250,30 @@ export default {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
-            filter: this.search,
+            // filter: this.search,
+            date_from: this.start_date,
+            date_end: this.end_date,
+            statuses: this.selectedStatus,
+            villages: this.selectedVillage,
           },
         })
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
-              //   this.customers = res.data.data.data;
-              //   this.pagination = res.data.data.pagination;
+              this.customers = res.data.data.data;
+              this.pagination = res.data.data.pagination;
+              this.start_menu = false;
+              this.end_menu = false;
             }, 300);
+            this.fetchAddress();
           }
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
           this.fetchData();
+          this.start_menu = false;
+          this.end_menu = false;
           if (error.response.status == 422) {
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
@@ -152,14 +283,86 @@ export default {
         });
     },
 
-    viewPage() {
-      //   this.$router.push({
-      //     name: "ViewCustomer",
-      //     params: { id },
-      //   });
+    fetchAddress() {
+      this.$axios
+        .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.address = res.data.data;
+              this.address.map((item) => {
+                this.districts = item.districts;
+              });
+            }, 300);
+          }
+        })
+        .catch(() => {});
+    },
+
+    fetchVillage() {
+      this.$axios
+        .get("info/district/" + this.selectedDistrict + "/village")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.villages = res.data.data;
+            }, 300);
+          }
+        })
+        .catch(() => {});
+    },
+
+    viewPage(id) {
+      this.$router.push({
+        name: "ViewCustomer",
+        params: { id },
+      });
     },
     Search() {
       GetOldValueOnInput(this);
+    },
+    statusColor(value) {
+      if (value == "active") return "success";
+      else if (value == "inactive") return "error";
+      else return "info";
+    },
+
+    exportData() {
+      this.loading = true;
+      console.log(this.selectedStatus);
+      console.log(this.selectedVillage);
+      this.$axios
+        .post(
+          "export-customer/",
+          {
+            // filter: this.search,
+            // date_from: this.start_date,
+            // date_end: this.end_date,
+            // statuses: this.selectedStatus,
+            // villages: this.selectedVillage,
+          },
+          { responseType: "blob" }
+        )
+        .then((res) => {
+          if (res.status == 200) {
+            setTimeout(() => {
+              this.loading = false;
+              const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
+              const fileLink = document.createElement("a");
+              fileLink.href = fileUrl;
+              fileLink.setAttribute("download", "customer" + ".xlsx");
+              document.body.appendChild(fileLink);
+              fileLink.click();
+              document.body.removeChild(fileLink);
+            }, 300);
+          }
+        })
+        .catch(() => {
+          this.fetchData();
+          this.$store.commit("Toast_State", this.toast_error);
+          this.$store.commit("modalDelete_State", false);
+          this.loading = false;
+        });
     },
   },
   watch: {
@@ -167,6 +370,16 @@ export default {
       if (value == "") {
         this.fetchData();
       }
+    },
+
+    selectedVillage: function () {
+      this.fetchData();
+    },
+    selectedDistrict: function () {
+      this.fetchVillage();
+    },
+    selectedStatus: function () {
+      this.fetchData();
     },
   },
   created() {

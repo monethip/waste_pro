@@ -7,6 +7,41 @@
         </v-btn>
       </v-col>
       <v-col>
+        <v-autocomplete
+          outlined
+          dense
+          :items="districts"
+          v-model="selectedDistrict"
+          item-text="name"
+          item-value="id"
+          label="ເມືອງ"
+        ></v-autocomplete>
+      </v-col>
+      <v-col>
+        <v-autocomplete
+          outlined
+          dense
+          :items="villages"
+          v-model="selectedVillage"
+          item-text="name"
+          item-value="id"
+          label="ບ້ານ"
+          multiple
+        ></v-autocomplete>
+      </v-col>
+      <v-col>
+        <v-select
+          outlined
+          dense
+          :items="status"
+          v-model="selectedStatus"
+          item-text="name"
+          item-value="name"
+          label="ສະຖານະ"
+          multiple
+        ></v-select>
+      </v-col>
+      <v-col>
         <v-text-field
           outlined
           dense
@@ -54,17 +89,17 @@
                   </template>
                   <!--Role -->
                   <template v-slot:item.status="{ item }">
-                    <div>
-                      <span v-for="(role, index) in item.roles" :key="index">
-                        {{ role.name }},
-                      </span>
-                    </div>
-                    <v-chip :color="statusColor(item.status)">{{
-                      item.status
-                    }}</v-chip>
+                    <v-chip
+                      :color="statusColor(item.status)"
+                      @click="switchStatus(item.id)"
+                      >{{ item.status }}</v-chip
+                    >
                   </template>
 
                   <template v-slot:item.actions="{ item }">
+                    <v-icon small class="mr-2" @click="addPackage(item.id)">
+                      mdi-package
+                    </v-icon>
                     <v-icon small class="mr-2" @click="viewPage(item.id)">
                       mdi-eye
                     </v-icon>
@@ -90,6 +125,82 @@
         </v-tabs-items>
       </v-card>
     </div>
+
+    <!-- Modal Add-->
+    <ModalAdd>
+      <template @close="close">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Add Package</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-form ref="form" lazy-validation>
+                <v-row>
+                  <v-col cols="12">
+                    <v-select
+                      v-model="selectedPackage"
+                      :items="packages"
+                      item-text="name"
+                      item-value="id"
+                      label="ເລືອກແພັກເກດ"
+                      outlined
+                      dense
+                    ></v-select>
+                    <p class="errors">
+                      {{ server_errors.package }}
+                    </p>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="12">
+                    <v-menu
+                      v-model="start_menu"
+                      :close-on-content-click="false"
+                      :nudge-right="40"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          v-model="start_date"
+                          label="ເລີ່ມວັນທີ"
+                          readonly
+                          outlined
+                          v-bind="attrs"
+                          v-on="on"
+                          dense
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker v-model="start_date"></v-date-picker>
+                    </v-menu>
+                    <p class="errors">
+                      {{ server_errors.start_month }}
+                    </p>
+                  </v-col>
+                </v-row>
+              </v-form>
+            </v-container>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeAddModal()">
+                Close
+              </v-btn>
+              <v-btn
+                color="blue darken-1"
+                text
+                :loading="loading"
+                :disabled="loading"
+                @click="AddPackage()"
+              >
+                Add
+              </v-btn>
+            </v-card-actions>
+          </v-card-text>
+        </v-card>
+      </template>
+    </ModalAdd>
 
     <!--Delete Modal-->
     <ModalDelete>
@@ -128,17 +239,44 @@ export default {
       per_page: 15,
       search: "",
       oldVal: "",
+      //Add Package
+      start_date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+        .toISOString()
+        .substr(0, 10),
+      start_menu: false,
+      packages: [],
+      selectedPackage: "",
+      server_errors: {},
+      //Filter
+      districts: [],
+      selectedDistrict: "",
+      villages: [],
+      selectedVillage: [],
+      selectedStatus: [],
+      status: [
+        {
+          id: 1,
+          name: "active",
+        },
+        {
+          id: 1,
+          name: "inactive",
+        },
+        {
+          id: 1,
+          name: "trial",
+        },
+      ],
 
       headers: [
         { text: "ຊື່", value: "name" },
         { text: "ນາມສະກຸນ", value: "surname" },
         { text: "Phone", value: "user.phone", sortable: false },
-        { text: "Email", value: "user.email", sortable: false },
-        { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
+        { text: "ທີ່ຢູ່", value: "district.name", sortable: false },
+        { text: "ແພັກເກດ", value: "package.name", sortable: false },
+        // { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
         { text: "Image", value: "media" },
         { text: "ສະຖານະ", value: "status" },
-        { text: "Lat", value: "latitude", sortable: false },
-        { text: "Lng", value: "longitude", sortable: false },
         { text: "", value: "actions", sortable: false },
       ],
       toast: {
@@ -162,6 +300,8 @@ export default {
             page: this.pagination.current_page,
             per_page: this.per_page,
             filter: this.search,
+            villages: this.selectedVillage,
+            statuses: this.selectedStatus,
           },
         })
         .then((res) => {
@@ -184,6 +324,49 @@ export default {
           }
         });
     },
+
+    fetchAddress() {
+      this.$axios
+        .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.address = res.data.data;
+              this.address.map((item) => {
+                this.districts = item.districts;
+              });
+            }, 300);
+          }
+        })
+        .catch(() => {});
+    },
+
+    fetchVillage() {
+      this.$axios
+        .get("info/district/" + this.selectedDistrict + "/village")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.villages = res.data.data;
+            }, 300);
+          }
+        })
+        .catch(() => {});
+    },
+
+    fetchPackage() {
+      this.$axios
+        .get("package")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.packages = res.data.data;
+            }, 300);
+          }
+        })
+        .catch(() => {});
+    },
+
     closeDelete() {
       this.$store.commit("modalDelete_State", false);
     },
@@ -219,6 +402,68 @@ export default {
         name: "CreateCustomer",
       });
     },
+
+    switchStatus(id) {
+      this.loading = true;
+      this.$axios
+        .post("customer/" + id + "/switch-status")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.loading = false;
+              this.fetchData();
+              this.$store.commit("Toast_State", this.toast);
+            }, 300);
+          }
+        })
+        .catch(() => {
+          this.loading = false;
+          this.$store.commit("Toast_State", this.toast_error);
+          this.fetchData();
+        });
+    },
+
+    addPackage(id) {
+      this.fetchPackage();
+      this.$store.commit("modalAdd_State", true);
+      this.customerId = id;
+    },
+    AddPackage() {
+      if (this.$refs.form.validate() == true) {
+        this.loading = true;
+        this.$axios
+          .post("customer/" + this.customerId + "/add-package", {
+            package_id: this.selectedPackage,
+            start_month: this.start_date,
+          })
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.loading = false;
+                this.closeAddModal();
+                this.selectedPackage = "";
+                this.fetchData();
+                this.reset();
+                this.$store.commit("Toast_State", this.toast);
+              }, 300);
+            }
+          })
+          .catch((error) => {
+            this.loading = false;
+            this.$store.commit("Toast_State", this.toast_error);
+            this.fetchData();
+            if (error.response.status == 422) {
+              var obj = error.response.data.errors;
+              for (let [key, customer] of Object.entries(obj)) {
+                this.server_errors[key] = customer[0];
+              }
+            }
+          });
+      }
+    },
+    closeAddModal() {
+      this.$store.commit("modalAdd_State", false);
+    },
     editPage(id) {
       this.$router.push({
         name: "EditCustomer",
@@ -226,7 +471,6 @@ export default {
       });
     },
     viewPage(id) {
-      console.log(id);
       this.$router.push({
         name: "ViewCustomer",
         params: { id },
@@ -247,9 +491,19 @@ export default {
         this.fetchData();
       }
     },
+    selectedVillage: function () {
+      this.fetchData();
+    },
+    selectedDistrict: function () {
+      this.fetchVillage();
+    },
+    selectedStatus: function () {
+      this.fetchData();
+    },
   },
   created() {
     this.fetchData();
+    this.fetchAddress();
   },
 };
 </script>

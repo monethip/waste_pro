@@ -2,85 +2,93 @@
   <v-container>
     <v-row class="mb-n6 text-right">
       <v-col>
-        <v-btn color="teal" dark large @click="OpenModalAddVillage()"
+        <v-btn class="btn-primary" @click="OpenModalAddVillage()"
           ><v-icon color>mdi-plus</v-icon>Add Village
         </v-btn>
       </v-col>
     </v-row>
     <v-card class="mx-auto my-12" elevation="2">
-      <v-card-title>
-        <v-spacer></v-spacer>
-        <v-autocomplete
-          required
-          :items="districts"
-          v-model="selectedDistrict"
-          item-text="name"
-          item-value="id"
-          label="District"
-          :rulesDistrict="rulePermission"
-          outlined
-          dense
-        ></v-autocomplete>
-        <v-spacer></v-spacer>
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          outlined
-          dense
-        ></v-text-field>
-      </v-card-title>
-      <v-data-table
-        :headers="headers"
-        :items="villages"
-        :search="search"
-        :disable-pagination="true"
-        hide-default-footer
-      >
-        <template v-slot:[`item.variation`]="{ item }">
-          <v-icon
-            medium
-            class="mr-2"
-            @click="ViewVillage(item.id)"
-          >
-            mdi-eye
-          </v-icon>
-          <v-icon
-            medium
-            class="mr-2"
-            color="green"
-            @click="openModalVariation(item)"
-          >
-            mdi-plus
-          </v-icon>
-          <v-icon
-            small
-            class="mr-2"
-            color="blue darken-4"
-            @click="openModalUpdateVariation(item.id)"
-          >
-            mdi-pencil
-          </v-icon>
-        </template>
+      <v-card-text>
+        <v-card-title>
+          <v-spacer></v-spacer>
+          <v-autocomplete
+            required
+            :items="districts"
+            v-model="selectedDistrict"
+            item-text="name"
+            item-value="id"
+            label="District"
+            :rulesDistrict="rulePermission"
+            outlined
+            dense
+          ></v-autocomplete>
+          <v-spacer></v-spacer>
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            outlined
+            dense
+          ></v-text-field>
+        </v-card-title>
+        <v-data-table
+          :headers="headers"
+          :items="villages"
+          :search="search"
+          :disable-pagination="true"
+          hide-default-footer
+        >
+          <template v-slot:[`item.variation`]="{ item }">
+            <v-icon
+              medium
+              class="mr-2"
+              color="green"
+              @click="openModalVariation(item)"
+            >
+              mdi-plus
+            </v-icon>
+            <v-icon
+              small
+              class="mr-2"
+              color="blue darken-4"
+              @click="openModalUpdateVariation(item)"
+            >
+              mdi-pencil
+            </v-icon>
+            <v-icon
+              small
+              class="mr-2"
+              color="red"
+              @click="openModaldeleteVariation(item)"
+            >
+              mdi-key-remove
+            </v-icon>
+          </template>
 
-        <template v-slot:[`item.actions`]="{ item }">
-          <v-icon small color="green" class="mr-2" @click="OpenModalEdit(item)">
-            mdi-account-edit
-          </v-icon>
-          <v-icon small color="red" @click="deleteItem(item.id)">
-            mdi-trash-can-outline
-          </v-icon>
+          <template v-slot:[`item.actions`]="{ item }">
+            <v-icon
+              small
+              color="green"
+              class="mr-2"
+              @click="OpenModalEdit(item)"
+            >
+              mdi-account-edit
+            </v-icon>
+            <v-icon small color="red" @click="deleteItem(item.id)">
+              mdi-trash-can-outline
+            </v-icon>
+          </template>
+        </v-data-table>
+        <template>
+          <Pagination
+            v-if="pagination.total_pages > 1"
+            :pagination="pagination"
+            :offset="offset"
+            @paginate="fetchVillage()"
+          ></Pagination>
         </template>
-      </v-data-table>
-      <template>
-        <Pagination
-          v-if="pagination.total_pages > 1"
-          :pagination="pagination"
-          :offset="offset"
-          @paginate="fetchVillage()"
-        ></Pagination>
-      </template>
+      </v-card-text>
     </v-card>
 
     <!-- Modal Add-->
@@ -457,7 +465,9 @@ export default {
       //getlistofdistrict
       getVillage: [],
       villages: [],
-      addvillage: {},
+      ban: "",
+      number: "",
+      errormsg: "",
 
       update_village: {},
       search: "",
@@ -762,8 +772,9 @@ export default {
 };
 </script>
 
-<style>
-</style>
 
+<style lang="scss">
+@import "../../../public/scss/main.scss";
+</style>
 
 

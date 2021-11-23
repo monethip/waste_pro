@@ -172,16 +172,16 @@ export default {
           title: "ໜ້າຫຼັກ",
           to: "/",
         },
-        {
-          icon: "mdi-calendar-month-outline",
-          title: "ແພັກເກັດ",
-          to: "/package",
-        },
-        {
-          icon: "mdi-home-account",
-          title: "ທີ່ຢູ່",
-          to: "/village",
-        },
+        // {
+        //   icon: "mdi-calendar-month-outline",
+        //   title: "ແພັກເກັດ",
+        //   to: "/package",
+        // },
+        // {
+        //   icon: "mdi-home-account",
+        //   title: "ທີ່ຢູ່",
+        //   to: "/village",
+        // },
       ],
 
       routes: [
@@ -191,9 +191,9 @@ export default {
           to: "/plan",
         },
         {
-          icon: "mdi-map-marker-path",
-          title: "Route",
-          to: "/route",
+          icon: "mdi-calendar-month",
+          title: "Plan Calendar",
+          to: "/calendar",
         },
       ],
       
@@ -220,7 +220,12 @@ export default {
         },
         {
           icon: "mdi-home-account",
-          title: "Address",
+          title: "ທີ່ຢູ່",
+          to: "/village",
+        },
+        {
+          icon: "mdi-home-account",
+          title: "ຈັດການລາຍລະອຽດທີ່ຢູ່",
           to: "/village-variation",
         },
       ],
@@ -234,6 +239,11 @@ export default {
           icon: "mdi-cash",
           title: "ລາຍງານຂໍ້ມູນບັນຊີ",
           to: "/report/invoice",
+        },
+        {
+          icon: "mdi-account",
+          title: "ລາຍງານຂໍ້ມູນຄົນຂັບລົດ",
+          to: "/report/driver",
         },
         {
           icon: "mdi-account-group",

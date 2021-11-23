@@ -167,6 +167,93 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
+
+  //Plan
+  {
+    path: '/create/plan',
+    name: 'CreatePlan',
+    component: () => import('@/views/routeplan/CreatePlan.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/edit/plan/:id',
+    name: 'EditPlan',
+    component: () => import('@/views/routeplan/EditPlan.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/create/export/plan',
+    name: 'CreateExportPlan',
+    component: () => import('@/views/routeplan/CreateExportPlan.vue'),
+    props: true,
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/plan',
+    name: 'Plan',
+    component: () => import('@/views/routeplan/Plan.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/plan/:id',
+    name: 'ViewPlan',
+    component: () => import('@/views/routeplan/ViewPlan.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/export/plan',
+    name: 'Export-Plan',
+    component: () => import('@/views/routeplan/ExportPlan.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/plan-month/:id/plan-calendar',
+    name: 'PlanCalendar',
+    component: () => import('@/views/calendar/PlanCalendar.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  //Plan Calendar Detail
+  {
+    path: '/plan-calendar/:id/detail',
+    name: 'PlanCalendarDetail',
+    component: () => import('@/views/calendar/PlanCalendarDetail.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  //Calendar
+  {
+    path: '/calendar',
+    name: 'Calendar',
+    component: () => import('@/views/calendar/Calendar.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+
   //Report 
   {
     path: '/report/trash',
@@ -181,6 +268,15 @@ const routes = [
     path: '/report/customer',
     name: 'Report-Customer',
     component: () => import('@/views/report/Customer.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/report/driver',
+    name: 'Report-Driver',
+    component: () => import('@/views/report/ReportDriver.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
