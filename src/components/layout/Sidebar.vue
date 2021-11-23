@@ -61,6 +61,8 @@
         </router-link>
       </div>
 
+     
+
       <v-list expand shaped>
         <v-list-item
           v-for="(item, i) in items"
@@ -77,6 +79,7 @@
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </v-list-item>
+
         <!--User groups-->
         <v-list-group
           :prepend-icon="'mdi-account-group'"
@@ -103,6 +106,7 @@
             </v-list-item-content>
           </v-list-item>
         </v-list-group>
+
         <!--Route plan-->
         <v-list-group
           :prepend-icon="'mdi-map'"
@@ -199,7 +203,7 @@ export default {
           to: "/calendar",
         },
       ],
-
+      
       setting: [
         {
           icon: "mdi-account-key",
@@ -220,11 +224,6 @@ export default {
           icon: "mdi-account-group",
           title: "Customer",
           to: "/customer",
-        },
-        {
-          icon: "mdi-calendar-month-outline",
-          title: "Package",
-          to: "/package",
         },
         {
           icon: "mdi-home-account",

@@ -298,6 +298,146 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+
+    <!--Edit Variation -->
+    <v-dialog v-model="UpdateVariationDialog" max-width="720px">
+      <v-card>
+        <v-card-title>
+          <span class="text-h5">Edit Village Variation</span>
+          <v-spacer></v-spacer>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-form ref="form" lazy-validation>
+              <!-- <v-row>
+                <v-col>
+                  <v-text-field
+                    v-model="update_villagevariation.name"
+                    label="village"
+                    required
+                    readonly
+                  ></v-text-field>
+                </v-col>
+              </v-row> -->
+              <v-row>
+                <v-col>
+                  <v-select
+                    required
+                    v-model="SelectedVillageVariation"
+                    :items="village_details"
+                    item-text="name"
+                    item-value="id"
+                    label="variation name*"
+                  ></v-select>
+                  <p class="errors">
+                    {{ errormsg }}
+                  </p>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                    v-model="village_details"
+                    :items="village_details"
+                    label="number*"
+                    required
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-form>
+          </v-container>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="blue darken-1"
+              text
+              @click="UpdateVariationDialog = false"
+            >
+              Close
+            </v-btn>
+            <v-btn
+              color="blue darken-1"
+              text
+              :loading="loading"
+              :disabled="loading"
+              @click="AddVariation"
+            >
+              Add
+            </v-btn>
+          </v-card-actions>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
+    <!--Edit Variation -->
+    <v-dialog v-model="DeleteVariationDialog" max-width="720px">
+      <v-card>
+        <v-card-title>
+          <span class="text-h5">Edit Village Variation</span>
+          <v-spacer></v-spacer>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-form ref="form" lazy-validation>
+              <!-- <v-row>
+                <v-col>
+                  <v-text-field
+                    v-model="update_villagevariation.name"
+                    label="village"
+                    required
+                    readonly
+                  ></v-text-field>
+                </v-col>
+              </v-row> -->
+              <v-row>
+                <v-col>
+                  <v-select
+                    required
+                    v-model="SelectedVillageVariation"
+                    :items="village_details"
+                    item-text="name"
+                    item-value="id"
+                    label="variation name*"
+                  ></v-select>
+                  <p class="errors">
+                    {{ errormsg }}
+                  </p>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                    v-model="village_details"
+                    :items="village_details"
+                    label="number*"
+                    required
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-form>
+          </v-container>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="blue darken-1"
+              text
+              @click="DeleteVariationDialog = false"
+            >
+              Close
+            </v-btn>
+            <v-btn
+              color="blue darken-1"
+              text
+              :loading="loading"
+              :disabled="loading"
+              @click="AddVariation"
+            >
+              Add
+            </v-btn>
+          </v-card-actions>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -317,7 +457,10 @@ export default {
       //
       variation: [],
       edit_villagevariation: {},
+
       variationDialog: false,
+      UpdateVariationDialog: false,
+      DeleteVariationDialog: false,
 
       //getlistofdistrict
       getVillage: [],
@@ -561,6 +704,24 @@ export default {
 
     closeAddModal() {
       this.$store.commit("modalAdd_State", false);
+    },
+
+    openModalUpdateVariation(id) {
+      this.$router.push({
+        name: "EditVillage",
+        params: { id },
+      });
+    },
+
+    ViewVillage(id) {
+      this.$router.push({
+        name: "ViewVillage",
+        params: { id },
+      });
+    },
+
+    openModaldeleteVariation() {
+      this.DeleteVariationDialog = true;
     },
 
     AddItem() {

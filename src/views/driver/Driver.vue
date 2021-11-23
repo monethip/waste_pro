@@ -45,13 +45,6 @@
                 @click="switchStatus(item.id)"
                 >{{ item.status }}</v-chip
               >
-              <v-switch
-                v-model="status"
-                @click="switchStatus(item.id)"
-                inset
-                :value="item.status"
-                :label="`Switch 1: ${status.toString()}`"
-              ></v-switch>
             </template>
 
             <template v-slot:item.actions="{ item }">
@@ -709,11 +702,10 @@ export default {
           this.fetchData();
         });
     },
-    statusColor() {
-      // console.log(value);
-      // if (value == "active") {
-      //   return true;
-      // } else if (value == "inactive") return false;
+    statusColor(value) {
+      if (value == "active") {
+        return "success";
+      } else if (value == "inactive") return "error";
     },
 
     reset() {

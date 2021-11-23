@@ -174,6 +174,7 @@ export default {
       oldVal: "",
       selectedVillage: [],
       selectedCustomer: [],
+      exclude_customers: [],
       selectedRows: [],
       customer: {},
 
@@ -249,11 +250,6 @@ export default {
     fetchData() {
       this.customers = this.items;
       this.selectedVillage = this.villages;
-      // if (this.customers) {
-      //   this.customers.filter((item) => {
-      //     this.selectedCutomer.push(item.id);
-      //   });
-      // }
     },
 
     closeDelete() {
@@ -266,13 +262,16 @@ export default {
     },
 
     deleteItemConfirm() {
+      this.selectedCustomer = [];
       this.loading = true;
       for (var i = 0; i < this.selectedRows.length; i++) {
         const index = this.customers.indexOf(this.selectedRows[i]);
+        this.selectedCustomer.push(this.customers[index]);
         this.customers.splice(index, 1);
-        this.fetchData();
-        console.log("Hei");
       }
+      this.selectedCustomer.filter((item) => {
+        this.exclude_customers.push(item.id);
+      });
       this.selectedRows = [];
       this.fetchData();
       this.loading = false;
@@ -280,13 +279,13 @@ export default {
     },
 
     exportRoutePlan() {
-      if (this.selectedCustomer.length > 0) {
+      if (this.customers.length > 0) {
         this.loading = true;
         this.$axios
           .post(
             "export-customer-location/",
             {
-              exclude_customers: this.selectedCustomer,
+              exclude_customers: this.exclude_customers,
               villages: this.selectedVillage,
             },
             { responseType: "blob" }
@@ -308,6 +307,9 @@ export default {
                 fileLink.click();
                 document.body.removeChild(fileLink);
               }, 300);
+              this.$router.push({
+                name: "Plan",
+              });
             }
           })
           .catch(() => {

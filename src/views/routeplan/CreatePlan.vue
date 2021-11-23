@@ -4,7 +4,7 @@
       <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
-      Create Plan</v-breadcrumbs
+      ສ້າງແຜນເສັ້ນທາງເກັບຂີເຫື້ອຍ</v-breadcrumbs
     >
     <v-card>
       <v-card-title>
@@ -15,11 +15,17 @@
           <v-form ref="form" lazy-validation>
             <v-row>
               <v-col align="12">
+                <!--
                 <v-file-input
                   label="File input (.kml)"
                   v-model="selectedFile"
                   :rules="rulesFile"
-                  type="file"
+                ></v-file-input>
+                -->
+                <v-file-input
+                  v-model="selectedFile"
+                  show-size
+                  label="File input"
                 ></v-file-input>
                 <p class="errors">
                   {{ server_errors.file }}
@@ -77,10 +83,7 @@ export default {
         (v) => !!v || "Embed is required",
         (v) => (v && v.length >= 2) || "Embed must be less than 2 characters",
       ],
-      rulesFile: [
-        (v) => !!v || "File is required",
-        (v) => (v && v.size > 0) || "File is required",
-      ],
+      rulesFile: [(v) => !!v || "File is required"],
     };
   },
   methods: {

@@ -300,7 +300,7 @@ export default {
               this.customers = res.data.data.data;
               this.selectedAllCustomer = res.data.data;
               this.pagination = res.data.data.pagination;
-              this.getCenter();
+              // this.getCenter();
             }, 300);
           }
         })
@@ -347,7 +347,7 @@ export default {
 
     createPage() {
       // console.log(this.customers);
-      if (this.customers.length > 0) {
+      if (this.customers.length > 0 && this.selectedVillage.length > 0) {
         this.$router.push({
           name: "CreateExportPlan",
           params: {
@@ -359,7 +359,7 @@ export default {
         this.$store.commit("Toast_State", {
           value: true,
           color: "error",
-          msg: "ກາລຸນາເລືອກລູກຄ້າກ່ອນ",
+          msg: "ກາລຸນາເລືອກບ້ານ ແລະ ລູກຄ້າກ່ອນ",
         });
       }
     },

@@ -123,9 +123,36 @@ const routes = [
     }
   },
   {
+    path: '/edit/village/:id',
+    name: 'EditVillage',
+    component: () => import('../views/village/EditVillage.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/view/village/:id',
+    name: 'ViewVillage',
+    component: () => import('@/views/village/ViewVillage.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
     path: '/package',
     name: 'Package',
     component: () => import('../views/package/PackageInfo.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/addpackage',
+    name: 'Addpackage',
+    component: () => import('../views/package/PackageAddSize.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],

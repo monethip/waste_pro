@@ -8,7 +8,7 @@
     >
     <v-card>
       <div v-for="(item, index) in data.media" :key="index">
-        <v-img :src="item.thumb" alt="Image" height="500px" dark> </v-img>
+        <v-img :src="item.url" alt="Image" height="500px" dark> </v-img>
       </div>
 
       <v-card-text>
