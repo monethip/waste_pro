@@ -6,7 +6,7 @@
           <v-btn text class="text-primary" @click="backPrevios()">
             <v-icon>mdi-chevron-left</v-icon></v-btn
           >
-          ລາຍການຈັດເວລາໃຫ້ພະນັກງານເກັບຂີ້ເຫຍື້ຍອ</v-breadcrumbs
+          ຈັດການເວລາໃຫ້ພະນັກງານເກັບຂີ້ເຫຍື້ຍອ</v-breadcrumbs
         >
       </v-col>
       <v-col cols="1">
@@ -235,6 +235,7 @@
                     </p>
                   </v-col>
                 </v-row>
+                <!--
                 <v-row>
                   <v-col cols="12">
                     <v-menu
@@ -283,6 +284,7 @@
                     </p>
                   </v-col>
                 </v-row>
+                -->
               </v-form>
             </v-container>
             <v-card-actions>
@@ -425,7 +427,6 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.calendars = res.data.data.data;
-              console.log(this.calendars);
               this.pagination = res.data.data.pagination;
             }, 300);
           }
@@ -486,7 +487,7 @@ export default {
         .delete(
           "plan-month/" +
             this.$route.params.id +
-            "/plan-calendar" +
+            "/plan-calendar/" +
             this.calendarId
         )
         .then((res) => {
@@ -521,9 +522,10 @@ export default {
             if (res.data.code == 200) {
               setTimeout(() => {
                 this.loading = false;
+                this.dates = [];
+                this.menu = false;
                 this.closeAddModal();
                 this.fetchData();
-                this.dates = [];
                 this.selectedRoutePlan = "";
                 this.selectedDriver = "";
                 this.reset();
@@ -533,6 +535,7 @@ export default {
           })
           .catch((error) => {
             this.loading = false;
+            this.menu = false;
             this.$store.commit("Toast_State", this.toast_error);
             this.fetchData();
             if (error.response.status == 422) {
@@ -567,7 +570,7 @@ export default {
             {
               driver_id: this.calendarEdit.driver_id,
               route_plan_id: this.calendarEdit.route_plan_id,
-              date: this.calendarEdit.date,
+              // date: this.calendarEdit.date,
             }
           )
           .then((res) => {
@@ -577,6 +580,7 @@ export default {
                 this.closeEditModal();
                 this.fetchData();
                 this.dates = [];
+                this.menu = false;
                 this.reset();
                 this.$store.commit("Toast_State", this.toast);
               }, 300);
@@ -584,6 +588,7 @@ export default {
           })
           .catch((error) => {
             this.loading = false;
+            this.menu = false;
             this.$store.commit("Toast_State", this.toast_error);
             this.fetchData();
             if (error.response.status == 422) {
@@ -606,6 +611,9 @@ export default {
         name: "PlanCalendarDetail",
         params: { id },
       });
+    },
+    reset() {
+      this.$refs.form.reset();
     },
   },
   watch: {

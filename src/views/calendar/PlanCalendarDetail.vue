@@ -42,14 +42,18 @@
             :disable-pagination="true"
             hide-default-footer
           >
-            <template v-slot:item.name="{ item }">
-              {{ item.route_plan_detail.customer.name }}
-              {{ item.route_plan_detail.customer.surname }}
+            <!--
+            <template v-slot:item.name="{ item }" v-if="item.name">
+              <div v-if="item.route_plan_detail.customer.name">
+                {{ item.route_plan_detail.customer.name }}
+                {{ item.route_plan_detail.customer.surname }}
+              </div>
             </template>
+           
             <template v-slot:item.start_month="{ item }">
               {{ item.route_plan_detail.customer.start_month }}
             </template>
-
+ -->
             <template v-slot:item.status="{ item }">
               <v-chip :color="statusColor(item.status)">{{
                 item.status
@@ -111,8 +115,8 @@ export default {
 
       headers: [
         { text: "ລຳດັບ", value: "route_plan_detail.priority" },
-        { text: "ຊື່ລູກຄ້າ", value: "name" },
-        { text: "ເລີ່ມວັນທີ", value: "start_month" },
+        { text: "ຊື່ລູກຄ້າ", value: "route_plan_detail.customer.name" },
+        { text: "ເລີ່ມວັນທີ", value: "route_plan_detail.customer.start_month" },
 
         {
           text: "ຈຳນວນຂີ້ເຫື້ຍອ",

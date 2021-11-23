@@ -2,15 +2,15 @@
   <v-container>
     <v-row class="mb-n6 text-right">
       <v-col>
-        <v-btn color="teal" dark large @click="OpenModalAdd()"
-          ><v-icon color>mdi-plus</v-icon>Add name
+        <v-btn class="btn-primary" dark medium @click="OpenModalAdd()"
+          ><v-icon color>mdi-plus</v-icon>Add
         </v-btn>
       </v-col>
     </v-row>
     <v-col justify="center">
-      <v-card class="mx-auto my-12" elevation="2">
+      <v-card class="my-6" elevation="2">
         <v-card-title>
-          ຂໍ້ມູນ Village
+          ຂໍ້ມູນລາຍລະອຽດທີ່ຢູ່
           <v-spacer></v-spacer>
           <v-text-field
             v-model="search"

@@ -7,31 +7,34 @@
         </v-btn>
       </v-col>
     </v-row>
-    <v-card class="mx-auto my-12" elevation="2">
+    <v-card class="mx-auto my-6" elevation="2">
       <v-card-text>
-        <v-card-title>
-          <v-spacer></v-spacer>
-          <v-autocomplete
-            required
-            :items="districts"
-            v-model="selectedDistrict"
-            item-text="name"
-            item-value="id"
-            label="District"
-            :rulesDistrict="rulePermission"
-            outlined
-            dense
-          ></v-autocomplete>
-          <v-spacer></v-spacer>
-          <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Search"
-            single-line
-            outlined
-            dense
-          ></v-text-field>
-        </v-card-title>
+        <v-row>
+          <v-col>
+            <v-autocomplete
+              required
+              :items="districts"
+              v-model="selectedDistrict"
+              item-text="name"
+              item-value="id"
+              label="District"
+              :rulesDistrict="rulePermission"
+              outlined
+              dense
+            ></v-autocomplete>
+          </v-col>
+          <v-col>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              outlined
+              dense
+            ></v-text-field>
+          </v-col>
+        </v-row>
+
         <v-data-table
           :headers="headers"
           :items="villages"
@@ -52,7 +55,7 @@
               small
               class="mr-2"
               color="blue darken-4"
-              @click="openModalUpdateVariation(item)"
+              @click="openModalUpdateVariation(item.id)"
             >
               mdi-pencil
             </v-icon>
@@ -451,6 +454,7 @@ export default {
       selectedDistrict: "",
       selectedVillage: "",
       listVillage: [],
+      village_details: [],
 
       SelectedVillageVariation: "",
 
@@ -707,6 +711,7 @@ export default {
     },
 
     openModalUpdateVariation(id) {
+      console.log(id);
       this.$router.push({
         name: "EditVillage",
         params: { id },

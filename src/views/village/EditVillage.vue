@@ -75,7 +75,7 @@
           <v-btn color="blue darken-1" text @click="backPrevios()">
             Back
           </v-btn>
-           <v-btn
+          <v-btn
             color="blue darken-1"
             text
             :loading="loading"
@@ -220,7 +220,6 @@ export default {
         });
     },
 
-
     backPrevios() {
       this.$router.go(-1);
     },
@@ -228,12 +227,11 @@ export default {
   watch: {},
 
   created() {
-    this.fetchData();
-    //ຮ່ອມ
-    this.fetchVillageVariation();
-    //ໜ່ວຍ
-    this.fetchVillageVariation2();
-
+    // this.fetchData();
+    // //ຮ່ອມ
+    // this.fetchVillageVariation();
+    // //ໜ່ວຍ
+    // this.fetchVillageVariation2();
   },
 };
 </script>
