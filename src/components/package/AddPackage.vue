@@ -1,6 +1,6 @@
  <template>
   <v-container>
-      <v-row class="mb-n6 text-right">
+    <v-row class="mb-n6 text-right">
       <v-col>
         <v-btn color="teal" dark large @click="OpenModalAdd()"
           ><v-icon color>mdi-plus</v-icon>
@@ -9,17 +9,17 @@
     </v-row>
     <v-data-table :headers="header" :items="packages" hide-default-footer>
       <template v-slot:[`item.action`]="{ item }">
-          <v-icon small color="green" class="mr-2" @click="OpenModalEdit(item)">
-            mdi-account-edit
-          </v-icon>
-          <v-icon small color="red" @click="deleteItem(item.id)">
-            mdi-trash-can
-          </v-icon>
-        </template>
+        <v-icon small color="green" class="mr-2" @click="OpenModalEdit(item)">
+          mdi-account-edit
+        </v-icon>
+        <v-icon small color="red" @click="deleteItem(item.id)">
+          mdi-trash-can
+        </v-icon>
+      </template>
     </v-data-table>
 
     <!-- Add Modal -->
-     <ModalAdd>
+    <ModalAdd>
       <template @close="close">
         <v-card>
           <v-card-title>
@@ -72,8 +72,7 @@
       </template>
     </ModalAdd>
 
-
-     <!--Edit Modal-->
+    <!--Edit Modal-->
     <ModalEdit>
       <template @close="close">
         <v-card>
@@ -124,7 +123,6 @@
         </v-card>
       </template>
     </ModalEdit>
-
   </v-container>
 </template>
  
@@ -143,6 +141,11 @@ export default {
         { text: "price", value: "price" },
         { text: "Actions", value: "action" },
       ],
+      bagRules: [
+        (v) => !!v || "Bag is required",
+        (v) =>
+          Number.isInteger(Number(v)) || "The value must be an integer number",
+      ],
     };
   },
 
@@ -151,10 +154,11 @@ export default {
       this.$refs.form.reset();
     },
 
-    OpenModalAdd(){   
+    OpenModalAdd() {
+      this.$store.commit("modalAdd_State", true);
     },
 
-     closeUpdate() {
+    closeUpdate() {
       this.reset(),
         (this.editPackage = {}),
         this.fetchData(),
@@ -165,7 +169,6 @@ export default {
       this.editPackage = item;
       this.$store.commit("modalEdit_State", true);
     },
-
 
     fetchData() {
       this.$store.commit("Loading_State", true);
