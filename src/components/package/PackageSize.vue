@@ -1,46 +1,41 @@
 <template>
   <v-container>
     <v-col justify="center">
-        <v-card-title>
-          ຂໍ້ມູນ Package
-          <v-spacer></v-spacer>
-          <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Search"
-            single-line
-            hide-details
-          ></v-text-field>
-        </v-card-title>
-        <v-data-table
-          :headers="headers"
-          :items="packagessize"
-          :search="search"
-          :disable-pagination="true"
-          hide-default-footer
-        >
-          <template v-slot:[`item.actions`]="{ item }">
-            <v-icon
-              small
-              color="green"
-              class="mr-2"
-              @click="OpenModalEdit(item)"
-            >
-              mdi-account-edit
-            </v-icon>
-            <v-icon small color="red" @click="deleteItem(item.id)">
-              mdi-trash-can-outline
-            </v-icon>
-          </template>
-        </v-data-table>
-        <template>
-          <Pagination
-            v-if="pagination.total_pages > 1"
-            :pagination="pagination"
-            :offset="offset"
-            @paginate="fetchData()"
-          ></Pagination>
+      <v-card-title>
+        ຂໍ້ມູນ Package
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+        ></v-text-field>
+      </v-card-title>
+      <v-data-table
+        :headers="headers"
+        :items="packagessize"
+        :search="search"
+        :disable-pagination="true"
+        hide-default-footer
+      >
+        <template v-slot:[`item.actions`]="{ item }">
+          <v-icon small color="green" class="mr-2" @click="OpenModalEdit(item)">
+            mdi-account-edit
+          </v-icon>
+          <v-icon small color="red" @click="deleteItem(item.id)">
+            mdi-trash-can-outline
+          </v-icon>
         </template>
+      </v-data-table>
+      <template>
+        <Pagination
+          v-if="pagination.total_pages > 1"
+          :pagination="pagination"
+          :offset="offset"
+          @paginate="fetchData()"
+        ></Pagination>
+      </template>
     </v-col>
 
     <!-- Modal Add-->
@@ -58,7 +53,7 @@
                   <v-col>
                     <v-text-field
                       v-model="addpackage.size"
-                      label="size*"
+                      label="Size*"
                       required
                       :rules="sizeRules"
                     ></v-text-field>
@@ -71,7 +66,7 @@
                   <v-col>
                     <v-text-field
                       v-model="addpackage.bag"
-                      label="bag*"
+                      label="Bag*"
                       type="number"
                       class="input-number"
                       required
@@ -201,8 +196,9 @@ export default {
       //validation
       sizeRules: [(v) => !!v || "Size is required"],
       bagRules: [
-        (v) => !!v || "bag is required",
-        (v) => /.+@.+\..+/.test(v) || "bag must be number",
+        (v) => !!v || "Bag is required",
+        (v) =>
+          Number.isInteger(Number(v)) || "The value must be an integer number",
       ],
 
       headers: [
