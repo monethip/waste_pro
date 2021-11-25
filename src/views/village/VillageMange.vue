@@ -31,6 +31,7 @@
               single-line
               outlined
               dense
+              @keyup.enter="Search()"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -66,6 +67,14 @@
               @click="openModaldeleteVariation(item)"
             >
               mdi-key-remove
+            </v-icon>
+            <v-icon
+              small
+              class="mr-2"
+              color="green"
+              @click="ViewVillage(item.id)"
+            >
+              mdi-eye
             </v-icon>
           </template>
 
@@ -137,22 +146,22 @@
                 </v-row>
               </v-form>
             </v-container>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeAddModal()">
+                Close
+              </v-btn>
+              <v-btn
+                color="blue darken-1"
+                text
+                :loading="loading"
+                :disabled="loading"
+                @click="AddItem()"
+              >
+                Save
+              </v-btn>
+            </v-card-actions>
           </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="closeAddModal()">
-              Close
-            </v-btn>
-            <v-btn
-              color="blue darken-1"
-              text
-              :loading="loading"
-              :disabled="loading"
-              @click="AddItem()"
-            >
-              Save
-            </v-btn>
-          </v-card-actions>
         </v-card>
       </template>
     </ModalAdd>
@@ -445,6 +454,7 @@
 </template>
 
 <script>
+import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
   name: "Village",
   data() {
@@ -531,8 +541,11 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.loading = false;
-              this.toast.msg = res.data.message;
-              this.$store.commi("Toast_State", this.toast);
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
+              });
               this.$store.commit("modalDelete_State", false);
               this.fetchData();
             }, 300);
@@ -540,7 +553,6 @@ export default {
         })
         .catch(() => {
           this.fetchData();
-          this.$store.commit("Toast_State", this.toast_error);
           this.$store.commit("modalDelete_State", false);
           this.loading = false;
         });
@@ -552,6 +564,7 @@ export default {
 
     OpenModalEdit(item) {
       this.update_village = item;
+      console.log(this.update_village);
       this.$store.commit("modalEdit_State", true);
     },
 
@@ -571,15 +584,23 @@ export default {
                 this.update_village = {};
                 this.reset();
                 this.fetchData();
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", this.toast_error);
             this.fetchVillage();
             if (error.response.status == 422) {
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response.data.message,
+              });
               var obj = error.response.data.errors;
               for (let [key, villages] of Object.entries(obj)) {
                 this.server_errors[key] = villages[0];
@@ -677,7 +698,11 @@ export default {
                 this.fetchData();
                 this.reset();
                 this.variationDialog = false;
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
@@ -685,7 +710,11 @@ export default {
             if (error.response.data.code == 422) {
               this.errormsg = error.response.data.message;
             }
-            this.$store.commit("Toast_State", this.toast_error);
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             this.fetchData();
           });
         this.loading = false;
@@ -745,15 +774,23 @@ export default {
                 this.closeAddModal();
                 this.fetchData();
                 this.reset();
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", this.toast_error);
             this.fetchData();
             if (error.response.status == 422) {
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response.data.message,
+              });
               var obj = error.response.data.error;
               for (let [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
@@ -762,16 +799,23 @@ export default {
           });
       }
     },
+    Search() {
+      GetOldValueOnInput(this);
+    },
   },
   watch: {
     selectedDistrict: function () {
       this.fetchVillage();
+      this.server_errors.district_id = "";
     },
 
     search: function (value) {
       if (value == "") {
         this.fetchVillage();
       }
+    },
+    ban: function () {
+      this.server_errors.name = "";
     },
   },
 };

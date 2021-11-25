@@ -205,8 +205,6 @@ export default {
         lng: 102.290218,
       },
       markers: [],
-      places: [],
-      currentPlace: null,
       markerOptions: {
         // eslint-disable-next-line global-require
         url: require("@coms/../../src/assets/pin1.svg"),
@@ -312,8 +310,12 @@ export default {
               });
             }
           })
-          .catch(() => {
-            this.$store.commit("Toast_State", this.toast_error);
+          .catch((error) => {
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             this.loading = false;
           });
       } else {

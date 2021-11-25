@@ -6,6 +6,62 @@
       >
       View Village Details</v-breadcrumbs
     >
+    <v-col justify="center">
+      <v-card class="my-6" elevation="2">
+        <v-card-title>
+          ຂໍ້ມູນລາຍລະອຽດທີ່ຢູ່
+          <v-spacer></v-spacer>
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
+          ></v-text-field>
+        </v-card-title>
+        <v-data-table
+          :headers="headers"
+          :items="addressdetail"
+          :search="search"
+          :disable-pagination="true"
+          hide-default-footer
+        >
+          <template v-slot:[`item.detail`]="{ item }">
+            <div v-if="item.detail.village_details">
+              <div
+                v-for="(data, index) in item.detail.village_details"
+                :key="index"
+              >
+                <span>{{ data.name }}</span>
+              </div>
+            </div>
+          </template>
+
+          <template v-slot:[`item.actions`]="{ item }">
+            <v-icon
+              small
+              color="green"
+              class="mr-2"
+              @click="OpenModalEdit(item)"
+            >
+              mdi-account-edit
+            </v-icon>
+            <v-icon small color="red" @click="deleteItem(item.id)">
+              mdi-trash-can-outline
+            </v-icon>
+          </template>
+        </v-data-table>
+        <template>
+          <Pagination
+            v-if="pagination.total_pages > 1"
+            :pagination="pagination"
+            :offset="offset"
+            @paginate="fetchData()"
+          ></Pagination>
+        </template>
+      </v-card>
+    </v-col>
+
     <v-card>
       <v-card-title>
         <span class="headline">View Village</span>
@@ -103,9 +159,19 @@ export default {
 
       villagevariation: {},
 
-      address: [],
+      addressdetail: [],
       paeng: [],
       errormsg: "",
+      search: "",
+      headers: [
+        { text: "name", value: "name" },
+        { text: "ລາຍລະອຽດ", value: "detail" },
+        { text: "actions", value: "actions" },
+      ],
+      //pagination
+      offset: 12,
+      pagination: {},
+      per_page: 15,
 
       //Validation
       nameRules: [
@@ -150,12 +216,18 @@ export default {
     fetchVillageVariation() {
       this.$axios
         .get("info/village/" + this.$route.params.id + "/village-detail", {
-          params: { filter: "ຮ່ອມ" },
+          params: {
+            page: this.pagination.current_page,
+            per_page: this.per_page,
+            filter: "",
+          },
         })
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.horm = res.data.data;
+              this.addressdetail = res.data.data.data;
+              console.log(this.addressdetail);
+              this.pagination = res.data.data.pagination;
               this.horm.map((item) => {
                 this.villagevariate1 = item.village_details;
                 this.selectedVillageDetail = this.villagevariate1[0].id;
@@ -208,13 +280,11 @@ export default {
         });
     },
 
-
     backPrevios() {
       this.$router.go(-1);
     },
   },
-  watch: {
-  },
+  watch: {},
 
   created() {
     this.fetchData();
