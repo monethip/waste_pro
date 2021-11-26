@@ -34,7 +34,7 @@
               class="mr-2"
               @click="OpenModalEdit(item)"
             >
-              mdi-account-edit
+              mdi-pencil
             </v-icon>
             <v-icon small color="red" @click="deleteItem(item.id)">
               mdi-trash-can-outline

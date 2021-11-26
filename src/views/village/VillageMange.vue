@@ -17,8 +17,7 @@
               v-model="selectedDistrict"
               item-text="name"
               item-value="id"
-              label="District"
-              :rulesDistrict="rulePermission"
+              label="ເມືອງ"
               outlined
               dense
             ></v-autocomplete>
@@ -45,30 +44,6 @@
         >
           <template v-slot:[`item.variation`]="{ item }">
             <v-icon
-              medium
-              class="mr-2"
-              color="green"
-              @click="openModalVariation(item)"
-            >
-              mdi-plus
-            </v-icon>
-            <v-icon
-              small
-              class="mr-2"
-              color="blue darken-4"
-              @click="openModalUpdateVariation(item.id)"
-            >
-              mdi-pencil
-            </v-icon>
-            <v-icon
-              small
-              class="mr-2"
-              color="red"
-              @click="openModaldeleteVariation(item)"
-            >
-              mdi-key-remove
-            </v-icon>
-            <v-icon
               small
               class="mr-2"
               color="green"
@@ -85,7 +60,7 @@
               class="mr-2"
               @click="OpenModalEdit(item)"
             >
-              mdi-account-edit
+              mdi-pencil
             </v-icon>
             <v-icon small color="red" @click="deleteItem(item.id)">
               mdi-trash-can-outline
@@ -245,211 +220,6 @@
         </v-card-actions>
       </template>
     </ModalDelete>
-
-    <!--Add Variation -->
-    <v-dialog v-model="variationDialog" max-width="720px">
-      <v-card>
-        <v-card-title>
-          <span class="text-h5">Add Village Variation</span>
-          <v-spacer></v-spacer>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-form ref="form" lazy-validation>
-              <v-row>
-                <v-col>
-                  <v-text-field
-                    v-model="update_village.name"
-                    label="village"
-                    required
-                    readonly
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <v-select
-                    required
-                    v-model="SelectedVillageVariation"
-                    :items="variation"
-                    item-text="name"
-                    item-value="id"
-                    label="variation name*"
-                  ></v-select>
-                  <p class="errors">
-                    {{ errormsg }}
-                  </p>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <v-text-field
-                    v-model="number"
-                    label="number*"
-                    required
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-            </v-form>
-          </v-container>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="variationDialog = false">
-              Close
-            </v-btn>
-            <v-btn
-              color="blue darken-1"
-              text
-              :loading="loading"
-              :disabled="loading"
-              @click="AddVariation"
-            >
-              Add
-            </v-btn>
-          </v-card-actions>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-
-    <!--Edit Variation -->
-    <v-dialog v-model="UpdateVariationDialog" max-width="720px">
-      <v-card>
-        <v-card-title>
-          <span class="text-h5">Edit Village Variation</span>
-          <v-spacer></v-spacer>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-form ref="form" lazy-validation>
-              <!-- <v-row>
-                <v-col>
-                  <v-text-field
-                    v-model="update_villagevariation.name"
-                    label="village"
-                    required
-                    readonly
-                  ></v-text-field>
-                </v-col>
-              </v-row> -->
-              <v-row>
-                <v-col>
-                  <v-select
-                    required
-                    v-model="SelectedVillageVariation"
-                    :items="village_details"
-                    item-text="name"
-                    item-value="id"
-                    label="variation name*"
-                  ></v-select>
-                  <p class="errors">
-                    {{ errormsg }}
-                  </p>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <v-text-field
-                    v-model="village_details"
-                    :items="village_details"
-                    label="number*"
-                    required
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-            </v-form>
-          </v-container>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              color="blue darken-1"
-              text
-              @click="UpdateVariationDialog = false"
-            >
-              Close
-            </v-btn>
-            <v-btn
-              color="blue darken-1"
-              text
-              :loading="loading"
-              :disabled="loading"
-              @click="AddVariation"
-            >
-              Add
-            </v-btn>
-          </v-card-actions>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-
-    <!--Edit Variation -->
-    <v-dialog v-model="DeleteVariationDialog" max-width="720px">
-      <v-card>
-        <v-card-title>
-          <span class="text-h5">Edit Village Variation</span>
-          <v-spacer></v-spacer>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-form ref="form" lazy-validation>
-              <!-- <v-row>
-                <v-col>
-                  <v-text-field
-                    v-model="update_villagevariation.name"
-                    label="village"
-                    required
-                    readonly
-                  ></v-text-field>
-                </v-col>
-              </v-row> -->
-              <v-row>
-                <v-col>
-                  <v-select
-                    required
-                    v-model="SelectedVillageVariation"
-                    :items="village_details"
-                    item-text="name"
-                    item-value="id"
-                    label="variation name*"
-                  ></v-select>
-                  <p class="errors">
-                    {{ errormsg }}
-                  </p>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <v-text-field
-                    v-model="village_details"
-                    :items="village_details"
-                    label="number*"
-                    required
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-            </v-form>
-          </v-container>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              color="blue darken-1"
-              text
-              @click="DeleteVariationDialog = false"
-            >
-              Close
-            </v-btn>
-            <v-btn
-              color="blue darken-1"
-              text
-              :loading="loading"
-              :disabled="loading"
-              @click="AddVariation"
-            >
-              Add
-            </v-btn>
-          </v-card-actions>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
   </v-container>
 </template>
 
@@ -465,16 +235,6 @@ export default {
       selectedVillage: "",
       listVillage: [],
       village_details: [],
-
-      SelectedVillageVariation: "",
-
-      //
-      variation: [],
-      edit_villagevariation: {},
-
-      variationDialog: false,
-      UpdateVariationDialog: false,
-      DeleteVariationDialog: false,
 
       //getlistofdistrict
       getVillage: [],
@@ -496,7 +256,6 @@ export default {
       rulesDistrict: [(v) => !!v || "District is required"],
       //Validation
       nameRules: [(v) => !!v || "Name is required"],
-      rulePermission: [(v) => !!v || "Permission is required"],
 
       headers: [
         {
@@ -511,7 +270,12 @@ export default {
           value: "name",
           sortable: false,
         },
-        { text: "Add Variation ", value: "variation", sortable: false },
+        {
+          text: "ລາຍລະອຽດທີ່ຢູ່",
+          value: "variation",
+          sortable: false,
+          align: "center",
+        },
         { text: "", value: "actions", sortable: false },
       ],
     };
@@ -564,7 +328,6 @@ export default {
 
     OpenModalEdit(item) {
       this.update_village = item;
-      console.log(this.update_village);
       this.$store.commit("modalEdit_State", true);
     },
 
@@ -632,7 +395,6 @@ export default {
 
     fetchVillage() {
       this.$store.commit("Loading_State", true);
-      console.log(this.search);
       this.$axios
         .get("info/district/" + this.selectedDistrict + "/village", {
           params: {
@@ -653,80 +415,32 @@ export default {
         .catch(() => {});
     },
 
-    fetchVariation() {
-      var variation = [];
-      this.$axios
-        .get("info/village-variation")
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.loading = false;
-              this.variation = res.data.data;
-              this.edit_villagevariation.variation.map((item) => {
-                variation.push(item.name);
-              });
-            }, 300);
-          }
-        })
-        .catch((error) => {
-          this.loading = false;
-          this.fetchData();
-          if (error.response.status == 422) {
-            var obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
-              this.server_errors[key] = message[0];
-            }
-          }
-        });
-    },
-
-    AddVariation() {
-      if (this.$refs.form.validate() == true) {
-        this.loading = true;
-        this.$axios
-          .post(
-            "address/village/" + this.update_village.id + "/village-detail",
-            {
-              name: this.number,
-              village_variation_id: this.SelectedVillageVariation,
-            }
-          )
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.loading = false;
-                this.fetchData();
-                this.reset();
-                this.variationDialog = false;
-                this.$store.commit("Toast_State", {
-                  value: true,
-                  color: "success",
-                  msg: res.data.message,
-                });
-              }, 300);
-            }
-          })
-          .catch((error) => {
-            if (error.response.data.code == 422) {
-              this.errormsg = error.response.data.message;
-            }
-            this.$store.commit("Toast_State", {
-              value: true,
-              color: "error",
-              msg: error.response.data.message,
-            });
-            this.fetchData();
-          });
-        this.loading = false;
-      }
-    },
-
-    openModalVariation(item) {
-      this.edit_villagevariation = item;
-      this.update_village = item;
-      this.fetchVariation();
-      this.variationDialog = true;
-    },
+    // fetchVariation() {
+    //   var variation = [];
+    //   this.$axios
+    //     .get("info/village-variation")
+    //     .then((res) => {
+    //       if (res.data.code == 200) {
+    //         setTimeout(() => {
+    //           this.loading = false;
+    //           this.variation = res.data.data;
+    //           this.edit_villagevariation.variation.map((item) => {
+    //             variation.push(item.name);
+    //           });
+    //         }, 300);
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       this.loading = false;
+    //       this.fetchData();
+    //       if (error.response.status == 422) {
+    //         var obj = error.response.data.errors;
+    //         for (let [key, message] of Object.entries(obj)) {
+    //           this.server_errors[key] = message[0];
+    //         }
+    //       }
+    //     });
+    // },
 
     closeUpdateVillage() {
       this.reset(),
@@ -739,23 +453,11 @@ export default {
       this.$store.commit("modalAdd_State", false);
     },
 
-    openModalUpdateVariation(id) {
-      console.log(id);
-      this.$router.push({
-        name: "EditVillage",
-        params: { id },
-      });
-    },
-
     ViewVillage(id) {
       this.$router.push({
         name: "ViewVillage",
         params: { id },
       });
-    },
-
-    openModaldeleteVariation() {
-      this.DeleteVariationDialog = true;
     },
 
     AddItem() {
