@@ -4,8 +4,10 @@
       <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
-      ລາຍລະອຽດແຜນເສັ້ນທາງ</v-breadcrumbs
+      ລາຍລະອຽດແຜນເສັ້ນທາງ
+      <span class="primary-color ml-2"> {{ plan.name }}</span></v-breadcrumbs
     >
+
     <v-row>
       <v-col cols="12" class="mb-4" v-if="switchMap">
         <GmapMap
@@ -28,7 +30,6 @@
             :position="getMarkers(m)"
             @click="toggleInfo(m, index)"
             :draggable="false"
-            @dragend="onLocation"
             :icon="markerOptions"
             :animation="2"
             :clickable="true"
@@ -78,19 +79,12 @@
               :disable-pagination="true"
               hide-default-footer
             >
-              <template v-slot:item.media="{ item }">
-                <v-avatar
-                  size="36px"
-                  v-for="(img, index) in item.media"
-                  :key="index"
-                >
-                  <img v-if="img.thumb" :src="img.thumb" />
-                </v-avatar>
-              </template>
               <template v-slot:item.status="{ item }">
-                <v-chip :color="statusColor(item.customer.status)">{{
-                  item.customer.status
-                }}</v-chip>
+                <v-chip
+                  v-if="item.customer"
+                  :color="statusColor(item.customer.status)"
+                  >{{ item.customer.status }}</v-chip
+                >
               </template>
 
               <template v-slot:item.actions="{ item }">
@@ -146,25 +140,12 @@ export default {
         { text: "ເຮືອນເລກທີ", value: "customer.house_number", sortable: false },
         { text: "", value: "actions", sortable: false },
       ],
-      toast: {
-        value: true,
-        color: "success",
-        msg: "",
-      },
-      toast_error: {
-        value: true,
-        color: "error",
-        msg: "Something when wrong!",
-      },
-
       //Map
       latlng: {
         lat: 18.1189434,
         lng: 102.290218,
       },
       markers: [],
-      places: [],
-      currentPlace: null,
       markerOptions: {
         // eslint-disable-next-line global-require
         url: require("@coms/../../src/assets/pin1.svg"),
@@ -223,7 +204,7 @@ export default {
               this.customers = res.data.data.data;
               this.pagination = res.data.data.pagination;
               this.getCenter();
-            }, 300);
+            }, 100);
           }
         })
         .catch((error) => {
@@ -244,7 +225,7 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.plan = res.data.data;
-            }, 300);
+            }, 100);
           }
         })
         .catch(() => {});
@@ -260,7 +241,7 @@ export default {
               this.address.map((item) => {
                 this.districts = item.districts;
               });
-            }, 300);
+            }, 100);
           }
         })
         .catch(() => {});
@@ -273,7 +254,7 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.villages = res.data.data;
-            }, 300);
+            }, 100);
           }
         })
         .catch(() => {});
@@ -299,99 +280,12 @@ export default {
     },
     viewMap() {
       this.switchMap = !this.switchMap;
-      // if (this.switchMap == true) {
-      //   this.switchMap = false;
-      // } else{
-
-      // }
     },
     Search() {
       GetOldValueOnInput(this);
     },
 
     //Google map
-
-    //Set Googlemap Api
-    createNewAddressName() {
-      const CUSTOMIZE = "#CUSTOM ADDRESS:";
-      return this.isCreate
-        ? this.currentAddress
-        : `${CUSTOMIZE} ${this.latlng.lat}, ${this.latlng.lng}`;
-    },
-    onLocation(evt) {
-      this.latlng.lat = evt.latLng.lat();
-      this.latlng.lng = evt.latLng.lng();
-      this.address = this.createNewAddressName();
-      //   this.customer_edit.latitude = this.center.lat;
-      //   this.customer_edit.longitude = this.center.lng;
-    },
-    setPlace(place) {
-      this.currentPlace = place;
-      this.placeMarker();
-    },
-    addMarker() {
-      if (this.currentPlace) {
-        const marker = {
-          lat: this.currentPlace.geometry.location.lat(),
-          lng: this.currentPlace.geometry.location.lng(),
-        };
-        this.markers.push({ position: marker });
-        this.latlng = marker;
-        this.currentPlace = null;
-      }
-    },
-    placeMarker() {
-      this.markers = [];
-      this.places = [];
-      if (this.currentPlace) {
-        const marker = {
-          lat: this.currentPlace.geometry.location.lat(),
-          lng: this.currentPlace.geometry.location.lng(),
-        };
-        this.markers.push({ position: marker });
-        this.latlng = marker;
-        this.animateMarker();
-      } else {
-        const marker = {
-          lat: this.latlng.lat,
-          lng: this.latlng.lng,
-        };
-        this.markers.push({ position: marker });
-      }
-      // set address
-      if (this.$refs.searchInput) {
-        this.address = this.$refs.searchInput.$el.value;
-      } else {
-        // this.address = this.currentPlace.formatted_address;
-      }
-      this.onDataChange();
-    },
-
-    geolocate() {
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.latlng = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-        this.placeMarker();
-      });
-    },
-    onDataChange() {
-      this.$emit("onDataChange", {
-        address: this.address,
-        position: this.latlng,
-      });
-      // console.log(this.center);
-    },
-
-    onSave() {
-      this.$emit("onSave", {
-        address: this.address || this.currentAddress || "Unnamed Location",
-        position: this.latlng,
-        isCreate: this.isCreate,
-      });
-    },
-
     getCenter() {
       if (this.customers.length) {
         const latlng = {
@@ -403,10 +297,12 @@ export default {
       return this.latlng;
     },
     getMarkers(m) {
-      return {
-        lat: parseFloat(m.customer.lat),
-        lng: parseFloat(m.customer.lng),
-      };
+      if (m.customer !== null) {
+        return {
+          lat: parseFloat(m.customer.lat),
+          lng: parseFloat(m.customer.lng),
+        };
+      }
     },
 
     toggleInfo(m, key) {
@@ -425,40 +321,13 @@ export default {
         this.infoCurrentKey = key;
       }
     },
-
-    toggle() {
-      console.log(this.likesAllFruit);
-      this.$nextTick(() => {
-        if (this.likesAllFruit) {
-          this.selectedVillage = [];
-        } else {
-          // this.selectedVillage = this.villages.slice();
-          this.villages.filter((item) => {
-            this.selectedVillage.push(item.id);
-          });
-          console.log(this.selectedVillage);
-        }
-      });
-    },
     statusColor(value) {
       if (value == "active") return "success";
       else if (value == "inactive") return "error";
       else return "info";
     },
   },
-  computed: {
-    likesAllFruit() {
-      return this.selectedVillage.length === this.villages.length;
-    },
-    likesSomeFruit() {
-      return this.selectedVillage.length > 0 && !this.likesAllFruit;
-    },
-    icon() {
-      if (this.likesAllFruit) return "mdi-close-box";
-      if (this.likesSomeFruit) return "mdi-minus-box";
-      return "mdi-checkbox-blank-outline";
-    },
-  },
+
   watch: {
     search: function (value) {
       if (value == "") {
@@ -472,13 +341,10 @@ export default {
       this.fetchVillage();
     },
   },
-  mounted() {
-    this.geolocate();
-  },
   created() {
     this.fetchData();
     this.fetchDetail();
-    this.fetchAddress();
+    // this.fetchAddress();
   },
 };
 </script>

@@ -282,7 +282,6 @@ export default {
       this.$router.go(-1);
     },
     fetchData() {
-      console.log(this.selectedVillage);
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("customer", {
@@ -294,7 +293,7 @@ export default {
           },
         })
         .then((res) => {
-          if (res.data.code == 200) {
+          if (res.data.code == 100) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.customers = res.data.data.data;

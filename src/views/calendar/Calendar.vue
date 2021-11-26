@@ -314,7 +314,7 @@ export default {
               this.$store.commit("Loading_State", false);
               this.calendars = res.data.data.data;
               this.pagination = res.data.data.pagination;
-            }, 300);
+            }, 100);
           }
         })
         .catch((error) => {

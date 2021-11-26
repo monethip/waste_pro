@@ -61,8 +61,6 @@
         </router-link>
       </div>
 
-     
-
       <v-list expand shaped>
         <v-list-item
           v-for="(item, i) in items"
@@ -115,7 +113,7 @@
         >
           <template v-slot:activator>
             <v-list-item-content>
-              <v-list-item-title>Route Plan</v-list-item-title>
+              <v-list-item-title>ແຜນເສັ້ງທາງ</v-list-item-title>
             </v-list-item-content>
           </template>
           <v-list-item
@@ -194,16 +192,16 @@ export default {
       routes: [
         {
           icon: "mdi-sitemap",
-          title: "Plan",
+          title: "ເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ",
           to: "/plan",
         },
         {
           icon: "mdi-calendar-month",
-          title: "Plan Calendar",
+          title: "ຈັດແຜນເວລາເກັບຂີ້ເຫື້ຍອ",
           to: "/calendar",
         },
       ],
-      
+
       setting: [
         {
           icon: "mdi-account-key",
@@ -226,8 +224,13 @@ export default {
           to: "/customer",
         },
         {
+          icon: "mdi-package",
+          title: "ຈັດການແພັກເກດ",
+          to: "/package",
+        },
+        {
           icon: "mdi-home-account",
-          title: "ທີ່ຢູ່",
+          title: "ຈັດການທີ່ຢູ່",
           to: "/village",
         },
         {

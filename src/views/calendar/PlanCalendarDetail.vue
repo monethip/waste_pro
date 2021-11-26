@@ -42,14 +42,13 @@
             :disable-pagination="true"
             hide-default-footer
           >
-            <!--
-            <template v-slot:item.name="{ item }" v-if="item.name">
-              <div v-if="item.route_plan_detail.customer.name">
+            <template v-slot:item.customer="{ item }">
+              <div v-if="item.route_plan_detail.customer">
                 {{ item.route_plan_detail.customer.name }}
                 {{ item.route_plan_detail.customer.surname }}
               </div>
             </template>
-           
+            <!--
             <template v-slot:item.start_month="{ item }">
               {{ item.route_plan_detail.customer.start_month }}
             </template>
@@ -115,7 +114,7 @@ export default {
 
       headers: [
         { text: "ລຳດັບ", value: "route_plan_detail.priority" },
-        { text: "ຊື່ລູກຄ້າ", value: "route_plan_detail.customer.name" },
+        { text: "ຊື່ລູກຄ້າ", value: "customer" },
         { text: "ເລີ່ມວັນທີ", value: "route_plan_detail.customer.start_month" },
 
         {
@@ -164,7 +163,7 @@ export default {
               this.calendars = res.data.data.data;
               this.summary = res.data.data.summary;
               this.pagination = res.data.data.pagination;
-            }, 300);
+            }, 100);
           }
         })
         .catch((error) => {

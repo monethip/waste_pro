@@ -34,7 +34,7 @@
               class="mr-2"
               @click="OpenModalEdit(item)"
             >
-              mdi-account-edit
+              mdi-pencil
             </v-icon>
             <v-icon small color="red" @click="deleteItem(item.id)">
               mdi-trash-can-outline
@@ -78,22 +78,22 @@
                 </v-row>
               </v-form>
             </v-container>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeAddModal()">
+                Close
+              </v-btn>
+              <v-btn
+                color="blue darken-1"
+                text
+                :loading="loading"
+                :disabled="loading"
+                @click="AddItem()"
+              >
+                Save
+              </v-btn>
+            </v-card-actions>
           </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="closeAddModal()">
-              Close
-            </v-btn>
-            <v-btn
-              color="blue darken-1"
-              text
-              :loading="loading"
-              :disabled="loading"
-              @click="AddItem()"
-            >
-              Save
-            </v-btn>
-          </v-card-actions>
         </v-card>
       </template>
     </ModalAdd>
@@ -104,7 +104,7 @@
       <template @close="close">
         <v-card>
           <v-card-title>
-            <span class="headline">ແກ້ໄຂຂໍ້ມູນຍ່ອຍຂອງບ້ານ</span>
+            <h4>ແກ້ໄຂຂໍ້ມູນຍ່ອຍຂອງບ້ານ</h4>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -116,6 +116,9 @@
                       label="name*"
                       required
                     ></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.name }}
+                    </p>
                   </v-col>
                 </v-row>
               </v-form>
@@ -194,17 +197,6 @@ export default {
         { text: "name", value: "name" },
         { text: "actions", value: "actions" },
       ],
-
-      toast: {
-        value: true,
-        color: "success",
-        msg: "Success",
-      },
-      toast_error: {
-        value: true,
-        color: "error",
-        msg: "Something when wrong!",
-      },
     };
   },
 
@@ -234,12 +226,15 @@ export default {
     },
 
     updateItem() {
+      let formData = new FormData();
+      formData.append("name", this.editVillagevariation.name);
+      formData.append("_method", "PUT");
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .put(
+          .post(
             "address/village-variation/" + this.editVillagevariation.id,
-            this.editVillagevariation
+            formData
           )
           .then((res) => {
             if (res.data.code == 200) {
@@ -249,15 +244,23 @@ export default {
                 this.editVillagevariation = {};
                 this.reset();
                 this.fetchData();
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", this.toast_error);
             this.fetchData();
             if (error.response.status == 422) {
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response.data.message,
+              });
               var obj = error.response.data.errors;
               for (let [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
@@ -267,46 +270,44 @@ export default {
       }
     },
 
-    fetchVariation() {
-      var variation = [];
-      var villagedetail = [];
-      this.$axios
-        .get("info/village-variation")
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.loading = false;
-              this.variation = res.data.data;
-              this.villagedetail = res.data.data;
-              this.edit_villagevariation.variation.map((item) => {
-                variation.push(item.name);
-              });
-              this.villagedetail.map((item) => {
-                villagedetail.push(item.name);
-              });
-            }, 300);
-          }
-        })
-        .catch((error) => {
-          this.loading = false;
-          this.fetchData();
-          if (error.response.status == 422) {
-            var obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
-              this.server_errors[key] = message[0];
-            }
-          }
-        });
-    },
-
-    openModalVariation(item) {
-      //this.village_variation_id = item.id
-      // this.edit_villagevariation = item;
-      this.editVillagevariation = item;
-      this.fetchVariation();
-      this.variationDialog = true;
-    },
-
+    // fetchVariation() {
+    //   this.$axios
+    //     .get("info/village-variation", {
+    //       params: {
+    //         page: this.pagination.current_page,
+    //         per_page: this.per_page,
+    //         filter: this.search,
+    //       },
+    //     })
+    //     .then((res) => {
+    //       if (res.data.code == 200) {
+    //         setTimeout(() => {
+    //           this.loading = false;
+    //           this.variation = res.data.data;
+    //           console.log(this.variation);
+    //           // this.villagedetail = res.data.data;
+    //           this.pagination = res.data.data.pagination;
+    //           // this.edit_villagevariation.variation.map((item) => {
+    //           //   variation.push(item.name);
+    //           // });
+    //           // this.villagedetail.map((item) => {
+    //           //   villagedetail.push(item.name);
+    //           // });
+    //         }, 300);
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       this.loading = false;
+    //       this.fetchData();
+    //       if (error.response.status == 422) {
+    //         this.$store.commit("Toast_State", {
+    //           value: true,
+    //           color: "error",
+    //           msg: error.response.data.message,
+    //         });
+    //       }
+    //     });
+    // },
     closeDelete() {
       this.$store.commit("modalDelete_State", false);
     },
@@ -324,8 +325,11 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.loading = false;
-              this.toast.msg = res.data.message;
-              this.$store.commi("Toast_State", this.toast);
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
+              });
               this.$store.commit("modalDelete_State", false);
               this.fetchData();
             }, 300);
@@ -333,7 +337,6 @@ export default {
         })
         .catch(() => {
           this.fetchData();
-          this.$store.commit("Toast_State", this.toast_error);
           this.$store.commit("modalDelete_State", false);
           this.loading = false;
         });
@@ -353,16 +356,24 @@ export default {
                 this.closeAddModal();
                 this.fetchData();
                 this.reset();
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", this.toast_error);
             this.fetchData();
             if (error.response.status == 422) {
-              var obj = error.response.data.error;
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response.data.message,
+              });
+              var obj = error.response.data.errors;
               for (let [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
               }
@@ -394,15 +405,23 @@ export default {
           this.$store.commit("Loading_State", false);
           this.fetchData();
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
-              this.server_errors[key] = message[0];
-            }
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
           }
         });
     },
   },
-
+  watch: {
+    addvillagevariation: function () {
+      this.server_errors.name = "";
+    },
+    "editVillagevariation.name": function () {
+      this.server_errors.name = "";
+    },
+  },
   created() {
     this.fetchData();
   },
