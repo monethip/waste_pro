@@ -188,7 +188,9 @@
                   item-text="name"
                   item-value="id"
                   label="ກຸ່ມ / ຄຸ້ມ"
-                ></v-select>
+                  multiple
+                >
+                </v-select>
                 <p class="errors">
                   {{ server_errors.village_details }}
                 </p>
@@ -202,11 +204,38 @@
                   item-value="id"
                   label="ຮ່ອມ / ໜ່ວຍ"
                   multiple
+                >
+                  <template v-slot:selection="data">
+                    <v-chip
+                      v-bind="data.attrs"
+                      :input-value="data.selected"
+                      close
+                      @click="data.select"
+                      @click:close="removeItem(data.item)"
+                    >
+                      {{ data.item.name }}
+                    </v-chip>
+                  </template>
+                </v-select>
+                <p class="errors">
+                  {{ server_errors.village_details }}
+                </p>
+              </v-col>
+              <!--
+              <v-col cols="6">
+                <v-select
+                  v-model="selectedVillageDetail"
+                  :items="units"
+                  item-text="name"
+                  item-value="id"
+                  label="ຮ່ອມ / ໜ່ວຍ"
+                  multiple
                 ></v-select>
                 <p class="errors">
                   {{ server_errors.village_details }}
                 </p>
               </v-col>
+              -->
 
               <!-- Gogle map-->
               <v-col cols="6">
@@ -296,7 +325,7 @@ export default {
       selectedVillage: "",
       village_details: [],
       village_variation_id: "",
-      selectedVillageDetail: [],
+      selectedVillageDetail: "",
       units: [],
 
       address: [],
@@ -368,9 +397,14 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data;
+              // console.log(this.data);
               this.selectedVillage = res.data.data.village_id;
               res.data.data.village_details.map((item) => {
-                this.village_variation_id.push(item[0].village_variation_id);
+                this.village_variation_id = item.village_variation_id;
+                console.log(item);
+                console.log(this.village_variation_id);
+                this.selectedVillageDetail = item.id;
+                console.log(this.selectedVillageDetail);
               });
               this.getCenter();
             }, 300);
@@ -415,15 +449,16 @@ export default {
     },
     fetchVillageDetail() {
       this.$axios
-        .get("info/village/" + this.selectedVillage + "/village-detail")
+        .get("info/village/" + this.selectedVillage)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.village_details = res.data.data;
-              res.data.data.map((item) => {
+              this.village_details = res.data.data.village_variations;
+              console.log(this.village_details);
+              res.data.data.village_variations.map((item) => {
                 this.units = item.village_details;
               });
-            }, 300);
+            }, 100);
           }
         })
         .catch(() => {});
@@ -458,9 +493,10 @@ export default {
       this.image_list.map((item) => {
         formData.append("images[]", item);
       });
-      this.selectedVillageDetail.map((item) => {
-        formData.append("village_details[]", item);
-      });
+      // console.log(this.selectedVillageDetail);
+      // this.selectedVillageDetail.map((item) => {
+      //   formData.append("village_details[]", item);
+      // });
       formData.append("name", this.data.name);
       formData.append("surname", this.data.surname);
       formData.append("village_id", this.selectedVillage);
@@ -586,6 +622,26 @@ export default {
         lng: parseFloat(data.lng),
       };
     },
+
+    fetchUnit() {
+      this.village_details.filter((item) => {
+        this.units = item.village_details;
+        // console.log(this.units);
+        // console.log(item.village_details);
+        // item.village_details.forEach((data) => {
+        //   console.log(data);
+        //   data.filter((i) => {
+        //     console.log(i);
+        //     return i.village_variation_id === this.village_variation_id;
+        //   });
+        // });
+
+        // // var a = item.id === this.village_variation_id;
+        // // console.log(a);
+        // // this.units.push(item.id === this.village_variation_id);
+        // console.log("Unit" + this.units);
+      });
+    },
   },
   watch: {
     selectedDistrict: function () {
@@ -617,12 +673,19 @@ export default {
     "data.password_confirmation": function () {
       this.server_errors.password = "";
     },
+    // village_variation_id: function () {
+    //   if (this.village_variation_id) {
+    //     // this.selectedVillageDetail = this.village_variation_id;
+    //   }
+    //   console.log(this.selectedVillageDetail);
+    //   // this.fetchUnits();
+    // },
     village_variation_id: function () {
+      console.log("HI");
       if (this.village_variation_id) {
-        // this.selectedVillageDetail = this.village_variation_id;
+        console.log(this.village_variation_id);
+        this.fetchUnit();
       }
-      console.log(this.selectedVillageDetail);
-      // this.fetchUnits();
     },
   },
   mounted() {

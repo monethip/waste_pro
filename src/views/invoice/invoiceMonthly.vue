@@ -1,61 +1,48 @@
 <template>
   <v-container>
-    <v-row class="mb-n6">
+    <v-row class="my-n6">
       <v-col>
+        <v-breadcrumbs large class="pa-0">
+          <v-btn text class="text-primary" @click="backPrevios()">
+            <v-icon>mdi-chevron-left</v-icon></v-btn
+          >
+          ລາຍລະອຽດການອອກບິນຄ່າຂີ້ເຫຍື້ອ</v-breadcrumbs
+        >
+      </v-col>
+    </v-row>
+    <v-row class="mb-n6">
+      <!--
+      <v-col cols="4">
         <v-btn class="btn-primary">Export </v-btn>
       </v-col>
-      <v-col>
-        <v-autocomplete
-          item-text=""
-          item-value=""
-          label="ວັນທີເລີ່ມ"
+-->
+      <v-spacer></v-spacer>
+      <v-col cols="8">
+        <v-select
           outlined
           dense
-          clearable
-        ></v-autocomplete>
-      </v-col>
-      <v-col>
-        <v-autocomplete
-          item-text=""
-          item-value=""
-          label="ວັນທີສີ້ນສຸດ"
-          outlined
-          dense
-          clearable
-        ></v-autocomplete>
-      </v-col>
-      <v-col>
-        <v-autocomplete
-          item-text=""
-          item-value=""
-          label="ເລືອກເມືອງ"
-          outlined
-          dense
-          clearable
-        ></v-autocomplete>
-      </v-col>
-      <v-col>
-        <v-autocomplete
-          item-text=""
-          item-value=""
-          label="ເລືອກບ້ານ"
-          outlined
-          dense
-          clearable
-        ></v-autocomplete>
-      </v-col>
-      <v-col>
-        <v-text-field
-          outlined
-          dense
-          clearable
-          prepend-inner-icon="mdi-magnify"
-          label="ຊື່ລູກຄ້າ,ເລກບິນ"
-          type="text"
-          v-model="search"
-          @keyup.enter="Search()"
+          :items="status"
+          v-model="selectedStatus"
+          item-text="name"
+          item-value="name"
+          label="ສະຖານະ"
+          multiple
         >
-        </v-text-field>
+          <template v-slot:selection="data">
+            <v-chip
+              color="green"
+              text-color="white"
+              class="ma-1"
+              v-bind="data.attrs"
+              :input-value="data.selected"
+              close
+              @click="data.select"
+              @click:close="removeItem(data.item)"
+            >
+              {{ data.item.name }}
+            </v-chip>
+          </template>
+        </v-select>
       </v-col>
     </v-row>
     <div>
@@ -156,11 +143,33 @@ export default {
       search: "",
       oldVal: "",
       invoices: [],
+      selectedStatus: ["created"],
+      status: [
+        {
+          id: 1,
+          name: "created",
+        },
+        {
+          id: 2,
+          name: "approved",
+        },
+        {
+          id: 3,
+          name: "to_confirm_payment",
+        },
+        {
+          id: 4,
+          name: "rejected",
+        },
+        {
+          id: 5,
+          name: "success",
+        },
+      ],
 
       headers: [
+        { text: "Invoice name", value: "plan_month.name", sortable: false },
         { text: "ລູກຄ້າ", value: "customer.name" },
-        { text: "ເມືອງ", value: "user.email", sortable: false },
-        { text: "ຈຳນວນເງິນ", value: "house_number", sortable: false },
         { text: "ຈຳນວນຖົງ", value: "total_bag", sortable: false },
         { text: "ສ່ວນຫຼຸດ", value: "discount" },
         { text: "SubTotal", value: "sub_total", sortable: false },
@@ -182,14 +191,17 @@ export default {
     };
   },
   methods: {
+    backPrevios() {
+      this.$router.go(-1);
+    },
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("plan-month/" + 2 + "/invoice", {
+        .get("plan-month/" + this.$route.params.id + "/invoice", {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
-            filter: this.search,
+            statuses: this.selectedStatus,
           },
         })
         .then((res) => {
@@ -247,21 +259,18 @@ export default {
         name: "CreateCustomer",
       });
     },
-    editPage(id) {
-      this.$router.push({
-        name: "EditCustomer",
-        params: { id },
-      });
-    },
+
     viewPage(id) {
-      console.log(id);
       this.$router.push({
-        name: "ViewCustomer",
+        name: "InvoiceDetail",
         params: { id },
       });
     },
     Search() {
       GetOldValueOnInput(this);
+    },
+    RemoveItem(item) {
+      this.preview_list.splice(this.preview_list.indexOf(item), 1);
     },
   },
   watch: {
@@ -269,6 +278,9 @@ export default {
       if (value == "") {
         this.fetchData();
       }
+    },
+    selectedStatus: function () {
+      this.fetchData();
     },
   },
   created() {

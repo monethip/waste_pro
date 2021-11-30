@@ -293,14 +293,14 @@ export default {
           },
         })
         .then((res) => {
-          if (res.data.code == 100) {
+          if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.customers = res.data.data.data;
               this.selectedAllCustomer = res.data.data;
               this.pagination = res.data.data.pagination;
               // this.getCenter();
-            }, 300);
+            }, 100);
           }
         })
         .catch((error) => {
@@ -383,22 +383,27 @@ export default {
     },
 
     //Google map
-
     getCenter() {
       if (this.customers.length) {
-        const latlng = {
-          lat: parseFloat(this.customers[0].lat),
-          lng: parseFloat(this.customers[0].lng),
-        };
-        return latlng;
+        if (parseFloat(this.customers[0].lat) == null) {
+          return this.latlng;
+        } else {
+          const latlng = {
+            lat: parseFloat(this.customers[0].lat),
+            lng: parseFloat(this.customers[0].lng),
+          };
+          return latlng;
+        }
       }
       return this.latlng;
     },
     getMarkers(m) {
-      return {
-        lat: parseFloat(m.lat),
-        lng: parseFloat(m.lng),
-      };
+      if (m.customer !== null) {
+        return {
+          lat: parseFloat(m.lat),
+          lng: parseFloat(m.lng),
+        };
+      }
     },
 
     // getSiteIcon(status) {
@@ -483,6 +488,7 @@ export default {
     },
   },
   created() {
+    console.log(this.getCenter);
     this.fetchData();
     this.fetchAddress();
     // this.selectedVillage = this.villages.slice();

@@ -254,6 +254,35 @@ const routes = [
     }
   },
 
+  //Invoice
+  {
+    path: '/invoice',
+    name: 'Invoice',
+    component: () => import('@/views/invoice/invoice.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/invoice/month/:id/',
+    name: 'Monthly-Invoice',
+    component: () => import('@/views/invoice/invoiceMonthly.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/invoice/:id',
+    name: 'InvoiceDetail',
+    component: () => import('@/views/invoice/invoiceDetail.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+
   //Report 
   {
     path: '/report/trash',

@@ -113,13 +113,40 @@
         >
           <template v-slot:activator>
             <v-list-item-content>
-              <v-list-item-title>ແຜນເສັ້ງທາງ</v-list-item-title>
+              <v-list-item-title>ແຜນເສັ້ນທາງ</v-list-item-title>
             </v-list-item-content>
           </template>
           <v-list-item
             exact
             color="indigo darken-4"
             v-for="(item, k) in routes"
+            :key="k"
+            :to="item.to"
+          >
+            <v-list-item-action>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title v-text="item.title" />
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-group>
+
+        <!--Route plan-->
+        <v-list-group
+          :prepend-icon="'mdi-note-outline'"
+          no-action
+          color="indigo darken-4"
+        >
+          <template v-slot:activator>
+            <v-list-item-content>
+              <v-list-item-title>Invoice</v-list-item-title>
+            </v-list-item-content>
+          </template>
+          <v-list-item
+            exact
+            color="indigo darken-4"
+            v-for="(item, k) in invoices"
             :key="k"
             :to="item.to"
           >
@@ -199,6 +226,13 @@ export default {
           icon: "mdi-calendar-month",
           title: "ຈັດແຜນເວລາເກັບຂີ້ເຫື້ຍອ",
           to: "/calendar",
+        },
+      ],
+      invoices: [
+        {
+          icon: "mdi-currency-usd-circle-outline",
+          title: "ອອກບິນ",
+          to: "/invoice",
         },
       ],
 

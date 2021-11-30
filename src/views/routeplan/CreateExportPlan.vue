@@ -339,20 +339,26 @@ export default {
 
     //Google map
     getCenter() {
-      if (this.customers.length > 0) {
-        const latlng = {
-          lat: parseFloat(this.customers[0].lat),
-          lng: parseFloat(this.customers[0].lng),
-        };
-        return latlng;
+      if (this.customers.length) {
+        if (parseFloat(this.customers[0].lat) == null) {
+          return this.latlng;
+        } else {
+          const latlng = {
+            lat: parseFloat(this.customers[0].lat),
+            lng: parseFloat(this.customers[0].lng),
+          };
+          return latlng;
+        }
       }
       return this.latlng;
     },
     getMarkers(m) {
-      return {
-        lat: parseFloat(m.lat),
-        lng: parseFloat(m.lng),
-      };
+      if (m.customer !== null) {
+        return {
+          lat: parseFloat(m.lat),
+          lng: parseFloat(m.lng),
+        };
+      }
     },
     toggleInfo(m, key) {
       this.infoPosition = this.getMarkers(m);
