@@ -446,6 +446,9 @@ export default {
         params: { id },
       });
     },
+    reset() {
+      this.$refs.form.reset();
+    },
   },
   watch: {
     search: function (value) {

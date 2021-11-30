@@ -264,10 +264,20 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
+
+  {
+    path: '/reject',
+    name: 'Reject',
+    component: () => import('@/views/invoice/reject/reject.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
   {
     path: '/invoice/month/:id/',
-    name: 'Monthly-Invoice',
-    component: () => import('@/views/invoice/invoiceMonthly.vue'),
+    name: 'InvoiceTab',
+    component: () => import('@/views/invoice/tabindex.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],

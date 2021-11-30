@@ -230,9 +230,14 @@ export default {
       ],
       invoices: [
         {
-          icon: "mdi-currency-usd-circle-outline",
+          icon: "mdi-note-outline",
           title: "ອອກບິນ",
           to: "/invoice",
+        },
+        {
+          icon: "mdi-close-circle-outline",
+          title: "Reject",
+          to: "/reject",
         },
       ],
 

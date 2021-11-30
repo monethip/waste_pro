@@ -16,8 +16,8 @@
         <v-card-text class="px-16 py-16">
           <v-row align="center" class="py-4">
             <v-col align="center">
-              <h2 v-if="invoice.plan_month">ໃບບິນເກັບເງິນຄ່າຂີ້ເຫື້ອຍ</h2>
-              <p>{{ invoice.plan_month.name }}</p>
+              <h2>ໃບບິນເກັບເງິນຄ່າຂີ້ເຫື້ອຍ</h2>
+              <p v-if="invoice.plan_month">{{ invoice.plan_month.name }}</p>
             </v-col>
           </v-row>
           <v-row>
@@ -39,9 +39,10 @@
           <v-divider class="my-6"></v-divider>
           <v-row>
             <v-col>
-              <h3 v-if="invoice.plan_month">
-                ຈຳນວນຖົງ: {{ invoice.total_bag }}
-              </h3>
+              <h3>ຈຳນວນຖົງ: {{ invoice.total_bag }}</h3>
+              <h3>ຈຳນວນຖົງທີ່ກາຍ: {{ invoice.exceed_bag }}</h3>
+              <h3>ຈຳນວນຖົງທີ່ກາຍ: {{ invoice.exceed_bag_charge }}</h3>
+              <h3>ຈຳນວນຖົງທີ່ກາຍ: {{ invoice.new_exceed_bag_charge }}</h3>
             </v-col>
             <v-col>
               <h3>ລວມ: {{ invoice.sub_total }}</h3>
@@ -58,12 +59,19 @@
           </v-row>
           <v-row>
             <v-col>
-              <h1 v-if="invoice.plan_month">{{ invoice.plan_month.name }}</h1>
-              <h4 v-if="invoice.customer">{{ invoice.customer.name }}</h4>
+              <h2 v-if="invoice.plan_month">{{ invoice.plan_month.name }}</h2>
+              <h4>{{ invoice.bcel_ticket_id }}</h4>
             </v-col>
             <v-col>
-              <h1 v-if="invoice.plan_month">{{ invoice.plan_month.name }}</h1>
-              <h4 v-if="invoice.customer">{{ invoice.customer.name }}</h4>
+              <p>ການຊຳລະ</p>
+              <h4>ວັນທິຊຳລະ</h4>
+              <h4>
+                {{ invoice.confirmed_payment_by }}
+              </h4>
+              <h4 v-if="invoice.customer">{{ invoice.paided_by }}</h4>
+              <h4 v-if="invoice.customer">
+                Payment ID:{{ invoice.bcel_reference_number }}
+              </h4>
             </v-col>
           </v-row>
           <v-card-actions>

@@ -135,13 +135,12 @@ export default {
           }
         });
     },
-
     Search() {
       GetOldValueOnInput(this);
     },
     createInvoice(id) {
       this.$router.push({
-        name: "Monthly-Invoice",
+        name: "InvoiceTab",
         params: { id },
       });
     },
