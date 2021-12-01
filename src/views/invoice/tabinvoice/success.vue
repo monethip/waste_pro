@@ -50,48 +50,12 @@
       <v-card>
         <v-card flat>
           <v-card-text>
-            <v-row class="my-0 mx-2">
-              <v-col>
-                <v-btn text color="primary" dark class="mb-2" @click="Approve()"
-                  >Approve {{ selectedRows.length }}</v-btn
-                ></v-col
-              >
-              <v-col cols="8">
-                <v-select
-                  outlined
-                  dense
-                  :items="status"
-                  v-model="selectedStatus"
-                  item-text="name"
-                  item-value="name"
-                  label="ສະຖານະ"
-                  multiple
-                >
-                  <template v-slot:selection="data">
-                    <v-chip
-                      color="green"
-                      text-color="white"
-                      class="ma-1"
-                      v-bind="data.attrs"
-                      :input-value="data.selected"
-                      close
-                      @click="data.select"
-                      @click:close="removeItem(data.item)"
-                    >
-                      {{ data.item.name }}
-                    </v-chip>
-                  </template>
-                </v-select>
-              </v-col>
-            </v-row>
             <v-data-table
               :headers="headers"
               :items="invoices"
               :search="search"
               :disable-pagination="true"
               hide-default-footer
-              v-model="selectedRows"
-              show-select
               fixed-header
               height="100vh"
             >
@@ -150,30 +114,6 @@
                       <v-list-item-title @click="viewPage(item.id)">
                         <v-icon small class="mr-2"> mdi-eye </v-icon>
                         View
-                      </v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link>
-                      <v-list-item-title @click="editModal(item)">
-                        <v-icon small class="mr-2"> mdi-pencil </v-icon>
-                        Update Invoice
-                      </v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link>
-                      <v-list-item-title>
-                        <v-icon small> mdi-credit-card </v-icon>
-                        Payment
-                      </v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link>
-                      <v-list-item-title>
-                        <v-icon small> mdi-credit-card </v-icon>
-                        Reject Payment
-                      </v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link>
-                      <v-list-item-title>
-                        <v-icon small> mdi-delete </v-icon>
-                        Confirm Payment
                       </v-list-item-title>
                     </v-list-item>
                   </v-list>
@@ -316,29 +256,7 @@ export default {
       invoices: [],
       editItem: {},
       server_errors: {},
-      selectedStatus: ["created"],
-      status: [
-        {
-          id: 1,
-          name: "created",
-        },
-        {
-          id: 2,
-          name: "approved",
-        },
-        {
-          id: 3,
-          name: "to_confirm_payment",
-        },
-        {
-          id: 4,
-          name: "rejected",
-        },
-        {
-          id: 5,
-          name: "success",
-        },
-      ],
+      selectedStatus: ["success"],
 
       headers: [
         { text: "ລູກຄ້າ", value: "customer.name" },

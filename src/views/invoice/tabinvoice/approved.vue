@@ -1,97 +1,22 @@
 <template>
   <v-container>
-    <v-row class="my-n2">
+    <v-row class="mb-2">
       <v-col>
         <v-breadcrumbs large class="pa-0">
-          <v-btn text class="text-primary" @click="backPrevios()">
-            <v-icon>mdi-chevron-left</v-icon></v-btn
-          >
           ລາຍລະອຽດການອອກບິນຄ່າຂີ້ເຫຍື້ອ</v-breadcrumbs
         >
       </v-col>
     </v-row>
-    <!--
-    <v-row class="mb-n6">
-
-      <v-col cols="4">
-        <v-btn class="btn-primary">Export </v-btn>
-      </v-col>
-      <v-spacer></v-spacer>
-      <v-col cols="8">
-        <v-select
-          outlined
-          dense
-          :items="status"
-          v-model="selectedStatus"
-          item-text="name"
-          item-value="name"
-          label="ສະຖານະ"
-          multiple
-        >
-          <template v-slot:selection="data">
-            <v-chip
-              color="green"
-              text-color="white"
-              class="ma-1"
-              v-bind="data.attrs"
-              :input-value="data.selected"
-              close
-              @click="data.select"
-              @click:close="removeItem(data.item)"
-            >
-              {{ data.item.name }}
-            </v-chip>
-          </template>
-        </v-select>
-      </v-col>
-    </v-row>
-    -->
     <div>
       <v-card>
         <v-card flat>
           <v-card-text>
-            <v-row class="my-0 mx-2">
-              <v-col>
-                <v-btn text color="primary" dark class="mb-2" @click="Approve()"
-                  >Approve {{ selectedRows.length }}</v-btn
-                ></v-col
-              >
-              <v-col cols="8">
-                <v-select
-                  outlined
-                  dense
-                  :items="status"
-                  v-model="selectedStatus"
-                  item-text="name"
-                  item-value="name"
-                  label="ສະຖານະ"
-                  multiple
-                >
-                  <template v-slot:selection="data">
-                    <v-chip
-                      color="green"
-                      text-color="white"
-                      class="ma-1"
-                      v-bind="data.attrs"
-                      :input-value="data.selected"
-                      close
-                      @click="data.select"
-                      @click:close="removeItem(data.item)"
-                    >
-                      {{ data.item.name }}
-                    </v-chip>
-                  </template>
-                </v-select>
-              </v-col>
-            </v-row>
             <v-data-table
               :headers="headers"
               :items="invoices"
               :search="search"
               :disable-pagination="true"
               hide-default-footer
-              v-model="selectedRows"
-              show-select
               fixed-header
               height="100vh"
             >
@@ -153,13 +78,7 @@
                       </v-list-item-title>
                     </v-list-item>
                     <v-list-item link>
-                      <v-list-item-title @click="editModal(item)">
-                        <v-icon small class="mr-2"> mdi-pencil </v-icon>
-                        Update Invoice
-                      </v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link>
-                      <v-list-item-title>
+                      <v-list-item-title @click="PaymentPage(item.id)">
                         <v-icon small> mdi-credit-card </v-icon>
                         Payment
                       </v-list-item-title>
@@ -168,12 +87,6 @@
                       <v-list-item-title>
                         <v-icon small> mdi-credit-card </v-icon>
                         Reject Payment
-                      </v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link>
-                      <v-list-item-title>
-                        <v-icon small> mdi-delete </v-icon>
-                        Confirm Payment
                       </v-list-item-title>
                     </v-list-item>
                   </v-list>
@@ -214,36 +127,103 @@
     </div>
 
     <!-- Edit Add-->
-    <ModalEdit>
+    <v-dialog v-model="paymentDialog" max-width="720px">
       <template @close="close">
         <v-card>
           <v-card-title>
-            <span class="headline">Update Invoice</span>
+            <p>
+              ຊຳລະຄ່າຂີ້ເຫຍື້ອ
+              <span class="primary-color" v-if="invoiceItem.customer"
+                >{{ invoiceItem.customer.name }}
+                {{ invoiceItem.customer.surname }}</span
+              >
+            </p>
           </v-card-title>
           <v-card-text>
             <v-container>
               <v-form ref="form" lazy-validation>
+                <h3>ເລືອກປະເພດການຊຳລະ</h3>
                 <v-row>
                   <v-col cols="12">
-                    <v-text-field
-                      v-model="editItem.discount"
-                      label="ສ່ວນຫຼຸດ"
-                      outlined
-                      dense
-                      type="number"
-                      class="input-number"
-                    >
-                    </v-text-field>
+                    <v-chip-group v-model="paymentType" column>
+                      <v-chip
+                        medium
+                        class="mr-6"
+                        color="success"
+                        label
+                        filter
+                        outlined
+                      >
+                        ເງິນສົດ
+                        <v-icon left class="ml-1"> mdi-currency-usd</v-icon>
+                      </v-chip>
+                      <v-chip medium color="error" label filter outlined>
+                        BCEL
+                        <v-icon class="ml-1" left>
+                          mdi-credit-card</v-icon
+                        ></v-chip
+                      >
+                    </v-chip-group>
                     <p class="errors">
-                      {{ server_errors.discount }}
+                      {{ server_errors.payment_method }}
                     </p>
                   </v-col>
                 </v-row>
+
+                <v-row>
+                  <v-col align="center">
+                    <div class="field">
+                      <div class="file is-large is-boxed">
+                        <label class="file-label">
+                          <input
+                            @change="onFileChange"
+                            class="file-input input-file-image"
+                            type="file"
+                            name="image"
+                            accept="image/*"
+                            ref="image"
+                          />
+                          <span class="file-cta">
+                            <span class="file-icon">
+                              <v-icon
+                                style="
+                                  font-size: 60px !important;
+                                  color: #719aff;
+                                  cursor: pointer;
+                                "
+                                class="fas fa-cloud-upload"
+                                >mdi-cloud-upload</v-icon
+                              >
+                            </span>
+                            <span
+                              class="file-label"
+                              style="
+                                margin-top: 10px;
+                                text-transform: uppercase;
+                                padding-top: 20px;
+                              "
+                            >
+                              ຫຼັກຖານການຊຳລະ
+                            </span>
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col align="center" class="mt-5" v-if="imageUrl">
+                    <v-avatar class="avatar rounded" size="94px">
+                      <img :src="imageUrl" alt="" />
+                    </v-avatar>
+                  </v-col>
+                </v-row>
+
                 <v-row>
                   <v-col cols="12">
                     <v-text-field
-                      v-model="editItem.new_exceed_bag_charge"
-                      label="ຈຳນວນຖົງ"
+                      v-model="bcel_reference_number"
+                      label="ເລກລະຫັດການຊຳລະ"
                       outlined
                       dense
                       type="number"
@@ -251,7 +231,7 @@
                     >
                     </v-text-field>
                     <p class="errors">
-                      {{ server_errors.new_exceed_bag_charge }}
+                      {{ server_errors.bcel_reference_number }}
                     </p>
                   </v-col>
                 </v-row>
@@ -267,34 +247,15 @@
                 text
                 :loading="loading"
                 :disabled="loading"
-                @click="UpdateItem()"
+                @click="Payment()"
               >
-                Update
+                ຊຳລະ
               </v-btn>
             </v-card-actions>
           </v-card-text>
         </v-card>
       </template>
-    </ModalEdit>
-
-    <!--Delete Modal-->
-    <ModalDelete>
-      <template>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            :loading="loading"
-            :disabled="loading"
-            @click="deleteItemConfirm"
-            >OK</v-btn
-          >
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </template>
-    </ModalDelete>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -307,6 +268,8 @@ export default {
       selectedRows: [],
       loading: false,
       customerId: "",
+      paymentDialog: false,
+      paymentType: "",
       //Pagination
       offset: 12,
       pagination: {},
@@ -314,32 +277,13 @@ export default {
       search: "",
       oldVal: "",
       invoices: [],
-      editItem: {},
       server_errors: {},
-      selectedStatus: ["created"],
-      status: [
-        {
-          id: 1,
-          name: "created",
-        },
-        {
-          id: 2,
-          name: "approved",
-        },
-        {
-          id: 3,
-          name: "to_confirm_payment",
-        },
-        {
-          id: 4,
-          name: "rejected",
-        },
-        {
-          id: 5,
-          name: "success",
-        },
-      ],
-
+      selectedStatus: ["approved"],
+      image: "",
+      imageUrl: "",
+      invoiceItem: {},
+      bcel_reference_number: "",
+      payment_method: "cash",
       headers: [
         { text: "ລູກຄ້າ", value: "customer.name" },
         {
@@ -380,6 +324,12 @@ export default {
     backPrevios() {
       this.$router.go(-1);
     },
+    onFileChange(e) {
+      let input = e.target;
+      let file = e.target.files[0];
+      this.image = input.files[0];
+      this.imageUrl = URL.createObjectURL(file);
+    },
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
@@ -411,39 +361,34 @@ export default {
         });
     },
 
-    editModal(item) {
-      this.editItem = item;
-      this.$store.commit("modalEdit_State", true);
+    paymentModal(item) {
+      this.invoiceItem = item;
+      this.paymentDialog = true;
     },
-    UpdateItem() {
+    Payment() {
+      let formData = new FormData();
+      formData.append("payment_method", this.payment_method);
+      formData.append("image", this.image);
+      formData.append("bcel_reference_number", this.bcel_reference_number);
+      formData.append("_method", "PUT");
+
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .put("invoice/" + this.editItem.id, {
-            discount: this.editItem.discount,
-            new_exceed_bag_charge: this.editItem.new_exceed_bag_charge,
-          })
+          .post("pay-invoice/" + this.invoiceItem.id, formData)
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
                 this.loading = false;
                 this.closeEditModal();
                 this.fetchData();
-                this.reset();
+                this.$refs.form.reset();
                 this.$store.commit("Toast_State", {
                   value: true,
                   color: "success",
                   msg: res.data.message,
                 });
               }, 300);
-            }
-            if (res.data.error == true) {
-              console.log("error");
-              this.$store.commit("Toast_State", {
-                value: true,
-                color: "error",
-                msg: res.data.message,
-              });
             }
           })
           .catch((error) => {
@@ -464,66 +409,7 @@ export default {
       }
     },
     closeEditModal() {
-      this.$store.commit("modalEdit_State", false);
-    },
-
-    closeDelete() {
-      this.$store.commit("modalDelete_State", false);
-    },
-    deleteItem(id) {
-      this.customerId = id;
-      this.$store.commit("modalDelete_State", true);
-    },
-
-    deleteItemConfirm() {
-      this.loading = true;
-      this.$axios
-        .delete("customer/" + this.customerId)
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.loading = false;
-              this.$store.commit("Toast_State", {
-                value: true,
-                color: "success",
-                msg: res.data.message,
-              });
-              this.$store.commit("modalDelete_State", false);
-              this.fetchData();
-            }, 300);
-          }
-        })
-        .catch(() => {
-          this.fetchData();
-          this.$store.commit("modalDelete_State", false);
-          this.loading = false;
-        });
-    },
-    Approve() {
-      this.loading = true;
-      this.$axios
-        .delete("plan-month/" + this.$route.params.id + "/approve-invoice/", {
-          invoices: this.selectedRows,
-        })
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.loading = false;
-              this.$store.commit("Toast_State", {
-                value: true,
-                color: "success",
-                msg: res.data.message,
-              });
-              this.$store.commit("modalDelete_State", false);
-              this.fetchData();
-            }, 300);
-          }
-        })
-        .catch(() => {
-          this.fetchData();
-          this.$store.commit("modalDelete_State", false);
-          this.loading = false;
-        });
+      this.paymentDialog = false;
     },
     viewPage(id) {
       this.$router.push({
@@ -531,11 +417,15 @@ export default {
         params: { id },
       });
     },
+    PaymentPage(id) {
+      console.log(id);
+      this.$router.push({
+        name: "Payment",
+        params: { id },
+      });
+    },
     Search() {
       GetOldValueOnInput(this);
-    },
-    RemoveItem(item) {
-      this.preview_list.splice(this.preview_list.indexOf(item), 1);
     },
   },
   watch: {
@@ -544,8 +434,8 @@ export default {
         this.fetchData();
       }
     },
-    selectedStatus: function () {
-      this.fetchData();
+    paymentType: function () {
+      console.log(this.paymentType);
     },
   },
   created() {

@@ -1,51 +1,12 @@
 <template>
   <v-container>
-    <v-row class="my-n2">
+    <v-row class="mb-2">
       <v-col>
         <v-breadcrumbs large class="pa-0">
-          <v-btn text class="text-primary" @click="backPrevios()">
-            <v-icon>mdi-chevron-left</v-icon></v-btn
-          >
           ລາຍລະອຽດການອອກບິນຄ່າຂີ້ເຫຍື້ອ</v-breadcrumbs
         >
       </v-col>
     </v-row>
-    <!--
-    <v-row class="mb-n6">
-
-      <v-col cols="4">
-        <v-btn class="btn-primary">Export </v-btn>
-      </v-col>
-      <v-spacer></v-spacer>
-      <v-col cols="8">
-        <v-select
-          outlined
-          dense
-          :items="status"
-          v-model="selectedStatus"
-          item-text="name"
-          item-value="name"
-          label="ສະຖານະ"
-          multiple
-        >
-          <template v-slot:selection="data">
-            <v-chip
-              color="green"
-              text-color="white"
-              class="ma-1"
-              v-bind="data.attrs"
-              :input-value="data.selected"
-              close
-              @click="data.select"
-              @click:close="removeItem(data.item)"
-            >
-              {{ data.item.name }}
-            </v-chip>
-          </template>
-        </v-select>
-      </v-col>
-    </v-row>
-    -->
     <div>
       <v-card>
         <v-card flat>
@@ -76,7 +37,7 @@
                       :input-value="data.selected"
                       close
                       @click="data.select"
-                      @click:close="removeItem(data.item)"
+                      @click:close="remove(data.item)"
                     >
                       {{ data.item.name }}
                     </v-chip>
@@ -500,10 +461,15 @@ export default {
         });
     },
     Approve() {
+      var selectedInvoice = [];
+      this.selectedRows.filter((item) => {
+        selectedInvoice.push(item.id);
+      });
+      console.log(selectedInvoice);
       this.loading = true;
       this.$axios
-        .delete("plan-month/" + this.$route.params.id + "/approve-invoice/", {
-          invoices: this.selectedRows,
+        .put("plan-month/" + this.$route.params.id + "/approve-invoice/", {
+          invoices: selectedInvoice,
         })
         .then((res) => {
           if (res.data.code == 200) {
@@ -514,6 +480,7 @@ export default {
                 color: "success",
                 msg: res.data.message,
               });
+              this.selectedRows = [];
               this.$store.commit("modalDelete_State", false);
               this.fetchData();
             }, 300);
@@ -521,6 +488,7 @@ export default {
         })
         .catch(() => {
           this.fetchData();
+          this.selectedRows = [];
           this.$store.commit("modalDelete_State", false);
           this.loading = false;
         });
@@ -534,8 +502,10 @@ export default {
     Search() {
       GetOldValueOnInput(this);
     },
-    RemoveItem(item) {
-      this.preview_list.splice(this.preview_list.indexOf(item), 1);
+    remove(item) {
+      console.log(item);
+      const index = this.selectedStatus.indexOf(item.id);
+      if (index >= 0) this.selectedStatus.splice(index, 0)[0];
     },
   },
   watch: {

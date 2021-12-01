@@ -292,6 +292,15 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
+  {
+    path: '/invoice/payment/:id',
+    name: 'Payment',
+    component: () => import('@/views/invoice/payment.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
 
   //Report 
   {
