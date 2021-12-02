@@ -34,7 +34,12 @@
             hide-default-footer
           >
             <template v-slot:item.plan="{ item }">
-              <v-icon medium class="mr-2" @click="createInvoice(item.id)">
+              <v-icon
+                color="success"
+                small
+                class="mr-2"
+                @click="createInvoice(item.id)"
+              >
                 mdi-eye</v-icon
               >
             </template> </v-data-table
@@ -90,8 +95,8 @@ export default {
         { text: "ຊື່", value: "name" },
         { text: "ວັນທີ", value: "month" },
         {
-          text: "ຈຳນວນຮອບ",
-          value: "plan_calendars_count",
+          text: "ຈຳນວນບິນ",
+          value: "has_invoice",
           align: "center",
           sortable: false,
         },

@@ -1,13 +1,8 @@
 <template>
   <v-container>
-    <v-row class="my-n2">
+    <v-row>
       <v-col>
-        <v-breadcrumbs large class="pa-0">
-          <v-btn text class="text-primary" @click="backPrevios()">
-            <v-icon>mdi-chevron-left</v-icon></v-btn
-          >
-          ລາຍລະອຽດການອອກບິນຄ່າຂີ້ເຫຍື້ອ</v-breadcrumbs
-        >
+        <p>ບິນຄ່າຂີ້ເຫຍື້ອທີ່ສຳເລັດການຊຳລະ</p>
       </v-col>
     </v-row>
     <!--

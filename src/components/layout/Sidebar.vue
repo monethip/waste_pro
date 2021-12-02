@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar flat fixed app color="transparent">
+    <v-app-bar flat fixed app class="nav">
       <v-icon style="padding: 4px" @click="drawer = !drawer">
         mdi-order-bool-descending
       </v-icon>
@@ -48,8 +48,8 @@
         <router-link to="/" class="d-flex align-center text-decoration-none">
           <v-img
             :src="require('../../assets/logo-finalized.png')"
-            max-height="30px"
-            max-width="30px"
+            max-height="60px"
+            max-width="60px"
             alt="logo"
             contain
             eager
@@ -140,7 +140,7 @@
         >
           <template v-slot:activator>
             <v-list-item-content>
-              <v-list-item-title>Invoice</v-list-item-title>
+              <v-list-item-title>ຈັດການບິນ</v-list-item-title>
             </v-list-item-content>
           </template>
           <v-list-item
@@ -172,7 +172,7 @@
           </template>
           <v-list-item
             exact
-            color="indigo darken-4"
+            color="primary-color"
             v-for="(item, k) in reports"
             :key="k"
             :to="item.to"
@@ -328,11 +328,17 @@ export default {
   },
 };
 </script>
+
 <style lang="scss" scoped>
+@import "../../../public/scss/main.scss";
 .v-application--is-ltr
   .v-list-group--no-action
   > .v-list-group__items
   > .v-list-item {
   padding-left: 28px !important;
+}
+.nav {
+  border-bottom: 2px solid #eee;
+  background: #fff !important;
 }
 </style>

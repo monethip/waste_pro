@@ -1,10 +1,8 @@
 <template>
   <v-container>
-    <v-row class="mb-2">
+    <v-row>
       <v-col>
-        <v-breadcrumbs large class="pa-0">
-          ລາຍລະອຽດການອອກບິນຄ່າຂີ້ເຫຍື້ອ</v-breadcrumbs
-        >
+        <p>ລາຍລະອຽດການອອກບິນຄ່າຂີ້ເຫຍື້ອ</p>
       </v-col>
     </v-row>
     <div>
@@ -13,8 +11,13 @@
           <v-card-text>
             <v-row class="my-0 mx-2">
               <v-col>
-                <v-btn text color="primary" dark class="mb-2" @click="Approve()"
-                  >Approve {{ selectedRows.length }}</v-btn
+                <v-btn
+                  v-if="selectedRows.length"
+                  outlined
+                  color="info"
+                  class="mb-2"
+                  @click="Approve()"
+                  >ອະນຸມັດບິນ {{ selectedRows.length }}</v-btn
                 ></v-col
               >
               <v-col cols="8">
@@ -110,15 +113,16 @@
                     <v-list-item link>
                       <v-list-item-title @click="viewPage(item.id)">
                         <v-icon small class="mr-2"> mdi-eye </v-icon>
-                        View
+                        ລາຍລະອຽດ
                       </v-list-item-title>
                     </v-list-item>
                     <v-list-item link>
                       <v-list-item-title @click="editModal(item)">
                         <v-icon small class="mr-2"> mdi-pencil </v-icon>
-                        Update Invoice
+                        ແກ້ໄຂບິນ
                       </v-list-item-title>
                     </v-list-item>
+                    <!--
                     <v-list-item link>
                       <v-list-item-title>
                         <v-icon small> mdi-credit-card </v-icon>
@@ -137,6 +141,7 @@
                         Confirm Payment
                       </v-list-item-title>
                     </v-list-item>
+                    -->
                   </v-list>
                 </v-menu>
               </template>
@@ -428,38 +433,6 @@ export default {
       this.$store.commit("modalEdit_State", false);
     },
 
-    closeDelete() {
-      this.$store.commit("modalDelete_State", false);
-    },
-    deleteItem(id) {
-      this.customerId = id;
-      this.$store.commit("modalDelete_State", true);
-    },
-
-    deleteItemConfirm() {
-      this.loading = true;
-      this.$axios
-        .delete("customer/" + this.customerId)
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.loading = false;
-              this.$store.commit("Toast_State", {
-                value: true,
-                color: "success",
-                msg: res.data.message,
-              });
-              this.$store.commit("modalDelete_State", false);
-              this.fetchData();
-            }, 300);
-          }
-        })
-        .catch(() => {
-          this.fetchData();
-          this.$store.commit("modalDelete_State", false);
-          this.loading = false;
-        });
-    },
     Approve() {
       var selectedInvoice = [];
       this.selectedRows.filter((item) => {

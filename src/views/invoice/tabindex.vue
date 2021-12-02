@@ -2,7 +2,7 @@
   <div>
     <v-card>
       <v-tabs v-model="tab">
-        <v-tab href="#tab-1">ລວມບິນ</v-tab>
+        <v-tab href="#tab-1" link>ລວມບິນ</v-tab>
         <v-tab href="#tab-2">ບິນທີ່ອະນຸມັດ</v-tab>
         <v-tab href="#tab-3">ຢືນຢັນການຊຳລະ</v-tab>
         <v-tab href="#tab-4">ບິນທີ່ຊຳລະບໍຜ່ານ</v-tab>
