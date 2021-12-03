@@ -16,7 +16,7 @@
           <v-row align="center" class="py-4">
             <v-col align="center">
               <h2>ໃບບິນເກັບເງິນຄ່າຂີ້ເຫື້ອຍ</h2>
-              <p v-if="invoice.plan_month">{{ invoice.plan_month.name }}</p>
+              <!-- <p v-if="invoice.plan_month">{{ invoice.plan_month.name }}</p> -->
             </v-col>
           </v-row>
           <v-row>
@@ -74,32 +74,32 @@
           </v-row>
 
           <v-divider class="my-6 c-divider bottom"></v-divider>
-          <v-row>
+          <v-row class="mb-n10">
             <v-col>
-              <p>ຂັ້ນຕອນການຊຳລະ</p>
+              <p>ການຊຳລະ</p>
             </v-col>
           </v-row>
           <v-row>
-            <v-col v-if="invoice.media">
-              <div v-for="(index, data) in invoice.media" :key="index">
-                <v-img
-                  aspect-ratio="1"
-                  class="grey lighten-2"
-                  :src="data.url"
-                  max-height="150"
-                  max-width="275"
-                >
-                </v-img>
-              </div>
-            </v-col>
             <v-col>
               <h3>
                 ວັນທິຊຳລະ: {{ moment(invoice.updated_at).format("DD-MM-YY") }}
               </h3>
               <h3>ປະເພດຊຳລະ: {{ invoice.payment_method }}</h3>
-              <h3 v-if="invoice.customer">
-                ເລກໄອດີການຊຳລະ:{{ invoice.bcel_reference_number }}
+              <h3 v-if="invoice.bcel_reference_number">
+                ເລກໄອດີການຊຳລະ: {{ invoice.bcel_reference_number }}
               </h3>
+            </v-col>
+            <v-col v-if="invoice.media">
+              <div v-for="(item, index) in invoice.media" :key="index">
+                <v-img
+                  aspect-ratio="1"
+                  class="grey"
+                  :src="item.url"
+                  max-height="720"
+                  max-width="720"
+                >
+                </v-img>
+              </div>
             </v-col>
           </v-row>
           <v-card-actions class="mt-6">
