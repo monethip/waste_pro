@@ -2,127 +2,129 @@
   <v-container>
     <v-row>
       <v-col>
-        <p>ລາຍລະອຽດການອອກບິນຄ່າຂີ້ເຫຍື້ອ</p>
+        <p>
+          ລວມບິນຄ່າຂີ້ເຫື້ຍອທັງມົດ
+          <span class="primary-color">({{ pagination.total }})</span>
+        </p>
       </v-col>
     </v-row>
     <div>
-      <v-card>
-        <v-card flat>
-          <v-card-text>
-            <v-row class="my-0 mx-2">
-              <v-col>
-                <v-btn
-                  v-if="selectedRows.length"
-                  outlined
-                  color="info"
-                  class="mb-2"
-                  @click="Approve()"
-                  >ອະນຸມັດບິນ {{ selectedRows.length }}</v-btn
-                ></v-col
-              >
-              <v-col cols="8">
-                <v-select
-                  outlined
-                  dense
-                  :items="status"
-                  v-model="selectedStatus"
-                  item-text="name"
-                  item-value="name"
-                  label="ສະຖານະ"
-                  multiple
-                >
-                  <template v-slot:selection="data">
-                    <v-chip
-                      color="green"
-                      text-color="white"
-                      class="ma-1"
-                      v-bind="data.attrs"
-                      :input-value="data.selected"
-                      close
-                      @click="data.select"
-                      @click:close="remove(data.item)"
-                    >
-                      {{ data.item.name }}
-                    </v-chip>
-                  </template>
-                </v-select>
-              </v-col>
-            </v-row>
-            <v-data-table
-              :headers="headers"
-              :items="invoices"
-              :search="search"
-              :disable-pagination="true"
-              hide-default-footer
-              v-model="selectedRows"
-              show-select
-              fixed-header
-              height="100vh"
+      <v-card elevation="0">
+        <v-card-text>
+          <v-row class="my-0 mx-2">
+            <v-col>
+              <v-btn
+                v-if="selectedRows.length"
+                outlined
+                color="info"
+                class="mb-2"
+                @click="Approve()"
+                >ອະນຸມັດບິນ {{ selectedRows.length }}</v-btn
+              ></v-col
             >
-              <template v-slot:item.media="{ item }">
-                <v-avatar
-                  size="36px"
-                  v-for="(img, index) in item.media"
-                  :key="index"
-                >
-                  <img v-if="img.thumb" :src="img.thumb" />
-                </v-avatar>
-              </template>
-              <template v-slot:item.total_bag="{ item }">
-                <v-chip color="success">{{ item.total_bag }}</v-chip>
-              </template>
-              <template v-slot:item.exceed_bag="{ item }">
-                <v-chip color="error">{{ item.exceed_bag }}</v-chip>
-              </template>
-              <template v-slot:item.exceed_bag_charge="{ item }">
-                <div>
-                  {{ Intl.NumberFormat().format(item.exceed_bag_charge) }}
-                </div>
-              </template>
-              <template v-slot:item.new_exceed_bag_charge="{ item }">
-                <div class="error--text">
-                  {{ Intl.NumberFormat().format(item.new_exceed_bag_charge) }}
-                </div>
-              </template>
-              <template v-slot:item.sub_total="{ item }">
-                <div>
-                  {{ Intl.NumberFormat().format(item.sub_total) }}
-                </div>
-              </template>
+            <v-col cols="8">
+              <v-select
+                outlined
+                dense
+                :items="status"
+                v-model="selectedStatus"
+                item-text="name"
+                item-value="name"
+                label="ສະຖານະ"
+                multiple
+              >
+                <template v-slot:selection="data">
+                  <v-chip
+                    color="green"
+                    text-color="white"
+                    class="ma-1"
+                    v-bind="data.attrs"
+                    :input-value="data.selected"
+                    close
+                    @click="data.select"
+                    @click:close="remove(data.item)"
+                  >
+                    {{ data.item.name }}
+                  </v-chip>
+                </template>
+              </v-select>
+            </v-col>
+          </v-row>
+          <v-data-table
+            :headers="headers"
+            :items="invoices"
+            :search="search"
+            :disable-pagination="true"
+            hide-default-footer
+            v-model="selectedRows"
+            show-select
+            fixed-header
+            height="100vh"
+          >
+            <template v-slot:item.media="{ item }">
+              <v-avatar
+                size="36px"
+                v-for="(img, index) in item.media"
+                :key="index"
+              >
+                <img v-if="img.thumb" :src="img.thumb" />
+              </v-avatar>
+            </template>
+            <template v-slot:item.total_bag="{ item }">
+              <v-chip color="success">{{ item.total_bag }}</v-chip>
+            </template>
+            <template v-slot:item.exceed_bag="{ item }">
+              <v-chip color="error">{{ item.exceed_bag }}</v-chip>
+            </template>
+            <template v-slot:item.exceed_bag_charge="{ item }">
+              <div>
+                {{ Intl.NumberFormat().format(item.exceed_bag_charge) }}
+              </div>
+            </template>
+            <template v-slot:item.new_exceed_bag_charge="{ item }">
+              <div class="error--text">
+                {{ Intl.NumberFormat().format(item.new_exceed_bag_charge) }}
+              </div>
+            </template>
+            <template v-slot:item.sub_total="{ item }">
+              <div>
+                {{ Intl.NumberFormat().format(item.sub_total) }}
+              </div>
+            </template>
 
-              <template v-slot:item.total="{ item }">
-                <div>
-                  {{ Intl.NumberFormat().format(item.total) }}
-                </div>
-              </template>
+            <template v-slot:item.total="{ item }">
+              <div>
+                {{ Intl.NumberFormat().format(item.total) }}
+              </div>
+            </template>
 
-              <template v-slot:item.actions="{ item }">
-                <v-menu offset-y>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-icon
-                      color="primary"
-                      dark
-                      v-bind="attrs"
-                      v-on="on"
-                      medium
-                      class="mr-2"
-                      >mdi-dots-vertical</v-icon
-                    >
-                  </template>
-                  <v-list>
-                    <v-list-item link>
-                      <v-list-item-title @click="viewPage(item.id)">
-                        <v-icon small class="mr-2"> mdi-eye </v-icon>
-                        ລາຍລະອຽດ
-                      </v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link>
-                      <v-list-item-title @click="editModal(item)">
-                        <v-icon small class="mr-2"> mdi-pencil </v-icon>
-                        ແກ້ໄຂບິນ
-                      </v-list-item-title>
-                    </v-list-item>
-                    <!--
+            <template v-slot:item.actions="{ item }">
+              <v-menu offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon
+                    color="primary"
+                    dark
+                    v-bind="attrs"
+                    v-on="on"
+                    medium
+                    class="mr-2"
+                    >mdi-dots-vertical</v-icon
+                  >
+                </template>
+                <v-list>
+                  <v-list-item link>
+                    <v-list-item-title @click="viewPage(item.id)">
+                      <v-icon small class="mr-2"> mdi-eye </v-icon>
+                      ລາຍລະອຽດ
+                    </v-list-item-title>
+                  </v-list-item>
+                  <v-list-item link>
+                    <v-list-item-title @click="editModal(item)">
+                      <v-icon small class="mr-2"> mdi-pencil </v-icon>
+                      ແກ້ໄຂບິນ
+                    </v-list-item-title>
+                  </v-list-item>
+                  <!--
                     <v-list-item link>
                       <v-list-item-title>
                         <v-icon small> mdi-credit-card </v-icon>
@@ -142,10 +144,10 @@
                       </v-list-item-title>
                     </v-list-item>
                     -->
-                  </v-list>
-                </v-menu>
-              </template>
-              <!-- <div>
+                </v-list>
+              </v-menu>
+            </template>
+            <!-- <div>
                 <template v-slot:item.actions="{ item }">
                   <v-menu offset-y>
                     <template v-slot:activator="{ on, attrs }">
@@ -165,17 +167,16 @@
                   </v-menu>
                 </template>
               </div> --> </v-data-table
-            ><br />
-            <template>
-              <Pagination
-                v-if="pagination.total_pages > 1"
-                :pagination="pagination"
-                :offset="offset"
-                @paginate="fetchData()"
-              ></Pagination>
-            </template>
-          </v-card-text>
-        </v-card>
+          ><br />
+          <template>
+            <Pagination
+              v-if="pagination.total_pages > 1"
+              :pagination="pagination"
+              :offset="offset"
+              @paginate="fetchData()"
+            ></Pagination>
+          </template>
+        </v-card-text>
       </v-card>
     </div>
 
@@ -242,25 +243,6 @@
         </v-card>
       </template>
     </ModalEdit>
-
-    <!--Delete Modal-->
-    <ModalDelete>
-      <template>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            :loading="loading"
-            :disabled="loading"
-            @click="deleteItemConfirm"
-            >OK</v-btn
-          >
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </template>
-    </ModalDelete>
   </v-container>
 </template>
 

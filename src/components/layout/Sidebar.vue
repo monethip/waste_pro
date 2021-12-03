@@ -236,7 +236,7 @@ export default {
         },
         {
           icon: "mdi-close-circle-outline",
-          title: "Reject",
+          title: "ເຫດຜົນຍົກເລີກບິນ",
           to: "/reject",
         },
       ],

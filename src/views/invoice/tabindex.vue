@@ -1,54 +1,56 @@
 <template>
-  <div>
-    <v-card>
-      <v-tabs v-model="tab">
-        <v-tab href="#tab-1" link>ລວມບິນ</v-tab>
-        <v-tab href="#tab-2">ບິນທີ່ອະນຸມັດ</v-tab>
-        <v-tab href="#tab-3">ຢືນຢັນການຊຳລະ</v-tab>
-        <v-tab href="#tab-4">ບິນທີ່ຊຳລະບໍຜ່ານ</v-tab>
-        <v-tab href="#tab-5">ບິນທີ່ສຳເລັດ</v-tab>
-      </v-tabs>
-      <!-- <hr /> -->
+  <v-container>
+    <v-card elevation="1">
+      <v-card-text>
+        <v-tabs v-model="tab">
+          <v-tab href="#tab-1" link>ລວມບິນ</v-tab>
+          <v-tab href="#tab-2">ບິນທີ່ອະນຸມັດ</v-tab>
+          <v-tab href="#tab-3">ຢືນຢັນການຊຳລະ</v-tab>
+          <v-tab href="#tab-4">ບິນທີ່ຊຳລະບໍຜ່ານ</v-tab>
+          <v-tab href="#tab-5">ບິນທີ່ສຳເລັດ</v-tab>
+        </v-tabs>
+        <!-- <hr /> -->
 
-      <v-tabs-items v-model="tab">
-        <v-tab-item value="tab-1">
-          <allInvoice />
-        </v-tab-item>
-      </v-tabs-items>
+        <v-tabs-items v-model="tab">
+          <v-tab-item value="tab-1">
+            <allInvoice />
+          </v-tab-item>
+        </v-tabs-items>
 
-      <v-tabs-items v-model="tab">
-        <v-tab-item value="tab-2">
-          <v-card flat>
-            <v-card-text>
-              <approvedInvoice />
-            </v-card-text>
-          </v-card>
-        </v-tab-item>
-      </v-tabs-items>
+        <v-tabs-items v-model="tab">
+          <v-tab-item value="tab-2">
+            <v-card flat>
+              <v-card-text>
+                <approvedInvoice />
+              </v-card-text>
+            </v-card>
+          </v-tab-item>
+        </v-tabs-items>
 
-      <v-tabs-items v-model="tab">
-        <v-tab-item value="tab-3">
-          <v-card flat>
-            <v-card-text> <confirmPayment /> </v-card-text>
-          </v-card>
-        </v-tab-item>
-      </v-tabs-items>
-      <v-tabs-items v-model="tab">
-        <v-tab-item value="tab-4">
-          <v-card flat>
-            <v-card-text> <reject /> </v-card-text>
-          </v-card>
-        </v-tab-item>
-      </v-tabs-items>
-      <v-tabs-items v-model="tab">
-        <v-tab-item value="tab-5">
-          <v-card flat>
-            <v-card-text> <success /> </v-card-text>
-          </v-card>
-        </v-tab-item>
-      </v-tabs-items>
+        <v-tabs-items v-model="tab">
+          <v-tab-item value="tab-3">
+            <v-card flat>
+              <v-card-text> <confirmPayment /> </v-card-text>
+            </v-card>
+          </v-tab-item>
+        </v-tabs-items>
+        <v-tabs-items v-model="tab">
+          <v-tab-item value="tab-4">
+            <v-card flat>
+              <v-card-text> <reject /> </v-card-text>
+            </v-card>
+          </v-tab-item>
+        </v-tabs-items>
+        <v-tabs-items v-model="tab">
+          <v-tab-item value="tab-5">
+            <v-card flat>
+              <v-card-text> <success /> </v-card-text>
+            </v-card>
+          </v-tab-item>
+        </v-tabs-items>
+      </v-card-text>
     </v-card>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -68,6 +70,11 @@ export default {
   data() {
     return {
       tab: null,
+      // countAll: null,
+      // countApprove: null,
+      // countToconfirm: null,
+      // countReject: null,
+      // countSuccess: null,
     };
   },
   created() {

@@ -10,7 +10,6 @@
         >
       </v-col>
     </v-row>
-
     <div>
       <v-card>
         <v-card-text class="px-16 py-16">
@@ -22,7 +21,13 @@
           </v-row>
           <v-row>
             <v-col>
-              <p>Invoice</p>
+              <p>ຂໍ້ມູນບິນ</p>
+              <h3>
+                ສະຖານະບິນ:
+                <span :class="invoiceStatusColor">{{
+                  invoiceStatus(invoice.status)
+                }}</span>
+              </h3>
               <h3>ປະເພດບິນ: {{ invoice.type }}</h3>
               <h3>
                 ວັນທີ:
@@ -30,107 +35,95 @@
               </h3>
             </v-col>
             <v-col>
-              <p>Customer</p>
+              <p>ຂໍ້ມູນລູກຄ້າ</p>
               <h3 v-if="invoice.customer">
-                {{ invoice.customer.name }} {{ invoice.customer.surname }}
+                ຊື່: {{ invoice.customer.name }} {{ invoice.customer.surname }}
+              </h3>
+              <h3 v-if="invoice.customer">
+                ວັນທີສະໝັກ: {{ invoice.customer.start_month }}
               </h3>
             </v-col>
           </v-row>
-          <v-divider class="my-6"></v-divider>
-          <v-row>
+          <v-row class="mb-n6">
+            <v-col>ລາຍລະອຽດ</v-col>
+          </v-row>
+          <v-divider class="my-6 c-divider"></v-divider>
+          <v-row class="mx-12">
             <v-col>
               <h3>ຈຳນວນຖົງ: {{ invoice.total_bag }}</h3>
               <h3>ຈຳນວນຖົງທີ່ກາຍ: {{ invoice.exceed_bag }}</h3>
-              <h3>ຈຳນວນຖົງທີ່ກາຍ: {{ invoice.exceed_bag_charge }}</h3>
-              <h3>ຈຳນວນຖົງທີ່ກາຍ: {{ invoice.new_exceed_bag_charge }}</h3>
             </v-col>
             <v-col>
-              <h3>ລວມ: {{ invoice.sub_total }}</h3>
-              <h3>ສ່ວນຫຼຸດ: {{ invoice.discount }}</h3>
-              <h3>ລວມທັງໝົດ: {{ invoice.total }}</h3>
+              <h3>ລວມ: {{ Intl.NumberFormat().format(invoice.sub_total) }}</h3>
+              <h3>
+                ສ່ວນຫຼຸດ: {{ Intl.NumberFormat().format(invoice.discount) }}
+              </h3>
+              <h3>
+                ຈຳນວນເງິນທີ່ກາຍ:
+                {{ Intl.NumberFormat().format(invoice.exceed_bag_charge) }}
+              </h3>
+              <h3>
+                ຈຳນວນເງິນທີ່ໄລ່ເພີມ:
+                {{ Intl.NumberFormat().format(invoice.new_exceed_bag_charge) }}
+              </h3>
+              <v-divider class="my-2"></v-divider>
+              <h3>
+                ລວມທັງໝົດ: {{ Intl.NumberFormat().format(invoice.total) }}
+              </h3>
             </v-col>
           </v-row>
 
-          <v-divider class="my-6"></v-divider>
+          <v-divider class="my-6 c-divider bottom"></v-divider>
           <v-row>
             <v-col>
-              <h4>Note</h4>
+              <p>ຂັ້ນຕອນການຊຳລະ</p>
             </v-col>
           </v-row>
           <v-row>
-            <v-col>
-              <h2 v-if="invoice.plan_month">{{ invoice.plan_month.name }}</h2>
-              <h4>{{ invoice.bcel_ticket_id }}</h4>
+            <v-col v-if="invoice.media">
+              <div v-for="(index, data) in invoice.media" :key="index">
+                <v-img
+                  aspect-ratio="1"
+                  class="grey lighten-2"
+                  :src="data.url"
+                  max-height="150"
+                  max-width="275"
+                >
+                </v-img>
+              </div>
             </v-col>
             <v-col>
-              <p>ການຊຳລະ</p>
-              <h4>ວັນທິຊຳລະ</h4>
-              <h4>
-                {{ invoice.confirmed_payment_by }}
-              </h4>
-              <h4 v-if="invoice.customer">{{ invoice.paided_by }}</h4>
-              <h4 v-if="invoice.customer">
-                Payment ID:{{ invoice.bcel_reference_number }}
-              </h4>
+              <h3>
+                ວັນທິຊຳລະ: {{ moment(invoice.updated_at).format("DD-MM-YY") }}
+              </h3>
+              <h3>ປະເພດຊຳລະ: {{ invoice.payment_method }}</h3>
+              <h3 v-if="invoice.customer">
+                ເລກໄອດີການຊຳລະ:{{ invoice.bcel_reference_number }}
+              </h3>
             </v-col>
           </v-row>
-          <v-card-actions>
+          <v-card-actions class="mt-6">
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="backPrevios()">
-              Print
-            </v-btn>
-            <v-btn
-              color="blue darken-1"
-              text
-              :loading="loading"
-              :disabled="loading"
-              @click="AddData()"
-            >
-              Update
+            <v-btn color="primary" text> Print </v-btn>
+            <v-btn color="info" text :loading="loading" :disabled="loading">
+              Export
             </v-btn>
           </v-card-actions>
         </v-card-text>
       </v-card>
     </div>
-
-    <!--Delete Modal-->
-    <ModalDelete>
-      <template>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            :loading="loading"
-            :disabled="loading"
-            @click="deleteItemConfirm"
-            >OK</v-btn
-          >
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </template>
-    </ModalDelete>
   </v-container>
 </template>
 
 <script>
 export default {
-  name: "Customer",
+  name: "InvoiceDetail",
   data() {
     return {
-      tab: null,
-      customers: [],
       loading: false,
       customerId: "",
-      //Pagination
-      offset: 12,
-      pagination: {},
-      per_page: 15,
-      search: "",
-      oldVal: "",
       invoice: [],
-      selectedStatus: ["created"],
+      invoiceStatusColor: "",
       status: [
         {
           id: 1,
@@ -183,41 +176,30 @@ export default {
           }
         });
     },
-    closeDelete() {
-      this.$store.commit("modalDelete_State", false);
+    invoiceStatus(data) {
+      if (data == "created") {
+        this.invoiceStatusColor = "primary--text";
+        return "ສ້າງບິນສຳເລັດ";
+      } else if (data == "approved") {
+        this.invoiceStatusColor = "info--text";
+        return "ອະນຸມັດແລ້ວ";
+      } else if (data == "to_confirm_payment") {
+        this.invoiceStatusColor = "warning--text";
+        return "ລໍຖ້າຢືນຢັນການຊຳລະ";
+      } else if (data == "rejected") {
+        this.invoiceStatusColor = "error--text";
+        return "ຊຳລະບໍ່ສຳເລັດ";
+      } else if (data == "success") {
+        this.invoiceStatusColor = "success--text";
+        return "ສຳເລັດການຊຳລະ";
+      }
     },
-    deleteItem(id) {
-      this.customerId = id;
-      this.$store.commit("modalDelete_State", true);
-    },
+    //     invoiceStatusColor(data) {
+    //   if (data == "success") {
+    //     return "success";
+    //   }
+    // },
 
-    deleteItemConfirm() {
-      this.loading = true;
-      this.$axios
-        .delete("customer/" + this.customerId)
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.loading = false;
-              this.toast.msg = res.data.message;
-              this.$store.commit("Toast_State", this.toast);
-              this.$store.commit("modalDelete_State", false);
-              this.fetchData();
-            }, 300);
-          }
-        })
-        .catch(() => {
-          this.fetchData();
-          this.$store.commit("Toast_State", this.toast_error);
-          this.$store.commit("modalDelete_State", false);
-          this.loading = false;
-        });
-    },
-    createPage() {
-      this.$router.push({
-        name: "CreateCustomer",
-      });
-    },
     editPage(id) {
       this.$router.push({
         name: "EditCustomer",
@@ -234,4 +216,19 @@ export default {
 
 <style lang="scss">
 @import "../../../public/scss/main.scss";
+h3 {
+  line-height: 28px !important;
+  font-size: 16px;
+  font-weight: 500;
+}
+.c-divider {
+  height: 10px;
+  background: $primary-color;
+  opacity: 0.8;
+  max-height: 20px;
+}
+.c-divider.bottom {
+  border-top: none;
+  border-bottom: $primary-color solid 2px;
+}
 </style>

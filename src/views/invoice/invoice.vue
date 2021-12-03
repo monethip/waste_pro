@@ -2,12 +2,7 @@
   <v-container>
     <v-row class="mb-n6">
       <v-col>
-        <v-btn class="btn-primary" @click="AddPlan()"
-          ><v-icon>mdi-plus</v-icon>
-        </v-btn>
-      </v-col>
-      <v-col>
-        <p>ອອກໃບບິນເກັບເງິນໃນເດືອນ</p>
+        <p>ເລືອກເດືອນທີ່ອອກໃບບິນເກັບເງິນ</p>
       </v-col>
       <v-col>
         <v-text-field

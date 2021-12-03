@@ -6,7 +6,7 @@
           <v-btn text class="text-primary" @click="backPrevios()">
             <v-icon>mdi-chevron-left</v-icon></v-btn
           >
-          Rejection Info</v-breadcrumbs
+          ຂໍ້ມູນເຫດຜົນທີ່ຍົກເລີກໃບບິນ</v-breadcrumbs
         >
       </v-col>
       <v-col class="text-right">
@@ -163,7 +163,7 @@
 </template>
 <script>
 export default {
-  name: "Customer",
+  name: "RejectionInfo",
   data() {
     return {
       loading: false,
@@ -334,11 +334,6 @@ export default {
           this.loading = false;
         });
     },
-    createPage() {
-      this.$router.push({
-        name: "CreateCustomer",
-      });
-    },
     reset() {
       this.$refs.form.reset();
     },
@@ -356,7 +351,6 @@ export default {
   },
 };
 </script>
-
 <style lang="scss">
 @import "../../../../public/scss/main.scss";
 </style>
