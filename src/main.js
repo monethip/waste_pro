@@ -7,6 +7,7 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import './plugins/Axios';
 import moment from 'moment';
 import * as VueGoogleMaps from 'vue2-google-maps';
+import can from '@/Helpers/Can'
 //Plugin
 import VueApexCharts from 'vue-apexcharts';
 
@@ -35,6 +36,7 @@ Vue.component('Pagination', Pagination);
 Vue.prototype.moment = moment;
 Vue.use(VueApexCharts)
 Vue.component('apexchart', VueApexCharts);
+Vue.prototype.$can = can;
 
 new Vue({
   router,

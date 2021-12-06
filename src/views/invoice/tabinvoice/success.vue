@@ -159,7 +159,7 @@ export default {
         },
         { text: "Total", value: "total", sortable: false },
         { text: "ປະເພດຊຳລະ", value: "payment_method", sortable: false },
-        { text: "Type", value: "type", sortable: false },
+        { text: "ປະເພດບິນ", value: "type", sortable: false },
         { text: "", value: "actions", sortable: false },
       ],
     };

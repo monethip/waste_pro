@@ -3,8 +3,22 @@ export default (roles, allrequired = false) => {
     let canEnter = false;
 
     //const userPermissions = store.getters['User/getUserType'];
-    const user_role = window.localStorage.getItem('RoleUser');
-    const roleUsers = JSON.parse(user_role);
+    const user_role = window.localStorage.getItem('user');
+    // const roless = user_role.map((item => item.reoles))
+    const getRoles = JSON.parse(user_role);
+    console.log(getRoles.roles);
+    const roleUsers = getRoles.roles;
+    // var roleUsers;
+    // data.forEach(role => {
+    //     roleUsers = role.name;
+    // });
+    // console.log(roleUsers);
+    // var dd;
+
+    // for (var i = 0; i < roleUsers.length; i++) {
+    //     dd.push(roleUsers[0].name);
+    // }
+    // console.log(dd)
 
     // ກວດສອບກໍລະນີ userPermission || Permission ບໍ່ມີ Permission ລະບົບຈະ (Return False)...
     if (!roleUsers || !roles) {
@@ -28,6 +42,6 @@ export default (roles, allrequired = false) => {
         }
     }
 
-   // ກໍລະນີ Permission ບໍ່ຖືກຕ້ອງອັນໃດເລີຍລະບົບຈະ (Return True) ອອກໄປ
+    // ກໍລະນີ Permission ບໍ່ຖືກຕ້ອງອັນໃດເລີຍລະບົບຈະ (Return True) ອອກໄປ
     return canEnter;
 }

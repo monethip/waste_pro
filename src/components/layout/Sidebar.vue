@@ -122,6 +122,7 @@
             v-for="(item, k) in routes"
             :key="k"
             :to="item.to"
+            v-bind="$can(item.roles)"
           >
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
@@ -170,6 +171,7 @@
               <v-list-item-title>ລາຍງານ</v-list-item-title>
             </v-list-item-content>
           </template>
+          <!-- <div v-for="(item, k) in reports" :key="k" v-bind="$can(item.roles)">-->
           <v-list-item
             exact
             color="primary-color"
@@ -203,6 +205,7 @@ export default {
           icon: "mdi-apps",
           title: "ໜ້າຫຼັກ",
           to: "/",
+          roles: ["admin", "super_admin"],
         },
         // {
         //   icon: "mdi-calendar-month-outline",
@@ -221,11 +224,13 @@ export default {
           icon: "mdi-sitemap",
           title: "ເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ",
           to: "/plan",
+          roles: ["admin", "super_admin"],
         },
         {
           icon: "mdi-calendar-month",
           title: "ຈັດແຜນເວລາເກັບຂີ້ເຫື້ຍອ",
           to: "/calendar",
+          roles: ["admin", "super_admin"],
         },
       ],
       invoices: [
@@ -233,11 +238,13 @@ export default {
           icon: "mdi-note-outline",
           title: "ອອກບິນ",
           to: "/invoice",
+          roles: ["admin", "super_admin"],
         },
         {
           icon: "mdi-close-circle-outline",
           title: "ເຫດຜົນຍົກເລີກບິນ",
           to: "/reject",
+          roles: ["admin", "super_admin"],
         },
       ],
 
@@ -246,36 +253,43 @@ export default {
           icon: "mdi-account-key",
           title: "Roles",
           to: "/role",
+          roles: ["super_admin"],
         },
         {
           icon: "mdi-account",
           title: "Users",
           to: "/user",
+          roles: ["super_admin"],
         },
         {
           icon: "mdi-dump-truck",
           title: "Drivers",
           to: "/driver",
+          roles: ["super_admin"],
         },
         {
           icon: "mdi-account-group",
           title: "Customer",
           to: "/customer",
+          roles: ["admin", "super_admin"],
         },
         {
           icon: "mdi-package",
           title: "ຈັດການແພັກເກດ",
           to: "/package",
+          roles: ["admin", "super_admin"],
         },
         {
           icon: "mdi-home-account",
           title: "ຈັດການທີ່ຢູ່",
           to: "/village",
+          roles: ["admin", "super_admin"],
         },
         {
           icon: "mdi-home-account",
           title: "ຈັດການລາຍລະອຽດທີ່ຢູ່",
           to: "/village-variation",
+          roles: ["admin", "super_admin"],
         },
       ],
       reports: [
@@ -283,21 +297,25 @@ export default {
           icon: "mdi-chart-bubble",
           title: "ລາຍງານການເກັບຂີ້ເຫຍື້ອ",
           to: "/report/trash",
+          roles: ["admin"],
         },
         {
           icon: "mdi-cash",
           title: "ລາຍງານຂໍ້ມູນບັນຊີ",
           to: "/report/invoice",
+          roles: ["admin", "super_admin"],
         },
         {
           icon: "mdi-account",
           title: "ລາຍງານຂໍ້ມູນຄົນຂັບລົດ",
           to: "/report/driver",
+          roles: ["admin", "super_admin"],
         },
         {
           icon: "mdi-account-group",
           title: "ລາຍງານຂໍ້ມູນລູກຄ້າ",
           to: "/report/customer",
+          roles: ["admin", "super_admin"],
         },
       ],
     };
@@ -325,6 +343,23 @@ export default {
     userLogout() {
       this.Logout();
     },
+    // menu(){
+    //     this.invoices = [
+    //     {
+    //       icon: "mdi-note-outline",
+    //       title: "ອອກບິນ",
+    //       to: "/invoice",
+    //     },
+    //     {
+    //       icon: "mdi-close-circle-outline",
+    //       title: "ເຫດຜົນຍົກເລີກບິນ",
+    //       to: "/reject",
+
+    //     },
+
+    //                 ];
+    //                 return this.invoices;
+    // }
   },
 };
 </script>

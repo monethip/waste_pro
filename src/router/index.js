@@ -301,7 +301,25 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
-
+  //Notification
+  {
+    path: '/notification',
+    name: 'NotificationTab',
+    component: () => import('@/views/notification/tabindex.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/notification/:id',
+    name: 'NotificationView',
+    component: () => import('@/views/notification/viewNotification.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
   //Report 
   {
     path: '/report/trash',
