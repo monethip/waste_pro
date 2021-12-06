@@ -104,18 +104,17 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
-              this.server_errors[key] = message[0];
-            }
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
           }
         });
     },
 
     viewPage(id) {
-      console.log(id);
       this.$router.push({
         name: "NotificationView",
         params: { id },

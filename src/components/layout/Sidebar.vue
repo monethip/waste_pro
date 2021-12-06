@@ -5,12 +5,63 @@
         mdi-order-bool-descending
       </v-icon>
       <v-spacer></v-spacer>
-      <v-btn text fab dark small class="mr-8">
-        <v-badge overlap color="orange">
-          <template v-slot:badge> 4 </template>
-          <v-icon large color="grey darken-1"> notifications </v-icon>
-        </v-badge>
-      </v-btn>
+
+      <v-menu bottom min-width="200px" rounded offset-y>
+        <template v-slot:activator="{ on }">
+          <v-btn text fab dark small class="mr-8" v-on="on">
+            <v-badge overlap color="orange">
+              <template v-slot:badge>{{ notifications.length }}</template>
+              <v-icon large color="grey darken-1"> notifications </v-icon>
+            </v-badge>
+          </v-btn>
+        </template>
+        <v-card v-if="notifications.lenght">
+          <v-card-text class="px-0">
+            <v-list-item-content class="justify-center">
+              <v-list two-line>
+                <v-list-item-group active-class="pink--text" multiple>
+                  <template v-for="(item, index) in notifications">
+                    <v-list-item :key="item.id" @click="viewPage(item.id)">
+                      <v-list-item-content>
+                        <v-list-item-title
+                          v-text="item.data.name"
+                        ></v-list-item-title>
+
+                        <v-list-item-subtitle
+                          class="text--primary"
+                          v-text="item.data.text"
+                        ></v-list-item-subtitle>
+
+                        <v-list-item-subtitle
+                          v-text="item.data.thanks"
+                        ></v-list-item-subtitle>
+                      </v-list-item-content>
+
+                      <v-list-item-action-text>
+                        <span class="primary-color">{{
+                          moment(item.created_at).format("DD-MM-YY")
+                        }}</span></v-list-item-action-text
+                      >
+                    </v-list-item>
+
+                    <v-divider
+                      v-if="index < notifications.length - 1"
+                      :key="index"
+                    ></v-divider>
+                  </template>
+                </v-list-item-group>
+              </v-list>
+
+              <v-divider class="my-3"></v-divider>
+              <v-list-item @click="viewAllNoti">
+                <div class="mx-auto text-center">
+                  <span class="primary-color">ອ່ານທັງໝົດ</span>
+                </div>
+              </v-list-item>
+            </v-list-item-content>
+          </v-card-text>
+        </v-card>
+      </v-menu>
 
       <v-menu bottom min-width="200px" rounded offset-y>
         <template v-slot:activator="{ on }">
@@ -122,7 +173,6 @@
             v-for="(item, k) in routes"
             :key="k"
             :to="item.to"
-            v-bind="$can(item.roles)"
           >
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
@@ -200,6 +250,12 @@ export default {
       drawer: true,
       userProfile: {},
       name: "",
+      //Pagination
+      offset: 12,
+      pagination: {},
+      per_page: 20,
+      notifications: [],
+      selectedStatus: "unread",
       items: [
         {
           icon: "mdi-apps",
@@ -318,6 +374,42 @@ export default {
           roles: ["admin", "super_admin"],
         },
       ],
+
+      selected: [2],
+      noti: [
+        {
+          action: "15 min",
+          headline: "Brunch this weekend?",
+          subtitle: `I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
+          title: "Ali Connors",
+        },
+        {
+          action: "2 hr",
+          headline: "Summer BBQ",
+          subtitle: `Wish I could come, but I'm out of town this weekend.`,
+          title: "me, Scrott, Jennifer",
+        },
+        {
+          action: "6 hr",
+          headline: "Oui oui",
+          subtitle: "Do you have Paris recommendations? Have you ever been?",
+          title: "Sandra Adams",
+        },
+        {
+          action: "12 hr",
+          headline: "Birthday gift",
+          subtitle:
+            "Have any ideas about what we should get Heidi for her birthday?",
+          title: "Trevor Hansen",
+        },
+        {
+          action: "18hr",
+          headline: "Recipe to try",
+          subtitle:
+            "We should eat this: Grate, Squash, Corn, and tomatillo Tacos.",
+          title: "Britta Holt",
+        },
+      ],
     };
   },
 
@@ -335,6 +427,7 @@ export default {
   created() {
     this.userProfile = JSON.parse(window.localStorage.getItem("user"));
     this.name = this.userProfile.name.slice(0, 1);
+    this.fetchData();
   },
   methods: {
     ...mapActions({
@@ -360,6 +453,48 @@ export default {
     //                 ];
     //                 return this.invoices;
     // }
+    fetchData() {
+      this.$store.commit("Loading_State", true);
+      this.$axios
+        .get("notification", {
+          params: {
+            page: this.pagination.current_page,
+            per_page: this.per_page,
+            status: this.selectedStatus,
+          },
+        })
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.$store.commit("Loading_State", false);
+              this.notifications = res.data.data.data;
+              this.pagination = res.data.data.pagination;
+              console.log(this.notifications);
+            }, 300);
+          }
+        })
+        .catch((error) => {
+          this.$store.commit("Loading_State", false);
+          if (error.response.status == 422) {
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
+          }
+        });
+    },
+    viewAllNoti() {
+      this.$router.push({
+        name: "NotificationTab",
+      });
+    },
+    viewPage(id) {
+      this.$router.push({
+        name: "NotificationView",
+        params: { id },
+      });
+    },
   },
 };
 </script>
