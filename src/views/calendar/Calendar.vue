@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row class="mb-n6">
+    <v-row>
       <v-col>
         <v-btn class="btn-primary" @click="AddPlan()"
           ><v-icon>mdi-plus</v-icon>

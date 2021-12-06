@@ -488,7 +488,6 @@ export default {
     },
   },
   created() {
-    console.log(this.getCenter);
     this.fetchData();
     this.fetchAddress();
     // this.selectedVillage = this.villages.slice();

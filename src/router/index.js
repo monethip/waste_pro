@@ -237,7 +237,16 @@ const routes = [
   {
     path: '/plan-calendar/:id/detail',
     name: 'PlanCalendarDetail',
-    component: () => import('@/views/calendar/PlanCalendarDetail.vue'),
+    component: () => import('@/views/calendar/tabindex.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/plan-calendar/:plan_calendar/detail/:id',
+    name: 'TrashDetail',
+    component: () => import('@/views/calendar/trashDetail.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],

@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row class="my-n6">
+    <v-row>
       <v-col>
         <v-breadcrumbs large class="pa-0">
           <v-btn text class="text-primary" @click="backPrevios()">
@@ -26,8 +26,14 @@
     <v-row class="mt-n4 mb-2">
       <v-col>
         <h4>
-          <span class="mr-8">ຈຳນວນລໍຖ້າ {{ summary.pending_count }} </span>
-          <span>ຈຳນວນສຳເລັດ {{ summary.success_count }}</span>
+          <span class="mr-8"
+            >ຈຳນວນລໍຖ້າ
+            <span class="primary-color">{{ summary.pending_count }}</span>
+          </span>
+          <span
+            >ຈຳນວນສຳເລັດ
+            <span class="primary-color">{{ summary.success_count }}</span></span
+          >
         </h4>
       </v-col>
     </v-row>
@@ -111,6 +117,7 @@ export default {
       oldVal: "",
       server_errors: {},
       summary: {},
+      statuses: ["pending"],
 
       headers: [
         { text: "ລຳດັບ", value: "route_plan_detail.priority" },
@@ -131,16 +138,6 @@ export default {
         },
         { text: "", value: "actions", sortable: false },
       ],
-      toast: {
-        value: true,
-        color: "success",
-        msg: "",
-      },
-      toast_error: {
-        value: true,
-        color: "error",
-        msg: "Something when wrong!",
-      },
     };
   },
   methods: {
@@ -154,6 +151,7 @@ export default {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
+            statuses: this.statuses,
           },
         })
         .then((res) => {

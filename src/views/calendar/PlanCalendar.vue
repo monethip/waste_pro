@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row class="my-n6">
+    <v-row>
       <v-col cols="6">
         <v-breadcrumbs large class="pa-0">
           <v-btn text class="text-primary" @click="backPrevios()">
@@ -166,9 +166,6 @@
                         </v-btn>
                       </v-date-picker>
                     </v-menu>
-                    <p class="errors">
-                      {{ server_errors.date }}
-                    </p>
                     <p class="errors">
                       {{ server_errors.date }}
                     </p>
@@ -547,9 +544,11 @@ export default {
                 msg: error.response.data.message,
               });
               var obj = error.response.data.errors;
+              console.log(obj);
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
               }
+              console.log(this.server_errors);
             }
           });
       }
