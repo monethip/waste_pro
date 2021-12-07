@@ -55,50 +55,11 @@
                 {{ Intl.NumberFormat().format(item.total) }}
               </div>
             </template>
-
             <template v-slot:item.actions="{ item }">
-              <v-menu offset-y>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-icon
-                    color="primary"
-                    dark
-                    v-bind="attrs"
-                    v-on="on"
-                    medium
-                    class="mr-2"
-                    >mdi-dots-vertical</v-icon
-                  >
-                </template>
-                <v-list>
-                  <v-list-item link>
-                    <v-list-item-title @click="viewPage(item.id)">
-                      <v-icon small class="mr-2"> mdi-eye </v-icon>
-                      View
-                    </v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
-            </template>
-            <!-- <div>
-                <template v-slot:item.actions="{ item }">
-                  <v-menu offset-y>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn color="primary" dark v-bind="attrs" v-on="on">
-                        Dropdown
-                      </v-btn>
-                    </template>
-                    <v-list>
-                      <v-list-item>
-                        <v-list-item-title>Menu 1
-                         <v-icon small class="mr-2" @click="editModal(item)">
-                  mdi-pencil
-                </v-icon>
-                        </v-list-item-title>
-                      </v-list-item>
-                    </v-list>
-                  </v-menu>
-                </template>
-              </div> --> </v-data-table
+              <v-icon small class="mr-2" @click="viewPage(item.id)">
+                mdi-eye
+              </v-icon>
+            </template> </v-data-table
           ><br />
           <template>
             <Pagination

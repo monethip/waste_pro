@@ -22,6 +22,7 @@
                 >ອະນຸມັດບິນ {{ selectedRows.length }}</v-btn
               ></v-col
             >
+            <!--
             <v-col cols="8">
               <v-select
                 outlined
@@ -49,6 +50,7 @@
                 </template>
               </v-select>
             </v-col>
+            -->
           </v-row>
           <v-data-table
             :headers="headers"

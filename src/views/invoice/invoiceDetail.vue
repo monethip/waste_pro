@@ -104,7 +104,6 @@
           </v-row>
           <v-card-actions class="mt-6">
             <v-spacer></v-spacer>
-            <v-btn color="primary" text> Print </v-btn>
             <v-btn color="info" text :loading="loading" :disabled="loading">
               Export
             </v-btn>

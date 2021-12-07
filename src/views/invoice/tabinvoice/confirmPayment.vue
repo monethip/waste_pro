@@ -104,6 +104,9 @@
         <v-card>
           <v-card-title>
             <p>
+              <v-icon class="primary-color" large color="success"
+                >mdi-checkbox-marked-circle-outline</v-icon
+              >
               ຢືນຢັນການຊຳລະ
               <span class="primary-color" v-if="editItem.customer"
                 >{{ editItem.customer.name }}

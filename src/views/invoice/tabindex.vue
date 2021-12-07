@@ -1,5 +1,10 @@
 <template>
   <v-container>
+    <v-row class="mb-0">
+      <v-col>
+        <v-breadcrumbs large class="pa-0"> ຈັດການຂໍ້ມູນບິນ</v-breadcrumbs>
+      </v-col>
+    </v-row>
     <v-card elevation="1">
       <v-card-text>
         <v-tabs v-model="tab">
@@ -76,6 +81,11 @@ export default {
       // countReject: null,
       // countSuccess: null,
     };
+  },
+  methods: {
+    backPrevios() {
+      this.$router.go(-1);
+    },
   },
   created() {
     if (this.$route.query.tab == "invoice-all") {

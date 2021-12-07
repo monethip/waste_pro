@@ -167,6 +167,9 @@
         <v-card>
           <v-card-title>
             <p>
+              <v-icon class="primary-color" large color="success"
+                >mdi-checkbox-marked-circle-outline</v-icon
+              >
               ຢືນຢັນຊຳລະຄ່າຂີ້ເຫຍື້ອ
               <span class="primary-color" v-if="invoice.customer"
                 >{{ invoice.customer.name }}
