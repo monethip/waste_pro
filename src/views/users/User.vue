@@ -48,32 +48,71 @@
             </template>
 
             <template v-slot:item.actions="{ item }">
-              <!--  <v-icon small class="mr-2"> mdi-key </v-icon> -->
-              <v-icon small class="mr-2" @click="OpenModalEdit(item)">
-                mdi-pencil
-              </v-icon>
-              <v-icon small @click="deleteItem(item.id)"> mdi-delete </v-icon>
-            </template>
-            <template v-slot:item.role="{ item }">
-              <v-icon small class="mr-2" @click="openModalRole(item)">
-                mdi-plus
-              </v-icon>
-              <v-icon small class="mr-2" @click="openModalUpdateRole(item)">
-                mdi-key-remove
-              </v-icon>
-            </template>
+              <v-menu offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon
+                    color="primary"
+                    dark
+                    v-bind="attrs"
+                    v-on="on"
+                    medium
+                    class="mr-2"
+                    >mdi-dots-vertical</v-icon
+                  >
+                </template>
+                <v-list>
+                  <v-list-item link>
+                    <v-list-item-title @click="openModalRole(item)">
+                      <v-icon small class="mr-2"> mdi-plus </v-icon>
+                      ເພີ່ມ Role
+                    </v-list-item-title>
+                  </v-list-item>
+                  <v-list-item link>
+                    <v-list-item-title @click="openModalUpdateRole(item)">
+                      <v-icon
+                        small
+                        class="mr-2"
+                        @click="openModalUpdateRole(item)"
+                      >
+                        mdi-key-remove
+                      </v-icon>
+                      ຖອນ Role
+                    </v-list-item-title>
+                  </v-list-item>
+                  <v-list-item link>
+                    <v-list-item-title @click="openModalPermission(item)">
+                      <v-icon small class="mr-2"> mdi-plus </v-icon>
+                      ເພີ່ມ Permission
+                    </v-list-item-title>
+                  </v-list-item>
+                  <v-list-item link>
+                    <v-list-item-title @click="openModalUpdatePermissoin(item)">
+                      <v-icon
+                        small
+                        class="mr-2"
+                        @click="openModalUpdatePermissoin(item)"
+                      >
+                        mdi-key-remove
+                      </v-icon>
+                      ຖອນ Permission
+                    </v-list-item-title>
+                  </v-list-item>
 
-            <template v-slot:item.permission="{ item }">
-              <v-icon small class="mr-2" @click="openModalPermission(item)">
-                mdi-plus
-              </v-icon>
-              <v-icon
-                small
-                class="mr-2"
-                @click="openModalUpdatePermissoin(item)"
-              >
-                mdi-key-remove
-              </v-icon>
+                  <v-list-item link>
+                    <v-list-item-title @click="OpenModalEdit(item)">
+                      <v-icon small class="mr-2"> mdi-pencil </v-icon>
+                      ແກ້ໄຂ
+                    </v-list-item-title>
+                  </v-list-item>
+
+                  <v-list-item link>
+                    <v-list-item-title @click="deleteItem(item.id)">
+                      <v-icon small> mdi-delete </v-icon>
+                      ລຶບ
+                    </v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
             </template>
           </v-data-table>
           <br />
@@ -524,14 +563,6 @@ export default {
         { text: "Email", value: "email", sortable: false },
         { text: "Role", value: "roles", sortable: false },
         { text: "Permission", value: "permissions", sortable: false },
-        {
-          text: "Role", value: "role", sortable: false, align: "center",},
-        {
-          text: "Permission",
-          value: "permission",
-          sortable: false,
-          align: "center",
-        },
         { text: "", value: "actions", sortable: false },
       ],
       loading: false,
@@ -554,7 +585,7 @@ export default {
       selectedPermission: "",
       permissions: [],
       revokes: [],
-      
+
       //Pagination
       offset: 12,
       pagination: {},
@@ -589,16 +620,6 @@ export default {
       ],
       rulePermission: [(v) => !!v || "Permission is required"],
       rulePermissionRole: [(v) => !!v || "Role is required"],
-      toast: {
-        value: true,
-        color: "success",
-        msg: "Success",
-      },
-      toast_error: {
-        value: true,
-        color: "error",
-        msg: "Something when wrong!",
-      },
     };
   },
   methods: {
@@ -618,13 +639,21 @@ export default {
                 this.user = {};
                 this.fetchData();
                 this.reset();
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", this.toast_error);
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             this.fetchData();
             if (error.response.status == 422) {
               var obj = error.response.data.errors;
@@ -717,7 +746,11 @@ export default {
         })
         .catch((error) => {
           this.loading = false;
-          this.fetchData();
+          this.$store.commit("Toast_State", {
+            value: true,
+            color: "error",
+            msg: error.response.data.message,
+          });
           if (error.response.status == 422) {
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
@@ -747,13 +780,21 @@ export default {
                 this.edit_user = {};
                 this.reset();
                 this.fetchData();
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", this.toast_error);
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             this.fetchData();
             if (error.response.status == 422) {
               var obj = error.response.data.errors;
@@ -785,15 +826,22 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.loading = false;
-              this.$store.commit("Toast_State", this.toast);
               this.$store.commit("modalDelete_State", false);
               this.fetchData();
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
+              });
             }, 300);
           }
         })
-        .catch(() => {
-          this.fetchData();
-          this.$store.commit("Toast_State", this.toast_error);
+        .catch((error) => {
+          this.$store.commit("Toast_State", {
+            value: true,
+            color: "error",
+            msg: error.response.data.message,
+          });
           this.$store.commit("modalDelete_State", false);
           this.loading = false;
         });
@@ -821,7 +869,11 @@ export default {
                 this.fetchData();
                 this.reset();
                 this.roleDialog = false;
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
@@ -829,7 +881,11 @@ export default {
             if (error.response.data.code == 422) {
               this.errormsg = error.response.data.message;
             }
-            this.$store.commit("Toast_State", this.toast_error);
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             this.fetchData();
           });
         this.loading = false;
@@ -858,7 +914,11 @@ export default {
                 this.fetchData();
                 this.reset();
                 this.updateRoleDialog = false;
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
@@ -866,7 +926,11 @@ export default {
             if (error.response.data.code == 422) {
               this.errormsg = error.response.data.message;
             }
-            this.$store.commit("Toast_State", this.toast_error);
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             this.fetchData();
           });
         this.loading = false;
@@ -896,7 +960,11 @@ export default {
                 this.fetchData();
                 this.reset();
                 this.permissionDialog = false;
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
@@ -904,7 +972,11 @@ export default {
             if (error.response.data.code == 422) {
               this.errormsg = error.response.data.message;
             }
-            this.$store.commit("Toast_State", this.toast_error);
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             this.fetchData();
           });
         this.loading = false;
@@ -934,7 +1006,11 @@ export default {
                 this.fetchData();
                 this.reset();
                 this.updatePermissionDialog = false;
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
@@ -942,7 +1018,11 @@ export default {
             if (error.response.data.code == 422) {
               this.errormsg = error.response.data.message;
             }
-            this.$store.commit("Toast_State", this.toast_error);
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             this.fetchData();
           });
         this.loading = false;

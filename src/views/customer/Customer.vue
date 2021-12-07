@@ -97,18 +97,45 @@
                   </template>
 
                   <template v-slot:item.actions="{ item }">
-                    <v-icon small class="mr-2" @click="addPackage(item.id)">
-                      mdi-package
-                    </v-icon>
-                    <v-icon small class="mr-2" @click="viewPage(item.id)">
-                      mdi-eye
-                    </v-icon>
-                    <v-icon small class="mr-2" @click="editPage(item.id)">
-                      mdi-pencil
-                    </v-icon>
-                    <v-icon small @click="deleteItem(item.id)">
-                      mdi-delete
-                    </v-icon>
+                    <v-menu offset-y>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-icon
+                          color="primary"
+                          dark
+                          v-bind="attrs"
+                          v-on="on"
+                          medium
+                          class="mr-2"
+                          >mdi-dots-vertical</v-icon
+                        >
+                      </template>
+                      <v-list>
+                        <v-list-item link>
+                          <v-list-item-title @click="addPackage(item.id)">
+                            <v-icon small class="mr-2"> mdi-eye </v-icon>
+                            ເພີ່ມແພັກເກດ
+                          </v-list-item-title>
+                        </v-list-item>
+                        <v-list-item link>
+                          <v-list-item-title @click="viewPage(item.id)">
+                            <v-icon small class="mr-2"> mdi-eye </v-icon>
+                            ລາຍລະອຽດ
+                          </v-list-item-title>
+                        </v-list-item>
+                        <v-list-item link>
+                          <v-list-item-title @click="editPage(item.id)">
+                            <v-icon small class="mr-2"> mdi-pencil </v-icon>
+                            ແກ້ໄຂບິນ
+                          </v-list-item-title>
+                        </v-list-item>
+                        <v-list-item link>
+                          <v-list-item-title @click="deleteItem(item.id)">
+                            <v-icon small> mdi-delete </v-icon>
+                            ລຶບ
+                          </v-list-item-title>
+                        </v-list-item>
+                      </v-list>
+                    </v-menu>
                   </template> </v-data-table
                 ><br />
                 <template>
@@ -131,7 +158,7 @@
       <template @close="close">
         <v-card>
           <v-card-title>
-            <span class="headline">Add Package</span>
+            <span class="headline">ເພີ່ມແພັກເກດໃຫ້ລູກຄ້າ</span>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -185,11 +212,14 @@
                 </v-row>
                 <v-row class="my-n4">
                   <v-col cols="12">
-                    <v-checkbox v-model="can_collect">
+                    <v-checkbox v-model="start_collect">
                       <template v-slot:label>
                         <div>ເລີ່ມເກັບຂີ້ເຫື້ອຍເລີຍບໍ່ ?</div>
                       </template>
                     </v-checkbox>
+                    <p class="errors">
+                      {{ server_errors.can_collect }}
+                    </p>
                   </v-col>
                 </v-row>
               </v-form>
@@ -257,7 +287,7 @@ export default {
       allowedDates: (val) => new Date(val).getDate() === 1,
       packages: [],
       selectedPackage: "",
-      can_collect: false,
+      start_collect: false,
       server_errors: {},
       //Filter
       districts: [],
@@ -446,14 +476,16 @@ export default {
       this.customerId = id;
     },
     AddPackage() {
-      console.log(this.can_collect);
+      console.log(this.start_collect);
+      console.log(this.selectedPackage);
+      console.log(this.start_date);
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
           .post("customer/" + this.customerId + "/add-package", {
             package_id: this.selectedPackage,
             start_month: this.start_date,
-            can_collect: this.can_collect,
+            can_collect: this.start_collect,
           })
           .then((res) => {
             if (res.data.code == 200) {

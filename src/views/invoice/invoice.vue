@@ -96,7 +96,7 @@ export default {
           sortable: false,
         },
         {
-          text: "ລາຍລະອຽດແຜນ",
+          text: "ລາຍລະອຽດ",
           value: "plan",
           sortable: false,
           align: "center",

@@ -54,27 +54,6 @@
               </v-icon>
               <v-icon small @click="deleteItem(item.id)"> mdi-delete </v-icon>
             </template>
-            <template v-slot:item.role="{ item }">
-              <v-icon small class="mr-2" @click="openModalRole(item)">
-                mdi-plus
-              </v-icon>
-              <v-icon small class="mr-2" @click="openModalUpdateRole(item)">
-                mdi-key-remove
-              </v-icon>
-            </template>
-
-            <template v-slot:item.permission="{ item }">
-              <v-icon small class="mr-2" @click="openModalPermission(item)">
-                mdi-plus
-              </v-icon>
-              <v-icon
-                small
-                class="mr-2"
-                @click="openModalUpdatePermissoin(item)"
-              >
-                mdi-key-remove
-              </v-icon>
-            </template>
           </v-data-table>
           <br />
           <template>
@@ -495,17 +474,6 @@ export default {
         (v) =>
           Number.isInteger(Number(v)) || "The value must be an integer number",
       ],
-
-      toast: {
-        value: true,
-        color: "success",
-        msg: "Success",
-      },
-      toast_error: {
-        value: true,
-        color: "error",
-        msg: "Something when wrong!",
-      },
     };
   },
   methods: {
@@ -544,13 +512,21 @@ export default {
                 this.imageUrl = "";
                 this.fetchData();
                 this.reset();
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", this.toast_error);
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             this.fetchData();
             if (error.response.status == 422) {
               var obj = error.response.data.errors;
@@ -580,7 +556,6 @@ export default {
               this.pagination = res.data.data.pagination;
               this.data.map((item) => {
                 if (item.status == "active") {
-                  console.log(item);
                   this.status = true;
                 } else {
                   this.status = false;
@@ -632,13 +607,21 @@ export default {
                 this.imageUrl = "";
                 this.fetchData();
                 this.reset();
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", this.toast_error);
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             this.fetchData();
             if (error.response.status == 422) {
               var obj = error.response.data.errors;
@@ -670,15 +653,23 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.loading = false;
-              this.$store.commit("Toast_State", this.toast);
               this.$store.commit("modalDelete_State", false);
               this.fetchData();
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
+              });
             }, 300);
           }
         })
-        .catch(() => {
+        .catch((error) => {
           this.fetchData();
-          this.$store.commit("Toast_State", this.toast_error);
+          this.$store.commit("Toast_State", {
+            value: true,
+            color: "error",
+            msg: error.response.data.message,
+          });
           this.$store.commit("modalDelete_State", false);
           this.loading = false;
         });
@@ -692,13 +683,21 @@ export default {
             setTimeout(() => {
               this.loading = false;
               this.fetchData();
-              this.$store.commit("Toast_State", this.toast);
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
+              });
             }, 300);
           }
         })
-        .catch(() => {
+        .catch((error) => {
           this.loading = false;
-          this.$store.commit("Toast_State", this.toast_error);
+          this.$store.commit("Toast_State", {
+            value: true,
+            color: "error",
+            msg: error.response.data.message,
+          });
           this.fetchData();
         });
     },

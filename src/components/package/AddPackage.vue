@@ -199,7 +199,7 @@ export default {
         { text: "Created", value: "created_at" },
         { text: "Actions", value: "action" },
       ],
-      nameRules: [(v) => !!v || "Name is required"],
+      nameRules: [(v) => !!v || "Package Name is required"],
       bagRules: [
         (v) => !!v || "Price is required",
         (v) =>
@@ -231,14 +231,14 @@ export default {
             if (res.data.code == 200) {
               setTimeout(() => {
                 this.loading = false;
-                this.closeAddModal();
-                this.fetchData();
-                this.reset();
                 this.$store.commit("Toast_State", {
                   value: true,
                   color: "success",
                   msg: res.data.message,
                 });
+                this.closeAddModal();
+                this.fetchData();
+                this.reset();
               }, 300);
             }
           })
@@ -270,7 +270,6 @@ export default {
     OpenModalEdit(item) {
       this.fetchPackageSize();
       this.editPackage = item;
-      console.log(this.editPackage);
       this.$store.commit("modalEdit_State", true);
     },
 

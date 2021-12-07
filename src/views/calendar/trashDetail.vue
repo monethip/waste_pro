@@ -7,9 +7,35 @@
       ລາຍລະອຽດລູກຄ້າ</v-breadcrumbs
     >
     <v-card>
+      <!--
       <div v-for="(item, index) in detail.media" :key="index">
         <v-img :src="item.url" alt="Image" height="500px" dark> </v-img>
       </div>
+      -->
+      <v-row>
+        <v-col
+          v-for="(item, index) in detail.media"
+          :key="index"
+          class="d-flex child-flex"
+          cols="4"
+        >
+          <v-img
+            :src="item.url"
+            :lazy-src="item.thumb"
+            aspect-ratio="1"
+            class="grey lighten-2"
+          >
+            <template v-slot:placeholder>
+              <v-row class="fill-height ma-0" align="center" justify="center">
+                <v-progress-circular
+                  indeterminate
+                  color="grey lighten-5"
+                ></v-progress-circular>
+              </v-row>
+            </template>
+          </v-img>
+        </v-col>
+      </v-row>
 
       <v-card-text>
         <v-container>
@@ -52,7 +78,7 @@
                     detail.route_plan_detail.customer.start_month
                   }}</v-list-item-title
                 >
-                <v-list-item-subtitle>ເລີ່ມລົງທະບຽໜວັນທີ</v-list-item-subtitle>
+                <v-list-item-subtitle>ສະໝັກແພັກເກດວັນທີ</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
             <v-divider inset></v-divider>
