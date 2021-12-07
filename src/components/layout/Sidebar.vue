@@ -15,7 +15,7 @@
             </v-badge>
           </v-btn>
         </template>
-        <v-card v-if="notifications.lenght">
+        <v-card>
           <v-card-text class="px-0">
             <v-list-item-content class="justify-center">
               <v-list two-line>
@@ -469,7 +469,6 @@ export default {
               this.$store.commit("Loading_State", false);
               this.notifications = res.data.data.data;
               this.pagination = res.data.data.pagination;
-              console.log(this.notifications);
             }, 300);
           }
         })

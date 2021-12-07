@@ -78,14 +78,14 @@ export default {
     tab: function (value) {
       if (value == "tab-1") {
         this.statuses = [];
-        this.fetchData();
+        this.fetchData(this.statuses);
         this.$router
           .push({ name: "PlanCalendarDetail", query: { tab: "trash-all" } })
           .catch(() => {});
       } else if (value == "tab-2") {
         this.statuses = [];
         this.statuses = ["pending"];
-        this.fetchData();
+        this.fetchData(this.statuses);
         this.$router
           .push({
             name: "PlanCalendarDetail",
@@ -94,8 +94,9 @@ export default {
           .catch(() => {});
       } else if (value == "tab-3") {
         this.statuses = [];
-        this.fetchData();
         this.statuses = ["success"];
+        // console.log(this.statuses);
+        this.fetchData(this.statuses);
         this.$router
           .push({
             name: "PlanCalendarDetail",

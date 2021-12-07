@@ -175,20 +175,20 @@ export default {
     // Search() {
     //   GetOldValueOnInput(this);
     // },
-    viewPage(plan_calendar, id) {
-      console.log(plan_calendar, id);
-      this.$router.push({
-        name: "TrashDetail",
-        params: { plan_calendar, id },
-      });
-    },
+    // viewPage(plan_calendar, id) {
+    //   console.log(plan_calendar, id);
+    //   this.$router.push({
+    //     name: "TrashDetail",
+    //     params: { plan_calendar, id },
+    //   });
+    // },
   },
   watch: {
-    search: function (value) {
-      if (value == "") {
-        this.fetchData();
-      }
-    },
+    // search: function (value) {
+    //   if (value == "") {
+    //     this.fetchData();
+    //   }
+    // },
   },
   created() {
     // this.fetchData();

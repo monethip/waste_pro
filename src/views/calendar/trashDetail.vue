@@ -18,9 +18,8 @@
               <v-list-item-icon>
                 <v-icon color="indigo"> mdi-account-circle-outline </v-icon>
               </v-list-item-icon>
-
               <v-list-item-content>
-                <v-list-item-title
+                <v-list-item-title v-if="detail.route_plan_detail"
                   >{{ detail.route_plan_detail.customer.name }}
                   {{
                     detail.route_plan_detail.customer.surname
@@ -28,70 +27,51 @@
                 >
                 <v-list-item-subtitle>ຊື່ ແລະ ນາມສະກຸນ</v-list-item-subtitle>
               </v-list-item-content>
-              <!--
-              <v-spacer></v-spacer>
-              <v-list-item-icon>
-                <v-icon class="mr-6" color="indigo">mdi-home</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title v-if="data.user">
-                  {{ detail.house_number }}</v-list-item-title
-                >
-                <v-list-item-subtitle>ເຮືອນເລກທີ</v-list-item-subtitle>
-              </v-list-item-content>
-              -->
             </v-list-item>
             <v-divider inset></v-divider>
           </v-row>
           <v-row>
             <v-list-item>
               <v-list-item-icon>
-                <v-icon color="indigo"> mdi-phone </v-icon>
+                <v-icon color="indigo"> mdi-calendar-range </v-icon>
               </v-list-item-icon>
 
               <v-list-item-content>
-                <v-list-item-title v-if="detail.route_plan_detail.customer">
-                  {{
-                    detail.route_plan_detail.customer.phone
-                  }}</v-list-item-title
+                <v-list-item-title v-if="detail.route_plan_detail">
+                  {{ detail.route_plan_detail.priority }}</v-list-item-title
                 >
-                <v-list-item-subtitle>ເບີໂທ</v-list-item-subtitle>
+                <v-list-item-subtitle>ລຳດັບເກັບຂີ້ເຫື້ອຍ</v-list-item-subtitle>
               </v-list-item-content>
               <v-spacer></v-spacer>
               <v-list-item-icon>
-                <v-icon class="mr-6" color="indigo">mdi-email</v-icon>
+                <v-icon class="mr-6" color="indigo">mdi-calendar</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-title v-if="detail.route_plan_detail.customer">
+                <v-list-item-title v-if="detail.route_plan_detail">
                   {{
-                    detail.route_plan_detail.customer.email
+                    detail.route_plan_detail.customer.start_month
                   }}</v-list-item-title
                 >
-                <v-list-item-subtitle>Email</v-list-item-subtitle>
+                <v-list-item-subtitle>ເລີ່ມລົງທະບຽໜວັນທີ</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
             <v-divider inset></v-divider>
             <v-list-item>
               <v-list-item-icon>
-                <v-icon color="indigo"> mdi-map-marker </v-icon>
+                <v-icon color="indigo"> mdi-home-search </v-icon>
               </v-list-item-icon>
 
-              <!--
               <v-list-item-content>
-                <v-list-item-title v-if="data.village">{{
-                  detail.village.name
-                }}</v-list-item-title>
-                <div
-                  v-for="(data, index) in detail.village_details"
-                  :key="index"
-                >
-                  <v-list-item-subtitle>{{ data.name }}</v-list-item-subtitle>
+                <v-list-item-title>ເຮືອນເລກທີ</v-list-item-title>
+                <div>
+                  <v-list-item-subtitle v-if="detail.route_plan_detail">{{
+                    detail.route_plan_detail.customer.house_number
+                  }}</v-list-item-subtitle>
                 </div>
               </v-list-item-content>
-              -->
             </v-list-item>
           </v-row>
-          <!--
+
           <v-row>
             <v-col cols="12" class="mb-4">
               <GmapMap
@@ -101,7 +81,8 @@
                 :disableDefaultUI="true"
               >
                 <GmapMarker
-                  :position="getMarkers(data)"
+                  v-if="detail.route_plan_detail"
+                  :position="getMarkers(detail.route_plan_detail.customer)"
                   @click="latlng = data"
                   :draggable="false"
                   :icon="markerOptions"
@@ -111,8 +92,17 @@
               </GmapMap>
             </v-col>
           </v-row>
-          -->
         </v-container>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="viewCustomer(detail.route_plan_detail.customer.id)"
+          >
+            ລາຍລະອຽດລູກຄ້າ
+          </v-btn>
+        </v-card-actions>
       </v-card-text>
     </v-card>
   </v-container>
@@ -181,10 +171,10 @@ export default {
       this.$router.go(-1);
     },
     getCenter() {
-      if (this.data.lat) {
+      if (this.detail.route_plan_detail) {
         const latlng = {
-          lat: parseFloat(this.data.lat),
-          lng: parseFloat(this.data.lng),
+          lat: parseFloat(this.detail.route_plan_detail.customer.lat),
+          lng: parseFloat(this.detail.route_plan_detail.customer.lng),
         };
         return latlng;
       }
@@ -196,9 +186,9 @@ export default {
         lng: parseFloat(data.lng),
       };
     },
-    editPage(id) {
+    viewCustomer(id) {
       this.$router.push({
-        name: "EditCustomer",
+        name: "ViewCustomer",
         params: { id },
       });
     },
@@ -213,7 +203,6 @@ export default {
   },
   created() {
     this.fetchData();
-    console.log("Item" + this.items);
   },
 };
 </script>

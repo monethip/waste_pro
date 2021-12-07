@@ -22,9 +22,9 @@
     </v-row>
     <div>
       <v-data-table
-        v-if="calendars"
+        v-if="successes"
         :headers="headers"
-        :items="calendars"
+        :items="successes"
         :search="search"
         :disable-pagination="true"
         hide-default-footer
@@ -77,24 +77,20 @@
 </template>
 
 <script>
-// import { GetOldValueOnInput } from "@/Helpers/GetValue";
-import trashMixin from "@/views/calendar/trashMixin";
+import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
-  mixins: [trashMixin],
   name: "Trash",
   data() {
     return {
-      //   loading: false,
-      //   calendarId: "",
       //   //Pagination
-      //   offset: 12,
-      //   calendars: [],
-      //   pagination: {},
-      //   per_page: 15,
-      //   search: "",
+      offset: 12,
+      successes: [],
+      pagination: {},
+      per_page: 15,
+      search: "",
       //   oldVal: "",
-      //   summary: {},
-      //   statuses: ["pending"],
+      summary: {},
+      statuses: ["success"],
       headers: [
         { text: "ລຳດັບ", value: "route_plan_detail.priority" },
         { text: "ຊື່ລູກຄ້າ", value: "customer" },
@@ -120,53 +116,53 @@ export default {
       this.$router.go(-1);
     },
 
-    // fetchData() {
-    //   this.$store.commit("Loading_State", true);
-    //   this.$axios
-    //     .get("plan-calendar/" + this.$route.params.id + "/detail", {
-    //       params: {
-    //         page: this.pagination.current_page,
-    //         per_page: this.per_page,
-    //         statuses: this.statuses,
-    //       },
-    //     })
-    //     .then((res) => {
-    //       if (res.data.code == 200) {
-    //         setTimeout(() => {
-    //           this.$store.commit("Loading_State", false);
-    //           this.calendars = res.data.data.data;
-    //           this.summary = res.data.data.summary;
-    //           this.pagination = res.data.data.pagination;
-    //         }, 100);
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       this.$store.commit("Loading_State", false);
-    //       this.fetchData();
-    //       if (error.response.status == 422) {
-    //         this.toast.msg = error.message;
-    //       }
-    //     });
-    // },
-    // statusColor(value) {
-    //   if (value == "pending") return "info";
-    //   else if (value == "success") return "success";
-    //   else return "error";
-    // },
-    // getUnit(value) {
-    //   console.log(value);
-    //   if (value == "bag") return "ຖົງ";
-    //   else return "Container";
-    // },
-    // Search() {
-    //   GetOldValueOnInput(this);
-    // },
-    // viewPage(id) {
-    //   this.$router.push({
-    //     name: "ViewCustomer",
-    //     params: { id },
-    //   });
-    // },
+    fetchData() {
+      this.$store.commit("Loading_State", true);
+      this.$axios
+        .get("plan-calendar/" + this.$route.params.id + "/detail", {
+          params: {
+            page: this.pagination.current_page,
+            per_page: this.per_page,
+            statuses: this.statuses,
+          },
+        })
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.$store.commit("Loading_State", false);
+              this.successes = res.data.data.data;
+              this.summary = res.data.data.summary;
+              this.pagination = res.data.data.pagination;
+            }, 100);
+          }
+        })
+        .catch((error) => {
+          this.$store.commit("Loading_State", false);
+          this.fetchData();
+          if (error.response.status == 422) {
+            this.toast.msg = error.message;
+          }
+        });
+    },
+    statusColor(value) {
+      if (value == "pending") return "info";
+      else if (value == "success") return "success";
+      else return "error";
+    },
+    getUnit(value) {
+      console.log(value);
+      if (value == "bag") return "ຖົງ";
+      else return "Container";
+    },
+    Search() {
+      GetOldValueOnInput(this);
+    },
+    viewPage(plan_calendar, id) {
+      this.$router.push({
+        name: "TrashDetail",
+        params: { plan_calendar, id },
+      });
+    },
   },
   watch: {
     search: function (value) {
@@ -176,7 +172,7 @@ export default {
     },
   },
   created() {
-    // this.fetchData();
+    this.fetchData();
   },
 };
 </script>

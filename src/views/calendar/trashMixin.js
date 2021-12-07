@@ -8,6 +8,7 @@ export default {
             calendarId: "",
             //Pagination
             calendars: [],
+            successes: [],
             offset: 12,
             pagination: {},
             per_page: 15,
@@ -51,7 +52,9 @@ export default {
                     if (res.data.code == 200) {
                         setTimeout(() => {
                             this.$store.commit("Loading_State", false);
-                            this.calendars = res.data.data.data;
+                            this.calendars = [],
+                                this.pagination = [],
+                                this.calendars = res.data.data.data;
                             this.summary = res.data.data.summary;
                             this.pagination = res.data.data.pagination;
                         }, 100);
@@ -78,7 +81,6 @@ export default {
             GetOldValueOnInput(this);
         },
         viewPage(plan_calendar, id) {
-            console.log(plan_calendar, id);
             this.$router.push({
                 name: "TrashDetail",
                 params: { plan_calendar, id },
@@ -93,7 +95,6 @@ export default {
         },
     },
     created() {
-        console.log(this.loading)
         this.fetchData();
     },
 };

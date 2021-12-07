@@ -22,9 +22,9 @@
     </v-row>
     <div>
       <v-data-table
-        v-if="calendars"
+        v-if="pending"
         :headers="headers"
-        :items="calendars"
+        :items="pending"
         :search="search"
         :disable-pagination="true"
         hide-default-footer
@@ -77,25 +77,21 @@
 </template>
 
 <script>
-import trashMixin from "@/views/calendar/trashMixin";
+import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
-  mixins: [trashMixin],
   name: "Trash",
   data() {
     return {
-      //   tab: null,
-      //   calendars: [],
-      //   loading: false,
-      //   calendarId: "",
+      pending: [],
+      loading: false,
+      calendarId: "",
       //   //Pagination
-      //   offset: 12,
-      //   pagination: {},
-      //   per_page: 15,
-      //   search: "",
-      //   oldVal: "",
-      //   server_errors: {},
-      //   summary: {},
-      //   statuses: ["pending"],
+      offset: 12,
+      pagination: {},
+      per_page: 15,
+      search: "",
+      oldVal: "",
+      statuses: ["pending"],
 
       headers: [
         { text: "ລຳດັບ", value: "route_plan_detail.priority" },
@@ -122,34 +118,34 @@ export default {
     backPrevios() {
       this.$router.go(-1);
     },
-    // fetchData() {
-    //   this.$store.commit("Loading_State", true);
-    //   this.$axios
-    //     .get("plan-calendar/" + this.$route.params.id + "/detail", {
-    //       params: {
-    //         page: this.pagination.current_page,
-    //         per_page: this.per_page,
-    //         statuses: this.statuses,
-    //       },
-    //     })
-    //     .then((res) => {
-    //       if (res.data.code == 200) {
-    //         setTimeout(() => {
-    //           this.$store.commit("Loading_State", false);
-    //           this.calendars = res.data.data.data;
-    //           this.summary = res.data.data.summary;
-    //           this.pagination = res.data.data.pagination;
-    //         }, 100);
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       this.$store.commit("Loading_State", false);
-    //       this.fetchData();
-    //       if (error.response.status == 422) {
-    //         this.toast.msg = error.message;
-    //       }
-    //     });
-    // },
+    fetchData() {
+      this.$store.commit("Loading_State", true);
+      this.$axios
+        .get("plan-calendar/" + this.$route.params.id + "/detail", {
+          params: {
+            page: this.pagination.current_page,
+            per_page: this.per_page,
+            statuses: this.statuses,
+          },
+        })
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.$store.commit("Loading_State", false);
+              this.pending = res.data.data.data;
+              this.summary = res.data.data.summary;
+              this.pagination = res.data.data.pagination;
+            }, 100);
+          }
+        })
+        .catch((error) => {
+          this.$store.commit("Loading_State", false);
+          this.fetchData();
+          if (error.response.status == 422) {
+            this.toast.msg = error.message;
+          }
+        });
+    },
     statusColor(value) {
       if (value == "pending") return "info";
       else if (value == "success") return "success";
@@ -159,10 +155,13 @@ export default {
       if (value == "bag") return "ຖົງ";
       else return "Container";
     },
-    viewPage(id) {
+    Search() {
+      GetOldValueOnInput(this);
+    },
+    viewPage(plan_calendar, id) {
       this.$router.push({
         name: "TrashDetail",
-        params: { id },
+        params: { plan_calendar, id },
       });
     },
   },
@@ -174,7 +173,7 @@ export default {
     },
   },
   created() {
-    // this.fetchData();
+    this.fetchData();
   },
 };
 </script>
