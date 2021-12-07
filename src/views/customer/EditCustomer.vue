@@ -397,14 +397,10 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data;
-              // console.log(this.data);
               this.selectedVillage = res.data.data.village_id;
               res.data.data.village_details.map((item) => {
                 this.village_variation_id = item.village_variation_id;
-                console.log(item);
-                console.log(this.village_variation_id);
                 this.selectedVillageDetail = item.id;
-                console.log(this.selectedVillageDetail);
               });
               this.getCenter();
             }, 300);
@@ -454,7 +450,6 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.village_details = res.data.data.village_variations;
-              console.log(this.village_details);
               res.data.data.village_variations.map((item) => {
                 this.units = item.village_details;
               });
@@ -597,7 +592,6 @@ export default {
         address: this.address,
         position: this.latlng,
       });
-      // console.log(this.center);
     },
     onSave() {
       this.$emit("onSave", {
@@ -626,8 +620,6 @@ export default {
     fetchUnit() {
       this.village_details.filter((item) => {
         this.units = item.village_details;
-        // console.log(this.units);
-        // console.log(item.village_details);
         // item.village_details.forEach((data) => {
         //   console.log(data);
         //   data.filter((i) => {
@@ -639,7 +631,6 @@ export default {
         // // var a = item.id === this.village_variation_id;
         // // console.log(a);
         // // this.units.push(item.id === this.village_variation_id);
-        // console.log("Unit" + this.units);
       });
     },
   },
@@ -681,9 +672,7 @@ export default {
     //   // this.fetchUnits();
     // },
     village_variation_id: function () {
-      console.log("HI");
       if (this.village_variation_id) {
-        console.log(this.village_variation_id);
         this.fetchUnit();
       }
     },

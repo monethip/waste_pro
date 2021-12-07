@@ -136,7 +136,7 @@
           <v-card-text>
             <v-container>
               <v-form ref="form" lazy-validation>
-                <v-row>
+                <v-row class="mb-n4 mt-0">
                   <v-col cols="12">
                     <v-select
                       v-model="selectedPackage"
@@ -148,15 +148,15 @@
                       dense
                     ></v-select>
                     <p class="errors">
-                      {{ server_errors.package }}
+                      {{ server_errors.package_id }}
                     </p>
                   </v-col>
                 </v-row>
-                <v-row>
+                <v-row class="my-n4">
                   <v-col cols="12">
                     <v-menu
                       v-model="start_menu"
-                      :close-on-content-click="false"
+                      :close-on-content-click="true"
                       :nudge-right="40"
                       transition="scale-transition"
                       offset-y
@@ -173,11 +173,23 @@
                           dense
                         ></v-text-field>
                       </template>
-                      <v-date-picker v-model="start_date"></v-date-picker>
+                      <v-date-picker
+                        v-model="start_date"
+                        :allowed-dates="allowedDates"
+                      ></v-date-picker>
                     </v-menu>
                     <p class="errors">
                       {{ server_errors.start_month }}
                     </p>
+                  </v-col>
+                </v-row>
+                <v-row class="my-n4">
+                  <v-col cols="12">
+                    <v-checkbox v-model="can_collect">
+                      <template v-slot:label>
+                        <div>ເລີ່ມເກັບຂີ້ເຫື້ອຍເລີຍບໍ່ ?</div>
+                      </template>
+                    </v-checkbox>
                   </v-col>
                 </v-row>
               </v-form>
@@ -240,12 +252,12 @@ export default {
       search: "",
       oldVal: "",
       //Add Package
-      start_date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-        .toISOString()
-        .substr(0, 10),
+      start_date: "",
       start_menu: false,
+      allowedDates: (val) => new Date(val).getDate() === 1,
       packages: [],
       selectedPackage: "",
+      can_collect: false,
       server_errors: {},
       //Filter
       districts: [],
@@ -279,16 +291,6 @@ export default {
         { text: "ສະຖານະ", value: "status" },
         { text: "", value: "actions", sortable: false },
       ],
-      toast: {
-        value: true,
-        color: "success",
-        msg: "",
-      },
-      toast_error: {
-        value: true,
-        color: "error",
-        msg: "Something when wrong!",
-      },
     };
   },
   methods: {
@@ -383,16 +385,23 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.loading = false;
-              this.toast.msg = res.data.message;
-              this.$store.commit("Toast_State", this.toast);
               this.$store.commit("modalDelete_State", false);
               this.fetchData();
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
+              });
             }, 300);
           }
         })
-        .catch(() => {
+        .catch((error) => {
           this.fetchData();
-          this.$store.commit("Toast_State", this.toast_error);
+          this.$store.commit("Toast_State", {
+            value: true,
+            color: "error",
+            msg: error.response.data.message,
+          });
           this.$store.commit("modalDelete_State", false);
           this.loading = false;
         });
@@ -412,13 +421,21 @@ export default {
             setTimeout(() => {
               this.loading = false;
               this.fetchData();
-              this.$store.commit("Toast_State", this.toast);
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
+              });
             }, 300);
           }
         })
-        .catch(() => {
+        .catch((error) => {
           this.loading = false;
-          this.$store.commit("Toast_State", this.toast_error);
+          this.$store.commit("Toast_State", {
+            value: true,
+            color: "error",
+            msg: error.response.data.message,
+          });
           this.fetchData();
         });
     },
@@ -429,12 +446,14 @@ export default {
       this.customerId = id;
     },
     AddPackage() {
+      console.log(this.can_collect);
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
           .post("customer/" + this.customerId + "/add-package", {
             package_id: this.selectedPackage,
             start_month: this.start_date,
+            can_collect: this.can_collect,
           })
           .then((res) => {
             if (res.data.code == 200) {
@@ -442,17 +461,26 @@ export default {
                 this.loading = false;
                 this.closeAddModal();
                 this.selectedPackage = "";
+                this.customerId = "";
                 this.fetchData();
                 this.reset();
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", this.toast_error);
             this.fetchData();
             if (error.response.status == 422) {
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response.data.message,
+              });
               var obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
@@ -462,6 +490,9 @@ export default {
       }
     },
     closeAddModal() {
+      this.selectedPackage = "";
+      this.customerId = "";
+      this.start_date = "";
       this.$store.commit("modalAdd_State", false);
     },
     editPage(id) {
@@ -499,6 +530,12 @@ export default {
     },
     selectedStatus: function () {
       this.fetchData();
+    },
+    selectedPackage: function () {
+      this.server_errors.package_id = "";
+    },
+    start_date: function () {
+      this.server_errors.start_month = "";
     },
   },
   created() {

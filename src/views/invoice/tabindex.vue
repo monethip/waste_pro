@@ -15,7 +15,6 @@
           <v-tab href="#tab-5">ບິນທີ່ສຳເລັດ</v-tab>
         </v-tabs>
         <!-- <hr /> -->
-
         <v-tabs-items v-model="tab">
           <v-tab-item value="tab-1">
             <allInvoice />
