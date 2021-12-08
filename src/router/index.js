@@ -1,27 +1,17 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-//import Package from '../views/package/PackageInfo.vue'
-//import Village from '../views/village/VillageManage.vue'
 
 import Middlewares from '@/Middlewares/Index'
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/about',
-    name: 'Home',
-    component: Home,
-    meta: {
-      layout: "home"
-    }
-  },
-  {
     path: '/customer',
     name: 'Customer',
     component: () => import('../views/customer/Customer.vue'),
     meta: {
-      layout: "admin"
+      layout: "admin",
+      middleware: [Middlewares.auth],
     }
   },
   {
@@ -33,16 +23,10 @@ const routes = [
       middleware: [Middlewares.guest],
     }
   },
-  {
-    path: '/about',
-    name: 'About',
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  },
-
 
   //Admin Route
   {
-    path: '/',
+    path: '/dashboard',
     name: 'Dashboard',
     component: () => import('../views/dashboard/Dashboard.vue'),
     meta: {

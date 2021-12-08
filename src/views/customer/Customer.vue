@@ -158,7 +158,7 @@
       <template @close="close">
         <v-card>
           <v-card-title>
-            <span class="headline">ເພີ່ມແພັກເກດໃຫ້ລູກຄ້າ</span>
+            <p>ເພີ່ມແພັກເກດໃຫ້ລູກຄ້າ</p>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -210,7 +210,7 @@
                     </p>
                   </v-col>
                 </v-row>
-                <v-row class="my-n4">
+                <v-row class="my-n6">
                   <v-col cols="12">
                     <v-checkbox v-model="start_collect">
                       <template v-slot:label>
@@ -236,7 +236,7 @@
                 :disabled="loading"
                 @click="AddPackage()"
               >
-                Add
+                ເພີ່ມ
               </v-btn>
             </v-card-actions>
           </v-card-text>

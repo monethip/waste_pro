@@ -128,8 +128,8 @@
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </v-list-item>
-
-        <!--User groups-->
+        <!--
+    
         <v-list-group
           :prepend-icon="'mdi-account-group'"
           no-action
@@ -156,7 +156,7 @@
           </v-list-item>
         </v-list-group>
 
-        <!--Route plan-->
+   
         <v-list-group
           :prepend-icon="'mdi-map'"
           no-action
@@ -183,7 +183,7 @@
           </v-list-item>
         </v-list-group>
 
-        <!--Route plan-->
+       
         <v-list-group
           :prepend-icon="'mdi-note-outline'"
           no-action
@@ -210,7 +210,7 @@
           </v-list-item>
         </v-list-group>
 
-        <!--Report groups-->
+      
         <v-list-group
           :prepend-icon="'mdi-chart-bubble'"
           no-action
@@ -221,7 +221,7 @@
               <v-list-item-title>ລາຍງານ</v-list-item-title>
             </v-list-item-content>
           </template>
-          <!-- <div v-for="(item, k) in reports" :key="k" v-bind="$can(item.roles)">-->
+    
           <v-list-item
             exact
             color="primary-color"
@@ -234,6 +234,36 @@
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title v-text="item.title" />
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-group>
+-->
+        <!--Report groups-->
+        <v-list-group
+          v-for="(item, k) in group_menus"
+          :key="k"
+          :prepend-icon="item.icon"
+          no-action
+          color="indigo darken-4"
+        >
+          <template v-slot:activator>
+            <v-list-item-content>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item-content>
+          </template>
+
+          <v-list-item
+            exact
+            color="primary-color"
+            v-for="(i, k) in item.menu"
+            :key="k"
+            :to="i.to"
+          >
+            <v-list-item-action>
+              <v-icon>{{ i.icon }}</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title v-text="i.title" />
             </v-list-item-content>
           </v-list-item>
         </v-list-group>
@@ -260,8 +290,8 @@ export default {
         {
           icon: "mdi-apps",
           title: "ໜ້າຫຼັກ",
-          to: "/",
-          roles: ["admin", "super_admin"],
+          to: "/dashboard",
+          permissions: ["create_user"],
         },
         // {
         //   icon: "mdi-calendar-month-outline",
@@ -274,106 +304,226 @@ export default {
         //   to: "/village",
         // },
       ],
-
-      routes: [
+      group_menu: [
         {
-          icon: "mdi-sitemap",
-          title: "ເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ",
-          to: "/plan",
-          roles: ["admin", "super_admin"],
+          id: 1,
+          title: "ຈັດການຂໍ້ມູນ",
+          icon: "mdi-account-group",
+          menu: [
+            {
+              icon: "mdi-account-key",
+              title: "Roles",
+              to: "/role",
+              permissions: ["get_role", "create_role"],
+            },
+            {
+              icon: "mdi-account",
+              title: "Users",
+              to: "/user",
+              permissions: ["get_user"],
+            },
+            {
+              icon: "mdi-dump-truck",
+              title: "Drivers",
+              to: "/driver",
+              permissions: ["get_driver"],
+            },
+            {
+              icon: "mdi-account-group",
+              title: "Customer",
+              to: "/customer",
+              permissions: ["get_customer"],
+            },
+            {
+              icon: "mdi-package",
+              title: "ຈັດການແພັກເກດ",
+              to: "/package",
+              permissions: ["get_package"],
+            },
+            {
+              icon: "mdi-home-account",
+              title: "ຈັດການທີ່ຢູ່",
+              to: "/village",
+              permissions: ["create_address"],
+            },
+            {
+              icon: "mdi-home-account",
+              title: "ຈັດການລາຍລະອຽດທີ່ຢູ່",
+              to: "/village-variation",
+              permissions: ["create_address"],
+            },
+          ],
         },
         {
-          icon: "mdi-calendar-month",
-          title: "ຈັດແຜນເວລາເກັບຂີ້ເຫື້ຍອ",
-          to: "/calendar",
-          roles: ["admin", "super_admin"],
+          id: 2,
+          title: "ແຜນເສັ້ນທາງ",
+          icon: "mdi-map",
+          menu: [
+            {
+              icon: "mdi-sitemap",
+              title: "ເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ",
+              to: "/plan",
+              permissions: ["get_route_plan"],
+            },
+            {
+              icon: "mdi-calendar-month",
+              title: "ຈັດແຜນເວລາເກັບຂີ້ເຫື້ຍອ",
+              to: "/calendar",
+              permissions: ["update_plan_calendar"],
+            },
+          ],
         },
-      ],
-      invoices: [
         {
+          id: 3,
+          title: "ຈັດການບິນ",
           icon: "mdi-note-outline",
-          title: "ຈັດການຂໍ້ມູນບິນ",
-          to: "/invoice",
-          roles: ["admin", "super_admin"],
+          menu: [
+            {
+              icon: "mdi-note-outline",
+              title: "ຈັດການຂໍ້ມູນບິນ",
+              to: "/invoice",
+              permissions: ["get_invoice"],
+            },
+            {
+              icon: "mdi-close-circle-outline",
+              title: "ເຫດຜົນຍົກເລີກບິນ",
+              to: "/reject",
+              permissions: ["get_invoice"],
+            },
+          ],
         },
         {
-          icon: "mdi-close-circle-outline",
-          title: "ເຫດຜົນຍົກເລີກບິນ",
-          to: "/reject",
-          roles: ["admin", "super_admin"],
+          id: 4,
+          title: "ລາຍງານ",
+          icon: "mdi-chart-bubble",
+          menu: [
+            {
+              icon: "mdi-chart-bubble",
+              title: "ລາຍງານການເກັບຂີ້ເຫຍື້ອ",
+              to: "/report/trash",
+              permissions: [],
+            },
+            {
+              icon: "mdi-cash",
+              title: "ລາຍງານຂໍ້ມູນບັນຊີ",
+              to: "/report/invoice",
+              permissions: [],
+            },
+            {
+              icon: "mdi-account",
+              title: "ລາຍງານຂໍ້ມູນຄົນຂັບລົດ",
+              to: "/report/driver",
+              permissions: [],
+            },
+            {
+              icon: "mdi-account-group",
+              title: "ລາຍງານຂໍ້ມູນລູກຄ້າ",
+              to: "/report/customer",
+              permissions: [],
+            },
+          ],
         },
       ],
 
-      setting: [
-        {
-          icon: "mdi-account-key",
-          title: "Roles",
-          to: "/role",
-          roles: ["super_admin"],
-        },
-        {
-          icon: "mdi-account",
-          title: "Users",
-          to: "/user",
-          roles: ["super_admin"],
-        },
-        {
-          icon: "mdi-dump-truck",
-          title: "Drivers",
-          to: "/driver",
-          roles: ["super_admin"],
-        },
-        {
-          icon: "mdi-account-group",
-          title: "Customer",
-          to: "/customer",
-          roles: ["admin", "super_admin"],
-        },
-        {
-          icon: "mdi-package",
-          title: "ຈັດການແພັກເກດ",
-          to: "/package",
-          roles: ["admin", "super_admin"],
-        },
-        {
-          icon: "mdi-home-account",
-          title: "ຈັດການທີ່ຢູ່",
-          to: "/village",
-          roles: ["admin", "super_admin"],
-        },
-        {
-          icon: "mdi-home-account",
-          title: "ຈັດການລາຍລະອຽດທີ່ຢູ່",
-          to: "/village-variation",
-          roles: ["admin", "super_admin"],
-        },
-      ],
-      reports: [
-        {
-          icon: "mdi-chart-bubble",
-          title: "ລາຍງານການເກັບຂີ້ເຫຍື້ອ",
-          to: "/report/trash",
-          roles: ["admin"],
-        },
-        {
-          icon: "mdi-cash",
-          title: "ລາຍງານຂໍ້ມູນບັນຊີ",
-          to: "/report/invoice",
-          roles: ["admin", "super_admin"],
-        },
-        {
-          icon: "mdi-account",
-          title: "ລາຍງານຂໍ້ມູນຄົນຂັບລົດ",
-          to: "/report/driver",
-          roles: ["admin", "super_admin"],
-        },
-        {
-          icon: "mdi-account-group",
-          title: "ລາຍງານຂໍ້ມູນລູກຄ້າ",
-          to: "/report/customer",
-          roles: ["admin", "super_admin"],
-        },
-      ],
+      // routes: [
+      //   {
+      //     icon: "mdi-sitemap",
+      //     title: "ເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ",
+      //     to: "/plan",
+      //     permissions: ["get_route_plan"],
+      //   },
+      //   {
+      //     icon: "mdi-calendar-month",
+      //     title: "ຈັດແຜນເວລາເກັບຂີ້ເຫື້ຍອ",
+      //     to: "/calendar",
+      //     permissions: ["update_plan_calendar"],
+      //   },
+      // ],
+      // invoices: [
+      //   {
+      //     icon: "mdi-note-outline",
+      //     title: "ຈັດການຂໍ້ມູນບິນ",
+      //     to: "/invoice",
+      //     permissions: ["get_invoice"],
+      //   },
+      //   {
+      //     icon: "mdi-close-circle-outline",
+      //     title: "ເຫດຜົນຍົກເລີກບິນ",
+      //     to: "/reject",
+      //     permissions: ["get_invoice"],
+      //   },
+      // ],
+
+      // setting: [
+      //   {
+      //     icon: "mdi-account-key",
+      //     title: "Roles",
+      //     to: "/role",
+      //     permissions: ["get_role", "create_role"],
+      //   },
+      //   {
+      //     icon: "mdi-account",
+      //     title: "Users",
+      //     to: "/user",
+      //     permissions: ["create_user"],
+      //   },
+      //   {
+      //     icon: "mdi-dump-truck",
+      //     title: "Drivers",
+      //     to: "/driver",
+      //     permissions: ["get_driver"],
+      //   },
+      //   {
+      //     icon: "mdi-account-group",
+      //     title: "Customer",
+      //     to: "/customer",
+      //     permissions: ["get_customer"],
+      //   },
+      //   {
+      //     icon: "mdi-package",
+      //     title: "ຈັດການແພັກເກດ",
+      //     to: "/package",
+      //     permissions: ["get_package"],
+      //   },
+      //   {
+      //     icon: "mdi-home-account",
+      //     title: "ຈັດການທີ່ຢູ່",
+      //     to: "/village",
+      //     permissions: ["create_address"],
+      //   },
+      //   {
+      //     icon: "mdi-home-account",
+      //     title: "ຈັດການລາຍລະອຽດທີ່ຢູ່",
+      //     to: "/village-variation",
+      //     permissions: ["create_address"],
+      //   },
+      // ],
+      // reports: [
+      //   {
+      //     icon: "mdi-chart-bubble",
+      //     title: "ລາຍງານການເກັບຂີ້ເຫຍື້ອ",
+      //     to: "/report/trash",
+      //     permissions: [],
+      //   },
+      //   {
+      //     icon: "mdi-cash",
+      //     title: "ລາຍງານຂໍ້ມູນບັນຊີ",
+      //     to: "/report/invoice",
+      //     permissions: [],
+      //   },
+      //   {
+      //     icon: "mdi-account",
+      //     title: "ລາຍງານຂໍ້ມູນຄົນຂັບລົດ",
+      //     to: "/report/driver",
+      //     permissions: [],
+      //   },
+      //   {
+      //     icon: "mdi-account-group",
+      //     title: "ລາຍງານຂໍ້ມູນລູກຄ້າ",
+      //     to: "/report/customer",
+      //     permissions: [],
+      //   },
+      // ],
     };
   },
 
@@ -387,11 +537,27 @@ export default {
     ...mapGetters({
       userRole: "User/getUserRole",
     }),
+
+    // check permission
+    group_menus: function () {
+      return this.group_menu.filter((group) => {
+        // console.log(group.title);
+        return group.menu.filter((menu) => {
+          console.log(menu.permissions);
+          if (this.$can(menu.permissions)) {
+            return menu;
+          }
+        });
+      });
+      // return this.menu.filter((i) => i.permissions == "");
+    },
   },
   created() {
     this.userProfile = JSON.parse(window.localStorage.getItem("user"));
     this.name = this.userProfile.name.slice(0, 1);
     this.fetchData();
+    // console.log(this.group_menus);
+    // console.log(this.group_menu);
   },
   methods: {
     ...mapActions({

@@ -397,6 +397,7 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data;
+              console.log(this.data);
               this.selectedVillage = res.data.data.village_id;
               res.data.data.village_details.map((item) => {
                 this.village_variation_id = item.village_variation_id;
@@ -512,8 +513,12 @@ export default {
             if (res.data.code == 200) {
               setTimeout(() => {
                 this.data = {};
-                this.$store.commit("Toast_State", res.data.message);
                 this.loading = false;
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
                 this.$router.push({
                   name: "Customer",
                 });
@@ -528,9 +533,13 @@ export default {
                 this.server_errors[key] = customer[0];
               }
             }
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             this.loading = false;
             this.fetchData();
-            this.$store.commit("Toast_State", this.toast_error);
           });
       }
     },
@@ -543,6 +552,7 @@ export default {
         : `${CUSTOMIZE} ${this.latlng.lat}, ${this.latlng.lng}`;
     },
     onLocation(evt) {
+      console.log("OnLocation");
       this.latlng.lat = evt.latLng.lat();
       this.latlng.lng = evt.latLng.lng();
       this.address = this.createNewAddressName();
@@ -550,6 +560,7 @@ export default {
       this.data.lat = this.latlng.lng;
     },
     setPlace(place) {
+      console.log("Set Place");
       this.currentPlace = place;
       this.placeMarker();
     },
