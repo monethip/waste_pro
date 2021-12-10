@@ -4,38 +4,20 @@
       <v-btn text class="text-primary" @click="backPrevios()">
         <v-icon>mdi-chevron-left</v-icon></v-btn
       >
-      ລາຍລະອຽດລູກຄ້າ</v-breadcrumbs
+      ລາຍລະອຽດການເກັບຂີ້ເຫື້ຍອຂອງລູກຄ້າ</v-breadcrumbs
     >
     <v-card>
-      <!--
-      <div v-for="(item, index) in detail.media" :key="index">
-        <v-img :src="item.url" alt="Image" height="500px" dark> </v-img>
-      </div>
-      -->
-      <v-row>
-        <v-col
+      <v-carousel v-if="detail.media">
+        <v-carousel-item
+          height="auto"
           v-for="(item, index) in detail.media"
           :key="index"
-          class="d-flex child-flex"
-          cols="4"
-        >
-          <v-img
-            :src="item.url"
-            :lazy-src="item.thumb"
-            aspect-ratio="1"
-            class="grey lighten-2"
-          >
-            <template v-slot:placeholder>
-              <v-row class="fill-height ma-0" align="center" justify="center">
-                <v-progress-circular
-                  indeterminate
-                  color="grey lighten-5"
-                ></v-progress-circular>
-              </v-row>
-            </template>
-          </v-img>
-        </v-col>
-      </v-row>
+          :src="item.url"
+          @click="viewImage(item.url)"
+          reverse-transition="fade-transition"
+          transition="fade-transition"
+        ></v-carousel-item>
+      </v-carousel>
 
       <v-card-text>
         <v-container>
@@ -52,6 +34,23 @@
                   }}</v-list-item-title
                 >
                 <v-list-item-subtitle>ຊື່ ແລະ ນາມສະກຸນ</v-list-item-subtitle>
+              </v-list-item-content>
+              <v-spacer></v-spacer>
+              <v-list-item-icon>
+                <v-icon class="mr-6" color="indigo"
+                  >mdi-trash-can-outline</v-icon
+                >
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title v-if="detail.collection_type == 'bag'">
+                  {{ detail.bag }} ຖົງ</v-list-item-title
+                >
+                <v-list-item-title
+                  v-else-if="detail.collection_type == 'constainer'"
+                >
+                  {{ detail.container }} Container</v-list-item-title
+                >
+                <v-list-item-subtitle>ຈຳນວນ</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
             <v-divider inset></v-divider>
@@ -95,6 +94,21 @@
                   }}</v-list-item-subtitle>
                 </div>
               </v-list-item-content>
+              <v-spacer></v-spacer>
+              <v-list-item-icon>
+                <v-icon color="indigo" class="mr-6"> mdi-home-search </v-icon>
+              </v-list-item-icon>
+
+              <v-list-item-content>
+                <v-list-item-title>ສະຖານະ</v-list-item-title>
+                <div>
+                  <v-list-item-subtitle
+                    ><v-chip label color="success">{{
+                      detail.status
+                    }}</v-chip></v-list-item-subtitle
+                  >
+                </div>
+              </v-list-item-content>
             </v-list-item>
           </v-row>
 
@@ -131,6 +145,17 @@
         </v-card-actions>
       </v-card-text>
     </v-card>
+    <v-dialog v-model="fullImage" max-width="1300px">
+      <img
+        contain
+        :src="url"
+        width="auto"
+        height="auto"
+        max-height="1200px"
+        zoom="100"
+        @click.stop="fullImage = !true"
+      />
+    </v-dialog>
   </v-container>
 </template>
 
@@ -139,6 +164,8 @@ export default {
   props: ["items"],
   data() {
     return {
+      fullImage: false,
+      url: "",
       detail: {},
       //Map
       latlng: {
@@ -217,6 +244,10 @@ export default {
         name: "ViewCustomer",
         params: { id },
       });
+    },
+    viewImage(url) {
+      this.fullImage = true;
+      this.url = url;
     },
   },
   watch: {

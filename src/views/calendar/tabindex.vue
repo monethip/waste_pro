@@ -1,5 +1,11 @@
 <template>
   <v-container>
+    <v-breadcrumbs large class="pt-0">
+      <v-btn text class="text-primary" @click="backPrevios()">
+        <v-icon>mdi-chevron-left</v-icon></v-btn
+      >
+      ລາຍລະອຽດແຜນ</v-breadcrumbs
+    >
     <v-card elevation="1">
       <v-card-text>
         <v-tabs v-model="tab">
@@ -64,6 +70,15 @@ export default {
       tab: null,
     };
   },
+  methods: {
+    backPrevios() {
+      this.$router.go(-2);
+      // this.$router.push({
+      //   name: "PlanCalendar",
+      //   params: { id },
+      // });
+    },
+  },
   created() {
     if (this.$route.query.tab == "trash-all") {
       this.tab = "tab-1";
@@ -77,15 +92,10 @@ export default {
   watch: {
     tab: function (value) {
       if (value == "tab-1") {
-        this.statuses = [];
-        this.fetchData(this.statuses);
         this.$router
           .push({ name: "PlanCalendarDetail", query: { tab: "trash-all" } })
           .catch(() => {});
       } else if (value == "tab-2") {
-        this.statuses = [];
-        this.statuses = ["pending"];
-        this.fetchData(this.statuses);
         this.$router
           .push({
             name: "PlanCalendarDetail",
@@ -93,10 +103,6 @@ export default {
           })
           .catch(() => {});
       } else if (value == "tab-3") {
-        this.statuses = [];
-        this.statuses = ["success"];
-        // console.log(this.statuses);
-        this.fetchData(this.statuses);
         this.$router
           .push({
             name: "PlanCalendarDetail",

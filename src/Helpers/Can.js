@@ -4,18 +4,13 @@ export default (roles, allrequired = false) => {
 
     //const userPermissions = store.getters['User/getUserType'];
     const user_role = window.localStorage.getItem('user');
-    // const roless = user_role.map((item => item.reoles))
     const getRoles = JSON.parse(user_role);
-    // console.log(getRoles.role_permissions);
-    // console.log("Can");
     const role_permissions = getRoles.role_permissions.map(i => i.name);
     const permissions = getRoles.permissions.map(i => i.name);
-    // console.log(roleUsers);
-    // console.log(permissions)
-    // console.log(roleUsers.concat(permissions));
+    //Merge array
     let roleUsers = role_permissions.concat(permissions);
     roleUsers = [...new Set([...role_permissions, ...permissions])];
-    // console.log(roleUsers)
+
     // ກວດສອບກໍລະນີ userPermission || Permission ບໍ່ມີ Permission ລະບົບຈະ (Return False)...
     if (!roleUsers || !roles) {
         return canEnter;

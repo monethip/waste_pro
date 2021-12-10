@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row class="mb-n">
+    <v-row>
       <v-col>
         <v-btn class="btn-primary mr-6" @click="createPlan()"
           ><v-icon>mdi-plus</v-icon>
@@ -10,7 +10,7 @@
         </v-btn>
       </v-col>
       <v-col>
-        <h4>ແຜນຈັດເສັ້ນທາງການເກັບຂີ້ເຫຍືຍອ</h4>
+        <h4>ແຜນຈັດເສັ້ນທາງການເກັບຂີ້ເຫຍື້ອ</h4>
       </v-col>
       <!--
       <v-col>

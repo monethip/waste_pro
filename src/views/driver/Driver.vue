@@ -413,13 +413,13 @@ export default {
   data() {
     return {
       headers: [
-        { text: "Name", value: "name" },
-        { text: "Surname Name", value: "surname" },
-        { text: "Car Number", value: "car_number" },
-        { text: "Phone", value: "user.phone", sortable: false },
+        { text: "ຊື່", value: "name" },
+        { text: "ນາມສະກຸນ", value: "surname" },
+        { text: "ທະບຽນລົດ", value: "car_number" },
+        { text: "ເບີໂທ", value: "user.phone", sortable: false },
         { text: "Email", value: "user.email", sortable: false },
         { text: "Status", value: "status", sortable: false },
-        { text: "Image", value: "media", sortable: false },
+        { text: "Profile", value: "media", sortable: false },
         { text: "", value: "actions", sortable: false },
       ],
       loading: false,

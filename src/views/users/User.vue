@@ -34,7 +34,9 @@
             <template v-slot:item.roles="{ item }">
               <div>
                 <span v-for="(role, index) in item.roles" :key="index">
-                  {{ role.name }},
+                  <v-chip color="error" class="mr-1 my-1">
+                    {{ role.name }}
+                  </v-chip>
                 </span>
               </div>
             </template>
@@ -42,7 +44,9 @@
             <template v-slot:item.permissions="{ item }">
               <div>
                 <span v-for="(ps, index) in item.permissions" :key="index">
-                  <span>{{ ps.name }}, </span>
+                  <v-chip color="success" class="mr-1 my-1">{{
+                    ps.name
+                  }}</v-chip>
                 </span>
               </div>
             </template>
@@ -61,52 +65,40 @@
                   >
                 </template>
                 <v-list>
-                  <v-list-item link>
-                    <v-list-item-title @click="openModalRole(item)">
+                  <v-list-item link @click="openModalRole(item)">
+                    <v-list-item-title>
                       <v-icon small class="mr-2"> mdi-plus </v-icon>
                       ເພີ່ມ Role
                     </v-list-item-title>
                   </v-list-item>
-                  <v-list-item link>
-                    <v-list-item-title @click="openModalUpdateRole(item)">
-                      <v-icon
-                        small
-                        class="mr-2"
-                        @click="openModalUpdateRole(item)"
-                      >
-                        mdi-key-remove
-                      </v-icon>
+                  <v-list-item link @click="openModalUpdateRole(item)">
+                    <v-list-item-title>
+                      <v-icon small class="mr-2"> mdi-key-remove </v-icon>
                       ຖອນ Role
                     </v-list-item-title>
                   </v-list-item>
-                  <v-list-item link>
-                    <v-list-item-title @click="openModalPermission(item)">
+                  <v-list-item link @click="openModalPermission(item)">
+                    <v-list-item-title>
                       <v-icon small class="mr-2"> mdi-plus </v-icon>
                       ເພີ່ມ Permission
                     </v-list-item-title>
                   </v-list-item>
-                  <v-list-item link>
-                    <v-list-item-title @click="openModalUpdatePermissoin(item)">
-                      <v-icon
-                        small
-                        class="mr-2"
-                        @click="openModalUpdatePermissoin(item)"
-                      >
-                        mdi-key-remove
-                      </v-icon>
+                  <v-list-item link @click="openModalUpdatePermissoin(item)">
+                    <v-list-item-title>
+                      <v-icon small class="mr-2"> mdi-key-remove </v-icon>
                       ຖອນ Permission
                     </v-list-item-title>
                   </v-list-item>
 
-                  <v-list-item link>
-                    <v-list-item-title @click="OpenModalEdit(item)">
+                  <v-list-item link @click="OpenModalEdit(item)">
+                    <v-list-item-title>
                       <v-icon small class="mr-2"> mdi-pencil </v-icon>
                       ແກ້ໄຂ
                     </v-list-item-title>
                   </v-list-item>
 
-                  <v-list-item link>
-                    <v-list-item-title @click="deleteItem(item.id)">
+                  <v-list-item link @click="deleteItem(item.id)">
+                    <v-list-item-title>
                       <v-icon small> mdi-delete </v-icon>
                       ລຶບ
                     </v-list-item-title>
@@ -319,7 +311,7 @@
     </ModalEdit>
 
     <!--Add Role -->
-    <v-dialog v-model="roleDialog" max-width="720px">
+    <v-dialog v-model="roleDialog" max-width="720px" persistent>
       <v-card>
         <v-card-title>
           <span class="headline"
@@ -371,7 +363,7 @@
     </v-dialog>
 
     <!--Update Role -->
-    <v-dialog v-model="updateRoleDialog" max-width="720px">
+    <v-dialog v-model="updateRoleDialog" max-width="720px" persistent>
       <v-card>
         <v-card-title>
           <span class="headline"
@@ -423,7 +415,7 @@
     </v-dialog>
 
     <!--Add Permission -->
-    <v-dialog v-model="permissionDialog" max-width="720px">
+    <v-dialog v-model="permissionDialog" max-width="720px" persistent>
       <v-card>
         <v-card-title>
           <span class="headline"
@@ -475,7 +467,7 @@
     </v-dialog>
 
     <!--Update Permission -->
-    <v-dialog v-model="updatePermissionDialog" max-width="720px">
+    <v-dialog v-model="updatePermissionDialog" max-width="720px" persistent>
       <v-card>
         <v-card-title>
           <span class="headline"

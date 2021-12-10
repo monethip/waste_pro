@@ -83,7 +83,7 @@
                 label="Surname *"
                 required
                 v-model="data.surname"
-                :rules="nameRules"
+                :rules="surNameRules"
               ></v-text-field>
               <p class="errors">
                 {{ server_errors.surname }}
@@ -158,6 +158,7 @@
               <v-autocomplete
                 v-model="village_variation_id"
                 :items="village_details"
+                :rules="ruleVariation"
                 item-text="name"
                 item-value="id"
                 label="ກຸ່ມ / ຄຸ້ມ"
@@ -352,7 +353,7 @@ export default {
       currentPlace: null,
       markerOptions: {
         // eslint-disable-next-line global-require
-        url: require("@coms/../../src/assets/pin.png"),
+        url: require("@coms/../../src/assets/pin1.svg"),
         size: {
           width: 35,
           height: 55,
@@ -390,6 +391,11 @@ export default {
         (v) => !!v || "Name is required",
         (v) => (v && v.length >= 2) || "Name must be less than 2 characters",
       ],
+      surNameRules: [
+        (v) => !!v || "SurName is required",
+        (v) => (v && v.length >= 2) || "SurName must be less than 2 characters",
+      ],
+
       phoneRules: [
         (v) => !!v || "Phone is required",
         (v) =>
@@ -398,11 +404,8 @@ export default {
       ],
       houseNumberRules: [(v) => !!v || "House number is required"],
       ruleVillage: [(v) => !!v || "Village is required"],
+      ruleVariation: [(v) => !!v || "Variation is required"],
       rulesDistrict: [(v) => !!v || "District is required"],
-      rules: [
-        (v) => !!v || "File is required",
-        (v) => (v && v.size > 0) || "File is required",
-      ],
     };
   },
   methods: {
@@ -478,6 +481,7 @@ export default {
       this.$router.go(-1);
     },
     AddData() {
+      console.log(this.selectedVillageDetail);
       let formData = new FormData();
       this.image_list.map((item) => {
         formData.append("images[]", item);
@@ -506,7 +510,11 @@ export default {
             if (res.data.code == 200) {
               setTimeout(() => {
                 this.loading = false;
-                this.$store.commit("Toast_State", res.data.message);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
                 this.$router.push({
                   name: "Customer",
                 });
@@ -522,7 +530,11 @@ export default {
             }
             this.loading = false;
             this.fetchData();
-            this.$store.commit("Toast_State", this.toast_error);
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
           });
       }
     },
@@ -640,7 +652,6 @@ export default {
     },
     village_variation_id: function () {
       if (this.village_variation_id) {
-        console.log(this.village_variation_id);
         this.fetchUnit();
       }
     },

@@ -110,26 +110,26 @@
                         >
                       </template>
                       <v-list>
-                        <v-list-item link>
-                          <v-list-item-title @click="addPackage(item.id)">
-                            <v-icon small class="mr-2"> mdi-eye </v-icon>
+                        <v-list-item link @click="addPackage(item.id)">
+                          <v-list-item-title>
+                            <v-icon small class="mr-2">mdi-plus</v-icon>
                             ເພີ່ມແພັກເກດ
                           </v-list-item-title>
                         </v-list-item>
-                        <v-list-item link>
-                          <v-list-item-title @click="viewPage(item.id)">
+                        <v-list-item link @click="viewPage(item.id)">
+                          <v-list-item-title>
                             <v-icon small class="mr-2"> mdi-eye </v-icon>
                             ລາຍລະອຽດ
                           </v-list-item-title>
                         </v-list-item>
-                        <v-list-item link>
-                          <v-list-item-title @click="editPage(item.id)">
+                        <v-list-item link @click="editPage(item.id)">
+                          <v-list-item-title>
                             <v-icon small class="mr-2"> mdi-pencil </v-icon>
                             ແກ້ໄຂບິນ
                           </v-list-item-title>
                         </v-list-item>
-                        <v-list-item link>
-                          <v-list-item-title @click="deleteItem(item.id)">
+                        <v-list-item link @click="deleteItem(item.id)">
+                          <v-list-item-title>
                             <v-icon small> mdi-delete </v-icon>
                             ລຶບ
                           </v-list-item-title>

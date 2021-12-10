@@ -55,6 +55,7 @@ export default {
                             this.calendars = [],
                                 this.pagination = [],
                                 this.calendars = res.data.data.data;
+                            console.log(this.calendars)
                             this.summary = res.data.data.summary;
                             this.pagination = res.data.data.pagination;
                         }, 100);

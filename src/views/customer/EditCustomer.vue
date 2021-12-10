@@ -4,12 +4,9 @@
       <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
-      Update Customer</v-breadcrumbs
+      ແກ້ໄຂຂໍ້ມູນລູກຄ້າ</v-breadcrumbs
     >
     <v-card>
-      <v-card-title>
-        <span class="headline">Update Customer</span>
-      </v-card-title>
       <v-card-text>
         <v-container>
           <v-form ref="form" lazy-validation>
@@ -182,7 +179,7 @@
                 </p>
               </v-col>
               <v-col cols="6">
-                <v-select
+                <v-autocomplete
                   v-model="village_variation_id"
                   :items="village_details"
                   item-text="name"
@@ -190,7 +187,7 @@
                   label="ກຸ່ມ / ຄຸ້ມ"
                   multiple
                 >
-                </v-select>
+                </v-autocomplete>
                 <p class="errors">
                   {{ server_errors.village_details }}
                 </p>
@@ -276,10 +273,7 @@
                   :disableDefaultUI="true"
                 >
                   <GmapMarker
-                    :key="index"
-                    v-for="(m, index) in markers"
-                    :position="m.position"
-                    @click="latlng = m.position"
+                    :position="getMarkers(data)"
                     :draggable="true"
                     @dragend="onLocation"
                     :icon="markerOptions"
@@ -335,8 +329,8 @@ export default {
       image: [],
       //Map
       latlng: {
-        lat: 0,
-        lng: 0,
+        lat: 18.1189434,
+        lng: 102.290218,
       },
       markers: [],
       currentPlace: null,
@@ -381,10 +375,6 @@ export default {
       houseNumberRules: [(v) => !!v || "House number is required"],
       ruleVillage: [(v) => !!v || "Village is required"],
       rulesDistrict: [(v) => !!v || "District is required"],
-      rules: [
-        (v) => !!v || "File is required",
-        (v) => (v && v.size > 0) || "File is required",
-      ],
     };
   },
   methods: {
@@ -397,13 +387,12 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data;
-              console.log(this.data);
+              // console.log(this.data);
               this.selectedVillage = res.data.data.village_id;
               res.data.data.village_details.map((item) => {
                 this.village_variation_id = item.village_variation_id;
                 this.selectedVillageDetail = item.id;
               });
-              this.getCenter();
             }, 300);
           }
         })
@@ -466,6 +455,10 @@ export default {
     RemoveItem(item) {
       this.preview_list.splice(this.preview_list.indexOf(item), 1);
     },
+    removeItem(item) {
+      const index = this.selectedVillageDetail.indexOf(item.id);
+      if (index >= 0) this.selectedVillageDetail.splice(index, 1);
+    },
 
     previewMultiImage: function (event) {
       let input = event.target;
@@ -485,22 +478,25 @@ export default {
     },
 
     UpdateData() {
+      console.log(this.selectedVillageDetail);
       let formData = new FormData();
       this.image_list.map((item) => {
         formData.append("images[]", item);
       });
-      // console.log(this.selectedVillageDetail);
       // this.selectedVillageDetail.map((item) => {
       //   formData.append("village_details[]", item);
       // });
+      this.selectedVillageDetail.map((item) => {
+        formData.append("village_details[]", item);
+      });
       formData.append("name", this.data.name);
       formData.append("surname", this.data.surname);
       formData.append("village_id", this.selectedVillage);
       formData.append("house_number", this.data.house_number);
       formData.append("phone", this.data.user.phone);
       formData.append("email", this.data.user.email);
-      formData.append("lat", this.latlng.lat);
-      formData.append("lng", this.latlng.lng);
+      formData.append("lat", this.data.lat);
+      formData.append("lng", this.data.lng);
       formData.append("_method", "PUT");
 
       if (this.$refs.form.validate() == true) {
@@ -552,15 +548,13 @@ export default {
         : `${CUSTOMIZE} ${this.latlng.lat}, ${this.latlng.lng}`;
     },
     onLocation(evt) {
-      console.log("OnLocation");
       this.latlng.lat = evt.latLng.lat();
       this.latlng.lng = evt.latLng.lng();
       this.address = this.createNewAddressName();
       this.data.lat = this.latlng.lat;
-      this.data.lat = this.latlng.lng;
+      this.data.lng = this.latlng.lng;
     },
     setPlace(place) {
-      console.log("Set Place");
       this.currentPlace = place;
       this.placeMarker();
     },
@@ -618,14 +612,19 @@ export default {
           lng: parseFloat(this.data.lng),
         };
         return latlng;
+      } else {
+        return this.latlng;
       }
-      return this.latlng;
     },
     getMarkers(data) {
-      return {
-        lat: parseFloat(data.lat),
-        lng: parseFloat(data.lng),
-      };
+      if (data.lat != null) {
+        return {
+          lat: parseFloat(data.lat),
+          lng: parseFloat(data.lng),
+        };
+      } else {
+        return this.latlng;
+      }
     },
 
     fetchUnit() {
@@ -683,6 +682,8 @@ export default {
     //   // this.fetchUnits();
     // },
     village_variation_id: function () {
+      console.log("HI");
+      console.log(this.village_variation_id);
       if (this.village_variation_id) {
         this.fetchUnit();
       }

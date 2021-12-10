@@ -159,6 +159,7 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.calendars = res.data.data.data;
+              console.log(this.calendars);
               this.summary = res.data.data.summary;
               this.pagination = res.data.data.pagination;
             }, 100);
@@ -178,7 +179,6 @@ export default {
       else return "error";
     },
     getUnit(value) {
-      console.log(value);
       if (value == "bag") return "ຖົງ";
       else return "Container";
     },
