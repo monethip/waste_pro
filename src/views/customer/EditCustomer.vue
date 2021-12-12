@@ -185,7 +185,6 @@
                   item-text="name"
                   item-value="id"
                   label="ກຸ່ມ / ຄຸ້ມ"
-                  multiple
                 >
                 </v-autocomplete>
                 <p class="errors">
@@ -194,13 +193,12 @@
               </v-col>
 
               <v-col cols="6">
-                <v-select
+                <v-autocomplete
                   v-model="selectedVillageDetail"
                   :items="units"
                   item-text="name"
                   item-value="id"
                   label="ຮ່ອມ / ໜ່ວຍ"
-                  multiple
                 >
                   <template v-slot:selection="data">
                     <v-chip
@@ -213,26 +211,11 @@
                       {{ data.item.name }}
                     </v-chip>
                   </template>
-                </v-select>
+                </v-autocomplete>
                 <p class="errors">
                   {{ server_errors.village_details }}
                 </p>
               </v-col>
-              <!--
-              <v-col cols="6">
-                <v-select
-                  v-model="selectedVillageDetail"
-                  :items="units"
-                  item-text="name"
-                  item-value="id"
-                  label="ຮ່ອມ / ໜ່ວຍ"
-                  multiple
-                ></v-select>
-                <p class="errors">
-                  {{ server_errors.village_details }}
-                </p>
-              </v-col>
-              -->
 
               <!-- Gogle map-->
               <v-col cols="6">
@@ -478,7 +461,6 @@ export default {
     },
 
     UpdateData() {
-      console.log(this.selectedVillageDetail);
       let formData = new FormData();
       this.image_list.map((item) => {
         formData.append("images[]", item);
@@ -681,9 +663,12 @@ export default {
     //   console.log(this.selectedVillageDetail);
     //   // this.fetchUnits();
     // },
+    selectedVillageDetail: function () {
+      console.log("Hi");
+    },
+
     village_variation_id: function () {
-      console.log("HI");
-      console.log(this.village_variation_id);
+      // console.log(this.village_variation_id);
       if (this.village_variation_id) {
         this.fetchUnit();
       }
@@ -692,7 +677,6 @@ export default {
   mounted() {
     this.geolocate();
   },
-
   created() {
     this.fetchAddress();
     this.fetchData();

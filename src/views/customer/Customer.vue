@@ -476,9 +476,6 @@ export default {
       this.customerId = id;
     },
     AddPackage() {
-      console.log(this.start_collect);
-      console.log(this.selectedPackage);
-      console.log(this.start_date);
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios

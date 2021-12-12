@@ -133,15 +133,16 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
-  // {
-  //   path: '/addpackage',
-  //   name: 'Addpackage',
-  //   component: () => import('../views/package/PackageAddSize.vue'),
-  //   meta: {
-  //     layout: "admin",
-  //     middleware: [Middlewares.auth],
-  //   }
-  // },
+
+  {
+    path: '/vehicle',
+    name: 'Vehicle',
+    component: () => import('../views/vehicle/Vehicle.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
   {
     path: '/village-variation',
     name: 'VillageVariation',

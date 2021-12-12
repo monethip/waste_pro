@@ -1,0 +1,40 @@
+<template>
+  <v-container>
+    <div>
+      <v-card>
+        <v-tabs v-model="tab" dark background-color="tab-color lighten-2">
+          <v-tab href="#tab-1">ຂໍ້ມູນລົດ</v-tab>
+          <v-tab href="#tab-2">ຂໍ້ມູນປະເພດລົດ</v-tab>
+        </v-tabs>
+        <v-tabs-items v-model="tab">
+          <v-tab-item value="tab-1">
+            <Vehicle />
+          </v-tab-item>
+        </v-tabs-items>
+
+        <v-tabs-items v-model="tab">
+          <v-tab-item value="tab-2">
+            <vehicle-type />
+          </v-tab-item>
+        </v-tabs-items>
+      </v-card>
+    </div>
+  </v-container>
+</template>
+
+<script>
+import Vehicle from "../../components/vehicle/Vehicle.vue";
+import VehicleType from "../../components/vehicle/Vehicle_Type.vue";
+export default {
+  components: { Vehicle, VehicleType },
+  data() {
+    return {
+      tab: null,
+    };
+  },
+};
+</script>
+
+<style lang="scss">
+@import "../../../public/scss/main.scss";
+</style>

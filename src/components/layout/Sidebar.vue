@@ -226,7 +226,13 @@ export default {
               icon: "mdi-package",
               title: "ຈັດການແພັກເກດ",
               to: "/package",
-              permissions: ["get_package"],
+              permissions: ["get_package", "get_customer"],
+            },
+            {
+              icon: "mdi-car-multiple",
+              title: "ຈັດການລົດ",
+              to: "/vehicle",
+              permissions: ["get_vehicle"],
             },
             {
               icon: "mdi-home-account",

@@ -3,7 +3,7 @@
     <v-row class="mb-n6 text-right">
       <v-col>
         <v-card-title>
-          ຂໍ້ມູນແພັກເກດ
+          ຂໍ້ມູນລົດ
           <v-spacer></v-spacer>
           <v-btn color="info" medium @click="OpenModalAdd()"
             ><v-icon color>mdi-plus</v-icon>
@@ -11,7 +11,7 @@
         </v-card-title>
       </v-col>
     </v-row>
-    <v-data-table :headers="header" :items="packages" hide-default-footer>
+    <v-data-table :headers="header" :items="data" hide-default-footer>
       <template v-slot:[`item.created_at`]="{ item }">
         <div>{{ moment(item.created_at).format("DD-MM-YY hh:mm") }}</div>
       </template>
@@ -24,7 +24,6 @@
         </v-icon>
       </template>
     </v-data-table>
-    <!--
     <template>
       <Pagination
         v-if="pagination.total_pages > 1"
@@ -33,14 +32,13 @@
         @paginate="fetchData()"
       ></Pagination>
     </template>
-    -->
 
     <!-- Add Modal -->
     <ModalAdd>
       <template @close="close">
         <v-card>
           <v-card-title>
-            <p>ເພີ່ມແພັກເກດ</p>
+            <p>ເພີ່ມລົດ</p>
             <v-spacer></v-spacer>
           </v-card-title>
           <v-card-text>
@@ -49,43 +47,41 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      v-model="addpackage.name"
-                      label="Package Name *"
-                      :rules="nameRules"
+                      v-model="vehicle.car_number"
+                      label="ທະບຽນລົດ *"
+                      :rules="numberRules"
                     ></v-text-field>
                     <p class="errors">
-                      {{ server_errors.name }}
+                      {{ server_errors.car_number }}
                     </p>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col>
                     <v-text-field
-                      v-model="addpackage.price"
-                      label="Price *"
-                      type="number"
-                      class="input-number"
+                      v-model="vehicle.car_id"
+                      label="ID *"
                       required
-                      :rules="bagRules"
+                      :rules="carIdRules"
                     ></v-text-field>
                     <p class="errors">
-                      {{ server_errors.price }}
+                      {{ server_errors.car_id }}
                     </p>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col>
                     <v-autocomplete
-                      v-model="selectedPackageSize"
-                      :items="packageSize"
-                      item-text="size"
+                      v-model="selectedVehicleType"
+                      :items="vehicleType"
+                      item-text="name"
                       item-value="id"
-                      label="ເລືອກຂະໜາດແພັກເກດ"
+                      label="ເລືອກປະເພດລົດ"
                       dense
-                      :rules="ruleSize"
+                      :rules="typeRules"
                     ></v-autocomplete>
                     <p class="errors">
-                      {{ server_errors.package_size_id }}
+                      {{ server_errors.vehicle_type_id }}
                     </p>
                   </v-col>
                 </v-row>
@@ -94,7 +90,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="closeAddModal()">
-                Close
+                ຍົກເລີກ
               </v-btn>
               <v-btn
                 color="blue darken-1"
@@ -103,7 +99,7 @@
                 :disabled="loading"
                 @click="AddItem()"
               >
-                Save
+                ບັນທຶກ
               </v-btn>
             </v-card-actions>
           </v-card-text>
@@ -116,7 +112,7 @@
       <template @close="close">
         <v-card>
           <v-card-title>
-            <span class="headline">Edit Package</span>
+            <p>ແກ້ໄຂຂໍ້ມູນລົດ</p>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -124,9 +120,9 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      v-model="editPackage.name"
-                      label="Package Name *"
-                      :rules="nameRules"
+                      v-model="editVehicle.car_number"
+                      label="ທະບຽນລົດ *"
+                      :rules="numberRules"
                     ></v-text-field>
                     <p class="errors">
                       {{ server_errors.name }}
@@ -136,31 +132,29 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      v-model="editPackage.price"
-                      label="Price *"
-                      type="number"
-                      class="input-number"
+                      v-model="editVehicle.car_id"
+                      label="ID *"
                       required
-                      :rules="bagRules"
+                      :rules="carIdRules"
                     ></v-text-field>
                     <p class="errors">
-                      {{ server_errors.price }}
+                      {{ server_errors.car_id }}
                     </p>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col>
                     <v-autocomplete
-                      v-model="editPackage.package_size_id"
-                      :items="packageSize"
-                      item-text="size"
+                      v-model="editVehicle.vehicle_type_id"
+                      :items="vehicleType"
+                      item-text="name"
                       item-value="id"
-                      label="ເລືອກຂະໜາດແພັກເກດ"
+                      label="ເລືອກປະເພດລົດ"
                       dense
-                      :rules="ruleSize"
+                      :rules="typeRules"
                     ></v-autocomplete>
                     <p class="errors">
-                      {{ server_errors.package_size_id }}
+                      {{ server_errors.vehicle_type_id }}
                     </p>
                   </v-col>
                 </v-row>
@@ -209,13 +203,13 @@
 export default {
   data() {
     return {
-      packages: [],
-      addpackage: {},
-      editPackage: {},
+      data: [],
+      vehicle: {},
+      editVehicle: {},
+      vehicle_id: "",
       loading: false,
-      selectedPackageSize: "",
-      packageSize: [],
-      pakage_id: "",
+      selectedVehicleType: "",
+      vehicleType: [],
       server_errors: {},
       //Pagination
       offset: 12,
@@ -223,18 +217,16 @@ export default {
       per_page: 12,
 
       header: [
-        { text: "ຊື່ແພັກເກດ", value: "name" },
-        { text: "ລາຄາ", value: "price" },
+        { text: "ID", value: "car_id" },
+        { text: "ທະບຽນລົດ", value: "car_number" },
+        { text: "ປະເພດລົດ", value: "vehicle_type.name" },
+        { text: "ຜູ້ຮັບຜິດຊອບ", value: "driver.name" },
         { text: "Created", value: "created_at" },
         { text: "Actions", value: "action" },
       ],
-      nameRules: [(v) => !!v || "Package Name is required"],
-      bagRules: [
-        (v) => !!v || "Price is required",
-        (v) =>
-          Number.isInteger(Number(v)) || "The value must be an integer number",
-      ],
-      ruleSize: [(v) => !!v || "Package Size is required"],
+      numberRules: [(v) => !!v || "Car Number is required"],
+      carIdRules: [(v) => !!v || "Car Id is required"],
+      typeRules: [(v) => !!v || "Vehicle Type is required"],
     };
   },
 
@@ -245,7 +237,7 @@ export default {
 
     OpenModalAdd() {
       this.$store.commit("modalAdd_State", true);
-      this.fetchPackageSize();
+      this.fetchVehicleType();
     },
     closeAddModal() {
       this.$store.commit("modalAdd_State", false);
@@ -253,9 +245,9 @@ export default {
     AddItem() {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
-        this.addpackage.package_size_id = this.selectedPackageSize;
+        this.vehicle.vehicle_type_id = this.selectedVehicleType;
         this.$axios
-          .post("package", this.addpackage)
+          .post("vehicle", this.vehicle)
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
@@ -291,27 +283,26 @@ export default {
 
     closeUpdate() {
       this.reset(),
-        (this.editPackage = {}),
+        (this.editVehicle = {}),
         this.fetchData(),
         this.$store.commit("modalEdit_State", false);
     },
 
     OpenModalEdit(item) {
-      this.fetchPackageSize();
-      this.editPackage = item;
+      this.fetchVehicleType();
+      this.editVehicle = item;
       this.$store.commit("modalEdit_State", true);
     },
 
     UpdateItem() {
-      let formData = new FormData();
-      formData.append("name", this.editPackage.name);
-      formData.append("price", this.editPackage.price);
-      formData.append("package_size_id", this.editPackage.package_size_id);
-      formData.append("_method", "PUT");
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .post("package/" + this.editPackage.id, formData)
+          .put("vehicle/" + this.editVehicle.id, {
+            car_number: this.editVehicle.car_number,
+            car_id: this.editVehicle.car_id,
+            vehicle_type_id: this.editVehicle.vehicle_type_id,
+          })
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
@@ -345,7 +336,7 @@ export default {
       }
     },
     deleteItem(id) {
-      this.package_id = id;
+      this.vehicle_id = id;
       this.$store.commit("modalDelete_State", true);
     },
     closeDelete() {
@@ -354,7 +345,7 @@ export default {
     deleteItemConfirm() {
       this.loading = true;
       this.$axios
-        .delete("package/" + this.package_id)
+        .delete("vehicle/" + this.vehicle_id)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
@@ -378,7 +369,7 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("package", {
+        .get("vehicle", {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
@@ -388,9 +379,8 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
-              this.packages = res.data.data.data;
-              // this.pagination = res.data.data.pagination;
-              // console.log(this.pagination);
+              this.data = res.data.data.data;
+              this.pagination = res.data.data.pagination;
             }, 300);
           }
         })
@@ -406,13 +396,13 @@ export default {
         });
     },
 
-    fetchPackageSize() {
+    fetchVehicleType() {
       this.$axios
-        .get("package-size")
+        .get("vehicle_type")
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.packageSize = res.data.data;
+              this.vehicleType = res.data.data;
             }, 100);
           }
         })
@@ -420,14 +410,14 @@ export default {
     },
   },
   watch: {
-    selectedPackageSize() {
-      this.server_errors.package_size_id = "";
+    selectedVehicleType() {
+      this.server_errors.vehicle_type_id = "";
     },
-    "addpackage.price": function () {
-      this.server_errors.price = "";
+    "vehicle.car_number": function () {
+      this.server_errors.car_number = "";
     },
-    "addpackage.name": function () {
-      this.server_errors.name = "";
+    "vehicle.car_id": function () {
+      this.server_errors.car_id = "";
     },
   },
   created() {
