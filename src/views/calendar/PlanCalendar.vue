@@ -402,7 +402,6 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.calendars = res.data.data.data;
-              console.log(this.calendars);
               this.pagination = res.data.data.pagination;
             }, 100);
           }
@@ -545,11 +544,9 @@ export default {
                 msg: error.response.data.message,
               });
               var obj = error.response.data.errors;
-              console.log(obj);
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
               }
-              console.log(this.server_errors);
             }
           });
       }
@@ -564,7 +561,6 @@ export default {
       this.fetchRoutePlan();
       this.fetchDriver();
       this.calendarEdit = item;
-      console.log(this.calendarEdit);
       this.$store.commit("modalEdit_State", true);
     },
     UpdatePlan() {

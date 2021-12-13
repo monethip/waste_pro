@@ -51,8 +51,7 @@
                   </template>
                 </v-list-item-group>
               </v-list>
-
-              <v-divider class="my-3"></v-divider>
+              <v-divider></v-divider>
               <v-list-item @click="viewAllNoti">
                 <div class="mx-auto text-center">
                   <span class="primary-color">ອ່ານທັງໝົດ</span>
@@ -230,7 +229,7 @@ export default {
             },
             {
               icon: "mdi-car-multiple",
-              title: "ຈັດການລົດ",
+              title: "ຈັດການພາຫະນະ",
               to: "/vehicle",
               permissions: ["get_vehicle"],
             },
@@ -291,7 +290,7 @@ export default {
         {
           id: 4,
           title: "ລາຍງານ",
-          icon: "mdi-chart-bubble",
+          icon: "mdi-finance",
           group_permissions: ["get_invoice", "get_driver"],
           menu: [
             {
@@ -307,13 +306,13 @@ export default {
               permissions: [],
             },
             {
-              icon: "mdi-account",
+              icon: "mdi-chart-areaspline",
               title: "ລາຍງານຂໍ້ມູນຄົນຂັບລົດ",
               to: "/report/driver",
               permissions: ["get_driver"],
             },
             {
-              icon: "mdi-account-group",
+              icon: "mdi-chart-bar",
               title: "ລາຍງານຂໍ້ມູນລູກຄ້າ",
               to: "/report/customer",
               permissions: ["get_customer"],

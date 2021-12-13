@@ -254,7 +254,6 @@ export default {
       });
     },
     viewPage(id) {
-      console.log(id);
       this.$router.push({
         name: "ViewCustomer",
         params: { id },

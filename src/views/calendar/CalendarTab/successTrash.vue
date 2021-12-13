@@ -150,7 +150,6 @@ export default {
       else return "error";
     },
     getUnit(value) {
-      console.log(value);
       if (value == "bag") return "ຖົງ";
       else return "Container";
     },

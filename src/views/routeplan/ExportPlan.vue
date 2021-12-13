@@ -38,7 +38,7 @@
     <v-row class="mb-n6">
       <v-col>
         <v-btn class="btn-primary" @click="createPage()"
-          ><v-icon>mdi-arrow-right-bold-circle-outline</v-icon>
+          >Next <v-icon>mdi-arrow-right-bold-circle-outline</v-icon>
         </v-btn>
       </v-col>
       <v-col>
@@ -69,6 +69,7 @@
         ></v-autocomplete>
       </v-col>
       -->
+      <!--
       <v-col>
         <v-text-field
           outlined
@@ -82,6 +83,7 @@
         >
         </v-text-field>
       </v-col>
+      -->
     </v-row>
     <!--
     <v-row class="mb-n4">
@@ -345,7 +347,7 @@ export default {
     },
 
     createPage() {
-      // console.log(this.customers);
+      //  var a = [];
       if (this.customers.length > 0 && this.selectedVillage.length > 0) {
         this.$router.push({
           name: "CreateExportPlan",

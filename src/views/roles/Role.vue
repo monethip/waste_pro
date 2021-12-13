@@ -12,6 +12,7 @@
         <v-card class="pa-2">
           <v-card-title>
             ຂໍ້ມູນ Roles
+            <v-divider class="mx-4" vertical></v-divider>
             <v-spacer></v-spacer>
             <v-text-field
               v-model="search"
@@ -652,7 +653,6 @@ export default {
       }
     },
     removeItem(item) {
-      console.log(item);
       const index = this.selectedPermission.indexOf(item.id);
       if (index >= 0) this.selectedPermission.splice(index, 1);
     },

@@ -3,10 +3,10 @@
     <v-row>
       <v-col>
         <v-btn class="btn-primary mr-6" @click="createPlan()"
-          ><v-icon>mdi-plus</v-icon>
+          ><v-icon>mdi-plus </v-icon> Add
         </v-btn>
         <v-btn class="btn-primary" @click="createPage()"
-          ><v-icon>mdi-application-export</v-icon>
+          ><v-icon>mdi-application-export </v-icon> Export File
         </v-btn>
       </v-col>
       <v-col>

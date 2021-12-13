@@ -11,7 +11,8 @@
       <v-col>
         <v-card class="pa-2">
           <v-card-title>
-            ຂໍ້ມູນ Users
+            ຂໍ້ມູນ Users ({{ pagination.total }})
+            <v-divider class="mx-4" vertical></v-divider>
             <v-spacer></v-spacer>
             <v-text-field
               v-model="search"

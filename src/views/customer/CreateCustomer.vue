@@ -481,7 +481,6 @@ export default {
       this.$router.go(-1);
     },
     AddData() {
-      console.log(this.selectedVillageDetail);
       let formData = new FormData();
       this.image_list.map((item) => {
         formData.append("images[]", item);

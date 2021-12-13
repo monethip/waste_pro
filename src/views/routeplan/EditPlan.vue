@@ -87,7 +87,6 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.plan = res.data.data;
-              console.log(this.plan);
             }, 300);
           }
         })

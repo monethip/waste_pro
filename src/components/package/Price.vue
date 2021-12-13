@@ -177,7 +177,6 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.packagessize = res.data.data.data;
-              console.log(this.packagessize);
               this.pagination = res.data.data.pagination;
             }, 300);
           }

@@ -390,7 +390,6 @@ export default {
               this.$store.commit("Loading_State", false);
               this.packages = res.data.data.data;
               // this.pagination = res.data.data.pagination;
-              // console.log(this.pagination);
             }, 300);
           }
         })

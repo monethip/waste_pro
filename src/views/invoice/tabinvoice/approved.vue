@@ -9,93 +9,85 @@
       </v-col>
     </v-row>
     <div>
-      <v-card elevation="0">
-        <v-card-text>
-          <v-data-table
-            :headers="headers"
-            :items="invoices"
-            :disable-pagination="true"
-            hide-default-footer
-            fixed-header
-            height="100vh"
-          >
-            <template v-slot:item.media="{ item }">
-              <v-avatar
-                size="36px"
-                v-for="(img, index) in item.media"
-                :key="index"
+      <v-data-table
+        :headers="headers"
+        :items="invoices"
+        :disable-pagination="true"
+        hide-default-footer
+        fixed-header
+        height="100vh"
+      >
+        <template v-slot:item.media="{ item }">
+          <v-avatar size="36px" v-for="(img, index) in item.media" :key="index">
+            <img v-if="img.thumb" :src="img.thumb" />
+          </v-avatar>
+        </template>
+        <template v-slot:item.total_bag="{ item }">
+          <v-chip color="success">{{ item.total_bag }}</v-chip>
+        </template>
+        <template v-slot:item.exceed_bag="{ item }">
+          <v-chip color="error">{{ item.exceed_bag }}</v-chip>
+        </template>
+        <template v-slot:item.exceed_bag_charge="{ item }">
+          <div>
+            {{ Intl.NumberFormat().format(item.exceed_bag_charge) }}
+          </div>
+        </template>
+        <template v-slot:item.new_exceed_bag_charge="{ item }">
+          <div class="error--text">
+            {{ Intl.NumberFormat().format(item.new_exceed_bag_charge) }}
+          </div>
+        </template>
+        <template v-slot:item.sub_total="{ item }">
+          <div>
+            {{ Intl.NumberFormat().format(item.sub_total) }}
+          </div>
+        </template>
+
+        <template v-slot:item.total="{ item }">
+          <div>
+            {{ Intl.NumberFormat().format(item.total) }}
+          </div>
+        </template>
+
+        <template v-slot:item.actions="{ item }">
+          <v-menu offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon
+                color="primary"
+                dark
+                v-bind="attrs"
+                v-on="on"
+                medium
+                class="mr-2"
+                >mdi-dots-vertical</v-icon
               >
-                <img v-if="img.thumb" :src="img.thumb" />
-              </v-avatar>
             </template>
-            <template v-slot:item.total_bag="{ item }">
-              <v-chip color="success">{{ item.total_bag }}</v-chip>
-            </template>
-            <template v-slot:item.exceed_bag="{ item }">
-              <v-chip color="error">{{ item.exceed_bag }}</v-chip>
-            </template>
-            <template v-slot:item.exceed_bag_charge="{ item }">
-              <div>
-                {{ Intl.NumberFormat().format(item.exceed_bag_charge) }}
-              </div>
-            </template>
-            <template v-slot:item.new_exceed_bag_charge="{ item }">
-              <div class="error--text">
-                {{ Intl.NumberFormat().format(item.new_exceed_bag_charge) }}
-              </div>
-            </template>
-            <template v-slot:item.sub_total="{ item }">
-              <div>
-                {{ Intl.NumberFormat().format(item.sub_total) }}
-              </div>
-            </template>
-
-            <template v-slot:item.total="{ item }">
-              <div>
-                {{ Intl.NumberFormat().format(item.total) }}
-              </div>
-            </template>
-
-            <template v-slot:item.actions="{ item }">
-              <v-menu offset-y>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-icon
-                    color="primary"
-                    dark
-                    v-bind="attrs"
-                    v-on="on"
-                    medium
-                    class="mr-2"
-                    >mdi-dots-vertical</v-icon
-                  >
-                </template>
-                <v-list>
-                  <v-list-item link>
-                    <v-list-item-title @click="viewPage(item.id)">
-                      <v-icon small> mdi-eye </v-icon>
-                      ລາຍລະອຽດ
-                    </v-list-item-title>
-                  </v-list-item>
-                  <v-list-item link>
-                    <v-list-item-title @click="PaymentPage(item.id)">
-                      <v-icon small> mdi-credit-card </v-icon>
-                      ຊຳລະບິນ
-                    </v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
-            </template> </v-data-table
-          ><br />
-          <template>
-            <Pagination
-              v-if="pagination.total_pages > 1"
-              :pagination="pagination"
-              :offset="offset"
-              @paginate="fetchData()"
-            ></Pagination>
-          </template>
-        </v-card-text>
-      </v-card>
+            <v-list>
+              <v-list-item link>
+                <v-list-item-title @click="viewPage(item.id)">
+                  <v-icon small> mdi-eye </v-icon>
+                  ລາຍລະອຽດ
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item link>
+                <v-list-item-title @click="PaymentPage(item.id)">
+                  <v-icon small> mdi-credit-card </v-icon>
+                  ຊຳລະບິນ
+                </v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </template> </v-data-table
+      ><br />
+      <template>
+        <Pagination
+          v-if="pagination.total_pages > 1"
+          :pagination="pagination"
+          :offset="offset"
+          @paginate="fetchApproveData()"
+        ></Pagination>
+      </template>
     </div>
   </div>
 </template>
@@ -103,6 +95,7 @@
 <script>
 export default {
   name: "Approved",
+  props: ["tab"],
   data() {
     return {
       loading: false,
@@ -159,7 +152,7 @@ export default {
       this.image = input.files[0];
       this.imageUrl = URL.createObjectURL(file);
     },
-    fetchData() {
+    fetchApproveData() {
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("plan-month/" + this.$route.params.id + "/invoice", {
@@ -206,7 +199,7 @@ export default {
               setTimeout(() => {
                 this.loading = false;
                 this.closeEditModal();
-                this.fetchData();
+                this.fetchApproveData();
                 this.$refs.form.reset();
                 this.$store.commit("Toast_State", {
                   value: true,
@@ -229,7 +222,7 @@ export default {
                 this.server_errors[key] = customer[0];
               }
             }
-            this.fetchData();
+            this.fetchApproveData();
           });
       }
     },
@@ -241,16 +234,21 @@ export default {
       });
     },
     PaymentPage(id) {
-      console.log(id);
       this.$router.push({
         name: "Payment",
         params: { id },
       });
     },
   },
-
+  watch: {
+    tab: function () {
+      if (this.tab == "tab-2") {
+        this.fetchApproveData();
+      }
+    },
+  },
   created() {
-    this.fetchData();
+    this.fetchApproveData();
   },
 };
 </script>

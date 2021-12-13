@@ -17,7 +17,11 @@
         <!-- <hr /> -->
         <v-tabs-items v-model="tab">
           <v-tab-item value="tab-1">
-            <allInvoice />
+            <v-card flat>
+              <v-card-text>
+                <allInvoice :tab="tab" />
+              </v-card-text>
+            </v-card>
           </v-tab-item>
         </v-tabs-items>
 
@@ -25,7 +29,7 @@
           <v-tab-item value="tab-2">
             <v-card flat>
               <v-card-text>
-                <approvedInvoice />
+                <approvedInvoice :tab="tab" />
               </v-card-text>
             </v-card>
           </v-tab-item>
@@ -34,21 +38,21 @@
         <v-tabs-items v-model="tab">
           <v-tab-item value="tab-3">
             <v-card flat>
-              <v-card-text> <confirmPayment /> </v-card-text>
+              <v-card-text> <confirmPayment :tab="tab" /> </v-card-text>
             </v-card>
           </v-tab-item>
         </v-tabs-items>
         <v-tabs-items v-model="tab">
           <v-tab-item value="tab-4">
             <v-card flat>
-              <v-card-text> <reject /> </v-card-text>
+              <v-card-text> <reject :tab="tab" /> </v-card-text>
             </v-card>
           </v-tab-item>
         </v-tabs-items>
         <v-tabs-items v-model="tab">
           <v-tab-item value="tab-5">
             <v-card flat>
-              <v-card-text> <success /> </v-card-text>
+              <v-card-text> <success :tab="tab" /> </v-card-text>
             </v-card>
           </v-tab-item>
         </v-tabs-items>
@@ -74,18 +78,9 @@ export default {
   data() {
     return {
       tab: null,
-      // countAll: null,
-      // countApprove: null,
-      // countToconfirm: null,
-      // countReject: null,
-      // countSuccess: null,
     };
   },
-  methods: {
-    backPrevios() {
-      this.$router.go(-1);
-    },
-  },
+  methods: {},
   created() {
     if (this.$route.query.tab == "invoice-all") {
       this.tab = "tab-1";

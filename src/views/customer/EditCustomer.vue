@@ -370,7 +370,6 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data;
-              // console.log(this.data);
               this.selectedVillage = res.data.data.village_id;
               res.data.data.village_details.map((item) => {
                 this.village_variation_id = item.village_variation_id;

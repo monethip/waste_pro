@@ -219,7 +219,6 @@ export default {
   },
   methods: {
     fetchData() {
-      console.log(this.selectedStatus);
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("driver", {
@@ -324,7 +323,6 @@ export default {
               fileLink.href = fileUrl;
               fileLink.setAttribute("download", "driver" + ".xlsx");
               document.body.appendChild(fileLink);
-              console.log(fileLink);
               fileLink.click();
               document.body.removeChild(fileLink);
             }, 300);

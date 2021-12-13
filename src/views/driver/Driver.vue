@@ -11,8 +11,21 @@
       <v-col>
         <v-card class="pa-2">
           <v-card-title>
-            ຂໍ້ມູນ Driver
+            ຂໍ້ມູນພະນັກງານຂັບລົດ ({{ pagination.total }})
+            <v-divider class="mx-4" vertical></v-divider>
             <v-spacer></v-spacer>
+            <!--
+            <v-select
+              outlined
+              dense
+              :items="statuses"
+              v-model="selectedStatus"
+              item-text="name"
+              item-value="name"
+              label="ສະຖານະ"
+            ></v-select>
+            <v-spacer></v-spacer>
+                        -->
             <v-text-field
               v-model="search"
               clearable
@@ -73,7 +86,7 @@
       <template @close="close">
         <v-card>
           <v-card-title>
-            <span class="headline">Add Driver</span>
+            <p>ເພີ່ມພະນັກງານຂັບລົດ</p>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -173,19 +186,22 @@
                       {{ server_errors.email }}
                     </p>
                   </v-col>
+
                   <v-col cols="12">
-                    <v-text-field
-                      label="ທະບຽນລົດ *"
-                      required
-                      v-model="user.car_number"
-                      :rules="carnumberRules"
-                      type="number"
-                      class="input-number"
-                    ></v-text-field>
+                    <v-autocomplete
+                      v-model="selectedVehicle"
+                      :items="vehicle"
+                      item-text="car_number"
+                      item-value="id"
+                      label="ເລືອກລົດ"
+                      dense
+                      :rules="vehicleRules"
+                    ></v-autocomplete>
                     <p class="errors">
-                      {{ server_errors.car_number }}
+                      {{ server_errors.vehicle_id }}
                     </p>
                   </v-col>
+
                   <v-col cols="6">
                     <v-text-field
                       label="Password *"
@@ -217,7 +233,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="closeAddModal()">
-                Close
+                ຍົກເລີກ
               </v-btn>
               <v-btn
                 color="blue darken-1"
@@ -226,7 +242,7 @@
                 :disabled="loading"
                 @click="AddItem()"
               >
-                Save
+                ບັນທຶກ
               </v-btn>
             </v-card-actions>
           </v-card-text>
@@ -239,7 +255,7 @@
       <template @close="close" v-slot="">
         <v-card>
           <v-card-title>
-            <span class="headline">Update Driver</span>
+            <p>ແກ້ໄຂພະນັກງານຂັບລົດ</p>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -350,16 +366,17 @@
                     </p>
                   </v-col>
                   <v-col cols="12">
-                    <v-text-field
-                      label="ທະບຽນລົດ *"
-                      required
-                      v-model="edit_driver.car_number"
-                      :rules="carnumberRules"
-                      type="number"
-                      class="input-number"
-                    ></v-text-field>
+                    <v-autocomplete
+                      v-model="edit_driver.vehicle_id"
+                      :items="vehicle"
+                      item-text="car_number"
+                      item-value="id"
+                      label="ເລືອກລົດ"
+                      dense
+                      :rules="vehicleRules"
+                    ></v-autocomplete>
                     <p class="errors">
-                      {{ server_errors.car_number }}
+                      {{ server_errors.vehicle_id }}
                     </p>
                   </v-col>
                 </v-row>
@@ -415,7 +432,7 @@ export default {
       headers: [
         { text: "ຊື່", value: "name" },
         { text: "ນາມສະກຸນ", value: "surname" },
-        { text: "ທະບຽນລົດ", value: "car_number" },
+        { text: "ທະບຽນລົດ", value: "vehicle.car_number" },
         { text: "ເບີໂທ", value: "user.phone", sortable: false },
         { text: "Email", value: "user.email", sortable: false },
         { text: "Status", value: "status", sortable: false },
@@ -442,7 +459,19 @@ export default {
       per_page: 12,
       search: "",
       oldVal: "",
-
+      vehicle: [],
+      selectedVehicle: "",
+      selectedStatus: "",
+      statuses: [
+        {
+          id: 1,
+          name: "active",
+        },
+        {
+          id: 1,
+          name: "inactive",
+        },
+      ],
       //Validation
       emailRules: [
         (v) => !!v || "E-mail is required",
@@ -462,6 +491,7 @@ export default {
         (v) => !!v || "Name is required",
         (v) => (v && v.length >= 2) || "Name must be less than 2 characters",
       ],
+      vehicleRules: [(v) => !!v || "Vehicle is required"],
       phoneRules: [
         (v) => !!v || "Phone is required",
         (v) =>
@@ -477,6 +507,18 @@ export default {
     };
   },
   methods: {
+    fetchVehicle() {
+      this.$axios
+        .get("vehicle")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.vehicle = res.data.data;
+            }, 300);
+          }
+        })
+        .catch({});
+    },
     onFileChange(e) {
       let input = e.target;
       let file = e.target.files[0];
@@ -484,6 +526,7 @@ export default {
       this.imageUrl = URL.createObjectURL(file);
     },
     openAddModal() {
+      this.fetchVehicle();
       this.$store.commit("modalAdd_State", true);
     },
     AddItem() {
@@ -492,7 +535,7 @@ export default {
       formData.append("surname", this.user.surname);
       formData.append("phone", this.user.phone);
       formData.append("email", this.user.email);
-      formData.append("car_number", this.user.car_number);
+      formData.append("vehicle_id", this.selectedVehicle);
       formData.append("image", this.image);
       formData.append("password", this.user.password);
       formData.append("password_confirmation", this.user.password_confirmation);
@@ -544,7 +587,8 @@ export default {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
-            filter: this.search,
+            // filter: this.search,
+            status: this.selectedStatus,
           },
         })
         .then((res) => {
@@ -581,6 +625,7 @@ export default {
     },
     OpenModalEdit(item) {
       this.edit_driver = item;
+      this.fetchVehicle();
       this.$store.commit("modalEdit_State", true);
     },
     updateItem() {
@@ -589,7 +634,7 @@ export default {
       formData.append("surname", this.edit_driver.surname);
       formData.append("phone", this.edit_driver.user.phone);
       formData.append("email", this.edit_driver.user.email);
-      formData.append("car_number", this.edit_driver.car_number);
+      formData.append("vehicle_id", this.edit_driver.vehicle_id);
       formData.append("image", this.image);
       formData.append("_method", "PUT");
       if (this.$refs.form.validate() == true) {
@@ -714,30 +759,10 @@ export default {
       GetOldValueOnInput(this);
     },
   },
-  computed: {
-    // statuss() {
-    //   this.data.filter((item) => {
-    //     if (item == "active") {
-    //       console.log(item);
-    //       // return true;
-    //     } else if (item.status == "inactive") {
-    //       // return false;
-    //     }
-    //   });
-    // },
-    // selectedAllVillage() {
-    //   return this.selectedVillage.length === this.villages.length;
-    // },
-    // selectedSomeVillage() {
-    //   return this.selectedVillage.length > 0 && !this.selectedAllVillage;
-    // },
-    // icon() {
-    //   if (this.selectedAllVillage) return "mdi-close-box";
-    //   if (this.selectedSomeVillage) return "mdi-minus-box";
-    //   return "mdi-checkbox-blank-outline";
-    // },
-  },
   watch: {
+    selectedStatus: function () {
+      this.fetchData();
+    },
     "user.name": function () {
       this.server_errors.name = "";
     },
@@ -750,8 +775,8 @@ export default {
     "user.email": function () {
       this.server_errors.email = "";
     },
-    "user.car_number": function () {
-      this.server_errors.car_number = "";
+    "user.vehicle_id": function () {
+      this.server_errors.vehicle_id = "";
     },
     "user.password": function () {
       this.server_errors.password = "";
@@ -768,13 +793,9 @@ export default {
     "edit_driver.user.email": function () {
       this.server_errors.email = "";
     },
-    "edit_driver.car_number": function () {
-      this.server_errors.car_number = "";
+    "edit_driver.vehicle_id": function () {
+      this.server_errors.vehicle_id = "";
     },
-    // status: function () {
-    //   console.log("hi");
-    // },
-
     search: function (value) {
       if (value == "") {
         this.fetchData();

@@ -68,7 +68,7 @@
         <v-card flat>
           <v-card-text>
             <div>
-              <v-btn text color="grey" @click="deleteItem"
+              <v-btn text color="error" @click="deleteItem"
                 ><v-icon medium> mdi-delete </v-icon></v-btn
               >
             </div>
@@ -76,7 +76,8 @@
               :headers="headers"
               :items="customers"
               :search="search"
-              :items-per-page="15"
+              :disable-pagination="true"
+              hide-default-footer
               v-model="selectedRows"
               show-select
             >
@@ -110,6 +111,7 @@
                   mdi-eye
                 </v-icon>
               </template>
+
               <!--
               <template slot="item.delete" slot-scope="props">
                 <v-icon small @click="deleteItem(props)"> mdi-delete </v-icon>
@@ -247,6 +249,7 @@ export default {
     },
     fetchData() {
       this.customers = this.items;
+      // localStorage.setItem("customers", this.customers);
       this.selectedVillage = this.villages;
     },
 
@@ -269,6 +272,11 @@ export default {
       }
       this.selectedCustomer.filter((item) => {
         this.exclude_customers.push(item.id);
+      });
+      this.$store.commit("Toast_State", {
+        value: true,
+        color: "success",
+        msg: "ລຶບຂໍ້ມູນສຳເລັດແລ້ວ",
       });
       this.selectedRows = [];
       this.fetchData();
@@ -370,6 +378,20 @@ export default {
         this.infoCurrentKey = key;
       }
     },
+
+    rowClicked(row) {
+      this.toggleSelection(row.id);
+      console.log(row);
+    },
+    toggleSelection(keyID) {
+      if (this.selectedRows.includes(keyID)) {
+        this.selectedRows = this.selectedRows.filter(
+          (selectedKeyID) => selectedKeyID !== keyID
+        );
+      } else {
+        this.selectedRows.push(keyID);
+      }
+    },
   },
   watch: {
     search: function (value) {
@@ -378,6 +400,18 @@ export default {
       }
     },
   },
+  //   computed:{
+  // window.onbeforeunload = function (evt) {
+  //   var message = 'Are you sure you want to leave?';
+  //   if (typeof evt == 'undefined') {
+  //     evt = window.event;
+  //   }
+  //   if (evt) {
+  //     evt.returnValue = message;
+  //   }
+  //   return message;
+  // }
+  // },
   created() {
     this.fetchData();
   },

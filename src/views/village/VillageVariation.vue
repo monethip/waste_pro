@@ -11,6 +11,7 @@
       <v-card class="my-6" elevation="2">
         <v-card-title>
           ຂໍ້ມູນລາຍລະອຽດທີ່ຢູ່
+          <v-divider class="mx-4" vertical></v-divider>
           <v-spacer></v-spacer>
           <v-text-field
             v-model="search"

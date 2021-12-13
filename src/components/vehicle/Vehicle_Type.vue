@@ -302,7 +302,6 @@ export default {
     },
 
     AddItem() {
-      console.log(this.name);
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios

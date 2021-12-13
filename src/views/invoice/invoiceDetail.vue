@@ -160,7 +160,6 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.invoice = res.data.data;
-              console.log(this.invoice);
             }, 100);
           }
         })

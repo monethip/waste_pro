@@ -159,7 +159,6 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.calendars = res.data.data.data;
-              console.log(this.calendars);
               this.summary = res.data.data.summary;
               this.pagination = res.data.data.pagination;
             }, 100);

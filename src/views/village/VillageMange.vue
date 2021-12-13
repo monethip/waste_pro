@@ -1,6 +1,10 @@
 <template>
   <v-container>
     <v-row class="mb-n6 text-right">
+      <v-col class="text-left">
+        ຂໍ້ມູນທີ່ຢູ່
+        <v-spacer></v-spacer>
+      </v-col>
       <v-col>
         <v-btn class="btn-primary" @click="OpenModalAddVillage()"
           ><v-icon color>mdi-plus</v-icon>Add Village

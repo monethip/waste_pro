@@ -9,94 +9,86 @@
       </v-col>
     </v-row>
     <div>
-      <v-card elevation="0">
-        <v-card-text>
-          <v-data-table
-            :headers="headers"
-            :items="invoices"
-            :disable-pagination="true"
-            hide-default-footer
-            fixed-header
-            height="100vh"
-          >
-            <template v-slot:item.media="{ item }">
-              <v-avatar
-                size="36px"
-                v-for="(img, index) in item.media"
-                :key="index"
+      <v-data-table
+        :headers="headers"
+        :items="invoices"
+        :disable-pagination="true"
+        hide-default-footer
+        fixed-header
+        height="100vh"
+      >
+        <template v-slot:item.media="{ item }">
+          <v-avatar size="36px" v-for="(img, index) in item.media" :key="index">
+            <img v-if="img.thumb" :src="img.thumb" />
+          </v-avatar>
+        </template>
+        <template v-slot:item.total_bag="{ item }">
+          <v-chip color="success">{{ item.total_bag }}</v-chip>
+        </template>
+        <template v-slot:item.exceed_bag="{ item }">
+          <v-chip color="error">{{ item.exceed_bag }}</v-chip>
+        </template>
+        <template v-slot:item.exceed_bag_charge="{ item }">
+          <div>
+            {{ Intl.NumberFormat().format(item.exceed_bag_charge) }}
+          </div>
+        </template>
+        <template v-slot:item.new_exceed_bag_charge="{ item }">
+          <div class="error--text">
+            {{ Intl.NumberFormat().format(item.new_exceed_bag_charge) }}
+          </div>
+        </template>
+        <template v-slot:item.sub_total="{ item }">
+          <div>
+            {{ Intl.NumberFormat().format(item.sub_total) }}
+          </div>
+        </template>
+
+        <template v-slot:item.total="{ item }">
+          <div>
+            {{ Intl.NumberFormat().format(item.total) }}
+          </div>
+        </template>
+
+        <template v-slot:item.actions="{ item }">
+          <v-menu offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon
+                color="primary"
+                dark
+                v-bind="attrs"
+                v-on="on"
+                medium
+                class="mr-2"
+                >mdi-dots-vertical</v-icon
               >
-                <img v-if="img.thumb" :src="img.thumb" />
-              </v-avatar>
             </template>
-            <template v-slot:item.total_bag="{ item }">
-              <v-chip color="success">{{ item.total_bag }}</v-chip>
-            </template>
-            <template v-slot:item.exceed_bag="{ item }">
-              <v-chip color="error">{{ item.exceed_bag }}</v-chip>
-            </template>
-            <template v-slot:item.exceed_bag_charge="{ item }">
-              <div>
-                {{ Intl.NumberFormat().format(item.exceed_bag_charge) }}
-              </div>
-            </template>
-            <template v-slot:item.new_exceed_bag_charge="{ item }">
-              <div class="error--text">
-                {{ Intl.NumberFormat().format(item.new_exceed_bag_charge) }}
-              </div>
-            </template>
-            <template v-slot:item.sub_total="{ item }">
-              <div>
-                {{ Intl.NumberFormat().format(item.sub_total) }}
-              </div>
-            </template>
+            <v-list>
+              <v-list-item link>
+                <v-list-item-title @click="viewPage(item.id)">
+                  <v-icon small class="mr-2"> mdi-eye </v-icon>
+                  ລາຍລະອຽດ
+                </v-list-item-title>
+              </v-list-item>
 
-            <template v-slot:item.total="{ item }">
-              <div>
-                {{ Intl.NumberFormat().format(item.total) }}
-              </div>
-            </template>
-
-            <template v-slot:item.actions="{ item }">
-              <v-menu offset-y>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-icon
-                    color="primary"
-                    dark
-                    v-bind="attrs"
-                    v-on="on"
-                    medium
-                    class="mr-2"
-                    >mdi-dots-vertical</v-icon
-                  >
-                </template>
-                <v-list>
-                  <v-list-item link>
-                    <v-list-item-title @click="viewPage(item.id)">
-                      <v-icon small class="mr-2"> mdi-eye </v-icon>
-                      ລາຍລະອຽດ
-                    </v-list-item-title>
-                  </v-list-item>
-
-                  <v-list-item link>
-                    <v-list-item-title @click="paymentModal(item)">
-                      <v-icon small> mdi-credit-card </v-icon>
-                      ຢືນຢັນການຊຳລະ
-                    </v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
-            </template></v-data-table
-          ><br />
-          <template>
-            <Pagination
-              v-if="pagination.total_pages > 1"
-              :pagination="pagination"
-              :offset="offset"
-              @paginate="fetchData()"
-            ></Pagination>
-          </template>
-        </v-card-text>
-      </v-card>
+              <v-list-item link>
+                <v-list-item-title @click="paymentModal(item)">
+                  <v-icon small> mdi-credit-card </v-icon>
+                  ຢືນຢັນການຊຳລະ
+                </v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </template></v-data-table
+      ><br />
+      <template>
+        <Pagination
+          v-if="pagination.total_pages > 1"
+          :pagination="pagination"
+          :offset="offset"
+          @paginate="fetchData()"
+        ></Pagination>
+      </template>
     </div>
     <!-- confirm payment -->
     <v-dialog v-model="confirmDialog" max-width="620px">
@@ -202,7 +194,8 @@
 
 <script>
 export default {
-  name: "Customer",
+  name: "ConfirmPayment",
+  props: ["tab"],
   data() {
     return {
       loading: false,
@@ -379,6 +372,11 @@ export default {
     confirmType: function () {
       if (this.confirmType == 0) {
         this.confirmPayment();
+      }
+    },
+    tab: function () {
+      if (this.tab == "tab-3") {
+        this.fetchData();
       }
     },
   },

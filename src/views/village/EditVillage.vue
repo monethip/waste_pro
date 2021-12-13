@@ -141,7 +141,6 @@ export default {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data;
               this.showdistrict = res.data.data.district;
-              console.log(this.data);
             }, 300);
           }
         })

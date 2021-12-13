@@ -9,20 +9,18 @@
       </v-col>
     </v-row>
     <div>
-      <v-card elevation="0">
-        <v-card-text>
-          <v-row class="my-0 mx-2">
-            <v-col>
-              <v-btn
-                v-if="selectedRows.length"
-                outlined
-                color="info"
-                class="mb-2"
-                @click="Approve()"
-                >ອະນຸມັດບິນ {{ selectedRows.length }}</v-btn
-              ></v-col
-            >
-            <!--
+      <v-row class="my-0 mx-2">
+        <v-col>
+          <v-btn
+            v-if="selectedRows.length"
+            outlined
+            color="info"
+            class="mb-2"
+            @click="Approve()"
+            >ອະນຸມັດບິນ {{ selectedRows.length }}</v-btn
+          ></v-col
+        >
+        <!--
             <v-col cols="8">
               <v-select
                 outlined
@@ -51,82 +49,78 @@
               </v-select>
             </v-col>
             -->
-          </v-row>
-          <v-data-table
-            :headers="headers"
-            :items="invoices"
-            :search="search"
-            :disable-pagination="true"
-            hide-default-footer
-            v-model="selectedRows"
-            show-select
-            fixed-header
-            height="100vh"
-          >
-            <template v-slot:item.media="{ item }">
-              <v-avatar
-                size="36px"
-                v-for="(img, index) in item.media"
-                :key="index"
+      </v-row>
+      <v-data-table
+        :headers="headers"
+        :items="invoices"
+        :search="search"
+        :disable-pagination="true"
+        hide-default-footer
+        v-model="selectedRows"
+        show-select
+        fixed-header
+        height="100vh"
+      >
+        <template v-slot:item.media="{ item }">
+          <v-avatar size="36px" v-for="(img, index) in item.media" :key="index">
+            <img v-if="img.thumb" :src="img.thumb" />
+          </v-avatar>
+        </template>
+        <template v-slot:item.total_bag="{ item }">
+          <v-chip color="success">{{ item.total_bag }}</v-chip>
+        </template>
+        <template v-slot:item.exceed_bag="{ item }">
+          <v-chip color="error">{{ item.exceed_bag }}</v-chip>
+        </template>
+        <template v-slot:item.exceed_bag_charge="{ item }">
+          <div>
+            {{ Intl.NumberFormat().format(item.exceed_bag_charge) }}
+          </div>
+        </template>
+        <template v-slot:item.new_exceed_bag_charge="{ item }">
+          <div class="error--text">
+            {{ Intl.NumberFormat().format(item.new_exceed_bag_charge) }}
+          </div>
+        </template>
+        <template v-slot:item.sub_total="{ item }">
+          <div>
+            {{ Intl.NumberFormat().format(item.sub_total) }}
+          </div>
+        </template>
+
+        <template v-slot:item.total="{ item }">
+          <div>
+            {{ Intl.NumberFormat().format(item.total) }}
+          </div>
+        </template>
+
+        <template v-slot:item.actions="{ item }">
+          <v-menu offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon
+                color="primary"
+                dark
+                v-bind="attrs"
+                v-on="on"
+                medium
+                class="mr-2"
+                >mdi-dots-vertical</v-icon
               >
-                <img v-if="img.thumb" :src="img.thumb" />
-              </v-avatar>
             </template>
-            <template v-slot:item.total_bag="{ item }">
-              <v-chip color="success">{{ item.total_bag }}</v-chip>
-            </template>
-            <template v-slot:item.exceed_bag="{ item }">
-              <v-chip color="error">{{ item.exceed_bag }}</v-chip>
-            </template>
-            <template v-slot:item.exceed_bag_charge="{ item }">
-              <div>
-                {{ Intl.NumberFormat().format(item.exceed_bag_charge) }}
-              </div>
-            </template>
-            <template v-slot:item.new_exceed_bag_charge="{ item }">
-              <div class="error--text">
-                {{ Intl.NumberFormat().format(item.new_exceed_bag_charge) }}
-              </div>
-            </template>
-            <template v-slot:item.sub_total="{ item }">
-              <div>
-                {{ Intl.NumberFormat().format(item.sub_total) }}
-              </div>
-            </template>
-
-            <template v-slot:item.total="{ item }">
-              <div>
-                {{ Intl.NumberFormat().format(item.total) }}
-              </div>
-            </template>
-
-            <template v-slot:item.actions="{ item }">
-              <v-menu offset-y>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-icon
-                    color="primary"
-                    dark
-                    v-bind="attrs"
-                    v-on="on"
-                    medium
-                    class="mr-2"
-                    >mdi-dots-vertical</v-icon
-                  >
-                </template>
-                <v-list>
-                  <v-list-item link>
-                    <v-list-item-title @click="viewPage(item.id)">
-                      <v-icon small class="mr-2"> mdi-eye </v-icon>
-                      ລາຍລະອຽດ
-                    </v-list-item-title>
-                  </v-list-item>
-                  <v-list-item link>
-                    <v-list-item-title @click="editModal(item)">
-                      <v-icon small class="mr-2"> mdi-pencil </v-icon>
-                      ແກ້ໄຂບິນ
-                    </v-list-item-title>
-                  </v-list-item>
-                  <!--
+            <v-list>
+              <v-list-item link>
+                <v-list-item-title @click="viewPage(item.id)">
+                  <v-icon small class="mr-2"> mdi-eye </v-icon>
+                  ລາຍລະອຽດ
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item link>
+                <v-list-item-title @click="editModal(item)">
+                  <v-icon small class="mr-2"> mdi-pencil </v-icon>
+                  ແກ້ໄຂບິນ
+                </v-list-item-title>
+              </v-list-item>
+              <!--
                     <v-list-item link>
                       <v-list-item-title>
                         <v-icon small> mdi-credit-card </v-icon>
@@ -146,40 +140,18 @@
                       </v-list-item-title>
                     </v-list-item>
                     -->
-                </v-list>
-              </v-menu>
-            </template>
-            <!-- <div>
-                <template v-slot:item.actions="{ item }">
-                  <v-menu offset-y>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn color="primary" dark v-bind="attrs" v-on="on">
-                        Dropdown
-                      </v-btn>
-                    </template>
-                    <v-list>
-                      <v-list-item>
-                        <v-list-item-title>Menu 1
-                         <v-icon small class="mr-2" @click="editModal(item)">
-                  mdi-pencil
-                </v-icon>
-                        </v-list-item-title>
-                      </v-list-item>
-                    </v-list>
-                  </v-menu>
-                </template>
-              </div> --> </v-data-table
-          ><br />
-          <template>
-            <Pagination
-              v-if="pagination.total_pages > 1"
-              :pagination="pagination"
-              :offset="offset"
-              @paginate="fetchData()"
-            ></Pagination>
-          </template>
-        </v-card-text>
-      </v-card>
+            </v-list>
+          </v-menu>
+        </template> </v-data-table
+      ><br />
+      <template>
+        <Pagination
+          v-if="pagination.total_pages > 1"
+          :pagination="pagination"
+          :offset="offset"
+          @paginate="fetchData()"
+        ></Pagination>
+      </template>
     </div>
 
     <!-- Edit Add-->
@@ -252,6 +224,7 @@
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
   name: "Customer",
+  props: ["tab"],
   data() {
     return {
       selectedRows: [],
@@ -327,9 +300,6 @@ export default {
     };
   },
   methods: {
-    backPrevios() {
-      this.$router.go(-1);
-    },
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
@@ -388,7 +358,6 @@ export default {
               }, 300);
             }
             if (res.data.error == true) {
-              console.log("error");
               this.$store.commit("Toast_State", {
                 value: true,
                 color: "error",
@@ -422,7 +391,6 @@ export default {
       this.selectedRows.filter((item) => {
         selectedInvoice.push(item.id);
       });
-      console.log(selectedInvoice);
       this.loading = true;
       this.$axios
         .put("plan-month/" + this.$route.params.id + "/approve-invoice/", {
@@ -460,7 +428,6 @@ export default {
       GetOldValueOnInput(this);
     },
     remove(item) {
-      console.log(item);
       const index = this.selectedStatus.indexOf(item.id);
       if (index >= 0) this.selectedStatus.splice(index, 0)[0];
     },
@@ -473,6 +440,11 @@ export default {
     },
     selectedStatus: function () {
       this.fetchData();
+    },
+    tab: function () {
+      if (this.tab == "tab-1") {
+        this.fetchData();
+      }
     },
   },
   created() {
