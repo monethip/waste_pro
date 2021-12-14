@@ -297,13 +297,13 @@ export default {
               icon: "mdi-chart-bubble",
               title: "ລາຍງານການເກັບຂີ້ເຫຍື້ອ",
               to: "/report/trash",
-              permissions: [],
+              permissions: ["get_invoice"],
             },
             {
               icon: "mdi-cash",
               title: "ລາຍງານຂໍ້ມູນບັນຊີ",
               to: "/report/invoice",
-              permissions: [],
+              permissions: ["get_invoice"],
             },
             {
               icon: "mdi-chart-areaspline",

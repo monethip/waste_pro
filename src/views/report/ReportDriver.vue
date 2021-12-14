@@ -200,21 +200,11 @@ export default {
         { text: "ນາມສະກຸນ", value: "surname" },
         { text: "ເບີໂທ", value: "user.phone", sortable: false },
         { text: "Email", value: "user.email", sortable: false },
-        { text: "ທະບຽນລົດ", value: "car_number" },
+        { text: "ທະບຽນລົດ", value: "vehicle.car_number" },
         { text: "ສະຖານະ", value: "status", sortable: false },
         { text: "Profile", value: "media", sortable: false },
         { text: "", value: "actions", sortable: false },
       ],
-      toast: {
-        value: true,
-        color: "success",
-        msg: "",
-      },
-      toast_error: {
-        value: true,
-        color: "error",
-        msg: "Something when wrong!",
-      },
     };
   },
   methods: {
@@ -245,52 +235,20 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
           this.start_menu = false;
           this.end_menu = false;
           if (error.response.status == 422) {
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
           }
         });
-    },
-
-    fetchAddress() {
-      this.$axios
-        .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.address = res.data.data;
-              this.address.map((item) => {
-                this.districts = item.districts;
-              });
-            }, 300);
-          }
-        })
-        .catch(() => {});
-    },
-
-    fetchVillage() {
-      this.$axios
-        .get("info/district/" + this.selectedDistrict + "/village")
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.villages = res.data.data;
-            }, 300);
-          }
-        })
-        .catch(() => {});
-    },
-
-    viewPage(id) {
-      this.$router.push({
-        name: "ViewCustomer",
-        params: { id },
-      });
     },
     Search() {
       GetOldValueOnInput(this);
@@ -328,9 +286,12 @@ export default {
             }, 300);
           }
         })
-        .catch(() => {
-          this.fetchData();
-          this.$store.commit("Toast_State", this.toast_error);
+        .catch((error) => {
+          this.$store.commit("Toast_State", {
+            value: true,
+            color: "error",
+            msg: error.response.data.message,
+          });
           this.$store.commit("modalDelete_State", false);
           this.loading = false;
         });
@@ -342,16 +303,9 @@ export default {
         this.fetchData();
       }
     },
-
-    selectedVillage: function () {
-      this.fetchData();
-    },
-    selectedDistrict: function () {
-      this.fetchVillage();
-    },
-    selectedStatus: function () {
-      this.fetchData();
-    },
+    // selectedStatus: function () {
+    //   this.fetchData();
+    // },
   },
   created() {
     this.fetchData();

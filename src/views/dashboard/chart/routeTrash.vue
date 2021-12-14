@@ -2,7 +2,7 @@
   <div>
     <apexchart
       width="500"
-      type="donut"
+      type="pie"
       :options="options"
       :series="series"
     ></apexchart>

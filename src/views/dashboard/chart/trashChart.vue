@@ -42,12 +42,13 @@ export default {
       date: new Date().toISOString().substr(0, 7),
       menu: false,
       modal: false,
+
       options: {
         chart: {
           type: "bar",
         },
         title: {
-          text: "ຈຳນວນລູກຄ້າລົງທະບຽນ",
+          text: "ຈຳນວນການເກັບຂີ້ເຫື້ຍອລາຍວັນ",
           align: "center",
           margin: 10,
           offsetX: 0,
@@ -70,6 +71,7 @@ export default {
           title: {
             text: "Date",
             style: {
+              colors: [],
               fontSize: "16px",
               fontWeight: 400,
             },
@@ -77,7 +79,7 @@ export default {
         },
         yaxis: {
           title: {
-            text: "Amount",
+            text: "Bag",
             style: {
               fontSize: "16px",
               fontWeight: 400,
@@ -90,7 +92,7 @@ export default {
           name: "series-1",
           data: [
             30, 40, 45, 50, 49, 60, 70, 91, 95, 100, 30, 40, 45, 50, 49, 60, 70,
-            91, 95, 100, 30, 40, 45, 50, 49, 60, 70, 91, 95, 100,
+            91, 95, 100, 30, 40, 45, 0, 0, 0, 0, 0, 0, 0,
           ],
         },
       ],
