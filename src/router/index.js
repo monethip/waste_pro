@@ -26,7 +26,7 @@ const routes = [
 
   //Admin Route
   {
-    path: '/dashboard',
+    path: '/',
     name: 'Dashboard',
     component: () => import('../views/dashboard/Dashboard.vue'),
     meta: {

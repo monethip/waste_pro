@@ -180,7 +180,7 @@ export default {
         {
           icon: "mdi-apps",
           title: "ໜ້າຫຼັກ",
-          to: "/dashboard",
+          to: "/",
           permissions: ["create_user"],
         },
       ],
@@ -402,5 +402,8 @@ export default {
 .nav {
   border-bottom: 2px solid #eee;
   background: #fff !important;
+}
+.theme--light.v-navigation-drawer {
+  border-right: 2px solid #eee !important;
 }
 </style>
