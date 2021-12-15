@@ -400,10 +400,16 @@ export default {
   padding-left: 28px !important;
 }
 .nav {
-  border-bottom: 2px solid #eee;
+  border-bottom: 1px solid #eee;
   background: #fff !important;
 }
 .theme--light.v-navigation-drawer {
-  border-right: 2px solid #eee !important;
+  border-right: 1px solid #eee !important;
+}
+.v-main__wrap.v-content__wrap {
+  background: #eee !important;
+}
+.v-main__wrap.v-content__wrap {
+  background: #eee !important;
 }
 </style>
