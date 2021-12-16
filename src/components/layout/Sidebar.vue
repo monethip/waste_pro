@@ -187,8 +187,8 @@ export default {
       group_menu: [
         {
           id: 1,
-          title: "ຈັດການຂໍ້ມູນ",
-          icon: "mdi-account-group",
+          title: "ຕັ້ງຄ່າ",
+          icon: "mdi-cog",
           group_permissions: [
             "get_role",
             "get_user",
@@ -198,28 +198,16 @@ export default {
           ],
           menu: [
             {
+              icon: "mdi-file-import",
+              title: "Import User",
+              to: "/import-file",
+              permissions: ["create_driver"],
+            },
+            {
               icon: "mdi-account-key",
               title: "Roles",
               to: "/role",
               permissions: ["get_role", "create_role"],
-            },
-            {
-              icon: "mdi-account",
-              title: "Users",
-              to: "/user",
-              permissions: ["get_user"],
-            },
-            {
-              icon: "mdi-dump-truck",
-              title: "Drivers",
-              to: "/driver",
-              permissions: ["get_driver"],
-            },
-            {
-              icon: "mdi-account-group",
-              title: "Customer",
-              to: "/customer",
-              permissions: ["get_customer"],
             },
             {
               icon: "mdi-package",
@@ -227,12 +215,7 @@ export default {
               to: "/package",
               permissions: ["get_package", "get_customer"],
             },
-            {
-              icon: "mdi-car-multiple",
-              title: "ຈັດການພາຫະນະ",
-              to: "/vehicle",
-              permissions: ["get_vehicle"],
-            },
+
             {
               icon: "mdi-home-account",
               title: "ຈັດການທີ່ຢູ່",
@@ -249,6 +232,62 @@ export default {
         },
         {
           id: 2,
+          title: "ຈັດການຂໍ້ມູນຜູ້ໃຊ້",
+          icon: "mdi-database",
+          group_permissions: [
+            "get_role",
+            "get_user",
+            "get_customer",
+            "get_driver",
+            "create_address",
+          ],
+          menu: [
+            {
+              icon: "mdi-account",
+              title: "Users",
+              to: "/user",
+              permissions: ["get_user"],
+            },
+            {
+              icon: "mdi-dump-truck",
+              title: "Drivers",
+              to: "/driver",
+              permissions: ["get_driver"],
+            },
+            {
+              icon: "mdi-badge-account",
+              title: "ພະນັກງານ",
+              to: "/employee",
+              permissions: ["get_employee"],
+            },
+            {
+              icon: "mdi-account-group",
+              title: "Team",
+              to: "/team",
+              permissions: ["get_team"],
+            },
+            {
+              icon: "mdi-office-building",
+              title: "Company",
+              to: "/company",
+              permissions: ["get_customer"],
+            },
+            {
+              icon: "mdi-account-group",
+              title: "Customer",
+              to: "/customer",
+              permissions: ["get_customer"],
+            },
+            {
+              icon: "mdi-car-multiple",
+              title: "ຈັດການພາຫະນະ",
+              to: "/vehicle",
+              permissions: ["get_vehicle"],
+            },
+          ],
+        },
+        {
+          id: 3,
           title: "ແຜນເສັ້ນທາງ",
           icon: "mdi-map",
           group_permissions: ["get_route_plan"],
@@ -268,7 +307,7 @@ export default {
           ],
         },
         {
-          id: 3,
+          id: 4,
           title: "ຈັດການບິນ",
           icon: "mdi-note-outline",
           group_permissions: ["get_invoice"],
@@ -288,7 +327,7 @@ export default {
           ],
         },
         {
-          id: 4,
+          id: 5,
           title: "ລາຍງານ",
           icon: "mdi-finance",
           group_permissions: ["get_invoice", "get_driver"],

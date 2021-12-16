@@ -44,6 +44,15 @@ const routes = [
     }
   },
   {
+    path: '/import-file',
+    name: 'ImportFile',
+    component: () => import('../components/importFile.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
     path: '/driver',
     name: 'Driver',
     component: () => import('../views/driver/Driver.vue'),
@@ -52,6 +61,72 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
+  {
+    path: '/employee',
+    name: 'Employee',
+    component: () => import('../views/employee/Employee.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  //Team
+  {
+    path: '/team/:id',
+    name: 'TeamDetail',
+    component: () => import('../views/team/TeamDetail.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/team',
+    name: 'Team',
+    component: () => import('../views/team/Team.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  //Company
+  {
+    path: '/company',
+    name: 'Company',
+    component: () => import('../views/company/Company.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/create/company',
+    name: 'CreateCompany',
+    component: () => import('../views/company/CreateCompany.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/edit/company/:id',
+    name: 'EditCompany',
+    component: () => import('../views/company/EditCompany.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/view/company/:id',
+    name: 'ViewCompany',
+    component: () => import('@/views/company/ViewCompany.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+
   {
     path: '/role',
     name: 'Role',
