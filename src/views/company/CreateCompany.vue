@@ -69,13 +69,13 @@
           <v-row>
             <v-col cols="4">
               <v-text-field
-                label="Company Name *"
+                label="ຊື່ບໍລິສັດ *"
                 required
                 v-model="data.company_name"
                 :rules="nameRules"
               ></v-text-field>
               <p class="errors">
-                {{ server_errors.name }}
+                {{ server_errors.company_name }}
               </p>
             </v-col>
             <v-col cols="4">
@@ -105,15 +105,12 @@
                 label="ເບີໂທຜູ້ປະສານງານ *"
                 required
                 v-model="data.coordinator_phone"
-                :rules="phoneRules"
                 type="number"
                 class="input-number"
               ></v-text-field>
-              <!--
               <p class="errors">
-                {{ server_errors.phone }}
+                {{ server_errors.coordinator_phone }}
               </p>
-              -->
             </v-col>
             <v-col cols="6">
               <v-text-field
@@ -121,11 +118,9 @@
                 required
                 v-model="data.coordinator_email"
               ></v-text-field>
-              <!--
               <p class="errors">
-                {{ server_errors.email }}
+                {{ server_errors.coordinator_email }}
               </p>
-              -->
             </v-col>
             <v-col cols="6">
               <v-text-field
@@ -135,11 +130,10 @@
                 type="number"
                 class="input-number"
               ></v-text-field>
-              <!--
+
               <p class="errors">
                 {{ server_errors.phone }}
               </p>
-              -->
             </v-col>
             <v-col cols="6">
               <v-text-field
@@ -147,11 +141,9 @@
                 required
                 v-model="data.email"
               ></v-text-field>
-              <!--
               <p class="errors">
                 {{ server_errors.email }}
               </p>
-              -->
             </v-col>
             <v-col cols="6">
               <v-autocomplete
@@ -517,8 +509,7 @@ export default {
       this.selectedVillageDetail.map((item) => {
         formData.append("village_details[]", item);
       });
-      formData.append("company_name", this.data.name);
-      formData.append("surname", this.data.surname);
+      formData.append("company_name", this.data.company_name);
       formData.append("village_id", this.selectedVillage);
       formData.append("lat", this.latlng.lat);
       formData.append("lng", this.latlng.lng);
@@ -526,9 +517,13 @@ export default {
       formData.append("email", this.data.email);
       formData.append("password", this.data.password);
       formData.append("password_confirmation", this.data.password_confirmation);
-      formData.append("coordinator_name", "Coordinator");
-      formData.append("coordinator_phone", "52232324");
-      formData.append("coordinator_email", "company@gmail.com");
+      formData.append("coordinator_name", this.data.coordinator_name);
+      formData.append("coordinator_surname", this.data.coordinator_surname);
+      formData.append("coordinator_phone", this.data.coordinator_phone);
+      formData.append("coordinator_email", this.data.coordinator_email);
+      formData.append("cost_by", "container");
+      formData.append("start_date", "22-01-2022");
+      formData.append("can_collect", "true");
 
       if (this.$refs.form.validate() == true) {
         this.loading = true;
@@ -546,7 +541,7 @@ export default {
                   msg: res.data.message,
                 });
                 this.$router.push({
-                  name: "Customer",
+                  name: "Company",
                 });
               }, 300);
             }
@@ -554,8 +549,8 @@ export default {
           .catch((error) => {
             if (error.response.status == 422) {
               var obj = error.response.data.errors;
-              for (let [key, customer] of Object.entries(obj)) {
-                this.server_errors[key] = customer[0];
+              for (let [key, data] of Object.entries(obj)) {
+                this.server_errors[key] = data[0];
               }
             }
             this.loading = false;
@@ -652,20 +647,6 @@ export default {
     fetchUnit() {
       this.village_details.filter((item) => {
         this.units = item.village_details;
-        // console.log(this.units);
-        // console.log(item.village_details);
-        // item.village_details.forEach((data) => {
-        //   console.log(data);
-        //   data.filter((i) => {
-        //     console.log(i);
-        //     return i.village_variation_id === this.village_variation_id;
-        //   });
-        // });
-
-        // // var a = item.id === this.village_variation_id;
-        // // console.log(a);
-        // // this.units.push(item.id === this.village_variation_id);
-        // console.log("Unit" + this.units);
       });
     },
     removeItem(item) {
@@ -686,14 +667,20 @@ export default {
       }
     },
     //Clear error change
-    "data.name": function () {
-      this.server_errors.name = "";
+    "data.company_name": function () {
+      this.server_errors.company_name = "";
     },
-    "data.surname": function () {
-      this.server_errors.surname = "";
+    "data.coordinator_name": function () {
+      this.server_errors.coordinator_name = "";
     },
-    "data.house_number": function () {
-      this.server_errors.house_number = "";
+    "data.coordinator_surname": function () {
+      this.server_errors.coordinator_surname = "";
+    },
+    "data.coordinator_phone": function () {
+      this.server_errors.coordinator_phone = "";
+    },
+    "data.coordinator_email": function () {
+      this.server_errors.coordinator_email = "";
     },
     "data.phone": function () {
       this.server_errors.phone = "";

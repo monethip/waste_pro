@@ -87,13 +87,17 @@
                       <img v-if="img.thumb" :src="img.thumb" />
                     </v-avatar>
                   </template>
-                  <!--Role -->
-                  <template v-slot:item.status="{ item }">
-                    <v-chip
-                      :color="statusColor(item.status)"
-                      @click="switchStatus(item.id)"
-                      >{{ item.status }}</v-chip
+                  <template v-slot:item.company_coordinators="{ item }">
+                    <div
+                      v-for="(data, index) in item.company_coordinators"
+                      :key="index"
                     >
+                      <div>{{ data.name }} {{ data.surname }}</div>
+                    </div>
+                  </template>
+                  <!--Role -->
+                  <template v-slot:item.cost_by="{ item }">
+                    <div>{{ item.cost_by }}</div>
                   </template>
 
                   <template v-slot:item.actions="{ item }">
@@ -110,12 +114,6 @@
                         >
                       </template>
                       <v-list>
-                        <v-list-item link @click="addPackage(item.id)">
-                          <v-list-item-title>
-                            <v-icon small class="mr-2">mdi-plus</v-icon>
-                            ເພີ່ມແພັກເກດ
-                          </v-list-item-title>
-                        </v-list-item>
                         <v-list-item link @click="viewPage(item.id)">
                           <v-list-item-title>
                             <v-icon small class="mr-2"> mdi-eye </v-icon>
@@ -152,97 +150,6 @@
         </v-tabs-items>
       </v-card>
     </div>
-
-    <!-- Modal Add-->
-    <ModalAdd>
-      <template @close="close">
-        <v-card>
-          <v-card-title>
-            <p>ເພີ່ມແພັກເກດໃຫ້ລູກຄ້າ</p>
-          </v-card-title>
-          <v-card-text>
-            <v-container>
-              <v-form ref="form" lazy-validation>
-                <v-row class="mb-n4 mt-0">
-                  <v-col cols="12">
-                    <v-select
-                      v-model="selectedPackage"
-                      :items="packages"
-                      item-text="name"
-                      item-value="id"
-                      label="ເລືອກແພັກເກດ"
-                      outlined
-                      dense
-                    ></v-select>
-                    <p class="errors">
-                      {{ server_errors.package_id }}
-                    </p>
-                  </v-col>
-                </v-row>
-                <v-row class="my-n4">
-                  <v-col cols="12">
-                    <v-menu
-                      v-model="start_menu"
-                      :close-on-content-click="true"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="start_date"
-                          label="ເລີ່ມວັນທີ"
-                          readonly
-                          outlined
-                          v-bind="attrs"
-                          v-on="on"
-                          dense
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                        v-model="start_date"
-                        :allowed-dates="allowedDates"
-                      ></v-date-picker>
-                    </v-menu>
-                    <p class="errors">
-                      {{ server_errors.start_month }}
-                    </p>
-                  </v-col>
-                </v-row>
-                <v-row class="my-n6">
-                  <v-col cols="12">
-                    <v-checkbox v-model="start_collect">
-                      <template v-slot:label>
-                        <div>ເລີ່ມເກັບຂີ້ເຫື້ອຍເລີຍບໍ່ ?</div>
-                      </template>
-                    </v-checkbox>
-                    <p class="errors">
-                      {{ server_errors.can_collect }}
-                    </p>
-                  </v-col>
-                </v-row>
-              </v-form>
-            </v-container>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeAddModal()">
-                Close
-              </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                :loading="loading"
-                :disabled="loading"
-                @click="AddPackage()"
-              >
-                ເພີ່ມ
-              </v-btn>
-            </v-card-actions>
-          </v-card-text>
-        </v-card>
-      </template>
-    </ModalAdd>
 
     <!--Delete Modal-->
     <ModalDelete>
@@ -311,14 +218,14 @@ export default {
       ],
 
       headers: [
-        { text: "ຊື່", value: "name" },
-        { text: "ນາມສະກຸນ", value: "surname" },
+        { text: "ບໍລິສັດ", value: "company_name" },
+        { text: "ຊື່ຜູ້ຮັບຜິດຊອບ", value: "company_coordinators" },
         { text: "Phone", value: "user.phone", sortable: false },
-        { text: "ທີ່ຢູ່", value: "district.name", sortable: false },
-        { text: "ແພັກເກດ", value: "package.name", sortable: false },
+        { text: "ບ້ານ", value: "village.name", sortable: false },
+        { text: "ເມືອງ", value: "district.name", sortable: false },
         // { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
+        { text: "ແພັກເກດ", value: "cost_by" },
         { text: "Image", value: "media" },
-        { text: "ສະຖານະ", value: "status" },
         { text: "", value: "actions", sortable: false },
       ],
     };
@@ -386,19 +293,6 @@ export default {
         .catch(() => {});
     },
 
-    fetchPackage() {
-      this.$axios
-        .get("package")
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.packages = res.data.data;
-            }, 300);
-          }
-        })
-        .catch(() => {});
-    },
-
     closeDelete() {
       this.$store.commit("modalDelete_State", false);
     },
@@ -441,89 +335,6 @@ export default {
         name: "CreateCompany",
       });
     },
-
-    switchStatus(id) {
-      this.loading = true;
-      this.$axios
-        .post("customer/" + id + "/switch-status")
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.loading = false;
-              this.fetchData();
-              this.$store.commit("Toast_State", {
-                value: true,
-                color: "success",
-                msg: res.data.message,
-              });
-            }, 300);
-          }
-        })
-        .catch((error) => {
-          this.loading = false;
-          this.$store.commit("Toast_State", {
-            value: true,
-            color: "error",
-            msg: error.response.data.message,
-          });
-          this.fetchData();
-        });
-    },
-
-    addPackage(id) {
-      this.fetchPackage();
-      this.$store.commit("modalAdd_State", true);
-      this.customerId = id;
-    },
-    AddPackage() {
-      if (this.$refs.form.validate() == true) {
-        this.loading = true;
-        this.$axios
-          .post("customer/" + this.customerId + "/add-package", {
-            package_id: this.selectedPackage,
-            start_month: this.start_date,
-            can_collect: this.start_collect,
-          })
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.loading = false;
-                this.closeAddModal();
-                this.selectedPackage = "";
-                this.customerId = "";
-                this.fetchData();
-                this.reset();
-                this.$store.commit("Toast_State", {
-                  value: true,
-                  color: "success",
-                  msg: res.data.message,
-                });
-              }, 300);
-            }
-          })
-          .catch((error) => {
-            this.loading = false;
-            this.fetchData();
-            if (error.response.status == 422) {
-              this.$store.commit("Toast_State", {
-                value: true,
-                color: "error",
-                msg: error.response.data.message,
-              });
-              var obj = error.response.data.errors;
-              for (let [key, customer] of Object.entries(obj)) {
-                this.server_errors[key] = customer[0];
-              }
-            }
-          });
-      }
-    },
-    closeAddModal() {
-      this.selectedPackage = "";
-      this.customerId = "";
-      this.start_date = "";
-      this.$store.commit("modalAdd_State", false);
-    },
     editPage(id) {
       this.$router.push({
         name: "EditCompany",
@@ -540,6 +351,7 @@ export default {
       GetOldValueOnInput(this);
     },
     statusColor(value) {
+      console.log(value);
       if (value == "active") return "success";
       else if (value == "inactive") return "error";
       else return "info";
