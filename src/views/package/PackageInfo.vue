@@ -38,6 +38,41 @@ export default {
       tab: null,
     };
   },
+  watch: {
+    tab: function (value) {
+      if (value == "tab-1") {
+        this.$router
+          .push({
+            name: "Package",
+            query: { tab: "package-info" },
+          })
+          .catch(() => {});
+      } else if (value == "tab-2") {
+        this.$router
+          .push({
+            name: "Package",
+            query: { tab: "package-size" },
+          })
+          .catch(() => {});
+      } else if (value == "tab-3") {
+        this.$router
+          .push({
+            name: "Package",
+            query: { tab: "package-price" },
+          })
+          .catch(() => {});
+      }
+    },
+  },
+  created() {
+    if (this.$route.query.tab == "package-info") {
+      this.tab = "tab-1";
+    } else if (this.$route.query.tab == "package-size") {
+      this.tab = "tab-2";
+    } else if (this.$route.query.tab == "package-price") {
+      this.tab = "tab-3";
+    }
+  },
 };
 </script>
 

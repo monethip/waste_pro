@@ -186,8 +186,7 @@ export default {
       ],
       group_menu: [
         {
-          id: 1,
-          title: "ຕັ້ງຄ່າ",
+          title: "ຈັດການຂໍ້ມູນ",
           icon: "mdi-cog",
           group_permissions: [
             "get_role",
@@ -228,12 +227,17 @@ export default {
               to: "/village-variation",
               permissions: ["create_address", "get_driver"],
             },
+            {
+              icon: "mdi-car-multiple",
+              title: "ຈັດການພາຫະນະ",
+              to: "/vehicle",
+              permissions: ["get_vehicle"],
+            },
           ],
         },
         {
-          id: 2,
-          title: "ຈັດການຂໍ້ມູນຜູ້ໃຊ້",
-          icon: "mdi-database",
+          title: "ຂໍ້ມູນຜູ້ໃຊ້",
+          icon: "mdi-account-supervisor",
           group_permissions: [
             "get_role",
             "get_user",
@@ -266,28 +270,41 @@ export default {
               to: "/team",
               permissions: ["get_team"],
             },
+          ],
+        },
+
+        {
+          title: "ຂໍ້ມູນລູກຄ້າ",
+          icon: "mdi-database",
+          group_permissions: [
+            "get_role",
+            "get_user",
+            "get_customer",
+            "get_driver",
+            "create_address",
+          ],
+          menu: [
+            {
+              icon: "mdi-account-group",
+              title: "ລູກຄ້າທົ່ວໄປ",
+              to: "/customer",
+              permissions: ["get_customer"],
+            },
             {
               icon: "mdi-office-building",
-              title: "Company",
+              title: "ລູກຄ້າບໍລິສັດ",
               to: "/company",
               permissions: ["get_customer"],
             },
             {
               icon: "mdi-account-group",
-              title: "Customer",
-              to: "/customer",
+              title: "ລູກຄ້າທີ່ສົງຄຳຮ້ອງຂໍເຂົ້າມາ",
+              to: "/company-request",
               permissions: ["get_customer"],
-            },
-            {
-              icon: "mdi-car-multiple",
-              title: "ຈັດການພາຫະນະ",
-              to: "/vehicle",
-              permissions: ["get_vehicle"],
             },
           ],
         },
         {
-          id: 3,
           title: "ແຜນເສັ້ນທາງ",
           icon: "mdi-map",
           group_permissions: ["get_route_plan"],
@@ -307,7 +324,6 @@ export default {
           ],
         },
         {
-          id: 4,
           title: "ຈັດການບິນ",
           icon: "mdi-note-outline",
           group_permissions: ["get_invoice"],
@@ -327,7 +343,6 @@ export default {
           ],
         },
         {
-          id: 5,
           title: "ລາຍງານ",
           icon: "mdi-finance",
           group_permissions: ["get_invoice", "get_driver"],

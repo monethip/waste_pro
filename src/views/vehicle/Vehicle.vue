@@ -32,6 +32,32 @@ export default {
       tab: null,
     };
   },
+  watch: {
+    tab: function (value) {
+      if (value == "tab-1") {
+        this.$router
+          .push({
+            name: "Vehicle",
+            query: { tab: "vehicle" },
+          })
+          .catch(() => {});
+      } else if (value == "tab-2") {
+        this.$router
+          .push({
+            name: "Vehicle",
+            query: { tab: "vehicle-type" },
+          })
+          .catch(() => {});
+      }
+    },
+  },
+  created() {
+    if (this.$route.query.tab == "veicle") {
+      this.tab = "tab-1";
+    } else if (this.$route.query.tab == "vehicle-type") {
+      this.tab = "tab-2";
+    }
+  },
 };
 </script>
 

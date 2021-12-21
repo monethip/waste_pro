@@ -125,7 +125,7 @@
                         <v-list-item link @click="editPage(item.id)">
                           <v-list-item-title>
                             <v-icon small class="mr-2"> mdi-pencil </v-icon>
-                            ແກ້ໄຂບິນ
+                            ແກ້ໄຂ
                           </v-list-item-title>
                         </v-list-item>
                         <v-list-item link @click="deleteItem(item.id)">
@@ -214,7 +214,7 @@
                   <v-col cols="12">
                     <v-checkbox v-model="start_collect">
                       <template v-slot:label>
-                        <div>ເລີ່ມເກັບຂີ້ເຫື້ອຍເລີຍບໍ່ ?</div>
+                        <div>ສາມາດເກັບຂີ້ເຫື້ອຍເລີຍໄດ້ບໍ່ ?</div>
                       </template>
                     </v-checkbox>
                     <p class="errors">

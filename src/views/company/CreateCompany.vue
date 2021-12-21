@@ -4,7 +4,7 @@
       <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
-      ເພີ່ມຂໍ້ມູນລູກຄ້າ</v-breadcrumbs
+      ເພີ່ມຂໍ້ມູນບໍລິສັດ</v-breadcrumbs
     >
     <v-card>
       <v-card-text class="px-12">
@@ -73,6 +73,8 @@
                 required
                 v-model="data.company_name"
                 :rules="nameRules"
+                outlined
+                dense
               ></v-text-field>
               <p class="errors">
                 {{ server_errors.company_name }}
@@ -80,26 +82,61 @@
             </v-col>
             <v-col cols="4">
               <v-text-field
+                label="ເບີໂທບໍລິສັດ *"
+                required
+                v-model="data.phone"
+                type="number"
+                class="input-number"
+                outlined
+                dense
+              ></v-text-field>
+
+              <p class="errors">
+                {{ server_errors.phone }}
+              </p>
+            </v-col>
+            <v-col cols="4">
+              <v-text-field
+                label="Email ບໍລິສັດ *"
+                required
+                v-model="data.email"
+                outlined
+                dense
+              ></v-text-field>
+              <p class="errors">
+                {{ server_errors.email }}
+              </p>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-text-field
                 label="ຊື່ຜູ້ປະສານງານ *"
                 required
                 v-model="data.coordinator_name"
                 :rules="corNameRules"
+                outlined
+                dense
               ></v-text-field>
               <p class="errors">
                 {{ server_errors.coordinator_name }}
               </p>
             </v-col>
-            <v-col cols="4">
+            <v-col>
               <v-text-field
                 label="ນາມສະກຸນຜູ້ປະສານງານ *"
                 required
                 v-model="data.coordinator_surname"
                 :rules="corSurameRules"
+                outlined
+                dense
               ></v-text-field>
               <p class="errors">
                 {{ server_errors.coordinator_surname }}
               </p>
             </v-col>
+          </v-row>
+          <v-row>
             <v-col cols="6">
               <v-text-field
                 label="ເບີໂທຜູ້ປະສານງານ *"
@@ -107,6 +144,8 @@
                 v-model="data.coordinator_phone"
                 type="number"
                 class="input-number"
+                outlined
+                dense
               ></v-text-field>
               <p class="errors">
                 {{ server_errors.coordinator_phone }}
@@ -117,34 +156,15 @@
                 label="Email ຜູ້ປະສານງານ *"
                 required
                 v-model="data.coordinator_email"
+                outlined
+                dense
               ></v-text-field>
               <p class="errors">
                 {{ server_errors.coordinator_email }}
               </p>
             </v-col>
-            <v-col cols="6">
-              <v-text-field
-                label="ເບີໂທບໍລິສັດ *"
-                required
-                v-model="data.phone"
-                type="number"
-                class="input-number"
-              ></v-text-field>
-
-              <p class="errors">
-                {{ server_errors.phone }}
-              </p>
-            </v-col>
-            <v-col cols="6">
-              <v-text-field
-                label="Email ບໍລິສັດ *"
-                required
-                v-model="data.email"
-              ></v-text-field>
-              <p class="errors">
-                {{ server_errors.email }}
-              </p>
-            </v-col>
+          </v-row>
+          <v-row>
             <v-col cols="6">
               <v-autocomplete
                 required
@@ -154,6 +174,8 @@
                 item-value="id"
                 label="District *"
                 :rulesDistrict="rulesDistrict"
+                outlined
+                dense
               ></v-autocomplete>
               <p class="errors">
                 {{ server_errors.district_id }}
@@ -168,11 +190,15 @@
                 item-value="id"
                 label="Village *"
                 :rules="ruleVillage"
+                outlined
+                dense
               ></v-autocomplete>
               <p class="errors">
                 {{ server_errors.village_id }}
               </p>
             </v-col>
+          </v-row>
+          <v-row>
             <v-col cols="6">
               <v-autocomplete
                 v-model="village_variation_id"
@@ -182,13 +208,14 @@
                 item-value="id"
                 label="ກຸ່ມ / ຄຸ້ມ"
                 multiple
+                outlined
+                dense
               >
               </v-autocomplete>
               <p class="errors">
                 {{ server_errors.village_details }}
               </p>
             </v-col>
-
             <v-col cols="6">
               <v-autocomplete
                 v-model="selectedVillageDetail"
@@ -197,6 +224,8 @@
                 item-value="id"
                 label="ຮ່ອມ / ໜ່ວຍ"
                 multiple
+                outlined
+                dense
               >
                 <template v-slot:selection="data">
                   <v-chip
@@ -214,36 +243,74 @@
                 {{ server_errors.village_details }}
               </p>
             </v-col>
-            <!--
-              <v-col cols="4">
-                <v-autocomplete
-                  required
-                  :items="villages"
-                  v-model="selectedVillage"
-                  item-text="name"
-                  item-value="id"
-                  label="Village *"
-                  :rules="ruleVillage"
-                ></v-autocomplete>
-                <p class="errors">
-                  {{ server_errors.village_id }}
-                </p>
-              </v-col>
-              <v-col cols="4">
-                <v-select
-                  required
-                  v-model="selectedVillageDetail"
-                  :items="village_details"
-                  item-text="name"
-                  item-value="id"
-                  label="Village Detail"
-                  multiple
-                ></v-select>
-                <p class="errors">
-                  {{ errormsg }}
-                </p>
-              </v-col>
-              -->
+          </v-row>
+          <v-row>
+            <v-col cols="6">
+              <v-select
+                outlined
+                dense
+                :items="costs"
+                v-model="selectedCost"
+                item-text="value"
+                item-value="value"
+                label="ປະເພດລາຄາ"
+              ></v-select>
+            </v-col>
+            <v-col v-if="selectedCost == 'fix_cost'" cols="6">
+              <v-text-field
+                label="ລາຄາ *"
+                type="number"
+                v-model="data.fix_cost"
+                required
+                outlined
+                dense
+              ></v-text-field>
+              <p class="errors">
+                {{ server_errors.fixed_cost }}
+              </p>
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col>
+              <v-menu
+                v-model="start_menu"
+                :close-on-content-click="true"
+                :nudge-right="40"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="start_date"
+                    label="ເລີ່ມວັນທີ"
+                    readonly
+                    outlined
+                    v-bind="attrs"
+                    v-on="on"
+                    dense
+                  ></v-text-field>
+                </template>
+                <v-date-picker v-model="start_date"></v-date-picker>
+              </v-menu>
+              <p class="errors">
+                {{ server_errors.start_month }}
+              </p>
+            </v-col>
+            <v-col>
+              <v-checkbox v-model="start_collect" class="my-auto">
+                <template v-slot:label>
+                  <div>ສາມາດເກັບຂີ້ເຫື້ອຍເລີຍໄດ້ບໍ່ ?</div>
+                </template>
+              </v-checkbox>
+              <p class="errors">
+                {{ server_errors.can_collect }}
+              </p>
+            </v-col>
+          </v-row>
+
+          <v-row>
             <v-col cols="6">
               <v-text-field
                 label="Password *"
@@ -251,6 +318,8 @@
                 v-model="data.password"
                 :rules="passwordRules"
                 required
+                outlined
+                dense
               ></v-text-field>
               <p class="errors">
                 {{ server_errors.password }}
@@ -260,6 +329,8 @@
               <v-text-field
                 label="Password Confirm *"
                 type="password"
+                outlined
+                dense
                 v-model="data.password_confirmation"
                 :rules="passwordConfirmRules"
                 required
@@ -268,14 +339,18 @@
                 {{ server_errors.password_confirmation }}
               </p>
             </v-col>
+          </v-row>
 
-            <!-- Gogle map-->
+          <!-- Gogle map-->
+          <v-row>
             <v-col cols="6">
               <v-text-field
                 label="Latitude"
                 v-model="latlng.lat"
                 type="number"
                 class="input-number"
+                outlined
+                dense
               ></v-text-field>
             </v-col>
             <v-col cols="6">
@@ -284,9 +359,12 @@
                 v-model="latlng.lng"
                 type="number"
                 class="input-number"
+                outlined
+                dense
               ></v-text-field>
             </v-col>
-
+          </v-row>
+          <v-row>
             <v-col cols="12">
               <gmap-autocomplete
                 ref="searchInput"
@@ -360,6 +438,21 @@ export default {
       village_variation_id: [],
       selectedVillageDetail: [],
       units: [],
+      selectedCost: "",
+      start_date: "",
+      start_menu: false,
+      // allowedDates: (val) => new Date(val).getDate() === 1,
+      start_collect: 0,
+      costs: [
+        {
+          id: 1,
+          value: "container",
+        },
+        {
+          id: 2,
+          value: "fixed_cost",
+        },
+      ],
 
       address: [],
       errormsg: "",
@@ -423,7 +516,6 @@ export default {
           (v && v.length >= 4 && v.length <= 11) ||
           "Phone number must be  4 - 11 numbers",
       ],
-      houseNumberRules: [(v) => !!v || "House number is required"],
       ruleVillage: [(v) => !!v || "Village is required"],
       ruleVariation: [(v) => !!v || "Variation is required"],
       rulesDistrict: [(v) => !!v || "District is required"],
@@ -521,9 +613,12 @@ export default {
       formData.append("coordinator_surname", this.data.coordinator_surname);
       formData.append("coordinator_phone", this.data.coordinator_phone);
       formData.append("coordinator_email", this.data.coordinator_email);
-      formData.append("cost_by", "container");
-      formData.append("start_date", "22-01-2022");
-      formData.append("can_collect", "true");
+      formData.append("cost_by", this.selectedCost);
+      if (this.selectedCost == "fix_cost") {
+        formData.append("fix_cost", this.data.fix_cost);
+      }
+      formData.append("start_date", this.start_date);
+      formData.append("can_collect", this.start_collect);
 
       if (this.$refs.form.validate() == true) {
         this.loading = true;
@@ -547,6 +642,11 @@ export default {
             }
           })
           .catch((error) => {
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             if (error.response.status == 422) {
               var obj = error.response.data.errors;
               for (let [key, data] of Object.entries(obj)) {
@@ -555,11 +655,6 @@ export default {
             }
             this.loading = false;
             this.fetchData();
-            this.$store.commit("Toast_State", {
-              value: true,
-              color: "error",
-              msg: error.response.data.message,
-            });
           });
       }
     },

@@ -100,6 +100,16 @@ const routes = [
     }
   },
   {
+    path: '/company-request',
+    name: 'CompanyRequest',
+    component: () => import('../views/company/companyRequest/all.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+
+  {
     path: '/create/company',
     name: 'CreateCompany',
     component: () => import('../views/company/CreateCompany.vue'),

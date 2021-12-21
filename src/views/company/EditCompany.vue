@@ -4,7 +4,7 @@
       <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
-      ແກ້ໄຂຂໍ້ມູນລູກຄ້າ</v-breadcrumbs
+      ແກ້ໄຂຂໍ້ມູນບໍລິສັດ</v-breadcrumbs
     >
     <v-card>
       <v-card-text>
@@ -87,68 +87,53 @@
                 </v-col>
               </div>
             </v-row>
-            <v-row>
-              <v-col cols="6">
-                <v-text-field
-                  label="Name *"
-                  required
-                  v-model="data.name"
-                  :rules="nameRules"
-                ></v-text-field>
-                <p class="errors">
-                  {{ server_errors.name }}
-                </p>
-              </v-col>
-              <v-col cols="6">
-                <v-text-field
-                  label="Surname *"
-                  required
-                  v-model="data.surname"
-                  :rules="nameRules"
-                ></v-text-field>
-                <p class="errors">
-                  {{ server_errors.surname }}
-                </p>
-              </v-col>
-              <v-col cols="4">
-                <v-text-field
-                  label="ເຮືອນເລກທີ *"
-                  required
-                  v-model="data.house_number"
-                  :rules="houseNumberRules"
-                  type="number"
-                  class="input-number"
-                ></v-text-field>
-                <p class="errors">
-                  {{ server_errors.house_number }}
-                </p>
-              </v-col>
 
+            <v-row>
               <v-col cols="4">
                 <v-text-field
-                  v-if="data.user"
-                  label="ເບີໂທ *"
+                  label="ຊື່ບໍລິສັດ *"
+                  required
+                  v-model="data.company_name"
+                  :rules="nameRules"
+                  outlined
+                  dense
+                ></v-text-field>
+                <p class="errors">
+                  {{ server_errors.company_name }}
+                </p>
+              </v-col>
+              <v-col cols="4">
+                <v-text-field
+                  label="ເບີໂທບໍລິສັດ *"
                   required
                   v-model="data.user.phone"
-                  :rules="phoneRules"
                   type="number"
                   class="input-number"
+                  outlined
+                  dense
+                  v-if="data.user"
                 ></v-text-field>
+
                 <p class="errors">
                   {{ server_errors.phone }}
                 </p>
               </v-col>
-
               <v-col cols="4">
                 <v-text-field
-                  v-if="data.user"
-                  label="Email"
+                  label="Email ບໍລິສັດ *"
+                  required
                   v-model="data.user.email"
+                  outlined
+                  dense
+                  v-if="data.user"
                 ></v-text-field>
                 <p class="errors">
                   {{ server_errors.email }}
                 </p>
               </v-col>
+            </v-row>
+
+            <v-row>
               <v-col cols="6">
                 <v-autocomplete
                   required
@@ -157,6 +142,8 @@
                   item-text="name"
                   item-value="id"
                   label="District *"
+                  outlined
+                  dense
                   :rulesDistrict="rulesDistrict"
                 ></v-autocomplete>
                 <p class="errors">
@@ -173,6 +160,8 @@
                   item-value="id"
                   label="Village *"
                   :rules="ruleVillage"
+                  outlined
+                  dense
                 ></v-autocomplete>
                 <p class="errors">
                   {{ errormsg }}
@@ -185,6 +174,8 @@
                   item-text="name"
                   item-value="id"
                   label="ກຸ່ມ / ຄຸ້ມ"
+                  outlined
+                  dense
                 >
                 </v-autocomplete>
                 <p class="errors">
@@ -199,6 +190,9 @@
                   item-text="name"
                   item-value="id"
                   label="ຮ່ອມ / ໜ່ວຍ"
+                  outlined
+                  dense
+                  multiple
                 >
                   <template v-slot:selection="data">
                     <v-chip
@@ -216,7 +210,75 @@
                   {{ server_errors.village_details }}
                 </p>
               </v-col>
+            </v-row>
 
+            <v-row>
+              <v-col cols="6">
+                <v-select
+                  outlined
+                  dense
+                  :items="costs"
+                  v-model="data.cost_by"
+                  item-text="value"
+                  item-value="value"
+                  label="ປະເພດລາຄາ"
+                ></v-select>
+              </v-col>
+              <v-col v-if="data.cost_by == 'fix_cost'" cols="6">
+                <v-text-field
+                  label="ລາຄາ *"
+                  type="number"
+                  v-model="data.fix_cost"
+                  required
+                  outlined
+                  dense
+                ></v-text-field>
+                <p class="errors">
+                  {{ server_errors.fixed_cost }}
+                </p>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col>
+                <v-menu
+                  v-model="start_menu"
+                  :close-on-content-click="true"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="data.start_month"
+                      label="ເລີ່ມວັນທີ"
+                      readonly
+                      outlined
+                      v-bind="attrs"
+                      v-on="on"
+                      dense
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker v-model="data.start_month"></v-date-picker>
+                </v-menu>
+                <p class="errors">
+                  {{ server_errors.start_month }}
+                </p>
+              </v-col>
+              <v-col>
+                <v-checkbox v-model="data.can_collect" class="my-auto">
+                  <template v-slot:label>
+                    <div>ສາມາດເກັບຂີ້ເຫື້ອຍເລີຍໄດ້ບໍ່ ?</div>
+                  </template>
+                </v-checkbox>
+                <p class="errors">
+                  {{ server_errors.can_collect }}
+                </p>
+              </v-col>
+            </v-row>
+
+            <v-row>
               <!-- Gogle map-->
               <v-col cols="6">
                 <v-text-field
@@ -224,6 +286,8 @@
                   v-model="data.lat"
                   type="number"
                   class="input-number"
+                  outlined
+                  dense
                 ></v-text-field>
               </v-col>
               <v-col cols="6">
@@ -232,9 +296,13 @@
                   v-model="data.lng"
                   type="number"
                   class="input-number"
+                  outlined
+                  dense
                 ></v-text-field>
               </v-col>
+            </v-row>
 
+            <v-row>
               <v-col cols="12">
                 <gmap-autocomplete
                   ref="searchInput"
@@ -302,8 +370,21 @@ export default {
       selectedVillage: "",
       village_details: [],
       village_variation_id: "",
-      selectedVillageDetail: "",
+      selectedVillageDetail: [],
       units: [],
+      selectedCost: "",
+      start_menu: false,
+      start_collect: 0,
+      costs: [
+        {
+          id: 1,
+          value: "container",
+        },
+        {
+          id: 2,
+          value: "fix_cost",
+        },
+      ],
 
       address: [],
       errormsg: "",
@@ -335,16 +416,6 @@ export default {
       },
 
       //Validation
-      passwordRules: [
-        (v) => !!v || "Password is required",
-        (v) =>
-          (v && v.length >= 8) || "Password must be more than 8 characters",
-      ],
-      passwordConfirmRules: [
-        (v) => !!v || "Password Confirm is required",
-        (v) =>
-          (v && v.length >= 8) || "Password must be more than 8 characters",
-      ],
       nameRules: [
         (v) => !!v || "Name is required",
         (v) => (v && v.length >= 2) || "Name must be less than 2 characters",
@@ -355,16 +426,16 @@ export default {
           (v && v.length >= 4 && v.length <= 11) ||
           "Phone number must be  4 - 11 numbers",
       ],
-      houseNumberRules: [(v) => !!v || "House number is required"],
       ruleVillage: [(v) => !!v || "Village is required"],
       rulesDistrict: [(v) => !!v || "District is required"],
     };
   },
   methods: {
     fetchData() {
+      this.selectedVillageDetail = [];
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("customer/" + this.$route.params.id)
+        .get("company/" + this.$route.params.id)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
@@ -373,7 +444,7 @@ export default {
               this.selectedVillage = res.data.data.village_id;
               res.data.data.village_details.map((item) => {
                 this.village_variation_id = item.village_variation_id;
-                this.selectedVillageDetail = item.id;
+                this.selectedVillageDetail.push(item.id);
               });
             }, 300);
           }
@@ -464,26 +535,31 @@ export default {
       this.image_list.map((item) => {
         formData.append("images[]", item);
       });
-      // this.selectedVillageDetail.map((item) => {
-      //   formData.append("village_details[]", item);
-      // });
       this.selectedVillageDetail.map((item) => {
         formData.append("village_details[]", item);
       });
-      formData.append("name", this.data.name);
-      formData.append("surname", this.data.surname);
+      formData.append("company_name", this.data.company_name);
       formData.append("village_id", this.selectedVillage);
-      formData.append("house_number", this.data.house_number);
-      formData.append("phone", this.data.user.phone);
-      formData.append("email", this.data.user.email);
       formData.append("lat", this.data.lat);
       formData.append("lng", this.data.lng);
+      formData.append("phone", this.data.user.phone);
+      formData.append("email", this.data.user.email);
+      formData.append("cost_by", this.data.cost_by);
+      if (this.data.cost_by == "fix_cost") {
+        formData.append("fix_cost", this.data.fix_cost);
+      }
+      formData.append("start_date", this.data.start_month);
+      if (this.data.can_collect == true) {
+        formData.append("can_collect", 1);
+      }
+      if (this.data.can_collect == false) {
+        formData.append("can_collect", 0);
+      }
       formData.append("_method", "PUT");
-
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .post("customer/" + this.$route.params.id, formData, {
+          .post("company/" + this.$route.params.id, formData, {
             headers: { "Content-Type": "multipart/form-data" },
           })
           .then((res) => {
@@ -497,7 +573,7 @@ export default {
                   msg: res.data.message,
                 });
                 this.$router.push({
-                  name: "Customer",
+                  name: "Company",
                 });
                 // this.reset();
               }, 300);
@@ -633,28 +709,35 @@ export default {
       this.fetchVillageDetail();
     },
     //Clear error change
-    "data.name": function () {
-      this.server_errors.name = "";
+    "data.company_name": function () {
+      this.server_errors.company_name = "";
     },
-    "data.surname": function () {
-      this.server_errors.surname = "";
+    "data.coordinator_name": function () {
+      this.server_errors.coordinator_name = "";
     },
-    "data.house_number": function () {
-      this.server_errors.house_number = "";
+    "data.coordinator_surname": function () {
+      this.server_errors.coordinator_surname = "";
+    },
+    "data.coordinator_phone": function () {
+      this.server_errors.coordinator_phone = "";
+    },
+    "data.coordinator_email": function () {
+      this.server_errors.coordinator_email = "";
     },
     "data.phone": function () {
       this.server_errors.phone = "";
-      this.server_errors.email = "";
     },
     "data.email": function () {
       this.server_errors.email = "";
     },
-    "data.password": function () {
-      this.server_errors.password = "";
-    },
-    "data.password_confirmation": function () {
-      this.server_errors.password = "";
-    },
+    // "data.can_collect": function () {
+    //   console.log(this.data.can_collect);
+    //   if (this.data.can_collect == true) {
+    //     return 1;
+    //   } else if (this.data.can_collect == false) {
+    //     return 0;
+    //   }
+    // },
     // village_variation_id: function () {
     //   if (this.village_variation_id) {
     //     // this.selectedVillageDetail = this.village_variation_id;
@@ -662,9 +745,9 @@ export default {
     //   console.log(this.selectedVillageDetail);
     //   // this.fetchUnits();
     // },
-    selectedVillageDetail: function () {
-      console.log("Hi");
-    },
+    // selectedVillageDetail: function () {
+    //   console.log("Hi");
+    // },
 
     village_variation_id: function () {
       // console.log(this.village_variation_id);

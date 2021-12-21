@@ -7,6 +7,59 @@
         </v-btn>
       </v-col>
       <v-col>
+        <v-menu
+          v-model="start_menu"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="start_date"
+              label="ເລີ່ມວັນທີ"
+              readonly
+              outlined
+              v-bind="attrs"
+              v-on="on"
+              dense
+            ></v-text-field>
+          </template>
+          <v-date-picker
+            v-model="start_date"
+            @input="fetchData()"
+          ></v-date-picker>
+        </v-menu>
+      </v-col>
+      <v-col>
+        <v-menu
+          v-model="end_menu"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="end_date"
+              label="ຫາວັນທີ"
+              readonly
+              outlined
+              v-bind="attrs"
+              v-on="on"
+              dense
+            ></v-text-field>
+          </template>
+          <v-date-picker
+            v-model="end_date"
+            @input="fetchData()"
+          ></v-date-picker>
+        </v-menu>
+      </v-col>
+
+      <v-col>
         <v-autocomplete
           outlined
           dense
@@ -29,6 +82,7 @@
           multiple
         ></v-autocomplete>
       </v-col>
+
       <v-col>
         <v-select
           outlined
@@ -41,113 +95,100 @@
           multiple
         ></v-select>
       </v-col>
-      <v-col>
-        <v-text-field
-          outlined
-          dense
-          clearable
-          prepend-inner-icon="mdi-magnify"
-          label="ຊື່ລູກຄ້າ"
-          type="text"
-          v-model="search"
-          @keyup.enter="Search()"
-        >
-        </v-text-field>
-      </v-col>
     </v-row>
     <div>
       <v-card>
-        <v-tabs
-          v-model="tab"
-          dark
-          background-color="tab-color lighten-2"
-          slider-color="indigo lighten-5"
-        >
-          <v-tab href="#tab-1"> <v-icon>mdi-account</v-icon>ລູກຄ້າ</v-tab>
-          <!-- <v-tab href="#tab-2">ລູກຄ້າ2</v-tab>
-          <v-tab href="#tab-3">ລູກຄ້າ3</v-tab> -->
-        </v-tabs>
-        <v-tabs-items v-model="tab">
-          <v-tab-item value="tab-1">
-            <v-card flat>
-              <v-card-text>
-                <v-data-table
-                  :headers="headers"
-                  :items="customers"
-                  :search="search"
-                  :disable-pagination="true"
-                  hide-default-footer
-                >
-                  <template v-slot:item.media="{ item }">
-                    <v-avatar
-                      size="36px"
-                      v-for="(img, index) in item.media"
-                      :key="index"
-                    >
-                      <img v-if="img.thumb" :src="img.thumb" />
-                    </v-avatar>
-                  </template>
-                  <template v-slot:item.company_coordinators="{ item }">
-                    <div
-                      v-for="(data, index) in item.company_coordinators"
-                      :key="index"
-                    >
-                      <div>{{ data.name }} {{ data.surname }}</div>
-                    </div>
-                  </template>
-                  <!--Role -->
-                  <template v-slot:item.cost_by="{ item }">
-                    <div>{{ item.cost_by }}</div>
-                  </template>
+        <v-card-title>
+          ຂໍ້ມູນລູກຄ້າທີ່ເປັນບໍລິສັດ
+          <v-divider class="mx-4" vertical></v-divider>
+          <v-spacer></v-spacer>
+          <v-text-field
+            outlined
+            dense
+            clearable
+            prepend-inner-icon="mdi-magnify"
+            label="ຄົ້ນຫາ"
+            type="text"
+            v-model="search"
+            @keyup.enter="Search()"
+          >
+          </v-text-field>
+        </v-card-title>
+        <v-card-text>
+          <v-data-table
+            :headers="headers"
+            :items="customers"
+            :search="search"
+            :disable-pagination="true"
+            hide-default-footer
+          >
+            <template v-slot:item.media="{ item }">
+              <v-avatar
+                size="36px"
+                v-for="(img, index) in item.media"
+                :key="index"
+              >
+                <img v-if="img.thumb" :src="img.thumb" />
+              </v-avatar>
+            </template>
+            <template v-slot:item.company_coordinators="{ item }">
+              <div
+                v-for="(data, index) in item.company_coordinators"
+                :key="index"
+              >
+                <div>{{ data.name }} {{ data.surname }}</div>
+              </div>
+            </template>
+            <!--Role -->
+            <template v-slot:item.cost_by="{ item }">
+              <div>{{ item.cost_by }}</div>
+            </template>
 
-                  <template v-slot:item.actions="{ item }">
-                    <v-menu offset-y>
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-icon
-                          color="primary"
-                          dark
-                          v-bind="attrs"
-                          v-on="on"
-                          medium
-                          class="mr-2"
-                          >mdi-dots-vertical</v-icon
-                        >
-                      </template>
-                      <v-list>
-                        <v-list-item link @click="viewPage(item.id)">
-                          <v-list-item-title>
-                            <v-icon small class="mr-2"> mdi-eye </v-icon>
-                            ລາຍລະອຽດ
-                          </v-list-item-title>
-                        </v-list-item>
-                        <v-list-item link @click="editPage(item.id)">
-                          <v-list-item-title>
-                            <v-icon small class="mr-2"> mdi-pencil </v-icon>
-                            ແກ້ໄຂບິນ
-                          </v-list-item-title>
-                        </v-list-item>
-                        <v-list-item link @click="deleteItem(item.id)">
-                          <v-list-item-title>
-                            <v-icon small> mdi-delete </v-icon>
-                            ລຶບ
-                          </v-list-item-title>
-                        </v-list-item>
-                      </v-list>
-                    </v-menu>
-                  </template> </v-data-table
-                ><br />
-                <template>
-                  <Pagination
-                    v-if="pagination.total_pages > 1"
-                    :pagination="pagination"
-                    :offset="offset"
-                    @paginate="fetchData()"
-                  ></Pagination>
+            <template v-slot:item.actions="{ item }">
+              <v-menu offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon
+                    color="primary"
+                    dark
+                    v-bind="attrs"
+                    v-on="on"
+                    medium
+                    class="mr-2"
+                    >mdi-dots-vertical</v-icon
+                  >
                 </template>
-              </v-card-text>
-            </v-card>
-          </v-tab-item>
-        </v-tabs-items>
+                <v-list>
+                  <v-list-item link @click="viewPage(item.id)">
+                    <v-list-item-title>
+                      <v-icon small class="mr-2"> mdi-eye </v-icon>
+                      ລາຍລະອຽດ
+                    </v-list-item-title>
+                  </v-list-item>
+                  <v-list-item link @click="editPage(item.id)">
+                    <v-list-item-title>
+                      <v-icon small class="mr-2"> mdi-pencil </v-icon>
+                      ແກ້ໄຂ
+                    </v-list-item-title>
+                  </v-list-item>
+                  <v-list-item link @click="deleteItem(item.id)">
+                    <v-list-item-title>
+                      <v-icon small> mdi-delete </v-icon>
+                      ລຶບ
+                    </v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </template> </v-data-table
+          ><br />
+          <template>
+            <Pagination
+              v-if="pagination.total_pages > 1"
+              :pagination="pagination"
+              :offset="offset"
+              @paginate="fetchData()"
+            ></Pagination>
+          </template>
+        </v-card-text>
       </v-card>
     </div>
 
@@ -171,14 +212,18 @@
     </ModalDelete>
   </v-container>
 </template>
-
+ 
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
   name: "Customer",
   data() {
     return {
-      tab: null,
+      start_date: "",
+      end_date: "",
+      start_menu: false,
+      end_menu: false,
+
       customers: [],
       loading: false,
       customerId: "",
@@ -189,8 +234,8 @@ export default {
       search: "",
       oldVal: "",
       //Add Package
-      start_date: "",
-      start_menu: false,
+      // start_date: "",
+      // start_menu: false,
       allowedDates: (val) => new Date(val).getDate() === 1,
       packages: [],
       selectedPackage: "",
@@ -232,6 +277,7 @@ export default {
   },
   methods: {
     fetchData() {
+      console.log(this.selectedVillage);
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("company", {
@@ -240,6 +286,8 @@ export default {
             per_page: this.per_page,
             filter: this.search,
             villages: this.selectedVillage,
+            date_from: this.start_date,
+            date_end: this.start_date,
             statuses: this.selectedStatus,
           },
         })

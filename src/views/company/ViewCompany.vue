@@ -4,7 +4,7 @@
       <v-btn text class="text-primary" @click="backPrevios()">
         <v-icon>mdi-chevron-left</v-icon></v-btn
       >
-      ລາຍລະອຽດລູກຄ້າ</v-breadcrumbs
+      ລາຍລະອຽດບໍລິສັດ</v-breadcrumbs
     >
     <v-card>
       <!--
@@ -21,31 +21,42 @@
           transition="fade-transition"
         ></v-carousel-item>
       </v-carousel>
-
       <v-card-text>
         <v-container>
           <v-row>
             <v-list-item>
               <v-list-item-icon>
-                <v-icon color="indigo"> mdi-account-circle-outline </v-icon>
+                <v-icon color="indigo">mdi-office-building </v-icon>
               </v-list-item-icon>
 
               <v-list-item-content>
+                <v-list-item-subtitle>ບໍລິສັດ</v-list-item-subtitle>
                 <v-list-item-title
-                  >{{ data.name }} {{ data.surname }}</v-list-item-title
+                  >{{ data.name }} {{ data.company_name }}</v-list-item-title
                 >
-                <v-list-item-subtitle>ຊື່ ແລະ ນາມສະກຸນ</v-list-item-subtitle>
               </v-list-item-content>
 
               <v-spacer></v-spacer>
               <v-list-item-icon>
-                <v-icon class="mr-6" color="indigo">mdi-home</v-icon>
+                <v-icon color="indigo" class="mr-6"> mdi-phone </v-icon>
+              </v-list-item-icon>
+
+              <v-list-item-content>
+                <v-list-item-subtitle>ເບີໂທ</v-list-item-subtitle>
+                <v-list-item-title v-if="data.user">
+                  {{ data.user.phone }}</v-list-item-title
+                >
+              </v-list-item-content>
+
+              <v-spacer></v-spacer>
+              <v-list-item-icon>
+                <v-icon class="mr-6" color="indigo">mdi-email</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
+                <v-list-item-subtitle>Email</v-list-item-subtitle>
                 <v-list-item-title v-if="data.user">
-                  {{ data.house_number }}</v-list-item-title
+                  {{ data.user.email }}</v-list-item-title
                 >
-                <v-list-item-subtitle>ເຮືອນເລກທີ</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
             <v-divider inset></v-divider>
@@ -53,24 +64,42 @@
           <v-row>
             <v-list-item>
               <v-list-item-icon>
-                <v-icon color="indigo"> mdi-phone </v-icon>
+                <v-icon color="indigo">mdi-account-circle</v-icon>
               </v-list-item-icon>
-
               <v-list-item-content>
-                <v-list-item-title v-if="data.user">
-                  {{ data.user.phone }}</v-list-item-title
+                <v-list-item-subtitle>ຜູ້ຮັບຜິດຊອບ</v-list-item-subtitle>
+                <v-list-item-title
+                  v-for="(coor, index) in data.company_coordinators"
+                  :key="index"
                 >
-                <v-list-item-subtitle>ເບີໂທ</v-list-item-subtitle>
+                  {{ coor.name }} {{ coor.surname }}
+                </v-list-item-title>
               </v-list-item-content>
               <v-spacer></v-spacer>
               <v-list-item-icon>
-                <v-icon class="mr-6" color="indigo">mdi-email</v-icon>
+                <v-icon color="indigo" class="mr-6">mdi-phone</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-title v-if="data.user">
-                  {{ data.user.email }}</v-list-item-title
+                <v-list-item-subtitle>ເບີໂທ</v-list-item-subtitle>
+                <v-list-item-title
+                  v-for="(coor, index) in data.company_coordinators"
+                  :key="index"
                 >
+                  {{ coor.phone }}
+                </v-list-item-title>
+              </v-list-item-content>
+              <v-spacer></v-spacer>
+              <v-list-item-icon>
+                <v-icon color="indigo" class="mr-6">mdi-email</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
                 <v-list-item-subtitle>Email</v-list-item-subtitle>
+                <v-list-item-title
+                  v-for="(coor, index) in data.company_coordinators"
+                  :key="index"
+                >
+                  {{ coor.email }}
+                </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
             <v-divider inset></v-divider>
@@ -179,12 +208,13 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("customer/" + this.$route.params.id)
+        .get("company/" + this.$route.params.id)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data;
+              console.log(this.data);
             }, 300);
           }
         })
@@ -221,7 +251,7 @@ export default {
     },
     editPage(id) {
       this.$router.push({
-        name: "EditCustomer",
+        name: "EditCompany",
         params: { id },
       });
     },

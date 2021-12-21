@@ -178,6 +178,7 @@
                   {{ errormsg }}
                 </p>
               </v-col>
+
               <v-col cols="6">
                 <v-autocomplete
                   v-model="village_variation_id"
@@ -199,6 +200,7 @@
                   item-text="name"
                   item-value="id"
                   label="ຮ່ອມ / ໜ່ວຍ"
+                  multiple
                 >
                   <template v-slot:selection="data">
                     <v-chip
@@ -302,7 +304,7 @@ export default {
       selectedVillage: "",
       village_details: [],
       village_variation_id: "",
-      selectedVillageDetail: "",
+      selectedVillageDetail: [],
       units: [],
 
       address: [],
@@ -362,6 +364,7 @@ export default {
   },
   methods: {
     fetchData() {
+      this.selectedVillageDetail = [];
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("customer/" + this.$route.params.id)
@@ -373,7 +376,8 @@ export default {
               this.selectedVillage = res.data.data.village_id;
               res.data.data.village_details.map((item) => {
                 this.village_variation_id = item.village_variation_id;
-                this.selectedVillageDetail = item.id;
+                this.selectedVillageDetail.push(item.id);
+                console.log(this.selectedVillageDetail);
               });
             }, 300);
           }
@@ -460,6 +464,7 @@ export default {
     },
 
     UpdateData() {
+      console.log(this.selectedVillageDetail);
       let formData = new FormData();
       this.image_list.map((item) => {
         formData.append("images[]", item);
@@ -662,12 +667,11 @@ export default {
     //   console.log(this.selectedVillageDetail);
     //   // this.fetchUnits();
     // },
-    selectedVillageDetail: function () {
-      console.log("Hi");
-    },
+    // selectedVillageDetail: function () {
+    //   console.log("Hi");
+    // },
 
     village_variation_id: function () {
-      // console.log(this.village_variation_id);
       if (this.village_variation_id) {
         this.fetchUnit();
       }

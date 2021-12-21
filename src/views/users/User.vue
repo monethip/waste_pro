@@ -10,19 +10,39 @@
     <v-row justify="center">
       <v-col>
         <v-card class="pa-2">
-          <v-card-title>
+          <v-card-title class="my-auto">
             ຂໍ້ມູນ Users ({{ pagination.total }})
             <v-divider class="mx-4" vertical></v-divider>
             <v-spacer></v-spacer>
-            <v-text-field
-              v-model="search"
-              clearable
-              prepend-inner-icon="mdi-magnify"
-              label="Search"
-              single-line
-              hide-details
-              @keyup.enter="Search()"
-            ></v-text-field>
+            <v-row>
+              <v-col>
+                <v-select
+                  outlined
+                  dense
+                  :items="roles"
+                  v-model="selectedRoles"
+                  item-text="name"
+                  item-value="name"
+                  label="Roles"
+                  multiple
+                  @input="fetchData()"
+                ></v-select>
+                <v-spacer></v-spacer>
+              </v-col>
+              <v-col>
+                <v-text-field
+                  v-model="search"
+                  clearable
+                  prepend-inner-icon="mdi-magnify"
+                  label="Search"
+                  single-line
+                  hide-details
+                  @keyup.enter="Search()"
+                  outlined
+                  dense
+                ></v-text-field>
+              </v-col>
+            </v-row>
           </v-card-title>
           <v-data-table
             :headers="headers"
@@ -571,6 +591,7 @@ export default {
       roleDialog: false,
       updateRoleDialog: false,
       selectedRole: "",
+      selectedRoles: [],
       roles: [],
       revokeRoles: [],
       permissionDialog: false,
@@ -665,6 +686,7 @@ export default {
             page: this.pagination.current_page,
             per_page: this.per_page,
             filter: this.search,
+            roles: this.selectedRoles,
           },
         })
         .then((res) => {
@@ -1050,6 +1072,7 @@ export default {
     },
   },
   created() {
+    this.fetchRole();
     this.fetchData();
   },
 };
