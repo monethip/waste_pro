@@ -748,6 +748,9 @@ export default {
       const index = this.selectedVillageDetail.indexOf(item.id);
       if (index >= 0) this.selectedVillageDetail.splice(index, 1);
     },
+    reset() {
+      this.$refs.form.reset();
+    },
   },
   watch: {
     selectedDistrict: function () {

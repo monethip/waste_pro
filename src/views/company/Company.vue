@@ -99,7 +99,7 @@
     <div>
       <v-card>
         <v-card-title>
-          ຂໍ້ມູນລູກຄ້າທີ່ເປັນບໍລິສັດ
+          ຂໍ້ມູນລູກຄ້າທີ່ເປັນບໍລິສັດ ({{ pagination.total }})
           <v-divider class="mx-4" vertical></v-divider>
           <v-spacer></v-spacer>
           <v-text-field
@@ -136,7 +136,7 @@
                 v-for="(data, index) in item.company_coordinators"
                 :key="index"
               >
-                <div>{{ data.name }} {{ data.surname }}</div>
+                <div v-if="index == 0">{{ data.name }} {{ data.surname }}</div>
               </div>
             </template>
             <!--Role -->
@@ -158,6 +158,12 @@
                   >
                 </template>
                 <v-list>
+                  <v-list-item link @click="addUser(item)">
+                    <v-list-item-title>
+                      <v-icon small class="mr-2"> mdi-plus </v-icon>
+                      ເພີ່ມຜູ້ປະສານງານ
+                    </v-list-item-title>
+                  </v-list-item>
                   <v-list-item link @click="viewPage(item.id)">
                     <v-list-item-title>
                       <v-icon small class="mr-2"> mdi-eye </v-icon>
@@ -191,6 +197,72 @@
         </v-card-text>
       </v-card>
     </div>
+
+    <!-- Modal Add-->
+    <ModalAdd>
+      <template @close="close">
+        <v-card>
+          <v-card-title>
+            <p>ເພີ່ມຜູ້ປະສານງານ</p>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-form ref="form" lazy-validation>
+                <v-row>
+                  <v-col cols="12">
+                    <v-text-field
+                      label="Name *"
+                      required
+                      v-model="user.name"
+                    ></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.name }}
+                    </p>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field
+                      label="Surname *"
+                      required
+                      v-model="user.surname"
+                    ></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.surname }}
+                    </p>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field
+                      label="ເບີໂທ *"
+                      required
+                      v-model="user.phone"
+                      type="number"
+                      class="input-number"
+                    ></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.phone }}
+                    </p>
+                  </v-col>
+                </v-row>
+              </v-form>
+            </v-container>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeAddModal()">
+                Close
+              </v-btn>
+              <v-btn
+                color="blue darken-1"
+                text
+                :loading="loading"
+                :disabled="loading"
+                @click="AddItem()"
+              >
+                Save
+              </v-btn>
+            </v-card-actions>
+          </v-card-text>
+        </v-card>
+      </template>
+    </ModalAdd>
 
     <!--Delete Modal-->
     <ModalDelete>
@@ -261,6 +333,8 @@ export default {
           name: "trial",
         },
       ],
+      user: {},
+      item: {},
 
       headers: [
         { text: "ບໍລິສັດ", value: "company_name" },
@@ -277,7 +351,6 @@ export default {
   },
   methods: {
     fetchData() {
-      console.log(this.selectedVillage);
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("company", {
@@ -378,6 +451,52 @@ export default {
           this.loading = false;
         });
     },
+    addUser(data) {
+      this.item = data;
+      this.$store.commit("modalAdd_State", true);
+    },
+    closeAddModal() {
+      this.$store.commit("modalAdd_State", false);
+    },
+    AddItem() {
+      if (this.$refs.form.validate() == true) {
+        this.loading = true;
+        this.$axios
+          .post("company/" + this.item.id + "/coordinator", this.user)
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.loading = false;
+                this.closeAddModal();
+                this.user = {};
+                this.fetchData();
+                this.reset();
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
+              }, 300);
+            }
+          })
+          .catch((error) => {
+            this.loading = false;
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
+            this.fetchData();
+            if (error.response.status == 422) {
+              var obj = error.response.data.errors;
+              for (let [key, customer] of Object.entries(obj)) {
+                this.server_errors[key] = customer[0];
+              }
+            }
+          });
+      }
+    },
+
     createPage() {
       this.$router.push({
         name: "CreateCompany",
@@ -399,7 +518,6 @@ export default {
       GetOldValueOnInput(this);
     },
     statusColor(value) {
-      console.log(value);
       if (value == "active") return "success";
       else if (value == "inactive") return "error";
       else return "info";
@@ -425,6 +543,15 @@ export default {
     },
     start_date: function () {
       this.server_errors.start_month = "";
+    },
+    "user.name": function () {
+      this.server_errors.name = "";
+    },
+    "user.surname": function () {
+      this.server_errors.name = "";
+    },
+    "user.phone": function () {
+      this.server_errors.phone = "";
     },
   },
   created() {

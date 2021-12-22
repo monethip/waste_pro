@@ -28,12 +28,13 @@
             :items="roles"
             :search="search"
             :disable-pagination="true"
+            expand
             hide-default-footer
           >
-            <template v-slot:item.created_at="{ item }">
+            <!--   <template v-slot:item.created_at="{ item }">
               {{ moment(item.create_at).format("DD-MM-YYYY") }}
-              <!-- {{item.created_at}} -->
-            </template>
+             
+            </template>-->
             <!--Permission -->
             <template v-slot:item.permissions="{ item }">
               <div>
@@ -344,7 +345,7 @@ export default {
       headers: [
         { text: "Role Name", value: "name" },
         { text: "Permission", value: "permissions" },
-        { text: "Created", value: "created_at", sortable: false },
+        // { text: "Created", value: "created_at", sortable: false },
         { text: "", value: "actions", sortable: false, align: "center" },
       ],
       loading: false,
