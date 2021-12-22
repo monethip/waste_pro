@@ -685,7 +685,7 @@ export default {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
-            filter: this.search,
+            // filter: this.search,
             roles: this.selectedRoles,
           },
         })
@@ -1070,6 +1070,9 @@ export default {
         this.fetchData();
       }
     },
+    // selectedRoles: function () {
+    //   this.fetchData();
+    // },
   },
   created() {
     this.fetchRole();
