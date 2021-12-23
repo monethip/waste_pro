@@ -5,8 +5,11 @@
         <v-btn class="btn-primary mr-6" @click="createPlan()"
           ><v-icon>mdi-plus </v-icon> Add
         </v-btn>
-        <v-btn class="btn-primary" @click="createPage()"
-          ><v-icon>mdi-application-export </v-icon> Export File
+        <v-btn class="btn-primary mr-6" @click="createPage()"
+          ><v-icon>mdi-application-export </v-icon> Export ລູກຄ້າຄົວເຮືອນ
+        </v-btn>
+        <v-btn class="btn-primary" @click="exportCompany()"
+          ><v-icon>mdi-application-export </v-icon> Export ລູກຄ້າບໍລິສັດ
         </v-btn>
       </v-col>
       <v-col>
@@ -241,6 +244,12 @@ export default {
         name: "Export-Plan",
       });
     },
+    exportCompany() {
+      this.$router.push({
+        name: "Export-Plan-Company",
+      });
+    },
+
     createPlan() {
       this.$router.push({
         name: "CreatePlan",

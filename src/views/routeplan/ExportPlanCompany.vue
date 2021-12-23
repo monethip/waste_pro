@@ -4,7 +4,7 @@
       <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
-      ເລືອກລູກຄ້າເຂົ້າແຜນເສັ້ນທາງ</v-breadcrumbs
+      ເລືອກບໍລິສັດເຂົ້າແຜນເສັ້ນທາງ</v-breadcrumbs
     >
     <v-row class="my-n4">
       <v-col cols="12" class="mb-4">
@@ -226,8 +226,8 @@ export default {
       // selectedAllVillage: [],
 
       headers: [
-        { text: "ຊື່", value: "name" },
-        { text: "ນາມສະກຸນ", value: "surname" },
+        { text: "ບໍລິສັດ", value: "company_name" },
+        // { text: "ຜູ້ຮບຜິດຊອບ", value: "company_coordinators.name" },
         { text: "Phone", value: "user.phone", sortable: false },
         { text: "ລາຍລະອຽດທີ່ຢູ່", value: "address_detail" },
         { text: "ບ້ານ", value: "village.name", sortable: true },
@@ -286,7 +286,7 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("customer", {
+        .get("company", {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
@@ -347,10 +347,11 @@ export default {
     },
 
     createPage() {
+      console.log("Company");
       //  var a = [];
       if (this.customers.length > 0 && this.selectedVillage.length > 0) {
         this.$router.push({
-          name: "CreateExportPlan",
+          name: "CreateExportPlanCompany",
           params: {
             items: this.customers,
             villages: this.selectedVillage,
@@ -366,7 +367,7 @@ export default {
     },
     viewPage(id) {
       this.$router.push({
-        name: "ViewCustomer",
+        name: "ViewCompany",
         params: { id },
       });
     },
@@ -401,29 +402,9 @@ export default {
         };
       }
     },
-
-    // getSiteIcon(status) {
-    //   try {
-    //     switch (status) {
-    //       case 1:
-    //         return require("@coms/../../src/assets/pin1.svg");
-
-    //       case 2:
-    //         return require("@coms/../../src/assets/pin2.svg");
-
-    //       case 3:
-    //         return require("@coms/../../src/assets/pin3.svg");
-
-    //       default:
-    //         return require("@coms/../../src/assets/pin1.svg");
-    //     }
-    //   } catch (e) {
-    //     return null;
-    //   }
-    // },
     toggleInfo(m, key) {
       this.infoPosition = this.getMarkers(m);
-      this.infoContent = m.name + " (" + m.house_number + ") ";
+      this.infoContent = m.company_name;
       if (this.infoCurrentKey == key) {
         this.infoOpened = !this.infoOpened;
       } else {
@@ -465,19 +446,6 @@ export default {
     },
     selectedVillage: function () {
       this.fetchData();
-      // var data = {};
-      // this.villages.filter((item) => {
-      //   // this.selectedVillage.includes(item.id);
-      //   if (this.selectedVillage) {
-      //     data.push(item);
-      //   }
-      // });
-      // console.log(data);
-      // // console.log("Hi" + selectedAllVillage);
-      // // // this.villages.filter((item) => {
-      // // this.selectedAllVillage.push(this.selectedVillage);
-      // // console.log(this.selectedAllVillage);
-      // // });
     },
     selectedDistrict: function () {
       this.fetchVillage();
@@ -486,7 +454,6 @@ export default {
   created() {
     this.fetchData();
     this.fetchAddress();
-    // this.selectedVillage = this.villages.slice();
   },
 };
 </script>

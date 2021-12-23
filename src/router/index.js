@@ -268,6 +268,16 @@ const routes = [
     }
   },
   {
+    path: '/create/export/company/plan',
+    name: 'CreateExportPlanCompany',
+    component: () => import('@/views/routeplan/CreateExportPlanCompany.vue'),
+    props: true,
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
     path: '/plan',
     name: 'Plan',
     component: () => import('@/views/routeplan/Plan.vue'),
@@ -289,6 +299,15 @@ const routes = [
     path: '/export/plan',
     name: 'Export-Plan',
     component: () => import('@/views/routeplan/ExportPlan.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/export/company/plan',
+    name: 'Export-Plan-Company',
+    component: () => import('@/views/routeplan/ExportPlanCompany.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
