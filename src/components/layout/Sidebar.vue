@@ -286,7 +286,7 @@ export default {
           menu: [
             {
               icon: "mdi-account-group",
-              title: "ລູກຄ້າທົ່ວໄປ",
+              title: "ລູກຄ້າຄົວເຮືອນ",
               to: "/customer",
               permissions: ["get_customer"],
             },

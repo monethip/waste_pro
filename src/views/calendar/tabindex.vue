@@ -72,10 +72,14 @@ export default {
   },
   methods: {
     backPrevios() {
-      this.$router.go(-2);
+      this.$router.go(-1);
       // this.$router.push({
       //   name: "PlanCalendar",
       //   params: { id },
+      // });
+      // this.$router.push({
+      //   name: "PlanCalendar",
+      //   params: { id: this.plan_monthId },
       // });
     },
   },

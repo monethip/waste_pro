@@ -1,5 +1,8 @@
 <template>
   <v-container>
+    <v-btn text class="text-primary mb-4" @click="backPrevios()">
+      <v-icon>mdi-chevron-left</v-icon> Back</v-btn
+    >
     <v-row class="mb-n6">
       <v-col>
         <v-btn @click="openAddModal()" class="btn-primary"
@@ -226,6 +229,9 @@ export default {
     };
   },
   methods: {
+    backPrevios() {
+      this.$router.go(-1);
+    },
     fetchMember() {
       this.$axios
         .get("employee")

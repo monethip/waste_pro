@@ -16,6 +16,7 @@ export default {
             oldVal: "",
             summary: {},
             statuses: [],
+            plan_monthId: this.$route.params.id,
             headers: [
                 { text: "ລຳດັບ", value: "route_plan_detail.priority" },
                 { text: "ຊື່ລູກຄ້າ", value: "customer" },
