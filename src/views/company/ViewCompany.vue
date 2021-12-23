@@ -98,7 +98,7 @@
                 </v-list-item-title>
               </v-list-item-content>
 
-              <v-list-item-content>
+              <v-list-item-content class="text-center">
                 <v-list-item-title>
                   <v-icon small class="mr-2" @click="editItem(coor)">
                     mdi-pencil
@@ -142,9 +142,11 @@
                 <v-icon color="indigo" class="mr-6">mdi-package</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-subtitle>ປະເພດການເກັບ</v-list-item-subtitle>
+                <v-list-item-subtitle>ປະເພດແພັກເກດ</v-list-item-subtitle>
                 <v-list-item-title>{{ data.cost_by }}</v-list-item-title>
-                <v-list-item-subtitle>{{ data.fix_cost }}</v-list-item-subtitle>
+                <v-list-item-subtitle v-if="data.cost_by == 'fix_cost'">{{
+                  Intl.NumberFormat().format(data.fix_cost)
+                }}</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
             <v-divider inset></v-divider>
@@ -481,4 +483,11 @@ export default {
 
 <style lang="scss">
 @import "../../../public/scss/main.scss";
+.v-list-item__title,
+.v-list-item__subtitle {
+  flex: 1 1 100%;
+  overflow: hidden;
+  text-overflow: inherit !important;
+  white-space: pre-line !important;
+}
 </style>

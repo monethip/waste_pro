@@ -56,9 +56,9 @@
                   align="center"
                   v-for="(item, index) in preview_list"
                   :key="index"
-                  class="mt-5"
+                  class="mt-5 text-center"
                 >
-                  <div>
+                  <div class="text-center">
                     <v-avatar class="avatar rounded mr-6" size="94px">
                       <img :src="item" alt="Image" />
                     </v-avatar>
@@ -75,7 +75,7 @@
                 </v-col>
               </div>
               <div v-else>
-                <v-col align="center" class="mt-5">
+                <v-col align="center text-center" class="mt-5">
                   <v-avatar
                     v-for="(item, index) in data.media"
                     :key="index"
