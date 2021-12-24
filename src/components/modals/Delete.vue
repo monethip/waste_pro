@@ -1,14 +1,8 @@
 <template>
-  <v-dialog v-model="active" max-width="500px">
+  <v-dialog v-model="active" max-width="480px">
     <v-card>
-      <v-card-text>
-        <v-row justify="center">
-          <v-col justify="center"
-            ><v-card-title justify="center"
-              >ຕ້ອງການລົບຂໍ້ມູນນີ້ບໍ່ ?</v-card-title
-            ></v-col
-          >
-        </v-row>
+      <v-card-text class="pt-8">
+        <h3 align="center" class="py-2">ຕ້ອງການລົບຂໍ້ມູນນີ້ບໍ່ ?</h3>
         <slot v-bind="{ close }" />
       </v-card-text>
     </v-card>

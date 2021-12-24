@@ -99,8 +99,6 @@ export default {
     //   }
     // },
     SubmitLogin() {
-      // console.log(this.users);
-      // this.$store.commit("Toast_State", this.toast);
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.AdminLogin(this.users)

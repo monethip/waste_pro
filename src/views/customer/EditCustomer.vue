@@ -4,12 +4,9 @@
       <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
-      Update Customer</v-breadcrumbs
+      ແກ້ໄຂຂໍ້ມູນລູກຄ້າ</v-breadcrumbs
     >
     <v-card>
-      <v-card-title>
-        <span class="headline">Update Customer</span>
-      </v-card-title>
       <v-card-text>
         <v-container>
           <v-form ref="form" lazy-validation>
@@ -181,28 +178,42 @@
                   {{ errormsg }}
                 </p>
               </v-col>
+
               <v-col cols="6">
-                <v-select
+                <v-autocomplete
                   v-model="village_variation_id"
                   :items="village_details"
                   item-text="name"
                   item-value="id"
                   label="ກຸ່ມ / ຄຸ້ມ"
-                ></v-select>
+                >
+                </v-autocomplete>
                 <p class="errors">
                   {{ server_errors.village_details }}
                 </p>
               </v-col>
 
               <v-col cols="6">
-                <v-select
+                <v-autocomplete
                   v-model="selectedVillageDetail"
                   :items="units"
                   item-text="name"
                   item-value="id"
                   label="ຮ່ອມ / ໜ່ວຍ"
                   multiple
-                ></v-select>
+                >
+                  <template v-slot:selection="data">
+                    <v-chip
+                      v-bind="data.attrs"
+                      :input-value="data.selected"
+                      close
+                      @click="data.select"
+                      @click:close="removeItem(data.item)"
+                    >
+                      {{ data.item.name }}
+                    </v-chip>
+                  </template>
+                </v-autocomplete>
                 <p class="errors">
                   {{ server_errors.village_details }}
                 </p>
@@ -247,10 +258,7 @@
                   :disableDefaultUI="true"
                 >
                   <GmapMarker
-                    :key="index"
-                    v-for="(m, index) in markers"
-                    :position="m.position"
-                    @click="latlng = m.position"
+                    :position="getMarkers(data)"
                     :draggable="true"
                     @dragend="onLocation"
                     :icon="markerOptions"
@@ -306,8 +314,8 @@ export default {
       image: [],
       //Map
       latlng: {
-        lat: 0,
-        lng: 0,
+        lat: 18.1189434,
+        lng: 102.290218,
       },
       markers: [],
       currentPlace: null,
@@ -352,14 +360,11 @@ export default {
       houseNumberRules: [(v) => !!v || "House number is required"],
       ruleVillage: [(v) => !!v || "Village is required"],
       rulesDistrict: [(v) => !!v || "District is required"],
-      rules: [
-        (v) => !!v || "File is required",
-        (v) => (v && v.size > 0) || "File is required",
-      ],
     };
   },
   methods: {
     fetchData() {
+      this.selectedVillageDetail = [];
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("customer/" + this.$route.params.id)
@@ -368,11 +373,18 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data;
+<<<<<<< HEAD
               console.log(this.data);
               res.data.data.customer_village_details.map((item) => {
                 this.selectedVillageDetail.push(item.customer_id);
+=======
+              this.selectedVillage = res.data.data.village_id;
+              res.data.data.village_details.map((item) => {
+                this.village_variation_id = item.village_variation_id;
+                this.selectedVillageDetail.push(item.id);
+                console.log(this.selectedVillageDetail);
+>>>>>>> f8bc46f78659df583a74728668959b5406e5d094
               });
-              this.getCenter();
             }, 300);
           }
         })
@@ -415,15 +427,15 @@ export default {
     },
     fetchVillageDetail() {
       this.$axios
-        .get("info/village/" + this.selectedVillage + "/village-detail")
+        .get("info/village/" + this.selectedVillage)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.village_details = res.data.data;
-              res.data.data.map((item) => {
+              this.village_details = res.data.data.village_variations;
+              res.data.data.village_variations.map((item) => {
                 this.units = item.village_details;
               });
-            }, 300);
+            }, 100);
           }
         })
         .catch(() => {});
@@ -434,6 +446,10 @@ export default {
     },
     RemoveItem(item) {
       this.preview_list.splice(this.preview_list.indexOf(item), 1);
+    },
+    removeItem(item) {
+      const index = this.selectedVillageDetail.indexOf(item.id);
+      if (index >= 0) this.selectedVillageDetail.splice(index, 1);
     },
 
     previewMultiImage: function (event) {
@@ -454,10 +470,14 @@ export default {
     },
 
     UpdateData() {
+      console.log(this.selectedVillageDetail);
       let formData = new FormData();
       this.image_list.map((item) => {
         formData.append("images[]", item);
       });
+      // this.selectedVillageDetail.map((item) => {
+      //   formData.append("village_details[]", item);
+      // });
       this.selectedVillageDetail.map((item) => {
         formData.append("village_details[]", item);
       });
@@ -467,8 +487,8 @@ export default {
       formData.append("house_number", this.data.house_number);
       formData.append("phone", this.data.user.phone);
       formData.append("email", this.data.user.email);
-      formData.append("lat", this.latlng.lat);
-      formData.append("lng", this.latlng.lng);
+      formData.append("lat", this.data.lat);
+      formData.append("lng", this.data.lng);
       formData.append("_method", "PUT");
 
       if (this.$refs.form.validate() == true) {
@@ -481,8 +501,12 @@ export default {
             if (res.data.code == 200) {
               setTimeout(() => {
                 this.data = {};
-                this.$store.commit("Toast_State", res.data.message);
                 this.loading = false;
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
                 this.$router.push({
                   name: "Customer",
                 });
@@ -497,9 +521,13 @@ export default {
                 this.server_errors[key] = customer[0];
               }
             }
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             this.loading = false;
             this.fetchData();
-            this.$store.commit("Toast_State", this.toast_error);
           });
       }
     },
@@ -516,7 +544,7 @@ export default {
       this.latlng.lng = evt.latLng.lng();
       this.address = this.createNewAddressName();
       this.data.lat = this.latlng.lat;
-      this.data.lat = this.latlng.lng;
+      this.data.lng = this.latlng.lng;
     },
     setPlace(place) {
       this.currentPlace = place;
@@ -561,7 +589,6 @@ export default {
         address: this.address,
         position: this.latlng,
       });
-      // console.log(this.center);
     },
     onSave() {
       this.$emit("onSave", {
@@ -577,14 +604,36 @@ export default {
           lng: parseFloat(this.data.lng),
         };
         return latlng;
+      } else {
+        return this.latlng;
       }
-      return this.latlng;
     },
     getMarkers(data) {
-      return {
-        lat: parseFloat(data.lat),
-        lng: parseFloat(data.lng),
-      };
+      if (data.lat != null) {
+        return {
+          lat: parseFloat(data.lat),
+          lng: parseFloat(data.lng),
+        };
+      } else {
+        return this.latlng;
+      }
+    },
+
+    fetchUnit() {
+      this.village_details.filter((item) => {
+        this.units = item.village_details;
+        // item.village_details.forEach((data) => {
+        //   console.log(data);
+        //   data.filter((i) => {
+        //     console.log(i);
+        //     return i.village_variation_id === this.village_variation_id;
+        //   });
+        // });
+
+        // // var a = item.id === this.village_variation_id;
+        // // console.log(a);
+        // // this.units.push(item.id === this.village_variation_id);
+      });
     },
   },
   watch: {
@@ -617,18 +666,26 @@ export default {
     "data.password_confirmation": function () {
       this.server_errors.password = "";
     },
+    // village_variation_id: function () {
+    //   if (this.village_variation_id) {
+    //     // this.selectedVillageDetail = this.village_variation_id;
+    //   }
+    //   console.log(this.selectedVillageDetail);
+    //   // this.fetchUnits();
+    // },
+    // selectedVillageDetail: function () {
+    //   console.log("Hi");
+    // },
+
     village_variation_id: function () {
       if (this.village_variation_id) {
-        // this.selectedVillageDetail = this.village_variation_id;
+        this.fetchUnit();
       }
-      console.log(this.selectedVillageDetail);
-      // this.fetchUnits();
     },
   },
   mounted() {
     this.geolocate();
   },
-
   created() {
     this.fetchAddress();
     this.fetchData();

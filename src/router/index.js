@@ -1,27 +1,17 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-//import Package from '../views/package/PackageInfo.vue'
-//import Village from '../views/village/VillageManage.vue'
 
 import Middlewares from '@/Middlewares/Index'
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/about',
-    name: 'Home',
-    component: Home,
-    meta: {
-      layout: "home"
-    }
-  },
-  {
     path: '/customer',
     name: 'Customer',
     component: () => import('../views/customer/Customer.vue'),
     meta: {
-      layout: "admin"
+      layout: "admin",
+      middleware: [Middlewares.auth],
     }
   },
   {
@@ -33,12 +23,6 @@ const routes = [
       middleware: [Middlewares.guest],
     }
   },
-  {
-    path: '/about',
-    name: 'About',
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  },
-
 
   //Admin Route
   {
@@ -60,6 +44,15 @@ const routes = [
     }
   },
   {
+    path: '/import-file',
+    name: 'ImportFile',
+    component: () => import('../components/importFile.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
     path: '/driver',
     name: 'Driver',
     component: () => import('../views/driver/Driver.vue'),
@@ -68,6 +61,82 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
+  {
+    path: '/employee',
+    name: 'Employee',
+    component: () => import('../views/employee/Employee.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  //Team
+  {
+    path: '/team/:id',
+    name: 'TeamDetail',
+    component: () => import('../views/team/TeamDetail.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/team',
+    name: 'Team',
+    component: () => import('../views/team/Team.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  //Company
+  {
+    path: '/company',
+    name: 'Company',
+    component: () => import('../views/company/Company.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/company-request',
+    name: 'CompanyRequest',
+    component: () => import('../views/company/companyRequest/all.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+
+  {
+    path: '/create/company',
+    name: 'CreateCompany',
+    component: () => import('../views/company/CreateCompany.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/edit/company/:id',
+    name: 'EditCompany',
+    component: () => import('../views/company/EditCompany.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/view/company/:id',
+    name: 'ViewCompany',
+    component: () => import('@/views/company/ViewCompany.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+
   {
     path: '/role',
     name: 'Role',
@@ -149,10 +218,11 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
+
   {
-    path: '/addpackage',
-    name: 'Addpackage',
-    component: () => import('../views/package/PackageAddSize.vue'),
+    path: '/vehicle',
+    name: 'Vehicle',
+    component: () => import('../views/vehicle/Vehicle.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
@@ -198,6 +268,16 @@ const routes = [
     }
   },
   {
+    path: '/create/export/company/plan',
+    name: 'CreateExportPlanCompany',
+    component: () => import('@/views/routeplan/CreateExportPlanCompany.vue'),
+    props: true,
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
     path: '/plan',
     name: 'Plan',
     component: () => import('@/views/routeplan/Plan.vue'),
@@ -225,6 +305,15 @@ const routes = [
     }
   },
   {
+    path: '/export/company/plan',
+    name: 'Export-Plan-Company',
+    component: () => import('@/views/routeplan/ExportPlanCompany.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
     path: '/plan-month/:id/plan-calendar',
     name: 'PlanCalendar',
     component: () => import('@/views/calendar/PlanCalendar.vue'),
@@ -237,7 +326,16 @@ const routes = [
   {
     path: '/plan-calendar/:id/detail',
     name: 'PlanCalendarDetail',
-    component: () => import('@/views/calendar/PlanCalendarDetail.vue'),
+    component: () => import('@/views/calendar/tabindex.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/plan-calendar/:plan_calendar/detail/:id',
+    name: 'TrashDetail',
+    component: () => import('@/views/calendar/trashDetail.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
@@ -254,6 +352,72 @@ const routes = [
     }
   },
 
+  //Invoice
+  {
+    path: '/invoice',
+    name: 'Invoice',
+    component: () => import('@/views/invoice/invoice.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+
+  {
+    path: '/reject',
+    name: 'Reject',
+    component: () => import('@/views/invoice/reject/reject.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/invoice/month/:id/',
+    name: 'InvoiceTab',
+    component: () => import('@/views/invoice/tabindex.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/invoice/:id',
+    name: 'InvoiceDetail',
+    component: () => import('@/views/invoice/invoiceDetail.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/invoice/payment/:id',
+    name: 'Payment',
+    component: () => import('@/views/invoice/payment.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  //Notification
+  {
+    path: '/notification',
+    name: 'NotificationTab',
+    component: () => import('@/views/notification/tabindex.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/notification/:id',
+    name: 'NotificationView',
+    component: () => import('@/views/notification/viewNotification.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
   //Report 
   {
     path: '/report/trash',

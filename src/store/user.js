@@ -93,20 +93,20 @@ const actions = {
                     const token = (response.data.data.access_token);
                     localStorage.setItem('access_token', token);   // ເກັບ Token ໄວ້ໃນ Localstorage ເພື່ອຈະນຳໄປໃຊ້ຂໍຂໍ້ມູນ
                     window.localStorage.setItem('user', JSON.stringify(response.data.data.user));
-                    // window.localStorage.setItem('roles', JSON.stringify(response.data.data.user.roles));
+                    window.localStorage.setItem('roles', JSON.stringify(response.data.data.user.roles));
                     // window.localStorage.setItem('permissions', JSON.stringify(response.data.data.user.role_permissions));
 
                     context.commit('AdminSignin', token);
                     context.commit('setUserProfile', response.data.data.user);
                     router.push({ name: 'Dashboard' });
                     // const userProfile = window.localStorage.getItem('user');
-                    // const user_role = window.localStorage.getItem('RoleUser');
-                    // const roleUsers = JSON.parse(user_role);
-                    // if (roleUsers.includes('factorymanager')) {
-                    //     router.push({ name: 'dashboard' });
-                    // } else if (roleUsers.includes('financemanager', 'financeuser')) {
-                    //     router.push({ name: 'Finance' })
-                    // }
+                    const user_role = window.localStorage.getItem('roles');
+                    const roleUsers = JSON.parse(user_role);
+                    if (roleUsers.includes('super_admin', 'admin')) {
+                        router.push({ name: 'dashboard' });
+                    } else if (roleUsers.includes('finance', 'company')) {
+                        router.push({ name: 'Invoice' })
+                    }
                     setTimeout(() => {
                         window.location.reload();
                     }, 300);
@@ -152,6 +152,10 @@ const actions = {
             })
         }
     },
+
+    appNotification() {
+
+    }
 
 };
 

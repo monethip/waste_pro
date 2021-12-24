@@ -1,20 +1,15 @@
 <template>
   <v-container>
-    <v-row class="my-n6">
-      <v-col cols="6">
+    <v-row>
+      <v-col>
         <v-breadcrumbs large class="pa-0">
           <v-btn text class="text-primary" @click="backPrevios()">
             <v-icon>mdi-chevron-left</v-icon></v-btn
           >
-          ລາຍລະອຽດການເກັບຂີ້ເຫຍື້ຍອ</v-breadcrumbs
+          ລາຍລະອຽດລູກຄ້າໃນແຜນການເກັບຂີ້ເຫຍື້ຍອ</v-breadcrumbs
         >
       </v-col>
-      <v-col cols="1">
-        <v-btn class="btn-primary" @click="AddPlan()"
-          ><v-icon>mdi-plus</v-icon>
-        </v-btn>
-      </v-col>
-      <v-col cols="5">
+      <v-col>
         <v-text-field
           outlined
           dense
@@ -28,6 +23,20 @@
         </v-text-field>
       </v-col>
     </v-row>
+    <v-row class="mt-n4 mb-2">
+      <v-col>
+        <h4>
+          <span class="mr-8"
+            >ຈຳນວນລໍຖ້າ
+            <span class="primary-color">{{ summary.pending_count }}</span>
+          </span>
+          <span
+            >ຈຳນວນສຳເລັດ
+            <span class="primary-color">{{ summary.success_count }}</span></span
+          >
+        </h4>
+      </v-col>
+    </v-row>
     <div>
       <v-card>
         <v-card-text>
@@ -39,17 +48,39 @@
             :disable-pagination="true"
             hide-default-footer
           >
-            <template v-slot:item.name="{ item }">
-              {{ item.route_plan_detail.customer.name }}
-              {{ item.route_plan_detail.customer.surname }}
+            <template v-slot:item.customer="{ item }">
+              <div v-if="item.route_plan_detail.customer">
+                {{ item.route_plan_detail.customer.name }}
+                {{ item.route_plan_detail.customer.surname }}
+              </div>
             </template>
+            <!--
+            <template v-slot:item.start_month="{ item }">
+              {{ item.route_plan_detail.customer.start_month }}
+            </template>
+ -->
             <template v-slot:item.status="{ item }">
               <v-chip :color="statusColor(item.status)">{{
                 item.status
               }}</v-chip>
             </template>
+            <template v-slot:item.amount="{ item }">
+              <div v-if="item.collection_type == 'bag'">
+                <v-chip color="primary">{{ item.bag }}</v-chip>
+                <span> {{ getUnit(item.collection_type) }}</span>
+              </div>
+              <div v-else>
+                <v-chip color="success">{{ item.container }}</v-chip>
+                <span> {{ getUnit(item.collection_type) }}</span>
+              </div>
+            </template>
+
             <template v-slot:item.actions="{ item }">
-              <v-icon small class="mr-2" @click="viewPage(item.id)">
+              <v-icon
+                small
+                class="mr-2"
+                @click="viewPage(item.route_plan_detail.customer.id)"
+              >
                 mdi-eye
               </v-icon>
             </template> </v-data-table
@@ -85,18 +116,17 @@ export default {
       search: "",
       oldVal: "",
       server_errors: {},
-
-      routeplans: [],
-      selectedRoutePlan: "",
-      drivers: [],
-      selectedDriver: "",
+      summary: {},
+      statuses: ["pending"],
 
       headers: [
-        { text: "ລຳດັບ", value: "route_plan_detail.priority", align: "center" },
-        { text: "ຊື່ລູກຄ້າ", value: "name" },
+        { text: "ລຳດັບ", value: "route_plan_detail.priority" },
+        { text: "ຊື່ລູກຄ້າ", value: "customer" },
+        { text: "ເລີ່ມວັນທີ", value: "route_plan_detail.customer.start_month" },
+
         {
-          text: "ຈຳນວນ",
-          value: "bag",
+          text: "ຈຳນວນຂີ້ເຫື້ຍອ",
+          value: "amount",
           align: "center",
           sortable: false,
         },
@@ -108,16 +138,6 @@ export default {
         },
         { text: "", value: "actions", sortable: false },
       ],
-      toast: {
-        value: true,
-        color: "success",
-        msg: "",
-      },
-      toast_error: {
-        value: true,
-        color: "error",
-        msg: "Something when wrong!",
-      },
     };
   },
   methods: {
@@ -131,6 +151,7 @@ export default {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
+            statuses: this.statuses,
           },
         })
         .then((res) => {
@@ -138,9 +159,9 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.calendars = res.data.data.data;
-              console.log(this.calendars);
+              this.summary = res.data.data.summary;
               this.pagination = res.data.data.pagination;
-            }, 300);
+            }, 100);
           }
         })
         .catch((error) => {
@@ -156,8 +177,18 @@ export default {
       else if (value == "success") return "success";
       else return "error";
     },
+    getUnit(value) {
+      if (value == "bag") return "ຖົງ";
+      else return "Container";
+    },
     Search() {
       GetOldValueOnInput(this);
+    },
+    viewPage(id) {
+      this.$router.push({
+        name: "ViewCustomer",
+        params: { id },
+      });
     },
   },
   watch: {

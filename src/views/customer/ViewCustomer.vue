@@ -7,9 +7,20 @@
       ລາຍລະອຽດລູກຄ້າ</v-breadcrumbs
     >
     <v-card>
+      <!--
       <div v-for="(item, index) in data.media" :key="index">
-        <v-img :src="item.thumb" alt="Image" height="500px" dark> </v-img>
+        <v-img :src="item.url" alt="Image" height="500px" dark> </v-img>
       </div>
+      -->
+      <v-carousel v-if="data.media.length">
+        <v-carousel-item
+          v-for="(item, index) in data.media"
+          :key="index"
+          :src="item.url"
+          reverse-transition="fade-transition"
+          transition="fade-transition"
+        ></v-carousel-item>
+      </v-carousel>
 
       <v-card-text>
         <v-container>

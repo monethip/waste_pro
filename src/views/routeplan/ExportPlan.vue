@@ -1,12 +1,12 @@
 <template>
   <v-container>
-    <v-breadcrumbs large>
+    <v-breadcrumbs large class="mt-n4">
       <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
       ເລືອກລູກຄ້າເຂົ້າແຜນເສັ້ນທາງ</v-breadcrumbs
     >
-    <v-row>
+    <v-row class="my-n4">
       <v-col cols="12" class="mb-4">
         <GmapMap
           :center="getCenter()"
@@ -38,7 +38,7 @@
     <v-row class="mb-n6">
       <v-col>
         <v-btn class="btn-primary" @click="createPage()"
-          ><v-icon>mdi-arrow-right-bold-circle-outline</v-icon>
+          >Next <v-icon>mdi-arrow-right-bold-circle-outline</v-icon>
         </v-btn>
       </v-col>
       <v-col>
@@ -69,6 +69,7 @@
         ></v-autocomplete>
       </v-col>
       -->
+      <!--
       <v-col>
         <v-text-field
           outlined
@@ -82,8 +83,9 @@
         >
         </v-text-field>
       </v-col>
+      -->
     </v-row>
-
+    <!--
     <v-row class="mb-n4">
       <v-col>
         <v-autocomplete
@@ -114,6 +116,52 @@
         </v-autocomplete>
       </v-col>
     </v-row>
+-->
+    <v-row>
+      <v-col cols="12">
+        <v-autocomplete
+          v-model="selectedVillage"
+          :items="villages"
+          item-text="name"
+          item-value="id"
+          label="ເລືອກບ້ານ"
+          filled
+          chips
+          color="blue-grey lighten-2"
+          multiple
+        >
+          <template v-slot:selection="data">
+            <v-chip
+              v-bind="data.attrs"
+              :input-value="data.selected"
+              close
+              @click="data.select"
+              @click:close="remove(data.item)"
+            >
+              {{ data.item.name }}
+            </v-chip>
+          </template>
+
+          <!--
+          <template v-slot:prepend-item>
+            <v-list-item ripple @click="toggle">
+              <v-list-item-action>
+                <v-icon
+                  :color="selectedVillage.length > 0 ? 'indigo darken-4' : ''"
+                >
+                  {{ icon }}
+                </v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title> Select All </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-divider class="mt-2"></v-divider>
+          </template>
+          -->
+        </v-autocomplete>
+      </v-col>
+    </v-row>
 
     <div>
       <v-card>
@@ -126,14 +174,10 @@
               :disable-pagination="true"
               hide-default-footer
             >
-              <template v-slot:item.media="{ item }">
-                <v-avatar
-                  size="36px"
-                  v-for="(img, index) in item.media"
-                  :key="index"
-                >
-                  <img v-if="img.thumb" :src="img.thumb" />
-                </v-avatar>
+              <template v-slot:item.address_detail="{ item }">
+                <div v-for="(data, index) in item.village_details" :key="index">
+                  <span>{{ data.name }}</span>
+                </div>
               </template>
 
               <template v-slot:item.actions="{ item }">
@@ -179,28 +223,18 @@ export default {
       selectedDistrict: "",
       villages: [],
       selectedVillage: [],
-      selectedAllVillage: [],
+      // selectedAllVillage: [],
 
       headers: [
         { text: "ຊື່", value: "name" },
         { text: "ນາມສະກຸນ", value: "surname" },
         { text: "Phone", value: "user.phone", sortable: false },
-        { text: "Email", value: "user.email", sortable: false },
-        { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
-        { text: "Image", value: "media" },
+        { text: "ລາຍລະອຽດທີ່ຢູ່", value: "address_detail" },
+        { text: "ບ້ານ", value: "village.name", sortable: true },
+        { text: "ເມືອງ", value: "district.name", sortable: true },
+        // { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
         { text: "", value: "actions", sortable: false },
       ],
-      toast: {
-        value: true,
-        color: "success",
-        msg: "",
-      },
-      toast_error: {
-        value: true,
-        color: "error",
-        msg: "Something when wrong!",
-      },
-
       //Map
       latlng: {
         lat: 18.1189434,
@@ -267,8 +301,8 @@ export default {
               this.customers = res.data.data.data;
               this.selectedAllCustomer = res.data.data;
               this.pagination = res.data.data.pagination;
-              this.getCenter();
-            }, 300);
+              // this.getCenter();
+            }, 100);
           }
         })
         .catch((error) => {
@@ -313,50 +347,59 @@ export default {
     },
 
     createPage() {
-      // console.log(this.customers);
-      this.$router.push({
-        name: "CreateExportPlan",
-        params: {
-          items: this.customers,
-          villages: this.selectedVillage,
-        },
-      });
-      this.$emit("create-plan", this.customers, this.selectedVillage);
-    },
-    editPage(id) {
-      this.$router.push({
-        name: "EditCustomer",
-        params: { id },
-      });
+      //  var a = [];
+      if (this.customers.length > 0 && this.selectedVillage.length > 0) {
+        this.$router.push({
+          name: "CreateExportPlan",
+          params: {
+            items: this.customers,
+            villages: this.selectedVillage,
+          },
+        });
+      } else {
+        this.$store.commit("Toast_State", {
+          value: true,
+          color: "error",
+          msg: "ກາລຸນາເລືອກບ້ານ ແລະ ລູກຄ້າກ່ອນ",
+        });
+      }
     },
     viewPage(id) {
-      console.log(id);
       this.$router.push({
         name: "ViewCustomer",
         params: { id },
       });
+    },
+    remove(item) {
+      const index = this.selectedVillage.indexOf(item.id);
+      if (index >= 0) this.selectedVillage.splice(index, 1);
     },
     Search() {
       GetOldValueOnInput(this);
     },
 
     //Google map
-
     getCenter() {
       if (this.customers.length) {
-        const latlng = {
-          lat: parseFloat(this.customers[0].lat),
-          lng: parseFloat(this.customers[0].lng),
-        };
-        return latlng;
+        if (parseFloat(this.customers[0].lat) == null) {
+          return this.latlng;
+        } else {
+          const latlng = {
+            lat: parseFloat(this.customers[0].lat),
+            lng: parseFloat(this.customers[0].lng),
+          };
+          return latlng;
+        }
       }
       return this.latlng;
     },
     getMarkers(m) {
-      return {
-        lat: parseFloat(m.lat),
-        lng: parseFloat(m.lng),
-      };
+      if (m.customer !== null) {
+        return {
+          lat: parseFloat(m.lat),
+          lng: parseFloat(m.lng),
+        };
+      }
     },
 
     // getSiteIcon(status) {
@@ -379,7 +422,6 @@ export default {
     //   }
     // },
     toggleInfo(m, key) {
-      console.log(m);
       this.infoPosition = this.getMarkers(m);
       this.infoContent = m.name + " (" + m.house_number + ") ";
       if (this.infoCurrentKey == key) {
@@ -391,28 +433,27 @@ export default {
     },
 
     toggle() {
-      console.log(this.likesAllFruit);
       this.$nextTick(() => {
-        if (this.likesAllFruit) {
+        if (this.selectedAllVillage) {
           this.selectedVillage = [];
         } else {
-          this.villages.filter((item) => {
-            this.selectedVillage.push(item.id);
-          });
+          setTimeout(() => {
+            this.selectedVillage = this.villages.slice();
+          }, 300);
         }
       });
     },
   },
   computed: {
-    likesAllFruit() {
+    selectedAllVillage() {
       return this.selectedVillage.length === this.villages.length;
     },
-    likesSomeFruit() {
-      return this.selectedVillage.length > 0 && !this.likesAllFruit;
+    selectedSomeVillage() {
+      return this.selectedVillage.length > 0 && !this.selectedAllVillage;
     },
     icon() {
-      if (this.likesAllFruit) return "mdi-close-box";
-      if (this.likesSomeFruit) return "mdi-minus-box";
+      if (this.selectedAllVillage) return "mdi-close-box";
+      if (this.selectedSomeVillage) return "mdi-minus-box";
       return "mdi-checkbox-blank-outline";
     },
   },
@@ -445,6 +486,7 @@ export default {
   created() {
     this.fetchData();
     this.fetchAddress();
+    // this.selectedVillage = this.villages.slice();
   },
 };
 </script>

@@ -10,18 +10,39 @@
     <v-row justify="center">
       <v-col>
         <v-card class="pa-2">
-          <v-card-title>
-            ຂໍ້ມູນ Users
+          <v-card-title class="my-auto">
+            ຂໍ້ມູນ Users ({{ pagination.total }})
+            <v-divider class="mx-4" vertical></v-divider>
             <v-spacer></v-spacer>
-            <v-text-field
-              v-model="search"
-              clearable
-              prepend-inner-icon="mdi-magnify"
-              label="Search"
-              single-line
-              hide-details
-              @keyup.enter="Search()"
-            ></v-text-field>
+            <v-row>
+              <v-col>
+                <v-select
+                  outlined
+                  dense
+                  :items="roles"
+                  v-model="selectedRoles"
+                  item-text="name"
+                  item-value="name"
+                  label="Roles"
+                  multiple
+                  @input="fetchData()"
+                ></v-select>
+                <v-spacer></v-spacer>
+              </v-col>
+              <v-col>
+                <v-text-field
+                  v-model="search"
+                  clearable
+                  prepend-inner-icon="mdi-magnify"
+                  label="Search"
+                  single-line
+                  hide-details
+                  @keyup.enter="Search()"
+                  outlined
+                  dense
+                ></v-text-field>
+              </v-col>
+            </v-row>
           </v-card-title>
           <v-data-table
             :headers="headers"
@@ -34,7 +55,9 @@
             <template v-slot:item.roles="{ item }">
               <div>
                 <span v-for="(role, index) in item.roles" :key="index">
-                  {{ role.name }},
+                  <v-chip color="error" class="mr-1 my-1">
+                    {{ role.name }}
+                  </v-chip>
                 </span>
               </div>
             </template>
@@ -42,38 +65,67 @@
             <template v-slot:item.permissions="{ item }">
               <div>
                 <span v-for="(ps, index) in item.permissions" :key="index">
-                  <span>{{ ps.name }}, </span>
+                  <v-chip color="success" class="mr-1 my-1">{{
+                    ps.name
+                  }}</v-chip>
                 </span>
               </div>
             </template>
 
             <template v-slot:item.actions="{ item }">
-              <!--  <v-icon small class="mr-2"> mdi-key </v-icon> -->
-              <v-icon small class="mr-2" @click="OpenModalEdit(item)">
-                mdi-pencil
-              </v-icon>
-              <v-icon small @click="deleteItem(item.id)"> mdi-delete </v-icon>
-            </template>
-            <template v-slot:item.role="{ item }">
-              <v-icon small class="mr-2" @click="openModalRole(item)">
-                mdi-plus
-              </v-icon>
-              <v-icon small class="mr-2" @click="openModalUpdateRole(item)">
-                mdi-key-remove
-              </v-icon>
-            </template>
+              <v-menu offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon
+                    color="primary"
+                    dark
+                    v-bind="attrs"
+                    v-on="on"
+                    medium
+                    class="mr-2"
+                    >mdi-dots-vertical</v-icon
+                  >
+                </template>
+                <v-list>
+                  <v-list-item link @click="openModalRole(item)">
+                    <v-list-item-title>
+                      <v-icon small class="mr-2"> mdi-plus </v-icon>
+                      ເພີ່ມ Role
+                    </v-list-item-title>
+                  </v-list-item>
+                  <v-list-item link @click="openModalUpdateRole(item)">
+                    <v-list-item-title>
+                      <v-icon small class="mr-2"> mdi-key-remove </v-icon>
+                      ຖອນ Role
+                    </v-list-item-title>
+                  </v-list-item>
+                  <v-list-item link @click="openModalPermission(item)">
+                    <v-list-item-title>
+                      <v-icon small class="mr-2"> mdi-plus </v-icon>
+                      ເພີ່ມ Permission
+                    </v-list-item-title>
+                  </v-list-item>
+                  <v-list-item link @click="openModalUpdatePermissoin(item)">
+                    <v-list-item-title>
+                      <v-icon small class="mr-2"> mdi-key-remove </v-icon>
+                      ຖອນ Permission
+                    </v-list-item-title>
+                  </v-list-item>
 
-            <template v-slot:item.permission="{ item }">
-              <v-icon small class="mr-2" @click="openModalPermission(item)">
-                mdi-plus
-              </v-icon>
-              <v-icon
-                small
-                class="mr-2"
-                @click="openModalUpdatePermissoin(item)"
-              >
-                mdi-key-remove
-              </v-icon>
+                  <v-list-item link @click="OpenModalEdit(item)">
+                    <v-list-item-title>
+                      <v-icon small class="mr-2"> mdi-pencil </v-icon>
+                      ແກ້ໄຂ
+                    </v-list-item-title>
+                  </v-list-item>
+
+                  <v-list-item link @click="deleteItem(item.id)">
+                    <v-list-item-title>
+                      <v-icon small> mdi-delete </v-icon>
+                      ລຶບ
+                    </v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
             </template>
           </v-data-table>
           <br />
@@ -280,7 +332,7 @@
     </ModalEdit>
 
     <!--Add Role -->
-    <v-dialog v-model="roleDialog" max-width="720px">
+    <v-dialog v-model="roleDialog" max-width="720px" persistent>
       <v-card>
         <v-card-title>
           <span class="headline"
@@ -332,7 +384,7 @@
     </v-dialog>
 
     <!--Update Role -->
-    <v-dialog v-model="updateRoleDialog" max-width="720px">
+    <v-dialog v-model="updateRoleDialog" max-width="720px" persistent>
       <v-card>
         <v-card-title>
           <span class="headline"
@@ -384,7 +436,7 @@
     </v-dialog>
 
     <!--Add Permission -->
-    <v-dialog v-model="permissionDialog" max-width="720px">
+    <v-dialog v-model="permissionDialog" max-width="720px" persistent>
       <v-card>
         <v-card-title>
           <span class="headline"
@@ -436,7 +488,7 @@
     </v-dialog>
 
     <!--Update Permission -->
-    <v-dialog v-model="updatePermissionDialog" max-width="720px">
+    <v-dialog v-model="updatePermissionDialog" max-width="720px" persistent>
       <v-card>
         <v-card-title>
           <span class="headline"
@@ -524,14 +576,6 @@ export default {
         { text: "Email", value: "email", sortable: false },
         { text: "Role", value: "roles", sortable: false },
         { text: "Permission", value: "permissions", sortable: false },
-        {
-          text: "Role", value: "role", sortable: false, align: "center",},
-        {
-          text: "Permission",
-          value: "permission",
-          sortable: false,
-          align: "center",
-        },
         { text: "", value: "actions", sortable: false },
       ],
       loading: false,
@@ -547,6 +591,7 @@ export default {
       roleDialog: false,
       updateRoleDialog: false,
       selectedRole: "",
+      selectedRoles: [],
       roles: [],
       revokeRoles: [],
       permissionDialog: false,
@@ -554,7 +599,7 @@ export default {
       selectedPermission: "",
       permissions: [],
       revokes: [],
-      
+
       //Pagination
       offset: 12,
       pagination: {},
@@ -589,16 +634,6 @@ export default {
       ],
       rulePermission: [(v) => !!v || "Permission is required"],
       rulePermissionRole: [(v) => !!v || "Role is required"],
-      toast: {
-        value: true,
-        color: "success",
-        msg: "Success",
-      },
-      toast_error: {
-        value: true,
-        color: "error",
-        msg: "Something when wrong!",
-      },
     };
   },
   methods: {
@@ -618,13 +653,21 @@ export default {
                 this.user = {};
                 this.fetchData();
                 this.reset();
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", this.toast_error);
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             this.fetchData();
             if (error.response.status == 422) {
               var obj = error.response.data.errors;
@@ -642,7 +685,8 @@ export default {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
-            filter: this.search,
+            // filter: this.search,
+            roles: this.selectedRoles,
           },
         })
         .then((res) => {
@@ -717,7 +761,11 @@ export default {
         })
         .catch((error) => {
           this.loading = false;
-          this.fetchData();
+          this.$store.commit("Toast_State", {
+            value: true,
+            color: "error",
+            msg: error.response.data.message,
+          });
           if (error.response.status == 422) {
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
@@ -747,13 +795,21 @@ export default {
                 this.edit_user = {};
                 this.reset();
                 this.fetchData();
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", this.toast_error);
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             this.fetchData();
             if (error.response.status == 422) {
               var obj = error.response.data.errors;
@@ -785,15 +841,22 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.loading = false;
-              this.$store.commit("Toast_State", this.toast);
               this.$store.commit("modalDelete_State", false);
               this.fetchData();
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
+              });
             }, 300);
           }
         })
-        .catch(() => {
-          this.fetchData();
-          this.$store.commit("Toast_State", this.toast_error);
+        .catch((error) => {
+          this.$store.commit("Toast_State", {
+            value: true,
+            color: "error",
+            msg: error.response.data.message,
+          });
           this.$store.commit("modalDelete_State", false);
           this.loading = false;
         });
@@ -821,7 +884,11 @@ export default {
                 this.fetchData();
                 this.reset();
                 this.roleDialog = false;
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
@@ -829,7 +896,11 @@ export default {
             if (error.response.data.code == 422) {
               this.errormsg = error.response.data.message;
             }
-            this.$store.commit("Toast_State", this.toast_error);
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             this.fetchData();
           });
         this.loading = false;
@@ -858,7 +929,11 @@ export default {
                 this.fetchData();
                 this.reset();
                 this.updateRoleDialog = false;
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
@@ -866,7 +941,11 @@ export default {
             if (error.response.data.code == 422) {
               this.errormsg = error.response.data.message;
             }
-            this.$store.commit("Toast_State", this.toast_error);
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             this.fetchData();
           });
         this.loading = false;
@@ -896,7 +975,11 @@ export default {
                 this.fetchData();
                 this.reset();
                 this.permissionDialog = false;
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
@@ -904,7 +987,11 @@ export default {
             if (error.response.data.code == 422) {
               this.errormsg = error.response.data.message;
             }
-            this.$store.commit("Toast_State", this.toast_error);
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             this.fetchData();
           });
         this.loading = false;
@@ -934,7 +1021,11 @@ export default {
                 this.fetchData();
                 this.reset();
                 this.updatePermissionDialog = false;
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
@@ -942,7 +1033,11 @@ export default {
             if (error.response.data.code == 422) {
               this.errormsg = error.response.data.message;
             }
-            this.$store.commit("Toast_State", this.toast_error);
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             this.fetchData();
           });
         this.loading = false;
@@ -975,8 +1070,12 @@ export default {
         this.fetchData();
       }
     },
+    // selectedRoles: function () {
+    //   this.fetchData();
+    // },
   },
   created() {
+    this.fetchRole();
     this.fetchData();
   },
 };

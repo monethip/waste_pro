@@ -1,14 +1,21 @@
 <template>
   <v-container>
-    <v-row class="mb-n6">
+    <v-row>
       <v-col>
         <v-btn class="btn-primary mr-6" @click="createPlan()"
-          ><v-icon>mdi-plus</v-icon>
+          ><v-icon>mdi-plus </v-icon> Add
         </v-btn>
-        <v-btn class="btn-primary" @click="createPage()"
-          ><v-icon>mdi-application-export</v-icon>
+        <v-btn class="btn-primary mr-6" @click="createPage()"
+          ><v-icon>mdi-application-export </v-icon> Export ລູກຄ້າຄົວເຮືອນ
+        </v-btn>
+        <v-btn class="btn-primary" @click="exportCompany()"
+          ><v-icon>mdi-application-export </v-icon> Export ລູກຄ້າບໍລິສັດ
         </v-btn>
       </v-col>
+      <v-col>
+        <h4>ແຜນຈັດເສັ້ນທາງການເກັບຂີ້ເຫຍື້ອ</h4>
+      </v-col>
+      <!--
       <v-col>
         <v-text-field
           outlined
@@ -22,8 +29,55 @@
         >
         </v-text-field>
       </v-col>
+      -->
     </v-row>
-    <div>
+    <v-row class="mb-n4">
+      <v-col
+        cols="4"
+        :loading="loading"
+        class="my-2"
+        max-width="374"
+        v-for="(item, index) in plans"
+        :key="index"
+      >
+        <v-card>
+          <v-img height="250" v-html="item.embed"></v-img>
+          <v-card-title>{{ item.name }}</v-card-title>
+          <v-divider class="mx-4"></v-divider>
+
+          <v-card-actions class="white justify-center">
+            <v-btn color="lighten-2" text @click="viewPage(item.id)">
+              <v-icon small class="mr-2"> mdi-eye </v-icon>
+            </v-btn>
+            <v-btn color="lighten-2" text @click="editPage(item.id)">
+              <v-icon small class="mr-2"> mdi-pencil </v-icon>
+            </v-btn>
+            <v-btn color="lighten-2" text @click="deleteItem(item.id)">
+              <v-icon small> mdi-delete </v-icon>
+            </v-btn>
+            <v-btn
+              color="lighten-2"
+              text
+              v-for="(data, index) in item.media"
+              :key="index"
+              @click="download(data.url)"
+            >
+              <v-icon small class="mr-2"> mdi-download </v-icon>
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
+    <br />
+    <template>
+      <Pagination
+        v-if="pagination.total_pages > 1"
+        :pagination="pagination"
+        :offset="offset"
+        @paginate="fetchData()"
+      ></Pagination>
+    </template>
+    <!--
       <v-card>
         <v-card flat>
           <v-card-text>
@@ -72,62 +126,7 @@
           </v-card-text>
         </v-card>
       </v-card>
-    </div>
-
-    <!-- Modal Add-->
-    <ModalAdd>
-      <template @close="close">
-        <v-card>
-          <v-card-title>
-            <span class="headline">Add Route Plan</span>
-          </v-card-title>
-          <v-card-text>
-            <v-container>
-              <v-form ref="form" lazy-validation>
-                <v-row>
-                  <v-col cols="12">
-                    <v-text-field
-                      label="Name *"
-                      required
-                      v-model="plan.name"
-                      :rules="nameRules"
-                    ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.name }}
-                    </p>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      label="ລາຍລະອຽດ "
-                      required
-                      v-model="plan.description"
-                      type="text"
-                      class="input-number"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-form>
-            </v-container>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeAddModal()">
-                Close
-              </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                :loading="loading"
-                :disabled="loading"
-                @click="AddItem()"
-              >
-                Save
-              </v-btn>
-            </v-card-actions>
-          </v-card-text>
-        </v-card>
-      </template>
-    </ModalAdd>
-
+      -->
     <!--Delete Modal-->
     <ModalDelete>
       <template>
@@ -150,7 +149,7 @@
 </template>
 
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
+// import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
   name: "Customer",
   data() {
@@ -163,7 +162,7 @@ export default {
       //Pagination
       offset: 12,
       pagination: {},
-      per_page: 15,
+      per_page: 9,
       search: "",
       oldVal: "",
 
@@ -176,16 +175,6 @@ export default {
         (v) => (v && v.length >= 2) || "Name must be less than 2 characters",
       ],
       server_errors: {},
-      toast: {
-        value: true,
-        color: "success",
-        msg: "",
-      },
-      toast_error: {
-        value: true,
-        color: "error",
-        msg: "Something when wrong!",
-      },
     };
   },
   methods: {
@@ -196,7 +185,7 @@ export default {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
-            filter: this.search,
+            // filter: this.search,
           },
         })
         .then((res) => {
@@ -205,7 +194,7 @@ export default {
               this.$store.commit("Loading_State", false);
               this.plans = res.data.data.data;
               this.pagination = res.data.data.pagination;
-            }, 300);
+            }, 100);
           }
         })
         .catch((error) => {
@@ -218,43 +207,6 @@ export default {
             }
           }
         });
-    },
-
-    openAddModal() {
-      this.$store.commit("modalAdd_State", true);
-    },
-    AddItem() {
-      if (this.$refs.form.validate() == true) {
-        this.loading = true;
-        this.$axios
-          .post("user-setting/user", this.plan)
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.loading = false;
-                this.closeAddModal();
-                this.user = {};
-                this.fetchData();
-                this.reset();
-                this.$store.commit("Toast_State", this.toast);
-              }, 300);
-            }
-          })
-          .catch((error) => {
-            this.loading = false;
-            this.$store.commit("Toast_State", this.toast_error);
-            this.fetchData();
-            if (error.response.status == 422) {
-              var obj = error.response.data.errors;
-              for (let [key, customer] of Object.entries(obj)) {
-                this.server_errors[key] = customer[0];
-              }
-            }
-          });
-      }
-    },
-    closeAddModal() {
-      this.$store.commit("modalAdd_State", false);
     },
 
     closeDelete() {
@@ -292,6 +244,12 @@ export default {
         name: "Export-Plan",
       });
     },
+    exportCompany() {
+      this.$router.push({
+        name: "Export-Plan-Company",
+      });
+    },
+
     createPlan() {
       this.$router.push({
         name: "CreatePlan",
@@ -310,15 +268,8 @@ export default {
         params: { id },
       });
     },
-    Search() {
-      GetOldValueOnInput(this);
-    },
-  },
-  watch: {
-    search: function (value) {
-      if (value == "") {
-        this.fetchData();
-      }
+    download(url) {
+      window.location.href = url;
     },
   },
   created() {

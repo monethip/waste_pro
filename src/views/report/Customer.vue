@@ -329,8 +329,6 @@ export default {
 
     exportData() {
       this.loading = true;
-      console.log(this.selectedStatus);
-      console.log(this.selectedVillage);
       this.$axios
         .post(
           "export-customer/",

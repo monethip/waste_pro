@@ -63,7 +63,9 @@
           background-color="tab-color lighten-2"
           slider-color="indigo lighten-5"
         >
-          <v-tab href="#tab-1"> <v-icon>mdi-account</v-icon>ລູກຄ້າ</v-tab>
+          <v-tab href="#tab-1">
+            <v-icon>mdi-account</v-icon>ລູກຄ້າ ({{ pagination.total }})</v-tab
+          >
           <!-- <v-tab href="#tab-2">ລູກຄ້າ2</v-tab>
           <v-tab href="#tab-3">ລູກຄ້າ3</v-tab> -->
         </v-tabs>
@@ -97,18 +99,45 @@
                   </template>
 
                   <template v-slot:item.actions="{ item }">
-                    <v-icon small class="mr-2" @click="addPackage(item.id)">
-                      mdi-package
-                    </v-icon>
-                    <v-icon small class="mr-2" @click="viewPage(item.id)">
-                      mdi-eye
-                    </v-icon>
-                    <v-icon small class="mr-2" @click="editPage(item.id)">
-                      mdi-pencil
-                    </v-icon>
-                    <v-icon small @click="deleteItem(item.id)">
-                      mdi-delete
-                    </v-icon>
+                    <v-menu offset-y>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-icon
+                          color="primary"
+                          dark
+                          v-bind="attrs"
+                          v-on="on"
+                          medium
+                          class="mr-2"
+                          >mdi-dots-vertical</v-icon
+                        >
+                      </template>
+                      <v-list>
+                        <v-list-item link @click="addPackage(item.id)">
+                          <v-list-item-title>
+                            <v-icon small class="mr-2">mdi-plus</v-icon>
+                            ເພີ່ມແພັກເກດ
+                          </v-list-item-title>
+                        </v-list-item>
+                        <v-list-item link @click="viewPage(item.id)">
+                          <v-list-item-title>
+                            <v-icon small class="mr-2"> mdi-eye </v-icon>
+                            ລາຍລະອຽດ
+                          </v-list-item-title>
+                        </v-list-item>
+                        <v-list-item link @click="editPage(item.id)">
+                          <v-list-item-title>
+                            <v-icon small class="mr-2"> mdi-pencil </v-icon>
+                            ແກ້ໄຂ
+                          </v-list-item-title>
+                        </v-list-item>
+                        <v-list-item link @click="deleteItem(item.id)">
+                          <v-list-item-title>
+                            <v-icon small> mdi-delete </v-icon>
+                            ລຶບ
+                          </v-list-item-title>
+                        </v-list-item>
+                      </v-list>
+                    </v-menu>
                   </template> </v-data-table
                 ><br />
                 <template>
@@ -131,12 +160,12 @@
       <template @close="close">
         <v-card>
           <v-card-title>
-            <span class="headline">Add Package</span>
+            <p>ເພີ່ມແພັກເກດໃຫ້ລູກຄ້າ</p>
           </v-card-title>
           <v-card-text>
             <v-container>
               <v-form ref="form" lazy-validation>
-                <v-row>
+                <v-row class="mb-n4 mt-0">
                   <v-col cols="12">
                     <v-select
                       v-model="selectedPackage"
@@ -148,15 +177,15 @@
                       dense
                     ></v-select>
                     <p class="errors">
-                      {{ server_errors.package }}
+                      {{ server_errors.package_id }}
                     </p>
                   </v-col>
                 </v-row>
-                <v-row>
+                <v-row class="my-n4">
                   <v-col cols="12">
                     <v-menu
                       v-model="start_menu"
-                      :close-on-content-click="false"
+                      :close-on-content-click="true"
                       :nudge-right="40"
                       transition="scale-transition"
                       offset-y
@@ -173,10 +202,25 @@
                           dense
                         ></v-text-field>
                       </template>
-                      <v-date-picker v-model="start_date"></v-date-picker>
+                      <v-date-picker
+                        v-model="start_date"
+                        :allowed-dates="allowedDates"
+                      ></v-date-picker>
                     </v-menu>
                     <p class="errors">
                       {{ server_errors.start_month }}
+                    </p>
+                  </v-col>
+                </v-row>
+                <v-row class="my-n6">
+                  <v-col cols="12">
+                    <v-checkbox v-model="start_collect">
+                      <template v-slot:label>
+                        <div>ສາມາດເກັບຂີ້ເຫື້ອຍເລີຍໄດ້ບໍ່ ?</div>
+                      </template>
+                    </v-checkbox>
+                    <p class="errors">
+                      {{ server_errors.can_collect }}
                     </p>
                   </v-col>
                 </v-row>
@@ -194,7 +238,7 @@
                 :disabled="loading"
                 @click="AddPackage()"
               >
-                Add
+                ເພີ່ມ
               </v-btn>
             </v-card-actions>
           </v-card-text>
@@ -240,12 +284,12 @@ export default {
       search: "",
       oldVal: "",
       //Add Package
-      start_date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-        .toISOString()
-        .substr(0, 10),
+      start_date: "",
       start_menu: false,
+      allowedDates: (val) => new Date(val).getDate() === 1,
       packages: [],
       selectedPackage: "",
+      start_collect: false,
       server_errors: {},
       //Filter
       districts: [],
@@ -279,16 +323,6 @@ export default {
         { text: "ສະຖານະ", value: "status" },
         { text: "", value: "actions", sortable: false },
       ],
-      toast: {
-        value: true,
-        color: "success",
-        msg: "",
-      },
-      toast_error: {
-        value: true,
-        color: "error",
-        msg: "Something when wrong!",
-      },
     };
   },
   methods: {
@@ -383,16 +417,23 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.loading = false;
-              this.toast.msg = res.data.message;
-              this.$store.commit("Toast_State", this.toast);
               this.$store.commit("modalDelete_State", false);
               this.fetchData();
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
+              });
             }, 300);
           }
         })
-        .catch(() => {
+        .catch((error) => {
           this.fetchData();
-          this.$store.commit("Toast_State", this.toast_error);
+          this.$store.commit("Toast_State", {
+            value: true,
+            color: "error",
+            msg: error.response.data.message,
+          });
           this.$store.commit("modalDelete_State", false);
           this.loading = false;
         });
@@ -412,13 +453,21 @@ export default {
             setTimeout(() => {
               this.loading = false;
               this.fetchData();
-              this.$store.commit("Toast_State", this.toast);
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
+              });
             }, 300);
           }
         })
-        .catch(() => {
+        .catch((error) => {
           this.loading = false;
-          this.$store.commit("Toast_State", this.toast_error);
+          this.$store.commit("Toast_State", {
+            value: true,
+            color: "error",
+            msg: error.response.data.message,
+          });
           this.fetchData();
         });
     },
@@ -435,6 +484,7 @@ export default {
           .post("customer/" + this.customerId + "/add-package", {
             package_id: this.selectedPackage,
             start_month: this.start_date,
+            can_collect: this.start_collect,
           })
           .then((res) => {
             if (res.data.code == 200) {
@@ -442,17 +492,26 @@ export default {
                 this.loading = false;
                 this.closeAddModal();
                 this.selectedPackage = "";
+                this.customerId = "";
                 this.fetchData();
                 this.reset();
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", this.toast_error);
             this.fetchData();
             if (error.response.status == 422) {
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response.data.message,
+              });
               var obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
@@ -462,6 +521,9 @@ export default {
       }
     },
     closeAddModal() {
+      this.selectedPackage = "";
+      this.customerId = "";
+      this.start_date = "";
       this.$store.commit("modalAdd_State", false);
     },
     editPage(id) {
@@ -499,6 +561,12 @@ export default {
     },
     selectedStatus: function () {
       this.fetchData();
+    },
+    selectedPackage: function () {
+      this.server_errors.package_id = "";
+    },
+    start_date: function () {
+      this.server_errors.start_month = "";
     },
   },
   created() {

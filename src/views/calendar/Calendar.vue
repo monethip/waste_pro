@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row class="mb-n6">
+    <v-row>
       <v-col>
         <v-btn class="btn-primary" @click="AddPlan()"
           ><v-icon>mdi-plus</v-icon>
@@ -314,7 +314,7 @@ export default {
               this.$store.commit("Loading_State", false);
               this.calendars = res.data.data.data;
               this.pagination = res.data.data.pagination;
-            }, 300);
+            }, 100);
           }
         })
         .catch((error) => {
@@ -445,6 +445,9 @@ export default {
         name: "PlanCalendar",
         params: { id },
       });
+    },
+    reset() {
+      this.$refs.form.reset();
     },
   },
   watch: {

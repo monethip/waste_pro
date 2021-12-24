@@ -1,8 +1,8 @@
 <template>
   <v-container>
-    <v-col justify="center">
+    <v-col justify="center" class="mt-n6">
       <v-card-title>
-        ຂໍ້ມູນ Package
+        ຂໍ້ມູນຂະໜາດແພັກເກດ
         <v-spacer></v-spacer>
         <v-text-field
           v-model="search"
@@ -11,6 +11,14 @@
           single-line
           hide-details
         ></v-text-field>
+
+        <v-btn
+          class="text-right ml-6"
+          color="info"
+          medium
+          @click="OpenModalAdd()"
+          ><v-icon color>mdi-plus</v-icon>
+        </v-btn>
       </v-card-title>
       <v-data-table
         :headers="headers"
@@ -19,6 +27,9 @@
         :disable-pagination="true"
         hide-default-footer
       >
+        <template v-slot:[`item.created_at`]="{ item }">
+          <div>{{ moment(item.created_at).format("DD-MM-YY hh:mm") }}</div>
+        </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-icon small color="green" class="mr-2" @click="OpenModalEdit(item)">
             mdi-account-edit
@@ -39,11 +50,11 @@
     </v-col>
 
     <!-- Modal Add-->
-    <ModalAdd>
-      <template @close="close">
+    <v-dialog v-model="addSizeDialog" max-width="720px">
+      <template>
         <v-card>
           <v-card-title>
-            <span class="text-h5">Add Package Size</span>
+            <p>ເພີ່ມຂະໜາດແພັກເກດ</p>
             <v-spacer></v-spacer>
           </v-card-title>
           <v-card-text>
@@ -66,7 +77,7 @@
                   <v-col>
                     <v-text-field
                       v-model="addpackage.bag"
-                      label="Bag*"
+                      label="ຈຳນວນ*"
                       type="number"
                       class="input-number"
                       required
@@ -79,30 +90,30 @@
                 </v-row>
               </v-form>
             </v-container>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeAddModal()">
+                Close
+              </v-btn>
+              <v-btn
+                color="blue darken-1"
+                text
+                :loading="loading"
+                :disabled="loading"
+                @click="AddItem()"
+              >
+                Save
+              </v-btn>
+            </v-card-actions>
           </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="closeAddModal()">
-              Close
-            </v-btn>
-            <v-btn
-              color="blue darken-1"
-              text
-              :loading="loading"
-              :disabled="loading"
-              @click="AddItem()"
-            >
-              Save
-            </v-btn>
-          </v-card-actions>
         </v-card>
       </template>
-    </ModalAdd>
+    </v-dialog>
 
     <!--Edit Modal-->
 
-    <ModalEdit>
-      <template @close="close">
+    <v-dialog v-model="editSizeDialog" max-width="720px">
+      <template>
         <v-card>
           <v-card-title>
             <span class="headline">ແກ້ໄຂຂໍ້ມູນ Package</span>
@@ -150,26 +161,33 @@
           </v-card-text>
         </v-card>
       </template>
-    </ModalEdit>
+    </v-dialog>
 
     <!--Delete Modal-->
-    <ModalDelete>
+    <v-dialog v-model="deleteSizeDialog" max-width="420px">
       <template>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            :loading="loading"
-            :disabled="loading"
-            @click="DeleteItemConfirm"
-            >OK</v-btn
-          >
-          <v-spacer></v-spacer>
-        </v-card-actions>
+        <v-card>
+          <v-card-text class="pt-8">
+            <h3 align="center" class="py-2">ຕ້ອງການລົບຂໍ້ມູນນີ້ບໍ່ ?</h3>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-0" text @click="closeDelete"
+                >Cancel</v-btn
+              >
+              <v-btn
+                color="blue darken-1"
+                text
+                :loading="loading"
+                :disabled="loading"
+                @click="DeleteItemConfirm"
+                >OK</v-btn
+              >
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card-text>
+        </v-card>
       </template>
-    </ModalDelete>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -182,6 +200,9 @@ export default {
       packagessize: [],
       addpackage: {},
       loading: false,
+      addSizeDialog: false,
+      editSizeDialog: false,
+      deleteSizeDialog: false,
 
       PackageSize_id: "",
       editPackageSize: {},
@@ -196,7 +217,7 @@ export default {
       //validation
       sizeRules: [(v) => !!v || "Size is required"],
       bagRules: [
-        (v) => !!v || "Bag is required",
+        (v) => !!v || "Amount is required",
         (v) =>
           Number.isInteger(Number(v)) || "The value must be an integer number",
       ],
@@ -204,6 +225,8 @@ export default {
       headers: [
         { text: "Size", value: "size" },
         { text: "ຈໍານວນ(ຖົງ)", value: "bag" },
+        { text: "Created", value: "created_at" },
+
         { text: "actions", value: "actions" },
       ],
 
@@ -226,23 +249,23 @@ export default {
     },
 
     OpenModalAdd() {
-      this.$store.commit("modalAdd_State", true);
+      this.addSizeDialog = true;
     },
 
     closeAddModal() {
-      this.$store.commit("modalAdd_State", false);
+      this.addSizeDialog = false;
     },
 
     closeUpdate() {
       this.reset(),
         (this.editPackageSize = {}),
         this.fetchData(),
-        this.$store.commit("modalEdit_State", false);
+        (this.editSizeDialog = false);
     },
 
     OpenModalEdit(item) {
       this.editPackageSize = item;
-      this.$store.commit("modalEdit_State", true);
+      this.editSizeDialog = true;
     },
 
     updateItem() {
@@ -258,13 +281,21 @@ export default {
                 this.editPackageSize = {};
                 this.reset();
                 this.fetchData();
-                this.$store.commit("Toast_State", this.toast);
-              }, 300);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
+              }, 100);
             }
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", this.toast_error);
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             this.fetchData();
             if (error.response.status == 422) {
               var obj = error.response.data.errors;
@@ -277,12 +308,12 @@ export default {
     },
 
     closeDelete() {
-      this.$store.commit("modalDelete_State", false);
+      this.deleteSizeDialog = false;
     },
 
     deleteItem(id) {
       this.PackageSize_id = id;
-      this.$store.commit("modalDelete_State", true);
+      this.deleteSizeDialog = true;
     },
 
     DeleteItemConfirm() {
@@ -294,15 +325,16 @@ export default {
             setTimeout(() => {
               this.loading = false;
               this.closeDelete();
-              this.$store.commi("Toast_State", this.toast);
-              // this.$store.commit("modalDelete_State", false);
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
+              });
               this.fetchData();
-            }, 300);
+            }, 100);
           }
         })
         .catch(() => {
-          this.fetchData();
-          this.$store.commit("Toast_State", this.toast_error);
           this.$store.commit("modalDelete_State", false);
           this.loading = false;
         });
@@ -320,15 +352,23 @@ export default {
                 this.closeAddModal();
                 this.fetchData();
                 this.reset();
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", this.toast_error);
             this.fetchData();
             if (error.response.status == 422) {
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response.data.message,
+              });
               var obj = error.response.data.error;
               for (let [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
@@ -353,9 +393,8 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.packagessize = res.data.data.data;
-              console.log(this.packagessize);
               this.pagination = res.data.data.pagination;
-            }, 300);
+            }, 100);
           }
         })
         .catch((error) => {
