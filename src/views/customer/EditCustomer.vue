@@ -373,17 +373,11 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data;
-<<<<<<< HEAD
-              console.log(this.data);
-              res.data.data.customer_village_details.map((item) => {
-                this.selectedVillageDetail.push(item.customer_id);
-=======
               this.selectedVillage = res.data.data.village_id;
               res.data.data.village_details.map((item) => {
                 this.village_variation_id = item.village_variation_id;
                 this.selectedVillageDetail.push(item.id);
                 console.log(this.selectedVillageDetail);
->>>>>>> f8bc46f78659df583a74728668959b5406e5d094
               });
             }, 300);
           }

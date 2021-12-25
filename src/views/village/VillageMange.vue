@@ -11,11 +11,7 @@
         </v-btn>
       </v-col>
     </v-row>
-<<<<<<< HEAD
-    <v-card class="mx-auto my-12" elevation="2">
-=======
     <v-card class="mx-auto my-6" elevation="2">
->>>>>>> f8bc46f78659df583a74728668959b5406e5d094
       <v-card-text>
         <v-row>
           <v-col>
