@@ -211,10 +211,9 @@ export default {
             {
               icon: "mdi-package",
               title: "ຈັດການແພັກເກດ",
-              to: "/package",
+              to: "package",
               permissions: ["get_package", "get_customer"],
             },
-
             {
               icon: "mdi-home-account",
               title: "ຈັດການທີ່ຢູ່",

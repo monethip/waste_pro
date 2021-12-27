@@ -30,7 +30,7 @@
       </v-card-title>
       <v-data-table
         :headers="headers"
-        :items="variation"
+        :items="addressdetail"
         :search="search"
         :disable-pagination="true"
         hide-default-footer
@@ -224,7 +224,6 @@ export default {
   data() {
     return {
       data: {},
-      variation: [],
       address: {},
       loading: false,
       server_errors: {},
@@ -233,7 +232,7 @@ export default {
       //ໜ່ວຍ
       village_detail: [],
       selectedDetail: "",
-      // addressdetail: [],
+      addressdetail: [],
       errormsg: "",
       search: "",
       headers: [
@@ -245,7 +244,6 @@ export default {
       offset: 12,
       pagination: {},
       per_page: 15,
-
       //Validation
       nameRules: [(v) => !!v || "Name is required"],
       rulesAddress: [(v) => !!v || "Address is required"],
@@ -264,7 +262,6 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data;
-              this.variation = res.data.data.village_variations;
             }, 100);
           }
         })
@@ -274,25 +271,28 @@ export default {
         });
     },
 
-    // fetchVillageVariation() {
-    //   this.$axios
-    //     .get("info/village/" + this.$route.params.id + "/village-detail", {
-    //       params: {
-    //         page: this.pagination.current_page,
-    //         per_page: this.per_page,
-    //         filter: "",
-    //       },
-    //     })
-    //     .then((res) => {
-    //       if (res.data.code == 200) {
-    //         setTimeout(() => {
-    //           this.addressdetail = res.data.data.data;
-    //           this.pagination = res.data.data.pagination;
-    //         }, 100);
-    //       }
-    //     })
-    //     .catch(() => {});
-    // },
+    fetchVillageVariation() {
+      this.$axios
+        .get(
+          "info/village/" + this.$route.params.id + "/village-detail"
+          // , {
+          //   params: {
+          //     page: this.pagination.current_page,
+          //     per_page: this.per_page,
+          //     filter: "",
+          //   },
+          // }
+        )
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.addressdetail = res.data.data;
+              // this.pagination = res.data.data.pagination;
+            }, 100);
+          }
+        })
+        .catch(() => {});
+    },
     fetchVariation() {
       this.$axios
         .get("info/village-variation")
@@ -336,7 +336,7 @@ export default {
               setTimeout(() => {
                 this.loading = false;
                 this.closeAddModal();
-                this.fetchData();
+                this.fetchVillageVariation();
                 this.reset();
                 this.selectedDetail = "";
                 (this.address = {}),
@@ -350,7 +350,6 @@ export default {
           })
           .catch((error) => {
             this.loading = false;
-            this.fetchData();
             if (error.response.status == 422) {
               this.$store.commit("Toast_State", {
                 value: true,
@@ -401,7 +400,7 @@ export default {
                 this.loading = false;
                 this.editVillageDetail = {};
                 this.reset();
-                this.fetchData();
+                this.fetchVillageVariation();
                 this.$store.commit("Toast_State", {
                   value: true,
                   color: "success",
@@ -413,7 +412,6 @@ export default {
           })
           .catch((error) => {
             this.loading = false;
-            this.fetchData();
             if (error.response.status == 422) {
               this.$store.commit("Toast_State", {
                 value: true,
@@ -457,12 +455,11 @@ export default {
                 msg: res.data.message,
               });
               this.$store.commit("modalDelete_State", false);
-              this.fetchData();
+              this.fetchVillageVariation();
             }, 300);
           }
         })
         .catch(() => {
-          this.fetchData();
           this.$store.commit("modalDelete_State", false);
           this.loading = false;
         });
@@ -483,7 +480,7 @@ export default {
 
   created() {
     this.fetchData();
-    // this.fetchVillageVariation();
+    this.fetchVillageVariation();
   },
 };
 </script>

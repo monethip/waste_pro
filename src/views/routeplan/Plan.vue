@@ -13,16 +13,24 @@
         </v-btn>
       </v-col>
       <v-col>
-        <h4>ແຜນຈັດເສັ້ນທາງການເກັບຂີ້ເຫຍື້ອ</h4>
+        <v-autocomplete
+          outlined
+          dense
+          :items="customer_types"
+          v-model="selectedCustomerType"
+          item-text="display"
+          item-value="name"
+          label="ປະເພດລູກຄ້າ"
+        ></v-autocomplete>
       </v-col>
       <!--
       <v-col>
         <v-text-field
           outlined
           dense
-          clearables
+          clearable
           prepend-inner-icon="mdi-magnify"
-          label="Name"
+          label="ຄົ້ນຫາ"
           type="text"
           v-model="search"
           @keyup.enter="Search()"
@@ -30,6 +38,11 @@
         </v-text-field>
       </v-col>
       -->
+    </v-row>
+    <v-row class="my-n6">
+      <v-col>
+        <h4>ແຜນຈັດເສັ້ນທາງການເກັບຂີ້ເຫຍື້ອ</h4>
+      </v-col>
     </v-row>
     <v-row class="mb-n4">
       <v-col
@@ -165,6 +178,21 @@ export default {
       per_page: 9,
       search: "",
       oldVal: "",
+      selectedCustomerType: "",
+      customer_types: [
+        {
+          name: "",
+          display: "ທັງໝົດ",
+        },
+        {
+          name: "company",
+          display: "ບໍລິສັດ",
+        },
+        {
+          name: "home",
+          display: "ຄົວເຮືອນ",
+        },
+      ],
 
       headers: [
         { text: "ຊື່", value: "name" },
@@ -185,7 +213,7 @@ export default {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
-            // filter: this.search,
+            customer_type: this.selectedCustomerType,
           },
         })
         .then((res) => {
@@ -225,16 +253,23 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.loading = false;
-              this.toast.msg = res.data.message;
-              this.$store.commit("Toast_State", this.toast);
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
+              });
               this.$store.commit("modalDelete_State", false);
               this.fetchData();
             }, 300);
           }
         })
-        .catch(() => {
+        .catch((error) => {
           this.fetchData();
-          this.$store.commit("Toast_State", this.toast_error);
+          this.$store.commit("Toast_State", {
+            value: true,
+            color: "error",
+            msg: error.response.data.message,
+          });
           this.$store.commit("modalDelete_State", false);
           this.loading = false;
         });
@@ -271,9 +306,17 @@ export default {
     download(url) {
       window.location.href = url;
     },
+    // Search() {
+    //   GetOldValueOnInput(this);
+    // },
   },
   created() {
     this.fetchData();
+  },
+  watch: {
+    selectedCustomerType: function () {
+      this.fetchData();
+    },
   },
 };
 </script>

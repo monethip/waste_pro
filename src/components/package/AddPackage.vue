@@ -50,7 +50,7 @@
                   <v-col>
                     <v-text-field
                       v-model="addpackage.name"
-                      label="Package Name *"
+                      label="ຊື່ແພັກເກດ *"
                       :rules="nameRules"
                     ></v-text-field>
                     <p class="errors">
@@ -62,7 +62,7 @@
                   <v-col>
                     <v-text-field
                       v-model="addpackage.price"
-                      label="Price *"
+                      label="ລາຄາ *"
                       type="number"
                       class="input-number"
                       required
@@ -94,7 +94,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="closeAddModal()">
-                Close
+                ຍົກເລີກ
               </v-btn>
               <v-btn
                 color="blue darken-1"
@@ -103,7 +103,7 @@
                 :disabled="loading"
                 @click="AddItem()"
               >
-                Save
+                ບັນທຶກ
               </v-btn>
             </v-card-actions>
           </v-card-text>
@@ -125,7 +125,7 @@
                   <v-col>
                     <v-text-field
                       v-model="editPackage.name"
-                      label="Package Name *"
+                      label="ຊື່ແພັກເກດ *"
                       :rules="nameRules"
                     ></v-text-field>
                     <p class="errors">
@@ -137,7 +137,7 @@
                   <v-col>
                     <v-text-field
                       v-model="editPackage.price"
-                      label="Price *"
+                      label="ລາຄາ *"
                       type="number"
                       class="input-number"
                       required
@@ -225,6 +225,8 @@ export default {
       header: [
         { text: "ຊື່ແພັກເກດ", value: "name" },
         { text: "ລາຄາ", value: "price" },
+        { text: "ຂະໜາດ", value: "package_size.size", align: "center" },
+        { text: "ຈຳນວນຖົງ", value: "package_size.bag", align: "center" },
         { text: "Created", value: "created_at" },
         { text: "Actions", value: "action" },
       ],
@@ -378,17 +380,20 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("package", {
-          params: {
-            page: this.pagination.current_page,
-            per_page: this.per_page,
-          },
-        })
+        .get(
+          "package"
+          // , {
+          //   params: {
+          //     page: this.pagination.current_page,
+          //     per_page: this.per_page,
+          //   },
+          // }
+        )
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
-              this.packages = res.data.data.data;
+              this.packages = res.data.data;
               // this.pagination = res.data.data.pagination;
             }, 300);
           }

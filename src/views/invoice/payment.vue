@@ -51,7 +51,11 @@
               <h3 class="my-4">ເລືອກປະເພດການຊຳລະ</h3>
               <v-row>
                 <v-col cols="12">
-                  <v-chip-group v-model="paymentType" column>
+                  <v-chip-group
+                    v-model="paymentType"
+                    column
+                    :rules="paymentTypeRule"
+                  >
                     <v-chip
                       large
                       class="mr-6"
@@ -162,8 +166,8 @@
     </div>
 
     <!-- Confirm Payment-->
-    <v-dialog v-model="paymentDialog" max-width="620px">
-      <template @close="close">
+    <v-dialog v-model="paymentDialog" max-width="620px" persistent>
+      <template>
         <v-card>
           <v-card-title>
             <p>
@@ -191,16 +195,13 @@
                         filter
                         outlined
                       >
-                        ຢືນຢັນການຊຳລະ
                         <v-icon left class="ml-1">
                           mdi-account-check-outline</v-icon
-                        >
+                        >ຢືນຢັນການຊຳລະ
                       </v-chip>
                       <v-chip medium color="error" label filter outlined>
-                        ຊຳລະບໍຜ່ານ
-                        <v-icon class="ml-1" left>
-                          mdi-account-cancel</v-icon
-                        ></v-chip
+                        <v-icon class="ml-1" left> mdi-cash-remove</v-icon>
+                        ຊຳລະບໍຜ່ານ</v-chip
                       >
                     </v-chip-group>
                   </v-col>
@@ -274,13 +275,14 @@ export default {
       image: "",
       imageUrl: "",
       bcel_reference_number: "",
-      payment_method: "cash",
-      paymentType: 0,
+      payment_method: "",
+      paymentType: "",
       confirmType: "",
       paymentDialog: false,
       rejects: [],
       reject_reason_id: "",
       description: "",
+      paymentTypeRule: [(v) => !!v || "Name is required"],
     };
   },
   methods: {
@@ -451,6 +453,7 @@ export default {
   },
   watch: {
     paymentType: function () {
+      console.log(this.paymentType);
       if (this.paymentType == 0) {
         this.payment_method = "cash";
         this.image = "";

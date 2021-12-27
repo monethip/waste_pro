@@ -3,9 +3,55 @@
     <v-row>
       <v-col>
         <p>
-          ບິນຄ່າຂີ້ເຫຍື້ອທີ່ສຳເລັດການຊຳລະ
+          ລວມບິນ
           <span class="primary-color">({{ pagination.total }})</span>
         </p>
+      </v-col>
+      <v-col>
+        <v-autocomplete
+          outlined
+          dense
+          :items="customer_types"
+          v-model="selectedCustomerType"
+          item-text="display"
+          item-value="name"
+          label="ປະເພດລູກຄ້າ"
+        ></v-autocomplete>
+      </v-col>
+      <v-col>
+        <v-autocomplete
+          outlined
+          dense
+          :items="plans"
+          v-model="selectedPlan"
+          item-text="name"
+          item-value="id"
+          label="ແຜນເສັ້ນທາງ"
+          multiple
+        ></v-autocomplete>
+      </v-col>
+      <v-col>
+        <v-autocomplete
+          outlined
+          dense
+          :items="districts"
+          v-model="selectedDistrict"
+          item-text="name"
+          item-value="id"
+          label="ເມືອງ"
+        ></v-autocomplete>
+      </v-col>
+      <v-col>
+        <v-autocomplete
+          outlined
+          dense
+          :items="villages"
+          v-model="selectedVillage"
+          item-text="name"
+          item-value="id"
+          label="ບ້ານ"
+          multiple
+        ></v-autocomplete>
       </v-col>
     </v-row>
     <div>
@@ -17,10 +63,11 @@
         fixed-header
         height="100vh"
       >
-        <template v-slot:item.media="{ item }">
-          <v-avatar size="36px" v-for="(img, index) in item.media" :key="index">
-            <img v-if="img.thumb" :src="img.thumb" />
-          </v-avatar>
+        <template v-slot:item.customer="{ item }">
+          <div v-if="(item.customer.customer_type = 'company')">
+            {{ item.customer.company_name }}
+          </div>
+          <div>{{ item.customer.name }}</div>
         </template>
         <template v-slot:item.total_bag="{ item }">
           <v-chip color="success">{{ item.total_bag }}</v-chip>
@@ -81,8 +128,28 @@ export default {
       invoices: [],
       selectedStatus: ["success"],
 
+      plans: [],
+      selectedPlan: [],
+      //Filter
+      districts: [],
+      selectedDistrict: "",
+      villages: [],
+      selectedVillage: [],
+
+      selectedCustomerType: "home",
+      customer_types: [
+        {
+          name: "home",
+          display: "ຄົວເຮືອນ",
+        },
+        {
+          name: "company",
+          display: "ບໍລິສັດ",
+        },
+      ],
+
       headers: [
-        { text: "ລູກຄ້າ", value: "customer.name" },
+        { text: "ລູກຄ້າ", value: "customer" },
         {
           text: "ຈຳນວນຖົງ",
           value: "total_bag",
@@ -127,6 +194,9 @@ export default {
             page: this.pagination.current_page,
             per_page: this.per_page,
             statuses: this.selectedStatus,
+            customer_type: this.selectedCustomerType,
+            route_plans: this.selectedPlan,
+            villages: this.selectedVillage,
           },
         })
         .then((res) => {
@@ -149,6 +219,49 @@ export default {
           }
         });
     },
+
+    fetchRoutePlan() {
+      this.$axios
+        .get("route-plan")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.plans = res.data.data;
+            }, 100);
+          }
+        })
+        .catch(() => {});
+    },
+
+    fetchAddress() {
+      this.$axios
+        .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.address = res.data.data;
+              this.address.map((item) => {
+                this.districts = item.districts;
+              });
+            }, 300);
+          }
+        })
+        .catch(() => {});
+    },
+
+    fetchVillage() {
+      this.$axios
+        .get("info/district/" + this.selectedDistrict + "/village")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.villages = res.data.data;
+            }, 300);
+          }
+        })
+        .catch(() => {});
+    },
+
     viewPage(id) {
       this.$router.push({
         name: "InvoiceDetail",
@@ -156,13 +269,30 @@ export default {
       });
     },
   },
-  tab: function () {
-    if (this.tab == "tab-5") {
+  watch: {
+    tab: function () {
+      if (this.tab == "tab-5") {
+        this.fetchData();
+      }
+    },
+    selectedCustomerType: function () {
       this.fetchData();
-    }
+    },
+    selectedPlan: function () {
+      this.fetchData();
+    },
+
+    selectedVillage: function () {
+      this.fetchData();
+    },
+    selectedDistrict: function () {
+      this.fetchVillage();
+    },
   },
   created() {
     this.fetchData();
+    this.fetchRoutePlan();
+    this.fetchAddress();
   },
 };
 </script>

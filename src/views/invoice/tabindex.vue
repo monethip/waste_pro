@@ -2,13 +2,18 @@
   <v-container>
     <v-row class="mb-0">
       <v-col>
-        <v-breadcrumbs large class="pa-0"> ຈັດການຂໍ້ມູນບິນ</v-breadcrumbs>
+        <v-breadcrumbs large class="pa-0">
+          ຈັດການຂໍ້ມູນບິນ
+          <span class="primary-color">
+            {{ plan_month.name }} ({{ plan_month.has_invoice }})</span
+          ></v-breadcrumbs
+        >
       </v-col>
     </v-row>
     <v-card elevation="1">
       <v-card-text>
         <v-tabs v-model="tab">
-          <v-tab href="#tab-1" link>ລວມບິນ</v-tab>
+          <v-tab href="#tab-1">ສ້າງບິນ</v-tab>
           <v-tab href="#tab-2">ບິນທີ່ອະນຸມັດ</v-tab>
           <v-tab href="#tab-3">ຢືນຢັນການຊຳລະ</v-tab>
           <v-tab href="#tab-4">ບິນທີ່ຊຳລະບໍຜ່ານ</v-tab>
@@ -78,10 +83,32 @@ export default {
   data() {
     return {
       tab: null,
+      plan_month: [],
     };
   },
-  methods: {},
+  methods: {
+    fetchPlanMonth() {
+      this.$axios
+        .get("plan-month/" + this.$route.params.id)
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.plan_month = res.data.data;
+            }, 300);
+          }
+        })
+        .catch((error) => {
+          if (error.response.status == 422) {
+            var obj = error.response.data.errors;
+            for (let [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
+            }
+          }
+        });
+    },
+  },
   created() {
+    this.fetchPlanMonth();
     if (this.$route.query.tab == "invoice-all") {
       this.tab = "tab-1";
     } else if (this.$route.query.tab == "invoice-approved") {

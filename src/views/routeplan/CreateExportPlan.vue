@@ -190,17 +190,6 @@ export default {
         { text: "ເມືອງ", value: "district.name", sortable: true },
         { text: "", value: "actions", sortable: false },
       ],
-      toast: {
-        value: true,
-        color: "success",
-        msg: "",
-      },
-      toast_error: {
-        value: true,
-        color: "error",
-        msg: "Something when wrong!",
-      },
-
       //Map
       latlng: {
         lat: 18.1189434,

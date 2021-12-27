@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-col justify="center">
+    <v-col justify="center" class="mt-n6">
       <v-card-title> ຂໍ້ມູນລາຄາ </v-card-title>
       <v-data-table
         :headers="headers"
@@ -100,7 +100,7 @@ export default {
       per_page: 15,
       headers: [
         { text: "Size", value: "name" },
-        { text: "Size", value: "price" },
+        { text: "Price", value: "price" },
         { text: "Updated", value: "updated_at" },
         { text: "actions", value: "actions", align: "center" },
       ],
@@ -112,10 +112,7 @@ export default {
       this.$refs.form.reset();
     },
     closeUpdate() {
-      this.reset(),
-        (this.editPackageSize = {}),
-        this.fetchData(),
-        (this.modalPrice = false);
+      this.reset(), (this.editPackageSize = {}), (this.modalPrice = false);
     },
 
     OpenModalEdit(item) {

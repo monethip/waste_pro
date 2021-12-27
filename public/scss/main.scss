@@ -57,3 +57,10 @@
   .succes-color{
       color: $succe-color;
   }
+  .input-number input[type='number'] {
+    -moz-appearance: textfield;
+  }
+  .input-number input::-webkit-outer-spin-button,
+  .input-number input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }

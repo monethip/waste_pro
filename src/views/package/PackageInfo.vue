@@ -44,7 +44,7 @@ export default {
         this.$router
           .push({
             name: "Package",
-            query: { tab: "package-info" },
+            query: { tab: "package" },
           })
           .catch(() => {});
       } else if (value == "tab-2") {
@@ -65,7 +65,7 @@ export default {
     },
   },
   created() {
-    if (this.$route.query.tab == "package-info") {
+    if (this.$route.query.tab == "package") {
       this.tab = "tab-1";
     } else if (this.$route.query.tab == "package-size") {
       this.tab = "tab-2";

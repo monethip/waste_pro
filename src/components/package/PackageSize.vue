@@ -64,7 +64,7 @@
                   <v-col>
                     <v-text-field
                       v-model="addpackage.size"
-                      label="Size*"
+                      label="ຂະໜາດ*"
                       required
                       :rules="sizeRules"
                     ></v-text-field>
@@ -116,7 +116,7 @@
       <template>
         <v-card>
           <v-card-title>
-            <span class="headline">ແກ້ໄຂຂໍ້ມູນ Package</span>
+            <p>ແກ້ໄຂຂໍ້ມູນ Package</p>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -125,7 +125,7 @@
                   <v-col>
                     <v-text-field
                       v-model="editPackageSize.size"
-                      label="size*"
+                      label="ຂະໜາດ*"
                       required
                     ></v-text-field>
                   </v-col>
@@ -134,7 +134,7 @@
                   <v-col>
                     <v-text-field
                       v-model="editPackageSize.bag"
-                      label="bag*"
+                      label="ຈຳນວນຖົງ*"
                       required
                       type="number"
                       class="input-number"

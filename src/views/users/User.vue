@@ -629,8 +629,8 @@ export default {
       phoneRules: [
         (v) => !!v || "Phone is required",
         (v) =>
-          (v && v.length >= 4 && v.length <= 11) ||
-          "Phone number must be  4 - 11 numbers",
+          (v && v.length >= 7 && v.length <= 11) ||
+          "Phone number must be  7 - 11 numbers",
       ],
       rulePermission: [(v) => !!v || "Permission is required"],
       rulePermissionRole: [(v) => !!v || "Role is required"],
@@ -685,7 +685,7 @@ export default {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
-            // filter: this.search,
+            filter: this.search,
             roles: this.selectedRoles,
           },
         })
@@ -871,7 +871,6 @@ export default {
     AddRole() {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
-        // this.roles = this.edit_user.roles;
         this.$axios
           .post("user-setting/user/" + this.userID + "/give-role", {
             roles: this.edit_user.roles,
@@ -1009,7 +1008,6 @@ export default {
     UpdatePermission() {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
-        // this.roles = this.edit_user.roles;
         this.$axios
           .post("user-setting/user/" + this.userID + "/revoke-permission", {
             permissions: this.selectedPermission,
@@ -1065,14 +1063,23 @@ export default {
     "user.password": function () {
       this.server_errors.password = "";
     },
+    "edit_user.name": function () {
+      this.server_errors.name = "";
+    },
+    "edit_user.phone": function () {
+      this.server_errors.phone = "";
+    },
+    "edit_user.email": function () {
+      this.server_errors.email = "";
+    },
+    "edit_user.password": function () {
+      this.server_errors.password = "";
+    },
     search: function (value) {
       if (value == "") {
         this.fetchData();
       }
     },
-    // selectedRoles: function () {
-    //   this.fetchData();
-    // },
   },
   created() {
     this.fetchRole();

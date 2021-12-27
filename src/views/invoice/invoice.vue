@@ -5,6 +5,33 @@
         <p>ເລືອກເດືອນທີ່ອອກໃບບິນເກັບເງິນ</p>
       </v-col>
       <v-col>
+        <v-menu
+          v-model="start_menu"
+          :close-on-content-click="true"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="date"
+              label="ເດືອນ"
+              readonly
+              outlined
+              v-bind="attrs"
+              v-on="on"
+              dense
+            ></v-text-field>
+          </template>
+          <v-date-picker
+            v-model="date"
+            @input="fetchData()"
+            type="month"
+          ></v-date-picker>
+        </v-menu>
+      </v-col>
+      <v-col>
         <v-text-field
           outlined
           dense
@@ -28,12 +55,15 @@
             :disable-pagination="true"
             hide-default-footer
           >
+            <template v-slot:item.total="{ item }">
+              {{ Intl.NumberFormat().format(item.total) }}
+            </template>
             <template v-slot:item.plan="{ item }">
               <v-icon
                 color="success"
                 small
                 class="mr-2"
-                @click="createInvoice(item.id)"
+                @click="createInvoice(item.plan_month.id)"
               >
                 mdi-eye</v-icon
               >
@@ -70,9 +100,7 @@ export default {
       search: "",
       oldVal: "",
       //Add Package
-      start_date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-        .toISOString()
-        .substr(0, 10),
+      date: new Date().toISOString().substr(0, 7),
       start_menu: false,
       packages: [],
       selectedPackage: "",
@@ -87,11 +115,23 @@ export default {
       calendarEdit: {},
 
       headers: [
-        { text: "ຊື່", value: "name" },
-        { text: "ວັນທີ", value: "month" },
+        { text: "ຊື່", value: "plan_month.name" },
+        // { text: "ວັນທີ", value: "plan_month.month" },
+        {
+          text: "ລວມເງິນ",
+          value: "total",
+          align: "center",
+          sortable: false,
+        },
+        {
+          text: "ຈຳນວນລູກຄ້າ",
+          value: "count_customer",
+          align: "center",
+          sortable: false,
+        },
         {
           text: "ຈຳນວນບິນ",
-          value: "has_invoice",
+          value: "plan_month.has_invoice",
           align: "center",
           sortable: false,
         },
@@ -109,10 +149,11 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("plan-month", {
+        .get("invoice-summary", {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
+            // month: this.date,
           },
         })
         .then((res) => {

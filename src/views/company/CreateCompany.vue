@@ -217,7 +217,7 @@
               </p>
             </v-col>
             <v-col cols="6">
-              <v-autocomplete
+              <v-select
                 v-model="selectedVillageDetail"
                 :items="units"
                 item-text="name"
@@ -238,7 +238,7 @@
                     {{ data.item.name }}
                   </v-chip>
                 </template>
-              </v-autocomplete>
+              </v-select>
               <p class="errors">
                 {{ server_errors.village_details }}
               </p>
@@ -437,6 +437,7 @@ export default {
       village_details: [],
       village_variation_id: [],
       selectedVillageDetail: [],
+      addressdetail: [],
       units: [],
       selectedCost: "",
       start_date: "",
@@ -570,6 +571,7 @@ export default {
               this.villages = res.data.data;
               this.selectedVillage = this.villages[0].id;
               this.fetchVillageDetail();
+              this.fetchVillageVariation();
             }, 300);
           }
         })
@@ -582,9 +584,33 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.village_details = res.data.data.village_variations;
+              // console.log(this.village_details);
               // res.data.data.map((item) => {
               //   this.units = item.village_details;
               // });
+            }, 100);
+          }
+        })
+        .catch(() => {});
+    },
+    fetchVillageVariation() {
+      this.$axios
+        .get(
+          "info/village/" + this.selectedVillage + "/village-detail"
+          // , {
+          //   params: {
+          //     page: this.pagination.current_page,
+          //     per_page: this.per_page,
+          //     filter: "",
+          //   },
+          // }
+        )
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.addressdetail = res.data.data;
+              console.log(this.addressdetail);
+              // this.pagination = res.data.data.pagination;
             }, 100);
           }
         })
@@ -740,8 +766,13 @@ export default {
       });
     },
     fetchUnit() {
-      this.village_details.filter((item) => {
-        this.units = item.village_details;
+      const result = this.addressdetail.filter(({ id }) =>
+        this.village_variation_id.includes(id)
+      );
+      result.map((item) => {
+        for (var i = 0; i < item.village_details.length; i++) {
+          this.units.push(item.village_details[i]);
+        }
       });
     },
     removeItem(item) {
@@ -757,10 +788,12 @@ export default {
       this.fetchVillage();
     },
     selectedVillage: function () {
-      this.fetchVillageDetail();
+      // this.fetchVillageDetail();
+      this.fetchVillageVariation();
     },
     village_variation_id: function () {
       if (this.village_variation_id) {
+        this.units = [];
         this.fetchUnit();
       }
     },

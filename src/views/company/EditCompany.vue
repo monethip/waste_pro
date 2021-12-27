@@ -176,6 +176,7 @@
                   label="ກຸ່ມ / ຄຸ້ມ"
                   outlined
                   dense
+                  multiple
                 >
                 </v-autocomplete>
                 <p class="errors">
@@ -369,8 +370,9 @@ export default {
       villages: [],
       selectedVillage: "",
       village_details: [],
-      village_variation_id: "",
+      village_variation_id: [],
       selectedVillageDetail: [],
+      addressdetail: [],
       units: [],
       selectedCost: "",
       start_menu: false,
@@ -443,8 +445,9 @@ export default {
               this.data = res.data.data;
               this.selectedVillage = res.data.data.village_id;
               res.data.data.village_details.map((item) => {
-                this.village_variation_id = item.village_variation_id;
+                this.village_variation_id.push(item.village_variation_id);
                 this.selectedVillageDetail.push(item.id);
+                console.log(this.selectedVillageDetail);
               });
             }, 300);
           }
@@ -481,6 +484,7 @@ export default {
               this.villages = res.data.data;
               this.selectedVillage = this.villages[0].id;
               this.fetchVillageDetail();
+              this.fetchVillageVariation();
             }, 300);
           }
         })
@@ -685,20 +689,37 @@ export default {
     },
 
     fetchUnit() {
-      this.village_details.filter((item) => {
-        this.units = item.village_details;
-        // item.village_details.forEach((data) => {
-        //   console.log(data);
-        //   data.filter((i) => {
-        //     console.log(i);
-        //     return i.village_variation_id === this.village_variation_id;
-        //   });
-        // });
-
-        // // var a = item.id === this.village_variation_id;
-        // // console.log(a);
-        // // this.units.push(item.id === this.village_variation_id);
+      const result = this.addressdetail.filter(({ id }) =>
+        this.village_variation_id.includes(id)
+      );
+      result.map((item) => {
+        for (var i = 0; i < item.village_details.length; i++) {
+          this.units.push(item.village_details[i]);
+        }
       });
+    },
+    fetchVillageVariation() {
+      this.$axios
+        .get(
+          "info/village/" + this.selectedVillage + "/village-detail"
+          // , {
+          //   params: {
+          //     page: this.pagination.current_page,
+          //     per_page: this.per_page,
+          //     filter: "",
+          //   },
+          // }
+        )
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.addressdetail = res.data.data;
+              // console.log(this.addressdetail);
+              // this.pagination = res.data.data.pagination;
+            }, 100);
+          }
+        })
+        .catch(() => {});
     },
   },
   watch: {
@@ -706,7 +727,7 @@ export default {
       this.fetchVillage();
     },
     selectedVillage: function () {
-      this.fetchVillageDetail();
+      this.fetchVillageVariation();
     },
     //Clear error change
     "data.company_name": function () {
@@ -752,6 +773,7 @@ export default {
     village_variation_id: function () {
       // console.log(this.village_variation_id);
       if (this.village_variation_id) {
+        this.units = [];
         this.fetchUnit();
       }
     },
@@ -762,6 +784,8 @@ export default {
   created() {
     this.fetchAddress();
     this.fetchData();
+    this.fetchUnit();
+    console.log(this.village_variation_id);
   },
 };
 </script>
