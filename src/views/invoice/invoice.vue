@@ -4,6 +4,7 @@
       <v-col>
         <p>ເລືອກເດືອນທີ່ອອກໃບບິນເກັບເງິນ</p>
       </v-col>
+      <!--
       <v-col>
         <v-menu
           v-model="start_menu"
@@ -31,6 +32,7 @@
           ></v-date-picker>
         </v-menu>
       </v-col>
+      -->
       <v-col>
         <v-text-field
           outlined

@@ -60,7 +60,7 @@
           outlined
           dense
           v-model="reject_reason_id"
-          label="ເລກລະຫັດການຊຳລະ"
+          label="ເຫດຜົນການຍົກເລີກ"
           :items="rejects"
           item-text="name"
           item-value="id"

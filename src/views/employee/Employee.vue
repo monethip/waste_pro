@@ -405,8 +405,8 @@ export default {
       phoneRules: [
         (v) => !!v || "Phone is required",
         (v) =>
-          (v && v.length >= 4 && v.length <= 11) ||
-          "Phone number must be  4 - 11 numbers",
+          (v && v.length >= 6 && v.length <= 8) ||
+          "Phone number must be  8 - 12 numbers",
       ],
       carnumberRules: [
         (v) => !!v || "Car number is required",

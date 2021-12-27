@@ -111,14 +111,14 @@
               >
             </template>
             <v-list>
-              <v-list-item link>
-                <v-list-item-title @click="viewPage(item.id)">
+              <v-list-item link @click="viewPage(item.id)">
+                <v-list-item-title>
                   <v-icon small> mdi-eye </v-icon>
                   ລາຍລະອຽດ
                 </v-list-item-title>
               </v-list-item>
-              <v-list-item link>
-                <v-list-item-title @click="PaymentPage(item.id)">
+              <v-list-item link @click="PaymentPage(item.id)">
+                <v-list-item-title>
                   <v-icon small> mdi-credit-card </v-icon>
                   ຊຳລະບິນ
                 </v-list-item-title>

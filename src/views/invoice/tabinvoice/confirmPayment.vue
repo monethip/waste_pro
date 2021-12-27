@@ -216,6 +216,7 @@
                     </v-col>
                   </v-row>
                   <v-row>
+                    <v-divider></v-divider>
                     <v-card-actions>
                       <v-btn
                         color="blue darken-1"
@@ -255,6 +256,7 @@ export default {
       invoices: [],
       editItem: {},
       server_errors: {},
+      description: "",
 
       plans: [],
       selectedPlan: [],
