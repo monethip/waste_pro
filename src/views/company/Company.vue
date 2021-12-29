@@ -9,7 +9,7 @@
       <v-col>
         <v-menu
           v-model="start_menu"
-          :close-on-content-click="false"
+          :close-on-content-click="true"
           :nudge-right="40"
           transition="scale-transition"
           offset-y
@@ -35,7 +35,7 @@
       <v-col>
         <v-menu
           v-model="end_menu"
-          :close-on-content-click="false"
+          :close-on-content-click="true"
           :nudge-right="40"
           transition="scale-transition"
           offset-y

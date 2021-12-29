@@ -4,8 +4,16 @@
       <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
-      ເລືອກບໍລິສັດເຂົ້າແຜນເສັ້ນທາງ</v-breadcrumbs
-    >
+      ເລືອກບໍລິສັດເຂົ້າແຜນເສັ້ນທາງ
+      <v-spacer></v-spacer>
+      <span class="mr-4"
+        ><v-icon color="red">mdi-map-marker</v-icon>ຢູ່ໃນແຜນແລ້ວ</span
+      >
+      <span
+        ><v-icon style="color: #49a3da">mdi-map-marker</v-icon
+        >ຍັງບໍທັນຢູ່ໃນແຜນ</span
+      >
+    </v-breadcrumbs>
     <v-row class="my-n4">
       <v-col cols="12" class="mb-4">
         <GmapMap
@@ -28,7 +36,7 @@
             :position="getMarkers(m)"
             @click="toggleInfo(m, index)"
             :draggable="false"
-            :icon="markerOptions"
+            :icon="getSiteIcon(m)"
             :animation="2"
             :clickable="true"
           />
@@ -243,30 +251,6 @@ export default {
       markers: [],
       places: [],
       currentPlace: null,
-      markerOptions: {
-        // eslint-disable-next-line global-require
-        url: require("@coms/../../src/assets/pin1.svg"),
-        zoomControl: true,
-        mapTypeControl: false,
-        scaleControl: false,
-        streetViewControl: false,
-        rotateControl: false,
-        fullscreenControl: false,
-        disableDefaultUi: false,
-        size: {
-          width: 28,
-          height: 48,
-          f: "px",
-          b: "px",
-        },
-        scaledSize: {
-          width: 28,
-          height: 48,
-          f: "px",
-          b: "px",
-        },
-      },
-
       infoPosition: null,
       infoContent: null,
       infoOpened: false,
@@ -347,7 +331,6 @@ export default {
     },
 
     createPage() {
-      console.log("Company");
       //  var a = [];
       if (this.customers.length > 0 && this.selectedVillage.length > 0) {
         this.$router.push({
@@ -400,6 +383,63 @@ export default {
           lat: parseFloat(m.lat),
           lng: parseFloat(m.lng),
         };
+      }
+    },
+    getSiteIcon(status) {
+      var pin1 = {
+        url: require("@coms/../../src/assets/pin1.svg"),
+        zoomControl: true,
+        mapTypeControl: false,
+        scaleControl: false,
+        streetViewControl: false,
+        rotateControl: false,
+        fullscreenControl: false,
+        disableDefaultUi: false,
+        size: {
+          width: 35,
+          height: 55,
+          f: "px",
+          b: "px",
+        },
+        scaledSize: {
+          width: 35,
+          height: 55,
+          f: "px",
+          b: "px",
+        },
+      };
+      var pin2 = {
+        url: require("@coms/../../src/assets/pin2.svg"),
+        zoomControl: true,
+        mapTypeControl: false,
+        scaleControl: false,
+        streetViewControl: false,
+        rotateControl: false,
+        fullscreenControl: false,
+        disableDefaultUi: false,
+        size: {
+          width: 35,
+          height: 55,
+          f: "px",
+          b: "px",
+        },
+        scaledSize: {
+          width: 35,
+          height: 55,
+          f: "px",
+          b: "px",
+        },
+      };
+
+      try {
+        switch (status.route_plan_details_count) {
+          case 0:
+            return pin1;
+          case 1:
+            return pin2;
+        }
+      } catch (e) {
+        return pin1;
       }
     },
     toggleInfo(m, key) {
