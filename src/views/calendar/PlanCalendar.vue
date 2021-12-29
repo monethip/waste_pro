@@ -6,7 +6,7 @@
           <v-btn text class="text-primary" @click="backPrevios()">
             <v-icon>mdi-chevron-left</v-icon></v-btn
           >
-          ຈັດການເວລາໃຫ້ພະນັກງານເກັບຂີ້ເຫຍື້ຍອ
+          ຈັດການເວລາໃຫ້ພະນັກງານເກັບຂີ້ເຫື້ຍອ
           <span class="ml-2 primary-color">{{
             planmonth.name
           }}</span></v-breadcrumbs
@@ -43,18 +43,13 @@
             hide-default-footer
           >
             <template v-slot:item.driver="{ item }">
-              <div>
-                {{ item.driver.name }} {{ item.driver.surname }}
-                <span class="primary--text"
-                  >- {{ item.driver.car_number }}</span
-                >
-              </div>
+              <div>{{ item.driver.name }} {{ item.driver.surname }}</div>
             </template>
             <template v-slot:item.date="{ item }">
               <v-chip color="success">{{ item.date }}</v-chip>
             </template>
             <template v-slot:item.detail="{ item }">
-              <v-icon small class="mr-2" @click="gotoPlanCalendar(item.id)"
+              <v-icon small class="mr-2" @click="gotoPlanCalendar(item)"
                 >mdi-eye</v-icon
               >
             </template>
@@ -348,6 +343,7 @@ export default {
       selectedStatus: [],
       planmonth: {},
       calendarEdit: {},
+      plan: [],
 
       routeplans: [],
       selectedRoutePlan: "",
@@ -355,7 +351,7 @@ export default {
       selectedDriver: "",
 
       headers: [
-        { text: "ວັນທີ", value: "date" },
+        { text: "ວັນທີເກັບຂີ້ເຫື້ຍອ", value: "date" },
         { text: "ຊື່ພະນັກງານ(ທະບຽນລົດ)", value: "driver" },
         {
           text: "ເສັ້ນທາງ",
@@ -564,6 +560,8 @@ export default {
       this.$store.commit("modalEdit_State", true);
     },
     UpdatePlan() {
+      console.log(this.$route.params.id);
+      console.log(this.calendarEdit.id);
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
@@ -619,10 +617,12 @@ export default {
     Search() {
       GetOldValueOnInput(this);
     },
-    gotoPlanCalendar(id) {
+    gotoPlanCalendar(item) {
+      console.log(item);
       this.$router.push({
         name: "PlanCalendarDetail",
-        params: { id },
+        // params: { id: item.id },
+        params: { id: item.id, driverId: item.driver_id },
       });
     },
     reset() {

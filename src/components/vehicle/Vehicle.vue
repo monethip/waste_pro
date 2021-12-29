@@ -3,7 +3,7 @@
     <v-row class="mb-n6 text-right">
       <v-col>
         <v-card-title>
-          ຂໍ້ມູນລົດ
+          ຂໍ້ມູນລົດ ({{ pagination.total }})
           <v-spacer></v-spacer>
           <v-btn color="info" medium @click="OpenModalAdd()"
             ><v-icon color>mdi-plus</v-icon>
@@ -47,18 +47,6 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      v-model="vehicle.car_number"
-                      label="ທະບຽນລົດ *"
-                      :rules="numberRules"
-                    ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.car_number }}
-                    </p>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col>
-                    <v-text-field
                       v-model="vehicle.car_id"
                       label="ID *"
                       required
@@ -66,6 +54,18 @@
                     ></v-text-field>
                     <p class="errors">
                       {{ server_errors.car_id }}
+                    </p>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      v-model="vehicle.car_number"
+                      label="ທະບຽນລົດ *"
+                      :rules="numberRules"
+                    ></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.car_number }}
                     </p>
                   </v-col>
                 </v-row>
@@ -120,18 +120,6 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      v-model="editVehicle.car_number"
-                      label="ທະບຽນລົດ *"
-                      :rules="numberRules"
-                    ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.name }}
-                    </p>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col>
-                    <v-text-field
                       v-model="editVehicle.car_id"
                       label="ID *"
                       required
@@ -139,6 +127,18 @@
                     ></v-text-field>
                     <p class="errors">
                       {{ server_errors.car_id }}
+                    </p>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      v-model="editVehicle.car_number"
+                      label="ທະບຽນລົດ *"
+                      :rules="numberRules"
+                    ></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.name }}
                     </p>
                   </v-col>
                 </v-row>

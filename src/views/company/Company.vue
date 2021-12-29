@@ -128,7 +128,7 @@
                 v-for="(img, index) in item.media"
                 :key="index"
               >
-                <img v-if="img.thumb" :src="img.thumb" />
+                <img v-if="img.url" :src="img.url" />
               </v-avatar>
             </template>
             <template v-slot:item.company_coordinators="{ item }">
@@ -308,7 +308,7 @@ export default {
       //Add Package
       // start_date: "",
       // start_menu: false,
-      allowedDates: (val) => new Date(val).getDate() === 1,
+      // allowedDates: (val) => new Date(val).getDate() === 1,
       packages: [],
       selectedPackage: "",
       start_collect: false,

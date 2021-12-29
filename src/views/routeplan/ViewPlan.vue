@@ -79,6 +79,15 @@
               :disable-pagination="true"
               hide-default-footer
             >
+              <template v-slot:item.customer="{ item }">
+                <div v-if="(item.customer.customer_type = 'company')">
+                  {{ item.customer.company_name }}
+                </div>
+                <div>
+                  {{ item.customer.name }}
+                  {{ item.customer.surname }}
+                </div>
+              </template>
               <template v-slot:item.status="{ item }">
                 <v-chip
                   v-if="item.customer"
@@ -88,7 +97,7 @@
               </template>
 
               <template v-slot:item.actions="{ item }">
-                <v-icon small class="mr-2" @click="viewPage(item.id)">
+                <v-icon small class="mr-2" @click="viewPage(item)">
                   mdi-eye
                 </v-icon>
               </template> </v-data-table
@@ -134,8 +143,7 @@ export default {
 
       headers: [
         { text: "ລຳດັບ", value: "priority", sortable: false, align: "center" },
-        { text: "ຊື່", value: "customer.name" },
-        { text: "ນາມສະກຸນ", value: "customer.surname" },
+        { text: "ລູກຄ້າ", value: "customer" },
         { text: "ສະຖານະ", value: "status", sortable: false },
         { text: "ເຮືອນເລກທີ", value: "customer.house_number", sortable: false },
         { text: "", value: "actions", sortable: false },
@@ -272,11 +280,18 @@ export default {
       this.$emit("create-plan", this.customers, this.selectedVillage);
     },
 
-    viewPage(id) {
-      this.$router.push({
-        name: "ViewCustomer",
-        params: { id },
-      });
+    viewPage(data) {
+      if (data.customer.customer_type == "company") {
+        this.$router.push({
+          name: "ViewCompany",
+          params: { id: data.customer_id },
+        });
+      } else if (data.customer.customer_type == "home") {
+        this.$router.push({
+          name: "ViewCustomer",
+          params: { id: data.customer_id },
+        });
+      }
     },
     viewMap() {
       this.switchMap = !this.switchMap;

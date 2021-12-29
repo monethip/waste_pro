@@ -3,7 +3,7 @@
     <v-row>
       <v-col>
         <v-breadcrumbs large class="pa-0">
-          ຂີ້ເຫຍື້ຍອທີ່ເກັບສຳເລັດແລ້ວ</v-breadcrumbs
+          ຂີ້ເຫື້ຍອທີ່ເກັບສຳເລັດແລ້ວ</v-breadcrumbs
         >
       </v-col>
       <v-col>
@@ -12,7 +12,7 @@
           dense
           clearable
           prepend-inner-icon="mdi-magnify"
-          label="ຊື່"
+          label="Search"
           type="text"
           v-model="search"
           @keyup.enter="Search()"
@@ -30,7 +30,12 @@
         hide-default-footer
       >
         <template v-slot:item.customer="{ item }">
-          <div v-if="item.route_plan_detail.customer">
+          <div
+            v-if="(item.route_plan_detail.customer.customer_type = 'company')"
+          >
+            {{ item.route_plan_detail.customer.company_name }}
+          </div>
+          <div>
             {{ item.route_plan_detail.customer.name }}
             {{ item.route_plan_detail.customer.surname }}
           </div>
@@ -93,8 +98,8 @@ export default {
       statuses: ["success"],
       headers: [
         { text: "ລຳດັບ", value: "route_plan_detail.priority" },
-        { text: "ຊື່ລູກຄ້າ", value: "customer" },
-        { text: "ເລີ່ມວັນທີ", value: "route_plan_detail.customer.start_month" },
+        { text: "ລູກຄ້າ", value: "customer" },
+        // { text: "ເລີ່ມວັນທີ", value: "route_plan_detail.customer.start_month" },
         {
           text: "ຈຳນວນຂີ້ເຫື້ຍອ",
           value: "amount",

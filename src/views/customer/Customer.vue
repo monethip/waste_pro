@@ -7,6 +7,58 @@
         </v-btn>
       </v-col>
       <v-col>
+        <v-menu
+          v-model="start_menu"
+          :close-on-content-click="true"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="start_date"
+              label="ເລີ່ມວັນທີ"
+              readonly
+              outlined
+              v-bind="attrs"
+              v-on="on"
+              dense
+            ></v-text-field>
+          </template>
+          <v-date-picker
+            v-model="start_date"
+            @input="fetchData()"
+          ></v-date-picker>
+        </v-menu>
+      </v-col>
+      <v-col>
+        <v-menu
+          v-model="end_menu"
+          :close-on-content-click="true"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="end_date"
+              label="ຫາວັນທີ"
+              readonly
+              outlined
+              v-bind="attrs"
+              v-on="on"
+              dense
+            ></v-text-field>
+          </template>
+          <v-date-picker
+            v-model="end_date"
+            @input="fetchData()"
+          ></v-date-picker>
+        </v-menu>
+      </v-col>
+      <v-col>
         <v-autocomplete
           outlined
           dense
@@ -47,7 +99,7 @@
           dense
           clearable
           prepend-inner-icon="mdi-magnify"
-          label="ຊື່ລູກຄ້າ"
+          label="Search"
           type="text"
           v-model="search"
           @keyup.enter="Search()"
@@ -82,11 +134,12 @@
                 >
                   <template v-slot:item.media="{ item }">
                     <v-avatar
+                      class="mr-1"
                       size="36px"
                       v-for="(img, index) in item.media"
                       :key="index"
                     >
-                      <img v-if="img.thumb" :src="img.thumb" />
+                      <img v-if="img.url" :src="img.url" />
                     </v-avatar>
                   </template>
                   <!--Role -->
@@ -184,7 +237,7 @@
                 <v-row class="my-n4">
                   <v-col cols="12">
                     <v-menu
-                      v-model="start_menu"
+                      v-model="package_menu"
                       :close-on-content-click="true"
                       :nudge-right="40"
                       transition="scale-transition"
@@ -193,7 +246,7 @@
                     >
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
-                          v-model="start_date"
+                          v-model="package_date"
                           label="ເລີ່ມວັນທີ"
                           readonly
                           outlined
@@ -202,10 +255,7 @@
                           dense
                         ></v-text-field>
                       </template>
-                      <v-date-picker
-                        v-model="start_date"
-                        :allowed-dates="allowedDates"
-                      ></v-date-picker>
+                      <v-date-picker v-model="package_date"></v-date-picker>
                     </v-menu>
                     <p class="errors">
                       {{ server_errors.start_month }}
@@ -284,9 +334,14 @@ export default {
       search: "",
       oldVal: "",
       //Add Package
+      package_date: "",
+      package_menu: false,
+      // allowedDates: (val) => new Date(val).getDate() === 1,
+
       start_date: "",
       start_menu: false,
-      allowedDates: (val) => new Date(val).getDate() === 1,
+      end_date: "",
+      end_menu: false,
       packages: [],
       selectedPackage: "",
       start_collect: false,
@@ -319,7 +374,7 @@ export default {
         { text: "ທີ່ຢູ່", value: "district.name", sortable: false },
         { text: "ແພັກເກດ", value: "package.name", sortable: false },
         // { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
-        { text: "Image", value: "media" },
+        { text: "Profile", value: "media" },
         { text: "ສະຖານະ", value: "status" },
         { text: "", value: "actions", sortable: false },
       ],
@@ -336,6 +391,8 @@ export default {
             filter: this.search,
             villages: this.selectedVillage,
             statuses: this.selectedStatus,
+            date_from: this.start_date,
+            date_end: this.end_date,
           },
         })
         .then((res) => {
@@ -483,7 +540,7 @@ export default {
         this.$axios
           .post("customer/" + this.customerId + "/add-package", {
             package_id: this.selectedPackage,
-            start_month: this.start_date,
+            start_month: this.package_date,
             can_collect: this.start_collect,
           })
           .then((res) => {
@@ -494,7 +551,7 @@ export default {
                 this.selectedPackage = "";
                 this.customerId = "";
                 this.fetchData();
-                this.reset();
+                this.package_menu = false;
                 this.$store.commit("Toast_State", {
                   value: true,
                   color: "success",
@@ -565,7 +622,7 @@ export default {
     selectedPackage: function () {
       this.server_errors.package_id = "";
     },
-    start_date: function () {
+    package_date: function () {
       this.server_errors.start_month = "";
     },
   },

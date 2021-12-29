@@ -49,7 +49,7 @@
                 v-for="(img, index) in item.media"
                 :key="index"
               >
-                <img v-if="img.thumb" :src="img.thumb" />
+                <img v-if="img.url" :src="img.url" />
               </v-avatar>
             </template>
             <template v-slot:item.status="{ item }">
@@ -312,7 +312,7 @@
                       class="avatar rounded mr-6"
                       size="94px"
                     >
-                      <img :src="item.thumb" />
+                      <img :src="item.url" />
                     </v-avatar>
                   </v-col>
                 </v-row>

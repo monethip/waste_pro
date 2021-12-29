@@ -82,7 +82,7 @@
                     class="avatar rounded mr-6"
                     size="94px"
                   >
-                    <img :src="item.thumb" alt="Image" />
+                    <img :src="item.url" alt="Image" />
                   </v-avatar>
                 </v-col>
               </div>

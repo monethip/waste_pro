@@ -6,6 +6,16 @@
       >
       ລາຍລະອຽດແຜນ</v-breadcrumbs
     >
+    <v-row>
+      <v-col>
+        <p v-if="data.plan_month">
+          {{ data.plan_month.name }} - {{ data.route_plan.name }} -
+          {{ data.plan_month.name }}
+          <span class="primary-color">({{ data.driver.name }}),</span> ວັນທີ
+          {{ data.date }}
+        </p>
+      </v-col>
+    </v-row>
     <v-card elevation="1">
       <v-card-text>
         <v-tabs v-model="tab">
@@ -59,7 +69,7 @@ import successTrash from "@views/calendar/CalendarTab/successTrash";
 import trashMixin from "@/views/calendar/trashMixin";
 export default {
   mixins: [trashMixin],
-  //   props: ["calendars"],
+  props: ["plan"],
   components: {
     allTrash,
     pendingTrash,
@@ -68,19 +78,38 @@ export default {
   data() {
     return {
       tab: null,
+      data: {},
     };
   },
   methods: {
     backPrevios() {
-      this.$router.go(-1);
+      // this.$router.go(-1);
       // this.$router.push({
       //   name: "PlanCalendar",
       //   params: { id },
       // });
-      // this.$router.push({
-      //   name: "PlanCalendar",
-      //   params: { id: this.plan_monthId },
-      // });
+      this.$router.push({
+        name: "PlanCalendar",
+        params: { id: this.data.plan_month_id },
+      });
+    },
+    fetchDataPlanMonth() {
+      this.$axios
+        .get(
+          "plan-month/" +
+            this.$route.params.driverId +
+            "/plan-calendar/" +
+            this.$route.params.id
+        )
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.data = res.data.data;
+              console.log(this.data);
+            }, 100);
+          }
+        })
+        .catch(() => {});
     },
   },
   created() {
@@ -91,7 +120,7 @@ export default {
     } else if (this.$route.query.tab == "trash-success") {
       this.tab = "tab-3";
     }
-    // this.fetchData();
+    this.fetchDataPlanMonth();
   },
   watch: {
     tab: function (value) {

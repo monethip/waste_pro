@@ -49,7 +49,7 @@
                 v-for="(img, index) in item.media"
                 :key="index"
               >
-                <img v-if="img.thumb" :src="img.thumb" />
+                <img v-if="img.url" :src="img.url" />
               </v-avatar>
             </template>
             <template v-slot:item.actions="{ item }">
@@ -252,7 +252,7 @@
                       class="avatar rounded mr-6"
                       size="94px"
                     >
-                      <img :src="item.thumb" />
+                      <img :src="item.url" />
                     </v-avatar>
                   </v-col>
                 </v-row>
@@ -387,32 +387,15 @@ export default {
         (v) => !!v || "E-mail is required",
         (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
       ],
-      passwordRules: [
-        (v) => !!v || "Password is required",
-        (v) =>
-          (v && v.length >= 8) || "Password must be more than 8 characters",
-      ],
-      passwordConfirmRules: [
-        (v) => !!v || "Password Confirm is required",
-        (v) =>
-          (v && v.length >= 8) || "Password must be more than 8 characters",
-      ],
       nameRules: [
         (v) => !!v || "Name is required",
         (v) => (v && v.length >= 2) || "Name must be less than 2 characters",
       ],
-      vehicleRules: [(v) => !!v || "Vehicle is required"],
       phoneRules: [
         (v) => !!v || "Phone is required",
         (v) =>
           (v && v.length >= 6 && v.length <= 8) ||
-          "Phone number must be  8 - 12 numbers",
-      ],
-      carnumberRules: [
-        (v) => !!v || "Car number is required",
-        (v) => (v && v.length == 4) || "Car number must be 4 number",
-        (v) =>
-          Number.isInteger(Number(v)) || "The value must be an integer number",
+          "Phone number must be  6 - 8 numbers",
       ],
     };
   },

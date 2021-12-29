@@ -12,17 +12,15 @@
         <v-img :src="item.url" alt="Image" height="500px" dark> </v-img>
       </div>
       -->
-      <div v-if="data.media.length > 0">
-        <v-carousel>
-          <v-carousel-item
-            v-for="(item, index) in data.media"
-            :key="index"
-            :src="item.url"
-            reverse-transition="fade-transition"
-            transition="fade-transition"
-          ></v-carousel-item>
-        </v-carousel>
-      </div>
+      <v-carousel v-if="data.media && data.media.length">
+        <v-carousel-item
+          v-for="(item, index) in data.media"
+          :key="index"
+          :src="item.url"
+          reverse-transition="fade-transition"
+          transition="fade-transition"
+        ></v-carousel-item>
+      </v-carousel>
       <v-card-text>
         <v-container>
           <v-row>
