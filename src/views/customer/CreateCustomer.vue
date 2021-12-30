@@ -457,6 +457,7 @@ export default {
               this.villages = res.data.data;
               this.selectedVillage = this.villages[0].id;
               this.fetchVillageDetail();
+              this.fetchVillageVariation();
             }, 300);
           }
         })
@@ -477,6 +478,21 @@ export default {
         })
         .catch(() => {});
     },
+    fetchVillageVariation() {
+      this.$axios
+        .get("info/village/" + this.selectedVillage + "/village-detail")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.addressdetail = res.data.data;
+              // this.pagination = res.data.data.pagination;
+              console.log(this.addressdetail);
+            }, 100);
+          }
+        })
+        .catch(() => {});
+    },
+
     backPrevios() {
       this.$router.go(-1);
     },
@@ -647,7 +663,8 @@ export default {
       this.fetchVillage();
     },
     selectedVillage: function () {
-      this.fetchVillageDetail();
+      // this.fetchVillageDetail();
+      this.fetchVillageVariation();
     },
     village_variation_id: function () {
       if (this.village_variation_id) {

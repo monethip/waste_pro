@@ -287,6 +287,7 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.addressdetail = res.data.data;
+              console.log(this.addressdetail);
               // this.pagination = res.data.data.pagination;
             }, 100);
           }

@@ -610,6 +610,7 @@ export default {
             setTimeout(() => {
               this.addressdetail = res.data.data;
               console.log(this.addressdetail);
+              console.log("e");
               // this.pagination = res.data.data.pagination;
             }, 100);
           }
@@ -793,7 +794,7 @@ export default {
     },
     village_variation_id: function () {
       if (this.village_variation_id) {
-        this.units = [];
+        // this.units = [];
         this.fetchUnit();
       }
     },
