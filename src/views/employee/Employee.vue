@@ -340,6 +340,9 @@
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
   name: "User",
+  title() {
+    return `Vientiane Waste Co-Dev|Employee`;
+  },
   data() {
     return {
       headers: [

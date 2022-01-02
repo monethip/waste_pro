@@ -26,6 +26,9 @@
 import Vehicle from "../../components/vehicle/Vehicle.vue";
 import VehicleType from "../../components/vehicle/Vehicle_Type.vue";
 export default {
+  title() {
+    return `Vientiane Waste Co-Dev|Vehicle`;
+  },
   components: { Vehicle, VehicleType },
   data() {
     return {

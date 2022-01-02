@@ -164,6 +164,9 @@
 <script>
 // import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
+  title() {
+    return `Vientiane Waste Co-Dev|Route Plan`;
+  },
   name: "Customer",
   data() {
     return {

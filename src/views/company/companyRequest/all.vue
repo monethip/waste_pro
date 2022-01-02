@@ -30,6 +30,9 @@
 import Success from "@views/company/companyRequest/success.vue";
 import Pending from "@views/company/companyRequest/pending.vue";
 export default {
+  title() {
+    return `Vientiane Waste Co-Dev|Company Request`;
+  },
   components: { Success, Pending },
   data() {
     return {

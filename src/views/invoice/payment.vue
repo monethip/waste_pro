@@ -267,6 +267,9 @@
 <script>
 export default {
   name: "Payment",
+  title() {
+    return `Vientiane Waste Co-Dev|Payment`;
+  },
   data() {
     return {
       loading: false,

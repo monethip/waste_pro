@@ -18,7 +18,11 @@
         <v-card>
           <v-card-text class="px-0">
             <v-list-item-content class="justify-center">
-              <v-list two-line>
+              <v-list
+                two-line
+                style="max-height: 650px"
+                class="overflow-y-auto"
+              >
                 <v-list-item-group active-class="pink--text" multiple>
                   <template v-for="(item, index) in notifications">
                     <v-list-item :key="item.id" @click="viewPage(item.id)">

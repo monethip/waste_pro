@@ -68,6 +68,9 @@ import pendingTrash from "@views/calendar/CalendarTab/pendingTrash";
 import successTrash from "@views/calendar/CalendarTab/successTrash";
 import trashMixin from "@/views/calendar/trashMixin";
 export default {
+  title() {
+    return `Vientiane Waste Co-Dev|Calendar`;
+  },
   mixins: [trashMixin],
   props: ["plan"],
   components: {

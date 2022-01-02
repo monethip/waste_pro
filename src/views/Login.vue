@@ -63,6 +63,9 @@
 import { mapActions, mapGetters } from "vuex";
 export default {
   name: "Login",
+  title() {
+    return `Vientiane Waste Co-Dev|Login`;
+  },
   data() {
     return {
       loading: false,

@@ -171,6 +171,9 @@
 <script>
 export default {
   name: "Company",
+  title() {
+    return `Vientiane Waste Co-Dev|Export Company`;
+  },
   props: ["items", "villages"],
   data() {
     return {

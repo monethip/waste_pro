@@ -138,6 +138,9 @@
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
   name: "Customer",
+  title() {
+    return `Vientiane Waste Co-Dev|Report Invoice`;
+  },
   data() {
     return {
       tab: null,

@@ -73,6 +73,9 @@ import confirmPayment from "@views/invoice/tabinvoice/confirmPayment";
 import reject from "@views/invoice/tabinvoice/reject";
 import success from "@views/invoice/tabinvoice/success";
 export default {
+  title() {
+    return `Vientiane Waste Co-Dev|Invoice`;
+  },
   components: {
     allInvoice,
     approvedInvoice,

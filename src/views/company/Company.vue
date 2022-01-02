@@ -289,8 +289,12 @@
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
   name: "Customer",
+  title() {
+    return `Vientiane Waste Co-Dev|${this.title}`;
+  },
   data() {
     return {
+      title: "Company",
       start_date: "",
       end_date: "",
       start_menu: false,

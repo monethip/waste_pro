@@ -33,6 +33,9 @@ import AddPackage from "../../components/package/AddPackage.vue";
 import Price from "../../components/package/Price.vue";
 export default {
   components: { PackageSize, Price, AddPackage },
+  title() {
+    return `Vientiane Waste Co-Dev|Package`;
+  },
   data() {
     return {
       tab: null,

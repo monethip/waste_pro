@@ -8,6 +8,7 @@ import './plugins/Axios';
 import moment from 'moment';
 import * as VueGoogleMaps from 'vue2-google-maps';
 import can from '@/Helpers/Can'
+import mixin from '@/Helpers/Mixin'
 //Plugin
 import VueApexCharts from 'vue-apexcharts';
 
@@ -37,6 +38,7 @@ Vue.prototype.moment = moment;
 Vue.use(VueApexCharts)
 Vue.component('apexchart', VueApexCharts);
 Vue.prototype.$can = can;
+Vue.mixin(mixin);
 
 new Vue({
   router,

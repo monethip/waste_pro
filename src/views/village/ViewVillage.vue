@@ -221,6 +221,9 @@
 
 <script>
 export default {
+  title() {
+    return `Vientiane Waste Co-Dev|Address`;
+  },
   data() {
     return {
       data: {},

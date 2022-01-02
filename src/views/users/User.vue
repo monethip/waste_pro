@@ -567,6 +567,9 @@
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
+    title() {
+    return `Vientiane Waste Co-Dev|User`;
+  },
   name: "User",
   data() {
     return {

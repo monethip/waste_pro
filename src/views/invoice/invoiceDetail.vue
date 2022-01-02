@@ -117,6 +117,9 @@
 <script>
 export default {
   name: "InvoiceDetail",
+  title() {
+    return `Vientiane Waste Co-Dev|Invoice Detail`;
+  },
   data() {
     return {
       loading: false,

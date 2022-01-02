@@ -168,6 +168,9 @@
 <script>
 export default {
   name: "VillageVariation",
+  title() {
+    return `Vientiane Waste Co-Dev|Address Detail`;
+  },
   data() {
     return {
       search: "",

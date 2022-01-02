@@ -157,7 +157,7 @@
             <v-col cols="6">
               <v-autocomplete
                 v-model="village_variation_id"
-                :items="village_details"
+                :items="addressdetail"
                 :rules="ruleVariation"
                 item-text="name"
                 item-value="id"
@@ -341,6 +341,7 @@ export default {
       village_variation_id: [],
       selectedVillageDetail: [],
       units: [],
+      addressdetail: [],
 
       address: [],
       errormsg: "",
@@ -637,6 +638,7 @@ export default {
     fetchUnit() {
       this.village_details.filter((item) => {
         this.units = item.village_details;
+        console.log(this.units);
         // console.log(this.units);
         // console.log(item.village_details);
         // item.village_details.forEach((data) => {

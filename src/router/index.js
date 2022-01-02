@@ -97,6 +97,7 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
+      title: "Company"
     }
   },
   {

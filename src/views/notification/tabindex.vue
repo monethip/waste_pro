@@ -32,6 +32,9 @@
 import allnotification from "@views/notification/tabnotification/allnotification";
 import read from "@views/notification/tabnotification/read";
 export default {
+  title() {
+    return `Vientiane Waste Co-Dev|Notification`;
+  },
   components: {
     allnotification,
     read,

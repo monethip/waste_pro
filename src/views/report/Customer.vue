@@ -184,6 +184,9 @@
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
   name: "Customer",
+  title() {
+    return `Vientiane Waste Co-Dev|Report Customer`;
+  },
   data() {
     return {
       start_date: "",

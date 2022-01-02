@@ -231,6 +231,9 @@
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
   name: "Village",
+  title() {
+    return `Vientiane Waste Co-Dev|Address`;
+  },
   data() {
     return {
       loading: false,

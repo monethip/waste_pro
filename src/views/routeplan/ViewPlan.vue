@@ -123,6 +123,9 @@ export default {
   name: "Customer",
   data() {
     return {
+      title() {
+        return `Vientiane Waste Co-Dev|View Plan`;
+      },
       tab: null,
       customers: [],
       loading: false,

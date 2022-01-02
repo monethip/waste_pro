@@ -304,6 +304,9 @@ import Package from "@views/dashboard/chart/package";
 import RouteTrash from "@views/dashboard/chart/routeTrash";
 import Income from "@/views/dashboard/chart/income.vue";
 export default {
+  title() {
+    return `Vientiane Waste Co-Dev|Dashboard`;
+  },
   components: {
     UserChart,
     Package,
