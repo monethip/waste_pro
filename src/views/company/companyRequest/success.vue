@@ -62,9 +62,10 @@ export default {
         { text: "ຜູ້ຮັບຜິດຊອບ", value: "coordinator" },
         { text: "ປະເພດ", value: "type" },
         { text: "Container", value: "container_amount" },
-        { text: "Status", value: "status" },
+        { text: "Description", value: "description" },
+        // { text: "Status", value: "status" },
         { text: "Created", value: "created_at" },
-        { text: "Actions", value: "action" },
+        { text: "", value: "action" },
       ],
     };
   },
@@ -108,7 +109,7 @@ export default {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
-            status: "success",
+            statuses: ["success"],
           },
         })
         .then((res) => {

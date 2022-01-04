@@ -487,7 +487,8 @@ export default {
             setTimeout(() => {
               this.addressdetail = res.data.data;
               // this.pagination = res.data.data.pagination;
-              console.log(this.addressdetail);
+              console.log("Detail" + this.addressdetail);
+              console.log("eheheh");
             }, 100);
           }
         })
@@ -538,6 +539,11 @@ export default {
             }
           })
           .catch((error) => {
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             if (error.response.status == 422) {
               var obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
@@ -545,12 +551,6 @@ export default {
               }
             }
             this.loading = false;
-            this.fetchData();
-            this.$store.commit("Toast_State", {
-              value: true,
-              color: "error",
-              msg: error.response.data.message,
-            });
           });
       }
     },
@@ -638,7 +638,8 @@ export default {
     fetchUnit() {
       this.village_details.filter((item) => {
         this.units = item.village_details;
-        console.log(this.units);
+        console.log("Hello Unit" + this.units);
+        console.error("Unit");
         // console.log(this.units);
         // console.log(item.village_details);
         // item.village_details.forEach((data) => {

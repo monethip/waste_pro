@@ -509,19 +509,18 @@ export default {
             }
           })
           .catch((error) => {
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             if (error.response.status == 422) {
               var obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
               }
             }
-            this.$store.commit("Toast_State", {
-              value: true,
-              color: "error",
-              msg: error.response.data.message,
-            });
             this.loading = false;
-            this.fetchData();
           });
       }
     },

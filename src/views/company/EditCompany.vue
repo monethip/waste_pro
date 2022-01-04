@@ -447,7 +447,7 @@ export default {
               res.data.data.village_details.map((item) => {
                 this.village_variation_id.push(item.village_variation_id);
                 this.selectedVillageDetail.push(item.id);
-                console.log(this.selectedVillageDetail);
+                // console.log(this.selectedVillageDetail);
               });
             }, 300);
           }
@@ -745,10 +745,10 @@ export default {
     "data.coordinator_email": function () {
       this.server_errors.coordinator_email = "";
     },
-    "data.phone": function () {
+    "data.user.phone": function () {
       this.server_errors.phone = "";
     },
-    "data.email": function () {
+    "data.user.email": function () {
       this.server_errors.email = "";
     },
     // "data.can_collect": function () {

@@ -173,11 +173,12 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("plan-month/" + 2 + "/invoice", {
+        .get("report-invoice", {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
             filter: this.search,
+            duration: "year",
           },
         })
         .then((res) => {
@@ -191,7 +192,6 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
           if (error.response.status == 422) {
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {

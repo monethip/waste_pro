@@ -64,7 +64,7 @@
           <v-card-text>
             <v-data-table
               :headers="headers"
-              :items="customers"
+              :items="collections"
               :search="search"
               :disable-pagination="true"
               hide-default-footer
@@ -149,7 +149,7 @@ export default {
   data() {
     return {
       tab: null,
-      customers: [],
+      collections: [],
       loading: false,
       customerId: "",
       //Pagination
@@ -186,7 +186,7 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("customer", {
+        .get("report-collection", {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
@@ -197,14 +197,13 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
-              //   this.customers = res.data.data.data;
-              //   this.pagination = res.data.data.pagination;
+              this.collections = res.data.data.data;
+              this.pagination = res.data.data.pagination;
             }, 300);
           }
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
           if (error.response.status == 422) {
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {

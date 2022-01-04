@@ -214,11 +214,11 @@ export default {
           name: "active",
         },
         {
-          id: 1,
+          id: 2,
           name: "inactive",
         },
         {
-          id: 1,
+          id: 3,
           name: "trial",
         },
       ],
@@ -274,7 +274,6 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
           this.start_menu = false;
           this.end_menu = false;
           if (error.response.status == 422) {

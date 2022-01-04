@@ -450,7 +450,7 @@ const routes = [
   {
     path: '/report/invoice',
     name: 'Report-Invoice',
-    component: () => import('@/views/report/ReportInvoice.vue'),
+    component: () => import('@/views/report/tabInvoiceIndex.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
