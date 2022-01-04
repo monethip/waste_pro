@@ -69,9 +69,9 @@
 
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
-import invoice from "@views/report/invoice";
+import collection from "@views/report/collection";
 export default {
-  mixins: [invoice],
+  mixins: [collection],
   // name: "HomeInvoice",
   props: ["tab"],
   title() {
@@ -156,7 +156,7 @@ export default {
   },
   watch: {
     tab: function () {
-      if (this.tab == "tab-1") {
+      if (this.tab == "tab-2") {
         // this.fetchData();
       }
     },

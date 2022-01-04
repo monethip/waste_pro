@@ -67,14 +67,14 @@ export default {
         fetchData() {
             this.$store.commit("Loading_State", true);
             this.$axios
-                .get("report-invoice", {
-                    params: {
-                        page: this.pagination.current_page,
-                        per_page: this.per_page,
-                        filter: this.search,
-                        duration: this.selectedDuration,
-                        type: this.selectedInvoceType,
-                    },
+                .post("report-collection", {
+
+                    page: this.pagination.current_page,
+                    per_page: this.per_page,
+                    filter: this.search,
+                    duration: this.selectedDuration,
+                    type: this.selectedInvoceType,
+
                 })
                 .then((res) => {
                     if (res.data.code == 200) {
@@ -103,17 +103,15 @@ export default {
             console.log("Hi")
             this.loading = true;
             this.$axios
-                .get(
-                    "report-invoice",
+                .post(
+                    "report-collection",
                     {
-                        params: {
-                            page: this.pagination.current_page,
-                            per_page: this.per_page,
-                            filter: this.search,
-                            duration: this.selectedDuration,
-                            type: this.selectedInvoceType,
-                            download: 1,
-                        }
+                        // page: this.pagination.current_page,
+                        // per_page: this.per_page,
+                        // filter: this.search,
+                        duration: this.selectedDuration,
+                        type: 'company',
+                        download: 1,
                     },
                     { responseType: "blob" }
                 )
@@ -128,14 +126,14 @@ export default {
                             fileLink.href = fileUrl;
                             fileLink.setAttribute(
                                 "download",
-                                "Invoice" + ".xlsx"
+                                "Collection" + ".xlsx"
                             );
                             document.body.appendChild(fileLink);
                             fileLink.click();
                             document.body.removeChild(fileLink);
                         }, 300);
                         this.$router.push({
-                            name: "Plan",
+                            name: "Report-Trash",
                         });
                     }
                 })

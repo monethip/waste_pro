@@ -138,18 +138,18 @@ export default {
     //       }
     //     });
     // },
-    editPage(id) {
-      this.$router.push({
-        name: "InvoiceDetail",
-        params: { id },
-      });
-    },
-    viewPage(id) {
-      this.$router.push({
-        name: "InvoiceDetail",
-        params: { id },
-      });
-    },
+    // editPage(id) {
+    //   this.$router.push({
+    //     name: "InvoiceDetail",
+    //     params: { id },
+    //   });
+    // },
+    // viewPage(id) {
+    //   this.$router.push({
+    //     name: "InvoiceDetail",
+    //     params: { id },
+    //   });
+    // },
     Search() {
       GetOldValueOnInput(this);
     },
@@ -157,7 +157,7 @@ export default {
   watch: {
     tab: function () {
       if (this.tab == "tab-1") {
-        this.fetchData();
+        // this.fetchData();
       }
     },
   },

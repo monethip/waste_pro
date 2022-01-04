@@ -6,6 +6,15 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    path: '/policy',
+    name: 'Policy',
+    component: () => import('../views/appPolicy.vue'),
+    meta: {
+      layout: "none",
+      middleware: [Middlewares.guest],
+    }
+  },
+  {
     path: '/customer',
     name: 'Customer',
     component: () => import('../views/customer/Customer.vue'),
@@ -423,7 +432,7 @@ const routes = [
   {
     path: '/report/trash',
     name: 'Report-Trash',
-    component: () => import('@/views/report/Trash.vue'),
+    component: () => import('@/views/report/tabCollectionIndex.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],

@@ -1,27 +1,23 @@
 <template>
   <v-container>
     <div>
-      <v-row v-for="(sum, index) in summary" :key="index">
+      <v-row v-for="(sum, index) in summary" :key="index" class="mb-n6 mt-0">
         <v-col>
           <h3>ປີ {{ sum.year }}</h3>
         </v-col>
         <v-col>
-          <p>ສ້າງບິນ {{ sum.home.total_created }}</p>
+          <p>ຈຳນວນຖົງຂີ້ເຫື້ອຍ {{ sum.home.total_bag_amount }}</p>
         </v-col>
         <v-col>
-          <p>ອະນຸມັດ {{ sum.home.total_approved }}</p>
+          <p>
+            ຈຳນວນຄັ້ງທີ່ລົງເກັບ {{ sum.home.total_number_of_times_to_collect }}
+          </p>
         </v-col>
         <v-col>
-          <p>ຍົກເລີກ {{ sum.home.total_rejected }}</p>
+          <p>ຈຳນວນເກັບສຳເລັດ {{ sum.home.total_success_count }}</p>
         </v-col>
         <v-col>
-          <p>ຊຳລະສຳເລັດ {{ sum.home.total_to_confirm_payment }}</p>
-        </v-col>
-        <v-col>
-          <p>ສຳເລັດທັງໝົດ {{ sum.home.total_success }}</p>
-        </v-col>
-        <v-col>
-          <p>ລວມ {{ sum.home.sum_total }}</p>
+          <p>ຈຳນວນລໍຖ້າເກັບ {{ sum.home.total_pending_count }}</p>
         </v-col>
       </v-row>
       <v-data-table
@@ -69,9 +65,9 @@
 
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
-import invoice from "@views/report/invoice";
+import colleciton from "@views/report/collection";
 export default {
-  mixins: [invoice],
+  mixins: [colleciton],
   // name: "HomeInvoice",
   props: ["tab"],
   title() {

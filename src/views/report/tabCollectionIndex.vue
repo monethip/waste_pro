@@ -1,9 +1,17 @@
 <template>
   <v-container>
-    <v-breadcrumbs large class="pt-0">ລາຍງານຂໍ້ມູນບິນ</v-breadcrumbs>
+    <v-breadcrumbs large class="pt-0"
+      >ລາຍງານຂໍ້ມູນການເກັບຂີ້ເຫື້ອຍ</v-breadcrumbs
+    >
     <v-row class="mb-n6">
       <v-col>
-        <v-btn class="btn-primary" @click="exportData()">Export </v-btn>
+        <v-btn
+          class="btn-primary"
+          :loading="loading"
+          :disabled="loading"
+          @click="exportData()"
+          >Export
+        </v-btn>
       </v-col>
       <v-col>
         <v-select
@@ -152,7 +160,7 @@
 
         <v-tabs-items v-model="tab">
           <v-tab-item value="tab-1">
-            <HomeInvoice :tab="tab" />
+            <HomeCollection :tab="tab" />
           </v-tab-item>
         </v-tabs-items>
 
@@ -160,7 +168,7 @@
           <v-tab-item value="tab-2">
             <v-card flat>
               <v-card-text>
-                <CompanyInvoice :tab="tab" />
+                <CompanyCollection :tab="tab" />
               </v-card-text>
             </v-card>
           </v-tab-item>
@@ -171,17 +179,17 @@
 </template>
 
 <script>
-import HomeInvoice from "@views/report/tab/homeInvoice";
-import CompanyInvoice from "@views/report/tab/companyInvoice";
-import invoice from "@views/report/invoice";
+import HomeCollection from "@views/report/tab/homeCollection";
+import CompanyCollection from "@views/report/tab/companyCollection";
+import collection from "@views/report/collection";
 export default {
   title() {
     return `Vientiane Waste Co-Dev|Calendar`;
   },
-  mixins: [invoice],
+  mixins: [collection],
   components: {
-    HomeInvoice,
-    CompanyInvoice,
+    HomeCollection,
+    CompanyCollection,
   },
   data() {
     return {
@@ -234,12 +242,12 @@ export default {
       if (value == "tab-1") {
         // this.fetchData();
         this.$router
-          .push({ name: "Report-Invoice", query: { tab: "home" } })
+          .push({ name: "Report-Trash", query: { tab: "home" } })
           .catch(() => {});
       } else if (value == "tab-2") {
         this.$router
           .push({
-            name: "Report-Invoice",
+            name: "Report-Trash",
             query: { tab: "company" },
           })
           .catch(() => {});
