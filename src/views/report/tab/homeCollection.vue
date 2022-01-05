@@ -1,63 +1,64 @@
 <template>
   <v-container>
     <div>
-      <v-row v-for="(sum, index) in summary" :key="index" class="mb-n6 mt-0">
-        <v-col>
-          <h3>ປີ {{ sum.year }}</h3>
-        </v-col>
-        <v-col>
-          <p>ຈຳນວນຖົງຂີ້ເຫື້ອຍ {{ sum.home.total_bag_amount }}</p>
-        </v-col>
-        <v-col>
-          <p>
-            ຈຳນວນຄັ້ງທີ່ລົງເກັບ {{ sum.home.total_number_of_times_to_collect }}
-          </p>
-        </v-col>
-        <v-col>
-          <p>ຈຳນວນເກັບສຳເລັດ {{ sum.home.total_success_count }}</p>
-        </v-col>
-        <v-col>
-          <p>ຈຳນວນລໍຖ້າເກັບ {{ sum.home.total_pending_count }}</p>
-        </v-col>
-      </v-row>
+      <div v-if="summary">
+        <v-row v-for="(sum, index) in summary" :key="index" class="mb-n6 mt-0">
+          <v-col>
+            <h3>ປີ {{ sum.year }}</h3>
+          </v-col>
+          <v-col>
+            <p>
+              ຈຳນວນຖົງຂີ້ເຫື້ອຍ
+              <span class="success--text">{{ sum.home.total_bag_amount }}</span>
+            </p>
+          </v-col>
+          <v-col>
+            <p>
+              ຈຳນວນຄັ້ງທີ່ລົງເກັບ
+              <span class="success--text">{{
+                sum.home.total_number_of_times_to_collect
+              }}</span>
+            </p>
+          </v-col>
+          <v-col>
+            <p>
+              ຈຳນວນເກັບສຳເລັດ
+              <span class="success--text">{{
+                sum.home.total_success_count
+              }}</span>
+            </p>
+          </v-col>
+          <v-col>
+            <p>
+              ຈຳນວນລໍຖ້າເກັບ
+              <span class="success--text">{{
+                sum.home.total_pending_count
+              }}</span>
+            </p>
+          </v-col>
+        </v-row>
+      </div>
       <v-data-table
+        v-if="homeCollection"
         :headers="headers"
-        :items="invoices"
+        :items="homeCollection"
         :search="search"
         :disable-pagination="true"
         hide-default-footer
       >
-        <!--Role -->
-        <template v-slot:item.sub_total="{ item }">
-          <div>
-            {{ Intl.NumberFormat().format(item.sub_total) }}
-          </div>
-        </template>
-        <template v-slot:item.total="{ item }">
-          <div>
-            {{ Intl.NumberFormat().format(item.total) }}
-          </div>
-        </template>
         <template v-slot:item.status="{ item }">
           <div>
             <span class="success--text">{{ item.status }}</span>
           </div>
-        </template>
-        <template v-slot:item.created_at="{ item }">
-          <div>
-            <span>{{ moment(item.created_at).format("DD-MM-YY") }}</span>
-          </div>
         </template> </v-data-table
       ><br />
       <template>
-        <!--
-            <Pagination
-              v-if="pagination.total_pages > 1"
-              :pagination="pagination"
-              :offset="offset"
-              @paginate="fetchData()"
-            ></Pagination>
-            -->
+        <Pagination
+          v-if="pagination.total_pages > 1"
+          :pagination="pagination"
+          :offset="offset"
+          @paginate="fetchData()"
+        ></Pagination>
       </template>
     </div>
   </v-container>
@@ -69,7 +70,7 @@ import colleciton from "@views/report/collection";
 export default {
   mixins: [colleciton],
   // name: "HomeInvoice",
-  props: ["tab"],
+  // props: ["tab"],
   title() {
     return `Vientiane Waste Co-Dev|Report Invoice`;
   },
@@ -87,14 +88,11 @@ export default {
       // invoices: [],
       // summary: {},
       headers: [
-        { text: "ວັນທີ", value: "month", sortable: false },
+        { text: "ວັນທີ", value: "date", sortable: false },
         { text: "ລູກຄ້າ", value: "full_name" },
-        { text: "ຈຳນວນຖົງ", value: "total_bag", sortable: false },
-        { text: "ສ່ວນຫຼຸດ", value: "discount" },
-        { text: "SubTotal", value: "sub_total", sortable: false },
-        { text: "Total", value: "total", sortable: false },
+        { text: "ຈຳນວນຖົງ", value: "bag", sortable: false, align: "center" },
+        { text: "ສະຖານທີ່", value: "name", sortable: false },
         { text: "ສະຖານະ", value: "status", sortable: false },
-        { text: "Type", value: "type", sortable: false },
         // { text: "", value: "actions", sortable: false },
       ],
     };
@@ -158,9 +156,10 @@ export default {
     },
   },
   created() {
+    this.pagination = [];
     // this.fetchDataInvoice();
-    console.log(this.invoices);
-    this.fetchData();
+    // console.log(this.collectionType);
+    // this.fetchData();
   },
 };
 </script>

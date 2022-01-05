@@ -1,67 +1,77 @@
 <template>
   <v-container>
     <div>
-      <v-row v-for="(sum, index) in summary" :key="index">
+      <v-row v-for="(sum, index) in summary" :key="index" class="mb-n6 mt-n6">
         <v-col>
           <h3>ປີ {{ sum.year }}</h3>
         </v-col>
         <v-col>
-          <p>ສ້າງບິນ {{ sum.home.total_created }}</p>
+          <p>
+            ລວມ Container
+            <span class="success--text">{{
+              sum.company.container_amount
+            }}</span>
+          </p>
         </v-col>
         <v-col>
-          <p>ອະນຸມັດ {{ sum.home.total_approved }}</p>
+          <p>
+            ລວມເກັບເປັນ Container
+            <span class="success--text">{{
+              sum.company.number_of_times_to_collect_by_container
+            }}</span>
+          </p>
         </v-col>
         <v-col>
-          <p>ຍົກເລີກ {{ sum.home.total_rejected }}</p>
+          <p>
+            ລວມເກັບຕາມລາຄາ
+            <span class="success--text">{{
+              sum.company.number_of_times_to_collect_by_fix_cost
+            }}</span>
+          </p>
         </v-col>
         <v-col>
-          <p>ຊຳລະສຳເລັດ {{ sum.home.total_to_confirm_payment }}</p>
+          <p>
+            ຍົກເລີກ
+            <span class="success--text">{{ sum.company.reject_count }}</span>
+          </p>
         </v-col>
         <v-col>
-          <p>ສຳເລັດທັງໝົດ {{ sum.home.total_success }}</p>
+          <p>
+            ລໍຖ້າເກັບ
+            <span class="success--text">{{ sum.company.pending_count }}</span>
+          </p>
         </v-col>
         <v-col>
-          <p>ລວມ {{ sum.home.sum_total }}</p>
+          <p>
+            ລວມ
+            <span class="success--text">{{
+              sum.company.wait_to_confirm_count
+            }}</span>
+          </p>
+        </v-col>
+        <v-col>
+          <p>
+            ສຳເລັດທັງໝົດ
+            <span class="success--text">{{ sum.company.success_count }}</span>
+          </p>
         </v-col>
       </v-row>
       <v-data-table
         :headers="headers"
-        :items="invoices"
+        :items="collections"
         :search="search"
         :disable-pagination="true"
         hide-default-footer
       >
-        <!--Role -->
-        <template v-slot:item.sub_total="{ item }">
-          <div>
-            {{ Intl.NumberFormat().format(item.sub_total) }}
-          </div>
-        </template>
-        <template v-slot:item.total="{ item }">
-          <div>
-            {{ Intl.NumberFormat().format(item.total) }}
-          </div>
-        </template>
-        <template v-slot:item.status="{ item }">
-          <div>
-            <span class="success--text">{{ item.status }}</span>
-          </div>
-        </template>
-        <template v-slot:item.created_at="{ item }">
-          <div>
-            <span>{{ moment(item.created_at).format("DD-MM-YY") }}</span>
-          </div>
-        </template> </v-data-table
+        <!--Role --> </v-data-table
       ><br />
       <template>
-        <!--
-            <Pagination
-              v-if="pagination.total_pages > 1"
-              :pagination="pagination"
-              :offset="offset"
-              @paginate="fetchData()"
-            ></Pagination>
-            -->
+        <Pagination
+          v-if="pagination.total_pages > 1"
+          :pagination="pagination"
+          :offset="offset"
+          @paginate="fetchData()"
+        ></Pagination>
       </template>
     </div>
   </v-container>
@@ -73,7 +83,7 @@ import collection from "@views/report/collection";
 export default {
   mixins: [collection],
   // name: "HomeInvoice",
-  props: ["tab"],
+  // props: ["tab"],
   title() {
     return `Vientiane Waste Co-Dev|Report Invoice`;
   },
@@ -91,14 +101,17 @@ export default {
       // invoices: [],
       // summary: {},
       headers: [
-        { text: "ວັນທີ", value: "month", sortable: false },
-        { text: "ລູກຄ້າ", value: "full_name" },
-        { text: "ຈຳນວນຖົງ", value: "total_bag", sortable: false },
-        { text: "ສ່ວນຫຼຸດ", value: "discount" },
-        { text: "SubTotal", value: "sub_total", sortable: false },
-        { text: "Total", value: "total", sortable: false },
+        { text: "ວັນທີ", value: "date", sortable: false },
+        { text: "ບໍລິສັດ", value: "company_name" },
+        { text: "ປະເພດການເກັບ", value: "collection_type" },
+        {
+          text: "Container",
+          value: "container",
+          sortable: false,
+          align: "center",
+        },
+        { text: "ສະຖານທີ່", value: "name", sortable: false },
         { text: "ສະຖານະ", value: "status", sortable: false },
-        { text: "Type", value: "type", sortable: false },
         // { text: "", value: "actions", sortable: false },
       ],
     };
@@ -162,9 +175,10 @@ export default {
     },
   },
   created() {
+    this.pagination = [];
     // this.fetchDataInvoice();
-    console.log(this.invoices);
-    this.fetchData();
+    // console.log(this.invoices);
+    // this.fetchData();
   },
 };
 </script>

@@ -9,6 +9,8 @@ import moment from 'moment';
 import * as VueGoogleMaps from 'vue2-google-maps';
 import can from '@/Helpers/Can'
 import mixin from '@/Helpers/Mixin'
+import DatePicker from 'vue2-datepicker';
+import 'vue2-datepicker/index.css';
 //Plugin
 import VueApexCharts from 'vue-apexcharts';
 
@@ -26,8 +28,7 @@ Vue.use(VueGoogleMaps, {
     libraries: 'places', // This is required if you use the Autocomplete plugin
   }
 });
-
-
+Vue.use(DatePicker);
 Vue.config.productionTip = false,
   Vue.component('ModalAdd', ModalAdd);
 Vue.component('ModalEdit', ModalEdit);

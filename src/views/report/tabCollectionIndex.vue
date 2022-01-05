@@ -21,119 +21,74 @@
           v-model="selectedDuration"
           item-text="name"
           item-value="duration"
-          label="Duration"
+          label="ຊ່ວງເວລາ"
         ></v-select>
       </v-col>
       <v-col v-if="selectedDuration == 'year'">
-        <v-menu
-          v-model="year_menu"
-          :close-on-content-click="true"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="start_year"
-              label="ເລີ່ມປີ"
-              readonly
-              outlined
-              v-bind="attrs"
-              v-on="on"
-              dense
-            ></v-text-field>
-          </template>
-          <v-date-picker
-            v-model="start_year"
+        <section>
+          <date-picker
+            style="height: 40px"
+            v-model="year_from"
             type="year"
+            format="YYYY"
+            placeholder="ເລີ່ມປີ"
             @input="fetchData()"
-          ></v-date-picker>
-        </v-menu>
+          ></date-picker>
+        </section>
       </v-col>
       <v-col v-if="selectedDuration == 'year'">
-        <v-menu
-          v-model="end_year_menu"
-          :close-on-content-click="true"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="end_year"
-              label="ຫາປີ"
-              readonly
-              outlined
-              v-bind="attrs"
-              v-on="on"
-              dense
-            ></v-text-field>
-          </template>
-          <v-date-picker
-            v-model="end_year"
-            @input="fetchData()"
+        <section>
+          <date-picker
+            v-model="year_to"
             type="year"
-            :show-current="true"
-            :readonly="false"
-            :disabled="false"
-          ></v-date-picker>
-        </v-menu>
+            format="YYYY"
+            placeholder="ຫາປີ"
+            @input="fetchData()"
+          ></date-picker>
+        </section>
       </v-col>
       <v-col v-if="selectedDuration == 'month'">
-        <v-menu
-          v-model="start_month_menu"
-          :close-on-content-click="true"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="start_month"
-              label="ເລີ່ມເດືອນ"
-              readonly
-              outlined
-              v-bind="attrs"
-              v-on="on"
-              dense
-            ></v-text-field>
-          </template>
-          <v-date-picker
-            v-model="start_month"
-            @input="fetchData()"
+        <section>
+          <date-picker
+            v-model="month_from"
             type="month"
-          ></v-date-picker>
-        </v-menu>
+            placeholder="ເລີ່ມເດືອນ"
+            @input="fetchData()"
+          ></date-picker>
+        </section>
       </v-col>
       <v-col v-if="selectedDuration == 'month'">
-        <v-menu
-          v-model="end_month_menu"
-          :close-on-content-click="true"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="end_month"
-              label="ສີ້ນສຸດເດືອນ"
-              readonly
-              outlined
-              v-bind="attrs"
-              v-on="on"
-              dense
-            ></v-text-field>
-          </template>
-          <v-date-picker
-            v-model="end_month"
-            @input="fetchData()"
+        <section>
+          <date-picker
+            v-model="month_to"
             type="month"
-          ></v-date-picker>
-        </v-menu>
+            placeholder="ຫາເດືອນ"
+            @input="fetchData()"
+          ></date-picker>
+        </section>
+      </v-col>
+
+      <v-col v-if="selectedDuration == 'merge' || selectedDuration == 'date'">
+        <section>
+          <date-picker
+            style="height: 40px"
+            v-model="date_from"
+            type="date"
+            placeholder="ເລີ່ມວັນທີ"
+            @input="fetchData()"
+          ></date-picker>
+        </section>
+      </v-col>
+      <v-col v-if="selectedDuration == 'merge' || selectedDuration == 'date'">
+        <section>
+          <date-picker
+            style="height: 40px"
+            v-model="date_to"
+            type="date"
+            placeholder="ຫາວັນທີ"
+            @input="fetchData()"
+          ></date-picker>
+        </section>
       </v-col>
 
       <v-col>
@@ -142,7 +97,7 @@
           dense
           clearable
           prepend-inner-icon="mdi-magnify"
-          label="ຊື່ລູກຄ້າ,ເລກບິນ"
+          label="Search"
           type="text"
           v-model="search"
           @keyup.enter="Search()"
@@ -193,7 +148,6 @@ export default {
   },
   data() {
     return {
-      tab: null,
       data: {},
     };
   },
@@ -229,33 +183,40 @@ export default {
     // },
   },
   created() {
-    if (this.$route.query.tab == "home") {
-      this.tab = "tab-1";
-      this.fetchData();
-    } else if (this.$route.query.tab == "company") {
-      this.tab = "tab-2";
-      this.fetchData();
-    }
+    // if (this.$route.query.tab == "home") {
+    //   this.tab = "tab-1";
+    //   this.selectedInvoceType = "home";
+    //   this.fetchData();
+    // } else if (this.$route.query.tab == "company") {
+    //   this.tab = "tab-2";
+    //   this.selectedInvoceType = "company";
+    //   this.fetchData();
+    // }
   },
-  watch: {
-    tab: function (value) {
-      if (value == "tab-1") {
-        // this.fetchData();
-        this.$router
-          .push({ name: "Report-Trash", query: { tab: "home" } })
-          .catch(() => {});
-      } else if (value == "tab-2") {
-        this.$router
-          .push({
-            name: "Report-Trash",
-            query: { tab: "company" },
-          })
-          .catch(() => {});
-      }
-    },
-  },
+  // watch: {
+  //   tab: function (value) {
+  //     if (value == "tab-1") {
+  //       // this.fetchData();
+  //       this.selectedInvoceType = "home";
+  //       this.$router
+  //         .push({ name: "Report-Trash", query: { tab: "home" } })
+  //         .catch(() => {});
+  //     } else if (value == "tab-2") {
+  //       this.selectedInvoceType = "company";
+  //       this.$router
+  //         .push({
+  //           name: "Report-Trash",
+  //           query: { tab: "company" },
+  //         })
+  //         .catch(() => {});
+  //     }
+  //   },
+  // },
 };
 </script>
 
 <style>
+.mx-input {
+  height: 40px !important;
+}
 </style>

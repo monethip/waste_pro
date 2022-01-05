@@ -6,22 +6,52 @@
           <h3>ປີ {{ sum.year }}</h3>
         </v-col>
         <v-col>
-          <p>ສ້າງບິນ {{ sum.home.total_created }}</p>
+          <p>
+            ສ້າງບິນ
+            <span class="success--text">{{
+              Intl.NumberFormat().format(sum.home.total_created)
+            }}</span>
+          </p>
         </v-col>
         <v-col>
-          <p>ອະນຸມັດ {{ sum.home.total_approved }}</p>
+          <p>
+            ອະນຸມັດ
+            <span class="success--text">{{
+              Intl.NumberFormat().format(sum.home.total_approved)
+            }}</span>
+          </p>
         </v-col>
         <v-col>
-          <p>ຍົກເລີກ {{ sum.home.total_rejected }}</p>
+          <p>
+            ຍົກເລີກ
+            <span class="success--text">{{
+              Intl.NumberFormat().format(sum.home.total_rejected)
+            }}</span>
+          </p>
         </v-col>
         <v-col>
-          <p>ຊຳລະສຳເລັດ {{ sum.home.total_to_confirm_payment }}</p>
+          <p>
+            ຊຳລະສຳເລັດ
+            <span class="success--text">{{
+              Intl.NumberFormat().format(sum.home.total_to_confirm_payment)
+            }}</span>
+          </p>
         </v-col>
         <v-col>
-          <p>ສຳເລັດທັງໝົດ {{ sum.home.total_success }}</p>
+          <p>
+            ສຳເລັດທັງໝົດ
+            <span class="success--text">{{
+              Intl.NumberFormat().format(sum.home.total_success)
+            }}</span>
+          </p>
         </v-col>
         <v-col>
-          <p>ລວມ {{ sum.home.sum_total }}</p>
+          <p>
+            ລວມ
+            <span class="success--text"
+              >{{ Intl.NumberFormat().format(sum.home.sum_total) }}
+            </span>
+          </p>
         </v-col>
       </v-row>
       <v-data-table
@@ -54,14 +84,12 @@
         </template> </v-data-table
       ><br />
       <template>
-        <!--
-            <Pagination
-              v-if="pagination.total_pages > 1"
-              :pagination="pagination"
-              :offset="offset"
-              @paginate="fetchData()"
-            ></Pagination>
-            -->
+        <Pagination
+          v-if="pagination.total_pages > 1"
+          :pagination="pagination"
+          :offset="offset"
+          @paginate="fetchData()"
+        ></Pagination>
       </template>
     </div>
   </v-container>
