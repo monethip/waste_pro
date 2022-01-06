@@ -182,12 +182,13 @@ export default {
         },
         tab: function (value) {
             if (value == "tab-1") {
-                // this.fetchData();
+                this.fetchData();
                 this.invoiceType = "home";
                 this.$router
                     .push({ name: "Report-Invoice", query: { tab: "home" } })
                     .catch(() => { });
             } else if (value == "tab-2") {
+                this.fetchData();
                 this.invoiceType = "company";
                 this.$router
                     .push({

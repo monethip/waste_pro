@@ -106,7 +106,6 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
-      title: "Company"
     }
   },
   {
@@ -141,6 +140,25 @@ const routes = [
     path: '/view/company/:id',
     name: 'ViewCompany',
     component: () => import('@/views/company/ViewCompany.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  //Collection Event
+  {
+    path: '/collection-event',
+    name: 'Collection',
+    component: () => import('../views/collection/collectionEvent.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/create/collection',
+    name: 'CreateCollectionEvent',
+    component: () => import('../views/collection/CreateCollectionEvent.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],

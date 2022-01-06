@@ -106,11 +106,7 @@ export default {
                             this.homeCollection = res.data.data.details.data;
                             this.collections = res.data.data.details.data;
                             this.summary = res.data.data.summary;
-                            // console.log(this.summary);
-                            // console.log(this.collections)
-                            // console.log(this.homeCollection)
                             this.pagination = res.data.data.details.pagination;
-                            // console.log(this.pagination)
                         }, 300);
                     }
                 })
@@ -201,12 +197,14 @@ export default {
         tab: function (value) {
             if (value == "tab-1") {
                 this.collectionType = "home";
+                console.log(this.collectionType)
                 this.fetchData();
                 this.$router
                     .push({ name: "Report-Trash", query: { tab: "home" } })
                     .catch(() => { });
             } else if (value == "tab-2") {
                 this.collectionType = "company";
+                console.log(this.collectionType)
                 this.fetchData();
                 this.$router
                     .push({
@@ -228,7 +226,6 @@ export default {
             this.collectionType = "company";
             this.fetchData();
         }
-        // this.fetchData();
-        // console.log(this.tab);
+        this.pagination = [];
     },
 };

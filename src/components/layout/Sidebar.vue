@@ -327,6 +327,19 @@ export default {
           ],
         },
         {
+          title: "ເກັບຂີ້ເຫື້ຍອພິເສດ",
+          icon: "mdi-trash-can",
+          group_permissions: ["manage_event", "get_customer"],
+          menu: [
+            {
+              icon: "mdi-trash-can",
+              title: "ເກັບຂີ້ເຫື້ຍອພິເສດ",
+              to: "/collection-event",
+              permissions: ["manage_event", "get_customer"],
+            },
+          ],
+        },
+        {
           title: "ຈັດການບິນ",
           icon: "mdi-note-outline",
           group_permissions: ["get_invoice"],
