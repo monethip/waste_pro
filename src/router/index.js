@@ -164,6 +164,34 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
+  {
+    path: '/view/collection-event/:id',
+    name: 'ViewCollectionEvent',
+    component: () => import('@/views/collection/ViewCollectionEvent.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+
+  {
+    path: '/edit/collection-event/:id',
+    name: 'EditCollectionEvent',
+    component: () => import('@/views/collection/EditCollectionEvent.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/payment/collection-event/:id',
+    name: 'PaymentCollectionEvent',
+    component: () => import('@/views/collection/paymentCollection.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
 
   {
     path: '/role',

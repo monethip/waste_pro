@@ -16,17 +16,17 @@
                 </v-col>
                 <v-divider class="mx-4" vertical></v-divider>
                 <v-col>
-                  <h3 class="primary-color">400</h3>
+                  <h3 class="primary-color">{{ data.user }}</h3>
                   <h3>Users</h3>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col>
-                  <h4><span class="succes-color">350</span></h4>
+                  <h4><span class="succes-color">30</span></h4>
                   <h4>Active</h4>
                 </v-col>
                 <v-col>
-                  <h4><span class="red-color">50</span></h4>
+                  <h4><span class="red-color">20</span></h4>
                   <h4>Inactive</h4>
                 </v-col>
               </v-row>
@@ -42,17 +42,23 @@
                 </v-col>
                 <v-divider class="mx-4" vertical></v-divider>
                 <v-col>
-                  <h3 class="primary-color">200</h3>
+                  <h3 class="primary-color" v-if="data.customer">
+                    {{ data.customer.all_driver }}
+                  </h3>
                   <h3>Driver</h3>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col>
-                  <h4><span class="succes-color">150</span></h4>
+                  <h4 v-if="data.customer">
+                    <span class="succes-color">{{ data.customer.active }}</span>
+                  </h4>
                   <h4>Active</h4>
                 </v-col>
                 <v-col>
-                  <h4><span class="red-color">50</span></h4>
+                  <h4 v-if="data.customer">
+                    <span class="red-color">{{ data.customer.inactive }}</span>
+                  </h4>
                   <h4>Inactive</h4>
                 </v-col>
               </v-row>
@@ -70,19 +76,25 @@
                 </v-col>
                 <v-divider class="mx-4" vertical></v-divider>
                 <v-col>
-                  <h3 class="primary-color">
-                    50,000 <span class="succes-color text-small">+3.0%</span>
+                  <h3 class="primary-color" v-if="data.customer">
+                    {{ data.customer.all_driver }}
                   </h3>
-                  <h3>Customers</h3>
+                  <h3>Home</h3>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col>
-                  <h4><span class="succes-color">40,500</span></h4>
+                  <h4 v-if="data.customer">
+                    <span class="succes-color">
+                      {{ data.customer.active }}</span
+                    >
+                  </h4>
                   <h4>Active</h4>
                 </v-col>
                 <v-col>
-                  <h4><span class="red-color">500</span></h4>
+                  <h4 v-if="data.customer">
+                    <span class="red-color"> {{ data.customer.inactive }}</span>
+                  </h4>
                   <h4>Inactive</h4>
                 </v-col>
               </v-row>
@@ -98,19 +110,23 @@
                 </v-col>
                 <v-divider class="mx-4" vertical></v-divider>
                 <v-col>
-                  <h3 class="primary-color">
-                    10,000 <span class="succes-color text-small">+3.0%</span>
+                  <h3 class="primary-color" v-if="data.company">
+                    {{ data.company.all_driver }}
                   </h3>
                   <h3>Company</h3>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col>
-                  <h4><span class="succes-color">9,500</span></h4>
+                  <h4 v-if="data.company">
+                    <span class="succes-color">{{ data.company.active }} </span>
+                  </h4>
                   <h4>Active</h4>
                 </v-col>
                 <v-col>
-                  <h4><span class="red-color">500</span></h4>
+                  <h4 v-if="data.company">
+                    <span class="red-color">{{ data.company.inactive }}</span>
+                  </h4>
                   <h4>Inactive</h4>
                 </v-col>
               </v-row>
@@ -125,20 +141,24 @@
             <v-col>
               <v-card elevation="1">
                 <v-card-text>
-                  <h3 class="my-2">ຈຳນວນຂີ້ເຫຍື້ອ / ອັດຕາການເພີ່ມຂື້ນ</h3>
+                  <h3 class="my-2">ຈຳນວນຂີ້ເຫຍື້ອ</h3>
                   <v-row>
                     <v-col>
                       <v-icon large @click="user()">mdi-package</v-icon>
                       <v-row>
                         <v-col>
-                          <h4>
-                            <span class="primary-color">350</span>
+                          <h4 v-if="data.last_month_collection">
+                            <span class="primary-color">{{
+                              data.last_month_collection.bag_amount
+                            }}</span>
                           </h4>
                           <h4 class="text-medium">ຖົງ</h4>
                         </v-col>
                         <v-col>
-                          <h4>
-                            <span class="primary-color">50</span>
+                          <h4 v-if="data.last_month_collection">
+                            <span class="primary-color">{{
+                              data.last_month_collection.container_amount
+                            }}</span>
                           </h4>
                           <h4 class="text-medium">Container</h4>
                         </v-col>
@@ -148,16 +168,18 @@
                     <v-col>
                       <v-row>
                         <v-col>
-                          <h4>
-                            <span class="primary-color">350</span>
-                            <span class="text-small succes-color"> (+15%)</span>
+                          <h4 v-if="data.current_month_collection">
+                            <span class="succes-color">{{
+                              data.current_month_collection.bag_amount
+                            }}</span>
                           </h4>
                           <h4 class="text-medium">ຖົງ</h4>
                         </v-col>
                         <v-col>
-                          <h4>
-                            <span class="primary-color">50</span>
-                            <span class="text-small succes-color"> (+10%)</span>
+                          <h4 v-if="data.current_month_collection">
+                            <span class="succes-color">{{
+                              data.current_month_collection.container_amount
+                            }}</span>
                           </h4>
                           <h4 class="text-medium">Container</h4>
                         </v-col>
@@ -166,10 +188,10 @@
                   </v-row>
                   <v-row>
                     <v-col>
-                      <h3>ທັງໝົດ</h3>
+                      <h3>ເດືອນຜ່ານມາ</h3>
                     </v-col>
                     <v-col>
-                      <h3>ມື້ນີ້</h3>
+                      <h3>ເດືອນນີ້</h3>
                     </v-col>
                   </v-row>
                 </v-card-text>
@@ -183,22 +205,24 @@
             <v-col>
               <v-card elevation="1">
                 <v-card-text>
-                  <h3 class="my-2">ລາຍໄດ້ສະເລ່ຍ / ຍອດເຕີບໂຕ</h3>
+                  <h3 class="my-2">ລາຍໄດ້ສະເລ່ຍ</h3>
                   <v-row>
                     <v-col>
                       <v-icon large @click="user()">mdi-cash-plus</v-icon>
                       <v-row>
                         <v-col>
-                          <h4>
-                            <span class="primary-color"
-                              >10,000,000,000,000</span
-                            >
+                          <h4 v-if="data.last_month_invoice">
+                            <span class="primary-color">{{
+                              data.last_month_invoice.success_total
+                            }}</span>
                           </h4>
                           <h4 class="text-medium">ກີບ</h4>
                         </v-col>
                         <v-col>
-                          <h4>
-                            <span class="primary-color">100,000,000</span>
+                          <h4 v-if="data.last_month_invoice">
+                            <span class="primary-color">{{
+                              data.last_month_invoice.total_invoice
+                            }}</span>
                           </h4>
                           <h4 class="text-medium">ບິນ</h4>
                         </v-col>
@@ -208,16 +232,18 @@
                     <v-col>
                       <v-row>
                         <v-col>
-                          <h4>
-                            <span class="primary-color">1,500,000,000</span>
-                            <span class="text-small red-color"> (-15%)</span>
+                          <h4 v-if="data.current_month_invoice">
+                            <span class="succes-color">{{
+                              data.current_month_invoice.success_total
+                            }}</span>
                           </h4>
                           <h4 class="text-medium">ກີບ</h4>
                         </v-col>
                         <v-col>
-                          <h4>
-                            <span class="primary-color">50</span>
-                            <span class="text-small red-color"> (-15%)</span>
+                          <h4 v-if="data.current_month_invoice">
+                            <span class="succes-color">{{
+                              data.current_month_invoice.total_invoice
+                            }}</span>
                           </h4>
                           <h4 class="text-medium">ບິນ</h4>
                         </v-col>
@@ -226,7 +252,7 @@
                   </v-row>
                   <v-row>
                     <v-col>
-                      <h3>ທັງໝົດ</h3>
+                      <h3>ເດືອນຜ່ານມາ</h3>
                     </v-col>
                     <v-col>
                       <h3>ເດືອນນີ້</h3>
@@ -258,6 +284,7 @@
       <br class="mx-4" />
       <v-card elevation="1">
         <v-card-text>
+          <!--
           <v-row>
             <v-col>
               <h3>ລູກຄ້າສະໝັກສະມາຊິກ</h3>
@@ -268,6 +295,7 @@
               <user-chart />
             </v-col>
           </v-row>
+          -->
           <v-row>
             <v-col>
               <h3>ສະໝັກແພັກເກດ</h3>
@@ -298,7 +326,7 @@
   </div>
 </template>
 <script>
-import UserChart from "@views/dashboard/chart/userChart";
+// import UserChart from "@views/dashboard/chart/userChart";
 import TrashChart from "@views/dashboard/chart/trashChart";
 import Package from "@views/dashboard/chart/package";
 import RouteTrash from "@views/dashboard/chart/routeTrash";
@@ -308,13 +336,41 @@ export default {
     return `Vientiane Waste Co-Dev|Dashboard`;
   },
   components: {
-    UserChart,
+    // UserChart,
     Package,
     RouteTrash,
     Income,
     TrashChart,
   },
+  data() {
+    return {
+      data: {},
+    };
+  },
   methods: {
+    fetchData() {
+      this.$store.commit("Loading_State", true);
+      this.$axios
+        .get("dashboard")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.$store.commit("Loading_State", false);
+              this.data = res.data.data;
+            }, 300);
+          }
+        })
+        .catch((error) => {
+          this.$store.commit("Loading_State", false);
+          // this.fetchData();
+          if (error.response.status == 422) {
+            var obj = error.response.data.errors;
+            for (let [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
+            }
+          }
+        });
+    },
     user() {
       this.$router.push("user");
     },
@@ -327,6 +383,9 @@ export default {
     package() {
       this.$router.push("package");
     },
+  },
+  created() {
+    this.fetchData();
   },
 };
 </script>

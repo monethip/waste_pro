@@ -17,8 +17,8 @@
         >
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
-              v-model="start_date"
-              label="ເລີ່ມວັນທີ"
+              v-model="month"
+              label="ເດືອນ"
               readonly
               outlined
               v-bind="attrs"
@@ -27,81 +27,44 @@
             ></v-text-field>
           </template>
           <v-date-picker
-            v-model="start_date"
+            v-model="month"
+            type="month"
             @input="fetchData()"
           ></v-date-picker>
         </v-menu>
       </v-col>
-      <v-col>
-        <v-menu
-          v-model="end_menu"
-          :close-on-content-click="true"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="end_date"
-              label="ຫາວັນທີ"
-              readonly
-              outlined
-              v-bind="attrs"
-              v-on="on"
-              dense
-            ></v-text-field>
-          </template>
-          <v-date-picker
-            v-model="end_date"
-            @input="fetchData()"
-          ></v-date-picker>
-        </v-menu>
-      </v-col>
-
-      <v-col>
-        <v-autocomplete
-          outlined
-          dense
-          :items="districts"
-          v-model="selectedDistrict"
-          item-text="name"
-          item-value="id"
-          label="ເມືອງ"
-        ></v-autocomplete>
-      </v-col>
-      <v-col>
-        <v-autocomplete
-          outlined
-          dense
-          :items="villages"
-          v-model="selectedVillage"
-          item-text="name"
-          item-value="id"
-          label="ບ້ານ"
-          multiple
-        ></v-autocomplete>
-      </v-col>
-
       <v-col>
         <v-select
           outlined
           dense
-          :items="status"
-          v-model="selectedStatus"
+          :items="collectionStatus"
+          v-model="selectedCollectionStatus"
+          @input="fetchData()"
           item-text="name"
           item-value="name"
           label="ສະຖານະ"
-          multiple
+        ></v-select>
+      </v-col>
+      <v-col>
+        <v-select
+          outlined
+          dense
+          :items="paymentStatus"
+          v-model="selectedPaymentStatus"
+          @input="fetchData()"
+          item-text="name"
+          item-value="name"
+          label="ສະຖານະການຊຳລະ"
         ></v-select>
       </v-col>
     </v-row>
     <div>
       <v-card>
         <v-card-title>
-          ຂໍ້ມູນລູກຄ້າທີ່ເປັນບໍລິສັດ ({{ pagination.total }})
+          ເກັບຂີເຫື້ຍອພິເສດ ({{ pagination.total }})
           <v-divider class="mx-4" vertical></v-divider>
           <v-spacer></v-spacer>
+          <!--
           <v-text-field
             outlined
             dense
@@ -113,11 +76,13 @@
             @keyup.enter="Search()"
           >
           </v-text-field>
+             -->
         </v-card-title>
+
         <v-card-text>
           <v-data-table
             :headers="headers"
-            :items="customers"
+            :items="collections"
             :search="search"
             :disable-pagination="true"
             hide-default-footer
@@ -140,8 +105,11 @@
               </div>
             </template>
             <!--Role -->
-            <template v-slot:item.cost_by="{ item }">
-              <div>{{ item.cost_by }}</div>
+            <template v-slot:item.payment_status="{ item }">
+              <v-chip class="success">{{ item.payment_status }}</v-chip>
+            </template>
+            <template v-slot:item.collect_status="{ item }">
+              <v-chip class="primary">{{ item.collect_status }}</v-chip>
             </template>
 
             <template v-slot:item.actions="{ item }">
@@ -158,12 +126,6 @@
                   >
                 </template>
                 <v-list>
-                  <v-list-item link @click="addUser(item)">
-                    <v-list-item-title>
-                      <v-icon small class="mr-2"> mdi-plus </v-icon>
-                      ເພີ່ມຜູ້ປະສານງານ
-                    </v-list-item-title>
-                  </v-list-item>
                   <v-list-item link @click="viewPage(item.id)">
                     <v-list-item-title>
                       <v-icon small class="mr-2"> mdi-eye </v-icon>
@@ -176,10 +138,28 @@
                       ແກ້ໄຂ
                     </v-list-item-title>
                   </v-list-item>
+                  <v-list-item link @click="editPage(item.id)">
+                    <v-list-item-title>
+                      <v-icon small class="mr-2"> mdi-pencil </v-icon>
+                      Confirm Payment
+                    </v-list-item-title>
+                  </v-list-item>
+                  <v-list-item link @click="paymentPage(item.id)">
+                    <v-list-item-title>
+                      <v-icon small class="mr-2"> mdi-pencil </v-icon>
+                      Payment
+                    </v-list-item-title>
+                  </v-list-item>
                   <v-list-item link @click="deleteItem(item.id)">
                     <v-list-item-title>
                       <v-icon small> mdi-delete </v-icon>
-                      ລຶບ
+                      Reject Payment
+                    </v-list-item-title>
+                  </v-list-item>
+                  <v-list-item link @click="deleteItem(item.id)">
+                    <v-list-item-title>
+                      <v-icon small> mdi-delete </v-icon>
+                      Reject
                     </v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -294,13 +274,11 @@ export default {
   },
   data() {
     return {
-      title: "Company",
-      start_date: "",
-      end_date: "",
+      title: "Collection",
+      month: "",
       start_menu: false,
-      end_menu: false,
 
-      customers: [],
+      collections: [],
       loading: false,
       customerId: "",
       //Pagination
@@ -313,30 +291,55 @@ export default {
       // start_date: "",
       // start_menu: false,
       // allowedDates: (val) => new Date(val).getDate() === 1,
-      packages: [],
-      selectedPackage: "",
-      start_collect: false,
+
       server_errors: {},
-      //Filter
-      districts: [],
-      selectedDistrict: "",
-      villages: [],
-      selectedVillage: [],
-      selectedStatus: [],
-      status: [
+      selectedCollectionStatus: "requested",
+      collectionStatus: [
         {
           id: 1,
-          name: "active",
+          name: "requested",
         },
         {
-          id: 1,
-          name: "inactive",
+          id: 2,
+          name: "rejected",
         },
         {
-          id: 1,
-          name: "trial",
+          id: 3,
+          name: "approved",
+        },
+        {
+          id: 4,
+          name: "collected",
+        },
+        {
+          id: 5,
+          name: "collect_confirm",
+        },
+        {
+          id: 5,
+          name: "collect_reject",
         },
       ],
+      selectedPaymentStatus: "pending",
+      paymentStatus: [
+        {
+          id: 1,
+          name: "pending",
+        },
+        {
+          id: 2,
+          name: "to_confirm_payment",
+        },
+        {
+          id: 3,
+          name: "rejected",
+        },
+        {
+          id: 4,
+          name: "success",
+        },
+      ],
+
       user: {},
       item: {},
 
@@ -348,6 +351,12 @@ export default {
         { text: "Discount", value: "discount", sortable: false },
         { text: "Total", value: "total", sortable: false },
         { text: "SubTotal", value: "sub_total" },
+        {
+          text: "Collect Status",
+          value: "collect_status",
+          align: "center",
+        },
+        { text: "Payment Status", value: "payment_status", align: "center" },
         { text: "Image", value: "media" },
         { text: "", value: "actions", sortable: false },
       ],
@@ -361,25 +370,24 @@ export default {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
-            filter: this.search,
-            villages: this.selectedVillage,
-            date_from: this.start_date,
-            date_end: this.start_date,
-            statuses: this.selectedStatus,
+            // filter: this.search,
+            collect_status: this.selectedCollectionStatus,
+            payment_status: this.selectedPaymentStatus,
+            // month: this.month,
           },
         })
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
-              this.customers = res.data.data.data;
+              this.collections = res.data.data.data;
               this.pagination = res.data.data.pagination;
             }, 300);
           }
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
+          // this.fetchData();
           if (error.response.status == 422) {
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
@@ -387,35 +395,6 @@ export default {
             }
           }
         });
-    },
-
-    fetchAddress() {
-      this.$axios
-        .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.address = res.data.data;
-              this.address.map((item) => {
-                this.districts = item.districts;
-              });
-            }, 300);
-          }
-        })
-        .catch(() => {});
-    },
-
-    fetchVillage() {
-      this.$axios
-        .get("info/district/" + this.selectedDistrict + "/village")
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.villages = res.data.data;
-            }, 300);
-          }
-        })
-        .catch(() => {});
     },
 
     closeDelete() {
@@ -462,45 +441,6 @@ export default {
     closeAddModal() {
       this.$store.commit("modalAdd_State", false);
     },
-    AddItem() {
-      if (this.$refs.form.validate() == true) {
-        this.loading = true;
-        this.$axios
-          .post("company/" + this.item.id + "/coordinator", this.user)
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.loading = false;
-                this.closeAddModal();
-                this.user = {};
-                this.fetchData();
-                this.reset();
-                this.$store.commit("Toast_State", {
-                  value: true,
-                  color: "success",
-                  msg: res.data.message,
-                });
-              }, 300);
-            }
-          })
-          .catch((error) => {
-            this.loading = false;
-            this.$store.commit("Toast_State", {
-              value: true,
-              color: "error",
-              msg: error.response.data.message,
-            });
-            this.fetchData();
-            if (error.response.status == 422) {
-              var obj = error.response.data.errors;
-              for (let [key, customer] of Object.entries(obj)) {
-                this.server_errors[key] = customer[0];
-              }
-            }
-          });
-      }
-    },
-
     createPage() {
       this.$router.push({
         name: "CreateCollectionEvent",
@@ -508,16 +448,23 @@ export default {
     },
     editPage(id) {
       this.$router.push({
-        name: "EditCompany",
+        name: "EditCollectionEvent",
         params: { id },
       });
     },
     viewPage(id) {
       this.$router.push({
-        name: "ViewCompany",
+        name: "ViewCollectionEvent",
         params: { id },
       });
     },
+    paymentPage(id) {
+      this.$router.push({
+        name: "PaymentCollectionEvent",
+        params: { id },
+      });
+    },
+
     Search() {
       GetOldValueOnInput(this);
     },
@@ -532,12 +479,6 @@ export default {
       if (value == "") {
         this.fetchData();
       }
-    },
-    selectedVillage: function () {
-      this.fetchData();
-    },
-    selectedDistrict: function () {
-      this.fetchVillage();
     },
     selectedStatus: function () {
       this.fetchData();
@@ -560,7 +501,6 @@ export default {
   },
   created() {
     this.fetchData();
-    this.fetchAddress();
   },
 };
 </script>

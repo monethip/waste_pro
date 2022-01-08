@@ -4,7 +4,7 @@
       <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
-      ເພີ່ມຂໍ້ມູນເກັບຂີ້ເຫື້ຍອພິເສດ</v-breadcrumbs
+      ແກ້ໄຂຂໍ້ມູນການເກັບຂີ້ເຫື້ຍອພິເສດ</v-breadcrumbs
     >
     <v-card>
       <v-card-text class="px-12">
@@ -67,7 +67,7 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="4">
+            <v-col>
               <v-text-field
                 label="ຊື່ *"
                 required
@@ -80,7 +80,7 @@
                 {{ server_errors.name }}
               </p>
             </v-col>
-            <v-col cols="4">
+            <v-col>
               <v-text-field
                 label="ນາມສະກຸນ"
                 required
@@ -92,7 +92,9 @@
                 {{ server_errors.surname }}
               </p>
             </v-col>
-            <v-col cols="4">
+          </v-row>
+          <v-row>
+            <v-col>
               <v-text-field
                 label="ເບີໂທ *"
                 required
@@ -107,8 +109,18 @@
                 {{ server_errors.phone }}
               </p>
             </v-col>
+            <v-col>
+              <v-select
+                outlined
+                dense
+                :items="collectionStatus"
+                v-model="data.collect_status"
+                item-text="name"
+                item-value="name"
+                label="ສະຖານະ"
+              ></v-select>
+            </v-col>
           </v-row>
-
           <v-row>
             <v-col cols="6">
               <v-autocomplete
@@ -184,7 +196,7 @@
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-text-field
-                    v-model="date"
+                    v-model="data.date"
                     label="ເລີ່ມວັນທີ"
                     readonly
                     outlined
@@ -193,7 +205,7 @@
                     dense
                   ></v-text-field>
                 </template>
-                <v-date-picker v-model="date"></v-date-picker>
+                <v-date-picker v-model="data.date"></v-date-picker>
               </v-menu>
               <p class="errors">
                 {{ server_errors.date }}
@@ -224,7 +236,7 @@
             </v-col>
             <v-col>
               <v-autocomplete
-                v-model="selectedDriver"
+                v-model="data.driver_id"
                 :items="driver"
                 item-text="name"
                 item-value="id"
@@ -309,9 +321,9 @@
             text
             :loading="loading"
             :disabled="loading"
-            @click="AddData()"
+            @click="UpdateData()"
           >
-            Save
+            ແກ້ໄຂ
           </v-btn>
         </v-card-actions>
       </v-card-text>
@@ -332,8 +344,17 @@ export default {
       villages: [],
       selectedVillage: "",
       driver: [],
-      collect_status: "",
       date: "",
+      collectionStatus: [
+        {
+          id: 1,
+          name: "rejected",
+        },
+        {
+          id: 2,
+          name: "approved",
+        },
+      ],
       start_menu: false,
       time: "",
       time_menu: false,
@@ -376,6 +397,19 @@ export default {
   methods: {
     RemoveItem(item) {
       this.preview_list.splice(this.preview_list.indexOf(item), 1);
+    },
+    fetchCollection() {
+      this.$axios
+        .get("collection-event/" + this.$route.params.id)
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.data = res.data.data;
+              console.log(this.data);
+            }, 300);
+          }
+        })
+        .catch({});
     },
     fetchDriver() {
       this.$axios
@@ -442,8 +476,8 @@ export default {
     backPrevios() {
       this.$router.go(-1);
     },
-    AddData() {
-      const dateTime = `${this.date} ${this.time + `:00`}`;
+    UpdateData() {
+      const dateTime = `${this.data.date} ${this.time + `:00`}`;
       console.log(dateTime);
       let formData = new FormData();
       this.image_list.map((item) => {
@@ -451,19 +485,21 @@ export default {
       });
       formData.append("name", this.data.name);
       formData.append("surname", this.data.surname);
-      formData.append("village_id", this.selectedVillage);
-      formData.append("lat", this.latlng.lat);
-      formData.append("lng", this.latlng.lng);
+      formData.append("village_id", this.data.village_id);
+      formData.append("lat", this.data.lat);
+      formData.append("lng", this.data.lng);
       formData.append("phone", this.data.phone);
       formData.append("date", dateTime);
       formData.append("sub_total", this.data.sub_total);
-      formData.append("driver_id", this.selectedDriver);
+      formData.append("driver_id", this.data.driver_id);
       formData.append("discount", this.data.discount);
+      formData.append("collect_status", this.data.collect_status);
+      formData.append("_method", "PUT");
 
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .post("collection-event/", formData, {
+          .post("collection-event/" + this.$route.params.id, formData, {
             headers: { "Content-Type": "multipart/form-data" },
           })
           .then((res) => {
@@ -633,6 +669,7 @@ export default {
   created() {
     this.fetchDriver();
     this.fetchAddress();
+    this.fetchCollection();
   },
 };
 </script>

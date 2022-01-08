@@ -4,7 +4,7 @@
       <v-btn text class="text-primary" @click="backPrevios()">
         <v-icon>mdi-chevron-left</v-icon></v-btn
       >
-      ລາຍລະອຽດບໍລິສັດ</v-breadcrumbs
+      ລາຍລະອຽດເກັບຂີ້ເຫື້ຍອພິເສດ</v-breadcrumbs
     >
     <v-card>
       <!--
@@ -61,6 +61,7 @@
             </v-list-item>
             <v-divider inset></v-divider>
           </v-row>
+          <!--
           <v-row>
             <v-list-item
               v-for="(coor, index) in data.company_coordinators"
@@ -113,7 +114,7 @@
 
               <v-list-item-content>
                 <v-list-item-subtitle>ວັນທີ່ເລີ່ມ</v-list-item-subtitle>
-                <v-list-item-title>{{ data.start_month }}</v-list-item-title>
+                <v-list-item-title>{{ data.date }}</v-list-item-title>
                 <v-list-item-subtitle>
                   <span>
                     <v-chip
@@ -167,6 +168,7 @@
               </v-list-item-content>
             </v-list-item>
           </v-row>
+          -->
 
           <v-row>
             <v-col cols="12" class="mb-4">
@@ -333,7 +335,7 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("company/" + this.$route.params.id)
+        .get("collection-event/" + this.$route.params.id)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
@@ -345,7 +347,6 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
           if (error.response.status == 422) {
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
