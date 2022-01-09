@@ -364,7 +364,7 @@ export default {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .post("pay-invoice/" + this.$route.params.id, formData)
+          .post("pay-collection-event/" + this.$route.params.id, formData)
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
@@ -393,7 +393,6 @@ export default {
                 this.server_errors[key] = data[0];
               }
             }
-            this.fetchData();
           });
       }
     },
