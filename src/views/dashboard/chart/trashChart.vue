@@ -157,7 +157,7 @@ export default {
         },
         yaxis: {
           title: {
-            text: "Bag",
+            text: "ຈຳນວນຂີ້ເຫື້ຍອ",
             style: {
               fontSize: "16px",
               fontWeight: 400,

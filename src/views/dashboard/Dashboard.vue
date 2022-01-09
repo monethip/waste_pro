@@ -296,6 +296,7 @@
             </v-col>
           </v-row>
           -->
+          <!--
           <v-row>
             <v-col>
               <h3>ສະໝັກແພັກເກດ</h3>
@@ -310,6 +311,7 @@
               <route-trash />
             </v-col>
           </v-row>
+          -->
           <v-row>
             <v-col>
               <h3>ລາຍໄດ້ສະເລ່ຍແຕ່ລະເດືອນ</h3>
@@ -328,8 +330,8 @@
 <script>
 // import UserChart from "@views/dashboard/chart/userChart";
 import TrashChart from "@views/dashboard/chart/trashChart";
-import Package from "@views/dashboard/chart/package";
-import RouteTrash from "@views/dashboard/chart/routeTrash";
+// import Package from "@views/dashboard/chart/package";
+// import RouteTrash from "@views/dashboard/chart/routeTrash";
 import Income from "@/views/dashboard/chart/income.vue";
 export default {
   title() {
@@ -337,8 +339,8 @@ export default {
   },
   components: {
     // UserChart,
-    Package,
-    RouteTrash,
+    // Package,
+    // RouteTrash,
     Income,
     TrashChart,
   },
