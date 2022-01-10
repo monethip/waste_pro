@@ -4,7 +4,7 @@
       <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
-      Export ຂໍ້ມູນລູກຄ້າໃນແຜນເສັ້ນທາງ
+      ເພີ່ມແຜນເສັ້ນທາງ
       <v-spacer></v-spacer>
       <span class="mr-4"
         ><v-icon color="red">mdi-map-marker</v-icon>ຢູ່ໃນແຜນແລ້ວ</span
@@ -21,7 +21,7 @@
           v-if="customers"
           :center="getCenter()"
           :zoom="14"
-          style="width: 100%; height: 450px"
+          style="width: 100%; height: 400px"
           :disableDefaultUI="true"
         >
           <gmap-info-window
@@ -49,10 +49,11 @@
       <v-col>
         <v-btn
           class="btn-primary"
-          @click="exportRoutePlan()"
+          @click="createRoutePlan()"
           :loading="loading"
           :disabled="loading"
-          ><v-icon>mdi-arrow-right-bold-circle-outline</v-icon>
+        >
+          ບັນທຶກ<v-icon>mdi-content-save</v-icon>
         </v-btn>
       </v-col>
       <v-col>
@@ -130,6 +131,50 @@
       </v-card>
     </div>
 
+    <!-- Modal Add-->
+    <ModalAdd>
+      <template @close="close">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Route Plan Name</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-form ref="form" lazy-validation>
+                <v-row>
+                  <v-col cols="12">
+                    <v-text-field
+                      label="Name *"
+                      required
+                      v-model="name"
+                    ></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.name }}
+                    </p>
+                  </v-col>
+                </v-row>
+              </v-form>
+            </v-container>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeAddModal()">
+                Close
+              </v-btn>
+              <v-btn
+                color="blue darken-1"
+                text
+                :loading="loading"
+                :disabled="loading"
+                @click="saveRoutePlan()"
+              >
+                Save
+              </v-btn>
+            </v-card-actions>
+          </v-card-text>
+        </v-card>
+      </template>
+    </ModalAdd>
+
     <!--Delete Modal-->
     <ModalDelete>
       <template>
@@ -156,13 +201,14 @@ import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import draggable from "vuedraggable";
 export default {
   name: "Customer",
-  props: ["selectedData", "villages"],
+  props: ["selectedData", "villages", "items"],
   components: {
     draggable,
   },
   data() {
     return {
       customers: [],
+      customersId: [],
       countcutomer: 0,
       loading: false,
       customerId: "",
@@ -175,7 +221,8 @@ export default {
       selectedRows: [],
       customer: {},
       customerIndex: "",
-
+      name: "",
+      server_errors: {},
       headers: [
         { text: "", value: "" },
         { text: "#", value: "" },
@@ -264,17 +311,27 @@ export default {
       this.loading = false;
       this.$store.commit("modalDelete_State", false);
     },
-
-    exportRoutePlan() {
+    createRoutePlan() {
+      this.$store.commit("modalAdd_State", true);
+    },
+    closeAddModal() {
+      this.$store.commit("modalAdd_State", false);
+    },
+    saveRoutePlan() {
       console.log(this.customers);
+      const selectedCustomer = [];
+      this.customers.map((item) => {
+        selectedCustomer.push(item.id);
+      });
+      console.log(selectedCustomer);
       if (this.customers.length > 0) {
         this.loading = true;
         this.$axios
           .post(
-            "export-customer-location/",
+            "create-route-plan",
             {
-              exclude_customers: this.exclude_customers,
-              villages: this.selectedVillage,
+              name: this.name,
+              customers: selectedCustomer,
             },
             { responseType: "blob" }
           )
@@ -282,18 +339,6 @@ export default {
             if (res.status == 200) {
               setTimeout(() => {
                 this.loading = false;
-                const fileUrl = window.URL.createObjectURL(
-                  new Blob([res.data])
-                );
-                const fileLink = document.createElement("a");
-                fileLink.href = fileUrl;
-                fileLink.setAttribute(
-                  "download",
-                  "customer_location" + ".xlsx"
-                );
-                document.body.appendChild(fileLink);
-                fileLink.click();
-                document.body.removeChild(fileLink);
               }, 300);
               this.$router.push({
                 name: "Plan",
@@ -441,20 +486,7 @@ export default {
       }
     },
   },
-  //   computed:{
-  // window.onbeforeunload = function (evt) {
-  //   var message = 'Are you sure you want to leave?';
-  //   if (typeof evt == 'undefined') {
-  //     evt = window.event;
-  //   }
-  //   if (evt) {
-  //     evt.returnValue = message;
-  //   }
-  //   return message;
-  // }
-  // },
   created() {
-    console.log(this.selectedData);
     this.fetchData();
   },
 };

@@ -71,7 +71,11 @@
                 </span>
               </div>
             </template>
-
+            <template v-slot:item.status="{ item }">
+              <v-icon small class="mr-2" @click="switchStatus(item.id)">
+                mdi-account-multiple-remove
+              </v-icon>
+            </template>
             <template v-slot:item.actions="{ item }">
               <v-menu offset-y>
                 <template v-slot:activator="{ on, attrs }">
@@ -115,6 +119,12 @@
                     <v-list-item-title>
                       <v-icon small class="mr-2"> mdi-pencil </v-icon>
                       ແກ້ໄຂ
+                    </v-list-item-title>
+                  </v-list-item>
+                  <v-list-item link @click="resetPassword(item)">
+                    <v-list-item-title>
+                      <v-icon small class="mr-2"> mdi-key </v-icon>
+                      Reset Password
                     </v-list-item-title>
                   </v-list-item>
 
@@ -303,6 +313,72 @@
         </v-card>
       </template>
     </ModalEdit>
+
+    <!--Change Password -->
+    <v-dialog v-model="changePasswordDialog" max-width="720px" persistent>
+      <v-card>
+        <v-card-title>
+          <span class="headline"
+            >Reset Password
+            <span
+              ><a>{{ edit_user.name }}</a></span
+            ></span
+          >
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-form ref="form" lazy-validation>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    label="Password *"
+                    type="password"
+                    v-model="password"
+                    :rules="passwordRules"
+                    required
+                  ></v-text-field>
+                  <p class="errors">
+                    {{ server_errors.password }}
+                  </p>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
+                    label="Password Confirm *"
+                    type="password"
+                    v-model="password_confirmation"
+                    :rules="passwordConfirmRules"
+                    required
+                    @keyup.enter="AddItem"
+                  ></v-text-field>
+                  <p class="errors">
+                    {{ server_errors.password_confirmation }}
+                  </p>
+                </v-col>
+              </v-row>
+            </v-form>
+          </v-container>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="blue darken-1"
+              text
+              @click="changePasswordDialog = false"
+            >
+              Close
+            </v-btn>
+            <v-btn
+              color="blue darken-1"
+              text
+              :loading="loading"
+              :disabled="loading"
+              @click="resetPasswordAcion"
+            >
+              Change
+            </v-btn>
+          </v-card-actions>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
 
     <!--Add Role -->
     <v-dialog v-model="roleDialog" max-width="720px" persistent>
@@ -552,6 +628,7 @@ export default {
         { text: "Email", value: "email", sortable: false },
         { text: "Role", value: "roles", sortable: false },
         { text: "Permission", value: "permissions", sortable: false },
+        { text: "Status", value: "status", sortable: false, align: "center" },
         { text: "", value: "actions", sortable: false },
       ],
       loading: false,
@@ -566,6 +643,7 @@ export default {
       errormsg: "",
       roleDialog: false,
       updateRoleDialog: false,
+      changePasswordDialog: false,
       selectedRole: "",
       selectedRoles: [],
       roles: [],
@@ -582,6 +660,9 @@ export default {
       per_page: 12,
       search: "",
       oldVal: "",
+      // resetPassword
+      password: "",
+      password_confirmation: "",
 
       //Validation
       emailRules: [
@@ -754,6 +835,51 @@ export default {
     closeAddModal() {
       this.$store.commit("modalAdd_State", false);
     },
+    resetPassword(item) {
+      this.changePasswordDialog = true;
+      this.edit_user = item;
+    },
+    resetPasswordAcion() {
+      if (this.$refs.form.validate() == true) {
+        this.loading = true;
+        this.$axios
+          .put("user-setting/reset-password/" + this.edit_user.id, {
+            password: this.password,
+            password_confirmation: this.password_confirmation,
+          })
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.loading = false;
+                this.edit_user = {};
+                this.reset();
+                this.fetchData();
+                this.changePasswordDialog = false;
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
+              }, 300);
+            }
+          })
+          .catch((error) => {
+            this.loading = false;
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
+            if (error.response.status == 422) {
+              var obj = error.response.data.errors;
+              for (let [key, message] of Object.entries(obj)) {
+                this.server_errors[key] = message[0];
+              }
+            }
+          });
+      }
+    },
+
     OpenModalEdit(item) {
       this.edit_user = item;
       this.$store.commit("modalEdit_State", true);
@@ -876,7 +1002,6 @@ export default {
               color: "error",
               msg: error.response.data.message,
             });
-            this.fetchData();
           });
         this.loading = false;
       }
@@ -1017,6 +1142,32 @@ export default {
         this.loading = false;
         this.updatePermissionDialog = false;
       }
+    },
+    switchStatus(id) {
+      this.loading = true;
+      this.$axios
+        .put("user-setting/update-status/" + id, { status: this.status })
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.loading = false;
+              this.fetchData();
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
+              });
+            }, 300);
+          }
+        })
+        .catch((error) => {
+          this.loading = false;
+          this.$store.commit("Toast_State", {
+            value: true,
+            color: "error",
+            msg: error.response.data.message,
+          });
+        });
     },
 
     reset() {
