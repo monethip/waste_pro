@@ -16,17 +16,27 @@
                 </v-col>
                 <v-divider class="mx-4" vertical></v-divider>
                 <v-col>
-                  <h3 class="primary-color">{{ data.user }}</h3>
+                  <h3 class="primary-color" v-if="data.user">
+                    {{ data.user.all_user }}
+                  </h3>
                   <h3>Users</h3>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col>
-                  <h4><span class="succes-color">30</span></h4>
+                  <h4>
+                    <span class="succes-color" v-if="data.user">{{
+                      data.user.active
+                    }}</span>
+                  </h4>
                   <h4>Active</h4>
                 </v-col>
                 <v-col>
-                  <h4><span class="red-color">20</span></h4>
+                  <h4>
+                    <span class="red-color" v-if="data.user">{{
+                      data.user.inactive
+                    }}</span>
+                  </h4>
                   <h4>Inactive</h4>
                 </v-col>
               </v-row>

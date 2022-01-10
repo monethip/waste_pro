@@ -5,11 +5,20 @@
         <v-btn class="btn-primary mr-6" @click="createPlan()"
           ><v-icon>mdi-plus </v-icon> Add
         </v-btn>
+      </v-col>
+      <v-col>
         <v-btn class="btn-primary mr-6" @click="createPage()"
           ><v-icon>mdi-application-export </v-icon> Export ລູກຄ້າຄົວເຮືອນ
         </v-btn>
+      </v-col>
+      <v-col>
         <v-btn class="btn-primary" @click="exportCompany()"
           ><v-icon>mdi-application-export </v-icon> Export ລູກຄ້າບໍລິສັດ
+        </v-btn>
+      </v-col>
+      <v-col>
+        <v-btn class="btn-primary mr-6" @click="createPlanNomap()"
+          ><v-icon>mdi-plus </v-icon> ເພີ່ມແຜນທີ່ບໍ່ລຽນລຳດັບ
         </v-btn>
       </v-col>
       <v-col>
@@ -39,48 +48,49 @@
       </v-col>
       -->
     </v-row>
-    <v-row class="my-n6">
-      <v-col>
+    <v-card elevation="1">
+      <v-card-text>
         <h4>ແຜນຈັດເສັ້ນທາງການເກັບຂີ້ເຫື້ຍອ</h4>
-      </v-col>
-    </v-row>
-    <v-row class="mb-n4">
-      <v-col
-        cols="4"
-        :loading="loading"
-        class="my-2"
-        max-width="374"
-        v-for="(item, index) in plans"
-        :key="index"
-      >
-        <v-card>
-          <v-img height="250" v-html="item.embed"></v-img>
-          <v-card-title>{{ item.name }}</v-card-title>
-          <v-divider class="mx-4"></v-divider>
 
-          <v-card-actions class="white justify-center">
-            <v-btn color="lighten-2" text @click="viewPage(item.id)">
-              <v-icon small class="mr-2"> mdi-eye </v-icon>
-            </v-btn>
-            <v-btn color="lighten-2" text @click="editPage(item.id)">
-              <v-icon small class="mr-2"> mdi-pencil </v-icon>
-            </v-btn>
-            <v-btn color="lighten-2" text @click="deleteItem(item.id)">
-              <v-icon small> mdi-delete </v-icon>
-            </v-btn>
-            <v-btn
-              color="lighten-2"
-              text
-              v-for="(data, index) in item.media"
-              :key="index"
-              @click="download(data.url)"
-            >
-              <v-icon small class="mr-2"> mdi-download </v-icon>
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
+        <v-row class="mb-n4">
+          <v-col
+            cols="4"
+            :loading="loading"
+            class="my-2"
+            max-width="374"
+            v-for="(item, index) in plans"
+            :key="index"
+          >
+            <v-card elevation="1">
+              <v-img height="250" v-html="item.embed"></v-img>
+              <v-card-title>{{ item.name }}</v-card-title>
+              <v-divider class="mx-4"></v-divider>
+
+              <v-card-actions class="white justify-center">
+                <v-btn color="lighten-2" text @click="viewPage(item.id)">
+                  <v-icon small class="mr-2"> mdi-eye </v-icon>
+                </v-btn>
+                <v-btn color="lighten-2" text @click="editPage(item.id)">
+                  <v-icon small class="mr-2"> mdi-pencil </v-icon>
+                </v-btn>
+                <v-btn color="lighten-2" text @click="deleteItem(item.id)">
+                  <v-icon small> mdi-delete </v-icon>
+                </v-btn>
+                <v-btn
+                  color="lighten-2"
+                  text
+                  v-for="(data, index) in item.media"
+                  :key="index"
+                  @click="download(data.url)"
+                >
+                  <v-icon small class="mr-2"> mdi-download </v-icon>
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-card-text>
+    </v-card>
     <br />
     <template>
       <!--
@@ -292,6 +302,12 @@ export default {
     createPlan() {
       this.$router.push({
         name: "CreatePlan",
+      });
+    },
+    createPlanNomap() {
+      console.log("Hii");
+      this.$router.push({
+        name: "SelectCustomerRoutePlan",
       });
     },
 

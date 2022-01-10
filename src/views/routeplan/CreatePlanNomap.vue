@@ -98,11 +98,7 @@
               >
                 <template v-slot:body="props">
                   <draggable :list="props.items" tag="tbody" @change="afterAdd">
-                    <tr
-                      v-for="(user, index) in props.items"
-                      :key="index"
-                      :move="checkMove(user.name)"
-                    >
+                    <tr v-for="(user, index) in props.items" :key="index">
                       <td>
                         <v-icon small class="page__grab-icon">
                           mdi-arrow-all
@@ -160,7 +156,7 @@ import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import draggable from "vuedraggable";
 export default {
   name: "Customer",
-  props: ["items", "villages"],
+  props: ["selectedData", "villages"],
   components: {
     draggable,
   },
@@ -437,10 +433,6 @@ export default {
         this.selectedRows.push(keyID);
       }
     },
-    checkMove: function (evt) {
-      console.log(evt);
-      // return evt.draggedContext.element.name !== "apple";
-    },
   },
   watch: {
     search: function (value) {
@@ -462,6 +454,7 @@ export default {
   // }
   // },
   created() {
+    console.log(this.selectedData);
     this.fetchData();
   },
 };

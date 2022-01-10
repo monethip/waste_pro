@@ -182,9 +182,15 @@ export default {
       selectedStatus: "unread",
       items: [
         {
-          icon: "mdi-apps",
+          icon: "mdi-home",
           title: "ໜ້າຫຼັກ",
           to: "/",
+          permissions: ["create_user"],
+        },
+        {
+          icon: "mdi-apps",
+          title: "Activity Log",
+          to: "/activity-log",
           permissions: ["create_user"],
         },
       ],

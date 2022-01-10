@@ -8,7 +8,7 @@ const routes = [
   {
     path: '/policy',
     name: 'Policy',
-    component: () => import('../views/appPolicy.vue'),
+    component: () => import('@/views/appPolicy.vue'),
     meta: {
       layout: "none",
       middleware: [Middlewares.guest],
@@ -17,7 +17,7 @@ const routes = [
   {
     path: '/customer',
     name: 'Customer',
-    component: () => import('../views/customer/Customer.vue'),
+    component: () => import('@/views/customer/Customer.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
@@ -26,18 +26,26 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('../views/Login.vue'),
+    component: () => import('@/views/Login.vue'),
     meta: {
       layout: "none",
       middleware: [Middlewares.guest],
     }
   },
-
+  {
+    path: '/activity-log',
+    name: 'ActivityLog',
+    component: () => import('@/views/ActivityLog.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
   //Admin Route
   {
     path: '/',
     name: 'Dashboard',
-    component: () => import('../views/dashboard/Dashboard.vue'),
+    component: () => import('@/views/dashboard/Dashboard.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
@@ -46,7 +54,7 @@ const routes = [
   {
     path: '/user',
     name: 'User',
-    component: () => import('../views/users/User.vue'),
+    component: () => import('@/views/users/User.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
@@ -55,7 +63,7 @@ const routes = [
   {
     path: '/import-file',
     name: 'ImportFile',
-    component: () => import('../components/importFile.vue'),
+    component: () => import('@/components/importFile.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
@@ -64,7 +72,7 @@ const routes = [
   {
     path: '/driver',
     name: 'Driver',
-    component: () => import('../views/driver/Driver.vue'),
+    component: () => import('@/views/driver/Driver.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
@@ -73,7 +81,7 @@ const routes = [
   {
     path: '/employee',
     name: 'Employee',
-    component: () => import('../views/employee/Employee.vue'),
+    component: () => import('@/views/employee/Employee.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
@@ -83,7 +91,7 @@ const routes = [
   {
     path: '/team/:id',
     name: 'TeamDetail',
-    component: () => import('../views/team/TeamDetail.vue'),
+    component: () => import('@/views/team/TeamDetail.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
@@ -92,7 +100,7 @@ const routes = [
   {
     path: '/team',
     name: 'Team',
-    component: () => import('../views/team/Team.vue'),
+    component: () => import('@/views/team/Team.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
@@ -102,7 +110,7 @@ const routes = [
   {
     path: '/company',
     name: 'Company',
-    component: () => import('../views/company/Company.vue'),
+    component: () => import('@/views/company/Company.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
@@ -111,7 +119,7 @@ const routes = [
   {
     path: '/company-request',
     name: 'CompanyRequest',
-    component: () => import('../views/company/companyRequest/all.vue'),
+    component: () => import('@/views/company/companyRequest/all.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
@@ -121,7 +129,7 @@ const routes = [
   {
     path: '/create/company',
     name: 'CreateCompany',
-    component: () => import('../views/company/CreateCompany.vue'),
+    component: () => import('@/views/company/CreateCompany.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
@@ -130,7 +138,7 @@ const routes = [
   {
     path: '/edit/company/:id',
     name: 'EditCompany',
-    component: () => import('../views/company/EditCompany.vue'),
+    component: () => import('@/views/company/EditCompany.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
@@ -378,6 +386,31 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
+
+  //Plan no map
+  {
+    path: '/select/customer',
+    name: 'SelectCustomerRoutePlan',
+    component: () => import('@/views/routeplan/SelecCustomerToRoute.vue'),
+    props: true,
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+
+  {
+    path: '/create/route/plan',
+    name: 'CreateRoutePlan',
+    component: () => import('@/views/routeplan/CreatePlanNomap.vue'),
+    props: true,
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+
+
   //Plan Calendar Detail
   {
     path: '/plan-calendar/:id/detail/:driverId',
