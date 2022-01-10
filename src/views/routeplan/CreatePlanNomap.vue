@@ -323,7 +323,6 @@ export default {
       this.customers.map((item) => {
         selectedCustomer.push(item.id);
       });
-      console.log(selectedCustomer);
       if (this.customers.length > 0) {
         this.loading = true;
         this.$axios
