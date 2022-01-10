@@ -14,6 +14,7 @@
         >ຍັງບໍທັນຢູ່ໃນແຜນ</span
       >
     </v-breadcrumbs>
+
     <v-row>
       <v-col cols="12" class="mb-4">
         <GmapMap
@@ -75,73 +76,53 @@
       <v-card>
         <v-card flat>
           <v-card-text>
+            <!--
             <div>
               <v-btn text color="error" @click="deleteItem"
                 ><v-icon medium> mdi-delete </v-icon></v-btn
               >
             </div>
-            <v-data-table
-              :headers="headers"
-              :items="customers"
-              :search="search"
-              :disable-pagination="true"
-              hide-default-footer
-              v-model="selectedRows"
-              show-select
-            >
-              <!--
-              <template v-slot:item.media="{ item }">
-                <v-avatar
-                  size="36px"
-                  v-for="(img, index) in item.media"
-                  :key="index"
-                >
-                  <img v-if="img.thumb" :src="img.thumb" />
-                </v-avatar>
-              </template>
-              -->
-
-              <template slot="item.index" scope="props">
-                <div>{{ props.index + 1 }}</div>
-              </template>
-              <template v-slot:item.address_detail="{ item }">
-                <div v-for="(data, index) in item.village_details" :key="index">
-                  <span>{{ data.name }}</span>
-                </div>
-              </template>
-              <template v-slot:item.address="{ item }">
-                <div v-if="item.district && item.village">
-                  {{ item.district.name }}, {{ item.village.name }}
-                </div>
-              </template>
-              <template v-slot:item.actions="{ item }">
-                <v-icon small class="mr-2" @click="viewPage(item.id)">
-                  mdi-eye
-                </v-icon>
-              </template>
-
-              <!--
-              <template slot="item.delete" slot-scope="props">
-                <v-icon small @click="deleteItem(props)"> mdi-delete </v-icon>
-              </template>
 -->
-              <!--
-              <template v-slot:item="{ item }">
-                <tr :class="selectedRows.indexOf(item.id) - 1 ? 'cyan' : ''">
-                  <td>{{ item.id + 1 }}</td>
-                  <td>{{ item.name }}</td>
-                  <td>{{ item.surname }}</td>
-                  <td>{{ item.user.phone }}</td>
-                  <td>{{ item.house_number }}</td>
-                  <td>
-                    <v-icon small @click="deleteItem(item.index)">
-                      mdi-delete
-                    </v-icon>
-                  </td>
-                </tr>
-              </template>
-              -->
-            </v-data-table>
+            <main class="page page--table">
+              <v-data-table
+                :headers="headers"
+                :items="customers"
+                :search="search"
+                :disable-pagination="true"
+                hide-default-footer
+                v-model="selectedRows"
+                item-key="id"
+                class="page__table"
+              >
+                <template v-slot:body="props">
+                  <draggable :list="props.items" tag="tbody">
+                    <tr v-for="(user, index) in props.items" :key="index">
+                      <td>
+                        <v-icon small class="page__grab-icon">
+                          mdi-arrow-all
+                        </v-icon>
+                      </td>
+                      <td>{{ index + 1 }}</td>
+                      <td>{{ user.id }}</td>
+                      <td>{{ user.name }}</td>
+                      <td>{{ user.username }}</td>
+                      <td>{{ user.user.phone }}</td>
+                      <td>{{ user.address_detail }}</td>
+                      <td>{{ user.village.name }}</td>
+                      <td>{{ user.district.name }}</td>
+                      <td>
+                        <v-icon small class="mr-2" @click="viewPage(user.id)">
+                          mdi-eye
+                        </v-icon>
+                        <v-icon small @click="deleteItem(index)">
+                          mdi-delete
+                        </v-icon>
+                      </td>
+                    </tr>
+                  </draggable>
+                </template>
+              </v-data-table>
+            </main>
           </v-card-text>
         </v-card>
       </v-card>
@@ -170,9 +151,13 @@
 
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import draggable from "vuedraggable";
 export default {
   name: "Customer",
   props: ["items", "villages"],
+  components: {
+    draggable,
+  },
   data() {
     return {
       customers: [],
@@ -187,9 +172,11 @@ export default {
       exclude_customers: [],
       selectedRows: [],
       customer: {},
+      customerIndex: "",
 
       headers: [
-        { text: "", value: "index" },
+        { text: "#", value: "index" },
+        { text: "Id", value: "id" },
         { text: "ຊື່", value: "name" },
         { text: "ນາມສະກຸນ", value: "surname" },
         { text: "Phone", value: "user.phone", sortable: false },
@@ -198,6 +185,7 @@ export default {
         { text: "ເມືອງ", value: "district.name", sortable: true },
         { text: "", value: "actions", sortable: false },
       ],
+
       //Map
       latlng: {
         lat: 18.1189434,
@@ -229,20 +217,22 @@ export default {
     closeDelete() {
       this.$store.commit("modalDelete_State", false);
     },
-    deleteItem() {
-      if (this.selectedRows.length > 0) {
-        this.$store.commit("modalDelete_State", true);
-      }
+    deleteItem(index) {
+      this.customerIndex = index;
+      // if (this.selectedRows.length > 0) {
+      this.$store.commit("modalDelete_State", true);
+      // }
     },
 
     deleteItemConfirm() {
       this.selectedCustomer = [];
       this.loading = true;
-      for (var i = 0; i < this.selectedRows.length; i++) {
-        const index = this.customers.indexOf(this.selectedRows[i]);
-        this.selectedCustomer.push(this.customers[index]);
-        this.customers.splice(index, 1);
-      }
+      this.customers.splice(this.customerIndex, 1);
+      // for (var i = 0; i < this.selectedRows.length; i++) {
+      //   const index = this.customers.indexOf(this.selectedRows[i]);
+      //   this.selectedCustomer.push(this.customers[index]);
+      //   this.customers.splice(index, 1);
+      // }
       this.selectedCustomer.filter((item) => {
         this.exclude_customers.push(item.id);
       });
@@ -313,6 +303,8 @@ export default {
         name: "ViewCustomer",
         params: { id },
       });
+
+      // window.open(route.href, "_blank");
     },
     Search() {
       GetOldValueOnInput(this);
@@ -450,4 +442,14 @@ export default {
 
 <style lang="scss">
 @import "../../../public/scss/main.scss";
+.page--table {
+  .page {
+    &__table {
+      margin-top: 20px;
+    }
+    &__grab-icon {
+      cursor: move;
+    }
+  }
+}
 </style>

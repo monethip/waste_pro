@@ -41,7 +41,7 @@
     </v-row>
     <v-row class="my-n6">
       <v-col>
-        <h4>ແຜນຈັດເສັ້ນທາງການເກັບຂີ້ເຫຍື້ອ</h4>
+        <h4>ແຜນຈັດເສັ້ນທາງການເກັບຂີ້ເຫື້ຍອ</h4>
       </v-col>
     </v-row>
     <v-row class="mb-n4">
@@ -83,12 +83,14 @@
     </v-row>
     <br />
     <template>
+      <!--
       <Pagination
         v-if="pagination.total_pages > 1"
         :pagination="pagination"
         :offset="offset"
         @paginate="fetchData()"
       ></Pagination>
+      -->
     </template>
     <!--
       <v-card>
@@ -214,8 +216,8 @@ export default {
       this.$axios
         .get("route-plan", {
           params: {
-            page: this.pagination.current_page,
-            per_page: this.per_page,
+            // page: this.pagination.current_page,
+            // per_page: this.per_page,
             customer_type: this.selectedCustomerType,
           },
         })
@@ -223,14 +225,14 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
-              this.plans = res.data.data.data;
-              this.pagination = res.data.data.pagination;
+              this.plans = res.data.data;
+              console.log(this.plans);
+              // this.pagination = res.data.data.pagination;
             }, 100);
           }
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
           if (error.response.status == 422) {
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
@@ -267,7 +269,6 @@ export default {
           }
         })
         .catch((error) => {
-          this.fetchData();
           this.$store.commit("Toast_State", {
             value: true,
             color: "error",

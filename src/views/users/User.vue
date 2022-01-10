@@ -281,33 +281,6 @@
                       {{ server_errors.email }}
                     </p>
                   </v-col>
-
-                  <v-col cols="12">
-                    <v-text-field
-                      label="Password *"
-                      type="password"
-                      v-model="edit_user.password"
-                      :rules="passwordRules"
-                      required
-                    ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.password }}
-                    </p>
-                  </v-col>
-
-                  <v-col cols="12">
-                    <v-text-field
-                      label="Password Confirm *"
-                      type="password"
-                      v-model="user.password_confirmation"
-                      :rules="passwordRules"
-                      required
-                      @keyup.enter="AddItem"
-                    ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.password_confirmation }}
-                    </p>
-                  </v-col>
                 </v-row>
               </v-form>
             </v-container>
@@ -567,7 +540,7 @@
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
-    title() {
+  title() {
     return `Vientiane Waste Co-Dev|User`;
   },
   name: "User",
