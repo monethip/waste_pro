@@ -5,8 +5,7 @@
         <v-menu
           ref="menu"
           v-model="month_from_menu"
-          :close-on-content-click="false"
-          :return-value.sync="month_from"
+          :close-on-content-click="true"
           transition="scale-transition"
           offset-y
           max-width="290px"
@@ -24,12 +23,20 @@
               dense
             ></v-text-field>
           </template>
-          <v-date-picker v-model="month_from" type="month" no-title scrollable>
+          <v-date-picker
+            v-model="month_from"
+            type="month"
+            no-title
+            scrollable
+            min="2020-NaN-NaN"
+          >
+            <!--
             <v-spacer></v-spacer>
             <v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
             <v-btn text color="primary" @click="$refs.menu.save(month_from)">
               OK
             </v-btn>
+            -->
           </v-date-picker>
         </v-menu>
       </v-col>
@@ -37,8 +44,7 @@
         <v-menu
           ref="menu"
           v-model="month_to_menu"
-          :close-on-content-click="false"
-          :return-value.sync="month_to"
+          :close-on-content-click="true"
           transition="scale-transition"
           offset-y
           max-width="290px"
@@ -56,12 +62,13 @@
               dense
             ></v-text-field>
           </template>
-          <v-date-picker v-model="month_to" type="month" no-title scrollable>
-            <v-spacer></v-spacer>
-            <v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
-            <v-btn text color="primary" @click="$refs.menu.save(month_to)">
-              OK
-            </v-btn>
+          <v-date-picker
+            v-model="month_to"
+            type="month"
+            no-title
+            scrollable
+            min="2020-NaN-NaN"
+          >
           </v-date-picker>
         </v-menu>
       </v-col>
@@ -90,10 +97,13 @@
 export default {
   data() {
     return {
-      month_from: new Date().toISOString().substr(0, 7),
+      // month_from: new Date().toISOString().substr(0, 7),
+      month_from: "",
       month_to: "",
       month_from_menu: false,
       month_to_menu: false,
+      max: "",
+      min: "",
       modal: false,
       homeInvoice: [],
       compnayInvoice: [],
@@ -116,8 +126,11 @@ export default {
 
       series: [
         {
-          name: "Net Profit",
+          name: "ລາຍໄດ້",
           data: [],
+          // formatter: function (val) {
+          //   return "Kip " + val + " ";
+          // },
         },
         // {
         //   name: "Revenue",
@@ -130,17 +143,17 @@ export default {
       ],
       chartOptions: {
         labels: [],
-        noData: {
-          text: "Loading ...",
-          align: "center",
-          verticalAlign: "middle",
-          offsetX: 0,
-          offsetY: 0,
-          style: {
-            color: "#00c1d2",
-            fontSize: "14px",
-          },
-        },
+        // noData: {
+        //   text: "Loading ...",
+        //   align: "center",
+        //   verticalAlign: "middle",
+        //   offsetX: 0,
+        //   offsetY: 0,
+        //   style: {
+        //     color: "#00c1d2",
+        //     fontSize: "14px",
+        //   },
+        // },
         chart: {
           type: "bar",
           height: 350,
@@ -200,7 +213,12 @@ export default {
         tooltip: {
           y: {
             formatter: function (val) {
-              return "$ " + val + " thousands";
+              return Intl.NumberFormat().format(val) + " Kip";
+            },
+          },
+          x: {
+            formatter: function (val) {
+              return "ເດືອນ " + val;
             },
           },
         },
@@ -210,22 +228,12 @@ export default {
   methods: {
     async fetchData() {
       this.$store.commit("Loading_State", true);
-      this.chartOptions.labels = [];
-      this.series[0].data = [];
+      // this.chartOptions.labels = [];
+      // this.series[0].data = [];
       const data = new FormData();
-
-      // const dataSet = {
-      //   data: [],
-      //   labels: [],
-      // };
-
       data.append("type", this.selectedCollection);
       data.append("duration", "month");
-      if (
-        this.month_from !== "" &&
-        this.month_to !== "" &&
-        this.selectedDuration == "month"
-      ) {
+      if (this.month_from !== "" && this.month_to !== "") {
         data.append(
           "month_from",
           this.moment(this.month_from).format("YYYY-MM")
@@ -233,61 +241,28 @@ export default {
         data.append("month_to", this.moment(this.month_to).format("YYYY-MM"));
       }
       await this.$axios
-        .post(
-          "report-invoice",
-          data
-          // {
-          //     page: this.pagination.current_page,
-          //     per_page: this.per_page,
-          //     filter: this.search,
-          //     duration: this.selectedDuration,
-          //     type: this.collectionType,
-          //     year_from: this.moment(this.year_from).format("YYYY"),
-          //     year_to: this.moment(this.year_to).format("YYYY"),
-          //     // month_from: month_from,
-          //     // month_to: month_to,
-          //     date_from: this.date_from,
-          //     date_to: this.date_to,
-          // }
-        )
+        .post("report-invoice", data)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.homeInvoice = res.data.data.summary;
-              // this.compnayCollection = res.data.data
-              console.log(this.homeInvoice);
-
               this.homeInvoice.map((item) => {
                 if (this.selectedCollection == "home") {
                   this.series[0].data.push(item.home.sum_total);
-                  // this.series[1].data.push(item.home.total_created);
-                  // this.series[2].data.push(item.home.total_success);
                   this.chartOptions.labels.push(item.month);
                 } else if (this.selectedCollection == "company") {
                   this.series[0].data.push(item.company.sum_total);
                   this.chartOptions.labels.push(item.month);
                 }
-                // dataSet.data.push(item.home.total_bag_amount);
-                // dataSet.labels.push(item.month);
                 window.dispatchEvent(new Event("resize"));
-                // console.log(item.home.total_bag_amount);
-                // console.log(dataSet.labels);
-
-                //    this.series[0].data.push(item.countCustomer);
-                // this.dates.labels.push(item.number);
               });
-              // console.log(this.homeCollection);
             }, 300);
           }
         })
         .catch(() => {
           this.$store.commit("Loading_State", false);
         });
-      // console.log(dataSet.data);
-      // this.series[0].data = dataSet.data;
-      // // this.options.labels.push(dataSet.labels);
-      // console.log(this.options.labels);
       window.dispatchEvent(new Event("resize"));
     },
   },
@@ -296,9 +271,13 @@ export default {
       this.fetchData();
     },
     month_to: function () {
+      this.chartOptions.labels = [];
+      this.series[0].data = [];
       this.fetchData();
     },
     month_from: function () {
+      this.chartOptions.labels = [];
+      this.series[0].data = [];
       this.fetchData();
     },
   },
