@@ -241,6 +241,7 @@ export default {
                 } else if (this.selectedCollection == "company") {
                   dataSet.data.push(item.home.container_amount);
                   dataSet.labels.push(item.month);
+                  window.dispatchEvent(new Event("resize"));
                 }
               });
             }, 300);
@@ -250,7 +251,6 @@ export default {
           this.$store.commit("Loading_State", false);
         });
       this.series[0].data = dataSet.data;
-      console.log(dataSet.data);
       // this.options.labels.include(dataSet.labels);
       // console.log(this.options.labels);
       window.dispatchEvent(new Event("resize"));
