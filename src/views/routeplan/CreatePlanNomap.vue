@@ -114,9 +114,11 @@
                       <td>{{ user.village.name }}</td>
                       <td>{{ user.district.name }}</td>
                       <td>
+                        <!--
                         <v-icon small class="mr-2" @click="viewPage(user.id)">
                           mdi-eye
                         </v-icon>
+                        -->
                         <v-icon small @click="deleteItem(index)">
                           mdi-delete
                         </v-icon>
@@ -318,7 +320,6 @@ export default {
       this.$store.commit("modalAdd_State", false);
     },
     saveRoutePlan() {
-      console.log(this.customers);
       const selectedCustomer = [];
       this.customers.map((item) => {
         selectedCustomer.push(item.id);

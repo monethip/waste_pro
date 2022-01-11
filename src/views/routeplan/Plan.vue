@@ -62,7 +62,10 @@
             :key="index"
           >
             <v-card elevation="1">
-              <v-img height="250" v-html="item.embed"></v-img>
+              <!--<v-img height="250" v-html="item.embed"></v-img>-->
+              <div>
+                <iframe :src="item.embed" height="100%" width="100%"></iframe>
+              </div>
               <v-card-title>{{ item.name }}</v-card-title>
               <v-divider class="mx-4"></v-divider>
 

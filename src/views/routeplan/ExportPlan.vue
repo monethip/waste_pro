@@ -464,19 +464,19 @@ export default {
       });
     },
   },
-  computed: {
-    selectedAllVillage() {
-      return this.selectedVillage.length === this.villages.length;
-    },
-    selectedSomeVillage() {
-      return this.selectedVillage.length > 0 && !this.selectedAllVillage;
-    },
-    icon() {
-      if (this.selectedAllVillage) return "mdi-close-box";
-      if (this.selectedSomeVillage) return "mdi-minus-box";
-      return "mdi-checkbox-blank-outline";
-    },
-  },
+  // computed: {
+  //   selectedAllVillage() {
+  //     return this.selectedVillage.length === this.villages.length;
+  //   },
+  //   selectedSomeVillage() {
+  //     return this.selectedVillage.length > 0 && !this.selectedAllVillage;
+  //   },
+  //   icon() {
+  //     if (this.selectedAllVillage) return "mdi-close-box";
+  //     if (this.selectedSomeVillage) return "mdi-minus-box";
+  //     return "mdi-checkbox-blank-outline";
+  //   },
+  // },
   watch: {
     search: function (value) {
       if (value == "") {
@@ -485,19 +485,6 @@ export default {
     },
     selectedVillage: function () {
       this.fetchData();
-      // var data = {};
-      // this.villages.filter((item) => {
-      //   // this.selectedVillage.includes(item.id);
-      //   if (this.selectedVillage) {
-      //     data.push(item);
-      //   }
-      // });
-      // console.log(data);
-      // // console.log("Hi" + selectedAllVillage);
-      // // // this.villages.filter((item) => {
-      // // this.selectedAllVillage.push(this.selectedVillage);
-      // // console.log(this.selectedAllVillage);
-      // // });
     },
     selectedDistrict: function () {
       this.fetchVillage();
@@ -506,7 +493,6 @@ export default {
   created() {
     this.fetchData();
     this.fetchAddress();
-    // this.selectedVillage = this.villages.slice();
   },
 };
 </script>

@@ -114,6 +114,7 @@
                   {{ item.district.name }}, {{ item.village.name }}
                 </div>
               </template>
+
               <template v-slot:item.actions="{ item }">
                 <v-icon small class="mr-2" @click="viewPage(item.id)">
                   mdi-eye
@@ -197,7 +198,7 @@ export default {
         { text: "ລາຍລະອຽດທີ່ຢູ່", value: "address_detail" },
         { text: "ບ້ານ", value: "village.name", sortable: true },
         { text: "ເມືອງ", value: "district.name", sortable: true },
-        { text: "", value: "actions", sortable: false },
+        // { text: "", value: "actions", sortable: false },
       ],
       //Map
       latlng: {
@@ -405,20 +406,6 @@ export default {
         this.infoCurrentKey = key;
       }
     },
-
-    rowClicked(row) {
-      this.toggleSelection(row.id);
-      console.log(row);
-    },
-    toggleSelection(keyID) {
-      if (this.selectedRows.includes(keyID)) {
-        this.selectedRows = this.selectedRows.filter(
-          (selectedKeyID) => selectedKeyID !== keyID
-        );
-      } else {
-        this.selectedRows.push(keyID);
-      }
-    },
   },
   watch: {
     search: function (value) {
@@ -427,18 +414,6 @@ export default {
       }
     },
   },
-  //   computed:{
-  // window.onbeforeunload = function (evt) {
-  //   var message = 'Are you sure you want to leave?';
-  //   if (typeof evt == 'undefined') {
-  //     evt = window.event;
-  //   }
-  //   if (evt) {
-  //     evt.returnValue = message;
-  //   }
-  //   return message;
-  // }
-  // },
   created() {
     this.fetchData();
   },

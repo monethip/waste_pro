@@ -39,7 +39,12 @@
 
       <v-col v-if="!switchMap">
         <div class="iframe-container">
-          <div v-html="plan.embed"></div>
+          <iframe
+            :src="plan.embed"
+            height="100%"
+            width="100%"
+            class="embed"
+          ></iframe>
         </div>
       </v-col>
     </v-row>
@@ -369,4 +374,7 @@ export default {
 
 <style lang="scss">
 @import "../../../public/scss/main.scss";
+.embed {
+  min-height: 400px;
+}
 </style>

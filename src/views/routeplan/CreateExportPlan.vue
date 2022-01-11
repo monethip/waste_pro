@@ -14,7 +14,6 @@
         >ຍັງບໍທັນຢູ່ໃນແຜນ</span
       >
     </v-breadcrumbs>
-
     <v-row>
       <v-col cols="12" class="mb-4">
         <GmapMap
@@ -56,9 +55,7 @@
         </v-btn>
       </v-col>
       <v-col>
-        <h4 v-if="customers">
-          ຈັດລຽນລຳດັບການເກັບຂີ້ເຫື້ຍອລູກຄ້າ {{ customers.length }} ຄົນ
-        </h4>
+        <h4 v-if="customers">ລວມລູກຄ້າ {{ customers.length }} ຄົນ</h4>
       </v-col>
       <v-col>
         <v-text-field
@@ -78,57 +75,73 @@
       <v-card>
         <v-card flat>
           <v-card-text>
-            <!--
             <div>
               <v-btn text color="error" @click="deleteItem"
                 ><v-icon medium> mdi-delete </v-icon></v-btn
               >
             </div>
+            <v-data-table
+              :headers="headers"
+              :items="customers"
+              :search="search"
+              :disable-pagination="true"
+              hide-default-footer
+              v-model="selectedRows"
+              show-select
+            >
+              <!--
+              <template v-slot:item.media="{ item }">
+                <v-avatar
+                  size="36px"
+                  v-for="(img, index) in item.media"
+                  :key="index"
+                >
+                  <img v-if="img.thumb" :src="img.thumb" />
+                </v-avatar>
+              </template>
+              -->
+
+              <template slot="item.index" scope="props">
+                <div>{{ props.index + 1 }}</div>
+              </template>
+              <template v-slot:item.address_detail="{ item }">
+                <div v-for="(data, index) in item.village_details" :key="index">
+                  <span>{{ data.name }}</span>
+                </div>
+              </template>
+              <template v-slot:item.address="{ item }">
+                <div v-if="item.district && item.village">
+                  {{ item.district.name }}, {{ item.village.name }}
+                </div>
+              </template>
+              <template v-slot:item.actions="{ item }">
+                <v-icon small class="mr-2" @click="viewPage(item.id)">
+                  mdi-eye
+                </v-icon>
+              </template>
+
+              <!--
+              <template slot="item.delete" slot-scope="props">
+                <v-icon small @click="deleteItem(props)"> mdi-delete </v-icon>
+              </template>
 -->
-            <main class="page page--table">
-              <v-data-table
-                :headers="headers"
-                :items="customers"
-                :search="search"
-                :disable-pagination="true"
-                hide-default-footer
-                v-model="selectedRows"
-                item-key="id"
-                class="page__table"
-              >
-                <template v-slot:body="props">
-                  <draggable :list="props.items" tag="tbody" @change="afterAdd">
-                    <tr
-                      v-for="(user, index) in props.items"
-                      :key="index"
-                      :move="checkMove(user.name)"
-                    >
-                      <td>
-                        <v-icon small class="page__grab-icon">
-                          mdi-arrow-all
-                        </v-icon>
-                      </td>
-                      <td>{{ index + 1 }}</td>
-                      <td>{{ user.id }}</td>
-                      <td>{{ user.name }}</td>
-                      <td>{{ user.surname }}</td>
-                      <td>{{ user.user.phone }}</td>
-                      <td>{{ user.address_detail }}</td>
-                      <td>{{ user.village.name }}</td>
-                      <td>{{ user.district.name }}</td>
-                      <td>
-                        <v-icon small class="mr-2" @click="viewPage(user.id)">
-                          mdi-eye
-                        </v-icon>
-                        <v-icon small @click="deleteItem(index)">
-                          mdi-delete
-                        </v-icon>
-                      </td>
-                    </tr>
-                  </draggable>
-                </template>
-              </v-data-table>
-            </main>
+              <!--
+              <template v-slot:item="{ item }">
+                <tr :class="selectedRows.indexOf(item.id) - 1 ? 'cyan' : ''">
+                  <td>{{ item.id + 1 }}</td>
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.surname }}</td>
+                  <td>{{ item.user.phone }}</td>
+                  <td>{{ item.house_number }}</td>
+                  <td>
+                    <v-icon small @click="deleteItem(item.index)">
+                      mdi-delete
+                    </v-icon>
+                  </td>
+                </tr>
+              </template>
+              -->
+            </v-data-table>
           </v-card-text>
         </v-card>
       </v-card>
@@ -157,13 +170,9 @@
 
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
-import draggable from "vuedraggable";
 export default {
   name: "Customer",
   props: ["items", "villages"],
-  components: {
-    draggable,
-  },
   data() {
     return {
       customers: [],
@@ -178,19 +187,16 @@ export default {
       exclude_customers: [],
       selectedRows: [],
       customer: {},
-      customerIndex: "",
 
       headers: [
-        { text: "", value: "" },
-        { text: "#", value: "" },
-        { text: "Id", value: "id" },
+        { text: "", value: "index" },
         { text: "ຊື່", value: "name" },
         { text: "ນາມສະກຸນ", value: "surname" },
         { text: "Phone", value: "user.phone", sortable: false },
         { text: "ລາຍລະອຽດທີ່ຢູ່", value: "address_detail" },
         { text: "ບ້ານ", value: "village.name", sortable: true },
         { text: "ເມືອງ", value: "district.name", sortable: true },
-        { text: "", value: "actions", sortable: false },
+        // { text: "", value: "actions", sortable: false },
       ],
       //Map
       latlng: {
@@ -211,21 +217,6 @@ export default {
     };
   },
   methods: {
-    afterAdd(evt) {
-      console.log(evt);
-      // const element = evt.moved.element;
-      const oldIndex = evt.moved.oldIndex;
-      const newIndex = evt.moved.newIndex;
-
-      var tmpOrder = this.customers[oldIndex];
-      this.customers.splice(oldIndex, 1);
-      this.customers.splice(newIndex, 0, tmpOrder);
-      // console.log(this.customers);
-
-      // this.history.push(
-      //   `${element.name} is moved from position ${oldIndex} to ${newIndex}`
-      // );
-    },
     backPrevios() {
       this.$router.go(-1);
     },
@@ -233,28 +224,25 @@ export default {
       this.customers = this.items;
       // localStorage.setItem("customers", this.customers);
       this.selectedVillage = this.villages;
-      // console.log(this.customers);
     },
 
     closeDelete() {
       this.$store.commit("modalDelete_State", false);
     },
-    deleteItem(index) {
-      this.customerIndex = index;
-      // if (this.selectedRows.length > 0) {
-      this.$store.commit("modalDelete_State", true);
-      // }
+    deleteItem() {
+      if (this.selectedRows.length > 0) {
+        this.$store.commit("modalDelete_State", true);
+      }
     },
 
     deleteItemConfirm() {
       this.selectedCustomer = [];
       this.loading = true;
-      this.customers.splice(this.customerIndex, 1);
-      // for (var i = 0; i < this.selectedRows.length; i++) {
-      //   const index = this.customers.indexOf(this.selectedRows[i]);
-      //   this.selectedCustomer.push(this.customers[index]);
-      //   this.customers.splice(index, 1);
-      // }
+      for (var i = 0; i < this.selectedRows.length; i++) {
+        const index = this.customers.indexOf(this.selectedRows[i]);
+        this.selectedCustomer.push(this.customers[index]);
+        this.customers.splice(index, 1);
+      }
       this.selectedCustomer.filter((item) => {
         this.exclude_customers.push(item.id);
       });
@@ -270,7 +258,6 @@ export default {
     },
 
     exportRoutePlan() {
-      console.log(this.customers);
       if (this.customers.length > 0) {
         this.loading = true;
         this.$axios
@@ -326,8 +313,6 @@ export default {
         name: "ViewCustomer",
         params: { id },
       });
-
-      // window.open(route.href, "_blank");
     },
     Search() {
       GetOldValueOnInput(this);
@@ -423,24 +408,6 @@ export default {
         this.infoCurrentKey = key;
       }
     },
-
-    rowClicked(row) {
-      this.toggleSelection(row.id);
-      console.log(row);
-    },
-    toggleSelection(keyID) {
-      if (this.selectedRows.includes(keyID)) {
-        this.selectedRows = this.selectedRows.filter(
-          (selectedKeyID) => selectedKeyID !== keyID
-        );
-      } else {
-        this.selectedRows.push(keyID);
-      }
-    },
-    checkMove: function (evt) {
-      console.log(evt);
-      // return evt.draggedContext.element.name !== "apple";
-    },
   },
   watch: {
     search: function (value) {
@@ -449,18 +416,6 @@ export default {
       }
     },
   },
-  //   computed:{
-  // window.onbeforeunload = function (evt) {
-  //   var message = 'Are you sure you want to leave?';
-  //   if (typeof evt == 'undefined') {
-  //     evt = window.event;
-  //   }
-  //   if (evt) {
-  //     evt.returnValue = message;
-  //   }
-  //   return message;
-  // }
-  // },
   created() {
     this.fetchData();
   },
@@ -469,14 +424,4 @@ export default {
 
 <style lang="scss">
 @import "../../../public/scss/main.scss";
-.page--table {
-  .page {
-    &__table {
-      margin-top: 20px;
-    }
-    &__grab-icon {
-      cursor: move;
-    }
-  }
-}
 </style>

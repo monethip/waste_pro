@@ -465,19 +465,6 @@ export default {
       });
     },
   },
-  computed: {
-    selectedAllVillage() {
-      return this.selectedVillage.length === this.villages.length;
-    },
-    selectedSomeVillage() {
-      return this.selectedVillage.length > 0 && !this.selectedAllVillage;
-    },
-    icon() {
-      if (this.selectedAllVillage) return "mdi-close-box";
-      if (this.selectedSomeVillage) return "mdi-minus-box";
-      return "mdi-checkbox-blank-outline";
-    },
-  },
   watch: {
     search: function (value) {
       if (value == "") {
