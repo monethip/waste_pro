@@ -158,8 +158,7 @@ export default {
   created() {
     this.pagination = [];
     // this.fetchDataInvoice();
-    // console.log(this.collectionType);
-    // this.fetchData();
+    this.fetchData();
   },
 };
 </script>

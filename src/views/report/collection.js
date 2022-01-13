@@ -197,14 +197,12 @@ export default {
         tab: function (value) {
             if (value == "tab-1") {
                 this.collectionType = "home";
-                console.log(this.collectionType)
                 this.fetchData();
                 this.$router
                     .push({ name: "Report-Trash", query: { tab: "home" } })
                     .catch(() => { });
             } else if (value == "tab-2") {
                 this.collectionType = "company";
-                console.log(this.collectionType)
                 this.fetchData();
                 this.$router
                     .push({
