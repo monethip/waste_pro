@@ -78,7 +78,7 @@
       <template @close="close">
         <v-card>
           <v-card-title>
-            <p>ເພີ່ມພະນັກງານຂັບລົດ</p>
+            <p>ເພີ່ມພະນັກງານ</p>
           </v-card-title>
           <v-card-text>
             <v-container>

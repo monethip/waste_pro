@@ -77,59 +77,57 @@
     </v-row>
     <div>
       <v-card>
-        <v-card flat>
-          <v-card-text>
-            <!--
+        <v-card-text>
+          <!--
             <div>
               <v-btn text color="error" @click="deleteItem"
                 ><v-icon medium> mdi-delete </v-icon></v-btn
               >
             </div>
 -->
-            <main class="page page--table">
-              <v-data-table
-                :headers="headers"
-                :items="customers"
-                :search="search"
-                :disable-pagination="true"
-                hide-default-footer
-                v-model="selectedRows"
-                item-key="id"
-                class="page__table"
-              >
-                <template v-slot:body="props">
-                  <draggable :list="props.items" tag="tbody" @change="afterAdd">
-                    <tr v-for="(user, index) in props.items" :key="index">
-                      <td>
-                        <v-icon small class="page__grab-icon">
-                          mdi-arrow-all
-                        </v-icon>
-                      </td>
-                      <td>{{ index + 1 }}</td>
-                      <td>{{ user.id }}</td>
-                      <td>{{ user.name }}</td>
-                      <td>{{ user.surname }}</td>
-                      <td>{{ user.user.phone }}</td>
-                      <td>{{ user.address_detail }}</td>
-                      <td>{{ user.village.name }}</td>
-                      <td>{{ user.district.name }}</td>
-                      <td>
-                        <!--
+          <main class="page page--table">
+            <v-data-table
+              :headers="headers"
+              :items="customers"
+              :search="search"
+              :disable-pagination="true"
+              hide-default-footer
+              v-model="selectedRows"
+              item-key="id"
+              class="page__table"
+            >
+              <template v-slot:body="props">
+                <draggable :list="props.items" tag="tbody" @change="afterAdd">
+                  <tr v-for="(user, index) in props.items" :key="index">
+                    <td>
+                      <v-icon small class="page__grab-icon">
+                        mdi-arrow-all
+                      </v-icon>
+                    </td>
+                    <td>{{ index + 1 }}</td>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.surname }}</td>
+                    <td>{{ user.user.phone }}</td>
+                    <td>{{ user.address_detail }}</td>
+                    <td>{{ user.village.name }}</td>
+                    <td>{{ user.district.name }}</td>
+                    <td>
+                      <!--
                         <v-icon small class="mr-2" @click="viewPage(user.id)">
                           mdi-eye
                         </v-icon>
                         -->
-                        <v-icon small @click="deleteItem(index)">
-                          mdi-delete
-                        </v-icon>
-                      </td>
-                    </tr>
-                  </draggable>
-                </template>
-              </v-data-table>
-            </main>
-          </v-card-text>
-        </v-card>
+                      <v-icon small @click="deleteItem(index)">
+                        mdi-delete
+                      </v-icon>
+                    </td>
+                  </tr>
+                </draggable>
+              </template>
+            </v-data-table>
+          </main>
+        </v-card-text>
       </v-card>
     </div>
 

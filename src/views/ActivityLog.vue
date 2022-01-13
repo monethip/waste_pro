@@ -58,6 +58,37 @@
           ></v-date-picker>
         </v-menu>
       </v-col>
+
+      <v-col>
+        <v-select
+          outlined
+          dense
+          :items="roles"
+          v-model="selectedRoles"
+          item-text="name"
+          item-value="name"
+          label="Roles"
+          multiple
+          @input="fetchData()"
+        ></v-select>
+        <v-spacer></v-spacer>
+      </v-col>
+
+      <v-col>
+        <v-autocomplete
+          outlined
+          dense
+          :items="users"
+          v-model="selectedUsers"
+          item-text="name"
+          item-value="id"
+          label="Users"
+          multiple
+          @input="fetchData()"
+        ></v-autocomplete>
+        <v-spacer></v-spacer>
+      </v-col>
+
       <v-col>
         <v-select
           outlined
@@ -77,16 +108,63 @@
           ຂໍ້ມູນ Activity Log ({{ pagination.total }})
         </v-card-title>
         <v-card-text>
+          <v-simple-table>
+            <template v-slot:default>
+              <thead>
+                <tr>
+                  <th class="text-left">Log Name</th>
+                  <th class="text-left">Description</th>
+                  <th class="text-left">Model</th>
+                  <th class="text-left">Type</th>
+                  <!-- <th class="text-left">Properties</th>
+                  <th class="text-left">Attributes</th> -->
+                  <th class="text-left">User</th>
+                  <th class="text-left">Created</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in activities" :key="item.id">
+                  <td>{{ item.log_name }}</td>
+                  <td>{{ item.description }}</td>
+                  <td>{{ item.model_name }}</td>
+                  <td>{{ item.subject_type }}</td>
+                  <!-- <td>{{ item.properties.old }}</td>
+                  <td>{{ item.properties.attributes }}</td> -->
+                  <td>{{ item.user.name }}</td>
+                  <td>
+                    {{ moment(item.created_at).format("hh:mm DD-MM-YY") }}
+                  </td>
+                </tr>
+              </tbody>
+            </template>
+          </v-simple-table>
+
+          <!--
           <v-data-table
             :headers="headers"
             :items="activities"
             :disable-pagination="true"
             hide-default-footer
+            class="page__table"
+            item-key="id"
           >
+            <template v-slot:body="props">
+              <tr v-for="(data, index) in props.items" :key="index">
+                <td>{{ data.log_name }}</td>
+                <td>{{ data.description }}</td>
+                <td>{{ data.model_name }}</td>
+                <td>{{ data.subject_type }}</td>
+                <td>{{ data.properties.old }}</td>
+                <td>{{ data.properties.attributes }}</td>
+                <td>{{ data.user.name }}</td>
+                <td>{{ moment(data.created_at).format("hh:mm DD-MM-YY") }}</td>
+              </tr>
+            </template>
+
             <template v-slot:item.created_at="{ item }">
               <div>{{ moment(item.created_at).format("hh:mm DD-MM-YY") }}</div>
             </template>
-
+         
             <template v-slot:item.actions="{ item }">
               <v-menu offset-y>
                 <template v-slot:activator="{ on, attrs }">
@@ -109,8 +187,10 @@
                   </v-list-item>
                 </v-list>
               </v-menu>
-            </template> </v-data-table
-          ><br />
+            </template> 
+            </v-data-table
+          >
+          --><br />
           <template>
             <Pagination
               v-if="pagination.total_pages > 1"
@@ -150,16 +230,20 @@ export default {
       models: [],
       selectedModel: [],
 
-      user: {},
-      item: {},
+      selectedRoles: [],
+      roles: [],
+      selectedUsers: [],
+      users: [],
 
       headers: [
         { text: "Log name", value: "log_name" },
         { text: "Description", value: "description" },
         { text: "Model Name", value: "model_name", sortable: false },
         { text: "Subject Type", value: "subject_type", sortable: false },
+        { text: "Properties", value: "properties", sortable: false },
+        { text: "Attributes", value: "attributes", sortable: false },
         { text: "Created", value: "created_at", sortable: false },
-        { text: "", value: "actions", sortable: false },
+        // { text: "", value: "actions", sortable: false },
       ],
     };
   },
@@ -174,6 +258,8 @@ export default {
             date_from: this.start_date,
             date_end: this.start_date,
             model_names: this.selectedModel,
+            users: this.selectedUsers,
+            roles: this.selectedRoles,
           },
         })
         .then((res) => {
@@ -210,6 +296,54 @@ export default {
         .catch(() => {});
     },
 
+    fetchRole() {
+      this.$axios
+        .get("user-setting/role")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.loading = false;
+              this.roles = res.data.data;
+              this.fetchUser();
+            }, 300);
+          }
+        })
+        .catch(() => {});
+    },
+
+    fetchUser() {
+      this.$store.commit("Loading_State", true);
+      this.$axios
+        .get("user-setting/user", {
+          params: {
+            // page: this.pagination.current_page,
+            // per_page: this.per_page,
+            // filter: this.search,
+            roles: this.selectedRoles,
+          },
+        })
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.loading = false;
+              this.$store.commit("Loading_State", false);
+              this.users = res.data.data;
+              console.log(this.users);
+            }, 300);
+          }
+        })
+        .catch((error) => {
+          this.$store.commit("Loading_State", false);
+          this.fetchData();
+          if (error.response.status == 422) {
+            var obj = error.response.data.errors;
+            for (let [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
+            }
+          }
+        });
+    },
+
     viewPage(id) {
       this.$router.push({
         name: "ViewCompany",
@@ -236,6 +370,7 @@ export default {
   },
   created() {
     this.fetchData();
+    this.fetchRole();
     this.fetchModels();
   },
 };

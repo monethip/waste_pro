@@ -456,7 +456,6 @@ export default {
   },
   watch: {
     paymentType: function () {
-      console.log(this.paymentType);
       if (this.paymentType == 0) {
         this.payment_method = "cash";
         this.image = "";

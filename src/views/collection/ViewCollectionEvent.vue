@@ -26,13 +26,13 @@
           <v-row>
             <v-list-item>
               <v-list-item-icon>
-                <v-icon color="indigo">mdi-office-building </v-icon>
+                <v-icon color="indigo">mdi-account</v-icon>
               </v-list-item-icon>
 
               <v-list-item-content>
-                <v-list-item-subtitle>ບໍລິສັດ</v-list-item-subtitle>
+                <v-list-item-subtitle>ຊື່</v-list-item-subtitle>
                 <v-list-item-title
-                  >{{ data.name }} {{ data.company_name }}</v-list-item-title
+                  >{{ data.name }} {{ data.surname }}</v-list-item-title
                 >
               </v-list-item-content>
 
@@ -43,94 +43,45 @@
 
               <v-list-item-content>
                 <v-list-item-subtitle>ເບີໂທ</v-list-item-subtitle>
-                <v-list-item-title v-if="data.user">
-                  {{ data.user.phone }}</v-list-item-title
-                >
+                <v-list-item-title> {{ data.phone }}</v-list-item-title>
               </v-list-item-content>
 
               <v-spacer></v-spacer>
               <v-list-item-icon>
-                <v-icon class="mr-6" color="indigo">mdi-email</v-icon>
+                <v-icon class="mr-6" color="indigo">mdi-calendar</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-subtitle>Email</v-list-item-subtitle>
-                <v-list-item-title v-if="data.user">
-                  {{ data.user.email }}</v-list-item-title
-                >
+                <v-list-item-subtitle>ວັນທີ</v-list-item-subtitle>
+                <v-list-item-title> {{ data.date }}</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
             <v-divider inset></v-divider>
           </v-row>
-          <!--
-          <v-row>
-            <v-list-item
-              v-for="(coor, index) in data.company_coordinators"
-              :key="index"
-            >
-              <v-list-item-icon>
-                <v-icon color="indigo">mdi-account-circle</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-subtitle>ຜູ້ປະສານງານ</v-list-item-subtitle>
-                <v-list-item-title>
-                  {{ coor.name }} {{ coor.surname }}
-                </v-list-item-title>
-              </v-list-item-content>
-              <v-spacer></v-spacer>
-              <v-list-item-icon>
-                <v-icon color="indigo" class="mr-6">mdi-phone</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-subtitle>ເບີໂທ</v-list-item-subtitle>
-                <v-list-item-title>
-                  {{ coor.phone }}
-                </v-list-item-title>
-              </v-list-item-content>
-              <v-spacer></v-spacer>
-              <v-list-item-icon>
-                <v-icon color="indigo" class="mr-6">mdi-email</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-subtitle>Email</v-list-item-subtitle>
-                <v-list-item-title>
-                  {{ coor.email }}
-                </v-list-item-title>
-              </v-list-item-content>
 
-              <v-list-item-content class="text-center">
-                <v-list-item-title>
-                  <v-icon small class="mr-2" @click="editItem(coor)">
-                    mdi-pencil
-                  </v-icon>
-                  <v-icon small @click="deleteItem(coor)"> mdi-delete </v-icon>
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider inset></v-divider>
+          <v-row>
             <v-list-item>
               <v-list-item-icon>
                 <v-icon color="indigo"> mdi-calendar </v-icon>
               </v-list-item-icon>
 
               <v-list-item-content>
-                <v-list-item-subtitle>ວັນທີ່ເລີ່ມ</v-list-item-subtitle>
-                <v-list-item-title>{{ data.date }}</v-list-item-title>
+                <v-list-item-subtitle>ສະຖານະ</v-list-item-subtitle>
                 <v-list-item-subtitle>
                   <span>
                     <v-chip
                       label
                       class="success"
-                      v-if="data.status == 'active'"
-                      >{{ data.status }}</v-chip
+                      v-if="data.collect_status == 'active'"
+                      >{{ data.collect_status }}</v-chip
                     >
                     <v-chip
                       label
                       class="error"
-                      v-else-if="data.status == 'inactive'"
-                      >{{ data.status }}</v-chip
+                      v-else-if="data.collect_status == 'inactive'"
+                      >{{ data.collect_status }}</v-chip
                     >
                     <v-chip label class="primary" v-else>{{
-                      data.status
+                      data.collect_status
                     }}</v-chip>
                   </span>
                 </v-list-item-subtitle>
@@ -141,35 +92,37 @@
                 <v-icon color="indigo" class="mr-6">mdi-package</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-subtitle>ປະເພດແພັກເກດ</v-list-item-subtitle>
-                <v-list-item-title>{{ data.cost_by }}</v-list-item-title>
-                <v-list-item-subtitle v-if="data.cost_by == 'fix_cost'">{{
-                  Intl.NumberFormat().format(data.fix_cost)
-                }}</v-list-item-subtitle>
+                <v-list-item-subtitle>ຄ່າບໍລິການ</v-list-item-subtitle>
+                <v-list-item-title
+                  >ລວມ:
+                  {{
+                    Intl.NumberFormat().format(data.total)
+                  }}</v-list-item-title
+                >
+                <v-list-item-subtitle
+                  >ສ່ວນຫຼຸດ:
+                  {{
+                    Intl.NumberFormat().format(data.discount)
+                  }}</v-list-item-subtitle
+                >
               </v-list-item-content>
             </v-list-item>
             <v-divider inset></v-divider>
             <v-list-item>
               <v-list-item-icon>
-                <v-icon color="indigo"> mdi-map-marker </v-icon>
+                <v-icon color="indigo">mdi-home</v-icon>
               </v-list-item-icon>
-
               <v-list-item-content>
-                <v-list-item-title v-if="data.village"
-                  >{{ data.village.name }},
-                  {{ data.district.name }}</v-list-item-title
-                >
-                <div
-                  v-for="(detail, index) in data.village_details"
-                  :key="index"
-                >
-                  <v-list-item-subtitle>{{ detail.name }}</v-list-item-subtitle>
-                </div>
+                <v-list-item-subtitle>ສະຖານທີ່</v-list-item-subtitle>
+                <v-list-item-title v-if="data.village">{{
+                  data.village.name
+                }}</v-list-item-title>
+                <v-list-item-subtitle>{{
+                  data.description
+                }}</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </v-row>
-          -->
-
           <v-row>
             <v-col cols="12" class="mb-4">
               <GmapMap
@@ -464,7 +417,7 @@ export default {
     },
     editPage(id) {
       this.$router.push({
-        name: "EditCompany",
+        name: "EditCollectionEvent",
         params: { id },
       });
     },

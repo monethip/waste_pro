@@ -83,7 +83,6 @@
             <v-col>
               <v-text-field
                 label="ນາມສະກຸນ"
-                required
                 v-model="data.surname"
                 outlined
                 dense
@@ -118,6 +117,8 @@
                 item-text="name"
                 item-value="name"
                 label="ສະຖານະ"
+                :rules="statusRule"
+                required
               ></v-select>
             </v-col>
           </v-row>
@@ -196,7 +197,7 @@
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-text-field
-                    v-model="data.date"
+                    v-model="date"
                     label="ເລີ່ມວັນທີ"
                     readonly
                     outlined
@@ -205,7 +206,7 @@
                     dense
                   ></v-text-field>
                 </template>
-                <v-date-picker v-model="data.date"></v-date-picker>
+                <v-date-picker v-model="date"></v-date-picker>
               </v-menu>
               <p class="errors">
                 {{ server_errors.date }}
@@ -392,6 +393,7 @@ export default {
         (v) => !!v || "Name is required",
         (v) => (v && v.length >= 2) || "Name must be less than 2 characters",
       ],
+      statusRule: [(v) => !!v || "Status is required"],
     };
   },
   methods: {
@@ -405,7 +407,8 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.data = res.data.data;
-              console.log(this.data);
+              this.time = this.moment(res.data.data.date).format("hh:mm:ss");
+              this.date = this.moment(res.data.data.date).format("YYYY-MM-DD");
             }, 300);
           }
         })
@@ -466,8 +469,6 @@ export default {
             setTimeout(() => {
               this.villages = res.data.data;
               this.selectedVillage = this.villages[0].id;
-              // this.fetchVillageDetail();
-              // this.fetchVillageVariation();
             }, 300);
           }
         })
@@ -477,8 +478,7 @@ export default {
       this.$router.go(-1);
     },
     UpdateData() {
-      const dateTime = `${this.data.date} ${this.time + `:00`}`;
-      console.log(dateTime);
+      const dateTime = `${this.date} ${this.time}`;
       let formData = new FormData();
       this.image_list.map((item) => {
         formData.append("collect_location[]", item);
@@ -651,7 +651,10 @@ export default {
       this.server_errors.date = "";
     },
     driver_id: function () {
-      this.server_errors.drier_id = "";
+      this.server_errors.driver_id = "";
+    },
+    "data.driver_id": function () {
+      this.server_errors.driver_id = "";
     },
     "data.sub_total": function () {
       this.server_errors.sub_total = "";
