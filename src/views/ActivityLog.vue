@@ -108,7 +108,9 @@
           ຂໍ້ມູນ Activity Log ({{ pagination.total }})
         </v-card-title>
         <v-card-text>
-          <v-simple-table>
+          <!--
+          <v-simple-table
+          >
             <template v-slot:default>
               <thead>
                 <tr>
@@ -116,10 +118,10 @@
                   <th class="text-left">Description</th>
                   <th class="text-left">Model</th>
                   <th class="text-left">Type</th>
-                  <!-- <th class="text-left">Properties</th>
-                  <th class="text-left">Attributes</th> -->
                   <th class="text-left">User</th>
                   <th class="text-left">Created</th>
+                  <th class="text-left">Properties</th>
+                  <th class="text-left">Attributes</th>
                 </tr>
               </thead>
               <tbody>
@@ -128,18 +130,18 @@
                   <td>{{ item.description }}</td>
                   <td>{{ item.model_name }}</td>
                   <td>{{ item.subject_type }}</td>
-                  <!-- <td>{{ item.properties.old }}</td>
-                  <td>{{ item.properties.attributes }}</td> -->
                   <td>{{ item.user.name }}</td>
                   <td>
                     {{ moment(item.created_at).format("hh:mm DD-MM-YY") }}
                   </td>
+                  <td>{{ item.properties.old }}</td>
+                  <td>{{ item.properties.attributes }}</td>
                 </tr>
               </tbody>
             </template>
           </v-simple-table>
+          -->
 
-          <!--
           <v-data-table
             :headers="headers"
             :items="activities"
@@ -147,8 +149,11 @@
             hide-default-footer
             class="page__table"
             item-key="id"
+            :single-expand="singleExpand"
+            :expanded.sync="expanded"
+            show-expand
           >
-            <template v-slot:body="props">
+            <!-- <template v-slot:body="props">
               <tr v-for="(data, index) in props.items" :key="index">
                 <td>{{ data.log_name }}</td>
                 <td>{{ data.description }}</td>
@@ -159,38 +164,29 @@
                 <td>{{ data.user.name }}</td>
                 <td>{{ moment(data.created_at).format("hh:mm DD-MM-YY") }}</td>
               </tr>
-            </template>
+            </template> -->
 
             <template v-slot:item.created_at="{ item }">
               <div>{{ moment(item.created_at).format("hh:mm DD-MM-YY") }}</div>
             </template>
-         
-            <template v-slot:item.actions="{ item }">
-              <v-menu offset-y>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-icon
-                    color="primary"
-                    dark
-                    v-bind="attrs"
-                    v-on="on"
-                    medium
-                    class="mr-2"
-                    >mdi-dots-vertical</v-icon
-                  >
-                </template>
-                <v-list>
-                  <v-list-item link @click="viewPage(item.id)">
-                    <v-list-item-title>
-                      <v-icon small class="mr-2"> mdi-eye </v-icon>
-                      ລາຍລະອຽດ
-                    </v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
-            </template> 
-            </v-data-table
-          >
-          --><br />
+            <template v-slot:expanded-item="{ headers, item }">
+              <td :colspan="headers.length" class="pt-2 pb-2">
+                <span style="font-size: 18px">Properties</span>
+                {{ item.properties.old }}
+              </td>
+              <td :colspan="headers.length" class="pt-2 pb-2">
+                <span style="font-size: 18px">Attributes</span>
+                {{ item.properties.attributes }}
+              </td>
+            </template>
+            <template v-slot:item.properties="{ item }">
+              <div v-text="item.properties.old"></div>
+            </template>
+            <template v-slot:item.attributes="{ item }">
+              <div v-text="item.properties.attributes"></div>
+            </template>
+          </v-data-table>
+          <br />
           <template>
             <Pagination
               v-if="pagination.total_pages > 1"
@@ -206,12 +202,13 @@
 </template>
 <script>
 export default {
-  name: "Customer",
+  name: "Activity",
   title() {
     return `Vientiane Waste Co-Dev|${this.title}`;
   },
   data() {
     return {
+      title: "Activity Log",
       start_date: "",
       end_date: "",
       start_menu: false,
@@ -235,15 +232,18 @@ export default {
       selectedUsers: [],
       users: [],
 
+      expanded: [],
+      singleExpand: false,
       headers: [
         { text: "Log name", value: "log_name" },
         { text: "Description", value: "description" },
         { text: "Model Name", value: "model_name", sortable: false },
         { text: "Subject Type", value: "subject_type", sortable: false },
+        { text: "User", value: "user.name", sortable: false },
+        { text: "Created", value: "created_at", sortable: false },
         { text: "Properties", value: "properties", sortable: false },
         { text: "Attributes", value: "attributes", sortable: false },
-        { text: "Created", value: "created_at", sortable: false },
-        // { text: "", value: "actions", sortable: false },
+        { text: "", value: "data-table-expand", sortable: false },
       ],
     };
   },
@@ -316,9 +316,6 @@ export default {
       this.$axios
         .get("user-setting/user", {
           params: {
-            // page: this.pagination.current_page,
-            // per_page: this.per_page,
-            // filter: this.search,
             roles: this.selectedRoles,
           },
         })
@@ -328,7 +325,6 @@ export default {
               this.loading = false;
               this.$store.commit("Loading_State", false);
               this.users = res.data.data;
-              console.log(this.users);
             }, 300);
           }
         })
