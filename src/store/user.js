@@ -89,27 +89,16 @@ const actions = {
                 password: data.password
             })
                 .then(response => {
+                    console.log("Then")
                     resolve(response)
                     const token = (response.data.data.access_token);
                     localStorage.setItem('access_token', token);   // ເກັບ Token ໄວ້ໃນ Localstorage ເພື່ອຈະນຳໄປໃຊ້ຂໍຂໍ້ມູນ
                     window.localStorage.setItem('user', JSON.stringify(response.data.data.user));
                     window.localStorage.setItem('roles', JSON.stringify(response.data.data.user.roles));
                     // window.localStorage.setItem('permissions', JSON.stringify(response.data.data.user.role_permissions));
-
                     context.commit('AdminSignin', token);
                     context.commit('setUserProfile', response.data.data.user);
-                    router.push({ name: 'Dashboard' });
-                    // const userProfile = window.localStorage.getItem('user');
-                    const user_role = window.localStorage.getItem('roles');
-                    const roleUsers = JSON.parse(user_role);
-                    if (roleUsers.includes('super_admin', 'admin')) {
-                        router.push({ name: 'dashboard' });
-                    } else if (roleUsers.includes('finance', 'company')) {
-                        router.push({ name: 'Invoice' })
-                    }
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 300);
+                    // window.location.reload();
                 })
                 .catch(error => {
                     reject(error)
@@ -124,7 +113,25 @@ const actions = {
                             context.commit('Commit_ErrorLogin', '');
                         }, 3000);
                     }
-                })
+                }).finally(response => {
+                    resolve(response)
+                    // console.log("Finally")
+                    // router.push({ name: 'Dashboard' });
+                    // const userProfile = window.localStorage.getItem('user');
+
+                    setTimeout(() => {
+                        const user_role = window.localStorage.getItem('roles');
+                        const roleUsers = JSON.parse(user_role);
+                        if (roleUsers.includes('super_admin', 'admin')) {
+                            router.push({ name: 'dashboard' });
+                        } else if (roleUsers.includes('admin', 'driver')) {
+                            router.push({ name: 'Invoice' })
+                        } else {
+                            router.push({ name: 'Dashboard' });
+                        }
+                        window.location.reload();
+                    }, 300);
+                }).catch(() => { });
         })
     },
 

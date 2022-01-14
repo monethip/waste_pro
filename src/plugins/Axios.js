@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import axios from 'axios';
 import store from '../store';
-// import router from '@/router/index';
+import router from '@/router/index';
 
 // Check Auth && Set Token To Header
 if (store.getters['User/isAuth']) {
@@ -19,19 +19,25 @@ export const normalAxios = axios.create(
     }
 );
 
-// $axios.interceptors.response.use(function (response) {
-//     return response;
-// }, function (error) {
-//     if (error.response.status == 401) {
-//         store.dispatch("User/destroyToken");
-//         router.push({ name: 'Login' })
-//     }
+$axios.interceptors.response.use(function (response) {
+    return response;
+}, function (error) {
+    // console.log(error.response.status)
+    if (error.response.status == 401) {
+        store.dispatch("destroyToken");
+        router.push({ name: 'Login' });
+        localStorage.removeItem('access_token');
+        // localStorage.removeItem('user')
+    }
 
-//     if (error.response.status == 403) {
-//         this.router.push({ name: 'Login' })
-//     }
-//     return Promise.reject(error);
-// });
+    if (error.response.status == 403) {
+        store.dispatch("destroyToken");
+        router.push({ name: 'Login' });
+        localStorage.removeItem('access_token');
+        // localStorage.removeItem('user')
+    }
+    return Promise.reject(error);
+});
 
 Vue.prototype.$axios = $axios;
 Vue.prototype.$http = normalAxios;
