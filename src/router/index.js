@@ -413,7 +413,7 @@ const routes = [
 
   //Plan Calendar Detail
   {
-    path: '/plan-calendar/:id/detail/:driverId',
+    path: '/plan-calendar/:id/detail/:planMonthId',
     name: 'PlanCalendarDetail',
     component: () => import('@/views/calendar/tabindex.vue'),
     meta: {

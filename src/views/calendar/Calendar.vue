@@ -322,7 +322,6 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
           if (error.response.status == 422) {
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
@@ -427,7 +426,6 @@ export default {
           .catch((error) => {
             this.loading = false;
             this.$store.commit("Toast_State", this.toast_error);
-            this.fetchData();
             if (error.response.status == 422) {
               var obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {

@@ -86,21 +86,21 @@ export default {
   },
   methods: {
     backPrevios() {
-      // this.$router.go(-1);
+      this.$router.go(-1);
       // this.$router.push({
       //   name: "PlanCalendar",
       //   params: { id },
       // });
-      this.$router.push({
-        name: "PlanCalendar",
-        params: { id: this.data.plan_month_id },
-      });
+      // this.$router.push({
+      //   name: "PlanCalendar",
+      //   params: { id: this.data.plan_month_id },
+      // });
     },
     fetchDataPlanMonth() {
       this.$axios
         .get(
           "plan-month/" +
-            this.$route.params.driverId +
+            this.$route.params.planMonthId +
             "/plan-calendar/" +
             this.$route.params.id
         )

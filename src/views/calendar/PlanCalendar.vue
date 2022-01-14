@@ -618,11 +618,9 @@ export default {
       GetOldValueOnInput(this);
     },
     gotoPlanCalendar(item) {
-      console.log(item);
       this.$router.push({
         name: "PlanCalendarDetail",
-        // params: { id: item.id },
-        params: { id: item.id, driverId: item.driver_id },
+        params: { id: item.route_plan_id, planMonthId: item.plan_month_id },
       });
     },
     reset() {

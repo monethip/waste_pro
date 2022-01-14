@@ -63,7 +63,6 @@ export default {
                 })
                 .catch((error) => {
                     this.$store.commit("Loading_State", false);
-                    this.fetchData();
                     if (error.response.status == 422) {
                         this.toast.msg = error.message;
                     }
