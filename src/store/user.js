@@ -29,7 +29,6 @@ const getters = {
         } else {
             user_Role = {};
         }
-
         if (Object.keys(state.userRole).length) {
             return state.userRole;
         }
@@ -89,7 +88,6 @@ const actions = {
                 password: data.password
             })
                 .then(response => {
-                    console.log("Then")
                     resolve(response)
                     const token = (response.data.data.access_token);
                     localStorage.setItem('access_token', token);   // ເກັບ Token ໄວ້ໃນ Localstorage ເພື່ອຈະນຳໄປໃຊ້ຂໍຂໍ້ມູນ
@@ -115,19 +113,19 @@ const actions = {
                     }
                 }).finally(response => {
                     resolve(response)
-                    // console.log("Finally")
                     // router.push({ name: 'Dashboard' });
                     // const userProfile = window.localStorage.getItem('user');
-
                     setTimeout(() => {
                         const user_role = window.localStorage.getItem('roles');
                         const roleUsers = JSON.parse(user_role);
                         if (roleUsers.includes('super_admin', 'admin')) {
                             router.push({ name: 'dashboard' });
+                            window.location.reload();
                         } else if (roleUsers.includes('admin', 'driver')) {
                             router.push({ name: 'Invoice' })
                         } else {
                             router.push({ name: 'Dashboard' });
+                            window.location.reload();
                         }
                         window.location.reload();
                     }, 300);

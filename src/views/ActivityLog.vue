@@ -236,13 +236,13 @@ export default {
       singleExpand: false,
       headers: [
         { text: "Log name", value: "log_name" },
-        { text: "Description", value: "description" },
+        { text: "ລາຍລະອຽດ", value: "description" },
         { text: "Model Name", value: "model_name", sortable: false },
         { text: "Subject Type", value: "subject_type", sortable: false },
         { text: "User", value: "user.name", sortable: false },
         { text: "Created", value: "created_at", sortable: false },
-        { text: "Properties", value: "properties", sortable: false },
-        { text: "Attributes", value: "attributes", sortable: false },
+        { text: "ຂໍ້ມູນເກົ່າ", value: "properties", sortable: false },
+        { text: "ຂໍ້ມູນທີ່ອັບເດດ", value: "attributes", sortable: false },
         { text: "", value: "data-table-expand", sortable: false },
       ],
     };
@@ -273,7 +273,6 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
           if (error.response.status == 422) {
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {

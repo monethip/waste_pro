@@ -55,7 +55,7 @@
             <template v-slot:item.roles="{ item }">
               <div>
                 <span v-for="(role, index) in item.roles" :key="index">
-                  <v-chip color="error" class="mr-1 my-1">
+                  <v-chip color="info" label class="mr-1 my-1">
                     {{ role.name }}
                   </v-chip>
                 </span>
@@ -65,16 +65,22 @@
             <template v-slot:item.permissions="{ item }">
               <div>
                 <span v-for="(ps, index) in item.permissions" :key="index">
-                  <v-chip color="success" class="mr-1 my-1">{{
+                  <v-chip color="success" label class="mr-1 my-1">{{
                     ps.name
                   }}</v-chip>
                 </span>
               </div>
             </template>
             <template v-slot:item.status="{ item }">
-              <v-icon small class="mr-2" @click="switchStatus(item.id)">
-                mdi-account-multiple-remove
-              </v-icon>
+              <v-chip
+                label
+                small
+                class="mr-2"
+                @click="changeStatus(item)"
+                :color="statusColor(item.status)"
+              >
+                {{ item.status }}
+              </v-chip>
             </template>
             <template v-slot:item.actions="{ item }">
               <v-menu offset-y>
@@ -156,7 +162,7 @@
       <template @close="close">
         <v-card>
           <v-card-title>
-            <span class="headline">Add User</span>
+            <span class="headline">ເພີ່ມ User</span>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -250,7 +256,7 @@
       <template @close="close" v-slot="">
         <v-card>
           <v-card-title>
-            <span class="headline">Update User</span>
+            <span class="headline">ແກ້ໄຂ User</span>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -359,11 +365,7 @@
           </v-container>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn
-              color="blue darken-1"
-              text
-              @click="changePasswordDialog = false"
-            >
+            <v-btn color="blue darken-1" text @click="closeReset()">
               Close
             </v-btn>
             <v-btn
@@ -380,12 +382,66 @@
       </v-card>
     </v-dialog>
 
+    <!--Change status -->
+    <v-dialog v-model="changeStatusDialog" max-width="720px" persistent>
+      <v-card>
+        <v-card-title>
+          <span class="headline"
+            >ປ່ຽນສະຖານະ
+            <span
+              ><a>{{ edit_user.name }}</a></span
+            ></span
+          >
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-form ref="form" lazy-validation>
+              <v-row>
+                <v-col cols="12">
+                  <v-select
+                    label="Status *"
+                    :items="statuses"
+                    v-model="edit_user.status"
+                    item-text="name"
+                    item-value="name"
+                    required
+                  ></v-select>
+                  <p class="errors">
+                    {{ server_errors.status }}
+                  </p>
+                </v-col>
+              </v-row>
+            </v-form>
+          </v-container>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="blue darken-1"
+              text
+              @click="changeStatusDialog = false"
+            >
+              Close
+            </v-btn>
+            <v-btn
+              color="blue darken-1"
+              text
+              :loading="loading"
+              :disabled="loading"
+              @click="switchStatus"
+            >
+              Change
+            </v-btn>
+          </v-card-actions>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
     <!--Add Role -->
     <v-dialog v-model="roleDialog" max-width="720px" persistent>
       <v-card>
         <v-card-title>
           <span class="headline"
-            >Add Role to
+            >ເພີ່ມ Role to
             <span
               ><a>{{ edit_user.name }}</a></span
             ></span
@@ -644,6 +700,8 @@ export default {
       roleDialog: false,
       updateRoleDialog: false,
       changePasswordDialog: false,
+      changeStatusDialog: false,
+
       selectedRole: "",
       selectedRoles: [],
       roles: [],
@@ -663,6 +721,15 @@ export default {
       // resetPassword
       password: "",
       password_confirmation: "",
+      statuses: [
+        {
+          name: "active",
+        },
+        {
+          name: "inactive",
+        },
+      ],
+      status: "",
 
       //Validation
       emailRules: [
@@ -758,7 +825,6 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
           if (error.response.status == 422) {
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
@@ -788,7 +854,6 @@ export default {
         })
         .catch((error) => {
           this.loading = false;
-          this.fetchData();
           if (error.response.status == 422) {
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
@@ -835,9 +900,10 @@ export default {
     closeAddModal() {
       this.$store.commit("modalAdd_State", false);
     },
-    resetPassword(item) {
-      this.changePasswordDialog = true;
-      this.edit_user = item;
+    closeReset() {
+      this.changePasswordDialog = false;
+      this.password = "";
+      this.password_confirmation = "";
     },
     resetPasswordAcion() {
       if (this.$refs.form.validate() == true) {
@@ -1143,10 +1209,21 @@ export default {
         this.updatePermissionDialog = false;
       }
     },
-    switchStatus(id) {
+
+    resetPassword(item) {
+      this.changePasswordDialog = true;
+      this.edit_user = item;
+    },
+    changeStatus(item) {
+      this.changeStatusDialog = true;
+      this.edit_user = item;
+    },
+    switchStatus() {
       this.loading = true;
       this.$axios
-        .put("user-setting/update-status/" + id, { status: this.status })
+        .put("user-setting/update-status/" + this.edit_user.id, {
+          status: this.edit_user.status,
+        })
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
@@ -1157,6 +1234,7 @@ export default {
                 color: "success",
                 msg: res.data.message,
               });
+              this.changeStatusDialog = false;
             }, 300);
           }
         })
@@ -1169,7 +1247,11 @@ export default {
           });
         });
     },
-
+    statusColor(value) {
+      if (value == "active") return "primary";
+      else if (value == "inactive") return "error";
+      else return "info";
+    },
     reset() {
       this.$refs.form.reset();
     },
@@ -1199,8 +1281,17 @@ export default {
     "edit_user.email": function () {
       this.server_errors.email = "";
     },
-    "edit_user.password": function () {
+    password: function () {
       this.server_errors.password = "";
+    },
+    password_confirmation: function () {
+      this.password_confirmation = "";
+    },
+    "edit_user.roles": function () {
+      this.errormsg = "";
+    },
+    "edit_user.permissions": function () {
+      this.server_errors.permissions = "";
     },
     search: function (value) {
       if (value == "") {

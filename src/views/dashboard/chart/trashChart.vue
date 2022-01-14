@@ -273,7 +273,6 @@ export default {
   },
   created() {
     this.fetchData();
-    // console.log(this.test);
   },
 };
 </script>
