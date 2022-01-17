@@ -100,8 +100,8 @@ import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import invoice from "@views/report/invoice";
 export default {
   mixins: [invoice],
-  // name: "HomeInvoice",
-  props: ["tab"],
+  name: "HomeInvoice",
+  // props: ["tab"],
   title() {
     return `Vientiane Waste Co-Dev|Report Invoice`;
   },
@@ -116,8 +116,6 @@ export default {
       per_page: 15,
       search: "",
       oldVal: "",
-      // invoices: [],
-      // summary: {},
       headers: [
         { text: "ວັນທີ", value: "month", sortable: false },
         { text: "ລູກຄ້າ", value: "full_name" },
@@ -132,52 +130,6 @@ export default {
     };
   },
   methods: {
-    // fetchDataInvoice() {
-    //   this.$store.commit("Loading_State", true);
-    //   this.$axios
-    //     .get("report-invoice", {
-    //       params: {
-    //         page: this.pagination.current_page,
-    //         per_page: this.per_page,
-    //         filter: this.search,
-    //         duration: "year",
-    //         type: "home",
-    //       },
-    //     })
-    //     .then((res) => {
-    //       if (res.data.code == 200) {
-    //         setTimeout(() => {
-    //           this.$store.commit("Loading_State", false);
-    //           this.invoices = res.data.data.details.data;
-    //           this.summary = res.data.data.summary;
-    //           console.log(this.summary);
-    //           console.log(this.invoices);
-    //           this.pagination = res.data.data.pagination;
-    //         }, 300);
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       this.$store.commit("Loading_State", false);
-    //       if (error.response.status == 422) {
-    //         var obj = error.response.data.errors;
-    //         for (let [key, message] of Object.entries(obj)) {
-    //           this.server_errors[key] = message[0];
-    //         }
-    //       }
-    //     });
-    // },
-    // editPage(id) {
-    //   this.$router.push({
-    //     name: "InvoiceDetail",
-    //     params: { id },
-    //   });
-    // },
-    // viewPage(id) {
-    //   this.$router.push({
-    //     name: "InvoiceDetail",
-    //     params: { id },
-    //   });
-    // },
     Search() {
       GetOldValueOnInput(this);
     },
@@ -190,8 +142,6 @@ export default {
     },
   },
   created() {
-    // this.fetchDataInvoice();
-    console.log(this.invoices);
     this.fetchData();
   },
 };

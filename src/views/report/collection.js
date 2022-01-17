@@ -48,19 +48,6 @@ export default {
                 },
             ],
             collectionType: "home",
-
-            // headers: [
-            //     { text: "ວັນທີ", value: "month", sortable: false },
-            //     { text: "ເລກບິນ", value: "user.email", sortable: false },
-            //     { text: "ລູກຄ້າ", value: "full_name" },
-            //     { text: "ຈຳນວນຖົງ", value: "total_bag", sortable: false },
-            //     { text: "ສ່ວນຫຼຸດ", value: "discount" },
-            //     { text: "SubTotal", value: "sub_total", sortable: false },
-            //     { text: "Total", value: "total", sortable: false },
-            //     { text: "ສະຖານະ", value: "status", sortable: false },
-            //     { text: "Type", value: "type", sortable: false },
-            //     { text: "", value: "actions", sortable: false },
-            // ]
         };
     },
     methods: {

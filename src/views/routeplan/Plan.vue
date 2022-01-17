@@ -18,7 +18,12 @@
       </v-col>
       <v-col>
         <v-btn class="btn-primary mr-6" @click="createPlanNomap()"
-          ><v-icon>mdi-plus </v-icon> ເພີ່ມແຜນທີ່ບໍ່ລຽນລຳດັບ
+          ><v-icon>mdi-plus </v-icon> ເພີ່ມແຜນທີ່ເປັນຄົວເຮືອນ
+        </v-btn>
+      </v-col>
+      <v-col>
+        <v-btn class="btn-primary mr-6" @click="createPlanCompany()"
+          ><v-icon>mdi-plus </v-icon> ເພີ່ມແຜນທີ່ເປັນບໍລິສັດ
         </v-btn>
       </v-col>
       <v-col>
@@ -308,9 +313,13 @@ export default {
       });
     },
     createPlanNomap() {
-      console.log("Hii");
       this.$router.push({
         name: "SelectCustomerRoutePlan",
+      });
+    },
+    createPlanCompany() {
+      this.$router.push({
+        name: "SelectCompanyRoutePlan",
       });
     },
 
@@ -325,6 +334,10 @@ export default {
         name: "ViewPlan",
         params: { id },
       });
+      //  this.$router.push({
+      //   name: "ViewCompanyPlan",
+      //   params: { id },
+      // });
     },
     download(url) {
       window.location.href = url;

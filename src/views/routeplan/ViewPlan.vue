@@ -56,6 +56,11 @@
         </v-btn>
       </v-col>
       <v-col>
+        <v-btn class="btn-primary" @click="editCompanyPlan(plan.id)"
+          >Update Plan
+        </v-btn>
+      </v-col>
+      <v-col>
         <h4>ລວມລູກຄ້າ {{ pagination.total }} ຄົນ</h4>
       </v-col>
       <v-col>
@@ -241,6 +246,7 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.plan = res.data.data;
+              console.log(this.plan);
             }, 100);
           }
         })
@@ -286,6 +292,13 @@ export default {
         },
       });
       this.$emit("create-plan", this.customers, this.selectedVillage);
+    },
+    editCompanyPlan(id) {
+      console.log(id);
+      this.$router.push({
+        name: "EditPlanNomap",
+        params: { id },
+      });
     },
 
     viewPage(data) {
@@ -368,6 +381,7 @@ export default {
     this.fetchData();
     this.fetchDetail();
     // this.fetchAddress();
+    console.log(this.plan);
   },
 };
 </script>

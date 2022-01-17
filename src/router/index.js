@@ -360,6 +360,15 @@ const routes = [
     }
   },
   {
+    path: '/company/plan/:id',
+    name: 'ViewCompanyPlan',
+    component: () => import('@/views/routeplan/companyPlan/ViewCompanyPlan.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
     path: '/export/plan',
     name: 'Export-Plan',
     component: () => import('@/views/routeplan/ExportPlan.vue'),
@@ -409,7 +418,37 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
+  {
+    path: '/edit/nomap/plan/:id',
+    name: 'EditPlanNomap',
+    component: () => import('@/views/routeplan/companyPlan/UpdatePlanCompany.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  //Company
+  {
+    path: '/select/company',
+    name: 'SelectCompanyRoutePlan',
+    component: () => import('@/views/routeplan/companyPlan/SelectCompanyToRoute.vue'),
+    props: true,
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
 
+  {
+    path: '/create/route/plan/company',
+    name: 'CreateRoutePlanCompany',
+    component: () => import('@/views/routeplan/companyPlan/CreatePlanCompany.vue'),
+    props: true,
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
 
   //Plan Calendar Detail
   {

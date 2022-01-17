@@ -6,50 +6,50 @@
           <h3>ປີ {{ sum.year }}</h3>
         </v-col>
         <v-col>
-          <p>
+          <p v-if="sum.company">
             ສ້າງບິນ
             <span class="success--text">{{
-              Intl.NumberFormat().format(sum.home.total_created)
+              Intl.NumberFormat().format(sum.company.total_created)
             }}</span>
           </p>
         </v-col>
         <v-col>
-          <p>
+          <p v-if="sum.company">
             ອະນຸມັດ
             <span class="success--text">{{
-              Intl.NumberFormat().format(sum.home.total_approved)
+              Intl.NumberFormat().format(sum.company.total_approved)
             }}</span>
           </p>
         </v-col>
         <v-col>
-          <p>
+          <p v-if="sum.company">
             ຍົກເລີກ
             <span class="success--text">{{
-              Intl.NumberFormat().format(sum.home.total_rejected)
+              Intl.NumberFormat().format(sum.company.total_rejected)
             }}</span>
           </p>
         </v-col>
         <v-col>
-          <p>
+          <p v-if="sum.company">
             ຊຳລະສຳເລັດ
             <span class="success--text">{{
-              Intl.NumberFormat().format(sum.home.total_to_confirm_payment)
+              Intl.NumberFormat().format(sum.company.total_to_confirm_payment)
             }}</span>
           </p>
         </v-col>
         <v-col>
-          <p>
+          <p v-if="sum.company">
             ສຳເລັດທັງໝົດ
             <span class="success--text">{{
-              Intl.NumberFormat().format(sum.home.total_success)
+              Intl.NumberFormat().format(sum.company.total_success)
             }}</span>
           </p>
         </v-col>
         <v-col>
-          <p>
+          <p v-if="sum.company">
             ລວມ
             <span class="success--text">{{
-              Intl.NumberFormat().format(sum.home.sum_total)
+              Intl.NumberFormat().format(sum.company.sum_total)
             }}</span>
           </p>
         </v-col>
@@ -98,10 +98,11 @@
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import invoice from "@views/report/invoice";
+// const invoices = defindePros({invoice});
 export default {
   mixins: [invoice],
   // name: "HomeInvoice",
-  props: ["tab"],
+  // props: ["companyInvoices", "companySummary"],
   title() {
     return `Vientiane Waste Co-Dev|Report Invoice`;
   },
@@ -116,12 +117,21 @@ export default {
       per_page: 15,
       search: "",
       oldVal: "",
-      // invoices: [],
-      // summary: {},
       headers: [
         { text: "ວັນທີ", value: "month", sortable: false },
-        { text: "ລູກຄ້າ", value: "full_name" },
-        { text: "ຈຳນວນຖົງ", value: "total_bag", sortable: false },
+        { text: "ລູກຄ້າ", value: "company_name" },
+        {
+          text: "ຈຳນວນ Container",
+          value: "total_container",
+          sortable: false,
+          align: "center",
+        },
+        {
+          text: "ຈຳນວນຄັ້ງ",
+          value: "total_time",
+          sortable: false,
+          align: "center",
+        },
         { text: "ສ່ວນຫຼຸດ", value: "discount" },
         { text: "SubTotal", value: "sub_total", sortable: false },
         { text: "Total", value: "total", sortable: false },
@@ -132,52 +142,6 @@ export default {
     };
   },
   methods: {
-    // fetchDataInvoice() {
-    //   this.$store.commit("Loading_State", true);
-    //   this.$axios
-    //     .get("report-invoice", {
-    //       params: {
-    //         page: this.pagination.current_page,
-    //         per_page: this.per_page,
-    //         filter: this.search,
-    //         duration: "year",
-    //         type: "home",
-    //       },
-    //     })
-    //     .then((res) => {
-    //       if (res.data.code == 200) {
-    //         setTimeout(() => {
-    //           this.$store.commit("Loading_State", false);
-    //           this.invoices = res.data.data.details.data;
-    //           this.summary = res.data.data.summary;
-    //           console.log(this.summary);
-    //           console.log(this.invoices);
-    //           this.pagination = res.data.data.pagination;
-    //         }, 300);
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       this.$store.commit("Loading_State", false);
-    //       if (error.response.status == 422) {
-    //         var obj = error.response.data.errors;
-    //         for (let [key, message] of Object.entries(obj)) {
-    //           this.server_errors[key] = message[0];
-    //         }
-    //       }
-    //     });
-    // },
-    // editPage(id) {
-    //   this.$router.push({
-    //     name: "InvoiceDetail",
-    //     params: { id },
-    //   });
-    // },
-    // viewPage(id) {
-    //   this.$router.push({
-    //     name: "InvoiceDetail",
-    //     params: { id },
-    //   });
-    // },
     Search() {
       GetOldValueOnInput(this);
     },
@@ -189,11 +153,7 @@ export default {
       }
     },
   },
-  created() {
-    // this.fetchDataInvoice();
-    console.log(this.invoices);
-    this.fetchData();
-  },
+  created() {},
 };
 </script>
 

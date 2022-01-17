@@ -5,6 +5,7 @@ export default {
     },
     data() {
         return {
+            tab: 'tab-1',
             customers: [],
             loading: false,
             customerId: "",
@@ -22,6 +23,8 @@ export default {
             oldVal: "",
             invoices: [],
             summary: {},
+            // companyInvoices: [],
+            // companySummary: {},
             selectedDuration: "year",
             duration: [
                 {
@@ -34,19 +37,6 @@ export default {
                 },
             ],
             invoiceType: "home",
-
-            // headers: [
-            //     { text: "ວັນທີ", value: "month", sortable: false },
-            //     { text: "ເລກບິນ", value: "user.email", sortable: false },
-            //     { text: "ລູກຄ້າ", value: "full_name" },
-            //     { text: "ຈຳນວນຖົງ", value: "total_bag", sortable: false },
-            //     { text: "ສ່ວນຫຼຸດ", value: "discount" },
-            //     { text: "SubTotal", value: "sub_total", sortable: false },
-            //     { text: "Total", value: "total", sortable: false },
-            //     { text: "ສະຖານະ", value: "status", sortable: false },
-            //     { text: "Type", value: "type", sortable: false },
-            //     { text: "", value: "actions", sortable: false },
-            // ]
         };
     },
     methods: {
@@ -83,6 +73,7 @@ export default {
                             this.$store.commit("Loading_State", false);
                             this.invoices = res.data.data.details.data;
                             this.summary = res.data.data.summary;
+                            console.log(this.summary)
                             this.pagination = res.data.data.details.pagination;
                         }, 300);
                     }
@@ -183,13 +174,13 @@ export default {
         tab: function (value) {
             if (value == "tab-1") {
                 this.fetchData();
-                this.invoiceType = "home";
+                this.invoiceType = 'home';
                 this.$router
                     .push({ name: "Report-Invoice", query: { tab: "home" } })
                     .catch(() => { });
             } else if (value == "tab-2") {
                 this.fetchData();
-                this.invoiceType = "company";
+                this.invoiceType = 'company';
                 this.$router
                     .push({
                         name: "Report-Invoice",

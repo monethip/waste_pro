@@ -14,6 +14,7 @@
           item-text="name"
           item-value="duration"
           label="ຊ່ວງເວລາ"
+          @input="fetchData()"
         ></v-select>
       </v-col>
       <v-col v-if="selectedDuration == 'year'">
@@ -115,7 +116,6 @@ export default {
   },
   data() {
     return {
-      tab: null,
       data: {},
     };
   },
