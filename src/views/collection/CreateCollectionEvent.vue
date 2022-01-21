@@ -444,7 +444,6 @@ export default {
     },
     AddData() {
       const dateTime = `${this.date} ${this.time + `:00`}`;
-      console.log(dateTime);
       let formData = new FormData();
       this.image_list.map((item) => {
         formData.append("collect_location[]", item);
@@ -570,7 +569,6 @@ export default {
         address: this.address,
         position: this.latlng,
       });
-      // console.log(this.center);
     },
     onSave() {
       this.$emit("onSave", {

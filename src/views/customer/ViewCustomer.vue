@@ -4,7 +4,7 @@
       <v-btn text class="text-primary" @click="backPrevios()">
         <v-icon>mdi-chevron-left</v-icon></v-btn
       >
-      ລາຍລະອຽດລູກຄ້າ</v-breadcrumbs
+      ລາຍລະອຽດ</v-breadcrumbs
     >
     <v-card>
       <!--
@@ -113,18 +113,19 @@
             </v-col>
           </v-row>
         </v-container>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="blue darken-1"
-            text
-            :loading="loading"
-            :disabled="loading"
-            @click="editPage(data.id)"
-          >
-            Update
-          </v-btn>
-        </v-card-actions>
+<!--        <v-card-actions>-->
+<!--          <v-spacer></v-spacer>-->
+<!--          <v-btn-->
+<!--            color="blue darken-1"-->
+<!--            text-->
+<!--            :loading="loading"-->
+<!--            :disabled="loading"-->
+<!--            @click="editPage(data.id)"-->
+<!--          >-->
+<!--            Update-->
+<!--          </v-btn>-->
+<!--        </v-card-actions>-->
+<!--        ->-->
       </v-card-text>
     </v-card>
   </v-container>

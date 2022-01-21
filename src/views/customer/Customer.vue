@@ -145,6 +145,7 @@
                   <!--Role -->
                   <template v-slot:item.status="{ item }">
                     <v-chip
+                        label
                       :color="statusColor(item.status)"
                       @click="switchStatus(item.id)"
                       >{{ item.status }}</v-chip
@@ -168,7 +169,7 @@
                         <v-list-item link @click="addPackage(item.id)">
                           <v-list-item-title>
                             <v-icon small class="mr-2">mdi-plus</v-icon>
-                            ເພີ່ມແພັກເກດ
+                            ເພີ່ມປະເພດບໍລິການ
                           </v-list-item-title>
                         </v-list-item>
                         <v-list-item link @click="viewPage(item.id)">
@@ -213,7 +214,7 @@
       <template @close="close">
         <v-card>
           <v-card-title>
-            <p>ເພີ່ມແພັກເກດໃຫ້ລູກຄ້າ</p>
+            <p>ເພີ່ມປະເພດບໍລິການໃຫ້ລູກຄ້າ</p>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -375,7 +376,7 @@ export default {
         { text: "ນາມສະກຸນ", value: "surname" },
         { text: "Phone", value: "user.phone", sortable: false },
         { text: "ທີ່ຢູ່", value: "district.name", sortable: false },
-        { text: "ແພັກເກດ", value: "package.name", sortable: false },
+        { text: "ປະເພດບໍລິການ", value: "package.name", sortable: false },
         // { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
         { text: "Profile", value: "media" },
         { text: "ສະຖານະ", value: "status" },
@@ -593,6 +594,7 @@ export default {
       });
     },
     viewPage(id) {
+      console.error((id))
       this.$router.push({
         name: "ViewCustomer",
         params: { id },
@@ -602,7 +604,7 @@ export default {
       GetOldValueOnInput(this);
     },
     statusColor(value) {
-      if (value == "active") return "success";
+      if (value == "active") return "primary";
       else if (value == "inactive") return "error";
       else return "info";
     },

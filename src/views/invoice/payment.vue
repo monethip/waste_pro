@@ -110,40 +110,40 @@
                 </v-row>
                 <v-row>
                   <v-col v-if="imageUrl">
-                    <v-avatar class="avatar rounded" size="194px">
                       <img :src="imageUrl" alt="" />
-                    </v-avatar>
                   </v-col>
                   <p class="errors">
                     {{ server_errors.image }}
                   </p>
                 </v-row>
-                <v-row>
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="bcel_reference_number"
-                      label="ເລກລະຫັດການຊຳລະ"
-                      outlined
-                      dense
-                      type="number"
-                      class="input-number"
-                      :rules="[
-                        () =>
-                          !!bcel_reference_number ||
-                          'BCEL Reference Number field is required',
-                        () =>
-                          (!!bcel_reference_number &&
-                            bcel_reference_number.length == 15) ||
-                          'BCEL Reference Number must be than 15 number',
-                      ]"
-                      counter="15"
-                    >
-                    </v-text-field>
-                  </v-col>
-                  <p class="errors">
-                    {{ server_errors.bcel_reference_number }}
-                  </p>
-                </v-row>
+
+<!--                <v-row>-->
+<!--                  <v-col cols="12">-->
+<!--                    <v-text-field-->
+<!--                      v-model="bcel_reference_number"-->
+<!--                      label="ເລກລະຫັດການຊຳລະ"-->
+<!--                      outlined-->
+<!--                      dense-->
+<!--                      type="number"-->
+<!--                      class="input-number"-->
+<!--                      :rules="[-->
+<!--                        () =>-->
+<!--                          !!bcel_reference_number ||-->
+<!--                          'BCEL Reference Number field is required',-->
+<!--                        () =>-->
+<!--                          (!!bcel_reference_number &&-->
+<!--                            bcel_reference_number.length == 15) ||-->
+<!--                          'BCEL Reference Number must be than 15 number',-->
+<!--                      ]"-->
+<!--                      counter="15"-->
+<!--                    >-->
+<!--                    </v-text-field>-->
+<!--                  </v-col>-->
+<!--                  <p class="errors">-->
+<!--                    {{ server_errors.bcel_reference_number }}-->
+<!--                  </p>-->
+<!--                </v-row>-->
+<!--                -->
               </div>
             </v-form>
           </v-container>
@@ -366,7 +366,7 @@ export default {
       let formData = new FormData();
       formData.append("payment_method", this.payment_method);
       formData.append("image", this.image);
-      formData.append("bcel_reference_number", this.bcel_reference_number);
+      // formData.append("bcel_reference_number", this.bcel_reference_number);
       formData.append("_method", "PUT");
       if (this.$refs.form.validate() == true) {
         this.loading = true;
@@ -460,7 +460,6 @@ export default {
         this.payment_method = "cash";
         this.image = "";
         this.imageUrl = "";
-        this.bcel_reference_number = "";
       } else if (this.paymentType == 1) {
         this.payment_method = "bcel";
       }
@@ -470,9 +469,6 @@ export default {
       if (this.confirmType == 0) {
         this.confirmPayment();
       }
-    },
-    bcel_reference_number: function () {
-      this.server_errors.bcel_reference_number = "";
     },
     image: function () {
       this.server_errors.image = "";

@@ -3,7 +3,7 @@
     <v-row class="mb-n6 text-right">
       <v-col>
         <v-card-title>
-          ຂໍ້ມູນແພັກເກດ
+          ຂໍ້ມູນປະເພດບໍລິການ
           <v-spacer></v-spacer>
           <v-btn color="info" medium @click="OpenModalAdd()"
             ><v-icon color>mdi-plus</v-icon>
@@ -40,7 +40,7 @@
       <template @close="close">
         <v-card>
           <v-card-title>
-            <p>ເພີ່ມແພັກເກດ</p>
+            <p>ເພີ່ມຂໍ້ມູນປະເພດບໍລິການ</p>
             <v-spacer></v-spacer>
           </v-card-title>
           <v-card-text>
@@ -50,7 +50,7 @@
                   <v-col>
                     <v-text-field
                       v-model="addpackage.name"
-                      label="ຊື່ແພັກເກດ *"
+                      label="ຊື່ບໍລິການ *"
                       :rules="nameRules"
                     ></v-text-field>
                     <p class="errors">
@@ -80,7 +80,7 @@
                       :items="packageSize"
                       item-text="size"
                       item-value="id"
-                      label="ເລືອກຂະໜາດແພັກເກດ"
+                      label="ເລືອກຂະໜາດບໍລະການ"
                       dense
                       :rules="ruleSize"
                     ></v-autocomplete>
@@ -116,7 +116,7 @@
       <template @close="close">
         <v-card>
           <v-card-title>
-            <span class="headline">Edit Package</span>
+            <span class="headline">ແກ້ໄຂຂໍ້ມູນບໍລິການ</span>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -125,7 +125,7 @@
                   <v-col>
                     <v-text-field
                       v-model="editPackage.name"
-                      label="ຊື່ແພັກເກດ *"
+                      label="ຊື່ບໍລິການ *"
                       :rules="nameRules"
                     ></v-text-field>
                     <p class="errors">
@@ -155,7 +155,7 @@
                       :items="packageSize"
                       item-text="size"
                       item-value="id"
-                      label="ເລືອກຂະໜາດແພັກເກດ"
+                      label="ເລືອກຂະໜາດປະເພດບໍລິການ"
                       dense
                       :rules="ruleSize"
                     ></v-autocomplete>
@@ -223,8 +223,8 @@ export default {
       per_page: 12,
 
       header: [
-        { text: "ຊື່ແພັກເກດ", value: "name" },
-        { text: "ລາຄາ", value: "price" },
+        { text: "ຊື່ບໍລິການ", value: "name" },
+        { text: "ມູນຄ່າສັນຍາ", value: "price" },
         { text: "ຂະໜາດ", value: "package_size.size", align: "center" },
         { text: "ຈຳນວນຖົງ", value: "package_size.bag", align: "center" },
         { text: "Created", value: "created_at" },
@@ -441,4 +441,3 @@ export default {
 </script>
 <style lang="scss">
 </style>
- 

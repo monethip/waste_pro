@@ -4,7 +4,7 @@
       <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
-      ແກ້ໄຂຂໍ້ມູນບໍລິສັດ</v-breadcrumbs
+      ແກ້ໄຂຂໍ້ມູນຫົວໜ່ວຍທຸລະກິດ</v-breadcrumbs
     >
     <v-card>
       <v-card-text>
@@ -222,12 +222,12 @@
                   v-model="data.cost_by"
                   item-text="value"
                   item-value="value"
-                  label="ປະເພດລາຄາ"
+                  label="ປະເພດບໍລິການ"
                 ></v-select>
               </v-col>
               <v-col v-if="data.cost_by == 'fix_cost'" cols="6">
                 <v-text-field
-                  label="ລາຄາ *"
+                  label="ມູນຄ່າສັນຍາ *"
                   type="number"
                   v-model="data.fix_cost"
                   required
@@ -377,6 +377,7 @@ export default {
       selectedCost: "",
       start_menu: false,
       start_collect: 0,
+      start_month:"",
       costs: [
         {
           id: 1,
@@ -443,6 +444,12 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data;
+              // console.log(this.data)
+              //
+              // this.start_month = this.moment(res.data.data.start_month).format("YYYY-MM-DD");
+              // console.log(res.data.data.start_month)
+              // console.log(this.start_month
+              // );
               this.selectedVillage = res.data.data.village_id;
               res.data.data.village_details.map((item) => {
                 this.village_variation_id.push(item.village_variation_id);
@@ -596,7 +603,6 @@ export default {
               msg: error.response.data.message,
             });
             this.loading = false;
-            this.fetchData();
           });
       }
     },

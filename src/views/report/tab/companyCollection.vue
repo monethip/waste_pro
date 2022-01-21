@@ -63,6 +63,11 @@
         :disable-pagination="true"
         hide-default-footer
       >
+        <template v-slot:item.status="{ item }">
+          <v-chip label :color="statusColor(item.status)">{{
+              item.status
+            }}</v-chip>
+        </template>
         <!--Role --> </v-data-table
       ><br />
       <template>
@@ -119,6 +124,11 @@ export default {
   methods: {
     Search() {
       GetOldValueOnInput(this);
+    },
+    statusColor(value) {
+      if (value == "success") return "success";
+      else if (value == "pending") return "primary";
+      else return "info";
     },
   },
   watch: {

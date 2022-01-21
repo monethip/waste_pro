@@ -14,19 +14,17 @@
             ຂໍ້ມູນພະນັກງານ ({{ pagination.total }})
             <v-divider class="mx-4" vertical></v-divider>
             <v-spacer></v-spacer>
-            <!--
-            <v-select
-              outlined
-              dense
-              :items="statuses"
-              v-model="selectedStatus"
-              item-text="name"
-              item-value="name"
-              label="ສະຖານະ"
-            ></v-select>
+
+              <v-checkbox v-model="has_team_member" class="my-auto">
+                <template v-slot:label>
+                  <div>ມີທີມ</div>
+                </template>
+              </v-checkbox>
             <v-spacer></v-spacer>
-                        -->
+
             <v-text-field
+                outlined
+                dense
               v-model="search"
               clearable
               prepend-inner-icon="mdi-magnify"
@@ -374,7 +372,7 @@ export default {
       oldVal: "",
       vehicle: [],
       selectedVehicle: "",
-      selectedStatus: "",
+      has_team_member: true,
       statuses: [
         {
           id: 1,
@@ -467,6 +465,7 @@ export default {
             page: this.pagination.current_page,
             per_page: this.per_page,
             filter: this.search,
+            has_team_member:this.has_team_member,
           },
         })
         .then((res) => {
@@ -622,6 +621,9 @@ export default {
     },
     "edit_user.phone": function () {
       this.server_errors.phone = "";
+    },
+    "has_team_member":function (){
+      this.fetchData();
     },
     search: function (value) {
       if (value == "") {

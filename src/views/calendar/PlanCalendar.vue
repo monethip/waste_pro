@@ -620,7 +620,7 @@ export default {
     gotoPlanCalendar(item) {
       this.$router.push({
         name: "PlanCalendarDetail",
-        params: { id: item.route_plan_id, planMonthId: item.plan_month_id },
+        params: { id: item.id, planMonthId: item.plan_month_id },
       });
     },
     reset() {

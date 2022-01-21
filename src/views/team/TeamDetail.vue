@@ -19,9 +19,8 @@
           <v-card-title>
             ສະມາຊິກໃນທີມ ({{ data.length }})
             <v-divider class="mx-4" vertical></v-divider>
-            ຜູ້ຂັບລົດ
-            <span class="primary-color" v-if="team.driver"
-              >({{ team.driver.name }})</span
+            ຜູ້ຂັບລົດ <span class="primary-color" v-if="team.driver"
+              > {{ team.driver.name }} ({{ team.driver.vehicle.car_number }})</span
             >
             <v-spacer></v-spacer>
             <v-text-field
@@ -67,7 +66,7 @@
       <template @close="close">
         <v-card>
           <v-card-title>
-            <p>ເພີ່ມທີມ</p>
+            <p>ເພີ່ມພະນັກງານເຂົ້າທີມ</p>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -79,7 +78,7 @@
                       :items="member"
                       item-text="name"
                       item-value="id"
-                      label="ພະນັກງານຂັບລົດ"
+                      label="ພະນັກງານ"
                       dense
                       :rules="driverRules"
                       multiple
@@ -110,67 +109,6 @@
         </v-card>
       </template>
     </ModalAdd>
-
-    <!--Edit Modal-->
-    <ModalEdit>
-      <template @close="close" v-slot="">
-        <v-card>
-          <v-card-title>
-            <p>ແກ້ໄຂທີມ</p>
-          </v-card-title>
-          <v-card-text>
-            <v-container>
-              <v-form ref="form" lazy-validation>
-                <v-row>
-                  <v-col cols="12">
-                    <v-text-field
-                      label="Name *"
-                      required
-                      v-model="edit_user.name"
-                      :rules="teamRules"
-                    ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.name }}
-                    </p>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-autocomplete
-                      v-if="edit_user.driver"
-                      v-model="edit_user.driver.id"
-                      :items="driver"
-                      item-text="name"
-                      item-value="id"
-                      label="ພະນັກງານຂັບລົດ"
-                      dense
-                      :rules="driverRules"
-                      multiple
-                    ></v-autocomplete>
-                    <p class="errors">
-                      {{ server_errors.driver_id }}
-                    </p>
-                  </v-col>
-                </v-row>
-              </v-form>
-            </v-container>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeUpdateModal()">
-                ຍົກເລີກ
-              </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                :loading="loading"
-                :disabled="loading"
-                @click="updateItem()"
-              >
-                ບັນທຶກ
-              </v-btn>
-            </v-card-actions>
-          </v-card-text>
-        </v-card>
-      </template>
-    </ModalEdit>
 
     <!--Delete Modal-->
     <ModalDelete>
@@ -239,6 +177,7 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.member = res.data.data;
+              console.log(this.member)
             }, 300);
           }
         })
@@ -251,6 +190,7 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.team = res.data.data;
+              console.log(this.team)
             }, 300);
           }
         })

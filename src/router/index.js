@@ -125,6 +125,16 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
+  {
+    path: '/company-request/:id/:status',
+    name: 'ViewCompanyRequest',
+    component: () => import('@/views/company/companyRequest/ViewCompanyRequest.vue'),
+    props: true,
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
 
   {
     path: '/create/company',
@@ -546,7 +556,7 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
-  //Report 
+  //Report
   {
     path: '/report/trash',
     name: 'Report-Trash',

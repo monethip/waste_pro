@@ -46,11 +46,17 @@
         :disable-pagination="true"
         hide-default-footer
       >
+<!--        <template v-slot:item.status="{ item }">-->
+<!--          <div>-->
+<!--            <span class="success&#45;&#45;text">{{ item.status }}</span>-->
+<!--          </div>-->
+<!--        </template>-->
         <template v-slot:item.status="{ item }">
-          <div>
-            <span class="success--text">{{ item.status }}</span>
-          </div>
-        </template> </v-data-table
+          <v-chip label :color="statusColor(item.status)">{{
+              item.status
+            }}</v-chip>
+        </template>
+      </v-data-table
       ><br />
       <template>
         <Pagination
@@ -98,6 +104,11 @@ export default {
   methods: {
     Search() {
       GetOldValueOnInput(this);
+    },
+    statusColor(value) {
+      if (value == "success") return "success";
+      else if (value == "pending") return "primary";
+      else return "info";
     },
   },
   watch: {

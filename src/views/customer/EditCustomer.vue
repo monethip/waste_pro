@@ -377,7 +377,6 @@ export default {
               res.data.data.village_details.map((item) => {
                 this.village_variation_id = item.village_variation_id;
                 this.selectedVillageDetail.push(item.id);
-                console.log(this.selectedVillageDetail);
               });
             }, 300);
           }
@@ -464,7 +463,6 @@ export default {
     },
 
     UpdateData() {
-      console.log(this.selectedVillageDetail);
       let formData = new FormData();
       this.image_list.map((item) => {
         formData.append("images[]", item);

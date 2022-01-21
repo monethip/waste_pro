@@ -73,9 +73,9 @@
           </div>
         </template>
         <template v-slot:item.status="{ item }">
-          <div>
-            <span class="success--text">{{ item.status }}</span>
-          </div>
+          <v-chip label :color="statusColor(item.status)">{{
+              item.status
+            }}</v-chip>
         </template>
         <template v-slot:item.created_at="{ item }">
           <div>
@@ -144,6 +144,11 @@ export default {
   methods: {
     Search() {
       GetOldValueOnInput(this);
+    },
+    statusColor(value) {
+      if (value == "success") return "success";
+      else if (value == "pending") return "primary";
+      else return "info";
     },
   },
   watch: {

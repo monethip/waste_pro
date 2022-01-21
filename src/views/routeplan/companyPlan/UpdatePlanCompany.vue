@@ -89,14 +89,12 @@
     <div>
       <v-card>
         <v-card-text>
-          <!--
+
           <div>
             <v-btn text color="primary" @click="addCustomer"
               ><v-icon medium> mdi-plus </v-icon></v-btn
             >
           </div>
-          -->
-
           <main class="page page--table">
             <v-data-table
               :headers="headers"
@@ -136,9 +134,9 @@
                           mdi-eye
                         </v-icon>
                         -->
-                      <v-icon small @click="deleteItem(index)">
-                        mdi-delete
-                      </v-icon>
+<!--                      <v-icon small @click="deleteItem(index)">-->
+<!--                        mdi-delete-->
+<!--                      </v-icon>-->
                     </td>
                   </tr>
                 </draggable>
@@ -422,6 +420,7 @@ export default {
       this.$store.commit("modalDelete_State", false);
     },
     deleteItem(index) {
+      console.log(index)
       this.customerIndex = index;
       // if (this.selectedRows.length > 0) {
       this.$store.commit("modalDelete_State", true);
@@ -452,13 +451,13 @@ export default {
     },
     addItem(item) {
       console.log(item);
-      let data = {};
-      data.customer_id = item.customer_id;
-      data.id = item.id;
-      // data.customer.name = "Name";
-      data.priority = "";
-      console.log(data);
-      this.customers.push(data);
+      // let data = {};
+      // data.customer_id = item.customer_id;
+      // data.id = item.id;
+      // // data.customer.name = "Name";
+      // data.priority = "";
+      // console.log(data);
+      this.customers.push(item);
 
       console.log(this.customers);
       this.addCustomers.splice(item.index, 1);
@@ -475,20 +474,25 @@ export default {
       this.$store.commit("modalAdd_State", false);
     },
     updateRoutePlan() {
-      const selectedCustomer = [];
+      // const selectedCustomer = [];
+      console.log(this.customers)
+      // console.error(this.selectedCustomer)
+      let formData = new FormData();
       this.customers.map((item) => {
-        selectedCustomer.push(item.customer_id);
+        formData.append("customers[]", item.customer_id);
+        console.log(item.customer_id)
       });
+      formData.append("name",this.plan.name);
+      formData.append("_method", "PUT");
       if (this.customers.length > 0) {
         this.loading = true;
         this.$axios
-          .put(
+          .post(
             "update-route-plan/" + this.$route.params.id,
-            {
-              name: this.plan.name,
-              customers: selectedCustomer,
-            },
-            { responseType: "blob" }
+              formData,
+               {
+                headers: { "Content-Type": "multipart/form-data" },
+              }
           )
           .then((res) => {
             if (res.status == 200) {

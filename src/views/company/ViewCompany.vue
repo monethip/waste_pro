@@ -4,7 +4,7 @@
       <v-btn text class="text-primary" @click="backPrevios()">
         <v-icon>mdi-chevron-left</v-icon></v-btn
       >
-      ລາຍລະອຽດບໍລິສັດ</v-breadcrumbs
+      ລາຍລະອຽດ</v-breadcrumbs
     >
     <v-card>
       <!--
@@ -140,7 +140,7 @@
                 <v-icon color="indigo" class="mr-6">mdi-package</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-subtitle>ປະເພດແພັກເກດ</v-list-item-subtitle>
+                <v-list-item-subtitle>ປະເພດບໍລິການ</v-list-item-subtitle>
                 <v-list-item-title>{{ data.cost_by }}</v-list-item-title>
                 <v-list-item-subtitle v-if="data.cost_by == 'fix_cost'">{{
                   Intl.NumberFormat().format(data.fix_cost)
@@ -339,13 +339,11 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data;
-              console.log(this.data);
             }, 300);
           }
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
           if (error.response.status == 422) {
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
@@ -360,7 +358,6 @@ export default {
     },
     deleteItem(data) {
       this.item = data;
-      console.log(this.item);
       this.$store.commit("modalDelete_State", true);
     },
 

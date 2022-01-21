@@ -6,6 +6,70 @@
           ><v-icon>mdi-plus</v-icon>
         </v-btn>
       </v-col>
+      <v-col>
+        <v-menu
+            v-model="start_menu"
+            :close-on-content-click="true"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+                v-model="start_date"
+                label="ເລີ່ມວັນທີ"
+                readonly
+                outlined
+                v-bind="attrs"
+                v-on="on"
+                dense
+            ></v-text-field>
+          </template>
+          <v-date-picker
+              v-model="start_date"
+              @input="fetchData()"
+          ></v-date-picker>
+        </v-menu>
+      </v-col>
+      <v-col>
+        <v-menu
+            v-model="end_menu"
+            :close-on-content-click="true"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+                v-model="end_date"
+                label="ຫາວັນທີ"
+                readonly
+                outlined
+                v-bind="attrs"
+                v-on="on"
+                dense
+            ></v-text-field>
+          </template>
+          <v-date-picker
+              v-model="end_date"
+              @input="fetchData()"
+          ></v-date-picker>
+        </v-menu>
+      </v-col>
+      <v-col>
+        <v-select
+            outlined
+            dense
+            :items="statuses"
+            v-model="selectedStatus"
+            item-text="name"
+            item-value="name"
+            label="ສະຖານະ"
+        ></v-select>
+      </v-col>
+
     </v-row>
     <v-row justify="center">
       <v-col>
@@ -54,6 +118,7 @@
             </template>
             <template v-slot:item.status="{ item }">
               <v-chip
+                  label
                 :color="statusColor(item.status)"
                 @click="switchStatus(item.id)"
                 >{{ item.status }}</v-chip
@@ -427,8 +492,16 @@
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
   name: "User",
+  title() {
+    return `Vientiane Waste Co-Dev|${this.title}`;
+  },
   data() {
     return {
+      title: "Driver",
+      start_date: "",
+      end_date: "",
+      start_menu: false,
+      end_menu: false,
       headers: [
         { text: "ຊື່", value: "name" },
         { text: "ນາມສະກຸນ", value: "surname" },
@@ -436,6 +509,7 @@ export default {
         { text: "ເບີໂທ", value: "user.phone", sortable: false },
         { text: "Email", value: "user.email", sortable: false },
         { text: "Status", value: "status", sortable: false },
+        { text: "Team", value: "team.name", sortable: false },
         { text: "Profile", value: "media", sortable: false },
         { text: "", value: "actions", sortable: false },
       ],
@@ -588,6 +662,9 @@ export default {
             page: this.pagination.current_page,
             per_page: this.per_page,
             // filter: this.search,
+            date_from: this.start_date,
+            date_end: this.end_date,
+            // statuses: this.selectedStatus,
             status: this.selectedStatus,
           },
         })
@@ -747,8 +824,9 @@ export default {
     },
     statusColor(value) {
       if (value == "active") {
-        return "success";
+        return "primary";
       } else if (value == "inactive") return "error";
+      else return  "info"
     },
 
     reset() {

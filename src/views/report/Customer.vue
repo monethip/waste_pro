@@ -103,7 +103,7 @@
           dense
           clearable
           prepend-inner-icon="mdi-magnify"
-          label="ຊື່ລູກຄ້າ"
+          label="Search"
           type="text"
           v-model="search"
           @keyup.enter="Search()"
@@ -138,7 +138,7 @@
               </template>
 
               <template v-slot:item.status="{ item }">
-                <v-chip :color="statusColor(item.status)">{{
+                <v-chip label :color="statusColor(item.status)">{{
                   item.status
                 }}</v-chip>
               </template>
@@ -228,8 +228,8 @@ export default {
         { text: "ນາມສະກຸນ", value: "surname" },
         { text: "Phone", value: "user.phone", sortable: false },
         { text: "ວັນທີ", value: "district.name", sortable: false },
-        { text: "ແພັກເກດ", value: "package.name" },
-        { text: "ວັນທີສະໝັກແພັກເກດ", value: "start_month", sortable: false },
+        { text: "ປະເພດບໍລິການ", value: "package.name" },
+        { text: "ວັນທີສະໝັກ", value: "start_month", sortable: false },
         { text: "ສະຖານະ", value: "status", sortable: false },
         { text: "", value: "actions", sortable: false },
       ],
@@ -269,7 +269,7 @@ export default {
               this.start_menu = false;
               this.end_menu = false;
             }, 300);
-            this.fetchAddress();
+            // this.fetchAddress();
           }
         })
         .catch((error) => {
@@ -324,7 +324,7 @@ export default {
       GetOldValueOnInput(this);
     },
     statusColor(value) {
-      if (value == "active") return "success";
+      if (value == "active") return "primary";
       else if (value == "inactive") return "error";
       else return "info";
     },
@@ -384,6 +384,7 @@ export default {
   },
   created() {
     this.fetchData();
+    this.fetchAddress();
   },
 };
 </script>

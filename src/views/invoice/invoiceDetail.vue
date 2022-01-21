@@ -85,9 +85,6 @@
                 ວັນທິຊຳລະ: {{ moment(invoice.updated_at).format("DD-MM-YY") }}
               </h3>
               <h3>ປະເພດຊຳລະ: {{ invoice.payment_method }}</h3>
-              <h3 v-if="invoice.bcel_reference_number">
-                ເລກໄອດີການຊຳລະ: {{ invoice.bcel_reference_number }}
-              </h3>
             </v-col>
             <v-col v-if="invoice.media">
               <div v-for="(item, index) in invoice.media" :key="index">
@@ -95,8 +92,6 @@
                   aspect-ratio="1"
                   class="grey"
                   :src="item.url"
-                  max-height="720"
-                  max-width="720"
                 >
                 </v-img>
               </div>

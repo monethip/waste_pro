@@ -7,6 +7,9 @@
       <template v-slot:item.coordinator="{ item }">
         <div>{{ item.coordinator_name }} {{ item.coordinator_surname }}</div>
       </template>
+      <template v-slot:item.status="{ item }">
+        <v-chip color="primary" label>{{ item.status }}</v-chip>
+      </template>
 
       <template v-slot:item.action="{ item }">
         <v-menu offset-y>
@@ -22,6 +25,12 @@
             >
           </template>
           <v-list>
+            <v-list-item link @click="viewPage(item)">
+              <v-list-item-title>
+                <v-icon small class="mr-2"> mdi-eye </v-icon>
+                ລາຍລະອຽດ
+              </v-list-item-title>
+            </v-list-item>
             <v-list-item link @click="makeSuccess(item)">
               <v-list-item-title>
                 <v-icon small class="mr-2"> mdi-pencil </v-icon>
@@ -85,10 +94,8 @@ export default {
         { text: "Phone", value: "phone" },
         { text: "Email", value: "email" },
         { text: "ຜູ້ຮັບຜິດຊອບ", value: "coordinator" },
-        { text: "ປະເພດ", value: "type" },
-        { text: "Container", value: "container_amount" },
-        { text: "Description", value: "description" },
-        // { text: "Status", value: "status" },
+        { text: "Status", value: "status" },
+        { text: "Image", value: "image" },
         { text: "Created", value: "created_at" },
         { text: "", value: "action" },
       ],
@@ -179,6 +186,12 @@ export default {
           this.loading = false;
         });
     },
+    viewPage(item){
+      this.$router.push({
+        name: "ViewCompanyRequest",
+        params: { id:item.id ,status:item.status},
+      });
+    },
   },
   watch: {},
   created() {
@@ -188,4 +201,3 @@ export default {
 </script>
 <style lang="scss">
 </style>
- 

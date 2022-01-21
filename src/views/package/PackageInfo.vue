@@ -3,9 +3,9 @@
     <div>
       <v-card>
         <v-tabs v-model="tab" dark background-color="tab-color lighten-2">
-          <v-tab href="#tab-1">Package</v-tab>
-          <v-tab href="#tab-2">size</v-tab>
-          <v-tab href="#tab-3">Price</v-tab>
+          <v-tab href="#tab-1">ປະເພດສັນຍາ</v-tab>
+          <v-tab href="#tab-2">ຂະໜາດ</v-tab>
+          <v-tab href="#tab-3">ມຸນຄ່າສັນຍາ</v-tab>
         </v-tabs>
         <v-tabs-items v-model="tab">
           <v-tab-item value="tab-1">

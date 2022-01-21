@@ -115,7 +115,7 @@
               </template>
 
               <template v-slot:item.status="{ item }">
-                <v-chip :color="statusColor(item.status)">{{
+                <v-chip label :color="statusColor(item.status)">{{
                   item.status
                 }}</v-chip>
               </template>
@@ -257,7 +257,7 @@ export default {
       GetOldValueOnInput(this);
     },
     statusColor(value) {
-      if (value == "active") return "success";
+      if (value == "active") return "primary";
       else if (value == "inactive") return "error";
       else return "info";
     },

@@ -4,7 +4,7 @@
       <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
-      ເພີ່ມຂໍ້ມູນບໍລິສັດ</v-breadcrumbs
+      ເພີ່ມຂໍ້ມູນຫົວໜ່ວຍທຸລະກິດ</v-breadcrumbs
     >
     <v-card>
       <v-card-text class="px-12">
@@ -253,12 +253,12 @@
                 v-model="selectedCost"
                 item-text="value"
                 item-value="value"
-                label="ປະເພດລາຄາ"
+                label="ປະເພດບໍລິການ"
               ></v-select>
             </v-col>
             <v-col v-if="selectedCost == 'fix_cost'" cols="6">
               <v-text-field
-                label="ລາຄາ *"
+                label="ມູນຄ່າສັນຍາ *"
                 type="number"
                 v-model="data.fix_cost"
                 required

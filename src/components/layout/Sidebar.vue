@@ -220,7 +220,7 @@ export default {
             },
             {
               icon: "mdi-package",
-              title: "ຈັດການແພັກເກດ",
+              title: "ຈັດການຂໍ້ມູນບໍລິການ",
               to: "package",
               permissions: ["get_package", "get_customer"],
             },
@@ -301,7 +301,7 @@ export default {
             },
             {
               icon: "mdi-office-building",
-              title: "ລູກຄ້າບໍລິສັດ",
+              title: "ລູກຄ້າຫົວໜ່ວຍທຸລະກິດ",
               to: "/company",
               permissions: ["get_customer"],
             },

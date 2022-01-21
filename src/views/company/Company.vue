@@ -99,7 +99,7 @@
     <div>
       <v-card>
         <v-card-title>
-          ຂໍ້ມູນລູກຄ້າທີ່ເປັນບໍລິສັດ ({{ pagination.total }})
+          ຂໍ້ມູນຫົວໜ່ວຍທຸລະກິດ ({{ pagination.total }})
           <v-divider class="mx-4" vertical></v-divider>
           <v-spacer></v-spacer>
           <v-text-field
@@ -139,9 +139,16 @@
                 <div v-if="index == 0">{{ data.name }} {{ data.surname }}</div>
               </div>
             </template>
-            <!--Role -->
+
             <template v-slot:item.cost_by="{ item }">
               <div>{{ item.cost_by }}</div>
+            </template>
+
+            <template v-slot:item.status="{ item }">
+              <v-chip label
+                  :color="statusColor(item.user.status)"
+              >{{ item.user.status }}</v-chip
+              >
             </template>
 
             <template v-slot:item.actions="{ item }">
@@ -284,7 +291,7 @@
     </ModalDelete>
   </v-container>
 </template>
- 
+
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
@@ -347,7 +354,8 @@ export default {
         { text: "ບ້ານ", value: "village.name", sortable: false },
         { text: "ເມືອງ", value: "district.name", sortable: false },
         // { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
-        { text: "ແພັກເກດ", value: "cost_by" },
+        { text: "ປະເພດບໍລິການ", value: "cost_by" },
+        { text: "ປະເພດບໍລິການ", value: "status" },
         { text: "Image", value: "media" },
         { text: "", value: "actions", sortable: false },
       ],
@@ -364,7 +372,7 @@ export default {
             filter: this.search,
             villages: this.selectedVillage,
             date_from: this.start_date,
-            date_end: this.start_date,
+            date_end: this.end_date,
             statuses: this.selectedStatus,
           },
         })
@@ -500,6 +508,9 @@ export default {
           });
       }
     },
+    reset() {
+      this.$refs.form.reset();
+    },
 
     createPage() {
       this.$router.push({
@@ -522,7 +533,7 @@ export default {
       GetOldValueOnInput(this);
     },
     statusColor(value) {
-      if (value == "active") return "success";
+      if (value == "active") return "primary";
       else if (value == "inactive") return "error";
       else return "info";
     },

@@ -104,8 +104,12 @@
                 <td>{{ user.discount }}</td>
                 <td>{{ user.total }}</td>
                 <td>{{ user.sub_total }}</td>
-                <td>{{ user.collect_status }}</td>
-                <td>{{ user.payment_status }}</td>
+                <td>
+                 <v-chip label color="primary"> {{ user.collect_status }}</v-chip>
+                </td>
+                <td>
+                  <v-chip label color="success">{{ user.payment_status }}</v-chip>
+                </td>
                 <td>
                   <v-avatar
                     size="36px"
@@ -469,7 +473,7 @@
     -->
   </v-container>
 </template>
- 
+
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
