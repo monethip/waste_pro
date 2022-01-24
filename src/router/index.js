@@ -314,18 +314,29 @@ const routes = [
 
   //Plan
   {
-    path: '/create/plan',
-    name: 'CreatePlan',
-    component: () => import('@/views/routeplan/CreatePlan.vue'),
+    path: '/routeplan',
+    name: 'RoutePlan',
+    component: () => import('@/views/routePlan/tabindex.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
     }
   },
+
+  {
+    path: '/create/plan',
+    name: 'CreatePlan',
+    component: () => import('@/views/routePlan/CreatePlan.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+
   {
     path: '/edit/plan/:id',
     name: 'EditPlan',
-    component: () => import('@/views/routeplan/EditPlan.vue'),
+    component: () => import('@/views/routePlan/EditPlan.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
@@ -334,7 +345,7 @@ const routes = [
   {
     path: '/create/export/plan',
     name: 'CreateExportPlan',
-    component: () => import('@/views/routeplan/CreateExportPlan.vue'),
+    component: () => import('@/views/routePlan/tabs/home/CreateExportPlan.vue'),
     props: true,
     meta: {
       layout: "admin",
@@ -344,7 +355,7 @@ const routes = [
   {
     path: '/create/export/company/plan',
     name: 'CreateExportPlanCompany',
-    component: () => import('@/views/routeplan/CreateExportPlanCompany.vue'),
+    component: () => import('@/views/routePlan/tabs/company/CreateExportPlanCompany.vue'),
     props: true,
     meta: {
       layout: "admin",
@@ -354,7 +365,7 @@ const routes = [
   {
     path: '/plan',
     name: 'Plan',
-    component: () => import('@/views/routeplan/Plan.vue'),
+    component: () => import('@/views/routePlan/tabindex.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
@@ -363,7 +374,7 @@ const routes = [
   {
     path: '/plan/:id',
     name: 'ViewPlan',
-    component: () => import('@/views/routeplan/ViewPlan.vue'),
+    component: () => import('@/views/routePlan/tabs/home/ViewPlan.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
@@ -371,8 +382,8 @@ const routes = [
   },
   {
     path: '/company/plan/:id',
-    name: 'ViewCompanyPlan',
-    component: () => import('@/views/routeplan/companyPlan/ViewCompanyPlan.vue'),
+    name: 'ViewCompanyRoutePlan',
+    component: () => import('@/views/routePlan/tabs/company/ViewPlanCompany.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
@@ -381,7 +392,7 @@ const routes = [
   {
     path: '/export/plan',
     name: 'Export-Plan',
-    component: () => import('@/views/routeplan/ExportPlan.vue'),
+    component: () => import('@/views/routePlan/tabs/home/ExportPlan.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
@@ -390,7 +401,7 @@ const routes = [
   {
     path: '/export/company/plan',
     name: 'Export-Plan-Company',
-    component: () => import('@/views/routeplan/ExportPlanCompany.vue'),
+    component: () => import('@/views/routePlan/tabs/company/ExportPlanCompany.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
@@ -405,12 +416,32 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
+    //Home
+  {
+    path: '/select/home',
+    name: 'SelectHomeRoutePlan',
+    component: () => import('@/views/routePlan/tabs/home/SelectHomeToRoute.vue'),
+    props: true,
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/edit/home/no-map/plan/:id',
+    name: 'EditHomeRoutePlanNoMap',
+    component: () => import('@/views/routePlan/tabs/home/UpdateRoutePlanHome.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
 
   //Plan no map
   {
     path: '/select/customer',
     name: 'SelectCustomerRoutePlan',
-    component: () => import('@/views/routeplan/SelecCustomerToRoute.vue'),
+    component: () => import('@/views/routePlan/tabs/company/SelecCustomerToRoute.vue'),
     props: true,
     meta: {
       layout: "admin",
@@ -421,7 +452,7 @@ const routes = [
   {
     path: '/create/route/plan',
     name: 'CreateRoutePlan',
-    component: () => import('@/views/routeplan/CreatePlanNomap.vue'),
+    component: () => import('@/views/routePlan/tabs/company/CreateRouteNoMap.vue'),
     props: true,
     meta: {
       layout: "admin",
@@ -429,9 +460,9 @@ const routes = [
     }
   },
   {
-    path: '/edit/nomap/plan/:id',
-    name: 'EditPlanNomap',
-    component: () => import('@/views/routeplan/companyPlan/UpdatePlanCompany.vue'),
+    path: '/edit/company/no-map/plan/:id',
+    name: 'EditPlanNoMap',
+    component: () => import('@/views/routePlan/companyPlan/UpdatePlanCompany.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
@@ -441,7 +472,7 @@ const routes = [
   {
     path: '/select/company',
     name: 'SelectCompanyRoutePlan',
-    component: () => import('@/views/routeplan/companyPlan/SelectCompanyToRoute.vue'),
+    component: () => import('@/views/routePlan/companyPlan/SelectCompanyToRoute.vue'),
     props: true,
     meta: {
       layout: "admin",
@@ -452,7 +483,7 @@ const routes = [
   {
     path: '/create/route/plan/company',
     name: 'CreateRoutePlanCompany',
-    component: () => import('@/views/routeplan/companyPlan/CreatePlanCompany.vue'),
+    component: () => import('@/views/routePlan/companyPlan/CreatePlanCompany.vue'),
     props: true,
     meta: {
       layout: "admin",
