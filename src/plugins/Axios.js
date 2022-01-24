@@ -21,7 +21,8 @@ export const normalAxios = axios.create(
 
 $axios.interceptors.response.use(function (response) {
     return response;
-}, function (error) {
+},
+    function (error) {
     // console.log(error.response.status)
     if (error.response.status == 401) {
         store.dispatch("destroyToken");

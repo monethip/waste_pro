@@ -304,6 +304,7 @@ export default {
       selectedCustomer: [],
       exclude_customers: [],
       selectedRows: [],
+      newCustomer:[],
 
       //Filter
       districts: [],
@@ -457,10 +458,12 @@ export default {
       // // data.customer.name = "Name";
       // data.priority = "";
       // console.log(data);
-      this.customers.push(item);
-
+      this.customers.unshift(item);
+       // this.newCustomer.unshift(item);
+       // console.log(this.newCustomer)
       console.log(this.customers);
       this.addCustomers.splice(item.index, 1);
+
       // for (var i = 0; i < this.selectedRows.length; i++) {
       //   const index = this.customers.indexOf(this.selectedRows[i]);
       //   this.selectedCustomer.push(this.customers[index]);

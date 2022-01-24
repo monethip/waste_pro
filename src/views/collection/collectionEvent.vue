@@ -140,7 +140,7 @@
                           ລາຍລະອຽດ
                         </v-list-item-title>
                       </v-list-item>
-                      <v-list-item link @click="editPage(user)">
+                      <v-list-item link @click="editPage(user.id)">
                         <v-list-item-title>
                           <v-icon small class="mr-2"> mdi-pencil </v-icon>
                           ແກ້ໄຂ
@@ -644,6 +644,7 @@ export default {
       });
     },
     editPage(id) {
+      console.log(id)
       this.$router.push({
         name: "EditCollectionEvent",
         params: { id },
