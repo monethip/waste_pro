@@ -189,7 +189,8 @@
                     -->
             </v-list>
           </v-menu>
-        </template> </v-data-table
+        </template>
+      </v-data-table
       ><br />
       <template>
         <Pagination

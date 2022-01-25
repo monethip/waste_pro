@@ -23,10 +23,29 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
+    //auth
   {
     path: '/login',
     name: 'Login',
-    component: () => import('@/views/Login.vue'),
+    component: () => import('@/views/auth/Login.vue'),
+    meta: {
+      layout: "none",
+      middleware: [Middlewares.guest],
+    }
+  },
+  {
+    path: '/login/check-phone',
+    name: 'CheckPhone',
+    component: () => import('@/views/auth/CheckPhone.vue'),
+    meta: {
+      layout: "none",
+      middleware: [Middlewares.guest],
+    }
+  },
+  {
+    path: '/login/verify-code',
+    name: 'VerifyCode',
+    component: () => import('@/views/auth/VerifyCode.vue'),
     meta: {
       layout: "none",
       middleware: [Middlewares.guest],

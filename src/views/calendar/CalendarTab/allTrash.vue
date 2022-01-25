@@ -54,14 +54,20 @@
             {{ item.route_plan_detail.customer.surname }}
           </div>
         </template>
-
-        <!--
-            <template v-slot:item.start_month="{ item }">
-              {{ item.route_plan_detail.customer.start_month }}
-            </template>
- -->
+        <template v-slot:item.created_at="{ item }">
+          <div
+          >
+            {{ moment(item.created_at).format("hh:mm:ss DD-MM-YY") }}
+          </div>
+        </template>
+        <template v-slot:item.updated_at="{ item }">
+          <div
+          >
+            {{ moment(item.updated_at).format("hh:mm:ss DD-MM-YY") }}
+          </div>
+        </template>
         <template v-slot:item.status="{ item }">
-          <v-chip :color="statusColor(item.status)">{{ item.status }}</v-chip>
+          <v-chip label :color="statusColor(item.status)">{{ item.status }}</v-chip>
         </template>
         <template v-slot:item.amount="{ item }">
           <div v-if="item.collection_type == 'bag'">
@@ -127,6 +133,18 @@ export default {
         {
           text: "ສະຖານະ",
           value: "status",
+          align: "center",
+          sortable: false,
+        },
+        {
+          text: "Created",
+          value: "created_at",
+          align: "center",
+          sortable: false,
+        },
+        {
+          text: "Updated",
+          value: "updated_at",
           align: "center",
           sortable: false,
         },

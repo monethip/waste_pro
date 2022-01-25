@@ -38,6 +38,12 @@
                 >mdi-map-marker-path</v-icon
               >
             </template>
+            <template v-slot:item.created_at="{ item }">
+              <div
+              >
+                {{ moment(item.created_at).format("hh:mm:ss DD-MM-YY") }}
+              </div>
+            </template>
             <template v-slot:item.actions="{ item }">
               <v-icon small class="mr-2" @click="editModal(item)">
                 mdi-pencil
@@ -269,7 +275,7 @@ export default {
 
       headers: [
         { text: "ຊື່", value: "name" },
-        { text: "ວັນທີ", value: "month" },
+        { text: "ວັນທີເລີ່ມ", value: "month" },
         {
           text: "ຈຳນວນຮອບ",
           value: "plan_calendars_count",
@@ -281,6 +287,12 @@ export default {
           value: "plan",
           sortable: false,
           align: "center",
+        },
+        {
+          text: "Created",
+          value: "created_at",
+          align: "center",
+          sortable: false,
         },
         { text: "", value: "actions", sortable: false },
       ],

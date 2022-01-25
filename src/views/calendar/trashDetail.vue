@@ -207,6 +207,7 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.detail = res.data.data;
+              console.log(this.detail)
             }, 100);
           }
         })

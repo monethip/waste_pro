@@ -48,22 +48,67 @@
             <template v-slot:item.date="{ item }">
               <v-chip color="success">{{ item.date }}</v-chip>
             </template>
-            <template v-slot:item.detail="{ item }">
-              <v-icon small class="mr-2" @click="gotoPlanCalendar(item)"
-                >mdi-eye</v-icon
+            <template v-slot:item.created_at="{ item }">
+              <div
               >
+                {{ moment(item.created_at).format("hh:mm:ss DD-MM-YY") }}
+              </div>
             </template>
+<!--            <template v-slot:item.detail="{ item }">-->
+<!--              <v-icon small class="mr-2" @click="gotoPlanCalendar(item)"-->
+<!--                >mdi-eye</v-icon-->
+<!--              >-->
+<!--            </template>-->
+<!--            <template v-slot:item.actions="{ item }">-->
+<!--              <v-icon small class="mr-2" @click="editModal(item)">-->
+<!--                mdi-pencil-->
+<!--              </v-icon>-->
+<!--              <v-icon small @click="deleteItem(item.id)"> mdi-delete </v-icon>-->
+<!--            </template>-->
+<!--            <template v-slot:item.plan="{ item }">-->
+<!--              <v-icon small class="mr-2" @click="editModal(item)">-->
+<!--                mdi-pencil-->
+<!--              </v-icon>-->
+<!--            </template>-->
+
+
             <template v-slot:item.actions="{ item }">
-              <v-icon small class="mr-2" @click="editModal(item)">
-                mdi-pencil
-              </v-icon>
-              <v-icon small @click="deleteItem(item.id)"> mdi-delete </v-icon>
+              <v-menu offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon
+                      color="primary"
+                      dark
+                      v-bind="attrs"
+                      v-on="on"
+                      medium
+                      class="mr-2"
+                  >mdi-dots-vertical</v-icon
+                  >
+                </template>
+                <v-list>
+                  <v-list-item link>
+                    <v-list-item-title @click="gotoPlanCalendar(item)">
+                      <v-icon small class="mr-2"> mdi-eye </v-icon>
+                      ລາຍລະອຽດ
+                    </v-list-item-title>
+                  </v-list-item>
+                  <v-list-item link>
+                    <v-list-item-title @click="editModal(item)">
+                      <v-icon small class="mr-2"> mdi-pencil </v-icon>
+                      ແກ້ໄຂຂໍ້ມູນ
+                    </v-list-item-title>
+                  </v-list-item>
+                  <v-list-item link>
+                    <v-list-item-title @click="deleteItem(item.id)">
+                      <v-icon small class="mr-2"> mdi-delete </v-icon>
+                      ລຶບຂໍ່ມູນ
+                    </v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
             </template>
-            <template v-slot:item.plan="{ item }">
-              <v-icon small class="mr-2" @click="editModal(item)">
-                mdi-pencil
-              </v-icon>
-            </template> </v-data-table
+
+          </v-data-table
           ><br />
           <template>
             <Pagination
@@ -365,9 +410,15 @@ export default {
           align: "center",
           sortable: false,
         },
+        // {
+        //   text: "ລາຍລະອຽດ",
+        //   value: "detail",
+        //   align: "center",
+        //   sortable: false,
+        // },
         {
-          text: "ລາຍລະອຽດ",
-          value: "detail",
+          text: "Created",
+          value: "created_at",
           align: "center",
           sortable: false,
         },
