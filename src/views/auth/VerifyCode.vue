@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row align="center" justify="center">
-      <v-col cols="6" sm="8" md="6">
+      <v-col cols="12" sm="12" md="12">
         <v-card class="elevation-1" max-width="600">
           <v-card-text class="py-16 px-16">
             <v-row justify="center">
@@ -11,25 +11,23 @@
                   max-height="150"
                   max-width="250"
                   alt="Logo"
+                  style="margin:auto"
                 ></v-img>
               </v-col>
             </v-row>
-            <h2 class="text-center display-5 black--text mb-8 mt-4">
-              Verify Code
+            <h2 class="text-center display-5 black--text mb-0 mt-4">
+              Verify Code OTP
             </h2>
+            <p class="text-center display-5 black--text mb-8 mt-0">Input Code from  SMS</p>
             <v-form ref="form" lazy-validation>
-              <v-otp-input
+              <vue-otp-2
+                  ref="otpInput2"
                   length="6"
-              ></v-otp-input>
-<!--              <v-text-field-->
-<!--                v-model="users.credential"-->
-<!--                label="OTP"-->
-<!--                single-line-->
-<!--                prepend-inner-icon="mdi-email"-->
-<!--                solo-->
-<!--                type="text"-->
-<!--                :rules="credentialRules"-->
-<!--              ></v-text-field>-->
+                  inputmode="numeric"
+                  @onChange="onChange"
+                  @onComplete="onComplete"
+                  class="vue-otp-2"
+              />
               <p class="errors">
                 {{ errors }}
               </p>
@@ -40,7 +38,7 @@
                   :loading="loading"
                   :disabled="loading"
                   @click="SubmitLogin"
-                  >Verify</v-btn
+                  >Confirm</v-btn
                 >
               </div>
             </v-form>
@@ -112,6 +110,18 @@ export default {
           });
       }
     },
+    onChange(){
+      console.log("onChange")
+    },
+    onComplete(value){
+      this.isStepTwo = true;
+      console.log(value)
+    },
+    goStepThree(){
+      if(this.isStepTwo){
+        this.stepValue = 3;
+      }
+    }
   },
   computed: {
     ...mapGetters({
@@ -133,5 +143,36 @@ export default {
   > .v-input__slot {
   box-shadow: 0px -2px 0px -10px rgb(0 0 0 / 20%),
     0px 2px 3px 0px rgb(0 0 0 / 14%), 1px 1px 2px 1px rgb(0 0 0 / 12%) !important;
+}
+.vue-otp-2 {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 80px !important;
+
+  div {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    input {
+      max-width: 48px !important;
+      padding: 11.5px 8px;
+      font-size: 20px;
+      border-radius: 3px;
+      border: 1px solid $primary-color !important;
+      text-align: center;
+    }
+
+    span {
+      display: block;
+      flex: 1;
+      text-align: center;
+    }
+  }
+}
+
+.v-stepper__content{
+  padding: 8px 8px;
 }
 </style>

@@ -1,11 +1,11 @@
 <template>
   <v-container>
     <v-row align="center" justify="center">
-      <v-col cols="6" sm="8" md="6">
+      <v-col cols="12" sm="12" md="12">
         <v-card class="elevation-1" max-width="600">
           <v-card-text class="py-16 px-16">
             <v-row justify="center">
-              <v-col justify="center" align="center">
+              <v-col justify="center">
                 <v-img
                   src="@/assets/logo-finalized.png"
                   max-height="150"
@@ -14,9 +14,9 @@
                 ></v-img>
               </v-col>
             </v-row>
-            <h2 class="text-center display-5 black--text mb-8 mt-4">
+            <h3 class="text-center display-5 black--text mb-8 mt-4">
               Login to Vientaine Waste Pro
-            </h2>
+            </h3>
             <v-form ref="form" lazy-validation>
               <v-text-field
                 v-model="users.credential"

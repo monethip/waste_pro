@@ -7,7 +7,7 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col>
+        <v-col cols="12" md="6" sm="12">
           <v-card elevation="1">
             <v-card-text>
               <v-row>
@@ -43,7 +43,7 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col>
+        <v-col cols="12" md="6" sm="12">
           <v-card elevation="1">
             <v-card-text>
               <v-row>
@@ -75,7 +75,7 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col>
+        <v-col cols="12" md="6" sm="12">
           <v-card elevation="1">
             <v-card-text>
               <v-row>
@@ -111,7 +111,7 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col>
+        <v-col cols="12" md="6" sm="12">
           <v-card elevation="1">
             <v-card-text>
               <v-row>
@@ -146,7 +146,7 @@
       </v-row>
 
       <v-row>
-        <v-col>
+        <v-col cols="12" md="6" sm="12">
           <v-row>
             <v-col>
               <v-card elevation="1">
@@ -210,7 +210,7 @@
           </v-row>
         </v-col>
 
-        <v-col>
+        <v-col cols="12" md="6" sm="12">
           <v-row>
             <v-col>
               <v-card elevation="1">

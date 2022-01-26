@@ -11,6 +11,7 @@ import can from '@/Helpers/Can'
 import mixin from '@/Helpers/Mixin'
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
+import VueOtp2 from 'vue-otp-2';
 //Plugin
 import VueApexCharts from 'vue-apexcharts';
 
@@ -35,6 +36,7 @@ Vue.component('ModalEdit', ModalEdit);
 Vue.component('ModalView', ModalView);
 Vue.component('ModalDelete', ModalDelete);
 Vue.component('Pagination', Pagination);
+Vue.use(VueOtp2)
 Vue.prototype.moment = moment;
 Vue.use(VueApexCharts)
 Vue.component('apexchart', VueApexCharts);

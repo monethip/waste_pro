@@ -165,86 +165,181 @@
             <span class="headline">ເພີ່ມ User</span>
           </v-card-title>
           <v-card-text>
-            <v-container>
-              <v-form ref="form" lazy-validation>
-                <v-row>
-                  <v-col cols="12">
-                    <v-text-field
-                      label="Name *"
-                      required
-                      v-model="user.name"
-                      :rules="nameRules"
-                    ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.name }}
-                    </p>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      label="ເບີໂທ *"
-                      required
-                      v-model="user.phone"
-                      :rules="phoneRules"
-                      type="number"
-                      class="input-number"
-                    ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.phone }}
-                    </p>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      label="Email *"
-                      required
-                      v-model="user.email"
-                      :rules="emailRules"
-                    ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.email }}
-                    </p>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      label="Password *"
-                      type="password"
-                      v-model="user.password"
-                      :rules="passwordRules"
-                      required
-                    ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.password }}
-                    </p>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      label="Password Confirm *"
-                      type="password"
-                      v-model="user.password_confirmation"
-                      :rules="passwordConfirmRules"
-                      required
-                      @keyup.enter="AddItem"
-                    ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.password_confirmation }}
-                    </p>
-                  </v-col>
-                </v-row>
-              </v-form>
-            </v-container>
+
+            <v-stepper v-model="stepValue">
+              <v-stepper-header>
+                <v-stepper-step
+                    :complete="stepValue > 1"
+                    step="1"
+                >
+                  Phone Number
+                </v-stepper-step>
+
+                <v-divider></v-divider>
+
+                <v-stepper-step
+                    :complete="stepValue > 2"
+                    step="2"
+                >
+                  Verify Code
+                </v-stepper-step>
+
+                <v-divider></v-divider>
+
+                <v-stepper-step step="3">
+                  User Info
+                </v-stepper-step>
+              </v-stepper-header>
+              <v-stepper-items>
+                <v-stepper-content step="1">
+
+          <v-row>
+            <v-col cols="12">
+              <v-text-field
+                  label="ເບີໂທ *"
+                  required
+                  v-model="user.phone"
+                  :rules="phoneRules"
+                  type="number"
+                  class="input-number"
+              ></v-text-field>
+              <p class="errors">
+                {{ server_errors.phone }}
+              </p>
+            </v-col>
+          </v-row>
+
+                  <v-btn
+                      color="primary"
+                      @click="stepValue = 2"
+                  >
+                    Continue
+                  </v-btn>
+                </v-stepper-content>
+
+                <v-stepper-content step="2">
+                  <v-row>
+                    <v-col cols="12">
+                      <vue-otp-2
+                          ref="otpInput2"
+                          length="6"
+                          inputmode="numeric"
+                          @onChange="onChange"
+                          @onComplete="onComplete"
+                          class="vue-otp-2"
+                      />
+
+                    </v-col>
+                  </v-row>
+
+                  <v-btn
+                      color="primary"
+                      @click="goStepThree"
+                  >
+                    Continue
+                  </v-btn>
+                </v-stepper-content>
+
+                <v-stepper-content step="3">
+                  <v-container>
+                    <v-form ref="form" lazy-validation>
+                      <v-row>
+                        <v-col cols="12">
+                          <v-text-field
+                              label="Name *"
+                              required
+                              v-model="user.name"
+                              :rules="nameRules"
+                          ></v-text-field>
+                          <p class="errors">
+                            {{ server_errors.name }}
+                          </p>
+                        </v-col>
+                        <v-col cols="12">
+                          <v-text-field
+                              label="ເບີໂທ *"
+                              required
+                              v-model="user.phone"
+                              :rules="phoneRules"
+                              type="number"
+                              class="input-number"
+                          ></v-text-field>
+                          <p class="errors">
+                            {{ server_errors.phone }}
+                          </p>
+                        </v-col>
+                        <v-col cols="12">
+                          <v-text-field
+                              label="Email *"
+                              required
+                              v-model="user.email"
+                              :rules="emailRules"
+                          ></v-text-field>
+                          <p class="errors">
+                            {{ server_errors.email }}
+                          </p>
+                        </v-col>
+                        <v-col cols="12">
+                          <v-text-field
+                              label="Password *"
+                              type="password"
+                              v-model="user.password"
+                              :rules="passwordRules"
+                              required
+                          ></v-text-field>
+                          <p class="errors">
+                            {{ server_errors.password }}
+                          </p>
+                        </v-col>
+                        <v-col cols="12">
+                          <v-text-field
+                              label="Password Confirm *"
+                              type="password"
+                              v-model="user.password_confirmation"
+                              :rules="passwordConfirmRules"
+                              required
+                              @keyup.enter="AddItem"
+                          ></v-text-field>
+                          <p class="errors">
+                            {{ server_errors.password_confirmation }}
+                          </p>
+                        </v-col>
+                      </v-row>
+                    </v-form>
+                  </v-container>
+
+<!--                  <v-btn-->
+<!--                      color="primary"-->
+<!--                      @click="e1 = 1"-->
+<!--                  >-->
+<!--                    Continue-->
+<!--                  </v-btn>-->
+                  <v-btn
+                      color="primary"
+                      :loading="loading"
+                      :disabled="loading"
+                      @click="AddItem()"
+                  >
+                    Save
+                  </v-btn>
+                </v-stepper-content>
+              </v-stepper-items>
+            </v-stepper>
+
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="closeAddModal()">
                 Close
               </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                :loading="loading"
-                :disabled="loading"
-                @click="AddItem()"
-              >
-                Save
-              </v-btn>
+<!--              <v-btn-->
+<!--                color="blue darken-1"-->
+<!--                text-->
+<!--                :loading="loading"-->
+<!--                :disabled="loading"-->
+<!--                @click="AddItem()"-->
+<!--              >-->
+<!--                Save-->
+<!--              </v-btn>-->
             </v-card-actions>
           </v-card-text>
         </v-card>
@@ -678,6 +773,9 @@ export default {
   name: "User",
   data() {
     return {
+      stepValue: 1,
+      otp:"",
+      isStepTwo:false,
       headers: [
         { text: "User Name", value: "name" },
         { text: "Phone", value: "phone", sortable: false },
@@ -794,7 +892,7 @@ export default {
             });
             this.fetchData();
             if (error.response.status == 422) {
-              var obj = error.response.data.errors;
+              let obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
               }
@@ -826,7 +924,7 @@ export default {
         .catch((error) => {
           this.$store.commit("Loading_State", false);
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
+            let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
@@ -835,7 +933,7 @@ export default {
     },
     fetchRole() {
       //Role
-      var roles = [];
+      let roles = [];
       this.$axios
         .get("user-setting/role")
         .then((res) => {
@@ -855,7 +953,7 @@ export default {
         .catch((error) => {
           this.loading = false;
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
+            let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
@@ -863,7 +961,7 @@ export default {
         });
     },
     fetchPermission() {
-      var permissions = [];
+      let permissions = [];
       //Permission
       this.$axios
         .get("user-setting/permission")
@@ -889,7 +987,7 @@ export default {
             msg: error.response.data.message,
           });
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
+            let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
@@ -899,6 +997,7 @@ export default {
 
     closeAddModal() {
       this.$store.commit("modalAdd_State", false);
+      this.stepValue = 1;
     },
     closeReset() {
       this.changePasswordDialog = false;
@@ -1258,6 +1357,20 @@ export default {
     Search() {
       GetOldValueOnInput(this);
     },
+
+    onChange(){
+      console.log("onChange")
+    },
+    onComplete(value){
+      this.isStepTwo = true;
+      console.log(value)
+    },
+    goStepThree(){
+      if(this.isStepTwo){
+        this.stepValue = 3;
+      }
+    }
+
   },
   watch: {
     "user.name": function () {
@@ -1308,4 +1421,37 @@ export default {
 
 <style lang="scss">
 @import "../../../public/scss/main.scss";
+.vue-otp-2 {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 22px !important;
+  margin-right: 22px !important;
+  margin-bottom: 18px !important;
+
+  div {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    input {
+      max-width: 48px !important;
+      padding: 11.5px 8px;
+      font-size: 20px;
+      border-radius: 3px;
+      border: 1px solid $primary-color !important;
+      text-align: center;
+    }
+
+    span {
+      display: block;
+      flex: 1;
+      text-align: center;
+    }
+  }
+}
+
+.v-stepper__content{
+  padding: 8px 8px;
+}
 </style>
