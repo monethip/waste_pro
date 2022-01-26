@@ -341,7 +341,7 @@
             </v-col>
           </v-row>
 
-          <!-- Gogle map-->
+          <!-- Google map-->
           <v-row>
             <v-col cols="6">
               <v-text-field
@@ -584,10 +584,6 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.village_details = res.data.data.village_variations;
-              // console.log(this.village_details);
-              // res.data.data.map((item) => {
-              //   this.units = item.village_details;
-              // });
             }, 100);
           }
         })
@@ -824,6 +820,9 @@ export default {
     "data.password_confirmation": function () {
       this.server_errors.password = "";
     },
+    "selectedCost": function (){
+      console.log(this.selectedCost)
+    }
   },
   mounted() {
     this.geolocate();

@@ -89,12 +89,11 @@
     <div>
       <v-card>
         <v-card-text>
-
-          <div class="mb-2">
-            <v-btn text color="primary" @click="addCustomer"
-              ><v-icon medium> mdi-plus </v-icon></v-btn
-            >
-          </div>
+<!--          <div class="mb-2" justify-end>-->
+<!--            <v-btn text color="primary" @click="addCustomer" justify-end-->
+<!--              ><v-icon medium> mdi-plus </v-icon></v-btn-->
+<!--            >-->
+<!--          </div>-->
          <v-row>
            <v-col>
              <h4>ລູກຄ້າທີ່ມີຢູ່</h4>
@@ -151,7 +150,19 @@
                vertical
            ></v-divider>
            <v-col>
-             <h4>ລູກຄ້າທີ່ເພີ່ມເຂົ້າໃໝ່</h4>
+              <v-row class="mb-n8">
+                <v-col>
+                  <div class="mb-2">
+                    <v-btn text color="primary" @click="addCustomer"
+                    ><v-icon medium> mdi-plus </v-icon></v-btn
+                    >
+                  </div>
+                </v-col>
+                <v-spacer></v-spacer>
+                <v-col>
+                  <h4>ລູກຄ້າທີ່ເພີ່ມເຂົ້າໃໝ່</h4>
+                </v-col>
+              </v-row>
              <main class="page page--table">
                <v-data-table
                    :headers="newHeaders"
@@ -271,7 +282,7 @@
                       <td>{{ user.village.name }}</td>
                       <td>{{ user.district.name }}</td>
                       <td>
-                        <v-icon small @click="addItem(user)"> mdi-plus </v-icon>
+                        <v-icon small @click="addItem(addCustomers,user)"> mdi-plus </v-icon>
                       </td>
                     </tr>
                   </draggable>
@@ -536,37 +547,22 @@ export default {
       this.loading = false;
       this.$store.commit("modalDelete_State", false);
     },
-    addItem(data) {
-       if(this.newCustomer.length > 0){
-         this.newCustomer.map(item =>{
-           if(data.id != item.id){
-             setTimeout( ()=>{
-               this.newCustomer.push(data);
-               this.addCustomers.splice(data.index, 1);
-             },300)
-           }
-         })
-       } else {
-         setTimeout( ()=>{
-           this.newCustomer.push(data);
-           this.addCustomers.splice(data.index, 1);
-         },300)
-       }
-      // if(this.newCustomer.indexOf(item) === -1) {
-      //   setTimeout( ()=>{
-      //     this.newCustomer.push(item);
-      //     this.addCustomers.splice(item.index, 1);
-      //   },300)
-      // }
-
+    addItem(array,data) {
+      let newId = data.id;
+      let found = false;
+      for (let i = 0; i < array.length; i++) {
+        if (array[i].id === newId) {
+          array[i] = data;
+          found = true;
+        }
+      }
+      if (found) this.newCustomer.push(data);
+      this.addCustomers.splice(data.index, 1);
     },
     closeAddModal() {
       this.$store.commit("modalAdd_State", false);
     },
     updateRoutePlan() {
-      // const selectedCustomer = [];
-      // console.log(this.customers)
-      // console.error(this.selectedCustomer)
       const oldId = this.customers.map((item) =>
           {
             return item.customer_id;
@@ -648,7 +644,6 @@ export default {
               this.addCustomers = res.data.data.data;
               // this.selectedAllCustomer = res.data.data;
               this.pagination = res.data.data.pagination;
-              console.log(this.addCustomers);
               // this.getCenter();
             }, 100);
           }
@@ -672,7 +667,6 @@ export default {
               this.address = res.data.data;
               this.address.map((item) => {
                 this.districts = item.districts;
-                // console.log(this.districts);
               });
             }, 300);
           }
@@ -789,19 +783,6 @@ export default {
       }
     },
 
-    rowClicked(row) {
-      this.toggleSelection(row.id);
-      console.log(row);
-    },
-    toggleSelection(keyID) {
-      if (this.selectedRows.includes(keyID)) {
-        this.selectedRows = this.selectedRows.filter(
-          (selectedKeyID) => selectedKeyID !== keyID
-        );
-      } else {
-        this.selectedRows.push(keyID);
-      }
-    },
   },
   watch: {
     search: function (value) {

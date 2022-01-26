@@ -90,11 +90,11 @@
       <v-card>
         <v-card-text>
 
-          <div class="mb-2">
-            <v-btn text color="primary" @click="addCustomer"
-              ><v-icon medium> mdi-plus </v-icon></v-btn
-            >
-          </div>
+<!--          <div class="mb-2">-->
+<!--            <v-btn text color="primary" @click="addCustomer"-->
+<!--              ><v-icon medium> mdi-plus </v-icon></v-btn-->
+<!--            >-->
+<!--          </div>-->
          <v-row>
            <v-col>
              <h4>ລູກຄ້າທີ່ມີຢູ່</h4>
@@ -148,7 +148,19 @@
                vertical
            ></v-divider>
            <v-col>
-             <h4>ລູກຄ້າທີ່ເພີ່ມເຂົ້າໃໝ່</h4>
+             <v-row class="mb-n8">
+               <v-col>
+                 <div class="mb-2">
+                   <v-btn text color="primary" @click="addCustomer"
+                   ><v-icon medium> mdi-plus </v-icon></v-btn
+                   >
+                 </div>
+               </v-col>
+               <v-spacer></v-spacer>
+               <v-col>
+                 <h4>ລູກຄ້າທີ່ເພີ່ມເຂົ້າໃໝ່</h4>
+               </v-col>
+             </v-row>
              <main class="page page--table">
                <v-data-table
                    :headers="newHeaders"
@@ -278,7 +290,7 @@
                       <td>{{ user.village.name }}</td>
                       <td>{{ user.district.name }}</td>
                       <td>
-                        <v-icon small @click="addItem(user)"> mdi-plus </v-icon>
+                        <v-icon small @click="addItem(addCustomers,user)"> mdi-plus </v-icon>
                       </td>
                     </tr>
                   </draggable>
@@ -434,7 +446,7 @@ export default {
     orderCustomer(evt){
       const oldIndex = evt.moved.oldIndex;
       const newIndex = evt.moved.newIndex;
-      var tmpOrder = this.newCustomer[oldIndex];
+      let tmpOrder = this.newCustomer[oldIndex];
       this.newCustomer.splice(oldIndex, 1);
       this.newCustomer.splice(newIndex, 0, tmpOrder);
     },
@@ -543,36 +555,22 @@ export default {
       this.loading = false;
       this.$store.commit("modalDelete_State", false);
     },
-    addItem(data) {
-    // setTimeout(()=>{
-    //   this.newCustomer.push(item);
-    //   this.addCustomers.splice(item.index, 1);
-    //   },300)
-
-      if(this.newCustomer.length > 0){
-        this.newCustomer.map(item =>{
-          if(data.id != item.id){
-            setTimeout( ()=>{
-              this.newCustomer.push(data);
-              this.addCustomers.splice(data.index, 1);
-            },300)
-          }
-        })
-      } else {
-        setTimeout( ()=>{
-          this.newCustomer.push(data);
-          this.addCustomers.splice(data.index, 1);
-        },300)
+    addItem(array,data) {
+      let newId = data.id;
+      let found = false;
+      for (let i = 0; i < array.length; i++) {
+        if (array[i].id === newId) {
+          array[i] = data;
+          found = true;
+        }
       }
-
+      if (found) this.newCustomer.push(data);
+      this.addCustomers.splice(data.index, 1);
     },
     closeAddModal() {
       this.$store.commit("modalAdd_State", false);
     },
     updateRoutePlan() {
-      // const selectedCustomer = [];
-      // console.log(this.customers)
-      // console.error(this.selectedCustomer)
       const oldId = this.customers.map((item) =>
           {
             return item.customer_id;
@@ -792,20 +790,6 @@ export default {
       } else {
         this.infoOpened = true;
         this.infoCurrentKey = key;
-      }
-    },
-
-    rowClicked(row) {
-      this.toggleSelection(row.id);
-      console.log(row);
-    },
-    toggleSelection(keyID) {
-      if (this.selectedRows.includes(keyID)) {
-        this.selectedRows = this.selectedRows.filter(
-          (selectedKeyID) => selectedKeyID !== keyID
-        );
-      } else {
-        this.selectedRows.push(keyID);
       }
     },
   },

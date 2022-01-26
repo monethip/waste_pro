@@ -33,13 +33,13 @@
           >
             <!--   <template v-slot:item.created_at="{ item }">
               {{ moment(item.create_at).format("DD-MM-YYYY") }}
-             
+
             </template>-->
             <!--Permission -->
             <template v-slot:item.permissions="{ item }">
               <div>
                 <span v-for="(ps, index) in item.permissions" :key="index">
-                  <v-chip color="success" class="mr-1 my-1">{{
+                  <v-chip label color="success" class="mr-1 my-1">{{
                     ps.name
                   }}</v-chip>
                 </span>
