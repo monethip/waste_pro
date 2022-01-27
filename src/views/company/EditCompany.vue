@@ -11,7 +11,7 @@
         <v-container>
           <v-form ref="form" lazy-validation>
             <v-row>
-              <v-col align="center">
+              <v-col>
                 <div class="field">
                   <div class="file is-large is-boxed">
                     <label class="file-label">
@@ -592,7 +592,7 @@ export default {
           })
           .catch((error) => {
             if (error.response.status == 422) {
-              var obj = error.response.data.errors;
+              let obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
               }
@@ -699,7 +699,7 @@ export default {
         this.village_variation_id.includes(id)
       );
       result.map((item) => {
-        for (var i = 0; i < item.village_details.length; i++) {
+        for (let i = 0; i < item.village_details.length; i++) {
           this.units.push(item.village_details[i]);
         }
       });
@@ -791,7 +791,6 @@ export default {
     this.fetchAddress();
     this.fetchData();
     this.fetchUnit();
-    console.log(this.village_variation_id);
   },
 };
 </script>

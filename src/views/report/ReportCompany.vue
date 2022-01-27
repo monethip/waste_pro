@@ -113,7 +113,7 @@
     </v-row>
     <v-row class="my-n4">
       <v-col>
-        <p class="text">ລວມຄົວເຮືອນ {{ pagination.total }}</p>
+        <p class="text">ລວມຫົວໜ່ວຍທຸລະກິດ {{ pagination.total }} </p>
       </v-col>
     </v-row>
     <div>
@@ -136,11 +136,21 @@
                   <img v-if="img.thumb" :src="img.thumb" />
                 </v-avatar>
               </template>
-
+              <template v-slot:item.created_at="{ item }">
+                <div>
+                  {{ moment(item.created_at).format("DD-MM-YY") }}
+                </div>
+              </template>
+<!--              <template v-slot:item.status="{ item }">-->
+<!--                <v-chip label :color="statusColor(item.status)">{{-->
+<!--                  item.status-->
+<!--                }}</v-chip>-->
+<!--              </template>-->
               <template v-slot:item.status="{ item }">
-                <v-chip label :color="statusColor(item.status)">{{
-                  item.status
-                }}</v-chip>
+                <v-chip label
+                        :color="statusColor(item.user.status)"
+                >{{ item.user.status }}</v-chip
+                >
               </template>
               <!--Role -->
               <template v-slot:item.roles="{ item }">
@@ -224,12 +234,12 @@ export default {
       ],
 
       headers: [
-        { text: "ຊື່", value: "name" },
-        { text: "ນາມສະກຸນ", value: "surname" },
+        { text: "ຊື່", value: "company_name" },
         { text: "Phone", value: "user.phone", sortable: false },
         { text: "ທີ່ຢູ່", value: "district.name", sortable: false },
-        { text: "ປະເພດບໍລິການ", value: "package.name" },
-        { text: "ວັນທີສະໝັກ", value: "start_month", sortable: false },
+        { text: "ປະເພດບໍລິການ", value: "cost_by" },
+        { text: "ເລີ່ມບໍລິການ", value: "start_month", sortable: false },
+        { text: "Created", value: "created_at", sortable: false },
         { text: "ສະຖານະ", value: "status", sortable: false },
         { text: "", value: "actions", sortable: false },
       ],
@@ -249,7 +259,7 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("customer", {
+        .get("company", {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
@@ -316,7 +326,7 @@ export default {
 
     viewPage(id) {
       this.$router.push({
-        name: "ViewClient",
+        name: "ViewCompanyDetail",
         params: { id },
       });
     },

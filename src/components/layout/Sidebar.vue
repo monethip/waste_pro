@@ -393,6 +393,12 @@ export default {
               to: "/report/customer",
               permissions: ["get_customer"],
             },
+            {
+              icon: "mdi-chart-bar",
+              title: "ລາຍງານຫົວໜ່ວຍທຸລະກິດ",
+              to: "/report/company",
+              permissions: ["get_customer"],
+            },
           ],
         },
       ],

@@ -276,6 +276,15 @@ const routes = [
     }
   },
   {
+    path: '/view/client/:id',
+    name: 'ViewClient',
+    component: () => import('@/views/report/CustomerDetail.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
     path: '/village',
     name: 'Village',
     component: () => import('../views/village/VillageMange.vue'),
@@ -626,9 +635,27 @@ const routes = [
     }
   },
   {
+    path: '/report/company',
+    name: 'Report-Company',
+    component: () => import('@/views/report/ReportCompany.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
     path: '/report/driver',
     name: 'Report-Driver',
     component: () => import('@/views/report/ReportDriver.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/view/company/:id',
+    name: 'ViewCompanyDetail',
+    component: () => import('@/views/report/CompanyDetail.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
