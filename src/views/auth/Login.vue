@@ -2,7 +2,8 @@
   <v-container>
     <v-row align="center" justify="center">
       <v-col cols="12" sm="12" md="12">
-        <v-card class="elevation-1" max-width="600">
+        <v-card class="elevation-1" max-width="600" style="    display: flex;
+    margin: auto;">
           <v-card-text class="py-16 px-16">
             <v-row justify="center">
               <v-col justify="center">
@@ -19,7 +20,7 @@
             </h3>
             <v-form ref="form" lazy-validation>
               <v-text-field
-                v-model="users.credential"
+                v-model="user.credential"
                 label="User name"
                 single-line
                 prepend-inner-icon="mdi-email"
@@ -28,15 +29,15 @@
                 :rules="credentialRules"
               ></v-text-field>
               <v-text-field
-                v-model="users.password"
+                v-model="user.password"
                 :rules="passwordRules"
                 solo
                 label="ລະຫັດຜ່ານ"
                 prepend-inner-icon="mdi-lock"
-                :type="show1 ? 'text' : 'password'"
-                :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                @click:append="show1 = !show1"
-                @keyup.enter="SubmitLogin"
+                :type="show ? 'text' : 'password'"
+                :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:append="show = !show"
+                @keyup.enter="submitLogin"
               ></v-text-field>
               <p class="errors">
                 {{ errors }}
@@ -47,7 +48,7 @@
                   class="login mt-6 py-6"
                   :loading="loading"
                   :disabled="loading"
-                  @click="SubmitLogin"
+                  @click="submitLogin"
                   >Login</v-btn
                 >
               </div>
@@ -60,7 +61,9 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
+import User from '@/store/models/User'
+
 export default {
   name: "Login",
   title() {
@@ -69,16 +72,15 @@ export default {
   data() {
     return {
       loading: false,
-      show1: false,
-      users: {},
-
+      show: false,
+      // user: {},
       credentialRules: [(v) => !!v || "User name required"],
       passwordRules: [
         (v) => !!v || "Password is required",
         (v) =>
           (v && v.length >= 8) || "Password must be more than 8 characters",
       ],
-
+      user:new User(),
       toast: {
         value: true,
         color: "success",
@@ -93,39 +95,31 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      AdminLogin: "User/LoginUser",
-    }),
-    // Submit() {
-    //   if (this.$refs.form.validate() == true) {
-    //     this.AdminSignIn();
-    //   }
-    // },
-    SubmitLogin() {
-      if (this.$refs.form.validate() == true) {
+    async submitLogin(){
+      // console.log(this.user)
+      if (this.$refs.form.validate() === true) {
         this.loading = true;
-        this.AdminLogin(this.users)
-          .then(() => {
-            setTimeout(() => {
-              // window.location.reload();
-              this.loading = false;
-              this.$store.commit("Toast_State", this.toast);
-            }, 300);
-          })
-          .catch(() => {
-            setTimeout(() => {
-              this.loading = false;
-              this.$store.commit("Toast_State", this.toast_error);
-            }, 300);
-          });
+        try {
+          console.log('Loading ...')
+          const response = await this.$store.dispatch('auth/login',this.user);
+          console.log('response',response);
+        }catch (error){
+          console.log("error")
+          this.$store.commit("Toast_State", this.toast_error);
+        }finally{
+          this.loading = false;
+        }
       }
-    },
+    }
   },
   computed: {
     ...mapGetters({
       errors: "User/ShowMsgErrors",
     }),
   },
+  created() {
+    console.log(this.errors)
+  }
 };
 </script>
 

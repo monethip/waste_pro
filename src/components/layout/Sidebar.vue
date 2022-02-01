@@ -426,7 +426,8 @@ export default {
       Logout: "User/destroyToken",
     }),
     userLogout() {
-      this.Logout();
+      console.log("logoooo")
+      this.$store.dispatch('auth/destroyToken');
     },
     fetchData() {
       this.$store.commit("Loading_State", true);

@@ -2,7 +2,8 @@
   <v-container>
     <v-row align="center" justify="center">
       <v-col cols="12" sm="12" md="12">
-        <v-card class="elevation-1" max-width="600">
+        <v-card class="elevation-1" max-width="600" style="    display: flex;
+    margin: auto;">
           <v-card-text class="py-16 px-16">
             <v-row justify="center">
               <v-col justify="center">
@@ -37,7 +38,7 @@
                   class="login mt-6 py-6"
                   :loading="loading"
                   :disabled="loading"
-                  @click="SubmitLogin"
+                  @click="verifyOtp"
                   >Confirm</v-btn
                 >
               </div>
@@ -110,6 +111,42 @@ export default {
           });
       }
     },
+
+
+
+    verifyOtp() {
+      this.loading = true;
+      if (this.phone.length != 8 || this.code.length != 6) {
+        this.$notification.InvalidPhone(
+            "top-right",
+            "danger",
+            9000
+        );
+      } else {
+        let code = this.code;
+        window.confirmationResult
+            .confirm(code)
+            .then((res) => {
+              if (res) {
+                this.$store.commit("RegisterRunner/setPhone", res.user._lat);
+                this.$emit("nexStepRegister")
+              }
+              this.loading = false;
+            })
+            .catch(function (error) {
+              // User couldn't sign in (bad verification code?)
+              // ...
+              this.$notification.InvalidPhone(
+                  "top-right",
+                  "success",
+                  9000
+              );
+              console.log(error);
+            });
+      }
+    },
+
+
     onChange(){
       console.log("onChange")
     },

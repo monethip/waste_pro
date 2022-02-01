@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import User from './user';
+import auth from '@/store/modules/auth'
+import User from '@/store/user'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     isLogged: false,
-    username: "Monethip",
-
+    phone: "",
     modalAddState: false,
     modalEditState: false,
     modalDeleteState: false,
@@ -37,6 +37,8 @@ export default new Vuex.Store({
       state.modalDeleteState = value;
     },
     Toast_State(state, result) {
+      console.log(result);
+      console.log("Toast")
       state.notificationToastState = result.value;
       state.message = result.msg;
       state.color = result.color;
@@ -48,6 +50,7 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
-    User,
+    auth:auth(),
+    User
   }
 })
