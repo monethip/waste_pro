@@ -2,9 +2,11 @@
   <v-container>
     <v-breadcrumbs large class="pt-0">
       <v-btn text class="text-primary" @click="backPrevios()">
-        <v-icon>mdi-chevron-left</v-icon></v-btn
+        <v-icon>mdi-chevron-left</v-icon>
+      </v-btn
       >
-      ລາຍລະອຽດ</v-breadcrumbs
+      ລາຍລະອຽດ
+    </v-breadcrumbs
     >
     <v-card>
       <!--
@@ -23,145 +25,211 @@
       </v-carousel>
 
       <v-card-text>
-                <v-tabs v-model="tab" background-color="#49A3DA"
-                        dark>
-                  <v-tab href="#tab-1"> ຂໍ້ມູນກ່ຽວກັບ </v-tab>
-                  <v-tab href="#tab-2"> ຂໍ້ມູນການບໍລິການ</v-tab>
-                  <v-tab href="#tab-3"> ຂໍ້ມູນການຊຳລະ</v-tab>
-                </v-tabs>
-                <!-- <hr /> -->
-                <v-tabs-items v-model="tab">
-                  <v-tab-item value="tab-1">
-<!--                    <HomeInvoice :tab="tab" />-->
-                  <v-container>
+        <v-tabs v-model="tab" background-color="#49A3DA"
+                dark>
+          <v-tab href="#tab-1"> ຂໍ້ມູນກ່ຽວກັບ</v-tab>
+          <v-tab href="#tab-2"> ຂໍ້ມູນການບໍລິການ</v-tab>
+          <v-tab href="#tab-3"> ຂໍ້ມູນການຊຳລະ</v-tab>
+        </v-tabs>
+        <!-- <hr /> -->
+        <v-tabs-items v-model="tab">
+          <v-tab-item value="tab-1">
+            <!--                    <HomeInvoice :tab="tab" />-->
+            <v-container>
 
-                    <v-row>
-                      <v-list-item>
-                        <v-list-item-icon>
-                          <v-icon color="indigo"> mdi-account-circle-outline </v-icon>
-                        </v-list-item-icon>
+              <v-row>
+                <v-list-item>
+                  <v-list-item-icon>
+                    <v-icon color="indigo"> mdi-account-circle-outline</v-icon>
+                  </v-list-item-icon>
 
-                        <v-list-item-content>
-                          <v-list-item-title
-                          >{{ data.name }} {{ data.surname }}</v-list-item-title
-                          >
-                          <v-list-item-subtitle>ຊື່ ແລະ ນາມສະກຸນ</v-list-item-subtitle>
-                        </v-list-item-content>
+                  <v-list-item-content>
+                    <v-list-item-title
+                    >{{ data.name }} {{ data.surname }}
+                    </v-list-item-title
+                    >
+                    <v-list-item-subtitle>ຊື່ ແລະ ນາມສະກຸນ</v-list-item-subtitle>
+                  </v-list-item-content>
 
-                        <v-spacer></v-spacer>
-                        <v-list-item-icon>
-                          <v-icon class="mr-6" color="indigo">mdi-home</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-content>
-                          <v-list-item-title v-if="data.user">
-                            {{ data.house_number }}</v-list-item-title
-                          >
-                          <v-list-item-subtitle>ເຮືອນເລກທີ</v-list-item-subtitle>
-                        </v-list-item-content>
-                      </v-list-item>
-                      <v-divider inset></v-divider>
-                    </v-row>
-                    <v-row>
-                      <v-list-item>
-                        <v-list-item-icon>
-                          <v-icon color="indigo"> mdi-phone </v-icon>
-                        </v-list-item-icon>
+                  <v-spacer></v-spacer>
+                  <v-list-item-icon>
+                    <v-icon class="mr-6" color="indigo">mdi-home</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title v-if="data.user">
+                      {{ data.house_number }}
+                    </v-list-item-title
+                    >
+                    <v-list-item-subtitle>ເຮືອນເລກທີ</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-divider inset></v-divider>
+              </v-row>
+              <v-row>
+                <v-list-item>
+                  <v-list-item-icon>
+                    <v-icon color="indigo"> mdi-phone</v-icon>
+                  </v-list-item-icon>
 
-                        <v-list-item-content>
-                          <v-list-item-title v-if="data.user">
-                            {{ data.user.phone }}</v-list-item-title
-                          >
-                          <v-list-item-subtitle>ເບີໂທ</v-list-item-subtitle>
-                        </v-list-item-content>
-                        <v-spacer></v-spacer>
-                        <v-list-item-icon>
-                          <v-icon class="mr-6" color="indigo">mdi-email</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-content>
-                          <v-list-item-title v-if="data.user">
-                            {{ data.user.email }}</v-list-item-title
-                          >
-                          <v-list-item-subtitle>Email</v-list-item-subtitle>
-                        </v-list-item-content>
-                      </v-list-item>
-                      <v-divider inset></v-divider>
-                      <v-list-item>
-                        <v-list-item-icon>
-                          <v-icon color="indigo"> mdi-map-marker </v-icon>
-                        </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title v-if="data.user">
+                      {{ data.user.phone }}
+                    </v-list-item-title
+                    >
+                    <v-list-item-subtitle>ເບີໂທ</v-list-item-subtitle>
+                  </v-list-item-content>
+                  <v-spacer></v-spacer>
+                  <v-list-item-icon>
+                    <v-icon class="mr-6" color="indigo">mdi-email</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title v-if="data.user">
+                      {{ data.user.email }}
+                    </v-list-item-title
+                    >
+                    <v-list-item-subtitle>Email</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-divider inset></v-divider>
+                <v-list-item>
+                  <v-list-item-icon>
+                    <v-icon color="indigo"> mdi-map-marker</v-icon>
+                  </v-list-item-icon>
 
-                        <v-list-item-content>
-                          <v-list-item-title v-if="data.village">{{
-                              data.village.name
-                            }}</v-list-item-title>
-                          <div
-                              v-for="(detail, index) in data.village_details"
-                              :key="index"
-                          >
-                            <v-list-item-subtitle>{{ detail.name }}</v-list-item-subtitle>
-                          </div>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </v-row>
+                  <v-list-item-content>
+                    <v-list-item-title v-if="data.village">{{
+                        data.village.name
+                      }}
+                    </v-list-item-title>
+                    <div
+                        v-for="(detail, index) in data.village_details"
+                        :key="index"
+                    >
+                      <v-list-item-subtitle>{{ detail.name }}</v-list-item-subtitle>
+                    </div>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-row>
 
-                    <v-row>
-                      <v-col cols="12" class="mb-4">
-                        <GmapMap
-                            :center="getCenter()"
-                            :zoom="16"
-                            style="width: 100%; height: 450px"
-                            :disableDefaultUI="true"
-                        >
-                          <GmapMarker
-                              :position="getMarkers(data)"
-                              @click="latlng = data"
-                              :draggable="false"
-                              :icon="markerOptions"
-                              :animation="2"
-                              ref="markers"
-                          />
-                        </GmapMap>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                  </v-tab-item>
-                </v-tabs-items>
+              <v-row>
+                <v-col cols="12" class="mb-4">
+                  <GmapMap
+                      :center="getCenter()"
+                      :zoom="16"
+                      style="width: 100%; height: 450px"
+                      :disableDefaultUI="true"
+                  >
+                    <GmapMarker
+                        :position="getMarkers(data)"
+                        @click="latlng = data"
+                        :draggable="false"
+                        :icon="markerOptions"
+                        :animation="2"
+                        ref="markers"
+                    />
+                  </GmapMap>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-tab-item>
+        </v-tabs-items>
 
-                <v-tabs-items v-model="tab">
-                  <v-tab-item value="tab-2">
-                    <v-container>
-                      <h3>ຂໍ້ມູນການບໍລິການ</h3>
-                      <v-simple-table>
-                        <template v-slot:default>
-                          <thead>
-                          <tr>
-                            <th class="text-left">
-                              Name
-                            </th>
-                            <th class="text-left">
-                              Date
-                            </th>
-                          </tr>
-                          </thead>
-                          <tbody>
-                          <tr
-                              v-for="item in services"
-                              :key="item.id"
-                          >
-                            <td>{{ item.name }}</td>
-                            <td>{{ item.date }}</td>
-                          </tr>
-                          </tbody>
-                        </template>
-                      </v-simple-table>
-                    </v-container>
-                  </v-tab-item>
-                </v-tabs-items>
+        <v-tabs-items v-model="tab">
+          <v-tab-item value="tab-2">
+            <v-container>
+              <h3>ຂໍ້ມູນການບໍລິການ</h3>
+              <v-row>
+                <v-col>
+                  <div>ຈຳນວນຖົງ: {{ serviceSummary.total_bag }}</div>
+                </v-col>
+                <v-col>
+                  <div>ຈຳນວນຄັ້ງ: {{ serviceSummary.total_time }}</div>
+                </v-col>
+                <v-col>
+                  <div>ຈຳນວນລໍຖ້າ: {{ statusSummary.pending_count }}</div>
+                </v-col>
+                <v-col>
+                  <div>ຈຳນວນປະຕິເສດ: {{ statusSummary.reject_count }}</div>
+                </v-col>
+                <v-col>
+                  <div>ຈຳນວນສຳເລັດ: {{ statusSummary.success_count }}</div>
+                </v-col>
+                <v-col>
+                  <div>ລໍຖ້າຢືນຢັນ: {{ statusSummary.wait_to_confirm_count }}</div>
+                </v-col>
+              </v-row>
+              <v-simple-table>
+                <template v-slot:default>
+                  <thead>
+                  <tr>
+                    <th class="text-left">
+                      Date
+                    </th>
+                    <th class="text-left">
+                      ຈຳນວນ
+                    </th>
+                    <th class="text-left">
+                      Status
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr
+                      v-for="item in services"
+                      :key="item.id"
+                  >
+                    <td>{{ (moment(item.updated_at).format('DD-MM-YYYY')) }}</td>
+                    <td>
+                      <div v-if="item.collection_type === 'bag'">
+                        {{ item.bag }} ຖົງ
+                      </div>
+                      <div v-if="item.collection_type === 'container'">
+                        {{ item.container }} container
+                      </div>
+                      <div v-else>
+                        {{item.collection_type}}
+                      </div>
+                    </td>
+                    <td>{{ item.status }}</td>
+                  </tr>
+                  </tbody>
+                </template>
+              </v-simple-table>
+              <br>
+              <Pagination
+                  v-if="pagination.total_pages > 1"
+                  :pagination="pagination"
+                  :offset="offset"
+                  @paginate="customerCollection()"
+              ></Pagination>
+            </v-container>
+          </v-tab-item>
+        </v-tabs-items>
 
         <v-tabs-items v-model="tab">
           <v-tab-item value="tab-3">
             <v-container>
               <h3>ປະຫັວດການຊຳລະ</h3>
+              <v-row class="mb-1 mt-1">
+                <v-col>
+                  <div>Package {{ invoiceSummary.name }}</div>
+                </v-col>
+                <v-col>
+                  <div>Total Created: {{ Intl.NumberFormat().format(invoiceSummary.created_total) }}</div>
+                </v-col>
+                <v-col>
+                  <div>Total Success: {{ Intl.NumberFormat().format(invoiceSummary.success_total) }}</div>
+                </v-col>
+                <v-col>
+                  <div>Confirm Payment: {{ Intl.NumberFormat().format(invoiceSummary.to_confirm_payment_total) }}</div>
+                </v-col>
+                <v-col>
+                  <div>Approved: {{ Intl.NumberFormat().format(invoiceSummary.approved_total) }}</div>
+                </v-col>
+                <v-col>
+                  <div>Reject: {{ Intl.NumberFormat().format(invoiceSummary.rejected_total) }}</div>
+                </v-col>
+              </v-row>
               <v-simple-table>
                 <template v-slot:default>
                   <thead>
@@ -170,29 +238,56 @@
                       Invoice Date
                     </th>
                     <th class="text-left">
-                      Name
+                      Payment
                     </th>
                     <th class="text-left">
-                      Payment Date
+                      Subtotal
                     </th>
                     <th class="text-left">
-                      ມູນຄ່າ
+                      Total
+                    </th>
+                    <th class="text-left">
+                      ສ່ວນຫຼູດ
+                    </th>
+                    <th class="text-left">
+                      ຈຳນວນ
+                    </th>
+                    <th class="text-left">
+                      ຈຳນວນເພີ່ມ
+                    </th>
+                    <th class="text-left">
+                      ຈຳນວນຄັ້ງ
                     </th>
                   </tr>
                   </thead>
                   <tbody>
                   <tr
-                      v-for="item in payments"
+                      v-for="item in invoices"
                       :key="item.id"
                   >
-                    <td>{{ item.date }}</td>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.payment_date }}</td>
-                    <td>{{ item.value }}</td>
+                    <td>{{ (moment(item.updated_at).format('DD-MM-YYYY')) }}</td>
+                    <td>
+                      <div class="primary--text">{{ item.payment_method }}</div>
+                    </td>
+                    <td>{{ Intl.NumberFormat().format(item.sub_total) }}</td>
+                    <td>{{ Intl.NumberFormat().format(item.total) }}</td>
+                    <td>{{ Intl.NumberFormat().format(item.discount) }}</td>
+                    <td>{{ Intl.NumberFormat().format(item.total_bag) }}</td>
+                    <td>{{ Intl.NumberFormat().format(item.exceed_bag) }}</td>
+                    <td>{{ item.total_time }}</td>
                   </tr>
                   </tbody>
                 </template>
               </v-simple-table>
+              <br>
+              <template>
+                <Pagination
+                    v-if="pagination.total_pages > 1"
+                    :pagination="pagination"
+                    :offset="offset"
+                    @paginate="customerInvoice()"
+                ></Pagination>
+              </template>
             </v-container>
           </v-tab-item>
         </v-tabs-items>
@@ -230,10 +325,9 @@ export default {
       selectedVillage: "",
       village_details: [],
       selectedVillageDetail: [],
-      tab:"",
+      tab: 'tab-1',
 
       address: [],
-      errormsg: "",
       preview_list: [],
       image_list: [],
       image: [],
@@ -260,59 +354,17 @@ export default {
           b: "px",
         },
       },
-      services:[
-        {
-          id:1,
-          name: 'Frozen Yogurt',
-          date: '22-01-2022',
-        },
-        {
-          id:2,
-          name: 'Ice cream sandwich',
-          date: '22-01-2022',
-        },
-        {
-          id:3,
-          name: 'Eclair',
-          date: '22-01-2022',
-        },
-        {
-          id:4,
-          name: 'Cupcake',
-          date: '22-01-2022',
-        },
-      ],
-      payments:[
-        {
-          id:1,
-          date: '22-06-1995',
-          name: 'Frozen Yogurt',
-          payment_date: '22-06-1995',
-          value: 159,
-        },
-        {
-          id:2,
-          date: '22-06-1995',
-          name: 'Frozen Yogurt',
-          payment_date: '22-06-1995',
-          value: 159,
-        },
-        {
-          id:3,
-          date: '22-06-1995',
-          name: 'Frozen Yogurt',
-          payment_date: '22-06-1995',
-          value: 159,
-        },
-        {
-          id:4,
-          date: '22-06-1995',
-          name: 'Frozen Yogurt',
-          payment_date: '22-06-1995',
-          value: 159,
-        },
-      ]
+      services: [],
+      serviceSummary: {},
+      statusSummary: {},
+      invoices: [],
+      invoiceSummary: {},
+      //Pagination
+      offset: 12,
+      pagination: {},
+      per_page: 12,
     };
+
   },
   methods: {
     fetchData() {
@@ -320,7 +372,7 @@ export default {
       this.$axios
           .get("customer/" + this.$route.params.id)
           .then((res) => {
-            if (res.data.code == 200) {
+            if (res.data.code === 200) {
               setTimeout(() => {
                 this.$store.commit("Loading_State", false);
                 this.data = res.data.data;
@@ -330,15 +382,77 @@ export default {
           .catch((error) => {
             this.$store.commit("Loading_State", false);
             this.fetchData();
-            if (error.response.status == 422) {
-              var obj = error.response.data.errors;
+            if (error.response.status === 422) {
+              let obj = error.response.data.errors;
               for (let [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
               }
             }
           });
     },
-
+    customerCollection() {
+      // this.this.pagination.current_page = "";
+      this.$store.commit("Loading_State", true);
+      this.$axios
+          .get("customer-collection-summary/" + this.$route.params.id, {
+            params: {
+              page: this.pagination.current_page,
+              per_page: this.per_page,
+            },
+          })
+          .then((res) => {
+            if (res.data.code === 200) {
+              setTimeout(() => {
+                this.$store.commit("Loading_State", false);
+                this.services = res.data.data.details.data;
+                this.serviceSummary = res.data.data.collect_summary;
+                this.statusSummary = res.data.data.status_summary;
+                this.pagination = res.data.data.details.pagination;
+              }, 300);
+            }
+          })
+          .catch((error) => {
+            this.$store.commit("Loading_State", false);
+            this.fetchData();
+            if (error.response.status === 422) {
+              let obj = error.response.data.errors;
+              for (let [key, message] of Object.entries(obj)) {
+                this.server_errors[key] = message[0];
+              }
+            }
+          });
+    },
+    customerInvoice() {
+      // this.this.pagination.current_page = "";
+      this.$store.commit("Loading_State", true);
+      this.$axios
+          .get("customer-invoice-summary/" + this.$route.params.id, {
+            params:{
+              page: this.pagination.current_page,
+              per_page: this.per_page,
+            }
+          })
+          .then((res) => {
+            if (res.data.code === 200) {
+              setTimeout(() => {
+                this.$store.commit("Loading_State", false);
+                this.invoices = res.data.data.details.data;
+                this.invoiceSummary = res.data.data.invoice_summary;
+                this.pagination = res.data.data.details.pagination;
+              }, 300);
+            }
+          })
+          .catch((error) => {
+            this.$store.commit("Loading_State", false);
+            this.fetchData();
+            if (error.response.status === 422) {
+              let obj = error.response.data.errors;
+              for (let [key, message] of Object.entries(obj)) {
+                this.server_errors[key] = message[0];
+              }
+            }
+          });
+    },
     backPrevios() {
       this.$router.go(-1);
     },
@@ -361,20 +475,28 @@ export default {
     editPage(id) {
       this.$router.push({
         name: "EditCustomer",
-        params: { id },
+        params: {id},
       });
     },
   },
   watch: {
-    selectedDistrict: function () {
-      this.fetchVillage();
-    },
-    selectedVillage: function () {
-      this.fetchVillageDetail();
-    },
+ tab:function (){
+     if(this.tab === 'tab-1'){
+       this.fetchData();
+     } else
+     if(this.tab === 'tab-2'){
+       this.customerCollection();
+     } else
+     if(this.tab === 'tab-3'){
+       this.customerInvoice();
+     }
+
+ }
   },
   created() {
     this.fetchData();
+    // this.customerInvoice();
+    // this.customerCollection();
   },
 };
 </script>

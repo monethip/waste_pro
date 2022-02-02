@@ -426,7 +426,6 @@ export default {
       Logout: "User/destroyToken",
     }),
     userLogout() {
-      console.log("logoooo")
       this.$store.dispatch('auth/destroyToken');
     },
     fetchData() {

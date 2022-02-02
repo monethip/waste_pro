@@ -16,6 +16,7 @@ export default function create(){
             phone:"",
             password:"",
             userConfirm:{},
+            msgErrors: '',
 
         },
         getters:{
@@ -37,6 +38,9 @@ export default function create(){
                 return !!getter.token;
                 // return state.token && state.token !== null;
             },
+            ShowMsgErrors(state) {
+                return state.msgErrors;
+            }
         },
         mutations:{
             setCredential(state,payload){
@@ -65,6 +69,9 @@ export default function create(){
             setUserProfile(state, payload) {
         state.userProfile = payload;
     },
+            Commit_ErrorLogin(state, payload) {
+                state.msgErrors = payload;
+            },
         },
         actions:{
             login(context, user) {
@@ -79,7 +86,6 @@ export default function create(){
                         ).then(
                         (response) => {
                             const {data} = response;
-                            console.error(data)
                            localStorage.setItem('confirmAccount',JSON.stringify(user));
                             // this.userConfirm = user;
                             /// Commit credential to data
@@ -91,15 +97,16 @@ export default function create(){
                     ).catch((error) =>{
                         ///Make Catch tet called
                         reject(error);
+                        reject(error);
                         if (error.response.status === 401) {
-                            context.commit('Commit_ErrorLogin', 'ອີເມວ ຫຼື ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ...');
+                            context.commit('Commit_ErrorLogin', error.response.data.message);
                             setTimeout(() => {
-                                context.commit('Commit_ErrorLogin', '');
+                                context.commit('Commit_ErrorLogin', error.response.data.message);
                             }, 3000);
                         } else if (error.response.status === 400) {
-                            context.commit('Commit_ErrorLogin', 'ອີເມວ ຫຼື ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ...');
+                            context.commit('Commit_ErrorLogin', error.response.data.message);
                             setTimeout(() => {
-                                context.commit('Commit_ErrorLogin', '');
+                                context.commit('Commit_ErrorLogin', error.response.data.message);
                             }, 3000);
                         }
                     })
@@ -126,14 +133,14 @@ export default function create(){
                         .catch(error => {
                             reject(error)
                             if (error.response.status === 401) {
-                                context.commit('Commit_ErrorLogin', 'ອີເມວ ຫຼື ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ...');
+                                context.commit('Commit_ErrorLogin',error.response.data.message);
                                 setTimeout(() => {
                                     context.commit('Commit_ErrorLogin', '');
                                 }, 3000);
                             } else if (error.response.status === 400) {
-                                context.commit('Commit_ErrorLogin', 'ອີເມວ ຫຼື ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ...');
+                                context.commit('Commit_ErrorLogin',error.response.data.message);
                                 setTimeout(() => {
-                                    context.commit('Commit_ErrorLogin', '');
+                                    context.commit('Commit_ErrorLogin', error.response.data.message);
                                 }, 3000);
                             }
                         }).finally(response => {

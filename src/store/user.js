@@ -69,10 +69,6 @@ const mutations = {
     setUserProfile(state, payload) {
         state.userProfile = payload;
     },
-    Commit_ErrorLogin(state, payload) {
-        state.msgErrors = payload;
-        console.log("Hello")
-    },
 };
 
 const actions = {

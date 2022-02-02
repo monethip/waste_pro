@@ -114,7 +114,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      errors: "User/ShowMsgErrors",
+      errors: "auth/ShowMsgErrors",
     }),
   },
   created() {
