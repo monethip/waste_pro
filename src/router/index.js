@@ -43,15 +43,6 @@ const routes = [
     }
   },
   {
-    path: '/login/verify-code',
-    name: 'VerifyCode',
-    component: () => import('@/views/auth/VerifyCode.vue'),
-    meta: {
-      layout: "none",
-      middleware: [Middlewares.guest],
-    }
-  },
-  {
     path: '/activity-log',
     name: 'ActivityLog',
     component: () => import('@/views/ActivityLog.vue'),

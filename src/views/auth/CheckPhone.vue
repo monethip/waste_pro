@@ -53,14 +53,7 @@
               </h2>
               <p class="text-center display-5 black--text mb-8 mt-0">Input Code from  SMS</p>
               <v-form ref="form" lazy-validation>
-<!--                <vue-otp-2-->
-<!--                    ref="otpInput2"-->
-<!--                    length="6"-->
-<!--                    inputmode="numeric"-->
-<!--                    @onChange="onChange"-->
-<!--                    @onComplete="onComplete"-->
-<!--                    class="vue-otp-2"-->
-<!--                />-->
+
                 <div style="display: flex; flex-direction: row;">
                   <v-otp-input
                       ref="otpInput"
@@ -99,10 +92,9 @@
 <script>
 import {mapActions, mapGetters} from "vuex";
 import firebase from 'firebase';
-import router from "@/router";
 
 export default {
-  name: "Login",
+  name: "CheckPhone",
   title() {
     return `Vientiane Waste Co-Dev|Login`;
   },
@@ -166,12 +158,12 @@ export default {
                 this.$store.commit("Loading_State", true);
                 const id_token = localStorage.getItem('id_token');
                 let user = {...this.user,id_token};
-               const response = this.$store.dispatch('auth/confirmLogin',user);
-               console.log('response',response);
+            const response = this.$store.dispatch('auth/confirmLogin',user);
+            console.log(response);
               }catch (error){
                 console.log("error")
               }finally{
-                router.push({ name: 'Dashboard' });
+                // router.push({ name: 'Dashboard' });
                 this.$store.commit("Toast_State", {
                   value: true,
                   color: "success",
@@ -181,11 +173,11 @@ export default {
               this.$store.commit("Loading_State", false);
               // this.$store.commit("Loading_State", true);
             })
-            .catch(function (error) {
+            .catch(function () {
               this.$store.commit("Toast_State", {
                 value: true,
                 color: "error",
-                msg: error,
+                msg: "ມີບາງຢ່າງຜິດພາດ ກະລຸນາລອງໃໝ່",
               });
             });
 
@@ -287,33 +279,6 @@ export default {
   box-shadow: 0px -2px 0px -10px rgb(0 0 0 / 20%),
   0px 2px 3px 0px rgb(0 0 0 / 14%), 1px 1px 2px 1px rgb(0 0 0 / 12%) !important;
 }
-.vue-otp-2 {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 80px !important;
-
-  div {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    input {
-      max-width: 48px !important;
-      padding: 11.5px 8px;
-      font-size: 20px;
-      border-radius: 3px;
-      border: 1px solid $primary-color !important;
-      text-align: center;
-    }
-
-    span {
-      display: block;
-      flex: 1;
-      text-align: center;
-    }
-  }
-}
 
 .v-stepper__content{
   padding: 8px 8px;
@@ -337,7 +302,5 @@ export default {
   -webkit-appearance: none;
   margin: 0;
 }
-.otp{
-  color: red;
-}
+
 </style>

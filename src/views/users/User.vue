@@ -114,7 +114,7 @@
                       ເພີ່ມ Permission
                     </v-list-item-title>
                   </v-list-item>
-                  <v-list-item link @click="openModalUpdatePermissoin(item)">
+                  <v-list-item link @click="openModalUpdatePermission(item)">
                     <v-list-item-title>
                       <v-icon small class="mr-2"> mdi-key-remove </v-icon>
                       ຖອນ Permission
@@ -131,6 +131,12 @@
                     <v-list-item-title>
                       <v-icon small class="mr-2"> mdi-key </v-icon>
                       Reset Password
+                    </v-list-item-title>
+                  </v-list-item>
+                  <v-list-item link @click="openChangePhone(item)">
+                    <v-list-item-title>
+                      <v-icon small class="mr-2"> mdi-phone </v-icon>
+                      ປ່ຽນເບີໂທ
                     </v-list-item-title>
                   </v-list-item>
 
@@ -195,14 +201,16 @@
 
           <v-row>
             <v-col cols="12">
+              <v-form ref="phone" lazy-validation>
               <v-text-field
                   label="ເບີໂທ *"
                   required
-                  v-model="user.phone"
+                  v-model="phone"
                   :rules="phoneRules"
                   type="number"
                   class="input-number"
               ></v-text-field>
+              </v-form>
               <p class="errors">
                 {{ server_errors.phone }}
               </p>
@@ -211,7 +219,9 @@
 
                   <v-btn
                       color="primary"
-                      @click="stepValue = 2"
+                      @click="verifyPhone"
+                      :loading="loading"
+                      :disabled="loading"
                   >
                     Continue
                   </v-btn>
@@ -220,21 +230,28 @@
                 <v-stepper-content step="2">
                   <v-row>
                     <v-col cols="12">
-                      <vue-otp-2
-                          ref="otpInput2"
-                          length="6"
-                          inputmode="numeric"
-                          @onChange="onChange"
-                          @onComplete="onComplete"
-                          class="vue-otp-2"
-                      />
+                      <div style="display: flex; flex-direction: row;">
+                        <v-otp-input
+                            ref="otpInput"
+                            input-classes="otp-input"
+                            separator=""
+                            :num-inputs="6"
+                            :should-auto-focus="true"
+                            :is-input-num="true"
+                            @on-complete="handleOnComplete"
+                            class="otp"
+                        />
 
+                        <v-btn class="btnClear" text @click="handleClearInput()">Clear</v-btn>
+                      </div>
                     </v-col>
                   </v-row>
 
                   <v-btn
                       color="primary"
-                      @click="goStepThree"
+                      :loading="loading"
+                      :disabled="loading"
+                      @click="verifyOtp"
                   >
                     Continue
                   </v-btn>
@@ -259,10 +276,11 @@
                           <v-text-field
                               label="ເບີໂທ *"
                               required
-                              v-model="user.phone"
+                              v-model="phone"
                               :rules="phoneRules"
                               type="number"
                               class="input-number"
+                              disabled
                           ></v-text-field>
                           <p class="errors">
                             {{ server_errors.phone }}
@@ -270,10 +288,9 @@
                         </v-col>
                         <v-col cols="12">
                           <v-text-field
-                              label="Email *"
+                              label="Email"
                               required
                               v-model="user.email"
-                              :rules="emailRules"
                           ></v-text-field>
                           <p class="errors">
                             {{ server_errors.email }}
@@ -376,14 +393,12 @@
                       :rules="phoneRules"
                       type="number"
                       class="input-number"
+                      disabled
                     ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.phone }}
-                    </p>
                   </v-col>
                   <v-col cols="12">
                     <v-text-field
-                      label="Email *"
+                      label="Email"
                       required
                       v-model="edit_user.email"
                       :rules="emailRules"
@@ -414,6 +429,152 @@
         </v-card>
       </template>
     </ModalEdit>
+
+<!--    Change Phone -->
+    <!-- Modal Add-->
+    <v-dialog v-model="changePhoneDialog" max-width="720px" persistent>
+      <template @close="close">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Change Phone {{edit_user.name}}</span>
+          </v-card-title>
+          <v-card-text>
+
+            <v-stepper v-model="stepValue">
+              <v-stepper-header>
+                <v-stepper-step
+                    :complete="stepValue > 1"
+                    step="1"
+                >
+                  Phone Number
+                </v-stepper-step>
+
+                <v-divider></v-divider>
+
+                <v-stepper-step
+                    :complete="stepValue > 2"
+                    step="2"
+                >
+                  Verify Code
+                </v-stepper-step>
+
+                <v-divider></v-divider>
+
+                <v-stepper-step step="3">
+                  Confirm
+                </v-stepper-step>
+              </v-stepper-header>
+              <v-stepper-items>
+                <v-stepper-content step="1">
+
+                  <v-row>
+                    <v-col cols="12">
+                      <v-form ref="phone" lazy-validation>
+                        <v-text-field
+                            label="ເບີໂທ *"
+                            required
+                            v-model="phone"
+                            :rules="phoneRules"
+                            type="number"
+                            class="input-number"
+                        ></v-text-field>
+                      </v-form>
+                      <p class="errors">
+                        {{ server_errors.phone }}
+                      </p>
+                    </v-col>
+                  </v-row>
+
+                  <v-btn
+                      color="primary"
+                      @click="verifyPhone"
+                      :loading="loading"
+                      :disabled="loading"
+                  >
+                    Continue
+                  </v-btn>
+                </v-stepper-content>
+
+                <v-stepper-content step="2">
+                  <v-row>
+                    <v-col cols="12">
+                      <div style="display: flex; flex-direction: row;">
+                        <v-otp-input
+                            ref="otpInput"
+                            input-classes="otp-input"
+                            separator=""
+                            :num-inputs="6"
+                            :should-auto-focus="true"
+                            :is-input-num="true"
+                            @on-complete="handleOnComplete"
+                            class="otp"
+                        />
+
+                        <v-btn class="btnClear" text @click="handleClearInput()">Clear</v-btn>
+                      </div>
+                    </v-col>
+                  </v-row>
+
+                  <v-btn
+                      color="primary"
+                      @click="verifyOtp"
+                      :loading="loading"
+                      :disabled="loading"
+                  >
+                    Continue
+                  </v-btn>
+                </v-stepper-content>
+
+                <v-stepper-content step="3">
+                  <v-container>
+                    <v-form ref="form" lazy-validation>
+                      <v-row>
+                        <v-col cols="12">
+                          <v-text-field
+                              label="ເບີໂທ *"
+                              required
+                              v-model="phone"
+                              :rules="phoneRules"
+                              type="number"
+                              class="input-number"
+                              disabled
+                          ></v-text-field>
+                          <p class="errors">
+                            {{ server_errors.phone }}
+                          </p>
+                        </v-col>
+                      </v-row>
+                    </v-form>
+                  </v-container>
+
+                  <!--                  <v-btn-->
+                  <!--                      color="primary"-->
+                  <!--                      @click="e1 = 1"-->
+                  <!--                  >-->
+                  <!--                    Continue-->
+                  <!--                  </v-btn>-->
+                  <v-btn
+                      color="primary"
+                      :loading="loading"
+                      :disabled="loading"
+                      @click="changePhone()"
+                  >
+                    Change
+                  </v-btn>
+                </v-stepper-content>
+              </v-stepper-items>
+            </v-stepper>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="changeStatusDialog = false">
+                Close
+              </v-btn>
+            </v-card-actions>
+          </v-card-text>
+        </v-card>
+      </template>
+    </v-dialog>
 
     <!--Change Password -->
     <v-dialog v-model="changePasswordDialog" max-width="720px" persistent>
@@ -468,7 +629,7 @@
               text
               :loading="loading"
               :disabled="loading"
-              @click="resetPasswordAcion"
+              @click="resetPasswordAction"
             >
               Change
             </v-btn>
@@ -761,11 +922,13 @@
         </v-card-actions>
       </template>
     </ModalDelete>
+    <div id="recaptcha-container"></div>
   </v-container>
 </template>
 
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import firebase from "firebase";
 export default {
   title() {
     return `Vientiane Waste Co-Dev|User`;
@@ -788,6 +951,7 @@ export default {
       loading: false,
       users: [],
       user: {},
+      phone:"",
       edit_user: {},
       userID: "",
       server_errors: {
@@ -799,6 +963,7 @@ export default {
       updateRoleDialog: false,
       changePasswordDialog: false,
       changeStatusDialog: false,
+      changePhoneDialog:false,
 
       selectedRole: "",
       selectedRoles: [],
@@ -809,6 +974,9 @@ export default {
       selectedPermission: "",
       permissions: [],
       revokes: [],
+      code:"",
+      appVerifier:"",
+      btnVerify:false,
 
       //Pagination
       offset: 12,
@@ -828,6 +996,7 @@ export default {
         },
       ],
       status: "",
+      id_token:"",
 
       //Validation
       emailRules: [
@@ -851,8 +1020,8 @@ export default {
       phoneRules: [
         (v) => !!v || "Phone is required",
         (v) =>
-          (v && v.length >= 7 && v.length <= 11) ||
-          "Phone number must be  7 - 11 numbers",
+          (v && v.length >= 8 && v.length <= 11) ||
+          "Phone number must be  8 - 11 numbers",
       ],
       rulePermission: [(v) => !!v || "Permission is required"],
       rulePermissionRole: [(v) => !!v || "Role is required"],
@@ -863,12 +1032,13 @@ export default {
       this.$store.commit("modalAdd_State", true);
     },
     AddItem() {
-      if (this.$refs.form.validate() == true) {
+      if (this.$refs.form.validate() === true) {
         this.loading = true;
+        this.user.id_token = this.id_token;
         this.$axios
           .post("user-setting/user", this.user)
           .then((res) => {
-            if (res.data.code == 200) {
+            if (res.data.code === 200) {
               setTimeout(() => {
                 this.loading = false;
                 this.closeAddModal();
@@ -890,8 +1060,7 @@ export default {
               color: "error",
               msg: error.response.data.message,
             });
-            this.fetchData();
-            if (error.response.status == 422) {
+            if (error.response.status === 422) {
               let obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
@@ -900,6 +1069,103 @@ export default {
           });
       }
     },
+    verifyPhone(){
+      // this.btnVerify = true;
+      this.loading = true;
+      if (this.$refs.phone.validate() === true){
+        this.$axios
+            .post("unique-phone", {phone:this.phone})
+            .then((res) => {
+              if (res.data.code === 200) {
+                  console.error(res.data.data.exists)
+                  if(res.data.data.exists === false){
+                    this.initReCaptcha();
+                    this.sendOtp();
+                    this.loading = true;
+                  } else if(res.data.data.exists === true){
+                    this.btnVerify = false;
+                    this.$store.commit("Toast_State", {
+                      value: true,
+                      color: "error",
+                      msg: "ເບີນີ້ມີໃນລະບົບແລ້ວ",
+                    });
+                  }
+                // this.btnVerify = false;
+                  this.loading = false;
+              }
+            })
+            .catch(() => {
+              this.btnVerify = false;
+            });
+      }
+    },
+    sendOtp() {
+      // this.btnVerify = true;
+        let countryCode = "+85620"; //laos
+        let phoneNumber = countryCode + this.phone;
+        let appVerifier = this.appVerifier;
+        firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+            .then(confirmationResult => {
+              window.confirmationResult = confirmationResult;
+              this.stepValue = 2;
+              // this.btnVerify = false;
+              // this.loading = true;
+            })
+            .catch(function () {
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: "SMS not sent",
+              });
+              // this.loading = true;
+            });
+    },
+
+    verifyOtp() {
+      // this.btnVerify = true;
+      let code = this.code;
+      window.confirmationResult
+          .confirm(code)
+          .then((res) => {
+            if (res) {
+              const token = (res.user);
+              this.id_token = token._lat;
+              console.log(this.id_token);
+              this.stepValue = 3;
+            }
+          })
+          .catch(function () {
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: "ມີບາງຢ່າງຜິດພາດ ກະລຸນາລອງໃໝ່",
+            });
+          });
+
+    },
+
+
+    initReCaptcha() {
+      setTimeout(() => {
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+            "recaptcha-container",
+            {
+              size: "invisible",
+              // callback: function (response) {
+              //   // reCAPTCHA solved, allow signInWithPhoneNumber.
+              //   // ...
+              // },
+              "expired-callback": function () {
+                // Response expired. Ask user to solve reCAPTCHA again.
+                // ...
+              },
+            }
+        );
+        //
+        this.appVerifier = window.recaptchaVerifier;
+      }, 1000);
+    },
+
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
@@ -912,7 +1178,7 @@ export default {
           },
         })
         .then((res) => {
-          if (res.data.code == 200) {
+          if (res.data.code === 200) {
             setTimeout(() => {
               this.loading = false;
               this.$store.commit("Loading_State", false);
@@ -923,7 +1189,7 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          if (error.response.status == 422) {
+          if (error.response.status === 422) {
             let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
@@ -937,7 +1203,7 @@ export default {
       this.$axios
         .get("user-setting/role")
         .then((res) => {
-          if (res.data.code == 200) {
+          if (res.data.code === 200) {
             setTimeout(() => {
               this.loading = false;
               this.roles = res.data.data;
@@ -952,7 +1218,7 @@ export default {
         })
         .catch((error) => {
           this.loading = false;
-          if (error.response.status == 422) {
+          if (error.response.status === 422) {
             let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
@@ -966,7 +1232,7 @@ export default {
       this.$axios
         .get("user-setting/permission")
         .then((res) => {
-          if (res.data.code == 200) {
+          if (res.data.code === 200) {
             setTimeout(() => {
               this.loading = false;
               this.permissions = res.data.data;
@@ -986,7 +1252,7 @@ export default {
             color: "error",
             msg: error.response.data.message,
           });
-          if (error.response.status == 422) {
+          if (error.response.status === 422) {
             let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
@@ -1004,8 +1270,8 @@ export default {
       this.password = "";
       this.password_confirmation = "";
     },
-    resetPasswordAcion() {
-      if (this.$refs.form.validate() == true) {
+    resetPasswordAction() {
+      if (this.$refs.form.validate() === true) {
         this.loading = true;
         this.$axios
           .put("user-setting/reset-password/" + this.edit_user.id, {
@@ -1013,7 +1279,7 @@ export default {
             password_confirmation: this.password_confirmation,
           })
           .then((res) => {
-            if (res.data.code == 200) {
+            if (res.data.code === 200) {
               setTimeout(() => {
                 this.loading = false;
                 this.edit_user = {};
@@ -1035,8 +1301,8 @@ export default {
               color: "error",
               msg: error.response.data.message,
             });
-            if (error.response.status == 422) {
-              var obj = error.response.data.errors;
+            if (error.response.status === 422) {
+              let obj = error.response.data.errors;
               for (let [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
               }
@@ -1050,12 +1316,12 @@ export default {
       this.$store.commit("modalEdit_State", true);
     },
     updateItem() {
-      if (this.$refs.form.validate() == true) {
+      if (this.$refs.form.validate() === true) {
         this.loading = true;
         this.$axios
           .put("user-setting/user/" + this.edit_user.id, this.edit_user)
           .then((res) => {
-            if (res.data.code == 200) {
+            if (res.data.code === 200) {
               setTimeout(() => {
                 this.loading = false;
                 this.closeUpdateModal();
@@ -1078,8 +1344,8 @@ export default {
               msg: error.response.data.message,
             });
             this.fetchData();
-            if (error.response.status == 422) {
-              var obj = error.response.data.errors;
+            if (error.response.status === 422) {
+              let obj = error.response.data.errors;
               for (let [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
               }
@@ -1105,7 +1371,7 @@ export default {
       this.$axios
         .delete("user-setting/user/" + this.userID)
         .then((res) => {
-          if (res.data.code == 200) {
+          if (res.data.code === 200) {
             setTimeout(() => {
               this.loading = false;
               this.$store.commit("modalDelete_State", false);
@@ -1136,14 +1402,14 @@ export default {
       this.roleDialog = true;
     },
     AddRole() {
-      if (this.$refs.form.validate() == true) {
+      if (this.$refs.form.validate() === true) {
         this.loading = true;
         this.$axios
           .post("user-setting/user/" + this.userID + "/give-role", {
             roles: this.edit_user.roles,
           })
           .then((res) => {
-            if (res.data.code == 200) {
+            if (res.data.code === 200) {
               setTimeout(() => {
                 this.loading = false;
                 this.selectedRole = "";
@@ -1159,7 +1425,7 @@ export default {
             }
           })
           .catch((error) => {
-            if (error.response.data.code == 422) {
+            if (error.response.data.code === 422) {
               this.errormsg = error.response.data.message;
             }
             this.$store.commit("Toast_State", {
@@ -1179,7 +1445,7 @@ export default {
     },
     //Update Role
     UpdateRole() {
-      if (this.$refs.form.validate() == true) {
+      if (this.$refs.form.validate() === true) {
         this.loading = true;
         // this.roles = this.edit_user.roles;
         this.$axios
@@ -1187,7 +1453,7 @@ export default {
             roles: this.selectedRole,
           })
           .then((res) => {
-            if (res.data.code == 200) {
+            if (res.data.code === 200) {
               setTimeout(() => {
                 this.loading = false;
                 this.selectedRole = "";
@@ -1203,7 +1469,7 @@ export default {
             }
           })
           .catch((error) => {
-            if (error.response.data.code == 422) {
+            if (error.response.data.code === 422) {
               this.errormsg = error.response.data.message;
             }
             this.$store.commit("Toast_State", {
@@ -1225,7 +1491,7 @@ export default {
       this.permissionDialog = true;
     },
     AddPermission() {
-      if (this.$refs.form.validate() == true) {
+      if (this.$refs.form.validate() === true) {
         this.loading = true;
         // this.roles = this.edit_user.roles;
         this.$axios
@@ -1233,7 +1499,7 @@ export default {
             permissions: this.edit_user.permissions,
           })
           .then((res) => {
-            if (res.data.code == 200) {
+            if (res.data.code === 200) {
               setTimeout(() => {
                 this.loading = false;
                 // this.selectedPermission = "";
@@ -1249,7 +1515,7 @@ export default {
             }
           })
           .catch((error) => {
-            if (error.response.data.code == 422) {
+            if (error.response.data.code === 422) {
               this.errormsg = error.response.data.message;
             }
             this.$store.commit("Toast_State", {
@@ -1264,7 +1530,7 @@ export default {
       }
     },
 
-    openModalUpdatePermissoin(item) {
+    openModalUpdatePermission(item) {
       this.userID = item.id;
       this.edit_user = item;
       this.fetchPermission();
@@ -1272,14 +1538,14 @@ export default {
     },
     //Update Role
     UpdatePermission() {
-      if (this.$refs.form.validate() == true) {
+      if (this.$refs.form.validate() === true) {
         this.loading = true;
         this.$axios
           .post("user-setting/user/" + this.userID + "/revoke-permission", {
             permissions: this.selectedPermission,
           })
           .then((res) => {
-            if (res.data.code == 200) {
+            if (res.data.code === 200) {
               setTimeout(() => {
                 this.loading = false;
                 this.fetchData();
@@ -1294,7 +1560,7 @@ export default {
             }
           })
           .catch((error) => {
-            if (error.response.data.code == 422) {
+            if (error.response.data.code === 422) {
               this.errormsg = error.response.data.message;
             }
             this.$store.commit("Toast_State", {
@@ -1317,6 +1583,51 @@ export default {
       this.changeStatusDialog = true;
       this.edit_user = item;
     },
+    // Change phone
+    openChangePhone(item){
+      this.changePhoneDialog = true;
+      this.edit_user = item;
+    },
+    closeChangePhone(){
+      this.changePasswordDialog = false;
+      this.stepValue = 1;
+    },
+    changePhone() {
+        this.loading = true;
+        this.edit_user.id_token = this.id_token;
+        this.$axios
+            .put("user-setting/user/" + this.edit_user.id, this.edit_user)
+            .then((res) => {
+              if (res.data.code === 200) {
+                setTimeout(() => {
+                  this.loading = false;
+                  this.closeChangePhone();
+                  this.edit_user = {};
+                  this.fetchData();
+                  this.$store.commit("Toast_State", {
+                    value: true,
+                    color: "success",
+                    msg: res.data.message,
+                  });
+                }, 300);
+              }
+            })
+            .catch((error) => {
+              this.loading = false;
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response.data.message,
+              });
+              if (error.response.status === 422) {
+                let obj = error.response.data.errors;
+                for (let [key, message] of Object.entries(obj)) {
+                  this.server_errors[key] = message[0];
+                }
+              }
+            });
+    },
+
     switchStatus() {
       this.loading = true;
       this.$axios
@@ -1324,7 +1635,7 @@ export default {
           status: this.edit_user.status,
         })
         .then((res) => {
-          if (res.data.code == 200) {
+          if (res.data.code === 200) {
             setTimeout(() => {
               this.loading = false;
               this.fetchData();
@@ -1347,8 +1658,8 @@ export default {
         });
     },
     statusColor(value) {
-      if (value == "active") return "primary";
-      else if (value == "inactive") return "error";
+      if (value === "active") return "primary";
+      else if (value === "inactive") return "error";
       else return "info";
     },
     reset() {
@@ -1358,20 +1669,14 @@ export default {
       GetOldValueOnInput(this);
     },
 
-    onChange(){
-      console.log("onChange")
+    handleOnComplete(value) {
+      this.code = value;
     },
-    onComplete(value){
-      this.isStepTwo = true;
-      console.log(value)
+    handleClearInput() {
+      this.$refs.otpInput.clearInput();
     },
-    goStepThree(){
-      if(this.isStepTwo){
-        this.stepValue = 3;
-      }
-    }
-
   },
+
   watch: {
     "user.name": function () {
       this.server_errors.name = "";
@@ -1407,7 +1712,7 @@ export default {
       this.server_errors.permissions = "";
     },
     search: function (value) {
-      if (value == "") {
+      if (value === "") {
         this.fetchData();
       }
     },
@@ -1415,43 +1720,39 @@ export default {
   created() {
     this.fetchRole();
     this.fetchData();
+    this.initReCaptcha();
   },
 };
 </script>
 
 <style lang="scss">
 @import "../../../public/scss/main.scss";
-.vue-otp-2 {
-  display: flex;
-  justify-content: space-between;
-  margin-left: 22px !important;
-  margin-right: 22px !important;
-  margin-bottom: 18px !important;
 
-  div {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    input {
-      max-width: 48px !important;
-      padding: 11.5px 8px;
-      font-size: 20px;
-      border-radius: 3px;
-      border: 1px solid $primary-color !important;
-      text-align: center;
-    }
-
-    span {
-      display: block;
-      flex: 1;
-      text-align: center;
-    }
+.otp-input {
+  width: 40px;
+  height: 40px;
+  padding: 5px;
+  margin: 0 10px;
+  font-size: 20px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  text-align: center;
+  &.error {
+    border: 1px solid red !important;
   }
+}
+.otp-input::-webkit-inner-spin-button,
+.otp-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .v-stepper__content{
   padding: 8px 8px;
 }
+.otp,.btnClear{
+  margin-bottom: 24px;
+  margin-top: 24px;
+}
+
 </style>

@@ -112,6 +112,7 @@ export default function create(){
                     })
                 }));
             },
+
             confirmLogin(context, data) {
                 return new Promise((resolve, reject) => {
                     axios.post(`${apiUrl}auth/login`, {
@@ -126,8 +127,6 @@ export default function create(){
                             localStorage.setItem('access_token', token);   // ເກັບ Token ໄວ້ໃນ Localstorage ເພື່ອຈະນຳໄປໃຊ້ຂໍຂໍ້ມູນ
                             window.localStorage.setItem('user', JSON.stringify(response.data.data.user));
                             window.localStorage.setItem('roles', JSON.stringify(response.data.data.user.roles));
-                            // window.localStorage.setItem('permissions', JSON.stringify(response.data.data.user.role_permissions));
-                            // context.commit('AdminSignin', token);
                             context.commit('setUserProfile', response.data.data.user);
                         })
                         .catch(error => {
@@ -147,21 +146,25 @@ export default function create(){
                         resolve(response)
                         // router.push({ name: 'Dashboard' });
                         // const userProfile = window.localStorage.getItem('user');
+                        localStorage.removeItem('phone');
+                        localStorage.removeItem('id_token');
+                        localStorage.removeItem('confirmAccount');
                         setTimeout(() => {
                             // router.push({ name: 'CheckPhone' });
-                            router.push({ name: 'Dashboard' });
-                            // const user_role = window.localStorage.getItem('roles');
-                            // const roleUsers = JSON.parse(user_role);
-                            // if (roleUsers.includes('super_admin', 'admin')) {
-                            //     router.push({ name: 'dashboard' });
-                            //     window.location.reload();
-                            // } else if (roleUsers.includes('admin', 'driver')) {
-                            //     router.push({ name: 'Invoice' })
-                            // } else {
-                            //     router.push({ name: 'Dashboard' });
-                            //     window.location.reload();
-                            // }
-                            window.location.reload();
+                            // router.push({ name: 'Dashboard' });
+                            const user_role = window.localStorage.getItem('roles');
+                            const roleUsers = JSON.parse(user_role);
+                            if (roleUsers.includes('super_admin',)) {
+                                router.push({ name: 'Dashboard' });
+                                window.location.reload();
+                            } else if(roleUsers.includes('admin')){
+                                router.push({ name: 'Dashboard' });
+                                window.location.reload();
+                            } else {
+                                router.push({ name: 'Dashboard' });
+                                window.location.reload();
+                                // this.destroyToken();
+                            }
                         }, 300);
                     }).catch(() => { });
                 })
