@@ -24,7 +24,7 @@
                 v-model="user.credential"
                 label="User name"
                 single-line
-                prepend-inner-icon="mdi-email"
+                prepend-inner-icon="mdi-account"
                 solo
                 type="text"
                 :rules="credentialRules"

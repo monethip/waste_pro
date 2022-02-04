@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row align="center" justify="center">
-      <v-col cols="6" sm="8" md="6">
+      <v-col cols="12" sm="12" md="12">
         <v-card class="elevation-1" max-width="600" style="    display: flex;
     margin: auto;">
           <v-card-text class="py-16 px-16">
@@ -17,17 +17,18 @@
               </v-col>
             </v-row>
             <div v-if="verifyPhone">
-              <h2 class="text-center display-5 black--text mb-8 mt-4">
-                Your Phone Number ({{ showPhone }})
-              </h2>
+              <h3 class="text-center display-5 black--text mb-8 mt-4">
+                Your phone number ({{ showPhone }})
+              </h3>
               <v-text-field
                   v-model="phone"
                   label="Phone"
                   single-line
                   prepend-inner-icon="mdi-phone"
                   solo
-                  type="text"
+                  type="number"
                   :rules="phoneRule"
+                  class="input-number"
                   @keyup.enter="sendOtp"
               ></v-text-field>
 
@@ -53,21 +54,23 @@
               </h2>
               <p class="text-center display-5 black--text mb-8 mt-0">Input Code from SMS</p>
               <v-form ref="form" lazy-validation>
-                <div style="display: flex; flex-direction: row;">
-                  <v-otp-input
-                      ref="otpInput"
-                      input-classes="otp-input"
-                      separator=""
-                      :num-inputs="6"
-                      :should-auto-focus="true"
-                      :is-input-num="true"
-                      @on-complete="handleOnComplete"
-                      class="otp"
-                  />
-
-                  <v-btn text @click="handleClearInput()">Clear</v-btn>
-                </div>
-
+                 <v-row>
+                   <v-col cols="12" sm="12" md="12">
+                     <div style="display: flex; flex-direction: row;">
+                     <v-otp-input
+                         ref="otpInput"
+                         input-classes="otp-input"
+                         separator=""
+                         :num-inputs="6"
+                         :should-auto-focus="true"
+                         :is-input-num="true"
+                         @on-complete="handleOnComplete"
+                         class="otp"
+                     />
+                     <v-btn text @click="handleClearInput()" small style="margin:auto;">Clear</v-btn>
+                     </div>
+                   </v-col>
+                 </v-row>
                 <div class="text-center">
                   <v-btn
                       block
@@ -283,6 +286,26 @@ export default {
 .otp-input::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+@media only screen and (max-width: 600px) {
+  //.otp{
+  //  padding: 4px 4px;
+  //  margin-left: -64px;
+  //}
+  .otp-input {
+    width: 30px;
+    height: 30px;
+    padding: 3px;
+    margin: 0 5px;
+    font-size: 18px;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    text-align: center;
+
+    &.error {
+      border: 1px solid red !important;
+    }
+  }
 }
 
 </style>
