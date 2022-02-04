@@ -12,14 +12,14 @@
                     max-height="150"
                     max-width="250"
                     alt="Logo"
+                    class="logo"
                 ></v-img>
               </v-col>
             </v-row>
             <div v-if="verifyPhone">
               <h2 class="text-center display-5 black--text mb-8 mt-4">
-                Your Phone Number ({{showPhone}})
+                Your Phone Number ({{ showPhone }})
               </h2>
-              <v-form ref="form" lazy-validation>
                 <v-text-field
                     v-model="phone"
                     label="Phone"
@@ -30,9 +30,11 @@
                     :rules="phoneRule"
                     @keyup.enter="sendOtp"
                 ></v-text-field>
-<!--                <p class="errors">-->
-<!--                  {{ errors }}-->
-<!--                </p>-->
+
+                                <p class="errors">
+                                  {{ error }}
+                                </p>
+
                 <div class="text-center">
                   <v-btn
                       block
@@ -44,14 +46,13 @@
                   </v-btn
                   >
                 </div>
-              </v-form>
             </div>
 
             <div v-if="verifyCode">
               <h2 class="text-center display-5 black--text mb-0 mt-4">
                 Verify Code OTP
               </h2>
-              <p class="text-center display-5 black--text mb-8 mt-0">Input Code from  SMS</p>
+              <p class="text-center display-5 black--text mb-8 mt-0">Input Code from SMS</p>
               <v-form ref="form" lazy-validation>
 
                 <div style="display: flex; flex-direction: row;">
@@ -76,7 +77,8 @@
                       :loading="btnVerify"
                       :disabled="btnVerify"
                       @click="verifyOtp"
-                  >Confirm</v-btn
+                  >Confirm
+                  </v-btn
                   >
                 </div>
               </v-form>
@@ -90,55 +92,66 @@
   </v-container>
 </template>
 <script>
-import {mapActions, mapGetters} from "vuex";
+import {mapActions} from "vuex";
 import firebase from 'firebase';
+import router from "@/router";
 
 export default {
   name: "CheckPhone",
   title() {
     return `Vientiane Waste Co-Dev|Login`;
   },
-  data:() =>({
+  data: () => ({
     loading: false,
-    btnVerify:false,
-    verifyCode:false,
-    verifyPhone:true,
-    phone:"",
-    showPhone:"",
-    code:"",
+    btnVerify: false,
+    verifyCode: false,
+    verifyPhone: true,
+    phone: "",
+    showPhone: "",
+    code: "",
     user: {},
+    error:"",
     phoneRule: [
       (v) => !!v || "Phone is required",
       (v) =>
           (v && v.length >= 8) || "Phone must be more than 8 characters",
     ],
-    appVerifier:"",
+    appVerifier: "",
   }),
 
   methods: {
     sendOtp() {
-      if (this.$refs.form.validate() === true) {
-            let countryCode = "+85620"; //laos
-            let phoneNumber = countryCode + this.phone;
-            let appVerifier = this.appVerifier;
-            firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
-                .then(confirmationResult => {
-                  this.verifyCode = true;
-                  this.verifyPhone =false;
-                  window.confirmationResult = confirmationResult;
-                })
-                .catch(function () {
-                  this.$store.commit("Toast_State", {
-                    value: true,
-                    color: "error",
-                    msg: "SMS not sent",
-                  });
-                });
+      if (this.phone.length >= 8) {
+        this.loading = true;
+        let countryCode = "+85620"; //laos
+        let phoneNumber = countryCode + this.phone;
+        let appVerifier = this.appVerifier;
+        firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+            .then(confirmationResult => {
+              this.verifyCode = true;
+              this.verifyPhone = false;
+              window.confirmationResult = confirmationResult;
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: "Success",
+              });
+              this.loading = false;
+            })
+            .catch(() =>{
+              this.loading = false;
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: "SMS not sent",
+              });
+            });
       } else {
+        this.loading = false;
         this.$store.commit("Toast_State", {
           value: true,
           color: "error",
-          msg: "Error",
+          msg: "ມີບາງຢ່າງຜິດພາດ ກະລຸນາລອງໃໝ່",
         });
       }
     },
@@ -146,43 +159,44 @@ export default {
     verifyOtp() {
       this.btnVerify = true;
       let code = this.code;
-        window.confirmationResult
-            .confirm(code)
-            .then((res) => {
-              if (res) {
-                this.btnVerify = false;
-                const token = (res.user);
-                localStorage.setItem('id_token',token._lat);
-              }
-              try {
-                this.$store.commit("Loading_State", true);
-                const id_token = localStorage.getItem('id_token');
-                let user = {...this.user,id_token};
-            const response = this.$store.dispatch('auth/confirmLogin',user);
-            console.log(response);
-              }catch (error){
-                console.log("error")
-              }finally{
-                // router.push({ name: 'Dashboard' });
-                this.$store.commit("Toast_State", {
-                  value: true,
-                  color: "success",
-                  msg: "Login Success",
-                });
-              }
-              this.$store.commit("Loading_State", false);
-              // this.$store.commit("Loading_State", true);
-            })
-            .catch(function () {
+      window.confirmationResult
+          .confirm(code)
+          .then((res) => {
+            if (res) {
+              this.btnVerify = false;
+              const token = (res.user);
+              localStorage.setItem('id_token', token._lat);
+            }
+            try {
+              this.$store.commit("Loading_State", true);
+              const id_token = localStorage.getItem('id_token');
+              let user = {...this.user, id_token};
+             this.$store.dispatch('auth/confirmLogin', user);
+            } catch (error) {
               this.$store.commit("Toast_State", {
                 value: true,
-                color: "error",
-                msg: "ມີບາງຢ່າງຜິດພາດ ກະລຸນາລອງໃໝ່",
+                color: "success",
+                msg: error,
               });
+            } finally {
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: "Login Success",
+              });
+            }
+            this.$store.commit("Loading_State", false);
+            // this.$store.commit("Loading_State", true);
+          })
+          .catch(function () {
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: "ມີບາງຢ່າງຜິດພາດ ກະລຸນາລອງໃໝ່",
             });
+          });
 
     },
-
 
 
     ...mapActions({
@@ -193,35 +207,6 @@ export default {
     //     this.AdminSignIn();
     //   }
     // },
-
-    // SubmitLogin() {
-    //   if (this.$refs.form.validate() == true) {
-    //     this.loading = true;
-    //     this.AdminLogin(this.users)
-    //         .then(() => {
-    //           setTimeout(() => {
-    //             // window.location.reload();
-    //             this.loading = false;
-    //             this.$store.commit("Toast_State", {
-    //               value: true,
-    //               color: "success",
-    //               msg: "Login Success",
-    //             });
-    //           }, 300);
-    //         })
-    //         .catch(() => {
-    //           setTimeout(() => {
-    //             this.loading = false;
-    //             this.$store.commit("Toast_State", {
-    //               value: true,
-    //               color: "error",
-    //               msg: "Login Fail",
-    //             });
-    //           }, 300);
-    //         });
-    //   }
-    // },
-
     initReCaptcha() {
       setTimeout(() => {
         window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
@@ -250,16 +235,14 @@ export default {
     },
 
   },
-  computed: {
-    ...mapGetters({
-      // errors: "User/ShowMsgErrors",
-    }),
-  },
   created() {
     this.initReCaptcha();
     const data = localStorage.getItem('confirmAccount');
-     this.showPhone = localStorage.getItem('phone');
+    this.showPhone = localStorage.getItem('phone');
     this.user = JSON.parse(data);
+    if(this.showPhone === null){
+      router.push({ name: 'Login' });
+    }
   }
 };
 </script>
@@ -280,7 +263,7 @@ export default {
   0px 2px 3px 0px rgb(0 0 0 / 14%), 1px 1px 2px 1px rgb(0 0 0 / 12%) !important;
 }
 
-.v-stepper__content{
+.v-stepper__content {
   padding: 8px 8px;
 }
 
@@ -293,10 +276,12 @@ export default {
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.3);
   text-align: center;
+
   &.error {
     border: 1px solid red !important;
   }
 }
+
 .otp-input::-webkit-inner-spin-button,
 .otp-input::-webkit-outer-spin-button {
   -webkit-appearance: none;

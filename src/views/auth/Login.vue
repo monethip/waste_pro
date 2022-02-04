@@ -12,6 +12,7 @@
                   max-height="150"
                   max-width="250"
                   alt="Logo"
+                  class="logo"
                 ></v-img>
               </v-col>
             </v-row>
@@ -96,16 +97,12 @@ export default {
 
   methods: {
     async submitLogin(){
-      // console.log(this.user)
       if (this.$refs.form.validate() === true) {
-        this.loading = true;
         try {
-          console.log('Loading ...')
-          const response = await this.$store.dispatch('auth/login',this.user);
-          console.log('response',response);
+          this.loading = true;
+          await this.$store.dispatch('auth/login', this.user);
         }catch (error){
-          console.log("error")
-          this.$store.commit("Toast_State", this.toast_error);
+          this.$store.commit("Toast_State", this.errors);
         }finally{
           this.loading = false;
         }
@@ -118,7 +115,6 @@ export default {
     }),
   },
   created() {
-    console.log(this.errors)
   }
 };
 </script>

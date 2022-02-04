@@ -7,33 +7,32 @@ import router from "@/router";
 const ID_TOKEN = 'id_token';
 const apiUrl = process.env['VUE_APP_BASE_API_URL'];
 
-
-export default function create(){
+export default function create() {
     return {
-        namespaced:true,
-        state:{
+        namespaced: true,
+        state: {
             credential: new Credential(),
-            phone:"",
-            password:"",
-            userConfirm:{},
+            phone: "",
+            password: "",
+            userConfirm: {},
             msgErrors: '',
 
         },
-        getters:{
+        getters: {
             ///check Login or not
             LoggedIn(state) {
                 return state.credential.access_token !== null;
             },
             ///Current logged-in user
-            auth(state){
+            auth(state) {
                 return state.credential.user;
             },
             ///Current access token
-            token(state){
-                return  state.credential.access_token;
+            token(state) {
+                return state.credential.access_token;
             },
             ///User login state
-            isAuth(state,getter){
+            isAuth(state, getter) {
                 // return !!getter.token;
                 return !!getter.token;
                 // return state.token && state.token !== null;
@@ -42,23 +41,23 @@ export default function create(){
                 return state.msgErrors;
             }
         },
-        mutations:{
-            setCredential(state,payload){
+        mutations: {
+            setCredential(state, payload) {
                 const {authUser} = payload;
                 const credential = new Credential();
                 const user = new User();
-                localStorage.setItem('phone',payload.data.phone);
+                localStorage.setItem('phone', payload.data.phone);
                 user.fromJSON({
-                    id:authUser.userId,
-                    phone:authUser.data.phone,
+                    id: authUser.userId,
+                    phone: authUser.data.phone,
                     email: authUser.email,
                     name: authUser.name,
                     profile_url: authUser.userProfile,
-                    notification_token:payload.payload,
+                    notification_token: payload.payload,
                 })
                 credential.fromJSON(
                     {
-                        ...payload,...{user}
+                        ...payload, ...{user}
                     }
                 );
                 state.credential = credential;
@@ -67,36 +66,34 @@ export default function create(){
                 // localStorage.setItem(ACCESS_TOKEN_KEY, state.credential.access_token);
             },
             setUserProfile(state, payload) {
-        state.userProfile = payload;
-    },
+                state.userProfile = payload;
+            },
             Commit_ErrorLogin(state, payload) {
                 state.msgErrors = payload;
             },
         },
-        actions:{
+        actions: {
             login(context, user) {
-                // console.log(context)
-                return new Promise(((resolve,reject) =>{
+                return new Promise(((resolve, reject) => {
                     ///Request to server api
                     axios.post(`${apiUrl}auth/login`,
                         {
                             credential: user.credential,
                             password: user.password,
                         }
-                        ).then(
+                    ).then(
                         (response) => {
                             const {data} = response;
-                           localStorage.setItem('confirmAccount',JSON.stringify(user));
+                            localStorage.setItem('confirmAccount', JSON.stringify(user));
                             // this.userConfirm = user;
                             /// Commit credential to data
-                            router.push({ name: 'CheckPhone' });
-                            context.commit('setCredential',data);
+                            router.push({name: 'CheckPhone'}).then();
+                            context.commit('setCredential', data);
                             /// Make then get called
                             resolve(data);
                         }
-                    ).catch((error) =>{
+                    ).catch((error) => {
                         ///Make Catch tet called
-                        reject(error);
                         reject(error);
                         if (error.response.status === 401) {
                             context.commit('Commit_ErrorLogin', error.response.data.message);
@@ -118,11 +115,10 @@ export default function create(){
                     axios.post(`${apiUrl}auth/login`, {
                         credential: data.credential,
                         password: data.password,
-                        id_token:data.id_token,
+                        id_token: data.id_token,
                     })
                         .then(response => {
                             resolve(response)
-                            // console.log(response)
                             const token = (response.data.data.access_token);
                             localStorage.setItem('access_token', token);   // ເກັບ Token ໄວ້ໃນ Localstorage ເພື່ອຈະນຳໄປໃຊ້ຂໍຂໍ້ມູນ
                             window.localStorage.setItem('user', JSON.stringify(response.data.data.user));
@@ -132,298 +128,96 @@ export default function create(){
                         .catch(error => {
                             reject(error)
                             if (error.response.status === 401) {
-                                context.commit('Commit_ErrorLogin',error.response.data.message);
+                                context.commit('Commit_ErrorLogin', error.response.data.message);
                                 setTimeout(() => {
                                     context.commit('Commit_ErrorLogin', '');
                                 }, 3000);
                             } else if (error.response.status === 400) {
-                                context.commit('Commit_ErrorLogin',error.response.data.message);
+                                context.commit('Commit_ErrorLogin', error.response.data.message);
                                 setTimeout(() => {
                                     context.commit('Commit_ErrorLogin', error.response.data.message);
                                 }, 3000);
                             }
                         }).finally(response => {
                         resolve(response)
-                        // router.push({ name: 'Dashboard' });
-                        // const userProfile = window.localStorage.getItem('user');
                         localStorage.removeItem('phone');
                         localStorage.removeItem('id_token');
                         localStorage.removeItem('confirmAccount');
                         setTimeout(() => {
-                            // router.push({ name: 'CheckPhone' });
-                            // router.push({ name: 'Dashboard' });
                             const user_role = window.localStorage.getItem('roles');
                             const roleUsers = JSON.parse(user_role);
-                            if (roleUsers.includes('super_admin',)) {
-                                router.push({ name: 'Dashboard' });
-                                window.location.reload();
-                            } else if(roleUsers.includes('admin')){
-                                router.push({ name: 'Dashboard' });
-                                window.location.reload();
-                            } else {
-                                router.push({ name: 'Dashboard' });
-                                window.location.reload();
-                                // this.destroyToken();
-                            }
+                             roleUsers.filter(item => {
+                                if(item.name.includes('customer')){
+                                    localStorage.removeItem('phone');
+                                    localStorage.removeItem('id_token');
+                                    localStorage.removeItem('confirmAccount');
+                                    localStorage.removeItem('access_token');
+                                    router.push({name:'Login'}).then(() =>{
+                                        window.location.reload();
+                                    });
+                                } else if(item.name.includes('company')){
+                                    localStorage.removeItem('phone');
+                                    localStorage.removeItem('id_token');
+                                    localStorage.removeItem('confirmAccount');
+                                    localStorage.removeItem('access_token');
+                                    router.push({name:'Login'}).then(() =>{
+                                        window.location.reload();
+                                    });
+                                } else if(item.name.includes('pre_customer')){
+                                    localStorage.removeItem('phone');
+                                    localStorage.removeItem('id_token');
+                                    localStorage.removeItem('confirmAccount');
+                                    localStorage.removeItem('access_token');
+                                    router.push({name:'Login'}).then(() =>{
+                                        window.location.reload();
+                                    });
+                                } else if(item.name.includes('driver')){
+                                    localStorage.removeItem('phone');
+                                    localStorage.removeItem('id_token');
+                                    localStorage.removeItem('confirmAccount');
+                                    localStorage.removeItem('access_token');
+                                    router.push({name:'Login'}).then(() =>{
+                                        window.location.reload();
+                                    });
+                                }
+                                else {
+                                    router.push({name: 'Dashboard'}).then(() =>{
+                                        window.location.reload();
+                                    });
+                                }
+                            })
                         }, 300);
-                    }).catch(() => { });
+                    }).catch(() => {
+                    });
                 })
             },
 
             // Logout User
-    destroyToken(context) {
-        if (context.getters.LoggedIn) {
-            return new Promise((resolve, reject) => {
-                axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
-                axios.post(`${apiUrl}auth/logout`)
-                    .then(response => {
-                        resolve(response)
+            destroyToken(context) {
+                if (context.getters.LoggedIn) {
+                    return new Promise((resolve, reject) => {
+                        axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
+                        axios.post(`${apiUrl}auth/logout`)
+                            .then(response => {
+                                resolve(response)
+                            })
+                            .catch((error) => {
+                                reject(error)
+                            })
+                            .finally(response => {
+                                resolve(response)
+                                localStorage.removeItem('access_token')     // Remove Item Of Localstorage...    // Remove Item Of Localstorage...
+                                localStorage.removeItem('user')
+                                context.commit('destroyToken')
+                                router.push({
+                                    name: 'Login'
+                                }).catch(() => {
+                                });
+                            })
                     })
-                    .catch((error) => {
-                        reject(error)
-                    })
-                    .finally(response => {
-                        resolve(response)
-                        localStorage.removeItem('access_token')     // Remove Item Of Localstorage...    // Remove Item Of Localstorage...
-                        localStorage.removeItem('user')
-                        context.commit('destroyToken')
-                        router.push({
-                            name: 'Login'
-                        }).catch(() => { });
-                    })
-            })
-        }
-    },
-
-
-            //     return new Promise((resolve, reject) => {
-            //         axios.post('auth/login', {
-            //             credential: data.credential,
-            //             password: data.password
-            //         })
-            //             .then(response => {
-            //                 resolve(response)
-            //                 console.log(response)
-            //                 // const token = (response.data.data.access_token);
-            //                 // localStorage.setItem('access_token', token);   // ເກັບ Token ໄວ້ໃນ Localstorage ເພື່ອຈະນຳໄປໃຊ້ຂໍຂໍ້ມູນ
-            //                 // window.localStorage.setItem('user', JSON.stringify(response.data.data.user));
-            //                 // window.localStorage.setItem('roles', JSON.stringify(response.data.data.user.roles));
-            //                 // // window.localStorage.setItem('permissions', JSON.stringify(response.data.data.user.role_permissions));
-            //                 // context.commit('AdminSignin', token);
-            //                 // context.commit('setUserProfile', response.data.data.user);
-            //                 // window.location.reload();
-            //             })
-            //             .catch(error => {
-            //                 reject(error)
-            //                 if (error.response.status == 401) {
-            //                     context.commit('Commit_ErrorLogin', 'ອີເມວ ຫຼື ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ...');
-            //                     setTimeout(() => {
-            //                         context.commit('Commit_ErrorLogin', '');
-            //                     }, 3000);
-            //                 } else if (error.response.status == 400) {
-            //                     context.commit('Commit_ErrorLogin', 'ອີເມວ ຫຼື ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ...');
-            //                     setTimeout(() => {
-            //                         context.commit('Commit_ErrorLogin', '');
-            //                     }, 3000);
-            //                 }
-            //             }).finally(response => {
-            //             resolve(response)
-            //             // router.push({ name: 'Dashboard' });
-            //             // const userProfile = window.localStorage.getItem('user');
-            //             setTimeout(() => {
-            //                 router.push({ name: 'CheckPhone' });
-            //                 // const user_role = window.localStorage.getItem('roles');
-            //                 // const roleUsers = JSON.parse(user_role);
-            //                 // if (roleUsers.includes('super_admin', 'admin')) {
-            //                 //     router.push({ name: 'dashboard' });
-            //                 //     window.location.reload();
-            //                 // } else if (roleUsers.includes('admin', 'driver')) {
-            //                 //     router.push({ name: 'Invoice' })
-            //                 // } else {
-            //                 //     router.push({ name: 'Dashboard' });
-            //                 //     window.location.reload();
-            //                 // }
-            //                 // window.location.reload();
-            //             }, 300);
-            //         }).catch(() => { });
-            //     })
-            // },
+                }
+            },
 
         }
     }
 }
-
-
-//
-//
-// const axios = client.create(
-//     {
-//         baseURL: process.env.VUE_APP_BASE_API_URL,
-//     });
-//
-// const state = {
-//     token: localStorage.getItem('access_token') || null,
-//     userProfile: {},
-//     userRole: [],
-//     msgErrors: '',
-//     auth: {},
-//     phone:"",
-// };
-//
-// const getters = {
-//     LoggedIn(state) {
-//         return state.token !== null;
-//     },
-//     getUserRole(state) {
-//         let user_Role = window.localStorage.getItem('roles');
-//         if (user_Role) {
-//             try {
-//                 user_Role = JSON.parse(user_Role);
-//             } catch (err) {
-//                 user_Role = {}
-//             }
-//         } else {
-//             user_Role = {};
-//         }
-//         if (Object.keys(state.userRole).length) {
-//             return state.userRole;
-//         }
-//         return user_Role.role_user;
-//     },
-//     getUserProfile(state) {
-//         let profile = window.localStorage.getItem('user');
-//         if (profile) {
-//             try {
-//                 profile = JSON.parse(profile);
-//             } catch (err) {
-//                 profile = {}
-//             }
-//         } else {
-//             profile = {};
-//         }
-//         if (Object.keys(state.userProfile).length) {
-//             return state.userProfile;
-//         }
-//         return profile.userProfile;
-//     },
-//
-//     getToken(state) {
-//         return state.token;
-//     },
-//     isAuth(state) {
-//         return state.token && state.token !== null;
-//     },
-//     ShowMsgErrors(state) {
-//         return state.msgErrors;
-//     }
-// };
-//
-// const mutations = {
-//     AdminSignin(state, token) {
-//         state.token = token
-//     },
-//     destroyToken(state) {
-//         state.token = null;
-//     },
-//     setUserRole(state, payload) {
-//         state.userRole = payload;
-//     },
-//     setUserProfile(state, payload) {
-//         state.userProfile = payload;
-//     },
-//     Commit_ErrorLogin(state, payload) {
-//         state.msgErrors = payload;
-//         console.log("Hello")
-//     },
-//
-//
-// };
-//
-// const actions = {
-//     LoginUser(context, data) {
-//         return new Promise((resolve, reject) => {
-//             axios.post('auth/login', {
-//                 credential: data.credential,
-//                 password: data.password
-//             })
-//                 .then(response => {
-//                     resolve(response)
-//                     console.log(response)
-//                     // const token = (response.data.data.access_token);
-//                     // localStorage.setItem('access_token', token);   // ເກັບ Token ໄວ້ໃນ Localstorage ເພື່ອຈະນຳໄປໃຊ້ຂໍຂໍ້ມູນ
-//                     // window.localStorage.setItem('user', JSON.stringify(response.data.data.user));
-//                     // window.localStorage.setItem('roles', JSON.stringify(response.data.data.user.roles));
-//                     // // window.localStorage.setItem('permissions', JSON.stringify(response.data.data.user.role_permissions));
-//                     // context.commit('AdminSignin', token);
-//                     // context.commit('setUserProfile', response.data.data.user);
-//                     // window.location.reload();
-//                 })
-//                 .catch(error => {
-//                     reject(error)
-//                     if (error.response.status == 401) {
-//                         context.commit('Commit_ErrorLogin', 'ອີເມວ ຫຼື ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ...');
-//                         setTimeout(() => {
-//                             context.commit('Commit_ErrorLogin', '');
-//                         }, 3000);
-//                     } else if (error.response.status == 400) {
-//                         context.commit('Commit_ErrorLogin', 'ອີເມວ ຫຼື ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ...');
-//                         setTimeout(() => {
-//                             context.commit('Commit_ErrorLogin', '');
-//                         }, 3000);
-//                     }
-//                 }).finally(response => {
-//                 resolve(response)
-//                 // router.push({ name: 'Dashboard' });
-//                 // const userProfile = window.localStorage.getItem('user');
-//                 setTimeout(() => {
-//                     router.push({ name: 'CheckPhone' });
-//                     // const user_role = window.localStorage.getItem('roles');
-//                     // const roleUsers = JSON.parse(user_role);
-//                     // if (roleUsers.includes('super_admin', 'admin')) {
-//                     //     router.push({ name: 'dashboard' });
-//                     //     window.location.reload();
-//                     // } else if (roleUsers.includes('admin', 'driver')) {
-//                     //     router.push({ name: 'Invoice' })
-//                     // } else {
-//                     //     router.push({ name: 'Dashboard' });
-//                     //     window.location.reload();
-//                     // }
-//                     // window.location.reload();
-//                 }, 300);
-//             }).catch(() => { });
-//         })
-//     },
-//
-//     // Logout User
-//     destroyToken(context) {
-//         if (context.getters.LoggedIn) {
-//             return new Promise((resolve, reject) => {
-//                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
-//                 axios.post('auth/logout')
-//                     .then(response => {
-//                         resolve(response)
-//                     })
-//                     .catch((error) => {
-//                         reject(error)
-//                     })
-//                     .finally(response => {
-//                         resolve(response)
-//                         localStorage.removeItem('access_token')     // Remove Item Of Localstorage...    // Remove Item Of Localstorage...
-//                         localStorage.removeItem('user')
-//                         context.commit('destroyToken')
-//                         router.push({
-//                             name: 'Login'
-//                         }).catch(() => { });
-//                     })
-//             })
-//         }
-//     },
-// };
-
-// export default {
-//     namespaced: true,
-//     state,
-//     getters,
-//     mutations,
-//     actions
-// }
