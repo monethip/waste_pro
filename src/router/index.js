@@ -672,7 +672,6 @@ const router = new VueRouter({
 
 function nextCheck(context, middleware, index) {
   const nextMiddleware = middleware[index];
-
   if (!nextMiddleware) return context.next();
 
   return (...parameters) => {
@@ -682,7 +681,6 @@ function nextCheck(context, middleware, index) {
     nextMiddleware({ ...context, nextMidd });
   }
 }
-
 router.beforeEach((to, from, next) => {
   if (to.meta.middleware) {
     const middleware = Array.isArray(to.meta.middleware) ? to.meta.middleware : [to.meta.middleware];
@@ -692,12 +690,10 @@ router.beforeEach((to, from, next) => {
       router,
       to
     }
-
     const nextMiddleware = nextCheck(ctx, middleware, 1);
     return middleware[0]({ ...ctx, nextMiddleware });
 
   }
   return next();
 });
-
 export default router
