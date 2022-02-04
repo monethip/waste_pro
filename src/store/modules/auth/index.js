@@ -1,12 +1,10 @@
 import axios from 'axios';
-// import {apiUrl} from "@/store/apis";
 import User from '@/store/models/User';
 import Credential from "@/store/models/auth/Credential";
 import router from "@/router";
 // const ACCESS_TOKEN_KEY = 'access_token';
 const ID_TOKEN = 'id_token';
 const apiUrl = process.env['VUE_APP_BASE_API_URL'];
-
 export default function create() {
     return {
         namespaced: true,
