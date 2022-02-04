@@ -546,13 +546,6 @@
                       </v-row>
                     </v-form>
                   </v-container>
-
-                  <!--                  <v-btn-->
-                  <!--                      color="primary"-->
-                  <!--                      @click="e1 = 1"-->
-                  <!--                  >-->
-                  <!--                    Continue-->
-                  <!--                  </v-btn>-->
                   <v-btn
                       color="primary"
                       :loading="loading"
@@ -697,7 +690,7 @@
       <v-card>
         <v-card-title>
           <span class="headline"
-            >ເພີ່ມ Role to
+            >Add Role to
             <span
               ><a>{{ edit_user.name }}</a></span
             ></span
@@ -1343,7 +1336,6 @@ export default {
               color: "error",
               msg: error.response.data.message,
             });
-            this.fetchData();
             if (error.response.status === 422) {
               let obj = error.response.data.errors;
               for (let [key, message] of Object.entries(obj)) {
@@ -1477,7 +1469,6 @@ export default {
               color: "error",
               msg: error.response.data.message,
             });
-            this.fetchData();
           });
         this.loading = false;
         this.updateRoleDialog = false;
@@ -1523,7 +1514,6 @@ export default {
               color: "error",
               msg: error.response.data.message,
             });
-            this.fetchData();
           });
         this.loading = false;
         this.permissionDialog = false;
@@ -1568,13 +1558,11 @@ export default {
               color: "error",
               msg: error.response.data.message,
             });
-            this.fetchData();
           });
         this.loading = false;
         this.updatePermissionDialog = false;
       }
     },
-
     resetPassword(item) {
       this.changePasswordDialog = true;
       this.edit_user = item;

@@ -20,41 +20,39 @@
               <h2 class="text-center display-5 black--text mb-8 mt-4">
                 Your Phone Number ({{ showPhone }})
               </h2>
-                <v-text-field
-                    v-model="phone"
-                    label="Phone"
-                    single-line
-                    prepend-inner-icon="mdi-phone"
-                    solo
-                    type="text"
-                    :rules="phoneRule"
-                    @keyup.enter="sendOtp"
-                ></v-text-field>
+              <v-text-field
+                  v-model="phone"
+                  label="Phone"
+                  single-line
+                  prepend-inner-icon="mdi-phone"
+                  solo
+                  type="text"
+                  :rules="phoneRule"
+                  @keyup.enter="sendOtp"
+              ></v-text-field>
 
-                                <p class="errors">
-                                  {{ error }}
-                                </p>
+              <p class="errors">
+                {{ error }}
+              </p>
 
-                <div class="text-center">
-                  <v-btn
-                      block
-                      class="login mt-6 py-6"
-                      :loading="loading"
-                      :disabled="loading"
-                      @click="sendOtp"
-                  >Get OTP
-                  </v-btn
-                  >
-                </div>
+              <div class="text-center">
+                <v-btn
+                    block
+                    class="login mt-6 py-6"
+                    :loading="loading"
+                    :disabled="loading"
+                    @click="sendOtp"
+                >Get OTP
+                </v-btn
+                >
+              </div>
             </div>
-
             <div v-if="verifyCode">
               <h2 class="text-center display-5 black--text mb-0 mt-4">
                 Verify Code OTP
               </h2>
               <p class="text-center display-5 black--text mb-8 mt-0">Input Code from SMS</p>
               <v-form ref="form" lazy-validation>
-
                 <div style="display: flex; flex-direction: row;">
                   <v-otp-input
                       ref="otpInput"
@@ -83,7 +81,6 @@
                 </div>
               </v-form>
             </div>
-
           </v-card-text>
         </v-card>
       </v-col>
@@ -110,7 +107,7 @@ export default {
     showPhone: "",
     code: "",
     user: {},
-    error:"",
+    error: "",
     phoneRule: [
       (v) => !!v || "Phone is required",
       (v) =>
@@ -138,7 +135,7 @@ export default {
               });
               this.loading = false;
             })
-            .catch(() =>{
+            .catch(() => {
               this.loading = false;
               this.$store.commit("Toast_State", {
                 value: true,
@@ -171,7 +168,7 @@ export default {
               this.$store.commit("Loading_State", true);
               const id_token = localStorage.getItem('id_token');
               let user = {...this.user, id_token};
-             this.$store.dispatch('auth/confirmLogin', user);
+              this.$store.dispatch('auth/confirmLogin', user);
             } catch (error) {
               this.$store.commit("Toast_State", {
                 value: true,
@@ -240,8 +237,8 @@ export default {
     const data = localStorage.getItem('confirmAccount');
     this.showPhone = localStorage.getItem('phone');
     this.user = JSON.parse(data);
-    if(this.showPhone === null){
-      router.push({ name: 'Login' });
+    if (this.showPhone === null) {
+      router.push({name: 'Login'});
     }
   }
 };
