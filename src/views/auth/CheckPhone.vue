@@ -121,7 +121,7 @@ export default {
 
   methods: {
     sendOtp() {
-      if (this.phone.length >= 8) {
+      if (this.phone.length == 8) {
         this.loading = true;
         let countryCode = "+85620"; //laos
         let phoneNumber = countryCode + this.phone;
