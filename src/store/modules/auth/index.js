@@ -14,6 +14,11 @@ export default function create() {
             password: "",
             userConfirm: {},
             msgErrors: '',
+            notificationToastState: false,
+            progressLoading: false,
+            message: '',
+            color: '',
+            isLoading: false,
 
         },
         getters: {
@@ -68,6 +73,11 @@ export default function create() {
             },
             Commit_ErrorLogin(state, payload) {
                 state.msgErrors = payload;
+            },
+            Toast_State(state, result) {
+                state.notificationToastState = result.value;
+                state.message = result.msg;
+                state.color = result.color;
             },
         },
         actions: {

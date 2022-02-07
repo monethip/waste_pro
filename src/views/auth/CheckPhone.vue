@@ -122,37 +122,64 @@ export default {
   methods: {
     sendOtp() {
       if (this.phone.length == 8) {
+        //Check Phone number
         this.loading = true;
-        let countryCode = "+85620"; //laos
-        let phoneNumber = countryCode + this.phone;
-        let appVerifier = this.appVerifier;
-        firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
-            .then(confirmationResult => {
-              this.verifyCode = true;
-              this.verifyPhone = false;
-              window.confirmationResult = confirmationResult;
-              this.$store.commit("Toast_State", {
-                value: true,
-                color: "error",
-                msg: "Success",
-              });
-              this.loading = false;
+        this.$axios
+            .post("auth/check-phone", {
+              credential:this.user.credential,
+              password:this.user.password,
+              phone:this.phone,
+            })
+            .then((res) => {
+              if (res.data.code === 200) {
+                console.error(res.data.data.collect)
+                if(res.data.data.collect === true){
+                  //Send OTP
+                    this.loading = true;
+                    let countryCode = "+85620"; //laos
+                    let phoneNumber = countryCode + this.phone;
+                    let appVerifier = this.appVerifier;
+                    firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+                        .then(confirmationResult => {
+                          this.verifyCode = true;
+                          this.verifyPhone = false;
+                          window.confirmationResult = confirmationResult;
+                          this.$store.commit("Toast_State", {
+                            value: true,
+                            color: "error",
+                            msg: "Success",
+                          });
+                          this.loading = false;
+                        })
+                        .catch(() => {
+                          this.loading = false;
+                          this.$store.commit("Toast_State", {
+                            value: true,
+                            color: "error",
+                            msg: "SMS not sent",
+                          });
+                        });
+                } else if(res.data.data.collect === false){
+                  this.loading = false;
+                  this.$store.commit("Toast_State", {
+                    value: true,
+                    color: "error",
+                    msg: "ເບີບໍ່ຖືກຕ້ອງ",
+                  });
+                } else {
+                    this.loading = false;
+                    this.$store.commit("Toast_State", {
+                      value: true,
+                      color: "error",
+                      msg: "ມີບາງຢ່າງຜິດພາດ ກະລຸນາລອງໃໝ່",
+                    });
+                }
+                this.loading = false;
+              }
             })
             .catch(() => {
               this.loading = false;
-              this.$store.commit("Toast_State", {
-                value: true,
-                color: "error",
-                msg: "SMS not sent",
-              });
             });
-      } else {
-        this.loading = false;
-        this.$store.commit("Toast_State", {
-          value: true,
-          color: "error",
-          msg: "ມີບາງຢ່າງຜິດພາດ ກະລຸນາລອງໃໝ່",
-        });
       }
     },
 
