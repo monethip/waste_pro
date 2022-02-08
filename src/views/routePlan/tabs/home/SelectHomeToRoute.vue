@@ -233,7 +233,8 @@ export default {
       // selectedAllVillage: [],
 
       headers: [
-        { text: "ບໍລິສັດ", value: "company_name" },
+        { text: "ຊື່", value: "name" },
+        { text: "ນາມສະກຸນ", value: "surname" },
         // { text: "ຜູ້ຮບຜິດຊອບ", value: "company_coordinators.name" },
         { text: "Phone", value: "user.phone", sortable: false },
         { text: "ລາຍລະອຽດທີ່ຢູ່", value: "address_detail" },
@@ -292,7 +293,7 @@ export default {
           this.$store.commit("Loading_State", false);
           this.fetchData();
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
+            let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
@@ -407,7 +408,7 @@ export default {
           b: "px",
         },
       };
-      var pin2 = {
+      let pin2 = {
         url: require("@coms/../../src/assets/pin2.svg"),
         zoomControl: true,
         mapTypeControl: false,

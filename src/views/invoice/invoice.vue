@@ -88,7 +88,7 @@
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
-  name: "Customer",
+  name: "Invoice",
   title() {
     return `Vientiane Waste Co-Dev|Invoice`;
   },
@@ -129,14 +129,8 @@ export default {
           sortable: false,
         },
         {
-          text: "ຈຳນວນລູກຄ້າ",
-          value: "count_customer",
-          align: "center",
-          sortable: false,
-        },
-        {
           text: "ຈຳນວນບິນ",
-          value: "plan_month.has_invoice",
+          value: "count_customer",
           align: "center",
           sortable: false,
         },

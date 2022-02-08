@@ -457,16 +457,16 @@ const routes = [
   },
 
   //Plan no map
-  {
-    path: '/select/customer',
-    name: 'SelectCustomerRoutePlan',
-    component: () => import('@/views/routePlan/tabs/company/SelectCustomerToRoute.vue'),
-    props: true,
-    meta: {
-      layout: "admin",
-      middleware: [Middlewares.auth],
-    }
-  },
+  // {
+  //   path: '/select/customer',
+  //   name: 'SelectCustomerRoutePlan',
+  //   component: () => import('@/views/routePlan/tabs/home/SelectCustomerToRoute.vue'),
+  //   props: true,
+  //   meta: {
+  //     layout: "admin",
+  //     middleware: [Middlewares.auth],
+  //   }
+  // },
 
   {
     path: '/create/route/plan',
