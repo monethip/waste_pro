@@ -14,7 +14,7 @@
       <v-card>
         <v-card-text class="px-16 py-16">
           <v-row align="center" class="py-4">
-            <v-col align="center">
+            <v-col>
               <h2>ໃບບິນເກັບເງິນຄ່າຂີ້ເຫື້ອຍ</h2>
               <!-- <p v-if="invoice.plan_month">{{ invoice.plan_month.name }}</p> -->
             </v-col>
@@ -88,21 +88,20 @@
             </v-col>
             <v-col v-if="invoice.media">
               <div v-for="(item, index) in invoice.media" :key="index">
-                <v-img
+                <img
                   aspect-ratio="1"
                   class="grey"
                   :src="item.url"
-                >
-                </v-img>
+                />
               </div>
             </v-col>
           </v-row>
-          <v-card-actions class="mt-6">
-            <v-spacer></v-spacer>
-            <v-btn color="info" text :loading="loading" :disabled="loading">
-              Export
-            </v-btn>
-          </v-card-actions>
+<!--          <v-card-actions class="mt-6">-->
+<!--            <v-spacer></v-spacer>-->
+<!--            <v-btn color="info" text :loading="loading" :disabled="loading">-->
+<!--              Export-->
+<!--            </v-btn>-->
+<!--          </v-card-actions>-->
         </v-card-text>
       </v-card>
     </div>

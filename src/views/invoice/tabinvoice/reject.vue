@@ -131,6 +131,12 @@
                   ລາຍລະອຽດ
                 </v-list-item-title>
               </v-list-item>
+              <v-list-item link @click="PaymentPage(item.id)">
+                <v-list-item-title>
+                  <v-icon small> mdi-credit-card </v-icon>
+                  ຊຳລະບິນ
+                </v-list-item-title>
+              </v-list-item>
             </v-list>
           </v-menu>
         </template> </v-data-table
@@ -298,7 +304,12 @@ export default {
         })
         .catch(() => {});
     },
-
+    PaymentPage(id) {
+      this.$router.push({
+        name: "Payment",
+        params: { id },
+      });
+    },
     fetchVillage() {
       this.$axios
         .get("info/district/" + this.selectedDistrict + "/village")
