@@ -372,6 +372,7 @@ export default {
       ],
 
       headers: [
+        { text: "ID", value: "customer_id" },
         { text: "ຊື່", value: "name" },
         { text: "ນາມສະກຸນ", value: "surname" },
         { text: "Phone", value: "user.phone", sortable: false },
