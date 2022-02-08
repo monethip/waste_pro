@@ -335,7 +335,7 @@ export default {
       // console.log(this.customers);
       if (this.customers.length > 0 && this.selectedVillage.length > 0) {
         this.$router.push({
-          name: "CreateRoutePlanCompany",
+          name: "CreateRoutePlan",
           params: {
             items: this.customers,
           },

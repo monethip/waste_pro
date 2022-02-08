@@ -242,10 +242,9 @@
                   </v-col>
                   <v-col cols="6">
                     <v-text-field
-                      label="Email *"
+                      label="Email"
                       required
                       v-model="user.email"
-                      :rules="emailRules"
                     ></v-text-field>
                     <p class="errors">
                       {{ server_errors.email }}
@@ -547,10 +546,6 @@ export default {
         },
       ],
       //Validation
-      emailRules: [
-        (v) => !!v || "E-mail is required",
-        (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
-      ],
       passwordRules: [
         (v) => !!v || "Password is required",
         (v) =>
