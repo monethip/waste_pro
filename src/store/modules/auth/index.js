@@ -69,6 +69,7 @@ export default function create() {
                 // localStorage.setItem(ACCESS_TOKEN_KEY, state.credential.access_token);
             },
             setUserProfile(state, payload) {
+
                 state.userProfile = payload;
             },
             Commit_ErrorLogin(state, payload) {
@@ -131,7 +132,7 @@ export default function create() {
                             localStorage.setItem('access_token', token);   // ເກັບ Token ໄວ້ໃນ Localstorage ເພື່ອຈະນຳໄປໃຊ້ຂໍຂໍ້ມູນ
                             window.localStorage.setItem('user', JSON.stringify(response.data.data.user));
                             window.localStorage.setItem('roles', JSON.stringify(response.data.data.user.roles));
-                            context.commit('setUserProfile', response.data.data.user);
+                            // context.commit('setUserProfile', response.data.data.user);
                         })
                         .catch(error => {
                             reject(error)
@@ -151,6 +152,7 @@ export default function create() {
                         localStorage.removeItem('phone');
                         localStorage.removeItem('id_token');
                         localStorage.removeItem('confirmAccount');
+
                         setTimeout(() => {
                             const user_role = window.localStorage.getItem('roles');
                             const roleUsers = JSON.parse(user_role);
@@ -189,9 +191,9 @@ export default function create() {
                                     });
                                 }
                                 else {
-                                    router.push({name: 'Dashboard'}).then(() =>{
-                                        window.location.reload();
-                                    });
+                                      router.push({name: 'Dashboard'}).then(() =>{
+                                          window.location.reload();
+                                      });
                                 }
                             })
                         }, 300);

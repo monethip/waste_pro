@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import axios from 'axios';
 import store from '@/store';
+// import router from "@/router";
 // import router from '@/router/index';
 
 // Check Auth && Set Token To Header
@@ -24,26 +25,22 @@ export const normalAxios = axios.create(
 //     apiUrl
 // }
 
-// $axios.interceptors.response.use(function (response) {
-//     return response;
-// },
-//     function (error) {
-//     // console.log(error.response.status)
-//     if (error.response.status == 401) {
-//         store.dispatch("destroyToken");
-//         router.push({ name: 'Login' });
-//         localStorage.removeItem('access_token');
-//         // localStorage.removeItem('user')
-//     }
-//
-//     if (error.response.status == 403) {
-//         store.dispatch("destroyToken");
-//         router.push({ name: 'Login' });
-//         localStorage.removeItem('access_token');
-//         // localStorage.removeItem('user')
-//     }
-//     return Promise.reject(error);
-// });
+$axios.interceptors.response.use(function (response) {
+    return response;
+},
+    function (error) {
+    console.log(error.response.status)
+    if (error.response.status == 401) {
+        // store.dispatch("destroyToken");
+        // localStorage.removeItem('access_token');
+    }
+
+    if (error.response.status == 403) {
+        // store.dispatch("destroyToken");
+        // localStorage.removeItem('access_token');
+    }
+    return Promise.reject(error);
+});
 
 
 Vue.prototype.$axios = $axios;
