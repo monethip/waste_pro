@@ -10,7 +10,7 @@
       <v-card-text class="px-12">
         <v-form ref="form" lazy-validation>
           <v-row>
-            <v-col align="center">
+            <v-col>
               <div class="field">
                 <div class="file is-large is-boxed">
                   <label class="file-label">
@@ -51,7 +51,6 @@
           </v-row>
           <v-row>
             <v-col
-              align="center"
               class="mt-5"
               v-for="(item, index) in preview_list"
               :key="index"

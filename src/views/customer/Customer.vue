@@ -378,9 +378,9 @@ export default {
         { text: "Phone", value: "user.phone", sortable: false },
         { text: "ທີ່ຢູ່", value: "district.name", sortable: false },
         { text: "ປະເພດບໍລິການ", value: "package.name", sortable: false },
-        // { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
         { text: "Profile", value: "media" },
-        { text: "ສະຖານະ", value: "status" },
+        { text: "ສະຖານະແພັກເກດ", value: "status" },
+        { text: "ເປີດ/ປິດບໍລິການ", value: "can_collect",align:"center" },
         { text: "", value: "actions", sortable: false },
       ],
     };
