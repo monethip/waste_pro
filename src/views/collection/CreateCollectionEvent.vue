@@ -337,6 +337,7 @@ export default {
       time: "",
       time_menu: false,
       errormsg: "",
+      selectedDriver:"",
       //Map
       latlng: {
         lat: 18.1189434,

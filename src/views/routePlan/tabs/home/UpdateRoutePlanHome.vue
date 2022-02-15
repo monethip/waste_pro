@@ -216,7 +216,7 @@
       <template @close="close">
         <v-card>
           <v-card-title>
-            <span class="headline">ເພີ່ມລູກຄ້າເຂົ້າໃນແຜນ</span>
+            <span class="headline">Add customer to route plan</span>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -382,7 +382,7 @@ export default {
       plan: {},
       headers: [
         { text: "", value: "" },
-        { text: "#", value: "" },
+        { text: "ລຳດັບ", value: "" },
         { text: "Id", value: "id" },
         { text: "ລູກຄ້າ", value: "" },
         // { text: "Phone", value: "user.phone", sortable: false },
@@ -635,6 +635,7 @@ export default {
             per_page: this.per_page,
             // filter: this.search,
             villages: this.selectedVillage,
+            without:['route_plan','calendar']
           },
         })
         .then((res) => {

@@ -224,7 +224,7 @@
       <template @close="close">
         <v-card>
           <v-card-title>
-            <span class="headline">ເພີ່ມລູກຄ້າເຂົ້າໃນແຜນ</span>
+            <span class="headline">Add customer to route plan</span>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -390,7 +390,7 @@ export default {
       plan: {},
       headers: [
         { text: "", value: "" },
-        { text: "#", value: "" },
+        { text: "ລຳດັບ", value: "" },
         { text: "Id", value: "id" },
         { text: "ລູກຄ້າ", value: "" },
         // { text: "Phone", value: "user.phone", sortable: false },
@@ -439,7 +439,7 @@ export default {
     afterAdd(evt) {
       const oldIndex = evt.moved.oldIndex;
       const newIndex = evt.moved.newIndex;
-      var tmpOrder = this.customers[oldIndex];
+      let tmpOrder = this.customers[oldIndex];
       this.customers.splice(oldIndex, 1);
       this.customers.splice(newIndex, 0, tmpOrder);
     },
@@ -498,7 +498,6 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.plan = res.data.data;
-              console.log(this.plan);
             }, 100);
           }
         })
@@ -643,6 +642,7 @@ export default {
             per_page: this.per_page,
             // filter: this.search,
             villages: this.selectedVillage,
+            without:['route_plan','calendar']
           },
         })
         .then((res) => {
@@ -652,7 +652,6 @@ export default {
               this.addCustomers = res.data.data.data;
               // this.selectedAllCustomer = res.data.data;
               this.pagination = res.data.data.pagination;
-              console.log(this.addCustomers);
               // this.getCenter();
             }, 100);
           }

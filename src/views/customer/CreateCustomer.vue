@@ -117,10 +117,9 @@
             </v-col>
             <v-col cols="4">
               <v-text-field
-                label="Email *"
+                label="Email"
                 required
                 v-model="data.email"
-                :rules="emailRules"
               ></v-text-field>
               <p class="errors">
                 {{ server_errors.email }}
@@ -487,8 +486,6 @@ export default {
             setTimeout(() => {
               this.addressdetail = res.data.data;
               // this.pagination = res.data.data.pagination;
-              console.log("Detail" + this.addressdetail);
-              console.log("eheheh");
             }, 100);
           }
         })
@@ -545,7 +542,7 @@ export default {
               msg: error.response.data.message,
             });
             if (error.response.status == 422) {
-              var obj = error.response.data.errors;
+              let obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
               }
@@ -638,8 +635,6 @@ export default {
     fetchUnit() {
       this.village_details.filter((item) => {
         this.units = item.village_details;
-        console.log("Hello Unit" + this.units);
-        console.error("Unit");
         // console.log(this.units);
         // console.log(item.village_details);
         // item.village_details.forEach((data) => {

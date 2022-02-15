@@ -97,8 +97,7 @@
             </v-col>
             <v-col cols="4">
               <v-text-field
-                label="Email ບໍລິສັດ *"
-                required
+                label="Email ບໍລິສັດ"
                 v-model="data.email"
                 outlined
                 dense
@@ -153,8 +152,7 @@
             </v-col>
             <v-col cols="6">
               <v-text-field
-                label="Email ຜູ້ປະສານງານ *"
-                required
+                label="Email ຜູ້ປະສານງານ"
                 v-model="data.coordinator_email"
                 outlined
                 dense

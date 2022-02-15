@@ -30,9 +30,7 @@
               <v-col cols="12">
                 <v-text-field
                   label="Embed"
-                  required
                   v-model="plan.embed"
-                  :rules="nameRules"
                 ></v-text-field>
                 <p class="errors">
                   {{ server_errors.embed }}

@@ -346,9 +346,9 @@ export default {
       this.infoContent =
         m.priority +
         " " +
-        m.customer.name +
+        m.customer.company_name +
         " (" +
-        m.customer.house_number +
+        m.customer.customer_id +
         ") ";
       if (this.infoCurrentKey == key) {
         this.infoOpened = !this.infoOpened;

@@ -233,6 +233,7 @@ export default {
       // selectedAllVillage: [],
 
       headers: [
+        { text: "ID", value: "customer_id" },
         { text: "ບໍລິສັດ", value: "company_name" },
         // { text: "ຜູ້ຮບຜິດຊອບ", value: "company_coordinators.name" },
         { text: "Phone", value: "user.phone", sortable: false },
@@ -275,6 +276,7 @@ export default {
             per_page: this.per_page,
             // filter: this.search,
             villages: this.selectedVillage,
+            without:['route_plan','calendar']
           },
         })
         .then((res) => {
@@ -292,7 +294,7 @@ export default {
           this.$store.commit("Loading_State", false);
           this.fetchData();
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
+            let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
@@ -330,7 +332,6 @@ export default {
     },
 
     createPage() {
-      console.log("Helo");
       //  var a = [];
       // console.log(this.customers);
       if (this.customers.length > 0 && this.selectedVillage.length > 0) {
@@ -386,7 +387,7 @@ export default {
       }
     },
     getSiteIcon(status) {
-      var pin1 = {
+      const pin1 = {
         url: require("@coms/../../src/assets/pin1.svg"),
         zoomControl: true,
         mapTypeControl: false,
@@ -408,7 +409,7 @@ export default {
           b: "px",
         },
       };
-      var pin2 = {
+      const pin2 = {
         url: require("@coms/../../src/assets/pin2.svg"),
         zoomControl: true,
         mapTypeControl: false,
@@ -444,7 +445,7 @@ export default {
     },
     toggleInfo(m, key) {
       this.infoPosition = this.getMarkers(m);
-      this.infoContent = m.name + " (" + m.house_number + ") ";
+      this.infoContent = m.company_name + " (" + m.user.phone + ") ";
       if (this.infoCurrentKey == key) {
         this.infoOpened = !this.infoOpened;
       } else {

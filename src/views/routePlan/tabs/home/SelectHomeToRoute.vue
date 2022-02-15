@@ -233,6 +233,7 @@ export default {
       // selectedAllVillage: [],
 
       headers: [
+        { text: "ID", value: "customer_id" },
         { text: "ຊື່", value: "name" },
         { text: "ນາມສະກຸນ", value: "surname" },
         // { text: "ຜູ້ຮບຜິດຊອບ", value: "company_coordinators.name" },
@@ -276,6 +277,7 @@ export default {
             per_page: this.per_page,
             // filter: this.search,
             villages: this.selectedVillage,
+            without:['route_plan','calendar']
           },
         })
         .then((res) => {

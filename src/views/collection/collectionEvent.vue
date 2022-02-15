@@ -1,12 +1,12 @@
 <template>
   <v-container>
     <v-row class="mb-n6">
-      <v-col>
+      <v-col cols="1">
         <v-btn class="btn-primary" @click="createPage()"
           ><v-icon>mdi-plus</v-icon>
         </v-btn>
       </v-col>
-      <v-col>
+      <v-col cols="3">
         <v-menu
           v-model="start_menu"
           :close-on-content-click="true"
@@ -33,28 +33,30 @@
           ></v-date-picker>
         </v-menu>
       </v-col>
-      <v-col>
+      <v-col cols="4">
         <v-select
           outlined
           dense
           :items="collectionStatus"
           v-model="selectedCollectionStatus"
           @input="fetchData()"
-          item-text="name"
+          item-text="dis_play"
           item-value="name"
-          label="ສະຖານະ"
+          label="ສະຖານະບໍລິການ"
+          multiple
         ></v-select>
       </v-col>
-      <v-col>
+      <v-col cols="4">
         <v-select
           outlined
           dense
           :items="paymentStatus"
           v-model="selectedPaymentStatus"
           @input="fetchData()"
-          item-text="name"
+          item-text="dis_play"
           item-value="name"
           label="ສະຖານະການຊຳລະ"
+          multiple
         ></v-select>
       </v-col>
     </v-row>
@@ -90,7 +92,7 @@
                 <th class="text-left">Discount</th>
                 <th class="text-left">Total</th>
                 <th class="text-left">Subtotal</th>
-                <th class="text-left">ສະຖານະ</th>
+                <th class="text-left">ສະຖານະບໍລິການ</th>
                 <th class="text-left">ສະຖານະການຊຳລະ</th>
                 <th class="text-left">Image</th>
               </tr>
@@ -147,12 +149,13 @@
                         </v-list-item-title>
                       </v-list-item>
 
-                      <div
-                        v-if="
-                          user.collect_status == 'approved' &&
-                          user.payment_status == 'pending'
-                        "
-                      >
+<!--                      <div-->
+<!--                        v-if="-->
+<!--                          user.collect_status == 'approved' &&-->
+<!--                          user.payment_status == 'pending'-->
+<!--                        "-->
+<!--                      >-->
+                      <div>
                         <v-list-item link @click="paymentPage(user)">
                           <v-list-item-title>
                             <v-icon small class="mr-2">mdi-cash</v-icon>
@@ -160,12 +163,13 @@
                           </v-list-item-title>
                         </v-list-item>
                       </div>
-                      <div
-                        v-if="
-                          user.collect_status == 'approved' &&
-                          user.payment_status == 'to_confirm_payment'
-                        "
-                      >
+<!--                      <div-->
+<!--                        v-if="-->
+<!--                          user.collect_status == 'approved' &&-->
+<!--                          user.payment_status == 'to_confirm_payment'-->
+<!--                        "-->
+<!--                      >-->
+                      <div>
                         <v-list-item link @click="paymentConfirmModal(user)">
                           <v-list-item-title>
                             <v-icon small class="mr-2">mdi-card</v-icon>
@@ -497,50 +501,61 @@ export default {
       search: "",
       oldVal: "",
       server_errors: {},
-      selectedCollectionStatus: "requested",
+      selectedCollectionStatus: [],
       collectionStatus: [
         {
           id: 1,
           name: "requested",
+          dis_play:"requested"
         },
         {
           id: 2,
           name: "rejected",
+          dis_play:"rejected"
         },
         {
           id: 3,
           name: "approved",
+          dis_play:"approved"
+
         },
         {
           id: 4,
           name: "collected",
+          dis_play:"collected"
         },
         {
           id: 5,
           name: "collect_confirm",
+          dis_play:"collect_confirm"
         },
         {
           id: 5,
           name: "collect_reject",
+          dis_play:"collect_reject"
         },
       ],
-      selectedPaymentStatus: "pending",
+      selectedPaymentStatus: [],
       paymentStatus: [
         {
           id: 1,
           name: "pending",
+          dis_play:"pending"
         },
         {
           id: 2,
           name: "to_confirm_payment",
+          dis_play:"to_confirm_payment"
         },
         {
           id: 3,
           name: "rejected",
+          dis_play:"rejected"
         },
         {
           id: 4,
           name: "success",
+          dis_play:"success"
         },
       ],
 
@@ -589,17 +604,17 @@ export default {
       this.imageUrl = URL.createObjectURL(file);
     },
     fetchData() {
+      const params = {
+        page: this.pagination.current_page,
+        per_page: this.per_page,
+        collect_status: this.selectedCollectionStatus,
+        payment_status: this.selectedPaymentStatus,
+        // month: this.month,
+      }
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("collection-event", {
-          params: {
-            page: this.pagination.current_page,
-            per_page: this.per_page,
-            // filter: this.search,
-            collect_status: this.selectedCollectionStatus,
-            payment_status: this.selectedPaymentStatus,
-            // month: this.month,
-          },
+        params
         })
         .then((res) => {
           if (res.data.code == 200) {
