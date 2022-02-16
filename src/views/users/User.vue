@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <div id="recaptcha-container"></div>
     <v-row class="mb-n6">
       <v-col>
         <v-btn @click="openAddModal()" class="btn-primary"
@@ -171,7 +172,6 @@
             <span class="headline">ເພີ່ມ User</span>
           </v-card-title>
           <v-card-text>
-
             <v-stepper v-model="stepValue">
               <v-stepper-header>
                 <v-stepper-step
@@ -915,7 +915,6 @@
         </v-card-actions>
       </template>
     </ModalDelete>
-    <div id="recaptcha-container"></div>
   </v-container>
 </template>
 
