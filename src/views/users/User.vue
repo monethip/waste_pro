@@ -1,6 +1,9 @@
 <template>
   <v-container>
-    <div id="recaptcha-container"></div>
+    <div style="z-index: 9999;">
+      <div id="recaptcha-container"></div>
+    </div>
+
     <v-row class="mb-n6">
       <v-col>
         <v-btn @click="openAddModal()" class="btn-primary"
@@ -169,7 +172,7 @@
       <template @close="close">
         <v-card>
           <v-card-title>
-            <span class="headline">ເພີ່ມ User</span>
+            <span class="headline">Add user</span>
           </v-card-title>
           <v-card-text>
             <v-stepper v-model="stepValue">
@@ -325,12 +328,6 @@
                     </v-form>
                   </v-container>
 
-<!--                  <v-btn-->
-<!--                      color="primary"-->
-<!--                      @click="e1 = 1"-->
-<!--                  >-->
-<!--                    Continue-->
-<!--                  </v-btn>-->
                   <v-btn
                       color="primary"
                       :loading="loading"

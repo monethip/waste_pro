@@ -11,7 +11,7 @@
         <v-container>
           <v-form ref="form" lazy-validation>
             <v-row>
-              <v-col align="center">
+              <v-col>
                 <div class="field">
                   <div class="file is-large is-boxed">
                     <label class="file-label">
@@ -373,6 +373,7 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data;
+              console.log(this.data)
               this.selectedVillage = res.data.data.village_id;
               res.data.data.village_details.map((item) => {
                 this.village_variation_id = item.village_variation_id;
@@ -467,9 +468,6 @@ export default {
       this.image_list.map((item) => {
         formData.append("images[]", item);
       });
-      // this.selectedVillageDetail.map((item) => {
-      //   formData.append("village_details[]", item);
-      // });
       this.selectedVillageDetail.map((item) => {
         formData.append("village_details[]", item);
       });

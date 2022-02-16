@@ -15,7 +15,7 @@
       <v-card>
         <v-card-text class="px-16 py-16">
           <v-row align="center" class="py-4">
-            <v-col align="center">
+            <v-col>
               <h2>ຊຳລະບິນຄ່າຂີ້ເຫຍື້ອ</h2>
             </v-col>
           </v-row>
@@ -111,32 +111,32 @@
                     {{ server_errors.image }}
                   </p>
                 </v-row>
-                <v-row>
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="bcel_reference_number"
-                      label="ເລກລະຫັດການຊຳລະ"
-                      outlined
-                      dense
-                      type="number"
-                      class="input-number"
-                      :rules="[
-                        () =>
-                          !!bcel_reference_number ||
-                          'BCEL Reference Number field is required',
-                        () =>
-                          (!!bcel_reference_number &&
-                            bcel_reference_number.length == 15) ||
-                          'BCEL Reference Number must be than 15 number',
-                      ]"
-                      counter="15"
-                    >
-                    </v-text-field>
-                  </v-col>
-                  <p class="errors">
-                    {{ server_errors.bcel_reference_number }}
-                  </p>
-                </v-row>
+<!--                <v-row>-->
+<!--                  <v-col cols="12">-->
+<!--                    <v-text-field-->
+<!--                      v-model="bcel_reference_number"-->
+<!--                      label="ເລກລະຫັດການຊຳລະ"-->
+<!--                      outlined-->
+<!--                      dense-->
+<!--                      type="number"-->
+<!--                      class="input-number"-->
+<!--                      :rules="[-->
+<!--                        () =>-->
+<!--                          !!bcel_reference_number ||-->
+<!--                          'BCEL Reference Number field is required',-->
+<!--                        () =>-->
+<!--                          (!!bcel_reference_number &&-->
+<!--                            bcel_reference_number.length == 15) ||-->
+<!--                          'BCEL Reference Number must be than 15 number',-->
+<!--                      ]"-->
+<!--                      counter="15"-->
+<!--                    >-->
+<!--                    </v-text-field>-->
+<!--                  </v-col>-->
+<!--                  <p class="errors">-->
+<!--                    {{ server_errors.bcel_reference_number }}-->
+<!--                  </p>-->
+<!--                </v-row>-->
               </div>
             </v-form>
           </v-container>
@@ -270,7 +270,7 @@ export default {
       invoice: {},
       image: "",
       imageUrl: "",
-      bcel_reference_number: "",
+      // bcel_reference_number: "",
       payment_method: "",
       paymentType: "",
       confirmType: "",
@@ -359,7 +359,7 @@ export default {
       let formData = new FormData();
       formData.append("payment_method", this.payment_method);
       formData.append("image", this.image);
-      formData.append("bcel_reference_number", this.bcel_reference_number);
+      // formData.append("bcel_reference_number", this.bcel_reference_number);
       formData.append("_method", "PUT");
       if (this.$refs.form.validate() == true) {
         this.loading = true;
@@ -453,7 +453,7 @@ export default {
         this.payment_method = "cash";
         this.image = "";
         this.imageUrl = "";
-        this.bcel_reference_number = "";
+        // this.bcel_reference_number = "";
       } else if (this.paymentType == 1) {
         this.payment_method = "bcel";
       }
@@ -464,9 +464,9 @@ export default {
         this.confirmPayment();
       }
     },
-    bcel_reference_number: function () {
-      this.server_errors.bcel_reference_number = "";
-    },
+    // bcel_reference_number: function () {
+    //   this.server_errors.bcel_reference_number = "";
+    // },
     image: function () {
       this.server_errors.image = "";
     },
