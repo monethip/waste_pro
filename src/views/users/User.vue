@@ -560,7 +560,7 @@
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="changeStatusDialog = false">
+              <v-btn color="blue darken-1" text @click="closeChangePhone">
                 Close
               </v-btn>
             </v-card-actions>
@@ -600,10 +600,10 @@
                   <v-text-field
                     label="Password Confirm *"
                     type="password"
-                    v-model="password_confirmation"
+                    v-model="password_confirm"
                     :rules="passwordConfirmRules"
                     required
-                    @keyup.enter="AddItem"
+                    @keyup.enter="resetPasswordAction"
                   ></v-text-field>
                   <p class="errors">
                     {{ server_errors.password_confirmation }}
@@ -624,7 +624,7 @@
               :disabled="loading"
               @click="resetPasswordAction"
             >
-              Change
+              Reset
             </v-btn>
           </v-card-actions>
         </v-card-text>
@@ -979,7 +979,7 @@ export default {
       oldVal: "",
       // resetPassword
       password: "",
-      password_confirmation: "",
+      password_confirm: "",
       statuses: [
         {
           name: "active",
@@ -1269,7 +1269,7 @@ export default {
         this.$axios
           .put("user-setting/reset-password/" + this.edit_user.id, {
             password: this.password,
-            password_confirmation: this.password_confirmation,
+            password_confirmation: this.password_confirm,
           })
           .then((res) => {
             if (res.data.code === 200) {
@@ -1577,7 +1577,7 @@ export default {
       this.edit_user = item;
     },
     closeChangePhone(){
-      this.changePasswordDialog = false;
+      this.changePhoneDialog = false;
       this.stepValue = 1;
     },
     changePhone() {
