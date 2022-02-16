@@ -93,6 +93,20 @@
           multiple
         ></v-select>
       </v-col>
+
+      <v-col>
+        <v-select
+            outlined
+            dense
+            :items="customerStatus"
+            v-model="selectedCustomerStatus"
+            item-text="name"
+            item-value="value"
+            label="ສະຖານະລູກຄ້າ"
+            multiple
+        ></v-select>
+      </v-col>
+
       <v-col>
         <v-text-field
           outlined
@@ -370,6 +384,19 @@ export default {
           name: "trial",
         },
       ],
+      selectedCustomerStatus: [],
+      customerStatus: [
+        {
+          id: 1,
+          value:"calendar",
+          name: "ຍັງບໍມີຕາຕະລາງ",
+        },
+        {
+          id: 2,
+          value:"route_plan",
+          name: "ຍັງບໍມີແຜນ",
+        },
+      ],
 
       headers: [
         { text: "ID", value: "customer_id" },
@@ -398,6 +425,7 @@ export default {
             statuses: this.selectedStatus,
             date_from: this.start_date,
             date_end: this.end_date,
+            without: this.selectedCustomerStatus
           },
         })
         .then((res) => {
@@ -412,7 +440,7 @@ export default {
         .catch((error) => {
           this.$store.commit("Loading_State", false);
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
+            let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
@@ -629,6 +657,9 @@ export default {
     },
     package_date: function () {
       this.server_errors.start_month = "";
+    },
+    selectedCustomerStatus: function () {
+      this.fetchData();
     },
   },
   created() {

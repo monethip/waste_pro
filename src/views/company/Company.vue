@@ -95,6 +95,18 @@
           multiple
         ></v-select>
       </v-col>
+      <v-col>
+        <v-select
+            outlined
+            dense
+            :items="customerStatus"
+            v-model="selectedCustomerStatus"
+            item-text="name"
+            item-value="value"
+            label="ສະຖານະລູກຄ້າ"
+            multiple
+        ></v-select>
+      </v-col>
     </v-row>
     <div>
       <v-card>
@@ -344,6 +356,19 @@ export default {
           name: "trial",
         },
       ],
+      selectedCustomerStatus: [],
+      customerStatus: [
+        {
+          id: 1,
+          value:"calendar",
+          name: "ຍັງບໍມີຕາຕະລາງ",
+        },
+        {
+          id: 2,
+          value:"route_plan",
+          name: "ຍັງບໍມີແຜນ",
+        },
+      ],
       user: {},
       item: {},
 
@@ -374,6 +399,7 @@ export default {
             date_from: this.start_date,
             date_end: this.end_date,
             statuses: this.selectedStatus,
+            without: this.selectedCustomerStatus
           },
         })
         .then((res) => {
@@ -558,6 +584,9 @@ export default {
     },
     start_date: function () {
       this.server_errors.start_month = "";
+    },
+    selectedCustomerStatus: function () {
+      this.fetchData();
     },
     "user.name": function () {
       this.server_errors.name = "";
