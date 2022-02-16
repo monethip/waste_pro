@@ -6,7 +6,7 @@
 
     <v-row class="mb-n6">
       <v-col>
-        <v-btn @click="openAddModal()" class="btn-primary"
+        <v-btn @click="creatUser()" class="btn-primary"
           ><v-icon>mdi-plus</v-icon>
         </v-btn>
       </v-col>
@@ -137,7 +137,7 @@
                       Reset Password
                     </v-list-item-title>
                   </v-list-item>
-                  <v-list-item link @click="openChangePhone(item)">
+                  <v-list-item link @click="changePhone(item.id)">
                     <v-list-item-title>
                       <v-icon small class="mr-2"> mdi-phone </v-icon>
                       ປ່ຽນເບີໂທ
@@ -1017,8 +1017,10 @@ export default {
     };
   },
   methods: {
-    openAddModal() {
-      this.$store.commit("modalAdd_State", true);
+    creatUser() {
+      this.$router.push({
+        name: "CreateUser",
+      });
     },
     AddItem() {
       if (this.$refs.form.validate() === true) {
@@ -1568,49 +1570,51 @@ export default {
       this.edit_user = item;
     },
     // Change phone
-    openChangePhone(item){
-      this.changePhoneDialog = true;
-      this.edit_user = item;
+    changePhone(id){
+      this.$router.push({
+        name: "ChangePhone",
+        params:{id}
+      });
     },
     closeChangePhone(){
       this.changePhoneDialog = false;
       this.stepValue = 1;
     },
-    changePhone() {
-        this.loading = true;
-        this.edit_user.id_token = this.id_token;
-        this.$axios
-            .put("user-setting/user/" + this.edit_user.id, this.edit_user)
-            .then((res) => {
-              if (res.data.code === 200) {
-                setTimeout(() => {
-                  this.loading = false;
-                  this.closeChangePhone();
-                  this.edit_user = {};
-                  this.fetchData();
-                  this.$store.commit("Toast_State", {
-                    value: true,
-                    color: "success",
-                    msg: res.data.message,
-                  });
-                }, 300);
-              }
-            })
-            .catch((error) => {
-              this.loading = false;
-              this.$store.commit("Toast_State", {
-                value: true,
-                color: "error",
-                msg: error.response.data.message,
-              });
-              if (error.response.status === 422) {
-                let obj = error.response.data.errors;
-                for (let [key, message] of Object.entries(obj)) {
-                  this.server_errors[key] = message[0];
-                }
-              }
-            });
-    },
+    // changePhone() {
+    //     this.loading = true;
+    //     this.edit_user.id_token = this.id_token;
+    //     this.$axios
+    //         .put("user-setting/user/" + this.edit_user.id, this.edit_user)
+    //         .then((res) => {
+    //           if (res.data.code === 200) {
+    //             setTimeout(() => {
+    //               this.loading = false;
+    //               this.closeChangePhone();
+    //               this.edit_user = {};
+    //               this.fetchData();
+    //               this.$store.commit("Toast_State", {
+    //                 value: true,
+    //                 color: "success",
+    //                 msg: res.data.message,
+    //               });
+    //             }, 300);
+    //           }
+    //         })
+    //         .catch((error) => {
+    //           this.loading = false;
+    //           this.$store.commit("Toast_State", {
+    //             value: true,
+    //             color: "error",
+    //             msg: error.response.data.message,
+    //           });
+    //           if (error.response.status === 422) {
+    //             let obj = error.response.data.errors;
+    //             for (let [key, message] of Object.entries(obj)) {
+    //               this.server_errors[key] = message[0];
+    //             }
+    //           }
+    //         });
+    // },
 
     switchStatus() {
       this.loading = true;

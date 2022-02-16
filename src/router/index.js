@@ -61,10 +61,29 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
+    // User
   {
     path: '/user',
     name: 'User',
     component: () => import('@/views/users/User.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/user/create',
+    name: 'CreateUser',
+    component: () => import('@/views/users/CreateUser.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/user/change-phone/:id',
+    name: 'ChangePhone',
+    component: () => import('@/views/users/ChangePhone.vue'),
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
