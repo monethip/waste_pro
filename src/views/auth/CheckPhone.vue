@@ -200,7 +200,7 @@ export default {
               let user = {...this.user, id_token};
               this.$store.dispatch('auth/confirmLogin', user);
             } catch (error) {
-              this.$store.commit("Toast_State", {
+              this.store.commit("Toast_State", {
                 value: true,
                 color: "success",
                 msg: error,
@@ -212,11 +212,11 @@ export default {
                 msg: "Login Success",
               });
             }
-            this.$store.commit("Loading_State", false);
+            this.store.commit("Loading_State", false);
             // this.$store.commit("Loading_State", true);
           })
           .catch(function () {
-            this.$store.commit("Toast_State", {
+            this.store.commit("Toast_State", {
               value: true,
               color: "error",
               msg: "ມີບາງຢ່າງຜິດພາດ ກະລຸນາລອງໃໝ່",

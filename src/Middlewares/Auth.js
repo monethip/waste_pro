@@ -1,8 +1,7 @@
-// import store from '../store';
-// import router from '../router/index';
+import store from '../store';
 
 export default function auth({ next, router }) {
-    if (!localStorage.getItem('access_token')) {
+    if (!store.getters['auth/isAuth']) {
         return router.push({ name: 'Login' });
     }
 

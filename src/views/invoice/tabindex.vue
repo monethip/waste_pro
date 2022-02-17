@@ -95,14 +95,12 @@ export default {
         .get("plan-month/" + this.$route.params.id)
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
               this.plan_month = res.data.data;
-            }, 300);
           }
         })
         .catch((error) => {
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
+            let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }

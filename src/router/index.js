@@ -680,6 +680,25 @@ const routes = [
       middleware: [Middlewares.auth],
     }
   },
+
+  {
+    path: '/report/event/trash',
+    name: 'Report-Trash-Event',
+    component: () => import('@views/report/TabCollectionTab/tabCollectionIndexEvent.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
+  {
+    path: '/report/event/invoice',
+    name: 'Report-Invoice-Event',
+    component: () => import('@views/report/TabCollectionTab/tabInvoiceEventIndex.vue'),
+    meta: {
+      layout: "admin",
+      middleware: [Middlewares.auth],
+    }
+  },
 ]
 
 const router = new VueRouter({

@@ -170,7 +170,7 @@
 
 <script>
 export default {
-  name: "Package",
+  name: "PackageType",
   data() {
     return {
       search: "",
@@ -257,9 +257,8 @@ export default {
               color: "error",
               msg: error.response.data.message,
             });
-            this.fetchData();
             if (error.response.status == 422) {
-              var obj = error.response.data.errors;
+              let obj = error.response.data.errors;
               for (let [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
               }
@@ -351,18 +350,15 @@ export default {
         })
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.vehicle_type = res.data.data.data;
               this.pagination = res.data.data.pagination;
-            }, 100);
           }
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
+            let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }

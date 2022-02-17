@@ -282,7 +282,7 @@ export default {
                 color: "error",
                 msg: error.response.data.message,
               });
-              var obj = error.response.data.errors;
+              let obj = error.response.data.errors;
               for (let [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
               }
@@ -331,14 +331,13 @@ export default {
           })
           .catch((error) => {
             this.loading = false;
-            this.fetchData();
             if (error.response.status == 422) {
               this.$store.commit("Toast_State", {
                 value: true,
                 color: "error",
                 msg: error.response.data.message,
               });
-              var obj = error.response.data.errors;
+              let obj = error.response.data.errors;
               for (let [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
               }
@@ -391,18 +390,15 @@ export default {
         )
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.packages = res.data.data;
               // this.pagination = res.data.data.pagination;
-            }, 300);
           }
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
           if (error.respones.status == 422) {
-            var obj = error.respones.data.errors;
+            let obj = error.respones.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }

@@ -129,7 +129,6 @@ export default {
           .post("price-setting/" + this.editPackageSize.id, formData)
           .then((res) => {
             if (res.data.code == 200) {
-              setTimeout(() => {
                 this.loading = false;
                 this.closeUpdate();
                 this.editPackageSize = {};
@@ -140,7 +139,6 @@ export default {
                   color: "success",
                   msg: res.data.message,
                 });
-              }, 300);
             }
           })
           .catch((error) => {
@@ -150,9 +148,8 @@ export default {
               color: "error",
               msg: error.response.data.message,
             });
-            this.fetchData();
             if (error.response.status == 422) {
-              var obj = error.response.data.errors;
+              let obj = error.response.data.errors;
               for (let [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
               }
@@ -171,18 +168,15 @@ export default {
         })
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.packagessize = res.data.data.data;
               this.pagination = res.data.data.pagination;
-            }, 300);
           }
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
+            let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }

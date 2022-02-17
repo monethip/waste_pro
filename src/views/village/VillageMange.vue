@@ -371,7 +371,7 @@ export default {
                 color: "error",
                 msg: error.response.data.message,
               });
-              var obj = error.response.data.errors;
+              let obj = error.response.data.errors;
               for (let [key, villages] of Object.entries(obj)) {
                 this.server_errors[key] = villages[0];
               }
@@ -386,7 +386,6 @@ export default {
         .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
               this.getVillage = res.data.data;
               this.getVillage.map((item) => {
                 this.districts = item.districts;
@@ -394,7 +393,6 @@ export default {
                 this.$store.commit("Loading_State", false);
                 this.fetchVillage();
               });
-            }, 300);
           }
         })
         .catch(() => {});
@@ -412,11 +410,9 @@ export default {
         })
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
               this.villages = res.data.data.data;
               this.pagination = res.data.data.pagination;
               this.$store.commit("Loading_State", false);
-            }, 300);
           }
         })
         .catch(() => {});

@@ -199,17 +199,14 @@ export default {
         .post("request-company-status/" + this.$route.params.id,{   status: this.$route.params.status})
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data;
-              console.log(this.data)
-            }, 300);
           }
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
+            let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }

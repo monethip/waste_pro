@@ -619,11 +619,9 @@ export default {
         })
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.collections = res.data.data.data;
               this.pagination = res.data.data.pagination;
-            }, 300);
           }
         })
         .catch((error) => {
@@ -641,10 +639,8 @@ export default {
         .get("reject-reason")
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.rejects = res.data.data;
-            }, 100);
           }
         })
         .catch(() => {});

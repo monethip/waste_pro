@@ -10,6 +10,8 @@ export default new Vuex.Store({
     modalAddState: false,
     modalEditState: false,
     modalDeleteState: false,
+    modalCheckTokenState:false,
+    isLogout:false,
     modalView: false,
     notificationToastState: false,
     progressLoading: false,
@@ -18,6 +20,9 @@ export default new Vuex.Store({
     isLoading: false,
   },
   mutations: {
+    checkConfirmLogout(state,value){
+      state.isLogout = value;
+    },
     SET_LOGGED_IN(state) {
       state.isLogged = true
     },
@@ -33,6 +38,10 @@ export default new Vuex.Store({
     modalDelete_State(state, value) {
       state.modalDeleteState = value;
     },
+    modalCheckToken_State(state, value) {
+      state.modalCheckTokenState = value;
+    },
+
     Toast_State(state, result) {
       state.notificationToastState = result.value;
       state.message = result.msg;

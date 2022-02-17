@@ -29,16 +29,20 @@ $axios.interceptors.response.use(function (response) {
     return response;
 },
     function (error) {
-    console.log(error.response.status)
+        //Token expired
     if (error.response.status == 401) {
-        // store.dispatch("destroyToken");
+        // alert("Token is expired")
+        store.commit("modalCheckToken_State", true);
+        // store.dispatch("auth/destroyToken");
+        // localStorage.removeItem('access_token');
+    }
+     //Permission or role change
+    if (error.response.status == 403) {
+        store.commit("modalCheckToken_State", true);
+        // store.dispatch("auth/destroyToken");
         // localStorage.removeItem('access_token');
     }
 
-    if (error.response.status == 403) {
-        // store.dispatch("destroyToken");
-        // localStorage.removeItem('access_token');
-    }
     return Promise.reject(error);
 });
 

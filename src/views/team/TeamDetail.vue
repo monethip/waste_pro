@@ -188,10 +188,7 @@ export default {
         .get("team/" + this.$route.params.id)
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
               this.team = res.data.data;
-              console.log(this.team)
-            }, 300);
           }
         })
         .catch({});
@@ -211,20 +208,16 @@ export default {
         )
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
               this.loading = false;
               this.$store.commit("Loading_State", false);
               this.data = res.data.data.members;
-              console.log(this.data);
               // this.pagination = res.data.data.pagination;
-            }, 300);
           }
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
+            let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
@@ -267,7 +260,7 @@ export default {
             });
             this.fetchData();
             if (error.response.status == 422) {
-              var obj = error.response.data.errors;
+              let obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
               }
