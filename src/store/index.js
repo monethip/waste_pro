@@ -18,8 +18,24 @@ export default new Vuex.Store({
     message: '',
     color: '',
     isLoading: false,
+    breadcrumbs:[
+      // {
+      //   text: 'Dashboard',
+      //   disabled: false,
+      //   href: '/user',
+      // },
+      // {
+      //   text: 'Detail',
+      //   disabled: false,
+      //   href: 'dashboard',
+      // },
+    ]
   },
   mutations: {
+    // breadCrumbState(state,payload){
+    //   console.log(payload)
+    //   state.breadcrumbs = payload;
+    // },
     checkConfirmLogout(state,value){
       state.isLogout = value;
     },

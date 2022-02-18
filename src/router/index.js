@@ -49,6 +49,13 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
+      breadcrumb: [
+        {
+          text:'Activity log',
+          disabled: false,
+          href:'/activity-log'
+        }
+      ]
     }
   },
   //Admin Route
@@ -59,6 +66,13 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
+      breadcrumb: [
+        {
+          text:'Dashboard',
+          disabled: false,
+          href:'/'
+        }
+      ]
     }
   },
     // User
@@ -69,17 +83,32 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
-    }
-  },
-  {
-    path: '/user/create',
-    name: 'CreateUser',
-    component: () => import('@/views/users/CreateUser.vue'),
-    meta: {
-      layout: "admin",
-      middleware: [Middlewares.auth],
-    }
-  },
+      breadcrumb: [
+        {
+          text:'User',
+          disabled: false,
+          href:'/user'
+        },
+      ]
+    },
+    },
+      {
+        path: '/user/create',
+        name: 'CreateUser',
+        component: () => import('@/views/users/CreateUser'),
+        meta: {
+          layout: "admin",
+          middleware: [Middlewares.auth],
+          breadcrumb: [
+            {
+              text:'Create',
+              disabled: false,
+              href:'/user'
+            }
+          ]
+        }
+      },
+
   {
     path: '/user/change-phone/:id',
     name: 'ChangePhone',
@@ -105,6 +134,13 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
+      breadcrumb: [
+        {
+          text:'Driver',
+          disabled: false,
+          href:'/driver'
+        }
+      ]
     }
   },
   {
@@ -114,18 +150,16 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
+      breadcrumb: [
+        {
+          text: 'Employee',
+          disabled: false,
+          href: '/team',
+        }
+      ]
     }
   },
   //Team
-  {
-    path: '/team/:id',
-    name: 'TeamDetail',
-    component: () => import('@/views/team/TeamDetail.vue'),
-    meta: {
-      layout: "admin",
-      middleware: [Middlewares.auth],
-    }
-  },
   {
     path: '/team',
     name: 'Team',
@@ -133,7 +167,33 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
-    }
+      breadcrumb: [
+        {
+          text: 'Team',
+          disabled: false,
+          href: '/team',
+        }
+      ]
+    },
+
+    children: [
+      {
+        path: '/team/:id',
+        name: 'TeamDetail',
+        component: () => import('@/views/team/TeamDetail.vue'),
+        meta: {
+          layout: "admin",
+          middleware: [Middlewares.auth],
+          breadcrumb: [
+            {
+              text:'TeamDetail',
+              disabled: false,
+              href:'/team',
+            },
+          ]
+        },
+      },
+    ]
   },
   //Company
   {
@@ -143,7 +203,32 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
-    }
+      breadcrumb: [
+        {
+          text: 'Company',
+          disabled: false,
+          href: '/company',
+        },
+      ]
+    },
+    children: [
+      {
+        path: '/create/company',
+        name: 'CreateCompany',
+        component: () => import('@/views/company/CreateCompany.vue'),
+        meta: {
+          layout: "admin",
+          middleware: [Middlewares.auth],
+          breadcrumb: [
+            {
+              text:'Create',
+              disabled: false,
+              href:'/create/company',
+            },
+          ]
+        },
+      }
+    ],
   },
   {
     path: '/company-request',
@@ -152,6 +237,13 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
+      breadcrumb: [
+        {
+          text:'Company Request',
+          disabled: false,
+          href:'/company-request',
+        },
+      ]
     }
   },
   {
@@ -165,15 +257,6 @@ const routes = [
     }
   },
 
-  {
-    path: '/create/company',
-    name: 'CreateCompany',
-    component: () => import('@/views/company/CreateCompany.vue'),
-    meta: {
-      layout: "admin",
-      middleware: [Middlewares.auth],
-    }
-  },
   {
     path: '/edit/company/:id',
     name: 'EditCompany',
@@ -200,6 +283,13 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
+      breadcrumb: [
+        {
+          text:'Collection',
+          disabled: false,
+          href:'/collection-event'
+        }
+      ]
     }
   },
   {
@@ -247,6 +337,13 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
+      breadcrumb: [
+        {
+          text:'Role',
+          disabled: false,
+          href:'/role'
+        }
+      ]
     }
   },
   {
@@ -256,6 +353,13 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
+      breadcrumb: [
+        {
+          text:'Customer',
+          disabled: false,
+          href:'/customer'
+        }
+      ]
     }
   },
   {
@@ -301,6 +405,13 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
+      breadcrumb: [
+        {
+          text:'Village',
+          disabled: false,
+          href:'/village'
+        }
+      ]
     }
   },
   {
@@ -328,6 +439,13 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
+      breadcrumb: [
+        {
+          text:'Package',
+          disabled: false,
+          href:'/package'
+        }
+      ]
     }
   },
 
@@ -338,6 +456,13 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
+      breadcrumb: [
+        {
+          text:'Vehicle',
+          disabled: false,
+          href:'/vehicle'
+        }
+      ]
     }
   },
   {
@@ -358,6 +483,13 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
+      breadcrumb: [
+        {
+          text:'Route Plan',
+          disabled: false,
+          href:'/routeplan'
+        }
+      ]
     }
   },
 
@@ -407,6 +539,13 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
+      breadcrumb: [
+        {
+          text:'Plan',
+          disabled: false,
+          href:'/plan'
+        }
+      ]
     }
   },
   {
@@ -463,6 +602,13 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
+      breadcrumb: [
+        {
+          text:'Home Customer',
+          disabled: false,
+          href:'/select/home'
+        }
+      ]
     }
   },
   {
@@ -515,6 +661,13 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
+      breadcrumb: [
+        {
+          text:'Company Customer',
+          disabled: false,
+          href:'/select/company'
+        }
+      ]
     }
   },
 
@@ -556,6 +709,13 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
+      breadcrumb: [
+        {
+          text:'Calendar',
+          disabled: false,
+          href:'/calendar'
+        }
+      ]
     }
   },
 
@@ -567,6 +727,13 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
+      breadcrumb: [
+        {
+          text:'Invoice',
+          disabled: false,
+          href:'/invoice'
+        }
+      ]
     }
   },
 
@@ -577,6 +744,13 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
+      breadcrumb: [
+        {
+          text:'Reject',
+          disabled: false,
+          href:'/reject'
+        }
+      ]
     }
   },
   {

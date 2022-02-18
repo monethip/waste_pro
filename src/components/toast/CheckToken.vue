@@ -5,7 +5,8 @@
         <v-row>
           <v-col align="center"
                  justify="center">
-            <h3 class="py-2">Session is expired</h3>
+            <h3 class="py-2">Session Expired</h3>
+            <p>Please log in again.</p>
           </v-col>
         </v-row>
         <template>

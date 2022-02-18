@@ -4,8 +4,11 @@
       <v-icon style="padding: 4px" @click="drawer = !drawer">
         mdi-order-bool-descending
       </v-icon>
-      <v-spacer></v-spacer>
 
+      <v-breadcrumbs divider="-" :items="$route.meta.breadcrumb">
+      </v-breadcrumbs>
+
+      <v-spacer></v-spacer>
       <v-menu bottom min-width="200px" rounded offset-y>
         <template v-slot:activator="{ on }">
           <v-btn text fab dark small class="mr-8" v-on="on">
@@ -506,4 +509,5 @@ export default {
 .v-main__wrap.v-content__wrap {
   background: #eee !important;
 }
+
 </style>
