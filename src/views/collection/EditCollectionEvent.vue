@@ -142,7 +142,7 @@
               <v-autocomplete
                 required
                 :items="villages"
-                v-model="selectedVillage"
+                v-model="data.village_id"
                 item-text="name"
                 item-value="id"
                 label="Village *"
@@ -349,11 +349,27 @@ export default {
       collectionStatus: [
         {
           id: 1,
-          name: "rejected",
+          name: "requested",
         },
         {
           id: 2,
+          name: "rejected",
+        },
+        {
+          id: 3,
           name: "approved",
+        },
+        {
+          id: 4,
+          name: "collected",
+        },
+        {
+          id: 5,
+          name: "collect_confirm",
+        },
+        {
+          id: 6,
+          name: "collect_reject",
         },
       ],
       start_menu: false,
@@ -407,6 +423,8 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.data = res.data.data;
+              this.collect_status = res.data.data.collect_status;
+              this.selectedDistrict = this.data.village.district_id;
               this.time = this.moment(res.data.data.date).format("hh:mm:ss");
               this.date = this.moment(res.data.data.date).format("YYYY-MM-DD");
             }, 300);
@@ -419,9 +437,7 @@ export default {
         .get("driver")
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
               this.driver = res.data.data;
-            }, 300);
           }
         })
         .catch({});
@@ -448,14 +464,12 @@ export default {
         .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
               this.address = res.data.data;
               this.address.map((item) => {
                 this.districts = item.districts;
                 this.selectedDistrict = this.districts[0].id;
               });
               this.fetchVillage();
-            }, 100);
           }
         })
         .catch(() => {});
@@ -466,10 +480,8 @@ export default {
         .get("info/district/" + this.selectedDistrict + "/village")
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
               this.villages = res.data.data;
               this.selectedVillage = this.villages[0].id;
-            }, 300);
           }
         })
         .catch(() => {});
@@ -620,7 +632,7 @@ export default {
         this.village_variation_id.includes(id)
       );
       result.map((item) => {
-        for (var i = 0; i < item.village_details.length; i++) {
+        for (let i = 0; i < item.village_details.length; i++) {
           this.units.push(item.village_details[i]);
         }
       });
@@ -689,6 +701,6 @@ export default {
   margin-bottom: 12px;
   font-size: 16px;
   background: #eee;
-  border-radius: 2 px;
+  border-radius: 2px;
 }
 </style>

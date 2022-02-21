@@ -290,7 +290,7 @@ const routes = [
           href:'/collection-event'
         }
       ]
-    }
+    },
   },
   {
     path: '/create/collection',
@@ -318,6 +318,13 @@ const routes = [
     meta: {
       layout: "admin",
       middleware: [Middlewares.auth],
+      breadcrumb: [
+        {
+          text:'Edit Collection',
+          disabled: false,
+          href:'/collection-event'
+        }
+      ]
     }
   },
   {

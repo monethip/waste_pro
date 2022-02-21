@@ -430,7 +430,7 @@ export default {
             msg: error.response.data.message,
           });
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
+            let obj = error.response.data.errors;
             for (let [key, data] of Object.entries(obj)) {
               this.server_errors[key] = data[0];
             }
