@@ -708,7 +708,7 @@ export default {
                 msg: error.response.data.message,
               });
               if (error.response.status == 422) {
-                var obj = error.response.data.errors;
+                let obj = error.response.data.errors;
                 for (let [key, data] of Object.entries(obj)) {
                   this.server_errors[key] = data[0];
                 }
@@ -755,7 +755,7 @@ export default {
         data.append("_method", "PUT");
         this.loading = true;
         this.$axios
-          .post("reject-collection-event-payment/" + this.payment.id, data)
+          .post("reject-collection-event-payment/" + this.confirm.id, data)
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
@@ -778,7 +778,7 @@ export default {
               msg: error.response.data.message,
             });
             if (error.response.status == 422) {
-              var obj = error.response.data.errors;
+              let obj = error.response.data.errors;
               for (let [key, data] of Object.entries(obj)) {
                 this.server_errors[key] = data[0];
               }

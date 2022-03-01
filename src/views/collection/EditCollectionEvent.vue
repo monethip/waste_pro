@@ -120,6 +120,9 @@
                 :rules="statusRule"
                 required
               ></v-select>
+              <p class="errors">
+                {{ server_errors.collect_status }}
+              </p>
             </v-col>
           </v-row>
           <v-row>
