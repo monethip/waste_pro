@@ -194,7 +194,6 @@ const routes = [
         },
     },
 
-
     //Company
     {
         path: '/company',
@@ -211,7 +210,7 @@ const routes = [
                 },
             ]
         },
-        children: [
+    },
             {
                 path: '/create/company',
                 name: 'CreateCompany',
@@ -227,9 +226,8 @@ const routes = [
                         },
                     ]
                 },
-            }
-        ],
-    },
+            },
+
     {
         path: '/company-request',
         name: 'CompanyRequest',
