@@ -92,8 +92,8 @@
                 <th class="text-left">Discount</th>
                 <th class="text-left">Total</th>
                 <th class="text-left">Subtotal</th>
-                <th class="text-left">ສະຖານະບໍລິການ</th>
-                <th class="text-left">ສະຖານະການຊຳລະ</th>
+                <th class="text-left">ການບໍລິການ</th>
+                <th class="text-left">ການຊຳລະ</th>
                 <th class="text-left">Image</th>
               </tr>
             </thead>
@@ -656,7 +656,6 @@ export default {
       });
     },
     editPage(id) {
-      console.log(id)
       this.$router.push({
         name: "EditCollectionEvent",
         params: { id },
@@ -791,7 +790,6 @@ export default {
           msg: "ກາລຸນາເລືອກຂໍ້ມູນກ່ອນ",
         });
       } else {
-        console.log("elsee");
         this.$store.commit("Toast_State", {
           value: true,
           color: "error",

@@ -93,7 +93,7 @@
                     <v-menu
                       :rules="monthRules"
                       v-model="start_menu"
-                      :close-on-content-click="false"
+                      :close-on-content-click="true"
                       :nudge-right="40"
                       transition="scale-transition"
                       offset-y
@@ -110,7 +110,8 @@
                           dense
                         ></v-text-field>
                       </template>
-                      <v-date-picker v-model="start_date"></v-date-picker>
+                      <v-date-picker v-model="start_date" type="month"
+                      ></v-date-picker>
                     </v-menu>
                     <p class="errors">
                       {{ server_errors.month }}
@@ -166,8 +167,8 @@
                 <v-row>
                   <v-col cols="12">
                     <v-menu
-                      v-model="start_menu"
-                      :close-on-content-click="false"
+                      v-model="edit_date"
+                      :close-on-content-click="true"
                       :nudge-right="40"
                       transition="scale-transition"
                       offset-y
@@ -187,6 +188,7 @@
                       </template>
                       <v-date-picker
                         v-model="calendarEdit.month"
+                        type="month"
                       ></v-date-picker>
                     </v-menu>
                     <p class="errors">
@@ -246,7 +248,6 @@ export default {
   },
   data() {
     return {
-      tab: null,
       calendars: [],
       loading: false,
       calendarId: "",
@@ -257,10 +258,9 @@ export default {
       search: "",
       oldVal: "",
       //Add Package
-      start_date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-        .toISOString()
-        .substr(0, 10),
+      start_date: new Date().toISOString().substr(0, 7),
       start_menu: false,
+      edit_date:false,
       packages: [],
       selectedPackage: "",
       server_errors: {},
@@ -314,6 +314,14 @@ export default {
     };
   },
   methods: {
+
+    // allowedDates: val => parseInt(val.split('-')[2], 10) % 2 === 0,
+    // allowedDates: val => parseInt(val.split('-')[2], 10) % 2 === 0,
+
+    allowedDates(val) {
+      return val >= new Date().toISOString().substr(0, 10);
+    },
+
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
@@ -335,7 +343,7 @@ export default {
         .catch((error) => {
           this.$store.commit("Loading_State", false);
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
+            let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
@@ -376,14 +384,14 @@ export default {
           this.loading = false;
         });
     },
-
     SubmitPlan() {
+      const date = this.moment(`${this.start_date} ${1}`).format('YYYY-MM-DD');
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
           .post("plan-month/", {
             name: this.plan.name,
-            month: this.start_date,
+            month: date,
           })
           .then((res) => {
             if (res.data.code == 200) {
@@ -401,7 +409,7 @@ export default {
             this.$store.commit("Toast_State", this.toast_error);
             this.fetchData();
             if (error.response.status == 422) {
-              var obj = error.response.data.errors;
+              let obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
               }
@@ -414,15 +422,17 @@ export default {
     },
     editModal(item) {
       this.calendarEdit = item;
+      this.calendarEdit.month = this.moment(this.calendarEdit.month).format('YYYY-MM');
       this.$store.commit("modalEdit_State", true);
     },
     UpdatePlan() {
+      const date = this.moment(`${this.calendarEdit.month} ${1}`).format('YYYY-MM-DD');
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
           .put("plan-month/" + this.calendarEdit.id, {
             name: this.calendarEdit.name,
-            month: this.calendarEdit.month,
+            month: date,
           })
           .then((res) => {
             if (res.data.code == 200) {

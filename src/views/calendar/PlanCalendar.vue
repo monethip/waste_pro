@@ -180,7 +180,7 @@
                           multiple
                           chips
                           small-chips
-                          label="ວັນທີ"
+                          label="ວັນທີຢູ່ໃນແຜນ"
                           prepend-icon="mdi-calendar"
                           readonly
                           v-bind="attrs"
@@ -289,7 +289,7 @@
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
                           v-model="calendarEdit.date"
-                          label="ວັນທີ"
+                          label="ວັນທີຢູ່ໃນແຜນ"
                           readonly
                           outlined
                           v-bind="attrs"

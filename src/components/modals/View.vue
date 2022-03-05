@@ -1,10 +1,8 @@
 <template>
   <v-dialog
     v-model="active"
-    persistent
-    width="900px"
+    width="350px"
     max-with="1200px"
-    :retain-focus="false"
   >
     <slot v-bind="{ close }" />
   </v-dialog>

@@ -87,7 +87,7 @@ const routes = [
             breadcrumb: [
                 {
                     text: 'User',
-                    disabled: false,
+                    disabled: true,
                     href: '/user'
                 },
             ]
@@ -102,9 +102,14 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Create',
+                    text: 'User',
                     disabled: false,
                     href: '/user'
+                },
+                {
+                    text: 'Create',
+                    disabled: true,
+                    href: '/user/create'
                 }
             ]
         }
@@ -126,6 +131,13 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Import User',
+                    disabled: true,
+                    href: '/import-file'
+                },
+            ]
         }
     },
     {
@@ -138,7 +150,7 @@ const routes = [
             breadcrumb: [
                 {
                     text: 'Driver',
-                    disabled: false,
+                    disabled: true,
                     href: '/driver'
                 }
             ]
@@ -154,7 +166,7 @@ const routes = [
             breadcrumb: [
                 {
                     text: 'Employee',
-                    disabled: false,
+                    disabled: true,
                     href: '/team',
                 }
             ]
@@ -171,7 +183,7 @@ const routes = [
             breadcrumb: [
                 {
                     text: 'Team',
-                    disabled: false,
+                    disabled: true,
                     href: '/team',
                 }
             ]
@@ -186,9 +198,13 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'TeamDetail',
+                    text: 'Team',
                     disabled: false,
                     href: '/team',
+                },
+                {
+                    text: 'Detail',
+                    disabled: true,
                 },
             ]
         },
@@ -211,22 +227,22 @@ const routes = [
             ]
         },
     },
-            {
-                path: '/create/company',
-                name: 'CreateCompany',
-                component: () => import('@/views/company/CreateCompany.vue'),
-                meta: {
-                    layout: "admin",
-                    middleware: [Middlewares.auth],
-                    breadcrumb: [
-                        {
-                            text: 'Create',
-                            disabled: false,
-                            href: '/create/company',
-                        },
-                    ]
+    {
+        path: '/create/company',
+        name: 'CreateCompany',
+        component: () => import('@/views/company/CreateCompany.vue'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Create',
+                    disabled: false,
+                    href: '/create/company',
                 },
-            },
+            ]
+        },
+    },
 
     {
         path: '/company-request',
@@ -345,7 +361,7 @@ const routes = [
             breadcrumb: [
                 {
                     text: 'Role',
-                    disabled: false,
+                    disabled: true,
                     href: '/role'
                 }
             ]
@@ -363,7 +379,7 @@ const routes = [
                     text: 'Customer',
                     disabled: false,
                     href: '/customer'
-                }
+                },
             ]
         }
     },
@@ -374,6 +390,18 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Customer',
+                    disabled: false,
+                    href: '/customer'
+                },
+                {
+                    text: 'Create',
+                    disabled: true,
+                    href: '/customer'
+                }
+            ]
         }
     },
     {
@@ -383,7 +411,20 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Customer',
+                    disabled: false,
+                    href: '/customer'
+                },
+                {
+                    text: 'Edit',
+                    disabled: true,
+                    href: '/customer'
+                }
+            ]
         }
+
     },
     {
         path: '/view/customer/:id',
@@ -392,6 +433,18 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Customer',
+                    disabled: false,
+                    href: '/customer'
+                },
+                {
+                    text: 'View',
+                    disabled: true,
+                    href: '/customer'
+                }
+            ]
         }
     },
     {
@@ -413,7 +466,7 @@ const routes = [
             breadcrumb: [
                 {
                     text: 'Village',
-                    disabled: false,
+                    disabled: true,
                     href: '/village'
                 }
             ]
@@ -435,6 +488,18 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Village',
+                    disabled: false,
+                    href: '/village'
+                },
+                {
+                    text: 'Detail',
+                    disabled: true,
+                    href: '/village'
+                }
+            ]
         }
     },
     {
@@ -447,7 +512,7 @@ const routes = [
             breadcrumb: [
                 {
                     text: 'Package',
-                    disabled: false,
+                    disabled: true,
                     href: '/package'
                 }
             ]
@@ -464,7 +529,7 @@ const routes = [
             breadcrumb: [
                 {
                     text: 'Vehicle',
-                    disabled: false,
+                    disabled: true,
                     href: '/vehicle'
                 }
             ]
@@ -477,6 +542,13 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Village Detail',
+                    disabled: true,
+                    href: '/vehicle'
+                }
+            ]
         }
     },
 
@@ -863,7 +935,7 @@ const routes = [
     {
         path: '/report/event/trash',
         name: 'Report-Trash-Event',
-        component: () => import('@views/report/TabCollectionTab/tabCollectionIndexEvent.vue'),
+        component: () => import('@views/report/TabCollectionTab/homeCollectionEvent.vue'),
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
@@ -872,7 +944,7 @@ const routes = [
     {
         path: '/report/event/invoice',
         name: 'Report-Invoice-Event',
-        component: () => import('@views/report/TabCollectionTab/tabInvoiceEventIndex.vue'),
+        component: () => import('@views/report/TabCollectionTab/homeInvoice.vue'),
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],

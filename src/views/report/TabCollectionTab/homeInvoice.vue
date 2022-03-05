@@ -1,5 +1,80 @@
 <template>
   <v-container>
+
+    <v-breadcrumbs large class="pt-0">ລາຍງານຂໍ້ມູນບິນເກັບຂີ້ເຫື້ອຍພິເສດ</v-breadcrumbs>
+    <v-row class="mb-n6">
+      <v-col>
+        <v-btn class="btn-primary" @click="exportData()">Export </v-btn>
+      </v-col>
+      <v-col>
+        <v-select
+            outlined
+            dense
+            :items="duration"
+            v-model="selectedDuration"
+            item-text="name"
+            item-value="duration"
+            label="ຊ່ວງເວລາ"
+            @input="fetchData()"
+        ></v-select>
+      </v-col>
+      <v-col v-if="selectedDuration == 'year'">
+        <section>
+          <date-picker
+              style="height: 40px"
+              v-model="year_from"
+              type="year"
+              placeholder="ເລີ່ມປີ"
+              @input="fetchData()"
+          ></date-picker>
+        </section>
+      </v-col>
+      <v-col v-if="selectedDuration == 'year'">
+        <section>
+          <date-picker
+              v-model="year_to"
+              type="year"
+              placeholder="ຫາປີ"
+              @input="fetchData()"
+          ></date-picker>
+        </section>
+      </v-col>
+      <v-col v-if="selectedDuration == 'month'">
+        <section>
+          <date-picker
+              v-model="month_from"
+              type="month"
+              placeholder="ເລີ່ມເດືອນ"
+              @input="fetchData()"
+          ></date-picker>
+        </section>
+      </v-col>
+      <v-col v-if="selectedDuration == 'month'">
+        <section>
+          <date-picker
+              v-model="month_to"
+              type="month"
+              placeholder="ຫາເດືອນ"
+              @input="fetchData()"
+          ></date-picker>
+        </section>
+      </v-col>
+
+      <v-col>
+        <v-text-field
+            outlined
+            dense
+            clearable
+            prepend-inner-icon="mdi-magnify"
+            label="ຊື່ລູກຄ້າ,ເລກບິນ"
+            type="text"
+            v-model="search"
+            @keyup.enter="Search()"
+        >
+        </v-text-field>
+      </v-col>
+    </v-row>
+
     <div>
       <v-row v-for="(sum, index) in summary" :key="index">
         <v-col>
@@ -65,8 +140,8 @@
           </div>
         </template>
         <template v-slot:item.status="{ item }">
-          <v-chip label :color="statusColor(item.status)">{{
-              item.status
+          <v-chip label :color="statusColor(item.payment_status)">{{
+              item.payment_status
             }}</v-chip>
         </template>
         <template v-slot:item.created_at="{ item }">
@@ -115,7 +190,7 @@ export default {
         { text: "ສ່ວນຫຼຸດ", value: "discount" },
         { text: "SubTotal", value: "sub_total", sortable: false },
         { text: "Total", value: "total", sortable: false },
-        { text: "ສະຖານະ", value: "status", sortable: false },
+        { text: "ຊຳລະ", value: "status", sortable: false },
         { text: "Type", value: "type", sortable: false },
         // { text: "", value: "actions", sortable: false },
       ],
@@ -128,6 +203,7 @@ export default {
     statusColor(value) {
       if (value == "success") return "success";
       else if (value == "pending") return "primary";
+      else if (value == "rejected") return "error"
       else return "info";
     },
   },
@@ -146,4 +222,7 @@ export default {
 
 <style lang="scss">
 @import "../../../../public/scss/main.scss";
+.mx-input {
+  height: 40px !important;
+}
 </style>

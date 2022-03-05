@@ -7,16 +7,18 @@
       ລາຍລະອຽດເກັບຂີ້ເຫື້ຍອພິເສດ</v-breadcrumbs
     >
     <v-card>
-      <!--
-      <div v-for="(item, index) in data.media" :key="index">
-        <v-img :src="item.url" alt="Image" height="500px" dark> </v-img>
-      </div>
-      -->
+
+<!--      <div v-for="(item, index) in data.media" :key="index">-->
+<!--        <v-img :src="item.url" alt="Image" height="500px" dark> </v-img>-->
+<!--      </div>-->
+
+
       <v-carousel v-if="data.media && data.media.length">
         <v-carousel-item
           v-for="(item, index) in data.media"
           :key="index"
           :src="item.url"
+          @click="showImage(item.url)"
           reverse-transition="fade-transition"
           transition="fade-transition"
         ></v-carousel-item>
@@ -242,6 +244,14 @@
         </v-card-actions>
       </template>
     </ModalDelete>
+
+    <ModalView>
+      <template>
+          <v-card>
+            <v-img :src="imageUrl" alt="Image" width="auto" height="auto" dark> </v-img>
+          </v-card>
+      </template>
+    </ModalView>
   </v-container>
 </template>
 
@@ -282,9 +292,16 @@ export default {
         },
       },
       item: {},
+      imageUrl:""
     };
   },
   methods: {
+    showImage(url){
+     if(url != null){
+       this.imageUrl = url;
+       this.$store.commit("modalView_State", true);
+     }
+    },
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios

@@ -352,7 +352,7 @@ export default {
       search: "",
       oldVal: "",
       //Add Package
-      package_date: "",
+      package_date: new Date().toISOString().substr(0, 7),
       package_menu: false,
       // allowedDates: (val) => new Date(val).getDate() === 1,
 
@@ -567,6 +567,8 @@ export default {
       this.customerId = id;
     },
     AddPackage() {
+      // const date = this.moment(`${this.package_date} ${1}`).format('YYYY-MM-DD');
+      // console.log(date);
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios

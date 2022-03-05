@@ -1,10 +1,116 @@
 <template>
   <v-container>
+      <v-breadcrumbs large class="pt-0"
+      >ລາຍງານຂໍ້ມູນການເກັບຂີ້ເຫື້ອຍພິເສດ</v-breadcrumbs
+      >
+      <v-row class="mb-n6">
+        <v-col>
+          <v-btn
+              class="btn-primary"
+              :loading="loading"
+              :disabled="loading"
+              @click="exportData()"
+          >Export
+          </v-btn>
+        </v-col>
+        <v-col>
+          <v-select
+              outlined
+              dense
+              :items="duration"
+              v-model="selectedDuration"
+              item-text="name"
+              item-value="duration"
+              label="ຊ່ວງເວລາ"
+          ></v-select>
+        </v-col>
+        <v-col v-if="selectedDuration == 'year'">
+          <section>
+            <date-picker
+                style="height: 40px"
+                v-model="year_from"
+                type="year"
+                format="YYYY"
+                placeholder="ເລີ່ມປີ"
+                @input="fetchData()"
+            ></date-picker>
+          </section>
+        </v-col>
+        <v-col v-if="selectedDuration == 'year'">
+          <section>
+            <date-picker
+                v-model="year_to"
+                type="year"
+                format="YYYY"
+                placeholder="ຫາປີ"
+                @input="fetchData()"
+            ></date-picker>
+          </section>
+        </v-col>
+        <v-col v-if="selectedDuration == 'month'">
+          <section>
+            <date-picker
+                v-model="month_from"
+                type="month"
+                placeholder="ເລີ່ມເດືອນ"
+                @input="fetchData()"
+            ></date-picker>
+          </section>
+        </v-col>
+        <v-col v-if="selectedDuration == 'month'">
+          <section>
+            <date-picker
+                v-model="month_to"
+                type="month"
+                placeholder="ຫາເດືອນ"
+                @input="fetchData()"
+            ></date-picker>
+          </section>
+        </v-col>
+
+        <v-col v-if="selectedDuration == 'merge' || selectedDuration == 'date'">
+          <section>
+            <date-picker
+                style="height: 40px"
+                v-model="date_from"
+                type="date"
+                placeholder="ເລີ່ມວັນທີ"
+                @input="fetchData()"
+            ></date-picker>
+          </section>
+        </v-col>
+        <v-col v-if="selectedDuration == 'merge' || selectedDuration == 'date'">
+          <section>
+            <date-picker
+                style="height: 40px"
+                v-model="date_to"
+                type="date"
+                placeholder="ຫາວັນທີ"
+                @input="fetchData()"
+            ></date-picker>
+          </section>
+        </v-col>
+
+        <v-col>
+          <v-text-field
+              outlined
+              dense
+              clearable
+              prepend-inner-icon="mdi-magnify"
+              label="Search"
+              type="text"
+              v-model="search"
+              @keyup.enter="Search()"
+          >
+          </v-text-field>
+        </v-col>
+      </v-row>
+
     <div>
       <div v-if="summary">
         <v-row v-for="(sum, index) in summary" :key="index" class="mb-n6 mt-0">
           <v-col>
-            <h3>ປີ {{ sum.year }}</h3>
+            <p>ປີ {{ sum.year }}</p>
           </v-col>
           <v-col>
             <p>
@@ -57,9 +163,7 @@
 <!--          </div>-->
 <!--        </template>-->
         <template v-slot:item.status="{ item }">
-          <v-chip label :color="statusColor(item.status)">{{
-              item.status
-            }}</v-chip>
+          <div>{{item.collect_status}}</div>
         </template>
       </v-data-table
       ><br />
@@ -131,4 +235,7 @@ export default {
 
 <style lang="scss">
 @import "../../../../public/scss/main.scss";
+.mx-input {
+  height: 40px !important;
+}
 </style>

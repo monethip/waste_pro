@@ -5,7 +5,7 @@
         mdi-order-bool-descending
       </v-icon>
 
-      <v-breadcrumbs divider="-" :items="$route.meta.breadcrumb">
+      <v-breadcrumbs divider=">" :items="$route.meta.breadcrumb">
       </v-breadcrumbs>
 
       <v-spacer></v-spacer>
