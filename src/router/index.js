@@ -221,7 +221,7 @@ const routes = [
             breadcrumb: [
                 {
                     text: 'Company',
-                    disabled: false,
+                    disabled: true,
                     href: '/company',
                 },
             ]
@@ -236,9 +236,13 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Create',
+                    text: 'Company',
                     disabled: false,
-                    href: '/create/company',
+                    href: '/company',
+                },
+                {
+                    text: 'Create',
+                    disabled: true,
                 },
             ]
         },
@@ -254,7 +258,7 @@ const routes = [
             breadcrumb: [
                 {
                     text: 'Company Request',
-                    disabled: false,
+                    disabled: true,
                     href: '/company-request',
                 },
             ]
@@ -278,6 +282,17 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Company',
+                    disabled: false,
+                    href: '/company',
+                },
+                {
+                    text: 'Edit',
+                    disabled: true,
+                },
+            ]
         }
     },
     {
@@ -287,6 +302,17 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Company',
+                    disabled: false,
+                    href: '/company',
+                },
+                {
+                    text: 'View',
+                    disabled: true,
+                },
+            ]
         }
     },
     //Collection Event
@@ -313,6 +339,17 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Collection',
+                    disabled: false,
+                    href: '/collection-event'
+                },
+                {
+                    text: 'Create',
+                    disabled: true,
+                }
+            ]
         }
     },
     {
@@ -322,6 +359,17 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Collection',
+                    disabled: false,
+                    href: '/collection-event'
+                },
+                {
+                    text: 'View',
+                    disabled: true,
+                }
+            ]
         }
     },
 
@@ -334,9 +382,13 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Edit Collection',
+                    text: 'Collection',
                     disabled: false,
                     href: '/collection-event'
+                },
+                {
+                    text: 'Edit Collection',
+                    disabled: true,
                 }
             ]
         }
@@ -563,7 +615,7 @@ const routes = [
             breadcrumb: [
                 {
                     text: 'Route Plan',
-                    disabled: false,
+                    disabled: true,
                     href: '/routeplan'
                 }
             ]
@@ -577,6 +629,17 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Route Plan',
+                    disabled: false,
+                    href: '/routeplan'
+                },
+                {
+                    text: 'Create',
+                    disabled: true,
+                }
+            ]
         }
     },
 
@@ -587,6 +650,17 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Route Plan',
+                    disabled: false,
+                    href: '/routeplan'
+                },
+                {
+                    text: 'Edit',
+                    disabled: true,
+                }
+            ]
         }
     },
     {
@@ -632,6 +706,17 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Route Plan',
+                    disabled: false,
+                    href: '/routeplan'
+                },
+                {
+                    text: 'View',
+                    disabled: true,
+                }
+            ]
         }
     },
     {
@@ -641,6 +726,17 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Route Plan',
+                    disabled: false,
+                    href: '/routeplan'
+                },
+                {
+                    text: 'Company',
+                    disabled: true,
+                }
+            ]
         }
     },
     {
