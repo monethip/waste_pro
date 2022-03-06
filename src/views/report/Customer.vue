@@ -118,7 +118,6 @@
     </v-row>
     <div>
       <v-card>
-        <v-card flat>
           <v-card-text>
             <v-data-table
               :headers="headers"
@@ -174,7 +173,6 @@
               ></Pagination>
             </template>
           </v-card-text>
-        </v-card>
       </v-card>
     </div>
   </v-container>

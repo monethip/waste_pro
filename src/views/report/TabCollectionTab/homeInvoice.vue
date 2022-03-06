@@ -78,7 +78,7 @@
     <div>
       <v-row v-for="(sum, index) in summary" :key="index">
         <v-col>
-          <h3>ປີ {{ sum.year }}</h3>
+          <p>ປີ {{ sum.year }}</p>
         </v-col>
         <v-col>
           <p>
@@ -121,35 +121,41 @@
           </p>
         </v-col>
       </v-row>
-      <v-data-table
-        :headers="headers"
-        :items="invoices"
-        :search="search"
-        :disable-pagination="true"
-        hide-default-footer
-      >
-        <!--Role -->
-        <template v-slot:item.sub_total="{ item }">
-          <div>
-            {{ Intl.NumberFormat().format(item.sub_total) }}
-          </div>
-        </template>
-        <template v-slot:item.total="{ item }">
-          <div>
-            {{ Intl.NumberFormat().format(item.total) }}
-          </div>
-        </template>
-        <template v-slot:item.status="{ item }">
-          <v-chip label :color="statusColor(item.payment_status)">{{
-              item.payment_status
-            }}</v-chip>
-        </template>
-        <template v-slot:item.created_at="{ item }">
-          <div>
-            <span>{{ moment(item.created_at).format("DD-MM-YY") }}</span>
-          </div>
-        </template> </v-data-table
-      ><br />
+       <v-card>
+         <v-card-text>
+           <v-data-table
+               :headers="headers"
+               :items="invoices"
+               :search="search"
+               :disable-pagination="true"
+               hide-default-footer
+           >
+             <!--Role -->
+             <template v-slot:item.sub_total="{ item }">
+               <div>
+                 {{ Intl.NumberFormat().format(item.sub_total) }}
+               </div>
+             </template>
+             <template v-slot:item.total="{ item }">
+               <div>
+                 {{ Intl.NumberFormat().format(item.total) }}
+               </div>
+             </template>
+             <template v-slot:item.status="{ item }">
+               <v-chip label :color="statusColor(item.payment_status)">{{
+                   item.payment_status
+                 }}</v-chip>
+             </template>
+             <template v-slot:item.created_at="{ item }">
+               <div>
+                 <span>{{ moment(item.created_at).format("DD-MM-YY") }}</span>
+               </div>
+             </template>
+           </v-data-table
+           >
+         </v-card-text>
+       </v-card>
+      <br />
       <template>
         <Pagination
           v-if="pagination.total_pages > 1"

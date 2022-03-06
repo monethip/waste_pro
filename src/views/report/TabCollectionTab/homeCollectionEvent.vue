@@ -149,24 +149,30 @@
           </v-col>
         </v-row>
       </div>
-      <v-data-table
-        v-if="homeCollection"
-        :headers="headers"
-        :items="homeCollection"
-        :search="search"
-        :disable-pagination="true"
-        hide-default-footer
-      >
-<!--        <template v-slot:item.status="{ item }">-->
-<!--          <div>-->
-<!--            <span class="success&#45;&#45;text">{{ item.status }}</span>-->
-<!--          </div>-->
-<!--        </template>-->
-        <template v-slot:item.status="{ item }">
-          <div>{{item.collect_status}}</div>
-        </template>
-      </v-data-table
-      ><br />
+       <v-card>
+         <v-card-text>
+           <v-data-table
+               v-if="homeCollection"
+               :headers="headers"
+               :items="homeCollection"
+               :search="search"
+               :disable-pagination="true"
+               hide-default-footer
+           >
+             <!--        <template v-slot:item.status="{ item }">-->
+             <!--          <div>-->
+             <!--            <span class="success&#45;&#45;text">{{ item.status }}</span>-->
+             <!--          </div>-->
+             <!--        </template>-->
+             <template v-slot:item.status="{ item }">
+               <div>{{item.collect_status}}</div>
+             </template>
+           </v-data-table
+           >
+         </v-card-text>
+       </v-card>
+
+      <br />
       <template>
         <Pagination
           v-if="pagination.total_pages > 1"

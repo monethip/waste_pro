@@ -226,31 +226,17 @@ export default {
         })
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.customers = res.data.data.data;
               this.pagination = res.data.data.pagination;
               this.start_menu = false;
               this.end_menu = false;
-            }, 300);
-            this.fetchAddress();
           }
         })
-        .catch((error) => {
+        .catch(() => {
           this.$store.commit("Loading_State", false);
           this.start_menu = false;
           this.end_menu = false;
-          if (error.response.status == 422) {
-            this.$store.commit("Toast_State", {
-              value: true,
-              color: "error",
-              msg: error.response.data.message,
-            });
-            var obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
-              this.server_errors[key] = message[0];
-            }
-          }
         });
     },
     Search() {

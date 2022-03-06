@@ -19,6 +19,7 @@
             v-for="(item, index) in data.media"
             :key="index"
             :src="item.url"
+            @click="showImage(item.url)"
             reverse-transition="fade-transition"
             transition="fade-transition"
         ></v-carousel-item>
@@ -187,7 +188,7 @@
                         {{ item.container }} container
                       </div>
                       <div v-else>
-                        {{item.collection_type}}
+                        {{ item.collection_type }}
                       </div>
                     </td>
                     <td>{{ item.status }}</td>
@@ -308,6 +309,15 @@
         <!--        ->-->
       </v-card-text>
     </v-card>
+
+    <ModalView>
+      <template>
+        <v-card>
+          <v-img :src="imageUrl" alt="Image" width="auto" height="auto" dark></v-img>
+        </v-card>
+      </template>
+    </ModalView>
+
   </v-container>
 </template>
 
@@ -363,10 +373,17 @@ export default {
       offset: 12,
       pagination: {},
       per_page: 12,
-    };
 
+      imageUrl: ""
+    };
   },
   methods: {
+    showImage(url) {
+      if (url != null) {
+        this.imageUrl = url;
+        this.$store.commit("modalView_State", true);
+      }
+    },
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
@@ -427,7 +444,7 @@ export default {
       this.$store.commit("Loading_State", true);
       this.$axios
           .get("customer-invoice-summary/" + this.$route.params.id, {
-            params:{
+            params: {
               page: this.pagination.current_page,
               per_page: this.per_page,
             }
@@ -480,18 +497,16 @@ export default {
     },
   },
   watch: {
- tab:function (){
-     if(this.tab === 'tab-1'){
-       this.fetchData();
-     } else
-     if(this.tab === 'tab-2'){
-       this.customerCollection();
-     } else
-     if(this.tab === 'tab-3'){
-       this.customerInvoice();
-     }
+    tab: function () {
+      if (this.tab === 'tab-1') {
+        this.fetchData();
+      } else if (this.tab === 'tab-2') {
+        this.customerCollection();
+      } else if (this.tab === 'tab-3') {
+        this.customerInvoice();
+      }
 
- }
+    }
   },
   created() {
     this.fetchData();

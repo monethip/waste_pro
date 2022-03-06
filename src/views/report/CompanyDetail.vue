@@ -17,6 +17,7 @@
             v-for="(item, index) in data.media"
             :key="index"
             :src="item.url"
+            @click="showImage(item.url)"
             reverse-transition="fade-transition"
             transition="fade-transition"
         ></v-carousel-item>
@@ -375,6 +376,13 @@
         <!--        ->-->
       </v-card-text>
     </v-card>
+    <ModalView>
+      <template>
+        <v-card>
+          <v-img :src="imageUrl" alt="Image" width="auto" height="auto" dark> </v-img>
+        </v-card>
+      </template>
+    </ModalView>
   </v-container>
 </template>
 
@@ -431,9 +439,16 @@ export default {
       offset: 12,
       pagination: {},
       per_page: 12,
+      imageUrl:""
     };
   },
   methods: {
+    showImage(url) {
+      if (url != null) {
+        this.imageUrl = url;
+        this.$store.commit("modalView_State", true);
+      }
+    },
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios

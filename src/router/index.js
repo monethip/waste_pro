@@ -272,6 +272,18 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Company Request',
+                    disabled: false,
+                    href: '/company-request',
+                },
+                {
+                    text: 'Detail',
+                    disabled: true,
+                },
+            ]
+
         }
     },
 
@@ -499,15 +511,7 @@ const routes = [
             ]
         }
     },
-    {
-        path: '/view/client/:id',
-        name: 'ViewClient',
-        component: () => import('@/views/report/CustomerDetail.vue'),
-        meta: {
-            layout: "admin",
-            middleware: [Middlewares.auth],
-        }
-    },
+
     {
         path: '/village',
         name: 'Village',
@@ -777,9 +781,13 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Home Customer',
+                    text: 'Route Plan',
                     disabled: false,
-                    href: '/select/home'
+                    href: '/routeplan'
+                },
+                {
+                    text: 'Home Customer',
+                    disabled: true,
                 }
             ]
         }
@@ -791,6 +799,17 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Route Plan',
+                    disabled: false,
+                    href: '/routeplan'
+                },
+                {
+                    text: 'Edit',
+                    disabled: true,
+                }
+            ]
         }
     },
 
@@ -814,6 +833,22 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Route Plan',
+                    disabled: false,
+                    href: '/routeplan'
+                },
+                {
+                    text: 'Home Customer',
+                    disabled: false,
+                    href: '/select/home'
+                },
+                {
+                    text: 'Create',
+                    disabled: true,
+                }
+            ]
         }
     },
     {
@@ -823,6 +858,17 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Route Plan',
+                    disabled: false,
+                    href: '/routeplan'
+                },
+                {
+                    text: 'Edit',
+                    disabled: true,
+                }
+            ]
         }
     },
     //Company
@@ -836,9 +882,13 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Company Customer',
+                    text: 'Route Plan',
                     disabled: false,
-                    href: '/select/company'
+                    href: '/routeplan'
+                },
+                {
+                    text: 'Select Company',
+                    disabled: true,
                 }
             ]
         }
@@ -852,6 +902,22 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Route Plan',
+                    disabled: false,
+                    href: '/routeplan'
+                },
+                {
+                    text: 'Select Company',
+                    disabled: false,
+                    href: '/select/company'
+                },
+                {
+                    text: 'Create',
+                    disabled: true,
+                }
+            ]
         }
     },
 
@@ -920,7 +986,7 @@ const routes = [
             breadcrumb: [
                 {
                     text: 'Reject',
-                    disabled: false,
+                    disabled: true,
                     href: '/reject'
                 }
             ]
@@ -980,6 +1046,13 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Report Trash',
+                    disabled: true,
+                    href: '/report/trash'
+                },
+            ]
         }
     },
     {
@@ -989,6 +1062,35 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Report Customer',
+                    disabled: true,
+                    href: '/report/customer'
+                },
+            ]
+        }
+    },
+
+    {
+        path: '/view/client/:id',
+        name: 'ViewClient',
+        component: () => import('@/views/report/CustomerDetail.vue'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Report Customer',
+                    disabled: false,
+                    href: '/report/customer'
+                },
+                {
+                    text: 'Detail',
+                    disabled: true,
+                },
+            ]
+
         }
     },
     {
@@ -998,6 +1100,13 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Report Company',
+                    disabled: true,
+                    href: '/report/company'
+                },
+            ]
         }
     },
     {
@@ -1007,6 +1116,13 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Report Driver',
+                    disabled: true,
+                    href: '/report/driver'
+                },
+            ]
         }
     },
     {
@@ -1016,6 +1132,17 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Report Company',
+                    disabled: false,
+                    href: '/report/company'
+                },
+                {
+                    text: 'Detail',
+                    disabled: true,
+                },
+            ]
         }
     },
     {
