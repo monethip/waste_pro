@@ -53,7 +53,6 @@
             <v-row>
               <div v-if="image_list.length > 0" style="display: inline-flex">
                 <v-col
-                  align="center"
                   v-for="(item, index) in preview_list"
                   :key="index"
                   class="mt-5 text-center"
@@ -75,7 +74,7 @@
                 </v-col>
               </div>
               <div v-else>
-                <v-col align="center text-center" class="mt-5 text-center">
+                <v-col class="mt-5 text-center">
                   <v-avatar
                     v-for="(item, index) in data.media"
                     :key="index"
@@ -149,7 +148,18 @@
                   {{ server_errors.email }}
                 </p>
               </v-col>
-              <v-col cols="6">
+
+              <v-col cols="4">
+                <v-checkbox v-model="can_collect">
+                  <template v-slot:label>
+                    <div>ສາມາດເກັບຂີ້ເຫື້ອຍເລີຍໄດ້ບໍ່ ?</div>
+                  </template>
+                </v-checkbox>
+                <p class="errors">
+                  {{ server_errors.can_collect }}
+                </p>
+              </v-col>
+              <v-col cols="4">
                 <v-autocomplete
                   required
                   :items="districts"
@@ -164,7 +174,7 @@
                 </p>
               </v-col>
 
-              <v-col cols="6">
+              <v-col cols="4">
                 <v-autocomplete
                   required
                   :items="villages"
@@ -185,7 +195,7 @@
                   :items="village_details"
                   item-text="name"
                   item-value="id"
-                  label="ກຸ່ມ / ຄຸ້ມ"
+                  label="ໜ່ວຍ"
                 >
                 </v-autocomplete>
                 <p class="errors">
@@ -199,7 +209,7 @@
                   :items="units"
                   item-text="name"
                   item-value="id"
-                  label="ຮ່ອມ / ໜ່ວຍ"
+                  label="ຮ່ອມ"
                   multiple
                 >
                   <template v-slot:selection="data">
@@ -306,12 +316,14 @@ export default {
       village_variation_id: "",
       selectedVillageDetail: [],
       units: [],
+      can_collect:0,
 
       address: [],
       errormsg: "",
       preview_list: [],
       image_list: [],
       image: [],
+
       //Map
       latlng: {
         lat: 18.1189434,
@@ -360,9 +372,13 @@ export default {
       houseNumberRules: [(v) => !!v || "House number is required"],
       ruleVillage: [(v) => !!v || "Village is required"],
       rulesDistrict: [(v) => !!v || "District is required"],
+
+
     };
+
   },
   methods: {
+
     fetchData() {
       this.selectedVillageDetail = [];
       this.$store.commit("Loading_State", true);
@@ -373,8 +389,9 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data;
-              console.log(this.data)
-              this.selectedVillage = res.data.data.village_id;
+              this.can_collect = res.data.data.can_collect;
+              this.selectedDistrict = res.data.data.district.id;
+              this.selectedVillage = res.data.data.village.id;
               res.data.data.village_details.map((item) => {
                 this.village_variation_id = item.village_variation_id;
                 this.selectedVillageDetail.push(item.id);
@@ -396,7 +413,7 @@ export default {
               this.address = res.data.data;
               this.address.map((item) => {
                 this.districts = item.districts;
-                this.selectedDistrict = this.districts[0].id;
+                // this.selectedDistrict = this.districts[0].id;
               });
               this.fetchVillage();
             }, 300);
@@ -412,7 +429,7 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.villages = res.data.data;
-              this.selectedVillage = this.villages[0].id;
+              // this.selectedVillage = this.villages[0].id;
               this.fetchVillageDetail();
             }, 300);
           }
@@ -421,11 +438,12 @@ export default {
     },
     fetchVillageDetail() {
       this.$axios
-        .get("info/village/" + this.selectedVillage)
+        .get("info/village/" + this.selectedVillage + "/village-detail")
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.village_details = res.data.data.village_variations;
+              this.village_details = res.data.data;
+              console.log(this.village_details);
               res.data.data.village_variations.map((item) => {
                 this.units = item.village_details;
               });
@@ -479,8 +497,8 @@ export default {
       formData.append("email", this.data.user.email);
       formData.append("lat", this.data.lat);
       formData.append("lng", this.data.lng);
+      formData.append("can_collect", this.can_collect);
       formData.append("_method", "PUT");
-
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
@@ -511,7 +529,7 @@ export default {
               msg: error.response.data.message,
             });
             if (error.response.status == 422) {
-              var obj = error.response.data.errors;
+              let obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
               }
@@ -633,6 +651,16 @@ export default {
       this.fetchVillageDetail();
     },
     //Clear error change
+
+    "can_collect": function () {
+      this.server_errors.can_collect = "";
+      console.log((this.can_collect));
+      // if(this.can_collect == 1){
+      //   this.can_collect = true;
+      // } else if(this.can_collect == 0){
+      //   this.can_collect = false;
+      // }
+    },
     "data.name": function () {
       this.server_errors.name = "";
     },

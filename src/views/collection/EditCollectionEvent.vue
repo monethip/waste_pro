@@ -428,7 +428,7 @@ export default {
               this.data = res.data.data;
               this.collect_status = res.data.data.collect_status;
               this.selectedDistrict = this.data.village.district_id;
-              this.time = this.moment(res.data.data.date).format("hh:mm:ss");
+              this.time = this.moment(res.data.data.date).format("hh:mm");
               this.date = this.moment(res.data.data.date).format("YYYY-MM-DD");
             }, 300);
           }
@@ -493,7 +493,7 @@ export default {
       this.$router.go(-1);
     },
     UpdateData() {
-      const dateTime = `${this.date} ${this.time}`;
+      const dateTime = `${this.date} ${this.time + `:00`}`;
       let formData = new FormData();
       this.image_list.map((item) => {
         formData.append("collect_location[]", item);
@@ -505,6 +505,7 @@ export default {
       formData.append("lng", this.data.lng);
       formData.append("phone", this.data.phone);
       formData.append("date", dateTime);
+      // formData.append("date", this.moment(dateTime).format("y-m-d hh:mm:ss"));
       formData.append("sub_total", this.data.sub_total);
       formData.append("driver_id", this.data.driver_id);
       formData.append("discount", this.data.discount);
@@ -539,7 +540,7 @@ export default {
               msg: error.response.data.message,
             });
             if (error.response.status == 422) {
-              var obj = error.response.data.errors;
+              let obj = error.response.data.errors;
               for (let [key, data] of Object.entries(obj)) {
                 this.server_errors[key] = data[0];
               }
