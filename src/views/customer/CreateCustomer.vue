@@ -89,6 +89,8 @@
                 {{ server_errors.surname }}
               </p>
             </v-col>
+          </v-row>
+          <v-row>
             <v-col cols="4">
               <v-text-field
                 label="ເຮືອນເລກທີ *"
@@ -118,13 +120,16 @@
             <v-col cols="4">
               <v-text-field
                 label="Email"
-                required
                 v-model="data.email"
+                type="email"
+                :rules="emailRules"
               ></v-text-field>
               <p class="errors">
                 {{ server_errors.email }}
               </p>
             </v-col>
+          </v-row>
+          <v-row>
             <v-col cols="6">
               <v-autocomplete
                 required
@@ -153,6 +158,9 @@
                 {{ server_errors.village_id }}
               </p>
             </v-col>
+          </v-row>
+
+          <v-row>
             <v-col cols="6">
               <v-autocomplete
                 v-model="village_variation_id"
@@ -160,7 +168,7 @@
                 :rules="ruleVariation"
                 item-text="name"
                 item-value="id"
-                label="ໜ່ວຍ"
+                label="ລາຍລະອຽທີ່ຢູ່"
                 multiple
               >
               </v-autocomplete>
@@ -175,7 +183,7 @@
                 :items="units"
                 item-text="name"
                 item-value="id"
-                label="ຮ່ອມ"
+                label="ໜ່ວຍ, ຮ່ອມ"
                 multiple
               >
                 <template v-slot:selection="data">
@@ -194,61 +202,56 @@
                 {{ server_errors.village_details }}
               </p>
             </v-col>
-            <!--
-              <v-col cols="4">
-                <v-autocomplete
-                  required
-                  :items="villages"
-                  v-model="selectedVillage"
-                  item-text="name"
-                  item-value="id"
-                  label="Village *"
-                  :rules="ruleVillage"
-                ></v-autocomplete>
-                <p class="errors">
-                  {{ server_errors.village_id }}
-                </p>
-              </v-col>
-              <v-col cols="4">
-                <v-select
-                  required
-                  v-model="selectedVillageDetail"
-                  :items="village_details"
-                  item-text="name"
-                  item-value="id"
-                  label="Village Detail"
-                  multiple
-                ></v-select>
-                <p class="errors">
-                  {{ errormsg }}
-                </p>
-              </v-col>
-              -->
-            <v-col cols="6">
-              <v-text-field
-                label="Password *"
-                type="password"
-                v-model="data.password"
-                :rules="passwordRules"
-                required
-              ></v-text-field>
-              <p class="errors">
-                {{ server_errors.password }}
-              </p>
-            </v-col>
-            <v-col cols="6">
-              <v-text-field
-                label="Password Confirm *"
-                type="password"
-                v-model="data.password_confirmation"
-                :rules="passwordConfirmRules"
-                required
-              ></v-text-field>
-              <p class="errors">
-                {{ server_errors.password_confirmation }}
-              </p>
-            </v-col>
+          </v-row>
 
+
+
+<!--            <v-row>-->
+<!--              <v-col  cols="6" v-for="(data,index) in addressdetail" :key="index" multiple>-->
+<!--                <v-autocomplete-->
+<!--                    :v-model="selectedVillageDetail[data.village_details.id]"-->
+<!--                    :items="data.village_details"-->
+<!--                    item-text="name"-->
+<!--                    :item-value="data.village_details.id"-->
+<!--                    :label="data.name"-->
+<!--                >-->
+<!--                </v-autocomplete>-->
+<!--                <p class="errors">-->
+<!--                  {{ server_errors.village_details }}-->
+<!--                </p>-->
+<!--              </v-col>-->
+<!--            </v-row>-->
+
+
+
+       <v-row>
+         <v-col cols="6">
+           <v-text-field
+               label="Password *"
+               type="password"
+               v-model="data.password"
+               :rules="passwordRules"
+               required
+           ></v-text-field>
+           <p class="errors">
+             {{ server_errors.password }}
+           </p>
+         </v-col>
+         <v-col cols="6">
+           <v-text-field
+               label="Password Confirm *"
+               type="password"
+               v-model="data.password_confirmation"
+               :rules="passwordConfirmRules"
+               required
+           ></v-text-field>
+           <p class="errors">
+             {{ server_errors.password_confirmation }}
+           </p>
+         </v-col>
+
+       </v-row>
+          <v-row>
             <!-- Gogle map-->
             <v-col cols="6">
               <v-text-field
@@ -665,6 +668,17 @@ export default {
     },
   },
   watch: {
+    "village_details":function (){
+
+      console.log(this.village_details)
+    },
+    "data.village_details.id":function (value){
+      console.log(value);
+    },
+    "selectedVillageDetail":function (){
+      console.log(this.selectedVillageDetail);
+      console.error("HI")
+    },
     selectedDistrict: function () {
       this.fetchVillage();
     },
@@ -721,6 +735,6 @@ export default {
   margin-bottom: 12px;
   font-size: 16px;
   background: #eee;
-  border-radius: 2 px;
+  border-radius: 2px;
 }
 </style>
