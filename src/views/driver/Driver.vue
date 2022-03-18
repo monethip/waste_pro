@@ -515,7 +515,9 @@ export default {
       loading: false,
       status: false,
       data: [],
-      user: {},
+      user: {
+        email:''
+      },
       edit_driver: {},
       userID: "",
       server_errors: {

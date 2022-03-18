@@ -122,7 +122,6 @@
                 label="Email"
                 v-model="data.email"
                 type="email"
-                :rules="emailRules"
               ></v-text-field>
               <p class="errors">
                 {{ server_errors.email }}
@@ -331,7 +330,9 @@
 export default {
   data() {
     return {
-      data: {},
+      data: {
+        email:'',
+      },
       loading: false,
       server_errors: {},
       provinces: [],

@@ -338,7 +338,7 @@ const routes = [
             breadcrumb: [
                 {
                     text: 'Collection',
-                    disabled: false,
+                    disabled: true,
                     href: '/collection-event'
                 }
             ]

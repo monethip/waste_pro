@@ -254,7 +254,7 @@
                 label="ປະເພດບໍລິການ"
               ></v-select>
             </v-col>
-            <v-col v-if="selectedCost == 'fix_cost'" cols="6">
+            <v-col v-if="showFixed">
               <v-text-field
                 label="ມູນຄ່າສັນຍາ *"
                 type="number"
@@ -264,7 +264,7 @@
                 dense
               ></v-text-field>
               <p class="errors">
-                {{ server_errors.fixed_cost }}
+                {{ server_errors.cost_by }}
               </p>
             </v-col>
           </v-row>
@@ -424,7 +424,10 @@
 export default {
   data() {
     return {
-      data: {},
+      data: {
+        email:'',
+        coordinator_email:''
+      },
       loading: false,
       server_errors: {},
       provinces: [],
@@ -442,6 +445,7 @@ export default {
       start_menu: false,
       // allowedDates: (val) => new Date(val).getDate() === 1,
       start_collect: 0,
+      showFixed:false,
       costs: [
         {
           id: 1,
@@ -819,7 +823,10 @@ export default {
       this.server_errors.password = "";
     },
     "selectedCost": function (){
-      console.log(this.selectedCost)
+      if(this.selectedCost == 'container'){
+        this.showFixed = false;
+      } else if(this.selectedCost == 'fixed_cost')
+        this.showFixed = true;
     }
   },
   mounted() {
@@ -843,6 +850,6 @@ export default {
   margin-bottom: 12px;
   font-size: 16px;
   background: #eee;
-  border-radius: 2 px;
+  border-radius: 2px;
 }
 </style>
