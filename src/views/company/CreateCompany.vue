@@ -258,7 +258,7 @@
               <v-text-field
                 label="ມູນຄ່າສັນຍາ *"
                 type="number"
-                v-model="data.fix_cost"
+                v-model="fix_cost"
                 required
                 outlined
                 dense
@@ -381,15 +381,13 @@
             <v-col cols="12" class="mb-4">
               <GmapMap
                 :center="latlng"
-                :zoom="16"
+                :zoom="17"
                 style="width: 100%; height: 450px"
                 :disableDefaultUI="true"
               >
                 <GmapMarker
-                  :key="index"
-                  v-for="(m, index) in markers"
-                  :position="m.position"
-                  @click="latlng = m.position"
+                  :position="latlng"
+                  @click="latlng = latlng"
                   :draggable="true"
                   @dragend="onLocation"
                   :icon="markerOptions"
@@ -446,6 +444,7 @@ export default {
       // allowedDates: (val) => new Date(val).getDate() === 1,
       start_collect: 0,
       showFixed:false,
+      fix_cost:'',
       costs: [
         {
           id: 1,
@@ -461,8 +460,8 @@ export default {
       errormsg: "",
       //Map
       latlng: {
-        lat: 18.1189434,
-        lng: 102.290218,
+        lat: 17.9614,
+        lng: 102.6465,
       },
       markers: [],
       currentPlace: null,
@@ -636,10 +635,12 @@ export default {
       formData.append("coordinator_surname", this.data.coordinator_surname);
       formData.append("coordinator_phone", this.data.coordinator_phone);
       formData.append("coordinator_email", this.data.coordinator_email);
-      formData.append("cost_by", this.selectedCost);
-      if (this.selectedCost == "fix_cost") {
-        formData.append("fix_cost", this.data.fix_cost);
-      }
+      // if (this.selectedCost == "container"){
+        formData.append("cost_by", this.selectedCost);
+      // }
+      // if (this.selectedCost == "fix_cost") {
+        formData.append("fix_cost", this.fix_cost);
+      // }
       formData.append("start_date", this.start_date);
       formData.append("can_collect", this.start_collect);
 
@@ -671,7 +672,7 @@ export default {
               msg: error.response.data.message,
             });
             if (error.response.status == 422) {
-              var obj = error.response.data.errors;
+              let obj = error.response.data.errors;
               for (let [key, data] of Object.entries(obj)) {
                 this.server_errors[key] = data[0];
               }
@@ -824,6 +825,7 @@ export default {
     },
     "selectedCost": function (){
       if(this.selectedCost == 'container'){
+        this.fix_cost = '';
         this.showFixed = false;
       } else if(this.selectedCost == 'fixed_cost')
         this.showFixed = true;

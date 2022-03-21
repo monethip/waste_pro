@@ -227,7 +227,7 @@ export default {
         { text: "Phone", value: "user.phone", sortable: false },
         { text: "ທີ່ຢູ່", value: "district.name", sortable: false },
         { text: "ປະເພດບໍລິການ", value: "package.name" },
-        { text: "ວັນທີສະໝັກ", value: "start_month", sortable: false },
+        { text: "ວັນທີສະໝັກ", value: "created_at", sortable: false },
         { text: "ສະຖານະ", value: "status", sortable: false },
         { text: "", value: "actions", sortable: false },
       ],

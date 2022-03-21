@@ -329,7 +329,7 @@ export default {
             },
             {
               icon: "mdi-calendar-month",
-              title: "ຈັດແຜນເວລາເກັບຂີ້ເຫື້ຍອ",
+              title: "ຈັດແຜນເດີນລົດ",
               to: "/calendar",
               permissions: ["update_plan_calendar"],
             },

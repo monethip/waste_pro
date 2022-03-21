@@ -206,9 +206,10 @@
 
 
 <!--            <v-row>-->
-<!--              <v-col  cols="6" v-for="(data,index) in addressdetail" :key="index" multiple>-->
+<!--              <v-col  cols="6" v-for="(data,index) in addressdetail" :key="index">-->
 <!--                <v-autocomplete-->
-<!--                    :v-model="selectedVillageDetail[data.village_details.id]"-->
+<!--                    v-model="selectedVillageDetail"-->
+<!--                    :key="data.village_details.id"-->
 <!--                    :items="data.village_details"-->
 <!--                    item-text="name"-->
 <!--                    :item-value="data.village_details.id"-->
@@ -287,15 +288,13 @@
             <v-col cols="12" class="mb-4">
               <GmapMap
                 :center="latlng"
-                :zoom="16"
+                :zoom="17"
                 style="width: 100%; height: 450px"
                 :disableDefaultUI="true"
               >
                 <GmapMarker
-                  :key="index"
-                  v-for="(m, index) in markers"
-                  :position="m.position"
-                  @click="latlng = m.position"
+                  :position="latlng"
+                  @click="latlng = latlng"
                   :draggable="true"
                   @dragend="onLocation"
                   :icon="markerOptions"
@@ -343,15 +342,15 @@ export default {
       village_details: [],
       village_variation_id: [],
       selectedVillageDetail: [],
+      selectItemDetail:'',
       units: [],
       addressdetail: [],
-
       address: [],
       errormsg: "",
       //Map
       latlng: {
-        lat: 18.1189434,
-        lng: 102.290218,
+        lat: 17.9614,
+        lng: 102.6465,
       },
       markers: [],
       currentPlace: null,
@@ -508,6 +507,7 @@ export default {
       this.$router.go(-1);
     },
     AddData() {
+      console.log(this.selectedVillageDetail);
       let formData = new FormData();
       this.image_list.map((item) => {
         formData.append("images[]", item);
@@ -598,6 +598,7 @@ export default {
           lat: this.latlng.lat,
           lng: this.latlng.lng,
         };
+
         this.markers.push({ position: marker });
         this.animateMarker();
       }
@@ -669,16 +670,19 @@ export default {
     },
   },
   watch: {
+    "selectItemDetail":function (){
+      console.log('Item');
+      console.log(this.selectItemDetail)
+    },
     "village_details":function (){
-
       console.log(this.village_details)
     },
     "data.village_details.id":function (value){
       console.log(value);
     },
     "selectedVillageDetail":function (){
+      console.log("SelectDeta");
       console.log(this.selectedVillageDetail);
-      console.error("HI")
     },
     selectedDistrict: function () {
       this.fetchVillage();
@@ -695,6 +699,9 @@ export default {
     //Clear error change
     "data.name": function () {
       this.server_errors.name = "";
+    },
+    "data.id":function (value){
+      console.log(value);
     },
     "data.surname": function () {
       this.server_errors.surname = "";
@@ -719,6 +726,7 @@ export default {
     this.geolocate();
   },
   created() {
+    console.log(this.latlng)
     this.fetchAddress();
   },
 };
