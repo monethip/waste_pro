@@ -360,7 +360,7 @@ export default {
                 color: "error",
                 msg: error.response.data.message,
               });
-              var obj = error.response.data.errors;
+              let obj = error.response.data.errors;
               for (let [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
               }

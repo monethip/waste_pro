@@ -50,10 +50,10 @@
                 </div>
               </v-col>
             </v-row>
+
             <v-row>
               <div v-if="image_list.length > 0" style="display: inline-flex">
                 <v-col
-                  align="center"
                   v-for="(item, index) in preview_list"
                   :key="index"
                   class="mt-5 text-center"
@@ -167,51 +167,133 @@
                   {{ errormsg }}
                 </p>
               </v-col>
-              <v-col cols="6">
-                <v-autocomplete
-                  v-model="village_variation_id"
-                  :items="village_details"
-                  item-text="name"
-                  item-value="id"
-                  label="ກຸ່ມ / ຄຸ້ມ"
-                  outlined
-                  dense
-                  multiple
-                >
-                </v-autocomplete>
-                <p class="errors">
-                  {{ server_errors.village_details }}
-                </p>
-              </v-col>
+            </v-row>
 
-              <v-col cols="6">
-                <v-autocomplete
-                  v-model="selectedVillageDetail"
-                  :items="units"
-                  item-text="name"
-                  item-value="id"
-                  label="ຮ່ອມ / ໜ່ວຍ"
-                  outlined
-                  dense
-                  multiple
+<!--            <v-row>-->
+<!--              <v-col cols="6">-->
+<!--                <v-autocomplete-->
+<!--                  v-model="village_variation_id"-->
+<!--                  :items="village_details"-->
+<!--                  item-text="name"-->
+<!--                  item-value="id"-->
+<!--                  label="ກຸ່ມ / ຄຸ້ມ"-->
+<!--                  outlined-->
+<!--                  dense-->
+<!--                  multiple-->
+<!--                >-->
+<!--                </v-autocomplete>-->
+<!--                <p class="errors">-->
+<!--                  {{ server_errors.village_details }}-->
+<!--                </p>-->
+<!--              </v-col>-->
+
+<!--              <v-col cols="6">-->
+<!--                <v-autocomplete-->
+<!--                  v-model="selectedVillageDetail"-->
+<!--                  :items="units"-->
+<!--                  item-text="name"-->
+<!--                  item-value="id"-->
+<!--                  label="ຮ່ອມ / ໜ່ວຍ"-->
+<!--                  outlined-->
+<!--                  dense-->
+<!--                  multiple-->
+<!--                >-->
+<!--                  <template v-slot:selection="data">-->
+<!--                    <v-chip-->
+<!--                      v-bind="data.attrs"-->
+<!--                      :input-value="data.selected"-->
+<!--                      close-->
+<!--                      @click="data.select"-->
+<!--                      @click:close="removeItem(data.item)"-->
+<!--                    >-->
+<!--                      {{ data.item.name }}-->
+<!--                    </v-chip>-->
+<!--                  </template>-->
+<!--                </v-autocomplete>-->
+<!--                <p class="errors">-->
+<!--                  {{ server_errors.village_details }}-->
+<!--                </p>-->
+<!--              </v-col>-->
+<!--            </v-row>-->
+
+
+            <v-row>
+              <v-col cols="6" v-for="(data,index) in village_details" :key="index">
+                <v-select
+                    v-model="selectedVillageDetail"
+                    :items="data.village_details"
+                    item-text="name"
+                    item-value="id"
+                    :label="data.name"
+                    chips
+                    deletable-chips
+                    multiple
                 >
-                  <template v-slot:selection="data">
-                    <v-chip
-                      v-bind="data.attrs"
-                      :input-value="data.selected"
-                      close
-                      @click="data.select"
-                      @click:close="removeItem(data.item)"
+                  <!--                    <v-chip v-for="(i,k) in data.village_details" :key="k" close>{{i.name}}</v-chip>-->
+                  <template v-slot:append-outer>
+                    <v-slide-x-reverse-transition
+                        mode="out-in"
                     >
-                      {{ data.item.name }}
-                    </v-chip>
+                      <v-icon
+                          :color="'info'"
+                          @click="addItem(data)"
+                          v-text="'mdi-plus-circle-outline'"
+                      ></v-icon>
+                    </v-slide-x-reverse-transition>
                   </template>
-                </v-autocomplete>
+                </v-select>
                 <p class="errors">
                   {{ server_errors.village_details }}
                 </p>
               </v-col>
             </v-row>
+
+            <!--Add more detail -->
+            <v-dialog v-model="addItemDetail" max-width="720px" persistent>
+              <v-card>
+                <v-card-title>
+          <span class="headline"
+          >Add Item
+            <span
+            ><a>{{ villageDetail.name }}</a></span
+            ></span
+          >
+                </v-card-title>
+                <v-card-text>
+                  <v-container>
+                    <v-form ref="form" lazy-validation>
+                      <v-row>
+                        <v-col cols="12">
+                          <v-text-field
+                              label="Name *"
+                              type="text"
+                              v-model="itemDetailValue"
+                              required
+                          ></v-text-field>
+                        </v-col>
+                      </v-row>
+                    </v-form>
+                  </v-container>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" text @click="addItemDetail = false">
+                      Close
+                    </v-btn>
+                    <v-btn
+                        color="blue darken-1"
+                        text
+                        :loading="loading"
+                        :disabled="loading"
+                        @click="addMoreVillageDetail"
+                    >
+                      Add
+                    </v-btn>
+                  </v-card-actions>
+                </v-card-text>
+              </v-card>
+            </v-dialog>
+
+
 
             <v-row>
               <v-col cols="6">
@@ -372,8 +454,16 @@ export default {
       village_details: [],
       village_variation_id: [],
       selectedVillageDetail: [],
-      addressdetail: [],
       units: [],
+
+      selectItemDetail: '',
+      addItemDetail: false,
+
+      itemDetailValue: '',
+      itemDetailValues: [],
+      villageDetail: {},
+
+
       selectedCost: "",
       start_menu: false,
       start_collect: 0,
@@ -491,7 +581,7 @@ export default {
               this.villages = res.data.data;
               this.selectedVillage = this.villages[0].id;
               this.fetchVillageDetail();
-              this.fetchVillageVariation();
+              // this.fetchVillageVariation();
             }, 300);
           }
         })
@@ -499,18 +589,16 @@ export default {
     },
     fetchVillageDetail() {
       this.$axios
-        .get("info/village/" + this.selectedVillage)
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.village_details = res.data.data.village_variations;
-              res.data.data.village_variations.map((item) => {
-                this.units = item.village_details;
-              });
-            }, 100);
-          }
-        })
-        .catch(() => {});
+          .get("info/village/" + this.selectedVillage + "/village-detail")
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.village_details = res.data.data;
+              }, 100);
+            }
+          })
+          .catch(() => {
+          });
     },
 
     backPrevios() {
@@ -543,6 +631,9 @@ export default {
 
     UpdateData() {
       let formData = new FormData();
+      if(this.data.user.email == null){
+        this.data.user.email ='';
+      }
       this.image_list.map((item) => {
         formData.append("images[]", item);
       });
@@ -694,46 +785,91 @@ export default {
       }
     },
 
-    fetchUnit() {
-      const result = this.addressdetail.filter(({ id }) =>
-        this.village_variation_id.includes(id)
-      );
-      result.map((item) => {
-        for (let i = 0; i < item.village_details.length; i++) {
-          this.units.push(item.village_details[i]);
-        }
-      });
+
+
+    addItem(data) {
+      this.addItemDetail = true;
+      this.villageDetail = data;
     },
-    fetchVillageVariation() {
-      this.$axios
-        .get(
-          "info/village/" + this.selectedVillage + "/village-detail"
-          // , {
-          //   params: {
-          //     page: this.pagination.current_page,
-          //     per_page: this.per_page,
-          //     filter: "",
-          //   },
-          // }
-        )
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.addressdetail = res.data.data;
-              // console.log(this.addressdetail);
-              // this.pagination = res.data.data.pagination;
-            }, 100);
-          }
-        })
-        .catch(() => {});
+    addMoreVillageDetail() {
+      if (this.itemDetailValue != '') {
+        this.itemDetailValues.push(this.itemDetailValue);
+        this.loading = true;
+        this.$axios
+            .post(
+                "address/village/" + this.selectedVillage + "/village-detail",
+                {
+                  name: this.itemDetailValue,
+                  village_variation_id: this.villageDetail.id,
+                }
+            )
+            .then((res) => {
+              if (res.data.code == 200) {
+                setTimeout(() => {
+                  this.loading = false;
+                  this.addItemDetail = false;
+                  this.selectedDetail = "";
+                  this.fetchVillageDetail();
+                  (this.address = {}),
+                      this.$store.commit("Toast_State", {
+                        value: true,
+                        color: "success",
+                        msg: res.data.message,
+                      });
+                }, 300);
+              }
+            })
+            .catch((error) => {
+              this.loading = false;
+              if (error.response.status == 422) {
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "error",
+                  msg: error.response.data.message,
+                });
+                let obj = error.response.data.errors;
+                for (let [key, message] of Object.entries(obj)) {
+                  this.server_errors[key] = message[0];
+                }
+              }
+            });
+      }
+      this.itemDetailValue = '';
+      this.addItemDetail = false;
     },
+
+    // fetchUnit() {
+    //   const result = this.addressdetail.filter(({ id }) =>
+    //     this.village_variation_id.includes(id)
+    //   );
+    //   result.map((item) => {
+    //     for (let i = 0; i < item.village_details.length; i++) {
+    //       this.units.push(item.village_details[i]);
+    //     }
+    //   });
+    // },
+    // fetchVillageVariation() {
+    //   this.$axios
+    //     .get(
+    //       "info/village/" + this.selectedVillage + "/village-detail"
+    //     )
+    //     .then((res) => {
+    //       if (res.data.code == 200) {
+    //         setTimeout(() => {
+    //           this.addressdetail = res.data.data;
+    //         }, 100);
+    //       }
+    //     })
+    //     .catch(() => {});
+    // },
+
   },
   watch: {
     selectedDistrict: function () {
       this.fetchVillage();
     },
     selectedVillage: function () {
-      this.fetchVillageVariation();
+      this.fetchVillageDetail();
     },
     //Clear error change
     "data.company_name": function () {
@@ -776,13 +912,6 @@ export default {
     //   console.log("Hi");
     // },
 
-    village_variation_id: function () {
-      // console.log(this.village_variation_id);
-      if (this.village_variation_id) {
-        this.units = [];
-        this.fetchUnit();
-      }
-    },
   },
   mounted() {
     this.geolocate();
@@ -790,7 +919,8 @@ export default {
   created() {
     this.fetchAddress();
     this.fetchData();
-    this.fetchUnit();
+    // this.fetchUnit();
+    console.log(this.village_details)
   },
 };
 </script>
@@ -807,6 +937,6 @@ export default {
   margin-bottom: 12px;
   font-size: 16px;
   background: #eee;
-  border-radius: 2 px;
+  border-radius: 2px;
 }
 </style>
