@@ -43,7 +43,7 @@
             hide-default-footer
           >
             <template v-slot:item.driver="{ item }">
-              <div>{{ item.driver.name }} {{ item.driver.surname }}</div>
+              <div>{{ item.driver.vehicle.car_number }} ({{ item.driver.name }})</div>
             </template>
             <template v-slot:item.date="{ item }">
               <v-chip color="success">{{ item.date }}</v-chip>
@@ -142,7 +142,12 @@
                       label="ຄົນຂົບລົດ"
                       outlined
                       dense
-                    ></v-autocomplete>
+
+                    >
+                      <template slot="selection" slot-scope="data">
+                        {{ data.item.car_id }}, {{ data.item.name }}
+                      </template>
+                    </v-autocomplete>
                     <p class="errors">
                       {{ server_errors.driver_id }}
                     </p>
@@ -397,10 +402,15 @@ export default {
 
       headers: [
         { text: "ວັນທີເກັບຂີ້ເຫື້ຍອ", value: "date" },
-        { text: "ຊື່ພະນັກງານ(ທະບຽນລົດ)", value: "driver" },
+        { text: "ທະບຽນລົດ(ພະນັກງານ)", value: "driver" },
         {
           text: "ເສັ້ນທາງ",
           value: "route_plan.name",
+          sortable: true,
+        },
+        {
+          text: "ລາຍລະອຽດແຜນ",
+          value: "route_plan.description",
           sortable: true,
         },
 
@@ -410,12 +420,12 @@ export default {
           align: "center",
           sortable: false,
         },
-        // {
-        //   text: "ລາຍລະອຽດ",
-        //   value: "detail",
-        //   align: "center",
-        //   sortable: false,
-        // },
+        {
+          text: "Success",
+          value: "count_success",
+          align: "center",
+          sortable: false,
+        },
         {
           text: "Created",
           value: "created_at",
@@ -496,6 +506,7 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.drivers = res.data.data;
+              console.log(this.drivers)
             }, 100);
           }
         })

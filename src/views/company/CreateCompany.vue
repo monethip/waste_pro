@@ -333,12 +333,12 @@
                 dense
                 :items="costs"
                 v-model="selectedCost"
-                item-text="value"
+                item-text="name"
                 item-value="value"
                 label="ປະເພດບໍລິການ"
               ></v-select>
             </v-col>
-            <v-col v-if="showFixed">
+            <v-col>
               <v-text-field
                 label="ມູນຄ່າສັນຍາ *"
                 type="number"
@@ -539,10 +539,17 @@ export default {
         {
           id: 1,
           value: "container",
+          name:  "Container"
         },
         {
           id: 2,
           value: "fixed_cost",
+          name:  "Fixed Cost"
+        },
+        {
+          id: 3,
+          value: "chartered",
+          name: "Chartered"
         },
       ],
 
@@ -662,7 +669,6 @@ export default {
               this.villages = res.data.data;
               this.selectedVillage = this.villages[0].id;
               this.fetchVillageDetail();
-              this.fetchVillageVariation();
             }, 300);
           }
         })
@@ -865,7 +871,6 @@ export default {
                   this.loading = false;
                   this.addItemDetail = false;
                   this.selectedDetail = "";
-                  this.fetchVillageVariation();
                   (this.address = {}),
                       this.$store.commit("Toast_State", {
                         value: true,

@@ -29,6 +29,17 @@
             <v-row>
               <v-col cols="12">
                 <v-text-field
+                    label="Description"
+                    v-model="plan.description"
+                ></v-text-field>
+                <p class="errors">
+                  {{ server_errors.description }}
+                </p>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field
                   label="Embed"
                   v-model="plan.embed"
                 ></v-text-field>
@@ -95,9 +106,11 @@ export default {
       this.$router.go(-1);
     },
     UpdateData() {
+      console.log(this.plan.name)
       let formData = new FormData();
       formData.append("name", this.plan.name);
       formData.append("embed", this.plan.embed);
+      formData.append("description", this.plan.description);
       formData.append("_method", "PUT");
       if (this.$refs.form.validate() == true) {
         this.loading = true;

@@ -22,6 +22,13 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Home Customer',
+                    disabled: true,
+                    href: '/customer'
+                }
+            ]
         }
     },
     //auth
@@ -53,7 +60,7 @@ const routes = [
             breadcrumb: [
                 {
                     text: 'Activity log',
-                    disabled: false,
+                    disabled: true,
                     href: '/activity-log'
                 }
             ]
@@ -70,7 +77,7 @@ const routes = [
             breadcrumb: [
                 {
                     text: 'Dashboard',
-                    disabled: false,
+                    disabled: true,
                     href: '/'
                 }
             ]
@@ -220,7 +227,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Company',
+                    text: 'Company Customer',
                     disabled: true,
                     href: '/company',
                 },
@@ -236,7 +243,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Company',
+                    text: 'Company Customer',
                     disabled: false,
                     href: '/company',
                 },
@@ -296,7 +303,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Company',
+                    text: 'Company Customer',
                     disabled: false,
                     href: '/company',
                 },
@@ -316,7 +323,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Company',
+                    text: 'Company Customer',
                     disabled: false,
                     href: '/company',
                 },
@@ -440,7 +447,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Customer',
+                    text: 'Home Customer',
                     disabled: false,
                     href: '/customer'
                 },
@@ -456,7 +463,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Customer',
+                    text: 'Home Customer',
                     disabled: false,
                     href: '/customer'
                 },
@@ -477,7 +484,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Customer',
+                    text: 'Home Customer',
                     disabled: false,
                     href: '/customer'
                 },
@@ -499,7 +506,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Customer',
+                    text: 'Home Customer',
                     disabled: false,
                     href: '/customer'
                 },
@@ -697,7 +704,7 @@ const routes = [
             breadcrumb: [
                 {
                     text: 'Plan',
-                    disabled: false,
+                    disabled: true,
                     href: '/plan'
                 }
             ]
@@ -951,7 +958,7 @@ const routes = [
             breadcrumb: [
                 {
                     text: 'Calendar',
-                    disabled: false,
+                    disabled: true,
                     href: '/calendar'
                 }
             ]
@@ -969,7 +976,7 @@ const routes = [
             breadcrumb: [
                 {
                     text: 'Invoice',
-                    disabled: false,
+                    disabled: true,
                     href: '/invoice'
                 }
             ]

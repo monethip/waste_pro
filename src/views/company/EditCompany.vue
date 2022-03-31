@@ -302,12 +302,12 @@
                   dense
                   :items="costs"
                   v-model="data.cost_by"
-                  item-text="value"
+                  item-text="name"
                   item-value="value"
                   label="ປະເພດບໍລິການ"
                 ></v-select>
               </v-col>
-              <v-col v-if="data.cost_by == 'fix_cost'" cols="6">
+              <v-col cols="6">
                 <v-text-field
                   label="ມູນຄ່າສັນຍາ *"
                   type="number"
@@ -472,10 +472,17 @@ export default {
         {
           id: 1,
           value: "container",
+          name:  "Container"
         },
         {
           id: 2,
-          value: "fix_cost",
+          value: "fixed_cost",
+          name:  "Fixed Cost"
+        },
+        {
+          id: 3,
+          value: "chartered",
+          name: "Chartered"
         },
       ],
 

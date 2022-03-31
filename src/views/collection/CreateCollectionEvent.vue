@@ -284,15 +284,13 @@
                 :disableDefaultUI="true"
               >
                 <GmapMarker
-                  :key="index"
-                  v-for="(m, index) in markers"
-                  :position="m.position"
-                  @click="latlng = m.position"
-                  :draggable="true"
-                  @dragend="onLocation"
-                  :icon="markerOptions"
-                  :animation="2"
-                  ref="markers"
+                    :position="latlng"
+                    @click="latlng = latlng"
+                    :draggable="true"
+                    @dragend="onLocation"
+                    :icon="markerOptions"
+                    :animation="2"
+                    ref="markers"
                 />
               </GmapMap>
             </v-col>
@@ -340,8 +338,8 @@ export default {
       selectedDriver:"",
       //Map
       latlng: {
-        lat: 18.1189434,
-        lng: 102.290218,
+        lat: 17.9614,
+        lng: 102.6465,
       },
       markers: [],
       currentPlace: null,
@@ -487,7 +485,7 @@ export default {
               msg: error.response.data.message,
             });
             if (error.response.status == 422) {
-              var obj = error.response.data.errors;
+              let obj = error.response.data.errors;
               for (let [key, data] of Object.entries(obj)) {
                 this.server_errors[key] = data[0];
               }

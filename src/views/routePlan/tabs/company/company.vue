@@ -45,6 +45,9 @@
                 <iframe :src="item.embed" height="100%" width="100%"></iframe>
               </div>
               <v-card-title>{{ item.name }}</v-card-title>
+              <v-card-text>
+                <p>{{ item.description }}</p>
+              </v-card-text>
               <v-divider class="mx-4"></v-divider>
 
               <v-card-actions class="white justify-center">

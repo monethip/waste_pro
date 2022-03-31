@@ -372,7 +372,7 @@ export default {
       oldVal: "",
       vehicle: [],
       selectedVehicle: "",
-      has_team_member: true,
+      has_team_member: false,
       statuses: [
         {
           id: 1,

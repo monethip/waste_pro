@@ -254,7 +254,7 @@
                   <v-col cols="12">
                     <v-autocomplete
                       v-model="selectedVehicle"
-                      :items="vehicle"
+                      :items="vehicles"
                       item-text="car_number"
                       item-value="id"
                       label="ເລືອກລົດ"
@@ -364,12 +364,12 @@
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col align="center" class="mt-5" v-if="imageUrl">
+                  <v-col class="mt-5" v-if="imageUrl">
                     <v-avatar class="avatar rounded" size="94px">
                       <img :src="imageUrl" alt="" />
                     </v-avatar>
                   </v-col>
-                  <v-col align="center" class="mt-5" v-else>
+                  <v-col class="mt-5" v-else>
                     <v-avatar
                       v-for="(item, index) in edit_driver.media"
                       :key="index"
@@ -423,7 +423,6 @@
                       label="Email *"
                       required
                       v-model="edit_driver.user.email"
-                      :rules="emailRules"
                     ></v-text-field>
                     <p class="errors">
                       {{ server_errors.email }}
@@ -535,6 +534,7 @@ export default {
       search: "",
       oldVal: "",
       vehicle: [],
+      vehicles: [],
       selectedVehicle: "",
       selectedStatus: "",
       statuses: [
@@ -585,6 +585,11 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.vehicle = res.data.data;
+              this.vehicle.filter(item =>{
+                if(item.driver == null || item.driver == ''){
+                  this.vehicles.push(item);
+                }
+              });
             }, 300);
           }
         })
@@ -641,7 +646,6 @@ export default {
               color: "error",
               msg: error.response.data.message,
             });
-            this.fetchData();
             if (error.response.status == 422) {
               let obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
@@ -667,7 +671,6 @@ export default {
         })
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
               this.loading = false;
               this.$store.commit("Loading_State", false);
               this.data = res.data.data.data;
@@ -679,13 +682,12 @@ export default {
                   this.status = false;
                 }
               });
-            }, 300);
           }
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
+            let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
@@ -740,9 +742,8 @@ export default {
               color: "error",
               msg: error.response.data.message,
             });
-            this.fetchData();
             if (error.response.status == 422) {
-              var obj = error.response.data.errors;
+              let obj = error.response.data.errors;
               for (let [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
               }
@@ -782,7 +783,6 @@ export default {
           }
         })
         .catch((error) => {
-          this.fetchData();
           this.$store.commit("Toast_State", {
             value: true,
             color: "error",

@@ -721,25 +721,6 @@ export default {
         isCreate: this.isCreate,
       });
     },
-    fetchUnit() {
-      // this.village_details.filter((item) => {
-      //   this.units = item.village_details;
-      //   console.log(this.units);
-      //   // console.log(item.village_details);
-      //   // item.village_details.forEach((data) => {
-      //   //   console.log(data);
-      //   //   data.filter((i) => {
-      //   //     console.log(i);
-      //   //     return i.village_variation_id === this.village_variation_id;
-      //   //   });
-      //   // });
-      //
-      //   // // var a = item.id === this.village_variation_id;
-      //   // // console.log(a);
-      //   // // this.units.push(item.id === this.village_variation_id);
-      //   // console.log("Unit" + this.units);
-      // });
-    },
     removeItem(item) {
       const index = this.selectedVillageDetail.indexOf(item.id);
       if (index >= 0) this.selectedVillageDetail.splice(index, 1);

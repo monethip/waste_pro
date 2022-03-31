@@ -307,8 +307,8 @@ export default {
     },
     verifyPhone(){
       // this.btnVerify = true;
-      this.loading = true;
       if (this.$refs.phone.validate() === true){
+        this.loading = true;
         this.$axios
             .post("unique-phone", {phone:this.phone})
             .then((res) => {

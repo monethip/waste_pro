@@ -1709,7 +1709,7 @@ export default {
     },
   },
   created() {
-    this.fetchRole();
+    // this.fetchRole();
     this.fetchData();
     this.initReCaptcha();
   },

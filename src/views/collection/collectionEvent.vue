@@ -605,12 +605,14 @@ export default {
       this.imageUrl = URL.createObjectURL(file);
     },
     fetchData() {
+
+      // let date = this.moment(this.month).format('YYYY-MM');
       const params = {
         page: this.pagination.current_page,
         per_page: this.per_page,
         collect_status: this.selectedCollectionStatus,
         payment_status: this.selectedPaymentStatus,
-        // month: this.month,
+        // month: date,
       }
       this.$store.commit("Loading_State", true);
       this.$axios
