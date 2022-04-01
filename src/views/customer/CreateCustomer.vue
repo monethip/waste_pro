@@ -162,53 +162,8 @@
             </v-col>
           </v-row>
 
-          <!--          <v-row>-->
-          <!--            <v-col cols="6">-->
-          <!--              <v-autocomplete-->
-          <!--                v-model="village_variation_id"-->
-          <!--                :items="addressdetail"-->
-          <!--                :rules="ruleVariation"-->
-          <!--                item-text="name"-->
-          <!--                item-value="id"-->
-          <!--                label="ລາຍລະອຽທີ່ຢູ່"-->
-          <!--                multiple-->
-          <!--              >-->
-          <!--              </v-autocomplete>-->
-          <!--              <p class="errors">-->
-          <!--                {{ server_errors.village_details }}-->
-          <!--              </p>-->
-          <!--            </v-col>-->
-
-          <!--            <v-col cols="6">-->
-          <!--              <v-autocomplete-->
-          <!--                v-model="selectedVillageDetail"-->
-          <!--                :items="units"-->
-          <!--                item-text="name"-->
-          <!--                item-value="id"-->
-          <!--                label="ໜ່ວຍ, ຮ່ອມ"-->
-          <!--                multiple-->
-          <!--              >-->
-          <!--                <template v-slot:selection="data">-->
-          <!--                  <v-chip-->
-          <!--                    v-bind="data.attrs"-->
-          <!--                    :input-value="data.selected"-->
-          <!--                    close-->
-          <!--                    @click="data.select"-->
-          <!--                    @click:close="removeItem(data.item)"-->
-          <!--                  >-->
-          <!--                    {{ data.item.name }}-->
-          <!--                  </v-chip>-->
-          <!--                </template>-->
-          <!--              </v-autocomplete>-->
-          <!--              <p class="errors">-->
-          <!--                {{ server_errors.village_details }}-->
-          <!--              </p>-->
-          <!--            </v-col>-->
-          <!--          </v-row>-->
-
-
           <v-row>
-            <v-col cols="6" v-for="(data,index) in addressdetail" :key="index">
+            <v-col cols="6" v-for="(data,index) in village_details" :key="index">
               <v-select
                   v-model="selectedVillageDetail"
                   :items="data.village_details"
@@ -533,9 +488,7 @@ export default {
               setTimeout(() => {
                 this.villages = res.data.data;
                 this.selectedVillage = this.villages[0].id;
-                this.fetchUnit();
                 this.fetchVillageDetail();
-                this.fetchVillageVariation();
               }, 300);
             }
           })
@@ -544,41 +497,17 @@ export default {
     },
     fetchVillageDetail() {
       this.$axios
-          .get("info/village/" + this.selectedVillage)
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.village_details = res.data.data.village_variations;
-                // console.log(this.village_details);
-                // res.data.data.map((item) => {
-                //   this.units = item.village_details;
-                //   // console.log(this.units)
-                // });
-              }, 100);
-            }
-          })
-          .catch(() => {
-          });
-    },
-    fetchVillageVariation() {
-      this.$axios
           .get("info/village/" + this.selectedVillage + "/village-detail")
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.addressdetail = res.data.data;
-                res.data.data.map((item) => {
-                  this.units = item.village_details;
-                  // console.log(this.units)
-                });
-                // this.pagination = res.data.data.pagination;
+                this.village_details = res.data.data;
               }, 100);
             }
           })
           .catch(() => {
           });
     },
-
     backPrevios() {
       this.$router.go(-1);
     },
@@ -761,7 +690,7 @@ export default {
                   this.loading = false;
                   this.addItemDetail = false;
                   this.selectedDetail = "";
-                  this.fetchVillageVariation();
+                  this.fetchVillageDetail();
                   (this.address = {}),
                       this.$store.commit("Toast_State", {
                         value: true,
@@ -796,13 +725,7 @@ export default {
       this.fetchVillage();
     },
     selectedVillage: function () {
-      // this.fetchVillageDetail();
-      this.fetchVillageVariation();
-    },
-    village_variation_id: function () {
-      if (this.village_variation_id) {
-        // this.fetchUnit();
-      }
+      this.fetchVillageDetail();
     },
     //Clear error change
     "data.name": function () {

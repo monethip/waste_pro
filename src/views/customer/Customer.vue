@@ -371,7 +371,7 @@
                             dense
                         ></v-text-field>
                       </template>
-                      <v-date-picker v-model="package_date"  :min="min_date" type="month"></v-date-picker>
+                      <v-date-picker v-model="package_date" :min="min_date" type="month"></v-date-picker>
                     </v-menu>
                     <p class="errors">
                       {{ server_errors.start_month }}
@@ -425,6 +425,7 @@
 <script>
 import {GetOldValueOnInput} from "@/Helpers/GetValue";
 import moment from "moment";
+import queryOption from "@/Helpers/queryOption";
 
 export default {
   name: "Customer",
@@ -448,7 +449,7 @@ export default {
       min_date: moment().add('1', 'months').startOf('month').format('YYYY-MM-DD'),
       package_menu: false,
       change_package_menu: false,
-      change_package:{},
+      change_package: {},
 
       start_date: "",
       start_menu: false,
@@ -508,20 +509,23 @@ export default {
   },
   methods: {
     fetchData() {
+
       this.$store.commit("Loading_State", true);
       this.$axios
-          .get("customer", {
-            params: {
-              page: this.pagination.current_page,
-              per_page: this.per_page,
-              filter: this.search,
-              villages: this.selectedVillage,
-              statuses: this.selectedStatus,
-              date_from: this.start_date,
-              date_end: this.end_date,
-              without: this.selectedCustomerStatus
-            },
-          })
+          .get("customer",
+              {
+                params: queryOption([
+                  {page: this.pagination.current_page},
+                  {per_page: this.per_page},
+                  {filter: this.search},
+                  {date_from: this.start_date},
+                  {date_end: this.end_date},
+                  {without: this.selectedCustomerStatus},
+                  {villages: this.selectedVillage},
+                  {statuses: this.selectedStatus},
+                  {district_id: this.selectedDistrict}]),
+              }
+          )
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
@@ -799,6 +803,9 @@ export default {
       this.fetchData();
     },
     selectedDistrict: function () {
+      if (this.selectedDistrict) {
+        this.fetchData();
+      }
       this.fetchVillage();
     },
     selectedStatus: function () {

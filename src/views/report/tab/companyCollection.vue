@@ -84,11 +84,12 @@
 
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
-import collection from "@views/report/collection";
+// import collection from "@views/report/collection";
 export default {
-  mixins: [collection],
+  // mixins: [collection],
   name: "CompanyCollection",
   // props: ["tab"],
+  props:["data"],
   title() {
     return `Vientiane Waste Co-Dev|Report Invoice`;
   },
@@ -140,6 +141,7 @@ export default {
   },
   created() {
     this.pagination = [];
+    console.log(this.homeCollection)
   },
 };
 </script>

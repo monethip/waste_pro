@@ -91,19 +91,6 @@
         </section>
       </v-col>
 
-      <v-col>
-        <v-text-field
-          outlined
-          dense
-          clearable
-          prepend-inner-icon="mdi-magnify"
-          label="Search"
-          type="text"
-          v-model="search"
-          @keyup.enter="Search()"
-        >
-        </v-text-field>
-      </v-col>
     </v-row>
     <v-card elevation="1">
       <v-card-text>
@@ -115,7 +102,7 @@
 
         <v-tabs-items v-model="tab">
           <v-tab-item value="tab-1">
-            <HomeCollection :tab="tab" />
+            <HomeCollection :tab="tab"/>
           </v-tab-item>
         </v-tabs-items>
 
@@ -123,7 +110,7 @@
           <v-tab-item value="tab-2">
             <v-card flat>
               <v-card-text>
-                <CompanyCollection :tab="tab" />
+                <CompanyCollection :tab="tab" :data="fetchData"/>
               </v-card-text>
             </v-card>
           </v-tab-item>

@@ -43,7 +43,7 @@
             hide-default-footer
           >
             <template v-slot:item.driver="{ item }">
-              <div>{{ item.driver.vehicle.car_number }} ({{ item.driver.name }})</div>
+              <div>{{ item.driver.vehicle.car_id }} ({{ item.driver.name }})</div>
             </template>
             <template v-slot:item.date="{ item }">
               <v-chip color="success">{{ item.date }}</v-chip>
@@ -137,7 +137,7 @@
                     <v-autocomplete
                       v-model="selectedDriver"
                       :items="drivers"
-                      item-text="name"
+                      :item-text="getDriver"
                       item-value="id"
                       label="ຄົນຂົບລົດ"
                       outlined
@@ -252,7 +252,7 @@
                     <v-autocomplete
                       v-model="calendarEdit.driver_id"
                       :items="drivers"
-                      item-text="name"
+                      :item-text="getDriver"
                       item-value="id"
                       label="ຄົນຂົບລົດ"
                       outlined
@@ -401,8 +401,8 @@ export default {
       selectedDriver: "",
 
       headers: [
-        { text: "ວັນທີເກັບຂີ້ເຫື້ຍອ", value: "date" },
-        { text: "ທະບຽນລົດ(ພະນັກງານ)", value: "driver" },
+        { text: "ວັນທີ", value: "date" },
+        { text: "ລົດ", value: "driver" },
         {
           text: "ເສັ້ນທາງ",
           value: "route_plan.name",
@@ -415,7 +415,7 @@ export default {
         },
 
         {
-          text: "ຈຳນວນລູກຄ້າ",
+          text: "ລູກຄ້າ",
           value: "plan_calendar_details_count",
           align: "center",
           sortable: false,
@@ -664,7 +664,7 @@ export default {
                 color: "error",
                 msg: error.response.data.message,
               });
-              var obj = error.response.data.errors;
+              let obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
               }
@@ -688,6 +688,13 @@ export default {
     reset() {
       this.$refs.form.reset();
     },
+    getDriver(value){
+     if(value.vehicle !== null){
+       return value.name +' '+ value.vehicle.car_id;
+     } else {
+       return value.name +' '+ '(ຍັງບໍທັນມີລົດ)'
+     }
+    }
   },
   watch: {
     search: function (value) {
@@ -695,8 +702,17 @@ export default {
         this.fetchData();
       }
     },
-    selectedDriver: function () {
+    selectedDriver: function (value) {
       this.server_errors.driver_id = "";
+      if(value){
+        this.getDriver(value);
+      }
+    },
+    "calendarEdit.driver_id":function (value){
+      this.server_errors.driver_id = "";
+      if(value){
+        this.getDriver(value);
+      }
     },
     selectedRoutePlan: function () {
       this.server_errors.route_plan_id = "";

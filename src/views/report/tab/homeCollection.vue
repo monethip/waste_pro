@@ -71,12 +71,16 @@
 </template>
 
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import colleciton from "@views/report/collection";
 export default {
   mixins: [colleciton],
   name: "HomeInvoice",
   // props: ["tab"],
+  props:{
+    callback: {
+      type: Function
+    }
+  },
   title() {
     return `Vientiane Waste Co-Dev|Report Invoice`;
   },
@@ -102,23 +106,27 @@ export default {
     };
   },
   methods: {
-    Search() {
-      GetOldValueOnInput(this);
-    },
     statusColor(value) {
       if (value == "success") return "success";
       else if (value == "pending") return "primary";
       else return "info";
     },
+    // execute() {
+    //   this.$emit('callback');
+    // }
   },
   watch: {
     tab: function () {
       if (this.tab == "tab-1") {
-        // this.fetchData();
+        this.fetchData();
       }
     },
   },
   created() {
+    // console.log(this.data);
+    // console.log(this.homeCollection)
+    // console.log(this.execute())
+    this.fetchData();
     this.pagination = [];
   },
 };

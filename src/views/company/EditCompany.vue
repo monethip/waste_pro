@@ -317,7 +317,7 @@
                   dense
                 ></v-text-field>
                 <p class="errors">
-                  {{ server_errors.fixed_cost }}
+                  {{ server_errors.fix_cost }}
                 </p>
               </v-col>
             </v-row>
@@ -476,7 +476,7 @@ export default {
         },
         {
           id: 2,
-          value: "fixed_cost",
+          value: "fix_cost",
           name:  "Fixed Cost"
         },
         {
@@ -551,7 +551,6 @@ export default {
               res.data.data.village_details.map((item) => {
                 this.village_variation_id.push(item.village_variation_id);
                 this.selectedVillageDetail.push(item.id);
-                // console.log(this.selectedVillageDetail);
               });
             }, 300);
           }
@@ -654,9 +653,9 @@ export default {
       formData.append("phone", this.data.user.phone);
       formData.append("email", this.data.user.email);
       formData.append("cost_by", this.data.cost_by);
-      if (this.data.cost_by == "fix_cost") {
+      // if (this.data.cost_by == "fix_cost") {
         formData.append("fix_cost", this.data.fix_cost);
-      }
+      // }
       formData.append("start_date", this.data.start_month);
       if (this.data.can_collect == true) {
         formData.append("can_collect", 1);
@@ -926,8 +925,6 @@ export default {
   created() {
     this.fetchAddress();
     this.fetchData();
-    // this.fetchUnit();
-    console.log(this.village_details)
   },
 };
 </script>

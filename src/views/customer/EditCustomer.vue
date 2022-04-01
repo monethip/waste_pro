@@ -405,7 +405,6 @@ export default {
       villages: [],
       selectedVillage: "",
       village_details: [],
-      village_variation_id: "",
       selectedVillageDetail: [],
       units: [],
       can_collect: 0,
@@ -491,10 +490,8 @@ export default {
                 this.data = res.data.data;
                 this.can_collect = res.data.data.can_collect;
                 this.selectedDistrict = res.data.data.district.id;
-                console.log(this.selectedDistrict);
                 this.selectedVillage = res.data.data.village.id;
                 res.data.data.village_details.map((item) => {
-                  this.village_variation_id = item.village_variation_id;
                   this.selectedVillageDetail.push(item.id);
                 });
               }, 300);
@@ -602,6 +599,12 @@ export default {
       formData.append("lat", this.data.lat);
       formData.append("lng", this.data.lng);
       formData.append("can_collect", this.can_collect);
+      if (this.can_collect == true) {
+        formData.append("can_collect", 1);
+      }
+      if (this.can_collect == false) {
+        formData.append("can_collect", 0);
+      }
       formData.append("_method", "PUT");
       if (this.$refs.form.validate() == true) {
         this.loading = true;
@@ -730,44 +733,6 @@ export default {
       }
     },
 
-    // fetchUnit() {
-    //   this.village_details.filter((item) => {
-    //     this.units = item.village_details;
-    //     // item.village_details.forEach((data) => {
-    //     //   console.log(data);
-    //     //   data.filter((i) => {
-    //     //     console.log(i);
-    //     //     return i.village_variation_id === this.village_variation_id;
-    //     //   });
-    //     // });
-    //
-    //     // // var a = item.id === this.village_variation_id;
-    //     // // console.log(a);
-    //     // // this.units.push(item.id === this.village_variation_id);
-    //   });
-    // },
-
-    // fetchVillageVariation() {
-    //   this.$axios
-    //       .get("info/village/" + this.selectedVillage + "/village-detail")
-    //       .then((res) => {
-    //         if (res.data.code == 200) {
-    //           setTimeout(() => {
-    //             this.addressdetail = res.data.data;
-    //             // res.data.data.map((item) => {
-    //             //   this.units = item.village_details;
-    //             //   // console.log(this.units)
-    //             // });
-    //             console.log(this.addressdetail)
-    //             // this.pagination = res.data.data.pagination;
-    //           }, 100);
-    //         }
-    //       })
-    //       .catch(() => {
-    //       });
-    // },
-
-
     addItem(data) {
       this.addItemDetail = true;
       this.villageDetail = data;
@@ -790,7 +755,7 @@ export default {
                   this.loading = false;
                   this.addItemDetail = false;
                   this.selectedDetail = "";
-                  this.fetchVillageVariation();
+                  this.fetchVillageDetail();
                   (this.address = {}),
                       this.$store.commit("Toast_State", {
                         value: true,
@@ -830,7 +795,6 @@ export default {
 
     "can_collect": function () {
       this.server_errors.can_collect = "";
-      console.log((this.can_collect));
       // if(this.can_collect == 1){
       //   this.can_collect = true;
       // } else if(this.can_collect == 0){
@@ -870,18 +834,12 @@ export default {
     //   console.log("Hi");
     // },
 
-    village_variation_id: function () {
-      if (this.village_variation_id) {
-        // this.fetchUnit();
-      }
-    },
   },
   mounted() {
     this.geolocate();
   },
   created() {
     this.fetchAddress();
-    // this.fetchVillageVariation();
     this.fetchData();
   },
 };
