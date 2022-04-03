@@ -180,6 +180,7 @@
 
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import queryOption from "@/Helpers/queryOption";
 export default {
   name: "Customer",
   title() {
@@ -248,15 +249,16 @@ export default {
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("customer", {
-          params: {
-            page: this.pagination.current_page,
-            per_page: this.per_page,
-            // filter: this.search,
-            date_from: this.start_date,
-            date_end: this.end_date,
-            statuses: this.selectedStatus,
-            villages: this.selectedVillage,
-          },
+          params: queryOption([
+            {page: this.pagination.current_page},
+            {per_page: this.per_page},
+            {filter: this.search},
+            {date_from: this.start_date},
+            {date_end: this.end_date},
+            {villages: this.selectedVillage},
+            {statuses: this.selectedStatus},
+            {district_id: this.selectedDistrict}]),
+
         })
         .then((res) => {
           if (res.data.code == 200) {
@@ -275,7 +277,7 @@ export default {
           this.start_menu = false;
           this.end_menu = false;
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
+            let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
@@ -333,11 +335,13 @@ export default {
         .post(
           "export-customer/",
           {
-            // filter: this.search,
-            // date_from: this.start_date,
-            // date_end: this.end_date,
-            // statuses: this.selectedStatus,
-            // villages: this.selectedVillage,
+            params: queryOption([
+              {date_from: this.start_date},
+              {date_end: this.end_date},
+              {villages: this.selectedVillage},
+              {statuses: this.selectedStatus},
+              {filter: this.search},
+              {district_id: this.selectedDistrict}]),
           },
           { responseType: "blob" }
         )
@@ -375,6 +379,7 @@ export default {
     },
     selectedDistrict: function () {
       this.fetchVillage();
+      this.fetchData();
     },
     selectedStatus: function () {
       this.fetchData();

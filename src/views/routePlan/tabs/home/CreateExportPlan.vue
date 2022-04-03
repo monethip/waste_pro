@@ -266,6 +266,7 @@ export default {
             {
               exclude_customers: this.exclude_customers,
               villages: this.selectedVillage,
+              // district_id:this.
             },
             { responseType: "blob" }
           )
@@ -417,6 +418,7 @@ export default {
     },
   },
   created() {
+    console.log("ccefsf")
     this.fetchData();
   },
 };
