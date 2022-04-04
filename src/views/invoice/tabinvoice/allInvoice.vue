@@ -9,13 +9,24 @@
       </v-col>
       <v-col>
         <v-autocomplete
+            outlined
+            dense
+            :items="customer_types"
+            v-model="selectedCustomerType"
+            item-text="display"
+            item-value="name"
+            label="ປະເພດລູກຄ້າ"
+        ></v-autocomplete>
+      </v-col>
+      <v-col>
+        <v-autocomplete
           outlined
           dense
-          :items="customer_types"
-          v-model="selectedCustomerType"
-          item-text="display"
-          item-value="name"
-          label="ປະເພດລູກຄ້າ"
+          :items="users"
+          v-model="selectedUser"
+          item-text="name"
+          item-value="id"
+          label="User"
         ></v-autocomplete>
       </v-col>
       <v-col>
@@ -270,6 +281,7 @@
 
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import queryOption from "@/Helpers/queryOption";
 export default {
   name: "Customer",
   props: ["tab"],
@@ -289,6 +301,8 @@ export default {
       server_errors: {},
       plans: [],
       selectedPlan: [],
+      selectedUser:"",
+      users:[],
       //Filter
       districts: [],
       selectedDistrict: "",
@@ -348,14 +362,16 @@ export default {
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("plan-month/" + this.$route.params.id + "/invoice", {
-          params: {
-            page: this.pagination.current_page,
-            per_page: this.per_page,
-            statuses: this.selectedStatus,
-            customer_type: this.selectedCustomerType,
-            route_plans: this.selectedPlan,
-            villages: this.selectedVillage,
-          },
+          params: queryOption([
+            {page: this.pagination.current_page},
+            {per_page: this.per_page},
+            {villages: this.selectedVillage},
+            {statuses: this.selectedStatus},
+            {route_plans: this.selectedPlan},
+            {customer_type: this.selectedCustomerType},
+            {user_id: this.selectedUser},
+            {district_id: this.selectedDistrict}]),
+
         })
         .then((res) => {
           if (res.data.code == 200) {
@@ -383,6 +399,21 @@ export default {
           }
         })
         .catch(() => {});
+    },
+    fetchUser() {
+      this.$axios
+          .get("user-setting/user", {
+            params: {
+              roles: ['admin'],
+            },
+          })
+          .then((res) => {
+            if (res.data.code === 200) {
+                this.users = res.data.data;
+            }
+          })
+          .catch(() => {
+          });
     },
 
     fetchAddress() {
@@ -451,7 +482,7 @@ export default {
               msg: error.response.data.message,
             });
             if (error.response.status == 422) {
-              var obj = error.response.data.errors;
+              let obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
               }
@@ -465,7 +496,7 @@ export default {
     },
 
     Approve() {
-      var selectedInvoice = [];
+      const selectedInvoice = [];
       this.selectedRows.filter((item) => {
         selectedInvoice.push(item.id);
       });
@@ -536,9 +567,14 @@ export default {
     },
     selectedDistrict: function () {
       this.fetchVillage();
+      this.fetchData();
     },
+    selectedUser:function (){
+      this.fetchData();
+    }
   },
   created() {
+    this.fetchUser();
     this.fetchData();
     this.fetchRoutePlan();
     this.fetchAddress();

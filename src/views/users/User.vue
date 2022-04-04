@@ -920,6 +920,7 @@
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import firebase from "firebase";
+import queryOption from "@/Helpers/queryOption";
 export default {
   title() {
     return `Vientiane Waste Co-Dev|User`;
@@ -1163,12 +1164,11 @@ export default {
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("user-setting/user", {
-          params: {
-            page: this.pagination.current_page,
-            per_page: this.per_page,
-            // filter: this.search,
-            roles: this.selectedRoles,
-          },
+          params: queryOption([
+            {page: this.pagination.current_page},
+            {per_page: this.per_page},
+            {filter: this.search},
+            {roles: this.selectedRoles},])
         })
         .then((res) => {
           if (res.data.code === 200) {
@@ -1200,6 +1200,7 @@ export default {
             setTimeout(() => {
               this.loading = false;
               this.roles = res.data.data;
+              console.log(this.roles)
               this.edit_user.roles.map((item) => {
                 roles.push(item.name);
               });
@@ -1583,42 +1584,6 @@ export default {
       this.changePhoneDialog = false;
       this.stepValue = 1;
     },
-    // changePhone() {
-    //     this.loading = true;
-    //     this.edit_user.id_token = this.id_token;
-    //     this.$axios
-    //         .put("user-setting/user/" + this.edit_user.id, this.edit_user)
-    //         .then((res) => {
-    //           if (res.data.code === 200) {
-    //             setTimeout(() => {
-    //               this.loading = false;
-    //               this.closeChangePhone();
-    //               this.edit_user = {};
-    //               this.fetchData();
-    //               this.$store.commit("Toast_State", {
-    //                 value: true,
-    //                 color: "success",
-    //                 msg: res.data.message,
-    //               });
-    //             }, 300);
-    //           }
-    //         })
-    //         .catch((error) => {
-    //           this.loading = false;
-    //           this.$store.commit("Toast_State", {
-    //             value: true,
-    //             color: "error",
-    //             msg: error.response.data.message,
-    //           });
-    //           if (error.response.status === 422) {
-    //             let obj = error.response.data.errors;
-    //             for (let [key, message] of Object.entries(obj)) {
-    //               this.server_errors[key] = message[0];
-    //             }
-    //           }
-    //         });
-    // },
-
     switchStatus() {
       this.loading = true;
       this.$axios
@@ -1709,7 +1674,7 @@ export default {
     },
   },
   created() {
-    // this.fetchRole();
+    this.fetchRole();
     this.fetchData();
     this.initReCaptcha();
   },

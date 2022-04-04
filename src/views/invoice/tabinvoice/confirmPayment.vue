@@ -20,6 +20,17 @@
       </v-col>
       <v-col>
         <v-autocomplete
+            outlined
+            dense
+            :items="users"
+            v-model="selectedUser"
+            item-text="name"
+            item-value="id"
+            label="User"
+        ></v-autocomplete>
+      </v-col>
+      <v-col>
+        <v-autocomplete
           outlined
           dense
           :items="plans"
@@ -242,6 +253,8 @@
 </template>
 
 <script>
+import queryOption from "@/Helpers/queryOption";
+
 export default {
   name: "ConfirmPayment",
   props: ["tab"],
@@ -266,6 +279,8 @@ export default {
       selectedDistrict: "",
       villages: [],
       selectedVillage: [],
+      selectedUser:"",
+      users:[],
 
       selectedCustomerType: "home",
       customer_types: [
@@ -327,14 +342,15 @@ export default {
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("plan-month/" + this.$route.params.id + "/invoice", {
-          params: {
-            page: this.pagination.current_page,
-            per_page: this.per_page,
-            statuses: this.selectedStatus,
-            customer_type: this.selectedCustomerType,
-            route_plans: this.selectedPlan,
-            villages: this.selectedVillage,
-          },
+          params: queryOption([
+            {page: this.pagination.current_page},
+            {per_page: this.per_page},
+            {villages: this.selectedVillage},
+            {statuses: this.selectedStatus},
+            {route_plans: this.selectedPlan},
+            {customer_type: this.selectedCustomerType},
+            {user_id: this.selectedUser},
+            {district_id: this.selectedDistrict}]),
         })
         .then((res) => {
           if (res.data.code == 200) {
@@ -460,12 +476,27 @@ export default {
             msg: error.response.data.message,
           });
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
+            let obj = error.response.data.errors;
             for (let [key, data] of Object.entries(obj)) {
               this.server_errors[key] = data[0];
             }
           }
         });
+    },
+    fetchUser() {
+      this.$axios
+          .get("user-setting/user", {
+            params: {
+              roles: ['admin'],
+            },
+          })
+          .then((res) => {
+            if (res.data.code === 200) {
+              this.users = res.data.data;
+            }
+          })
+          .catch(() => {
+          });
     },
 
     viewPage(id) {
@@ -498,10 +529,15 @@ export default {
     },
     selectedDistrict: function () {
       this.fetchVillage();
+      this.fetchData();
     },
+    selectedUser:function (){
+      this.fetchData();
+    }
   },
   created() {
     this.fetchData();
+    this.fetchUser();
     this.fetchRoutePlan();
     this.fetchAddress();
   },
