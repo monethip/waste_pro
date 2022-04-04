@@ -1063,6 +1063,23 @@ const routes = [
         }
     },
     {
+        path: '/report/driver/collection',
+        name: 'Report-Driver-Collection',
+        component: () => import('@/views/report/ReportCollection.vue'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Report Driver Collection',
+                    disabled: true,
+                    href: '/report/driver/collection'
+                },
+            ]
+        }
+    },
+
+    {
         path: '/report/customer',
         name: 'Report-Customer',
         component: () => import('@/views/report/Customer.vue'),
