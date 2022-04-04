@@ -116,6 +116,11 @@
                 <img v-if="img.url" :src="img.url" />
               </v-avatar>
             </template>
+            <template v-slot:item.vehicle="{ item }">
+            <div>
+              {{item.vehicle.car_id}} ({{item.vehicle.car_number}})
+            </div>
+            </template>
             <template v-slot:item.status="{ item }">
               <v-chip
                   label
@@ -157,7 +162,7 @@
             <v-container>
               <v-form ref="form" lazy-validation>
                 <v-row>
-                  <v-col align="center">
+                  <v-col>
                     <div class="field">
                       <div class="file is-large is-boxed">
                         <label class="file-label">
@@ -198,10 +203,23 @@
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col align="center" class="mt-5" v-if="imageUrl">
+                  <v-col class="mt-5" v-if="imageUrl">
                     <v-avatar class="avatar rounded" size="94px">
                       <img :src="imageUrl" alt="" />
                     </v-avatar>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="12">
+                    <v-text-field
+                        label="ID *"
+                        required
+                        v-model="user.card_id"
+                        :rules="idRules"
+                    ></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.card_id }}
+                    </p>
                   </v-col>
                 </v-row>
                 <v-row>
@@ -325,7 +343,7 @@
             <v-container>
               <v-form ref="form" lazy-validation>
                 <v-row>
-                  <v-col align="center">
+                  <v-col>
                     <div class="field">
                       <div class="file is-large is-boxed">
                         <label class="file-label">
@@ -378,6 +396,19 @@
                     >
                       <img :src="item.url" />
                     </v-avatar>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="12">
+                    <v-text-field
+                        label="ID *"
+                        required
+                        v-model="edit_driver.card_id"
+                        :rules="idRules"
+                    ></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.card_id }}
+                    </p>
                   </v-col>
                 </v-row>
                 <v-row>
@@ -488,6 +519,7 @@
 
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import queryOption from "@/Helpers/queryOption";
 export default {
   name: "User",
   title() {
@@ -501,9 +533,10 @@ export default {
       start_menu: false,
       end_menu: false,
       headers: [
+        { text: "ID", value: "card_id" },
         { text: "ຊື່", value: "name" },
         { text: "ນາມສະກຸນ", value: "surname" },
-        { text: "ທະບຽນລົດ", value: "vehicle.car_number" },
+        { text: "ທະບຽນລົດ", value: "vehicle" },
         { text: "ເບີໂທ", value: "user.phone", sortable: false },
         { text: "Email", value: "user.email", sortable: false },
         { text: "Status", value: "status", sortable: false },
@@ -558,6 +591,9 @@ export default {
         (v) =>
           (v && v.length >= 8) || "Password must be more than 8 characters",
       ],
+      idRules: [
+        (v) => !!v || "Id is required",
+      ],
       nameRules: [
         (v) => !!v || "Name is required",
         (v) => (v && v.length >= 2) || "Name must be less than 2 characters",
@@ -607,6 +643,7 @@ export default {
     },
     AddItem() {
       let formData = new FormData();
+      formData.append("card_id", this.user.card_id);
       formData.append("name", this.user.name);
       formData.append("surname", this.user.surname);
       formData.append("phone", this.user.phone);
@@ -659,15 +696,14 @@ export default {
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("driver", {
-          params: {
-            page: this.pagination.current_page,
-            per_page: this.per_page,
-            // filter: this.search,
-            date_from: this.start_date,
-            date_end: this.end_date,
-            // statuses: this.selectedStatus,
-            status: this.selectedStatus,
-          },
+          params: queryOption([
+            {page: this.pagination.current_page},
+            {per_page: this.per_page},
+            {filter: this.search},
+            {date_from: this.start_date},
+            {date_end: this.end_date},
+            {status: this.selectedStatus},
+            ]),
         })
         .then((res) => {
           if (res.data.code == 200) {
@@ -704,14 +740,19 @@ export default {
       this.$store.commit("modalEdit_State", true);
     },
     updateItem() {
+      if(this.edit_driver.user.email == null){
+        this.edit_driver.user.email = '';
+      }
       let formData = new FormData();
       formData.append("name", this.edit_driver.name);
+      formData.append("card_id", this.edit_driver.card_id);
       formData.append("surname", this.edit_driver.surname);
       formData.append("phone", this.edit_driver.user.phone);
       formData.append("email", this.edit_driver.user.email);
       formData.append("vehicle_id", this.edit_driver.vehicle_id);
       formData.append("image", this.image);
       formData.append("_method", "PUT");
+
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios

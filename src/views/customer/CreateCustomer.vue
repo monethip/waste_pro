@@ -731,9 +731,6 @@ export default {
     "data.name": function () {
       this.server_errors.name = "";
     },
-    "data.id": function (value) {
-      console.log(value);
-    },
     "data.surname": function () {
       this.server_errors.surname = "";
     },
@@ -757,7 +754,6 @@ export default {
     this.geolocate();
   },
   created() {
-    console.log(this.latlng)
     this.fetchAddress();
   },
 };
