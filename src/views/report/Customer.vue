@@ -350,6 +350,7 @@ export default {
             setTimeout(() => {
               this.loading = false;
               const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
+              console.log(fileUrl)
               const fileLink = document.createElement("a");
               fileLink.href = fileUrl;
               fileLink.setAttribute("download", "customer" + ".xlsx");

@@ -173,8 +173,8 @@ export default {
           })
           .then((res) => {
             if (res.data.code == 200) {
-                this.$store.commit("Loading_State", false);
-                this.customers = res.data.data.data;
+              this.$store.commit("Loading_State", false);
+              this.customers = res.data.data.data;
             }
           })
           .catch((error) => {
@@ -198,7 +198,6 @@ export default {
     },
 
     exportData() {
-      console.log(this.selectedCustomerType)
       this.loading = true;
       this.$axios
           .get(
@@ -215,19 +214,8 @@ export default {
           )
           .then((res) => {
             if (res.status == 200) {
-              setTimeout(() => {
-                this.loading = false;
-                // const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
-                const fileUrl = window.URL.createObjectURL(new Blob([res.data.download_link]));
-                console.log(fileUrl)
-                // console.log(fileUrls)
-                const fileLink = document.createElement("a");
-                fileLink.href = fileUrl;
-                fileLink.setAttribute("download", "driver collection " + ".xlsx");
-                document.body.appendChild(fileLink);
-                fileLink.click();
-                document.body.removeChild(fileLink);
-              }, 300);
+              window.open(res.data.data.download_link)
+              this.loading = false;
             }
           })
           .catch(() => {
