@@ -6,7 +6,8 @@
     <v-row class="mb-n6">
       <v-col>
         <v-btn
-          class="btn-primary"
+            depressed
+            color="primary"
           :loading="loading"
           :disabled="loading"
           @click="exportData()"
@@ -91,7 +92,20 @@
         </section>
       </v-col>
 
+<!--      <v-col>-->
+<!--        <v-select-->
+<!--            outlined-->
+<!--            dense-->
+<!--            :items="collectionTypes"-->
+<!--            v-model="collectionType"-->
+<!--            item-text="text"-->
+<!--            item-value="value"-->
+<!--            label="ປະເພດລູກຄ້າ"-->
+<!--        ></v-select>-->
+<!--      </v-col>-->
+
     </v-row>
+
     <v-card elevation="1">
       <v-card-text>
         <v-tabs v-model="tab">
@@ -102,7 +116,74 @@
 
         <v-tabs-items v-model="tab">
           <v-tab-item value="tab-1">
-            <HomeCollection :tab="tab"/>
+<!--            <HomeCollection :tab="tab"/>-->
+
+            <div v-if="collectionType == 'home'">
+              <div v-if="summary">
+                <v-row v-for="(sum, index) in summary" :key="index.id" class="mb-n6 mt-0">
+                  <v-col>
+                    <h3>ປີ {{ sum.year }}</h3>
+                  </v-col>
+                  <v-col>
+                    <p v-if="sum.home">
+                      ຈຳນວນຖົງຂີ້ເຫື້ອຍ
+                      <span class="success--text">{{ sum.home.total_bag_amount }}</span>
+                    </p>
+                  </v-col>
+                  <v-col>
+                    <p v-if="sum.home">
+                      ຈຳນວນຄັ້ງທີ່ລົງເກັບ
+                      <span class="success--text">{{
+                          sum.home.total_number_of_times_to_collect
+                        }}</span>
+                    </p>
+                  </v-col>
+                  <v-col>
+                    <p v-if="sum.home">
+                      ຈຳນວນເກັບສຳເລັດ
+                      <span class="success--text">{{
+                          sum.home.total_success_count
+                        }}</span>
+                    </p>
+                  </v-col>
+                  <v-col>
+                    <p v-if="sum.home">
+                      ຈຳນວນລໍຖ້າເກັບ
+                      <span class="success--text">{{
+                          sum.home.total_pending_count
+                        }}</span>
+                    </p>
+                  </v-col>
+                </v-row>
+              </div>
+              <v-data-table
+                  v-if="homeCollection"
+                  :headers="headers"
+                  :items="homeCollection"
+                  :disable-pagination="true"
+                  hide-default-footer
+              >
+                <!--        <template v-slot:item.status="{ item }">-->
+                <!--          <div>-->
+                <!--            <span class="success&#45;&#45;text">{{ item.status }}</span>-->
+                <!--          </div>-->
+                <!--        </template>-->
+                <template v-slot:item.status="{ item }">
+                  <v-chip label :color="homeStatus(item.status)">{{
+                      item.status
+                    }}</v-chip>
+                </template>
+              </v-data-table
+              ><br />
+              <template>
+                <Pagination
+                    v-if="pagination.total_pages > 1"
+                    :pagination="pagination"
+                    :offset="offset"
+                    @paginate="fetchData()"
+                ></Pagination>
+              </template>
+            </div>
           </v-tab-item>
         </v-tabs-items>
 
@@ -110,29 +191,113 @@
           <v-tab-item value="tab-2">
             <v-card flat>
               <v-card-text>
-                <CompanyCollection :tab="tab" :data="fetchData"/>
+<!--                <CompanyCollection :tab="tab"/>-->
+                <div v-if="collectionType == 'company'">
+                  <v-row v-for="(sum, index) in summary" :key="index" class="mb-n6 mt-n6">
+                    <v-col>
+                      <h3>ປີ {{ sum.year }}</h3>
+                    </v-col>
+                    <v-col>
+                      <p>
+                        ລວມ Container
+                        <span class="success--text">{{
+                            sum.company.container_amount
+                          }}</span>
+                      </p>
+                    </v-col>
+                    <v-col>
+                      <p>
+                        ລວມເກັບເປັນ Container
+                        <span class="success--text">{{
+                            sum.company.number_of_times_to_collect_by_container
+                          }}</span>
+                      </p>
+                    </v-col>
+                    <v-col>
+                      <p>
+                        ລວມເກັບຕາມລາຄາ
+                        <span class="success--text">{{
+                            sum.company.number_of_times_to_collect_by_fix_cost
+                          }}</span>
+                      </p>
+                    </v-col>
+                    <v-col>
+                      <p>
+                        ຍົກເລີກ
+                        <span class="success--text">{{ sum.company.reject_count }}</span>
+                      </p>
+                    </v-col>
+                    <v-col>
+                      <p>
+                        ລໍຖ້າເກັບ
+                        <span class="success--text">{{ sum.company.pending_count }}</span>
+                      </p>
+                    </v-col>
+                    <v-col>
+                      <p>
+                        ລວມ
+                        <span class="success--text">{{
+                            sum.company.wait_to_confirm_count
+                          }}</span>
+                      </p>
+                    </v-col>
+                    <v-col>
+                      <p>
+                        ສຳເລັດທັງໝົດ
+                        <span class="success--text">{{ sum.company.success_count }}</span>
+                      </p>
+                    </v-col>
+                  </v-row>
+                  <v-data-table
+                      :headers="company"
+                      :items="collections"
+                      :disable-pagination="true"
+                      hide-default-footer
+                  >
+                    <template v-slot:item.status="{ item }">
+                      <v-chip label :color="companyStatus(item.status)">{{
+                          item.status
+                        }}</v-chip>
+                    </template>
+
+                    <!--Role --> </v-data-table
+                  ><br />
+                  <template>
+                    <Pagination
+                        v-if="pagination.total_pages > 1"
+                        :pagination="pagination"
+                        :offset="offset"
+                        @paginate="fetchData()"
+                    ></Pagination>
+                  </template>
+                </div>
               </v-card-text>
             </v-card>
           </v-tab-item>
         </v-tabs-items>
+
+<!--        <div v-if="">-->
+
+<!--        </div>-->
+
       </v-card-text>
     </v-card>
   </v-container>
 </template>
 
 <script>
-import HomeCollection from "@views/report/tab/homeCollection";
-import CompanyCollection from "@views/report/tab/companyCollection";
+// import HomeCollection from "@views/report/tab/homeCollection";
+// import CompanyCollection from "@views/report/tab/companyCollection";
 import collection from "@views/report/collection";
 export default {
   title() {
     return `Vientiane Waste Co-Dev|Calendar`;
   },
   mixins: [collection],
-  components: {
-    HomeCollection,
-    CompanyCollection,
-  },
+  // components: {
+  //   HomeCollection,
+  //   CompanyCollection,
+  // },
   data() {
     return {
       data: {},
@@ -141,64 +306,8 @@ export default {
   methods: {
     backPrevios() {
       this.$router.go(-1);
-      // this.$router.push({
-      //   name: "PlanCalendar",
-      //   params: { id },
-      // });
-      // this.$router.push({
-      //   name: "PlanCalendar",
-      //   params: { id: this.data.plan_month_id },
-      // });
     },
-    // fetchDataPlanMonth() {
-    //   this.$axios
-    //     .get(
-    //       "plan-month/" +
-    //         this.$route.params.driverId +
-    //         "/plan-calendar/" +
-    //         this.$route.params.id
-    //     )
-    //     .then((res) => {
-    //       if (res.data.code == 200) {
-    //         setTimeout(() => {
-    //           this.data = res.data.data;
-    //           console.log(this.data);
-    //         }, 100);
-    //       }
-    //     })
-    //     .catch(() => {});
-    // },
   },
-  created() {
-    // if (this.$route.query.tab == "home") {
-    //   this.tab = "tab-1";
-    //   this.selectedInvoceType = "home";
-    //   this.fetchData();
-    // } else if (this.$route.query.tab == "company") {
-    //   this.tab = "tab-2";
-    //   this.selectedInvoceType = "company";
-    //   this.fetchData();
-    // }
-  },
-  // watch: {
-  //   tab: function (value) {
-  //     if (value == "tab-1") {
-  //       // this.fetchData();
-  //       this.selectedInvoceType = "home";
-  //       this.$router
-  //         .push({ name: "Report-Trash", query: { tab: "home" } })
-  //         .catch(() => {});
-  //     } else if (value == "tab-2") {
-  //       this.selectedInvoceType = "company";
-  //       this.$router
-  //         .push({
-  //           name: "Report-Trash",
-  //           query: { tab: "company" },
-  //         })
-  //         .catch(() => {});
-  //     }
-  //   },
-  // },
 };
 </script>
 

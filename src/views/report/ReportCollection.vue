@@ -76,34 +76,171 @@
     </v-row>
     <div>
       <v-card>
-        <v-card flat>
-          <v-card-text>
-            <v-data-table
-                :headers="headers"
-                :items="customers"
-                :search="search"
-                :disable-pagination="true"
-                hide-default-footer
-            >
-              <template v-slot:item.created_at="{ item }">
-                <div>
-                  {{ moment(item.created_at).format("DD-MM-YY") }}
-                </div>
-              </template>
-            </v-data-table
-            >
+        <v-card-text>
 
-            <!--            <br/>-->
-            <!--            <template>-->
-            <!--              <Pagination-->
-            <!--                  v-if="pagination.total_pages > 1"-->
-            <!--                  :pagination="pagination"-->
-            <!--                  :offset="offset"-->
-            <!--                  @paginate="fetchData()"-->
-            <!--              ></Pagination>-->
-            <!--            </template>-->
-          </v-card-text>
-        </v-card>
+          <!--         show home customer-->
+          <v-simple-table fixed-header v-if="selectedCustomerType == 'home'">
+            <thead>
+            <tr>
+              <th class="text-left text-table-header">
+                Driver Name
+              </th>
+              <th class="text-left text-table-header">
+                Car ID
+              </th>
+              <th class="text-left text-table-header">
+                Village
+              </th>
+              <th class="text-left text-table-header">
+                District
+              </th>
+              <th class="text-left text-table-header">
+                Amount
+              </th>
+              <th class="text-left text-table-header">
+                Bags
+              </th>
+              <th class="text-center text-table-header">
+                Total Bags
+              </th>
+              <th class="text-left text-table-header">
+                Created
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <template v-for="(driver) in customers"
+            >
+              <tr
+                  v-for="(item,iSub) in driver.data"
+                  :key="iSub.id"
+              >
+                <td v-if="iSub === 0" :rowspan="driver.data.length">{{ driver.driver_name }}</td>
+                <td v-if="iSub === 0" :rowspan="driver.data.length">{{ driver.vehicle_car_id }}</td>
+                <td>
+                  {{ item.village_name }}
+                </td>
+                <td>
+                  {{ item.district_name }}
+                </td>
+                <td>
+                  {{ item.amount }}
+                </td>
+                <td>
+                  {{ item.bags }}
+                </td>
+                <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
+                  <v-chip color="success">
+                    {{ driver.total }}
+                  </v-chip>
+                </td>
+                <td v-if="iSub === 0" :rowspan="driver.data.length">{{
+                    moment(driver.created_at).format("DD-MM-YY")
+                  }}
+                </td>
+              </tr>
+            </template>
+            </tbody>
+          </v-simple-table>
+
+          <!--            show company customer-->
+          <v-simple-table fixed-header v-if="selectedCustomerType == 'company'" dense>
+            <thead>
+            <tr>
+              <th class="text-left text-table-header">
+                Driver Name
+              </th>
+              <th class="text-left text-table-header">
+                Car ID
+              </th>
+              <th class="text-left text-table-header">
+                Village
+              </th>
+              <th class="text-left text-table-header">
+                District
+              </th>
+              <th class="text-left text-table-header">
+                Container
+              </th>
+              <th class="text-left text-table-header">
+                Fixed Cost
+              </th>
+              <th class="text-left text-table-header">
+                Collect Time
+              </th>
+              <th class="text-center text-table-header">
+                Total Container
+              </th>
+              <th class="text-center text-table-header">
+                Chartered Time
+              </th>
+              <th class="text-center text-table-header">
+                Collect Time
+              </th>
+              <th class="text-left text-table-header">
+                Created
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <template v-for="(driver) in customers"
+            >
+              <tr
+                  v-for="(item,iSub) in driver.data"
+                  :key="iSub.id"
+              >
+                <td class="text-table-body" v-if="iSub === 0" :rowspan="driver.data.length">{{ driver.driver_name }}</td>
+                <td class="text-table-body" v-if="iSub === 0" :rowspan="driver.data.length">{{ driver.vehicle_car_id }}</td>
+                <td class="text-table-body">
+                  {{ item.village_name }}
+                </td>
+                <td class="text-table-body">
+                  {{ item.district_name }}
+                </td>
+                <td class="text-table-body">
+                  {{ item.subtotal_container }}
+                </td>
+                <td class="text-table-body">
+                  {{ item.fix_cost_collect_time }}
+                </td>
+                <td class="text-table-body">
+                  {{ item.subtotal_collect_time }}
+                </td>
+                <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
+                  <v-chip color="success">
+                    {{ driver.total_container }}
+                  </v-chip>
+                </td>
+                <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
+                  <v-chip color="success">
+                    {{ driver.total_chartered_collect_time }}
+                  </v-chip>
+                </td>
+                <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
+                  <v-chip color="success">
+                    {{ driver.total_collect_time }}
+                  </v-chip>
+                </td>
+
+                <td v-if="iSub === 0" :rowspan="driver.data.length">{{
+                    moment(driver.created_at).format("DD-MM-YY")
+                  }}
+                </td>
+              </tr>
+            </template>
+            </tbody>
+          </v-simple-table>
+
+          <!--            <br/>-->
+          <!--            <template>-->
+          <!--              <Pagination-->
+          <!--                  v-if="pagination.total_pages > 1"-->
+          <!--                  :pagination="pagination"-->
+          <!--                  :offset="offset"-->
+          <!--                  @paginate="fetchData()"-->
+          <!--              ></Pagination>-->
+          <!--            </template>-->
+        </v-card-text>
       </v-card>
     </div>
   </v-container>
@@ -133,12 +270,8 @@ export default {
       search: "",
       oldVal: "",
       //Filter
-      selectedCustomerType: "",
+      selectedCustomerType: "home",
       customer_types: [
-        {
-          name: "",
-          display: "ທັງໝົດ",
-        },
         {
           name: "home",
           display: "ຄົວເຮືອນ",
@@ -175,6 +308,7 @@ export default {
             if (res.data.code == 200) {
               this.$store.commit("Loading_State", false);
               this.customers = res.data.data.data;
+              console.log(this.customers)
             }
           })
           .catch((error) => {
@@ -237,4 +371,21 @@ export default {
 
 <style lang="scss">
 @import "../../../public/scss/main.scss";
+.text-table-header{
+  font-size: 14px !important;
+}
+.text-table-body{
+  font-size: 13px !important;
+}
+.page--table {
+  .page {
+    &__table {
+      margin-top: 20px;
+    }
+
+    &__grab-icon {
+      cursor: move;
+    }
+  }
+}
 </style>

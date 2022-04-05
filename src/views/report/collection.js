@@ -1,3 +1,4 @@
+
 export default {
     title() {
         return `Vientiane Waste Co-Dev|Report Invoice`;
@@ -45,6 +46,39 @@ export default {
                 },
             ],
             collectionType: "home",
+            collectionTypes:[
+                {
+                    value:'home',
+                    text:'ຄົວເຮືອນ',
+                },
+                {
+                    value:'company',
+                    text:'ບໍລິສັດ',
+                }
+            ],
+
+            headers: [
+                { text: "ວັນທີ", value: "date", sortable: false },
+                { text: "ລູກຄ້າ", value: "full_name" },
+                { text: "ຈຳນວນຖົງ", value: "bag", sortable: false, align: "center" },
+                { text: "ສະຖານທີ່", value: "name", sortable: false },
+                { text: "ສະຖານະ", value: "status", sortable: false },
+                // { text: "", value: "actions", sortable: false },
+            ],
+            company: [
+                { text: "ວັນທີ", value: "date", sortable: false },
+                { text: "ບໍລິສັດ", value: "company_name" },
+                { text: "ປະເພດການເກັບ", value: "collection_type" },
+                {
+                    text: "Container",
+                    value: "container",
+                    sortable: false,
+                    align: "center",
+                },
+                { text: "ສະຖານທີ່", value: "name", sortable: false },
+                { text: "ສະຖານະ", value: "status", sortable: false },
+                // { text: "", value: "actions", sortable: false },
+            ],
         };
     },
     methods: {
@@ -75,9 +109,25 @@ export default {
                 data.set("date_from", this.moment(this.date_from).format("YYYY-MM-DD"));
                 data.set("date_to", this.moment(this.date_to).format("YYYY-MM-DD"));
             }
+
             this.$store.commit("Loading_State", true);
             this.$axios
-                .post("report-collection", data
+                .post("report-collection",
+                    data
+                    // {
+                    // params: queryOption([
+                    //     {page: this.pagination.current_page},
+                    //     {per_page: this.per_page},
+                    //     {type: this.collectionType},
+                    //     {duration: this.selectedDuration},
+                    //     {date_from: this.start_date},
+                    //     {date_to: this.end_date},
+                    //     {month_from: this.month_from},
+                    //     {month_to: this.month_to},
+                    //     {year_from: this.year_from},
+                    //     {year_to: this.year_to},
+                    //     ]),
+                    // }
                 )
                 .then((res) => {
                     if (res.data.code == 200) {
@@ -85,6 +135,7 @@ export default {
                             this.$store.commit("Loading_State", false);
                             this.homeCollection = res.data.data.details.data;
                             this.collections = res.data.data.details.data;
+                            console.log(this.homeCollection)
                             this.summary = res.data.data.summary;
                             this.pagination = res.data.data.details.pagination;
                         }, 300);
@@ -161,8 +212,24 @@ export default {
                 params: { id },
             });
         },
+        homeStatus(value) {
+            if (value == "success") return "success";
+            else if (value == "pending") return "primary";
+            else return "info";
+        },
+        companyStatus(value){
+            if (value == "success") return "success";
+            else if (value == "pending") return "primary";
+            else return "info";
+        }
     },
     watch: {
+        // pagination:function (){
+        //     this.fetchData();
+        // },
+        collectionType:function (){
+          this.fetchData();
+        },
         selectedDuration: function () {
             this.fetchData();
         },
@@ -177,12 +244,14 @@ export default {
         tab: function (value) {
             if (value == "tab-1") {
                 this.collectionType = "home";
+                this.pagination.current_page = '';
                 this.fetchData();
                 this.$router
                     .push({ name: "Report-Trash", query: { tab: "home" } })
                     .catch(() => { });
             } else if (value == "tab-2") {
                 this.collectionType = "company";
+                this.pagination.current_page = '';
                 this.fetchData();
                 this.$router
                     .push({
@@ -195,15 +264,16 @@ export default {
     },
 
     created() {
-        if (this.$route.query.tab == "home") {
-            this.tab = "tab-1";
-            this.collectionType = "home";
-            // this.fetchData();
-        } else if (this.$route.query.tab == "company") {
-            this.tab = "tab-2";
-            this.collectionType = "company";
-            // this.fetchData();
-        }
+        // if (this.$route.query.tab == "home") {
+        //     this.tab = "tab-1";
+        //     this.collectionType = "home";
+        //     // this.fetchData();
+        // } else if (this.$route.query.tab == "company") {
+        //     this.tab = "tab-2";
+        //     this.collectionType = "company";
+        //     // this.fetchData();
+        // }
+        this.fetchData();
         this.pagination = [];
     },
 };

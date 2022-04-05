@@ -195,11 +195,9 @@ export default {
         })
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
-              this.$store.commit("Loading_State", false);
               this.collections = res.data.data.data;
               this.pagination = res.data.data.pagination;
-            }, 300);
+            this.$store.commit("Loading_State", false);
           }
         })
         .catch((error) => {
