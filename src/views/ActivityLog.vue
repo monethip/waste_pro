@@ -2,11 +2,6 @@
   <v-container>
     <v-row class="mb-n6">
       <v-col>
-        <v-btn class="btn-primary" @click="createPage()"
-          ><v-icon>mdi-plus</v-icon>
-        </v-btn>
-      </v-col>
-      <v-col>
         <v-menu
           v-model="start_menu"
           :close-on-content-click="true"
@@ -201,6 +196,8 @@
   </v-container>
 </template>
 <script>
+import queryOption from "@/Helpers/queryOption";
+
 export default {
   name: "Activity",
   title() {
@@ -252,29 +249,27 @@ export default {
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("activity", {
-          params: {
-            page: this.pagination.current_page,
-            per_page: this.per_page,
-            date_from: this.start_date,
-            date_end: this.start_date,
-            model_names: this.selectedModel,
-            users: this.selectedUsers,
-            roles: this.selectedRoles,
-          },
+          params: queryOption([
+            {page: this.pagination.current_page},
+            {per_page: this.per_page},
+            {date_from: this.start_date},
+            {date_end: this.end_date},
+            {model_names: this.selectedModel},
+            {users: this.selectedUsers},
+            {roles: this.selectedRoles},
+          ]),
         })
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.activities = res.data.data.data;
               this.pagination = res.data.data.pagination;
-            }, 300);
           }
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
+            let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
@@ -287,9 +282,7 @@ export default {
         .get("model")
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
               this.models = res.data.data;
-            }, 300);
           }
         })
         .catch(() => {});
@@ -300,18 +293,14 @@ export default {
         .get("user-setting/role")
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
-              this.loading = false;
               this.roles = res.data.data;
               this.fetchUser();
-            }, 300);
           }
         })
         .catch(() => {});
     },
 
     fetchUser() {
-      this.$store.commit("Loading_State", true);
       this.$axios
         .get("user-setting/user", {
           params: {
@@ -320,22 +309,11 @@ export default {
         })
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
-              this.loading = false;
-              this.$store.commit("Loading_State", false);
               this.users = res.data.data;
-            }, 300);
           }
         })
-        .catch((error) => {
+        .catch(() => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
-          if (error.response.status == 422) {
-            var obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
-              this.server_errors[key] = message[0];
-            }
-          }
         });
     },
 

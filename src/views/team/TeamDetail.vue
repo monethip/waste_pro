@@ -175,10 +175,7 @@ export default {
         .get("employee")
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
               this.member = res.data.data;
-              console.log(this.member)
-            }, 300);
           }
         })
         .catch({});

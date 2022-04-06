@@ -1172,12 +1172,10 @@ export default {
         })
         .then((res) => {
           if (res.data.code === 200) {
-            setTimeout(() => {
               this.loading = false;
               this.$store.commit("Loading_State", false);
               this.users = res.data.data.data;
               this.pagination = res.data.data.pagination;
-            }, 300);
           }
         })
         .catch((error) => {
@@ -1197,17 +1195,14 @@ export default {
         .get("user-setting/role")
         .then((res) => {
           if (res.data.code === 200) {
-            setTimeout(() => {
               this.loading = false;
               this.roles = res.data.data;
-              console.log(this.roles)
               this.edit_user.roles.map((item) => {
                 roles.push(item.name);
               });
               this.revokeRoles = res.data.data.filter((item) =>
                 roles.includes(item.name)
               );
-            }, 300);
           }
         })
         .catch((error) => {
@@ -1227,7 +1222,6 @@ export default {
         .get("user-setting/permission")
         .then((res) => {
           if (res.data.code === 200) {
-            setTimeout(() => {
               this.loading = false;
               this.permissions = res.data.data;
               this.edit_user.permissions.map((item) => {
@@ -1236,7 +1230,6 @@ export default {
               this.revokes = res.data.data.filter((item) =>
                 permissions.includes(item.name)
               );
-            }, 300);
           }
         })
         .catch((error) => {

@@ -528,11 +528,9 @@ export default {
           )
           .then((res) => {
             if (res.data.code == 200) {
-              setTimeout(() => {
                 this.$store.commit("Loading_State", false);
                 this.customers = res.data.data.data;
                 this.pagination = res.data.data.pagination;
-              }, 300);
             }
           })
           .catch((error) => {
@@ -551,12 +549,10 @@ export default {
           .get("info/address", {params: {filter: "ນະຄອນຫລວງວຽງຈັນ"}})
           .then((res) => {
             if (res.data.code == 200) {
-              setTimeout(() => {
                 this.address = res.data.data;
                 this.address.map((item) => {
                   this.districts = item.districts;
                 });
-              }, 300);
             }
           })
           .catch(() => {
@@ -568,9 +564,7 @@ export default {
           .get("info/district/" + this.selectedDistrict + "/village")
           .then((res) => {
             if (res.data.code == 200) {
-              setTimeout(() => {
                 this.villages = res.data.data;
-              }, 300);
             }
           })
           .catch(() => {
@@ -582,9 +576,7 @@ export default {
           .get("package")
           .then((res) => {
             if (res.data.code == 200) {
-              setTimeout(() => {
                 this.packages = res.data.data;
-              }, 300);
             }
           })
           .catch(() => {

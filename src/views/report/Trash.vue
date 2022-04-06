@@ -234,7 +234,6 @@ export default {
           }
         })
         .catch(() => {
-          this.fetchData();
           this.$store.commit("Toast_State", this.toast_error);
           this.$store.commit("modalDelete_State", false);
           this.loading = false;
