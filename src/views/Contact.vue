@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h2>About us</h2>
+    <h2>Contact us</h2>
     <v-card
         class="mx-auto"
         elevation="1"
