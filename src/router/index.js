@@ -16,6 +16,15 @@ const routes = [
         }
     },
     {
+        path: '/about',
+        name: 'About',
+        component: () => import('@views/About.vue'),
+        meta: {
+            layout: "none",
+            middleware: [Middlewares.guest],
+        }
+    },
+    {
         path: '/customer',
         name: 'Customer',
         component: () => import('@/views/customer/Customer.vue'),
