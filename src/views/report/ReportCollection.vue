@@ -216,6 +216,86 @@
             </tbody>
           </v-simple-table>
 
+          <!--            show company customer-->
+          <v-simple-table fixed-header v-if="selectedCustomerType == 'event'" dense>
+            <thead>
+            <tr>
+              <th class="text-left text-table-header">
+                Driver Name
+              </th>
+              <th class="text-left text-table-header">
+                Car ID
+              </th>
+              <th class="text-left text-table-header">
+                Village
+              </th>
+              <th class="text-left text-table-header">
+                District
+              </th>
+              <th class="text-left text-table-header">
+                Container
+              </th>
+              <th class="text-left text-table-header">
+                Fixed Cost
+              </th>
+              <th class="text-left text-table-header">
+                Collect Time
+              </th>
+              <th class="text-center text-table-header">
+                Total Container
+              </th>
+              <th class="text-center text-table-header">
+                Chartered Time
+              </th>
+              <th class="text-center text-table-header">
+                Collect Time
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <template v-for="(driver) in customers"
+            >
+              <tr
+                  v-for="(item,iSub) in driver.data"
+                  :key="iSub.id"
+              >
+                <td class="text-table-body" v-if="iSub === 0" :rowspan="driver.data.length">{{ driver.driver_name }}</td>
+                <td class="text-table-body" v-if="iSub === 0" :rowspan="driver.data.length">{{ driver.vehicle_car_id }}</td>
+                <td class="text-table-body">
+                  {{ item.village_name }}
+                </td>
+                <td class="text-table-body">
+                  {{ item.district_name }}
+                </td>
+                <td class="text-table-body">
+                  {{ item.subtotal_container }}
+                </td>
+                <td class="text-table-body">
+                  {{ item.fix_cost_collect_time }}
+                </td>
+                <td class="text-table-body">
+                  {{ item.subtotal_collect_time }}
+                </td>
+                <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
+                  <v-chip color="success">
+                    {{ driver.total_container }}
+                  </v-chip>
+                </td>
+                <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
+                  <v-chip color="success">
+                    {{ driver.total_chartered_collect_time }}
+                  </v-chip>
+                </td>
+                <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
+                  <v-chip color="success">
+                    {{ driver.total_collect_time }}
+                  </v-chip>
+                </td>
+              </tr>
+            </template>
+            </tbody>
+          </v-simple-table>
+
           <!--            <br/>-->
           <!--            <template>-->
           <!--              <Pagination-->
@@ -267,7 +347,7 @@ export default {
         },
         {
           name: "event",
-          display: "Event",
+          display: "ຖ້ຽວພິເສດ",
         },
       ],
 

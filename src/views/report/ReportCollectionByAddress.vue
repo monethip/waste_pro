@@ -156,6 +156,45 @@
             </tbody>
           </v-simple-table>
 
+          <!--            show company customer-->
+          <v-simple-table fixed-header v-if="selectedCustomerType == 'event'" dense>
+            <thead>
+            <tr>
+              <th class="text-left text-table-header">
+                Village
+              </th>
+              <th class="text-left text-table-header">
+                District
+              </th>
+              <th class="text-left text-table-header">
+                Bags
+              </th>
+              <th class="text-left text-table-header">
+                Amount
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr
+                v-for="(item,index) in customers"
+                :key="index"
+            >
+              <td class="text-table-body">
+                {{ item.village_name }}
+              </td>
+              <td class="text-table-body">
+                {{ item.district_name }}
+              </td>
+              <td class="text-table-body">
+                {{ item.bags }}
+              </td>
+              <td class="text-table-body">
+                {{ item.amount }}
+              </td>
+            </tr>
+            </tbody>
+          </v-simple-table>
+
           <!--            <br/>-->
           <!--            <template>-->
           <!--              <Pagination-->
@@ -207,7 +246,7 @@ export default {
         },
         {
           name: "event",
-          display: "Event",
+          display: "ຖ້ຽວພິເສດ",
         },
       ],
 
