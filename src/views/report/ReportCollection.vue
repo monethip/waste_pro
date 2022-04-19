@@ -233,22 +233,10 @@
                 District
               </th>
               <th class="text-left text-table-header">
-                Container
+                Amount
               </th>
               <th class="text-left text-table-header">
-                Fixed Cost
-              </th>
-              <th class="text-left text-table-header">
-                Collect Time
-              </th>
-              <th class="text-center text-table-header">
-                Total Container
-              </th>
-              <th class="text-center text-table-header">
-                Chartered Time
-              </th>
-              <th class="text-center text-table-header">
-                Collect Time
+                Total
               </th>
             </tr>
             </thead>
@@ -268,27 +256,11 @@
                   {{ item.district_name }}
                 </td>
                 <td class="text-table-body">
-                  {{ item.subtotal_container }}
+                  {{ item.amount }}
                 </td>
-                <td class="text-table-body">
-                  {{ item.fix_cost_collect_time }}
-                </td>
-                <td class="text-table-body">
-                  {{ item.subtotal_collect_time }}
-                </td>
-                <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
+                <td class="text-table-body" v-if="iSub === 0" :rowspan="driver.data.length">
                   <v-chip color="success">
-                    {{ driver.total_container }}
-                  </v-chip>
-                </td>
-                <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
-                  <v-chip color="success">
-                    {{ driver.total_chartered_collect_time }}
-                  </v-chip>
-                </td>
-                <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
-                  <v-chip color="success">
-                    {{ driver.total_collect_time }}
+                    {{ driver.total }}
                   </v-chip>
                 </td>
               </tr>

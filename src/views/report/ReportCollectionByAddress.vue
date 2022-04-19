@@ -167,9 +167,6 @@
                 District
               </th>
               <th class="text-left text-table-header">
-                Bags
-              </th>
-              <th class="text-left text-table-header">
                 Amount
               </th>
             </tr>
@@ -184,9 +181,6 @@
               </td>
               <td class="text-table-body">
                 {{ item.district_name }}
-              </td>
-              <td class="text-table-body">
-                {{ item.bags }}
               </td>
               <td class="text-table-body">
                 {{ item.amount }}
