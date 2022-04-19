@@ -1071,6 +1071,7 @@ const routes = [
             ]
         }
     },
+    //Report by driver
     {
         path: '/report/driver/collection',
         name: 'Report-Driver-Collection',
@@ -1083,6 +1084,23 @@ const routes = [
                     text: 'Report Driver Collection',
                     disabled: true,
                     href: '/report/driver/collection'
+                },
+            ]
+        }
+    },
+    //Report by address
+    {
+        path: '/report/address/collection',
+        name: 'Report-Address-Collection',
+        component: () => import('@/views/report/ReportCollectionByAddress.vue'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Report by address Collection',
+                    disabled: true,
+                    href: '/report/address/collection'
                 },
             ]
         }

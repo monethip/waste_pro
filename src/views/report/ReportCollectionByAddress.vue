@@ -83,56 +83,37 @@
             <thead>
             <tr>
               <th class="text-left text-table-header">
-                Driver Name
-              </th>
-              <th class="text-left text-table-header">
-                Car ID
-              </th>
-              <th class="text-left text-table-header">
                 Village
               </th>
               <th class="text-left text-table-header">
                 District
               </th>
               <th class="text-left text-table-header">
-                Amount
-              </th>
-              <th class="text-left text-table-header">
                 Bags
               </th>
-              <th class="text-center text-table-header">
-                Total Bags
+              <th class="text-left text-table-header">
+                Amount
               </th>
             </tr>
             </thead>
             <tbody>
-            <template v-for="(driver) in customers"
+            <tr
+                v-for="(item,index) in customers"
+                :key="index"
             >
-              <tr
-                  v-for="(item,iSub) in driver.data"
-                  :key="iSub.id"
-              >
-                <td v-if="iSub === 0" :rowspan="driver.data.length">{{ driver.driver_name }}</td>
-                <td v-if="iSub === 0" :rowspan="driver.data.length">{{ driver.vehicle_car_id }}</td>
-                <td>
-                  {{ item.village_name }}
-                </td>
-                <td>
-                  {{ item.district_name }}
-                </td>
-                <td>
-                  {{ item.amount }}
-                </td>
-                <td>
-                  {{ item.bags }}
-                </td>
-                <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
-                  <v-chip color="success">
-                    {{ driver.total }}
-                  </v-chip>
-                </td>
-              </tr>
-            </template>
+              <td class="text-table-body">
+                {{ item.village_name }}
+              </td>
+              <td class="text-table-body">
+                {{ item.district_name }}
+              </td>
+              <td class="text-table-body">
+                {{ item.bags }}
+              </td>
+              <td class="text-table-body">
+                {{ item.amount }}
+              </td>
+            </tr>
             </tbody>
           </v-simple-table>
 
@@ -141,46 +122,24 @@
             <thead>
             <tr>
               <th class="text-left text-table-header">
-                Driver Name
-              </th>
-              <th class="text-left text-table-header">
-                Car ID
-              </th>
-              <th class="text-left text-table-header">
                 Village
               </th>
               <th class="text-left text-table-header">
                 District
               </th>
               <th class="text-left text-table-header">
-                Container
+                Bags
               </th>
               <th class="text-left text-table-header">
-                Fixed Cost
-              </th>
-              <th class="text-left text-table-header">
-                Collect Time
-              </th>
-              <th class="text-center text-table-header">
-                Total Container
-              </th>
-              <th class="text-center text-table-header">
-                Chartered Time
-              </th>
-              <th class="text-center text-table-header">
-                Collect Time
+                Amount
               </th>
             </tr>
             </thead>
             <tbody>
-            <template v-for="(driver) in customers"
-            >
               <tr
-                  v-for="(item,iSub) in driver.data"
-                  :key="iSub.id"
+                  v-for="(item,index) in customers"
+                  :key="index"
               >
-                <td class="text-table-body" v-if="iSub === 0" :rowspan="driver.data.length">{{ driver.driver_name }}</td>
-                <td class="text-table-body" v-if="iSub === 0" :rowspan="driver.data.length">{{ driver.vehicle_car_id }}</td>
                 <td class="text-table-body">
                   {{ item.village_name }}
                 </td>
@@ -188,31 +147,12 @@
                   {{ item.district_name }}
                 </td>
                 <td class="text-table-body">
-                  {{ item.subtotal_container }}
+                  {{ item.bags }}
                 </td>
                 <td class="text-table-body">
-                  {{ item.fix_cost_collect_time }}
-                </td>
-                <td class="text-table-body">
-                  {{ item.subtotal_collect_time }}
-                </td>
-                <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
-                  <v-chip color="success">
-                    {{ driver.total_container }}
-                  </v-chip>
-                </td>
-                <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
-                  <v-chip color="success">
-                    {{ driver.total_chartered_collect_time }}
-                  </v-chip>
-                </td>
-                <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
-                  <v-chip color="success">
-                    {{ driver.total_collect_time }}
-                  </v-chip>
+                  {{ item.amount }}
                 </td>
               </tr>
-            </template>
             </tbody>
           </v-simple-table>
 
@@ -284,7 +224,7 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-          .get("report-driver-collection", {
+          .get("report-address-collection", {
             params: queryOption([
               // {page: this.pagination.current_page},
               // {per_page: this.per_page},

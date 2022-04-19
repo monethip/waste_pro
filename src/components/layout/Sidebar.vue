@@ -377,7 +377,14 @@ export default {
               title: "ເກັບຂີ້ເຫຍື້ອຕາມລົດ",
               to: "/report/driver/collection",
               permissions: ["report"],
-            },      {
+            },
+            {
+              icon: "mdi-chart-bubble",
+              title: "ເກັບຂີ້ເຫຍື້ອຕາມບ້ານ",
+              to: "/report/address/collection",
+              permissions: ["report"],
+            },
+            {
               icon: "mdi-chart-bubble",
               title: "ລາຍງານການເກັບຂີ້ເຫຍື້ອ",
               to: "/report/trash",
