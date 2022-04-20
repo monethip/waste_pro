@@ -463,7 +463,7 @@
                     <v-autocomplete
                       v-model="edit_driver.vehicle_id"
                       :items="vehicle"
-                      item-text="car_number"
+                      :item-text="getVehicle"
                       item-value="id"
                       label="ເລືອກລົດ"
                       dense
@@ -886,7 +886,13 @@ export default {
       this.fetchData();
     },
     selectedVehicle: function (value) {
-      this.server_errors.driver_id = "";
+      this.server_errors.vehicle_id = "";
+      if(value){
+        this.getVehicle(value);
+      }
+    },
+    "edit_driver.vehicle_id":function (value){
+      this.server_errors.vehicle_id = "";
       if(value){
         this.getVehicle(value);
       }
@@ -920,9 +926,6 @@ export default {
     },
     "edit_driver.user.email": function () {
       this.server_errors.email = "";
-    },
-    "edit_driver.vehicle_id": function () {
-      this.server_errors.vehicle_id = "";
     },
     search: function (value) {
       if (value == "") {
