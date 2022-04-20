@@ -153,7 +153,7 @@
             </template>
 
             <template v-slot:item.cost_by="{ item }">
-              <div>{{ item.cost_by }}</div>
+              <div>{{ costBy(item.cost_by) }}</div>
             </template>
 
             <template v-slot:item.status="{ item }">
@@ -556,6 +556,11 @@ export default {
       else if (value == "inactive") return "error";
       else return "info";
     },
+    costBy(value){
+      if (value == "container") return "ຄອນເທັນເນີ";
+      else if (value == "fix_cost") return "ທຸລະກິດເປັນຖ້ຽວ";
+      else if (value == "chartered") return "ມອບເໝົາ";
+    }
   },
   watch: {
     search: function (value) {

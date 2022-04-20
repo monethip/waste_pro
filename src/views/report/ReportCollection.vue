@@ -315,7 +315,7 @@ export default {
         },
         {
           name: "company",
-          display: "ບໍລິສັດ",
+          display: "ຫົວໜ່ວຍທຸລະກິດ",
         },
         {
           name: "event",

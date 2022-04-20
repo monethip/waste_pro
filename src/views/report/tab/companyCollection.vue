@@ -68,6 +68,9 @@
               item.status
             }}</v-chip>
         </template>
+        <template v-slot:item.collection_type="{ item }">
+          <div>{{ costBy(item.collection_type) }}</div>
+        </template>
         <!--Role --> </v-data-table
       ><br />
       <template>
@@ -109,7 +112,7 @@ export default {
       headers: [
         { text: "ວັນທີ", value: "date", sortable: false },
         { text: "ບໍລິສັດ", value: "company_name" },
-        { text: "ປະເພດການເກັບ", value: "collection_type" },
+        { text: "ປະເພດບໍລະການ", value: "collection_type" },
         {
           text: "Container",
           value: "container",
@@ -131,6 +134,11 @@ export default {
       else if (value == "pending") return "primary";
       else return "info";
     },
+    costBy(value){
+      if (value == "container") return "ຄອນເທັນເນີ";
+      else if (value == "fix_cost") return "ທຸລະກິດເປັນຖ້ຽວ";
+      else if (value == "chartered") return "ມອບເໝົາ";
+    }
   },
   watch: {
     tab: function () {
@@ -141,7 +149,6 @@ export default {
   },
   created() {
     this.pagination = [];
-    console.log(this.homeCollection)
   },
 };
 </script>

@@ -1,70 +1,71 @@
 <template>
   <v-container>
     <v-breadcrumbs large class="pt-0"
-      >ລາຍງານຂໍ້ມູນການເກັບຂີ້ເຫື້ອຍ</v-breadcrumbs
+    >ລາຍງານຂໍ້ມູນການເກັບຂີ້ເຫື້ອຍ
+    </v-breadcrumbs
     >
     <v-row class="mb-n6">
       <v-col>
         <v-btn
             depressed
             color="primary"
-          :loading="loading"
-          :disabled="loading"
-          @click="exportData()"
-          >Export
+            :loading="loading"
+            :disabled="loading"
+            @click="exportData()"
+        >Export
         </v-btn>
       </v-col>
       <v-col>
         <v-select
-          outlined
-          dense
-          :items="duration"
-          v-model="selectedDuration"
-          item-text="name"
-          item-value="duration"
-          label="ຊ່ວງເວລາ"
+            outlined
+            dense
+            :items="duration"
+            v-model="selectedDuration"
+            item-text="name"
+            item-value="duration"
+            label="ຊ່ວງເວລາ"
         ></v-select>
       </v-col>
       <v-col v-if="selectedDuration == 'year'">
         <section>
           <date-picker
-            style="height: 40px"
-            v-model="year_from"
-            type="year"
-            format="YYYY"
-            placeholder="ເລີ່ມປີ"
-            @input="fetchData()"
+              style="height: 40px"
+              v-model="year_from"
+              type="year"
+              format="YYYY"
+              placeholder="ເລີ່ມປີ"
+              @input="fetchData()"
           ></date-picker>
         </section>
       </v-col>
       <v-col v-if="selectedDuration == 'year'">
         <section>
           <date-picker
-            v-model="year_to"
-            type="year"
-            format="YYYY"
-            placeholder="ຫາປີ"
-            @input="fetchData()"
+              v-model="year_to"
+              type="year"
+              format="YYYY"
+              placeholder="ຫາປີ"
+              @input="fetchData()"
           ></date-picker>
         </section>
       </v-col>
       <v-col v-if="selectedDuration == 'month'">
         <section>
           <date-picker
-            v-model="month_from"
-            type="month"
-            placeholder="ເລີ່ມເດືອນ"
-            @input="fetchData()"
+              v-model="month_from"
+              type="month"
+              placeholder="ເລີ່ມເດືອນ"
+              @input="fetchData()"
           ></date-picker>
         </section>
       </v-col>
       <v-col v-if="selectedDuration == 'month'">
         <section>
           <date-picker
-            v-model="month_to"
-            type="month"
-            placeholder="ຫາເດືອນ"
-            @input="fetchData()"
+              v-model="month_to"
+              type="month"
+              placeholder="ຫາເດືອນ"
+              @input="fetchData()"
           ></date-picker>
         </section>
       </v-col>
@@ -72,51 +73,51 @@
       <v-col v-if="selectedDuration == 'merge' || selectedDuration == 'date'">
         <section>
           <date-picker
-            style="height: 40px"
-            v-model="date_from"
-            type="date"
-            placeholder="ເລີ່ມວັນທີ"
-            @input="fetchData()"
+              style="height: 40px"
+              v-model="date_from"
+              type="date"
+              placeholder="ເລີ່ມວັນທີ"
+              @input="fetchData()"
           ></date-picker>
         </section>
       </v-col>
       <v-col v-if="selectedDuration == 'merge' || selectedDuration == 'date'">
         <section>
           <date-picker
-            style="height: 40px"
-            v-model="date_to"
-            type="date"
-            placeholder="ຫາວັນທີ"
-            @input="fetchData()"
+              style="height: 40px"
+              v-model="date_to"
+              type="date"
+              placeholder="ຫາວັນທີ"
+              @input="fetchData()"
           ></date-picker>
         </section>
       </v-col>
 
-<!--      <v-col>-->
-<!--        <v-select-->
-<!--            outlined-->
-<!--            dense-->
-<!--            :items="collectionTypes"-->
-<!--            v-model="collectionType"-->
-<!--            item-text="text"-->
-<!--            item-value="value"-->
-<!--            label="ປະເພດລູກຄ້າ"-->
-<!--        ></v-select>-->
-<!--      </v-col>-->
+      <!--      <v-col>-->
+      <!--        <v-select-->
+      <!--            outlined-->
+      <!--            dense-->
+      <!--            :items="collectionTypes"-->
+      <!--            v-model="collectionType"-->
+      <!--            item-text="text"-->
+      <!--            item-value="value"-->
+      <!--            label="ປະເພດລູກຄ້າ"-->
+      <!--        ></v-select>-->
+      <!--      </v-col>-->
 
     </v-row>
 
     <v-card elevation="1">
       <v-card-text>
         <v-tabs v-model="tab">
-          <v-tab href="#tab-1"> ຄົວເຮືອນ </v-tab>
-          <v-tab href="#tab-2"> ບໍລິສັດ </v-tab>
+          <v-tab href="#tab-1"> ຄົວເຮືອນ</v-tab>
+          <v-tab href="#tab-2"> ບໍລິສັດ</v-tab>
         </v-tabs>
         <!-- <hr /> -->
 
         <v-tabs-items v-model="tab">
           <v-tab-item value="tab-1">
-<!--            <HomeCollection :tab="tab"/>-->
+            <!--            <HomeCollection :tab="tab"/>-->
 
             <div v-if="collectionType == 'home'">
               <div v-if="summary">
@@ -171,10 +172,12 @@
                 <template v-slot:item.status="{ item }">
                   <v-chip label :color="homeStatus(item.status)">{{
                       item.status
-                    }}</v-chip>
+                    }}
+                  </v-chip>
                 </template>
               </v-data-table
-              ><br />
+              >
+              <br/>
               <template>
                 <Pagination
                     v-if="pagination.total_pages > 1"
@@ -191,7 +194,7 @@
           <v-tab-item value="tab-2">
             <v-card flat>
               <v-card-text>
-<!--                <CompanyCollection :tab="tab"/>-->
+                <!--                <CompanyCollection :tab="tab"/>-->
                 <div v-if="collectionType == 'company'">
                   <v-row v-for="(sum, index) in summary" :key="index" class="mb-n6 mt-n6">
                     <v-col>
@@ -257,11 +260,16 @@
                     <template v-slot:item.status="{ item }">
                       <v-chip label :color="companyStatus(item.status)">{{
                           item.status
-                        }}</v-chip>
+                        }}
+                      </v-chip>
+                    </template>
+                    <template v-slot:item.collection_type="{ item }">
+                      <div>{{ costBy(item.collection_type) }}</div>
                     </template>
 
                     <!--Role --> </v-data-table
-                  ><br />
+                  >
+                  <br/>
                   <template>
                     <Pagination
                         v-if="pagination.total_pages > 1"
@@ -276,9 +284,9 @@
           </v-tab-item>
         </v-tabs-items>
 
-<!--        <div v-if="">-->
+        <!--        <div v-if="">-->
 
-<!--        </div>-->
+        <!--        </div>-->
 
       </v-card-text>
     </v-card>
@@ -289,6 +297,7 @@
 // import HomeCollection from "@views/report/tab/homeCollection";
 // import CompanyCollection from "@views/report/tab/companyCollection";
 import collection from "@views/report/collection";
+
 export default {
   title() {
     return `Vientiane Waste Co-Dev|Calendar`;

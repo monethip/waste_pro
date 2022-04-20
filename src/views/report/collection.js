@@ -68,13 +68,13 @@ export default {
             company: [
                 { text: "ວັນທີ", value: "date", sortable: false },
                 { text: "ບໍລິສັດ", value: "company_name" },
-                { text: "ປະເພດການເກັບ", value: "collection_type" },
-                {
-                    text: "Container",
-                    value: "container",
-                    sortable: false,
-                    align: "center",
-                },
+                { text: "ປະເພດບໍລິການ", value: "collection_type" },
+                // {
+                //     text: "Container",
+                //     value: "container",
+                //     sortable: false,
+                //     align: "center",
+                // },
                 { text: "ສະຖານທີ່", value: "name", sortable: false },
                 { text: "ສະຖານະ", value: "status", sortable: false },
                 // { text: "", value: "actions", sortable: false },
@@ -221,6 +221,12 @@ export default {
             if (value == "success") return "success";
             else if (value == "pending") return "primary";
             else return "info";
+        },
+        costBy(value){
+            console.log(value)
+            if (value == "container") return "ຄອນເທັນເນີ";
+            else if (value == "fix_cost") return "ທຸລະກິດເປັນຖ້ຽວ";
+            else if (value == "chartered") return "ມອບເໝົາ";
         }
     },
     watch: {
@@ -273,6 +279,7 @@ export default {
         //     this.collectionType = "company";
         //     // this.fetchData();
         // }
+        console.log("Collection")
         this.fetchData();
         this.pagination = [];
     },
