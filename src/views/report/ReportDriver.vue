@@ -3,87 +3,87 @@
     <v-row class="mb-n6">
       <v-col>
         <v-btn
-          class="btn-primary"
-          :loading="loading"
-          :disabled="loading"
-          @click="exportData"
-          >Export
+            class="btn-primary"
+            :loading="loading"
+            :disabled="loading"
+            @click="exportData"
+        >Export
         </v-btn>
       </v-col>
       <v-col>
         <v-menu
-          v-model="start_menu"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
+            v-model="start_menu"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
         >
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
-              v-model="start_date"
-              label="ເລີ່ມວັນທີ"
-              readonly
-              outlined
-              v-bind="attrs"
-              v-on="on"
-              dense
+                v-model="start_date"
+                label="ເລີ່ມວັນທີ"
+                readonly
+                outlined
+                v-bind="attrs"
+                v-on="on"
+                dense
             ></v-text-field>
           </template>
           <v-date-picker
-            v-model="start_date"
-            @input="fetchData()"
+              v-model="start_date"
+              @input="fetchData()"
           ></v-date-picker>
         </v-menu>
       </v-col>
       <v-col>
         <v-menu
-          v-model="end_menu"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
+            v-model="end_menu"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
         >
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
-              v-model="end_date"
-              label="ຫາວັນທີ"
-              readonly
-              outlined
-              v-bind="attrs"
-              v-on="on"
-              dense
+                v-model="end_date"
+                label="ຫາວັນທີ"
+                readonly
+                outlined
+                v-bind="attrs"
+                v-on="on"
+                dense
             ></v-text-field>
           </template>
           <v-date-picker
-            v-model="end_date"
-            @input="fetchData()"
+              v-model="end_date"
+              @input="fetchData()"
           ></v-date-picker>
         </v-menu>
       </v-col>
       <v-col>
         <v-select
-          outlined
-          dense
-          :items="status"
-          v-model="selectedStatus"
-          item-text="name"
-          item-value="name"
-          label="ສະຖານະ"
-          @input="fetchData()"
+            outlined
+            dense
+            :items="status"
+            v-model="selectedStatus"
+            item-text="name"
+            item-value="name"
+            label="ສະຖານະ"
+            @input="fetchData()"
         ></v-select>
       </v-col>
       <v-col>
         <v-text-field
-          outlined
-          dense
-          clearable
-          prepend-inner-icon="mdi-magnify"
-          label="ຊື່ລູກຄ້າ"
-          type="text"
-          v-model="search"
-          @keyup.enter="Search()"
+            outlined
+            dense
+            clearable
+            prepend-inner-icon="mdi-magnify"
+            label="ຊື່ລູກຄ້າ"
+            type="text"
+            v-model="search"
+            @keyup.enter="Search()"
         >
         </v-text-field>
       </v-col>
@@ -98,26 +98,27 @@
         <v-card flat>
           <v-card-text>
             <v-data-table
-              :headers="headers"
-              :items="customers"
-              :search="search"
-              :disable-pagination="true"
-              hide-default-footer
+                :headers="headers"
+                :items="customers"
+                :search="search"
+                :disable-pagination="true"
+                hide-default-footer
             >
               <template v-slot:item.media="{ item }">
                 <v-avatar
-                  size="36px"
-                  v-for="(img, index) in item.media"
-                  :key="index"
+                    size="36px"
+                    v-for="(img, index) in item.media"
+                    :key="index"
                 >
-                  <img v-if="img.thumb" :src="img.thumb" />
+                  <img v-if="img.thumb" :src="img.thumb"/>
                 </v-avatar>
               </template>
 
               <template v-slot:item.status="{ item }">
                 <v-chip label :color="statusColor(item.status)">{{
-                  item.status
-                }}</v-chip>
+                    item.status
+                  }}
+                </v-chip>
               </template>
               <!--Role -->
               <template v-slot:item.roles="{ item }">
@@ -142,13 +143,14 @@
                 </v-icon>
               </template>
               --> </v-data-table
-            ><br />
+            >
+            <br/>
             <template>
               <Pagination
-                v-if="pagination.total_pages > 1"
-                :pagination="pagination"
-                :offset="offset"
-                @paginate="fetchData()"
+                  v-if="pagination.total_pages > 1"
+                  :pagination="pagination"
+                  :offset="offset"
+                  @paginate="fetchData()"
               ></Pagination>
             </template>
           </v-card-text>
@@ -159,7 +161,9 @@
 </template>
 
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import {GetOldValueOnInput} from "@/Helpers/GetValue";
+import queryOption from "@/Helpers/queryOption";
+
 export default {
   name: "Customer",
   title() {
@@ -199,14 +203,14 @@ export default {
       ],
 
       headers: [
-        { text: "ຊື່", value: "name" },
-        { text: "ນາມສະກຸນ", value: "surname" },
-        { text: "ເບີໂທ", value: "user.phone", sortable: false },
-        { text: "Email", value: "user.email", sortable: false },
-        { text: "ທະບຽນລົດ", value: "vehicle.car_number" },
-        { text: "ສະຖານະ", value: "status", sortable: false },
-        { text: "Profile", value: "media", sortable: false },
-        { text: "", value: "actions", sortable: false },
+        {text: "ຊື່", value: "name"},
+        {text: "ນາມສະກຸນ", value: "surname"},
+        {text: "ເບີໂທ", value: "user.phone", sortable: false},
+        {text: "Email", value: "user.email", sortable: false},
+        {text: "ທະບຽນລົດ", value: "vehicle.car_number"},
+        {text: "ສະຖານະ", value: "status", sortable: false},
+        {text: "Profile", value: "media", sortable: false},
+        {text: "", value: "actions", sortable: false},
       ],
     };
   },
@@ -214,30 +218,31 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("driver", {
-          params: {
-            page: this.pagination.current_page,
-            per_page: this.per_page,
-            // filter: this.search,
-            status: this.selectedStatus,
-            date_from: this.start_date,
-            date_end: this.end_date,
-          },
-        })
-        .then((res) => {
-          if (res.data.code == 200) {
+          .get("driver", {
+                params: queryOption([
+                  {page: this.pagination.current_page},
+                  {per_page: this.per_page},
+                  {filter: this.search},
+                  {date_from: this.start_date},
+                  {date_end: this.end_date},
+                  {status: this.selectedStatus},
+                ]),
+              }
+          )
+          .then((res) => {
+            if (res.data.code == 200) {
               this.$store.commit("Loading_State", false);
               this.customers = res.data.data.data;
               this.pagination = res.data.data.pagination;
               this.start_menu = false;
               this.end_menu = false;
-          }
-        })
-        .catch(() => {
-          this.$store.commit("Loading_State", false);
-          this.start_menu = false;
-          this.end_menu = false;
-        });
+            }
+          })
+          .catch(() => {
+            this.$store.commit("Loading_State", false);
+            this.start_menu = false;
+            this.end_menu = false;
+          });
     },
     Search() {
       GetOldValueOnInput(this);
@@ -251,39 +256,39 @@ export default {
     exportData() {
       this.loading = true;
       this.$axios
-        .post(
-          "export-driver/",
-          {
-            filter: this.search,
-            status: this.selectedStatus,
-            date_from: this.start_date,
-            date_end: this.end_date,
-          },
-          { responseType: "blob" }
-        )
-        .then((res) => {
-          if (res.status == 200) {
-            setTimeout(() => {
-              this.loading = false;
-              const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
-              const fileLink = document.createElement("a");
-              fileLink.href = fileUrl;
-              fileLink.setAttribute("download", "driver" + ".xlsx");
-              document.body.appendChild(fileLink);
-              fileLink.click();
-              document.body.removeChild(fileLink);
-            }, 300);
-          }
-        })
-        .catch((error) => {
-          this.$store.commit("Toast_State", {
-            value: true,
-            color: "error",
-            msg: error.response.data.message,
+          .post(
+              "export-driver/",
+              {
+                filter: this.search,
+                status: this.selectedStatus,
+                date_from: this.start_date,
+                date_end: this.end_date,
+              },
+              {responseType: "blob"}
+          )
+          .then((res) => {
+            if (res.status == 200) {
+              setTimeout(() => {
+                this.loading = false;
+                const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
+                const fileLink = document.createElement("a");
+                fileLink.href = fileUrl;
+                fileLink.setAttribute("download", "driver" + ".xlsx");
+                document.body.appendChild(fileLink);
+                fileLink.click();
+                document.body.removeChild(fileLink);
+              }, 300);
+            }
+          })
+          .catch((error) => {
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
+            this.$store.commit("modalDelete_State", false);
+            this.loading = false;
           });
-          this.$store.commit("modalDelete_State", false);
-          this.loading = false;
-        });
     },
   },
   watch: {

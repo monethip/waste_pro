@@ -10,58 +10,61 @@
         >Export
         </v-btn>
       </v-col>
-      <v-col>
-        <v-menu
-            v-model="start_menu"
-            :close-on-content-click="false"
-            :nudge-right="40"
-            transition="scale-transition"
-            offset-y
-            min-width="auto"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-                v-model="start_date"
-                label="ເລີ່ມວັນທີ"
-                readonly
-                outlined
-                v-bind="attrs"
-                v-on="on"
-                dense
-            ></v-text-field>
-          </template>
-          <v-date-picker
-              v-model="start_date"
-              @input="fetchData()"
-          ></v-date-picker>
-        </v-menu>
-      </v-col>
-      <v-col>
-        <v-menu
-            v-model="end_menu"
-            :close-on-content-click="false"
-            :nudge-right="40"
-            transition="scale-transition"
-            offset-y
-            min-width="auto"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-                v-model="end_date"
-                label="ຫາວັນທີ"
-                readonly
-                outlined
-                v-bind="attrs"
-                v-on="on"
-                dense
-            ></v-text-field>
-          </template>
-          <v-date-picker
-              v-model="end_date"
-              @input="fetchData()"
-          ></v-date-picker>
-        </v-menu>
-      </v-col>
+<!--      -->
+<!--      <v-col>-->
+<!--        <v-menu-->
+<!--            v-model="start_menu"-->
+<!--            :close-on-content-click="false"-->
+<!--            :nudge-right="40"-->
+<!--            transition="scale-transition"-->
+<!--            offset-y-->
+<!--            min-width="auto"-->
+<!--        >-->
+<!--          <template v-slot:activator="{ on, attrs }">-->
+<!--            <v-text-field-->
+<!--                v-model="start_date"-->
+<!--                label="ເລີ່ມວັນທີ"-->
+<!--                readonly-->
+<!--                outlined-->
+<!--                v-bind="attrs"-->
+<!--                v-on="on"-->
+<!--                dense-->
+<!--            ></v-text-field>-->
+<!--          </template>-->
+<!--          <v-date-picker-->
+<!--              v-model="start_date"-->
+<!--              @input="fetchData()"-->
+<!--          ></v-date-picker>-->
+<!--        </v-menu>-->
+<!--      </v-col>-->
+<!--      -->
+<!--      <v-col>-->
+<!--        <v-menu-->
+<!--            v-model="end_menu"-->
+<!--            :close-on-content-click="false"-->
+<!--            :nudge-right="40"-->
+<!--            transition="scale-transition"-->
+<!--            offset-y-->
+<!--            min-width="auto"-->
+<!--        >-->
+<!--          <template v-slot:activator="{ on, attrs }">-->
+<!--            <v-text-field-->
+<!--                v-model="end_date"-->
+<!--                label="ຫາວັນທີ"-->
+<!--                readonly-->
+<!--                outlined-->
+<!--                v-bind="attrs"-->
+<!--                v-on="on"-->
+<!--                dense-->
+<!--            ></v-text-field>-->
+<!--          </template>-->
+<!--          <v-date-picker-->
+<!--              v-model="end_date"-->
+<!--              @input="fetchData()"-->
+<!--          ></v-date-picker>-->
+<!--        </v-menu>-->
+<!--      </v-col>-->
+
       <v-col>
         <v-autocomplete
             outlined
@@ -83,16 +86,16 @@
             <thead>
             <tr>
               <th class="text-left text-table-header">
-                Village
+                ບ້ານ
               </th>
               <th class="text-left text-table-header">
-                District
+                ເມືອງ
               </th>
               <th class="text-left text-table-header">
-                Bags
+                ຈຳນວນຖົງ
               </th>
               <th class="text-left text-table-header">
-                Amount
+                ຈຳນວນຖ້ຽວ
               </th>
             </tr>
             </thead>
@@ -122,16 +125,25 @@
             <thead>
             <tr>
               <th class="text-left text-table-header">
-                Village
+                ບ້ານ
               </th>
               <th class="text-left text-table-header">
-                District
+                ເມືອງ
               </th>
               <th class="text-left text-table-header">
-                Bags
+                ມອບເໝົາ
               </th>
               <th class="text-left text-table-header">
-                Amount
+                ຄອນເທັນເນີ
+              </th>
+              <th class="text-left text-table-header">
+                ທຸລະກິດເປັນຖ້ຽວ
+              </th>
+              <th class="text-left text-table-header">
+                ລວມຈຳນວນຄັ້ງ
+              </th>
+              <th class="text-left text-table-header">
+                ຈຳນວນຄອນເທັນເນີ
               </th>
             </tr>
             </thead>
@@ -147,10 +159,19 @@
                   {{ item.district_name }}
                 </td>
                 <td class="text-table-body">
-                  {{ item.bags }}
+                  {{ item.chartered_collect_time }}
                 </td>
                 <td class="text-table-body">
-                  {{ item.amount }}
+                  {{ item.container_collect_time }}
+                </td>
+                <td class="text-table-body">
+                  {{ item.fix_cost_collect_time }}
+                </td>
+                <td class="text-table-body">
+                  {{ item.total_collect_time }}
+                </td>
+                <td class="text-table-body">
+                  {{ item.total_container }}
                 </td>
               </tr>
             </tbody>
@@ -161,13 +182,13 @@
             <thead>
             <tr>
               <th class="text-left text-table-header">
-                Village
+                ບ້ານ
               </th>
               <th class="text-left text-table-header">
-                District
+                ເມືອງ
               </th>
               <th class="text-left text-table-header">
-                Amount
+                ຈຳນວນ
               </th>
             </tr>
             </thead>
@@ -210,7 +231,7 @@ import queryOption from "@/Helpers/queryOption";
 export default {
   name: "Customer",
   title() {
-    return `Vientiane Waste Co-Dev|Report Customer`;
+    return `Vientiane Waste Co-Dev|Report Collection`;
   },
   data() {
     return {
@@ -243,14 +264,6 @@ export default {
           display: "ຖ້ຽວພິເສດ",
         },
       ],
-
-      headers: [
-        {text: "ຊື່", value: "driver_name"},
-        {text: "Car ID", value: "vehicle_car_id", sortable: false},
-        {text: "Total", value: "total"},
-        {text: "Created", value: "created_at", sortable: false},
-        {text: "", value: "actions", sortable: false},
-      ],
     };
   },
   methods: {
@@ -261,8 +274,8 @@ export default {
             params: queryOption([
               // {page: this.pagination.current_page},
               // {per_page: this.per_page},
-              {date_from: this.start_date},
-              {date_end: this.end_date},
+              // {date_from: this.start_date},
+              // {date_end: this.end_date},
               {customer_type: this.selectedCustomerType},
             ]),
           })
@@ -273,35 +286,22 @@ export default {
               console.log(this.customers)
             }
           })
-          .catch((error) => {
+          .catch(() => {
             this.$store.commit("Loading_State", false);
             this.start_menu = false;
             this.end_menu = false;
-            if (error.response.status == 422) {
-              let obj = error.response.data.errors;
-              for (let [key, message] of Object.entries(obj)) {
-                this.server_errors[key] = message[0];
-              }
-            }
           });
-    },
-
-    viewPage(id) {
-      this.$router.push({
-        name: "ViewCompanyDetail",
-        params: {id},
-      });
     },
 
     exportData() {
       this.loading = true;
       this.$axios
           .get(
-              "report-driver-collection/",
+              "report-address-collection/",
               {
                 params: queryOption([
-                  {date_from: this.start_date},
-                  {date_end: this.end_date},
+                  // {date_from: this.start_date},
+                  // {date_end: this.end_date},
                   {download: 'excel'},
                   {customer_type: this.selectedCustomerType},
                 ]),

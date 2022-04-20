@@ -273,7 +273,7 @@
                     <v-autocomplete
                       v-model="selectedVehicle"
                       :items="vehicles"
-                      item-text="car_number"
+                      :item-text="getVehicle"
                       item-value="id"
                       label="ເລືອກລົດ"
                       dense
@@ -870,6 +870,13 @@ export default {
     reset() {
       this.$refs.form.reset();
     },
+    getVehicle(value){
+      if(value !== null){
+        return value.car_id +' '+'('+value.car_number+')';
+      } else {
+        return '(ຍັງບໍທັນມີລົດ)'
+      }
+    },
     Search() {
       GetOldValueOnInput(this);
     },
@@ -877,6 +884,12 @@ export default {
   watch: {
     selectedStatus: function () {
       this.fetchData();
+    },
+    selectedVehicle: function (value) {
+      this.server_errors.driver_id = "";
+      if(value){
+        this.getVehicle(value);
+      }
     },
     "user.name": function () {
       this.server_errors.name = "";
