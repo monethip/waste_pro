@@ -53,8 +53,8 @@
                   <v-btn
                       color="primary"
                       @click="verifyPhone"
-                      :loading="loading"
-                      :disabled="loading"
+                      :loading="btnVerify"
+                      :disabled="btnVerify"
                   >
                     Continue
                   </v-btn>
@@ -308,16 +308,15 @@ export default {
     verifyPhone(){
       // this.btnVerify = true;
       if (this.$refs.phone.validate() === true){
-        this.loading = true;
+        this.btnVerify = true;
         this.$axios
             .post("unique-phone", {phone:this.phone})
             .then((res) => {
               if (res.data.code === 200) {
-                console.error(res.data.data.exists)
                 if(res.data.data.exists === false){
                   this.initReCaptcha();
                   this.sendOtp();
-                  this.loading = true;
+                  this.btnVerify = true;
                 } else if(res.data.data.exists === true){
                   this.btnVerify = false;
                   this.$store.commit("Toast_State", {
@@ -326,8 +325,7 @@ export default {
                     msg: "ເບີນີ້ມີໃນລະບົບແລ້ວ",
                   });
                 }
-                // this.btnVerify = false;
-                this.loading = false;
+                this.btnVerify = false;
               }
             })
             .catch(() => {
@@ -379,7 +377,6 @@ export default {
           });
 
     },
-
 
     initReCaptcha() {
       setTimeout(() => {

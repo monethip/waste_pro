@@ -301,6 +301,30 @@
           <v-row>
             <v-col cols="6">
               <v-text-field
+                  label="ລາຍລະອຽດບັນຈຸພັນ "
+                  type="text"
+                  v-model="data.collect_description"
+                  outlined
+                  dense
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6">
+              <v-select
+                  outlined
+                  dense
+                  :items="favorite_dates"
+                  v-model="selectedFavoriteDate"
+                  item-text="name"
+                  item-value="name"
+                  label="ວັນພິເສດ"
+                  multiple
+              ></v-select>
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col cols="6">
+              <v-text-field
                   label="Password *"
                   type="password"
                   v-model="data.password"
@@ -335,8 +359,8 @@
               <v-text-field
                   label="Latitude"
                   v-model="latlng.lat"
-                  type="number"
                   class="input-number"
+                  type="number"
                   outlined
                   dense
               ></v-text-field>
@@ -374,12 +398,14 @@
                   :zoom="17"
                   style="width: 100%; height: 450px"
                   :disableDefaultUI="true"
+                  @change="changeLat"
               >
                 <GmapMarker
                     :position="latlng"
                     @click="latlng = latlng"
                     :draggable="true"
                     @dragend="onLocation"
+                    @change="changeLat"
                     :icon="markerOptions"
                     :animation="2"
                     ref="markers"
@@ -505,6 +531,8 @@ export default {
           name: "ມອບເໝົາ"
         },
       ],
+      favorite_dates: [],
+      selectedFavoriteDate: [],
 
       address: [],
       errormsg: "",
@@ -626,7 +654,8 @@ export default {
               }, 300);
             }
           })
-          .catch(() => {});
+          .catch(() => {
+          });
     },
     fetchVillageDetail() {
       this.$axios
@@ -635,6 +664,20 @@ export default {
             if (res.data.code == 200) {
               setTimeout(() => {
                 this.village_details = res.data.data;
+              }, 100);
+            }
+          })
+          .catch(() => {
+          });
+    },
+
+    fetchFavorite() {
+      this.$axios
+          .get("favorite-date")
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.favorite_dates = res.data.data;
               }, 100);
             }
           })
@@ -653,6 +696,9 @@ export default {
       this.selectedVillageDetail.map((item) => {
         formData.append("village_details[]", item);
       });
+      this.selectedFavoriteDate.map((item) => {
+        formData.append("favorite_dates[]", item);
+      });
       formData.append("company_name", this.data.company_name);
       formData.append("village_id", this.selectedVillage);
       formData.append("lat", this.latlng.lat);
@@ -669,6 +715,7 @@ export default {
       formData.append("fix_cost", this.fix_cost);
       formData.append("start_date", this.start_date);
       formData.append("can_collect", this.start_collect);
+      formData.append("collect_description", this.data.collect_description);
 
       if (this.$refs.form.validate() == true) {
         this.loading = true;
@@ -724,10 +771,12 @@ export default {
       //   this.customer_edit.longitude = this.center.lng;
     },
     setPlace(place) {
+      console.log(place)
       this.currentPlace = place;
       this.placeMarker();
     },
     placeMarker() {
+      console.log("marker")
       this.markers = [];
       this.places = [];
       if (this.currentPlace) {
@@ -739,9 +788,10 @@ export default {
         this.latlng = marker;
         this.animateMarker();
       } else {
+        console.log("oooooo")
         const marker = {
-          lat: this.latlng.lat,
-          lng: this.latlng.lng,
+          lat: parseFloat(this.latlng.lat),
+          lng: parseFloat(this.latlng.lng),
         };
         this.markers.push({position: marker});
         this.animateMarker();
@@ -850,6 +900,26 @@ export default {
       this.addItemDetail = false;
     },
 
+    // setPlace(place) {
+    //   console.log(place)
+    //   this.currentPlace = place;
+    //   this.placeMarker();
+    // },
+
+    changeLat(){
+      console.log("hee");
+      this.placeMarker();
+      // this.onDataChange();
+      // this.onSave();
+      // this.setPlace();
+      // const marker = {
+      //   lat: parseFloat(this.latlng.lat),
+      //   lng: parseFloat(this.latlng.lng),
+      // };
+      // console.log(marker)
+      // this.markers.push({position: marker});
+
+    }
   },
   watch: {
     selectedDistrict: function () {
@@ -892,13 +962,18 @@ export default {
         this.showFixed = false;
       } else if (this.selectedCost == 'fixed_cost')
         this.showFixed = true;
-    }
+    },
+    // "latlng.lng": function () {
+    //   console.log("hi")
+    //   this.placeMarker();
+    // }
   },
   mounted() {
     this.geolocate();
   },
   created() {
     this.fetchAddress();
+    this.fetchFavorite();
   },
 };
 </script>

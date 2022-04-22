@@ -361,6 +361,31 @@
               </v-col>
             </v-row>
 
+
+            <v-row>
+              <v-col cols="6">
+                <v-text-field
+                    label="ລາຍລະອຽດບັນຈຸພັນ "
+                    type="text"
+                    v-model="data.collect_description"
+                    outlined
+                    dense
+                ></v-text-field>
+              </v-col>
+              <v-col cols="6">
+                <v-select
+                    outlined
+                    dense
+                    :items="data.favorite_dates"
+                    v-model="data.favorite_dates"
+                    item-text="name"
+                    item-value="name"
+                    label="ວັນພິເສດ"
+                    multiple
+                ></v-select>
+              </v-col>
+            </v-row>
+
             <v-row>
               <!-- Gogle map-->
               <v-col cols="6">
@@ -571,7 +596,7 @@ export default {
                 this.districts = item.districts;
                 this.selectedDistrict = this.districts[0].id;
               });
-              this.fetchVillage();
+              // this.fetchVillage();
             }, 300);
           }
         })
@@ -585,8 +610,8 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.villages = res.data.data;
-              this.selectedVillage = this.villages[0].id;
-              this.fetchVillageDetail();
+              // this.selectedVillage = this.villages[0].id;
+              // this.fetchVillageDetail();
               // this.fetchVillageVariation();
             }, 300);
           }
@@ -646,6 +671,9 @@ export default {
       this.selectedVillageDetail.map((item) => {
         formData.append("village_details[]", item);
       });
+      this.data.favorite_dates.map((item) => {
+        formData.append("favorite_dates[]", item.name);
+      });
       formData.append("company_name", this.data.company_name);
       formData.append("village_id", this.selectedVillage);
       formData.append("lat", this.data.lat);
@@ -663,6 +691,7 @@ export default {
       if (this.data.can_collect == false) {
         formData.append("can_collect", 0);
       }
+      formData.append("collect_description", this.data.collect_description);
       formData.append("_method", "PUT");
       if (this.$refs.form.validate() == true) {
         this.loading = true;

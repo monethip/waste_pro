@@ -490,7 +490,9 @@ export default {
                 this.data = res.data.data;
                 this.can_collect = res.data.data.can_collect;
                 this.selectedDistrict = res.data.data.district.id;
-                this.selectedVillage = res.data.data.village.id;
+                // this.selectedVillage = res.data.data.village.id;
+                this.selectedVillage = res.data.data.village_id;
+                console.log(this.selectedVillage)
                 res.data.data.village_details.map((item) => {
                   this.selectedVillageDetail.push(item.id);
                 });
@@ -513,7 +515,7 @@ export default {
                   this.districts = item.districts;
                   // this.selectedDistrict = this.districts[0].id;
                 });
-                this.fetchVillage();
+                // this.fetchVillage();
               }, 300);
             }
           })
@@ -526,11 +528,9 @@ export default {
           .get("info/district/" + this.selectedDistrict + "/village")
           .then((res) => {
             if (res.data.code == 200) {
-              setTimeout(() => {
                 this.villages = res.data.data;
                 // this.selectedVillage = this.villages[0].id;
-                this.fetchVillageDetail();
-              }, 300);
+                // this.fetchVillageDetail();
             }
           })
           .catch(() => {
