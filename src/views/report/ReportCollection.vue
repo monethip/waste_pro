@@ -86,25 +86,25 @@
             <thead>
             <tr>
               <th class="text-left text-table-header">
-                Driver Name
+                Driver
+              </th>
+<!--              <th class="text-left text-table-header">-->
+<!--                Car ID-->
+<!--              </th>-->
+              <th class="text-left text-table-header">
+                ບ້ານ
               </th>
               <th class="text-left text-table-header">
-                Car ID
+                ເມືອງ
               </th>
               <th class="text-left text-table-header">
-                Village
+                ຈຳນວນ
               </th>
               <th class="text-left text-table-header">
-                District
-              </th>
-              <th class="text-left text-table-header">
-                Amount
-              </th>
-              <th class="text-left text-table-header">
-                Bags
+                ຖົງ
               </th>
               <th class="text-center text-table-header">
-                Total Bags
+                ລວມຖົງ
               </th>
             </tr>
             </thead>
@@ -115,8 +115,8 @@
                   v-for="(item,iSub) in driver.data"
                   :key="iSub.id"
               >
-                <td v-if="iSub === 0" :rowspan="driver.data.length">{{ driver.driver_name }}</td>
-                <td v-if="iSub === 0" :rowspan="driver.data.length">{{ driver.vehicle_car_id }}</td>
+                <td v-if="iSub === 0" :rowspan="driver.data.length">{{ driver.driver_name }} ({{ driver.vehicle_car_id }})</td>
+<!--                <td v-if="iSub === 0" :rowspan="driver.data.length">{{ driver.vehicle_car_id }}</td>-->
                 <td>
                   {{ item.village_name }}
                 </td>
@@ -144,32 +144,45 @@
             <thead>
             <tr>
               <th class="text-left text-table-header">
-                Driver Name
+                Driver
+              </th>
+<!--              <th class="text-left text-table-header">-->
+<!--                Car ID-->
+<!--              </th>-->
+              <th class="text-left text-table-header">
+                ບ້ານ
               </th>
               <th class="text-left text-table-header">
-                Car ID
+                ເມືອງ
               </th>
               <th class="text-left text-table-header">
-                Village
+               Sub Container
               </th>
               <th class="text-left text-table-header">
-                District
+                Container Time
               </th>
               <th class="text-left text-table-header">
-                Container
+                ມອບເໝົາ
+              </th><th class="text-left text-table-header">
+                ຖ້ຽວພິເສດ
               </th>
               <th class="text-left text-table-header">
-                Fixed Cost
-              </th>
-              <th class="text-left text-table-header">
-                Collect Time
+                ຈຳນວນຄັ້ງ
               </th>
               <th class="text-center text-table-header">
                 Total Container
               </th>
               <th class="text-center text-table-header">
-                Chartered Time
+                 Container Time
               </th>
+              <th class="text-center text-table-header">
+                ມອບເໝົາ
+              </th>
+
+              <th class="text-center text-table-header">
+                ຖ້ຽວພິເສດ
+              </th>
+
               <th class="text-center text-table-header">
                 Collect Time
               </th>
@@ -182,8 +195,8 @@
                   v-for="(item,iSub) in driver.data"
                   :key="iSub.id"
               >
-                <td class="text-table-body" v-if="iSub === 0" :rowspan="driver.data.length">{{ driver.driver_name }}</td>
-                <td class="text-table-body" v-if="iSub === 0" :rowspan="driver.data.length">{{ driver.vehicle_car_id }}</td>
+                <td class="text-table-body" v-if="iSub === 0" :rowspan="driver.data.length">{{ driver.driver_name }} ({{ driver.vehicle_car_id }})</td>
+<!--                <td class="text-table-body" v-if="iSub === 0" :rowspan="driver.data.length">{{ driver.vehicle_car_id }}</td>-->
                 <td class="text-table-body">
                   {{ item.village_name }}
                 </td>
@@ -194,11 +207,18 @@
                   {{ item.subtotal_container }}
                 </td>
                 <td class="text-table-body">
+                  {{ item.container_collect_time }}
+                </td>
+                <td class="text-table-body">
+                  {{ item.chartered_collect_time }}
+                </td>
+                <td class="text-table-body">
                   {{ item.fix_cost_collect_time }}
                 </td>
                 <td class="text-table-body">
                   {{ item.subtotal_collect_time }}
                 </td>
+
                 <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
                   <v-chip color="success">
                     {{ driver.total_container }}
@@ -206,7 +226,16 @@
                 </td>
                 <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
                   <v-chip color="success">
+                    {{ driver.total_container_collect_time }}
+                  </v-chip>
+                </td>
+                <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
+                  <v-chip color="success">
                     {{ driver.total_chartered_collect_time }}
+                  </v-chip>
+                </td>    <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
+                  <v-chip color="success">
+                    {{ driver.total_fix_cost_collect_time }}
                   </v-chip>
                 </td>
                 <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
@@ -224,22 +253,22 @@
             <thead>
             <tr>
               <th class="text-left text-table-header">
-                Driver Name
+                Driver
+              </th>
+<!--              <th class="text-left text-table-header">-->
+<!--                Car ID-->
+<!--              </th>-->
+              <th class="text-left text-table-header">
+                ບ້ານ
               </th>
               <th class="text-left text-table-header">
-                Car ID
+                ເມືອງ
               </th>
               <th class="text-left text-table-header">
-                Village
+                ຈຳນວນ
               </th>
               <th class="text-left text-table-header">
-                District
-              </th>
-              <th class="text-left text-table-header">
-                Amount
-              </th>
-              <th class="text-left text-table-header">
-                Total
+                ທັງໝົດ
               </th>
             </tr>
             </thead>
@@ -250,8 +279,8 @@
                   v-for="(item,iSub) in driver.data"
                   :key="iSub.id"
               >
-                <td class="text-table-body" v-if="iSub === 0" :rowspan="driver.data.length">{{ driver.driver_name }}</td>
-                <td class="text-table-body" v-if="iSub === 0" :rowspan="driver.data.length">{{ driver.vehicle_car_id }}</td>
+                <td class="text-table-body" v-if="iSub === 0" :rowspan="driver.data.length">{{ driver.driver_name }} ({{ driver.vehicle_car_id }})</td>
+<!--                <td class="text-table-body" v-if="iSub === 0" :rowspan="driver.data.length">{{ driver.vehicle_car_id }}</td>-->
                 <td class="text-table-body">
                   {{ item.village_name }}
                 </td>
