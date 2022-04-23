@@ -168,6 +168,13 @@
                     </v-chip
                     >
                   </template>
+                  <template v-slot:item.can_collect="{ item }">
+                    <v-chip
+                        :color="Can_Collect(item.can_collect)"
+                    >{{ item.can_collect }}
+                    </v-chip
+                    >
+                  </template>
 
                   <template v-slot:item.actions="{ item }">
                     <v-menu offset-y>
@@ -502,7 +509,7 @@ export default {
         {text: "ປະເພດບໍລິການ", value: "package.name", sortable: false},
         {text: "Profile", value: "media"},
         {text: "ສະຖານະແພັກເກດ", value: "status"},
-        {text: "ເປີດ/ປິດບໍລິການ", value: "can_collect", align: "center"},
+        {text: "ສະຖານະເກັບ", value: "can_collect", align: "center"},
         {text: "", value: "actions", sortable: false},
       ],
     };
@@ -778,6 +785,11 @@ export default {
     },
     Search() {
       GetOldValueOnInput(this);
+    },
+    Can_Collect(value) {
+      if (value == "1") return "success";
+      else if (value == "0") return "error";
+      else return "info";
     },
     statusColor(value) {
       if (value == "active") return "primary";

@@ -8,13 +8,13 @@
       >
       ແກ້ໄຂແຜນເສັ້ນທາງ
       <v-spacer></v-spacer>
-      <span class="mr-4"
-      ><v-icon color="red">mdi-map-marker</v-icon>ຢູ່ໃນແຜນແລ້ວ</span
-      >
-      <span
-      ><v-icon style="color: #49a3da">mdi-map-marker</v-icon
-      >ຍັງບໍທັນຢູ່ໃນແຜນ</span
-      >
+<!--      <span class="mr-4"-->
+<!--      ><v-icon color="red">mdi-map-marker</v-icon>ຢູ່ໃນແຜນແລ້ວ</span-->
+<!--      >-->
+<!--      <span-->
+<!--      ><v-icon style="color: #49a3da">mdi-map-marker</v-icon-->
+<!--      >ຍັງບໍທັນຢູ່ໃນແຜນ</span-->
+<!--      >-->
     </v-breadcrumbs>
 
     <v-row>
@@ -244,9 +244,21 @@
                       label="ເມືອງ"
                   ></v-autocomplete>
                 </v-col>
+                <v-col>
+                  <v-select
+                      outlined
+                      dense
+                      :items="costs"
+                      v-model="selectedCost"
+                      item-text="name"
+                      item-value="value"
+                      label="ປະເພດບໍລິການ"
+                      multiple
+                  ></v-select>
+                </v-col>
               </v-row>
               <v-row>
-                <v-col cols="12">
+                <v-col>
                   <v-autocomplete
                       v-model="selectedVillage"
                       :items="villages"
@@ -271,6 +283,19 @@
                     </template>
                   </v-autocomplete>
                 </v-col>
+                <!--                <v-col>-->
+                <!--                  <v-text-field-->
+                <!--                      outlined-->
+                <!--                      dense-->
+                <!--                      clearable-->
+                <!--                      prepend-inner-icon="mdi-magnify"-->
+                <!--                      label="ຊື່ລູກຄ້າ"-->
+                <!--                      type="text"-->
+                <!--                      v-model="search"-->
+                <!--                      @keyup.enter="Search()"-->
+                <!--                  >-->
+                <!--                  </v-text-field>-->
+                <!--                </v-col>-->
               </v-row>
 
               <v-data-table
@@ -358,6 +383,7 @@
 <script>
 import {GetOldValueOnInput} from "@/Helpers/GetValue";
 import draggable from "vuedraggable";
+import queryOption from "@/Helpers/queryOption";
 
 export default {
   name: "Customer",
@@ -394,6 +420,26 @@ export default {
       name: "",
       server_errors: {},
       plan: {},
+
+      selectedCost: [],
+      costs: [
+        {
+          id: 1,
+          value: "container",
+          name: "ຄອນເທັນເນີ"
+        },
+        {
+          id: 2,
+          value: "fix_cost",
+          name: "ທຸລະກິດເປັນຖ້ຽວ"
+        },
+        {
+          id: 3,
+          value: "chartered",
+          name: "ມອບເໝົາ"
+        },
+      ],
+
       headers: [
         {text: "", value: ""},
         {text: "ລຳດັບ", value: ""},
@@ -473,6 +519,7 @@ export default {
               // per_page: this.per_page,
               // // filter: this.search,
               // villages: this.selectedVillage,
+
             },
           })
           .then((res) => {
@@ -480,7 +527,6 @@ export default {
               setTimeout(() => {
                 this.$store.commit("Loading_State", false);
                 this.customers = res.data.data;
-                console.log(this.customers);
                 // this.pagination = res.data.data.pagination;
                 this.getCenter();
               }, 100);
@@ -642,13 +688,17 @@ export default {
       this.$store.commit("Loading_State", true);
       this.$axios
           .get("company", {
-            params: {
-              page: this.pagination.current_page,
-              per_page: this.per_page,
-              // filter: this.search,
-              villages: this.selectedVillage,
-              without: ['route_plan', 'calendar']
-            },
+            params: queryOption([
+                  {page: this.pagination.current_page},
+                  {per_page: this.per_page},
+                  {filter: this.search},
+                  {without: this.selectedCustomerStatus},
+                  {villages: this.selectedVillage},
+                  {district_id: this.selectedDistrict},
+                  {cost_by: this.selectedCost},
+                  {without: ['route_plan', 'calendar']}
+                ]
+            ),
           })
           .then((res) => {
             if (res.data.code == 200) {
@@ -680,7 +730,6 @@ export default {
                 this.address = res.data.data;
                 this.address.map((item) => {
                   this.districts = item.districts;
-                  // console.log(this.districts);
                 });
               }, 300);
             }
@@ -811,6 +860,9 @@ export default {
     },
     selectedDistrict: function () {
       this.fetchVillage();
+    },
+    selectedCost:function (){
+      this.fetchAddCustomer();
     },
   },
   created() {

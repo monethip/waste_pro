@@ -64,6 +64,7 @@
             item-text="name"
             item-value="id"
             label="ເມືອງ"
+            clearable
         ></v-autocomplete>
       </v-col>
       <!--
@@ -97,7 +98,7 @@
       -->
     </v-row>
     <v-row>
-      <v-col cols="6">
+      <v-col>
         <v-autocomplete
             v-model="selectedVillage"
             :items="villages"
@@ -108,6 +109,7 @@
             chips
             multiple
             dense
+            clearable
         >
           <template v-slot:selection="data">
             <v-chip
@@ -123,7 +125,7 @@
         </v-autocomplete>
       </v-col>
 
-      <v-col cols="6">
+      <v-col>
         <v-autocomplete
             outlined
             dense
@@ -133,7 +135,34 @@
             item-value="value"
             label="ສະຖານະລູກຄ້າ"
             multiple
+            clearable
         ></v-autocomplete>
+      </v-col>
+      <v-col>
+        <v-select
+            outlined
+            dense
+            :items="costs"
+            v-model="selectedCost"
+            item-text="name"
+            item-value="value"
+            label="ປະເພດບໍລິການ"
+            multiple
+            clearable
+        ></v-select>
+      </v-col>
+      <v-col>
+        <v-text-field
+            outlined
+            dense
+            clearable
+            prepend-inner-icon="mdi-magnify"
+            label="ຊື່ລູກຄ້າ"
+            type="text"
+            v-model="search"
+            @keyup.enter="Search()"
+        >
+        </v-text-field>
       </v-col>
     </v-row>
 
@@ -152,6 +181,9 @@
                 <div v-for="(data, index) in item.village_details" :key="index">
                   <span>{{ data.name }}</span>
                 </div>
+              </template>
+              <template v-slot:item.cost_by="{ item }">
+                <div>{{ costBy(item.cost_by) }}</div>
               </template>
 
               <template v-slot:item.actions="{ item }">
@@ -215,15 +247,33 @@ export default {
           name: "ຍັງບໍມີແຜນ",
         },
       ],
+      selectedCost: [],
+      costs: [
+        {
+          id: 1,
+          value: "container",
+          name: "ຄອນເທັນເນີ"
+        },
+        {
+          id: 2,
+          value: "fix_cost",
+          name: "ທຸລະກິດເປັນຖ້ຽວ"
+        },
+        {
+          id: 3,
+          value: "chartered",
+          name: "ມອບເໝົາ"
+        },
+      ],
 
       headers: [
         {text: "ID", value: "customer_id"},
         {text: "ບໍລິສັດ", value: "company_name"},
         // { text: "ຜູ້ຮບຜິດຊອບ", value: "company_coordinators.name" },
-        {text: "Phone", value: "user.phone", sortable: false},
-        {text: "ລາຍລະອຽດທີ່ຢູ່", value: "address_detail"},
+        {text: "ປະເພດບໍລິການ", value: "cost_by", sortable: true},
         {text: "ບ້ານ", value: "village.name", sortable: true},
         {text: "ເມືອງ", value: "district.name", sortable: true},
+        {text: "ລາຍລະອຽດທີ່ຢູ່", value: "address_detail"},
         // { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
         {text: "", value: "actions", sortable: false},
       ],
@@ -260,7 +310,10 @@ export default {
               {per_page: this.per_page},
               {without: this.selectedCustomerStatus},
               {villages: this.selectedVillage},
-              {district_id: this.selectedDistrict}]),
+              {district_id: this.selectedDistrict},
+              {filter: this.search},
+              {cost_by: this.selectedCost},
+            ]),
           })
           .then((res) => {
             if (res.data.code == 200) {
@@ -318,7 +371,6 @@ export default {
 
     createPage() {
       //  var a = [];
-      // console.log(this.customers);
       if (this.customers.length > 0) {
         this.$router.push({
           name: "CreateRoutePlanCompany",
@@ -450,6 +502,11 @@ export default {
         }
       });
     },
+    costBy(value) {
+      if (value == "container") return "ຄອນເທັນເນີ";
+      else if (value == "fix_cost") return "ທຸລະກິດເປັນຖ້ຽວ";
+      else if (value == "chartered") return "ມອບເໝົາ";
+    }
   },
   computed: {
     selectedAllVillage() {
@@ -478,6 +535,9 @@ export default {
       this.fetchData();
     },
     selectedCustomerStatus: function () {
+      this.fetchData();
+    },
+    selectedCost:function (){
       this.fetchData();
     },
   },

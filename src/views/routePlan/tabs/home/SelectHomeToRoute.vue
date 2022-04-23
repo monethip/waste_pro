@@ -64,6 +64,7 @@
             item-text="name"
             item-value="id"
             label="ເມືອງ"
+            clearable
         ></v-autocomplete>
       </v-col>
       <!--
@@ -80,21 +81,7 @@
         ></v-autocomplete>
       </v-col>
       -->
-      <!--
-      <v-col>
-        <v-text-field
-          outlined
-          dense
-          clearable
-          prepend-inner-icon="mdi-magnify"
-          label="ຊື່ລູກຄ້າ"
-          type="text"
-          v-model="search"
-          @keyup.enter="Search()"
-        >
-        </v-text-field>
-      </v-col>
-      -->
+
     </v-row>
     <!--
     <v-row class="mb-n4">
@@ -129,7 +116,7 @@
     </v-row>
 -->
     <v-row>
-      <v-col cols="6">
+      <v-col>
         <v-autocomplete
             v-model="selectedVillage"
             :items="villages"
@@ -140,6 +127,7 @@
             chips
             multiple
             dense
+            clearable
         >
           <template v-slot:selection="data">
             <v-chip
@@ -155,7 +143,7 @@
         </v-autocomplete>
       </v-col>
 
-      <v-col cols="6">
+      <v-col>
         <v-autocomplete
             outlined
             dense
@@ -165,7 +153,21 @@
             item-value="value"
             label="ສະຖານະລູກຄ້າ"
             multiple
+            clearable
         ></v-autocomplete>
+      </v-col>
+      <v-col>
+        <v-text-field
+            outlined
+            dense
+            clearable
+            prepend-inner-icon="mdi-magnify"
+            label="ຊື່ລູກຄ້າ"
+            type="text"
+            v-model="search"
+            @keyup.enter="Search()"
+        >
+        </v-text-field>
       </v-col>
     </v-row>
 
@@ -296,7 +298,9 @@ export default {
               {per_page: this.per_page},
               {without: this.selectedCustomerStatus},
               {villages: this.selectedVillage},
-              {district_id: this.selectedDistrict}]),
+              {district_id: this.selectedDistrict},
+              {filter: this.search},
+            ]),
 
           })
           .then((res) => {

@@ -220,7 +220,6 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.plans = res.data.data;
-              console.log(this.plans);
               // this.pagination = res.data.data.pagination;
             }, 100);
           }
@@ -228,7 +227,7 @@ export default {
         .catch((error) => {
           this.$store.commit("Loading_State", false);
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
+            const obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }

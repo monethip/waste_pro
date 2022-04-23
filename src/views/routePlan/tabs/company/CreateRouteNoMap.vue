@@ -1,199 +1,201 @@
 <template>
-  <v-container>
-    <v-breadcrumbs large class="mt-n4">
-      <v-btn text class="text-primary" @click="backPrevios()"
+  <div @="onLoad">
+    <v-container>
+      <v-breadcrumbs large class="mt-n4">
+        <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
-      >
-      ເພີ່ມແຜນເສັ້ນທາງ
-      <v-spacer></v-spacer>
-      <span class="mr-4"
+        >
+        ເພີ່ມແຜນເສັ້ນທາງ
+        <v-spacer></v-spacer>
+        <span class="mr-4"
         ><v-icon color="red">mdi-map-marker</v-icon>ຢູ່ໃນແຜນແລ້ວ</span
-      >
-      <span
+        >
+        <span
         ><v-icon style="color: #49a3da">mdi-map-marker</v-icon
         >ຍັງບໍທັນຢູ່ໃນແຜນ</span
-      >
-    </v-breadcrumbs>
-
-    <v-row>
-      <v-col cols="12" class="mb-4">
-        <GmapMap
-          v-if="customers"
-          :center="getCenter()"
-          :zoom="14"
-          style="width: 100%; height: 400px"
-          :disableDefaultUI="true"
         >
-          <gmap-info-window
-            :options="infoOptions"
-            :position="infoPosition"
-            :opened="infoOpened"
-            :conent="infoContent"
-            @closeclick="infoOpened = false"
+      </v-breadcrumbs>
+
+      <v-row>
+        <v-col cols="12" class="mb-4">
+          <GmapMap
+              v-if="customers"
+              :center="getCenter()"
+              :zoom="14"
+              style="width: 100%; height: 400px"
+              :disableDefaultUI="true"
+          >
+            <gmap-info-window
+                :options="infoOptions"
+                :position="infoPosition"
+                :opened="infoOpened"
+                :conent="infoContent"
+                @closeclick="infoOpened = false"
             >{{ infoContent }}
-          </gmap-info-window>
-          <GmapMarker
-            :key="index"
-            v-for="(m, index) in customers"
-            :position="getMarkers(m)"
-            @click="toggleInfo(m, index)"
-            :draggable="false"
-            :icon="getSiteIcon(m)"
-            :animation="2"
-            :clickable="true"
-          />
-        </GmapMap>
-      </v-col>
-    </v-row>
-    <v-row class="mb-n6">
-      <v-col>
-        <v-btn
-          class="btn-primary"
-          @click="createRoutePlan()"
-          :loading="loading"
-          :disabled="loading"
-        >
-          ບັນທຶກ<v-icon>mdi-content-save</v-icon>
-        </v-btn>
-      </v-col>
-      <v-col>
-        <h4 v-if="customers">
-          ຈັດລຽນລຳດັບການເກັບຂີ້ເຫື້ຍອລູກຄ້າ {{ customers.length }} ຄົນ
-        </h4>
-      </v-col>
-      <v-col>
-        <v-text-field
-          outlined
-          dense
-          clearable
-          prepend-inner-icon="mdi-magnify"
-          label="ຊື່ລູກຄ້າ"
-          type="text"
-          v-model="search"
-          @keyup.enter="Search()"
-        >
-        </v-text-field>
-      </v-col>
-    </v-row>
-    <div>
-      <v-card>
-        <v-card-text>
-          <!--
-            <div>
-              <v-btn text color="error" @click="deleteItem"
-                ><v-icon medium> mdi-delete </v-icon></v-btn
-              >
-            </div>
--->
-          <main class="page page--table">
-            <v-data-table
-              :headers="headers"
-              :items="customers"
-              :search="search"
-              :disable-pagination="true"
-              hide-default-footer
-              v-model="selectedRows"
-              item-key="id"
-              class="page__table"
-            >
-              <template v-slot:body="props">
-                <draggable :list="props.items" tag="tbody" @change="afterAdd">
-                  <tr v-for="(user, index) in props.items" :key="index">
-                    <td>
-                      <v-icon small class="page__grab-icon">
-                        mdi-arrow-all
-                      </v-icon>
-                    </td>
-                    <td>{{ index + 1 }}</td>
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.name }}</td>
-                    <td>{{ user.surname }}</td>
-                    <td>{{ user.user.phone }}</td>
-                    <td>{{ user.address_detail }}</td>
-                    <td>{{ user.village.name }}</td>
-                    <td>{{ user.district.name }}</td>
-                    <td>
-                      <!--
-                        <v-icon small class="mr-2" @click="viewPage(user.id)">
-                          mdi-eye
-                        </v-icon>
-                        -->
-                      <v-icon small @click="deleteItem(index)">
-                        mdi-delete
-                      </v-icon>
-                    </td>
-                  </tr>
-                </draggable>
-              </template>
-            </v-data-table>
-          </main>
-        </v-card-text>
-      </v-card>
-    </div>
-
-    <!-- Modal Add-->
-    <ModalAdd>
-      <template @close="close">
+            </gmap-info-window>
+            <GmapMarker
+                :key="index"
+                v-for="(m, index) in customers"
+                :position="getMarkers(m)"
+                @click="toggleInfo(m, index)"
+                :draggable="false"
+                :icon="getSiteIcon(m)"
+                :animation="2"
+                :clickable="true"
+            />
+          </GmapMap>
+        </v-col>
+      </v-row>
+      <v-row class="mb-n6">
+        <v-col>
+          <v-btn
+              class="btn-primary"
+              @click="createRoutePlan()"
+              :loading="loading"
+              :disabled="loading"
+          >
+            ບັນທຶກ<v-icon>mdi-content-save</v-icon>
+          </v-btn>
+        </v-col>
+        <v-col>
+          <h4 v-if="customers">
+            ຈັດລຽນລຳດັບການເກັບຂີ້ເຫື້ຍອລູກຄ້າ {{ customers.length }} ຄົນ
+          </h4>
+        </v-col>
+        <v-col>
+          <v-text-field
+              outlined
+              dense
+              clearable
+              prepend-inner-icon="mdi-magnify"
+              label="ຊື່ລູກຄ້າ"
+              type="text"
+              v-model="search"
+              @keyup.enter="Search()"
+          >
+          </v-text-field>
+        </v-col>
+      </v-row>
+      <div>
         <v-card>
-          <v-card-title>
-            <span class="headline">Route Plan Name</span>
-          </v-card-title>
           <v-card-text>
-            <v-container>
-              <v-form ref="form" lazy-validation>
-                <v-row>
-                  <v-col cols="12">
-                    <v-text-field
-                      label="Name *"
-                      required
-                      v-model="name"
-                    ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.name }}
-                    </p>
-                  </v-col>
-                </v-row>
-              </v-form>
-            </v-container>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeAddModal()">
-                Close
-              </v-btn>
-              <v-btn
+            <!--
+              <div>
+                <v-btn text color="error" @click="deleteItem"
+                  ><v-icon medium> mdi-delete </v-icon></v-btn
+                >
+              </div>
+  -->
+            <main class="page page--table">
+              <v-data-table
+                  :headers="headers"
+                  :items="customers"
+                  :search="search"
+                  :disable-pagination="true"
+                  hide-default-footer
+                  v-model="selectedRows"
+                  item-key="id"
+                  class="page__table"
+              >
+                <template v-slot:body="props">
+                  <draggable :list="props.items" tag="tbody" @change="afterAdd">
+                    <tr v-for="(user, index) in props.items" :key="index">
+                      <td>
+                        <v-icon small class="page__grab-icon">
+                          mdi-arrow-all
+                        </v-icon>
+                      </td>
+                      <td>{{ index + 1 }}</td>
+                      <td>{{ user.id }}</td>
+                      <td>{{ user.name }}</td>
+                      <td>{{ user.surname }}</td>
+                      <td>{{ user.user.phone }}</td>
+                      <td>{{ user.address_detail }}</td>
+                      <td>{{ user.village.name }}</td>
+                      <td>{{ user.district.name }}</td>
+                      <td>
+                        <!--
+                          <v-icon small class="mr-2" @click="viewPage(user.id)">
+                            mdi-eye
+                          </v-icon>
+                          -->
+                        <v-icon small @click="deleteItem(index)">
+                          mdi-delete
+                        </v-icon>
+                      </td>
+                    </tr>
+                  </draggable>
+                </template>
+              </v-data-table>
+            </main>
+          </v-card-text>
+        </v-card>
+      </div>
+
+      <!-- Modal Add-->
+      <ModalAdd>
+        <template @close="close">
+          <v-card>
+            <v-card-title>
+              <span class="headline">Route Plan Name</span>
+            </v-card-title>
+            <v-card-text>
+              <v-container>
+                <v-form ref="form" lazy-validation>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-text-field
+                          label="Name *"
+                          required
+                          v-model="name"
+                      ></v-text-field>
+                      <p class="errors">
+                        {{ server_errors.name }}
+                      </p>
+                    </v-col>
+                  </v-row>
+                </v-form>
+              </v-container>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" text @click="closeAddModal()">
+                  Close
+                </v-btn>
+                <v-btn
+                    color="blue darken-1"
+                    text
+                    :loading="loading"
+                    :disabled="loading"
+                    @click="saveRoutePlan()"
+                >
+                  Save
+                </v-btn>
+              </v-card-actions>
+            </v-card-text>
+          </v-card>
+        </template>
+      </ModalAdd>
+
+      <!--Delete Modal-->
+      <ModalDelete>
+        <template>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+            <v-btn
                 color="blue darken-1"
                 text
                 :loading="loading"
                 :disabled="loading"
-                @click="saveRoutePlan()"
-              >
-                Save
-              </v-btn>
-            </v-card-actions>
-          </v-card-text>
-        </v-card>
-      </template>
-    </ModalAdd>
-
-    <!--Delete Modal-->
-    <ModalDelete>
-      <template>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            :loading="loading"
-            :disabled="loading"
-            @click="deleteItemConfirm"
+                @click="deleteItemConfirm"
             >OK</v-btn
-          >
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </template>
-    </ModalDelete>
-  </v-container>
+            >
+            <v-spacer></v-spacer>
+          </v-card-actions>
+        </template>
+      </ModalDelete>
+    </v-container>
+  </div>
 </template>
 
 <script>
@@ -476,6 +478,17 @@ export default {
         this.selectedRows.push(keyID);
       }
     },
+    onLoad(){
+      const currpage    = window.location.href;
+      const lasturl     = sessionStorage.getItem("last_url");
+
+      if(lasturl == null || lasturl.length === 0 || currpage !== lasturl ){
+        sessionStorage.setItem("last_url", currpage);
+        alert("New page loaded");
+      }else{
+        alert("Refreshed Page");
+      }
+    }
   },
   watch: {
     search: function (value) {
@@ -486,6 +499,11 @@ export default {
   },
   created() {
     this.fetchData();
+    // window.addEventListener('beforeunload', function(event) {
+    //   event.returnValue = 'Write something'
+    //   console.log(event)
+    //   this.$router.go(-1)
+    // })
   },
 };
 </script>

@@ -120,6 +120,18 @@
           ຂໍ້ມູນຫົວໜ່ວຍທຸລະກິດ ({{ pagination.total }})
           <v-divider class="mx-4" vertical></v-divider>
           <v-spacer></v-spacer>
+
+            <v-select
+                outlined
+                dense
+                :items="costs"
+                v-model="selectedCost"
+                item-text="name"
+                item-value="value"
+                label="ປະເພດບໍລິການ"
+                multiple
+            ></v-select>
+            <v-spacer></v-spacer>
           <v-text-field
               outlined
               dense
@@ -162,10 +174,10 @@
               <div>{{ costBy(item.cost_by) }}</div>
             </template>
 
-            <template v-slot:item.status="{ item }">
-              <v-chip label
-                      :color="statusColor(item.user.status)"
-              >{{ item.user.status }}
+            <template v-slot:item.can_collect="{ item }">
+              <v-chip
+                  :color="statusColor(item.can_collect)"
+              >{{ item.can_collect }}
               </v-chip
               >
             </template>
@@ -359,12 +371,12 @@ export default {
         {
           id: 1,
           name: "ເປີດ",
-          value:1,
+          value: 1,
         },
         {
           id: 2,
           name: "ປິດ",
-          value:0
+          value: 0,
         },
       ],
       selectedCustomerStatus: [],
@@ -380,6 +392,24 @@ export default {
           name: "ຍັງບໍມີແຜນ",
         },
       ],
+      selectedCost: [],
+      costs: [
+        {
+          id: 1,
+          value: "container",
+          name: "ຄອນເທັນເນີ"
+        },
+        {
+          id: 2,
+          value: "fix_cost",
+          name: "ທຸລະກິດເປັນຖ້ຽວ"
+        },
+        {
+          id: 3,
+          value: "chartered",
+          name: "ມອບເໝົາ"
+        },
+      ],
       user: {},
       item: {},
 
@@ -389,7 +419,7 @@ export default {
         {text: "ເມືອງ", value: "district.name", sortable: false},
         // { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
         {text: "ປະເພດບໍລິການ", value: "cost_by"},
-        {text: "ສະຖານະບໍລິການ", value: "status"},
+        {text: "ສະຖານະ", value: "can_collect", align: "center"},
         {text: "ວັນພິເສດ", value: "favorite_dates"},
         {text: "ລາຍລະອຽດບັນຈຸພັນ", value: "collect_description", sortable: false},
         {text: "", value: "media"},
@@ -410,8 +440,11 @@ export default {
                   {date_end: this.end_date},
                   {without: this.selectedCustomerStatus},
                   {villages: this.selectedVillage},
-                  {statuses: this.selectedStatus},
-                  {district_id: this.selectedDistrict}]),
+                  {can_collect: this.selectedStatus},
+                  {district_id: this.selectedDistrict},
+                  {cost_by: this.selectedCost},
+                ]
+                ),
               }
           )
           .then((res) => {
@@ -566,8 +599,8 @@ export default {
       GetOldValueOnInput(this);
     },
     statusColor(value) {
-      if (value == "active") return "primary";
-      else if (value == "inactive") return "error";
+      if (value == "1") return "success";
+      else if (value == "0") return "error";
       else return "info";
     },
     costBy(value) {
@@ -599,6 +632,9 @@ export default {
       this.server_errors.start_month = "";
     },
     selectedCustomerStatus: function () {
+      this.fetchData();
+    },
+    selectedCost:function (){
       this.fetchData();
     },
     "user.name": function () {
