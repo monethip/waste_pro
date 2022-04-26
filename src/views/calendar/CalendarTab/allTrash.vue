@@ -4,36 +4,20 @@
       <v-col>
         <v-breadcrumbs large class="pa-0"> ຂີ້ເຫື້ຍອທັງໝົດ</v-breadcrumbs>
       </v-col>
-      <v-col>
-        <v-text-field
-          outlined
-          dense
-          clearable
-          prepend-inner-icon="mdi-magnify"
-          label="Search"
-          type="text"
-          v-model="search"
-          @keyup.enter="Search()"
-        >
-        </v-text-field>
-      </v-col>
+<!--      <v-col>-->
+<!--        <v-text-field-->
+<!--          outlined-->
+<!--          dense-->
+<!--          clearable-->
+<!--          prepend-inner-icon="mdi-magnify"-->
+<!--          label="Search"-->
+<!--          type="text"-->
+<!--          v-model="search"-->
+<!--          @keyup.enter="Search()"-->
+<!--        >-->
+<!--        </v-text-field>-->
+<!--      </v-col>-->
     </v-row>
-    <!--
-    <v-row class="mt-n4 mb-2">
-      <v-col>
-        <h4>
-          <span class="mr-8"
-            >ຈຳນວນລໍຖ້າ
-            <span class="primary-color">{{ summary.pending_count }}</span>
-          </span>
-          <span
-            >ຈຳນວນສຳເລັດ
-            <span class="primary-color">{{ summary.success_count }}</span></span
-          >
-        </h4>
-      </v-col>
-    </v-row>
-    -->
     <div>
       <v-data-table
         v-if="calendars"

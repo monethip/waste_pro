@@ -1,4 +1,4 @@
-<template>
+pendingTrash.vue<template>
   <v-container>
     <v-row>
       <v-col>
@@ -94,7 +94,7 @@ export default {
       per_page: 15,
       search: "",
       oldVal: "",
-      statuses: ["pending"],
+      statuses: ["reject"],
 
       headers: [
         { text: "ລຳດັບ", value: "route_plan_detail.priority" },

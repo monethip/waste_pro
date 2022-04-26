@@ -6,19 +6,19 @@
           ຂີ້ເຫື້ຍອທີ່ເກັບສຳເລັດແລ້ວ</v-breadcrumbs
         >
       </v-col>
-      <v-col>
-        <v-text-field
-          outlined
-          dense
-          clearable
-          prepend-inner-icon="mdi-magnify"
-          label="Search"
-          type="text"
-          v-model="search"
-          @keyup.enter="Search()"
-        >
-        </v-text-field>
-      </v-col>
+<!--      <v-col>-->
+<!--        <v-text-field-->
+<!--          outlined-->
+<!--          dense-->
+<!--          clearable-->
+<!--          prepend-inner-icon="mdi-magnify"-->
+<!--          label="Search"-->
+<!--          type="text"-->
+<!--          v-model="search"-->
+<!--          @keyup.enter="Search()"-->
+<!--        >-->
+<!--        </v-text-field>-->
+<!--      </v-col>-->
     </v-row>
     <div>
       <v-data-table

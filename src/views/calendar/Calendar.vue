@@ -9,19 +9,19 @@
       <v-col>
         <p>ແຜນຕາຕະລາງວຽກແຕ່ລະເດືອນ</p>
       </v-col>
-      <v-col>
-        <v-text-field
-          outlined
-          dense
-          clearable
-          prepend-inner-icon="mdi-magnify"
-          label="ຊື່"
-          type="text"
-          v-model="search"
-          @keyup.enter="Search()"
-        >
-        </v-text-field>
-      </v-col>
+<!--      <v-col>-->
+<!--        <v-text-field-->
+<!--          outlined-->
+<!--          dense-->
+<!--          clearable-->
+<!--          prepend-inner-icon="mdi-magnify"-->
+<!--          label="ຊື່"-->
+<!--          type="text"-->
+<!--          v-model="search"-->
+<!--          @keyup.enter="Search()"-->
+<!--        >-->
+<!--        </v-text-field>-->
+<!--      </v-col>-->
     </v-row>
     <div>
       <v-card>
@@ -37,6 +37,11 @@
               <v-icon medium class="mr-2" @click="gotoPlanCalendar(item.id)"
                 >mdi-map-marker-path</v-icon
               >
+            </template>
+            <template v-slot:item.has_invoice="{ item }">
+              <v-chip :color="HasInvoiceColor(item.has_invoice)"
+              >{{HasInvoice(item.has_invoice)}}
+              </v-chip>
             </template>
             <template v-slot:item.created_at="{ item }">
               <div
@@ -241,6 +246,7 @@
 
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import queryOption from "@/Helpers/queryOption";
 export default {
   name: "Customer",
   title() {
@@ -276,6 +282,12 @@ export default {
       headers: [
         { text: "ຊື່", value: "name" },
         { text: "ວັນທີເລີ່ມ", value: "month" },
+        {
+          text: "ມີບິນ",
+          value: "has_invoice",
+          align: "center",
+          sortable: false,
+        },
         {
           text: "ຈຳນວນຮອບ",
           value: "plan_calendars_count",
@@ -326,11 +338,12 @@ export default {
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("plan-month", {
-          params: {
-            page: this.pagination.current_page,
-            per_page: this.per_page,
-          },
-        })
+          params: queryOption([
+            {page: this.pagination.current_page},
+            {per_page: this.per_page},
+          ]),
+        }
+        )
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
@@ -472,6 +485,20 @@ export default {
     reset() {
       this.$refs.form.reset();
     },
+    HasInvoiceColor(value){
+      if(value == '1'){
+        return 'success';
+      } else if(value == 0){
+        return 'error';
+      }
+    },
+    HasInvoice(value){
+      if(value == '1'){
+        return 'ມີບິນ';
+      } else if(value == 0){
+        return 'ບໍ່ມີ';
+      }
+    }
   },
   watch: {
     search: function (value) {
