@@ -322,6 +322,7 @@ export default {
       ],
       selectedStatus: ["created"],
       headers: [
+        {text: "InvoiceId", value: "invoice_id"},
         { text: "ລູກຄ້າ", value: "customer" },
         {
           text: "ຈຳນວນຖົງ",

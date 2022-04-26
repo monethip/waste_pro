@@ -171,7 +171,7 @@
                   <template v-slot:item.can_collect="{ item }">
                     <v-chip
                         :color="Can_Collect(item.can_collect)"
-                    >{{ item.can_collect }}
+                    >{{ CanCollect(item.can_collect) }}
                     </v-chip
                     >
                   </template>
@@ -507,9 +507,9 @@ export default {
         {text: "Phone", value: "user.phone", sortable: false},
         {text: "ທີ່ຢູ່", value: "district.name", sortable: false},
         {text: "ປະເພດບໍລິການ", value: "package.name", sortable: false},
-        {text: "Profile", value: "media"},
         {text: "ສະຖານະແພັກເກດ", value: "status"},
         {text: "ສະຖານະເກັບ", value: "can_collect", align: "center"},
+        {text: "Profile", value: "media"},
         {text: "", value: "actions", sortable: false},
       ],
     };
@@ -790,6 +790,10 @@ export default {
       if (value == "1") return "success";
       else if (value == "0") return "error";
       else return "info";
+    },
+    CanCollect(value) {
+      if (value == "1") return "ເກັບໄດ້";
+      else if (value == "0") return "ເກັບບໍ່ໄດ້";
     },
     statusColor(value) {
       if (value == "active") return "primary";

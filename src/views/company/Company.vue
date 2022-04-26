@@ -96,7 +96,7 @@
             v-model="selectedStatus"
             item-text="name"
             item-value="value"
-            label="ສະຖານະ"
+            label="ເກັບເລີຍໄດ້ບໍ່"
             clearable
         ></v-select>
       </v-col>
@@ -177,7 +177,7 @@
             <template v-slot:item.can_collect="{ item }">
               <v-chip
                   :color="statusColor(item.can_collect)"
-              >{{ item.can_collect }}
+              >{{ CanCollect(item.can_collect) }}
               </v-chip
               >
             </template>
@@ -370,13 +370,13 @@ export default {
       status: [
         {
           id: 1,
-          name: "ເປີດ",
-          value: 1,
+          name: "ເກັບໄດ້",
+          value: '1',
         },
         {
           id: 2,
-          name: "ປິດ",
-          value: 0,
+          name: "ເກັບບໍໄດ້",
+          value: '0',
         },
       ],
       selectedCustomerStatus: [],
@@ -419,7 +419,7 @@ export default {
         {text: "ເມືອງ", value: "district.name", sortable: false},
         // { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
         {text: "ປະເພດບໍລິການ", value: "cost_by"},
-        {text: "ສະຖານະ", value: "can_collect", align: "center"},
+        {text: "ສະຖານະເກັບ", value: "can_collect", align: "center"},
         {text: "ວັນພິເສດ", value: "favorite_dates"},
         {text: "ລາຍລະອຽດບັນຈຸພັນ", value: "collect_description", sortable: false},
         {text: "", value: "media"},
@@ -603,6 +603,11 @@ export default {
       else if (value == "0") return "error";
       else return "info";
     },
+    CanCollect(value) {
+      if (value == "1") return "ເກັບໄດ້";
+      else if (value == "0") return "ເກັບບໍ່ໄດ້";
+    },
+
     costBy(value) {
       if (value == "container") return "ຄອນເທັນເນີ";
       else if (value == "fix_cost") return "ທຸລະກິດເປັນຖ້ຽວ";

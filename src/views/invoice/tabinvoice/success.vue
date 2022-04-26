@@ -166,6 +166,7 @@ export default {
       ],
 
       headers: [
+        {text: "InvoiceId", value: "invoice_id"},
         {text: "ລູກຄ້າ", value: "customer"},
         {
           text: "ຈຳນວນຖົງ",

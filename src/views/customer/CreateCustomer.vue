@@ -267,9 +267,9 @@
                   style="width: 100%; height: 450px"
                   :disableDefaultUI="true"
               >
+<!--                @click="latlng = latlng"-->
                 <GmapMarker
                     :position="latlng"
-                    @click="latlng = latlng"
                     :draggable="true"
                     @dragend="onLocation"
                     :icon="markerOptions"
@@ -580,11 +580,12 @@ export default {
       this.latlng.lat = evt.latLng.lat();
       this.latlng.lng = evt.latLng.lng();
       this.address = this.createNewAddressName();
-      //   this.customer_edit.latitude = this.center.lat;
-      //   this.customer_edit.longitude = this.center.lng;
     },
     setPlace(place) {
       this.currentPlace = place;
+      this.placeMarker();
+    },
+    setInputMap(){
       this.placeMarker();
     },
     placeMarker() {
@@ -600,10 +601,10 @@ export default {
         this.animateMarker();
       } else {
         const marker = {
-          lat: this.latlng.lat,
-          lng: this.latlng.lng,
+          lat: parseFloat(this.latlng.lat),
+          lng: parseFloat(this.latlng.lng),
         };
-
+        console.log(this.markers)
         this.markers.push({position: marker});
         this.animateMarker();
       }
@@ -627,6 +628,7 @@ export default {
         // }
       });
     },
+    //Get current Position location
     geolocate() {
       navigator.geolocation.getCurrentPosition((position) => {
         this.latlng = {
@@ -726,6 +728,9 @@ export default {
     },
     selectedVillage: function () {
       this.fetchVillageDetail();
+    },
+    "latlng":function (value){
+      this.latlng(value);
     },
     //Clear error change
     "data.name": function () {

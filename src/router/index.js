@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-
 import Middlewares from '@/Middlewares/Index'
 
 Vue.use(VueRouter)
@@ -1015,6 +1014,18 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Invoice',
+                    disabled: false,
+                    href: '/invoice'
+                },
+                {
+                    text: 'Monthly',
+                    disabled: true,
+                    href: '/invoice'
+                }
+            ]
         }
     },
     {
@@ -1024,6 +1035,23 @@ const routes = [
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Invoice',
+                    disabled: false,
+                    href: '/invoice'
+                },
+                {
+                    text: 'Monthly',
+                    disabled: true,
+                    href: '/invoice'
+                },
+                {
+                    text: 'Invoice Detail',
+                    disabled: true,
+                    href: ''
+                }
+            ]
         }
     },
     {

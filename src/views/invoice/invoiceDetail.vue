@@ -13,16 +13,36 @@
     <div>
       <v-card>
         <v-card-text class="px-16 py-16">
-          <v-row align="center" class="py-4">
+          <v-row>
+            <v-col >
+              <div class="text-center mx-auto">
+                <v-img
+                    :src="require('../../assets/logo_waste.png')"
+                    max-height="160px"
+                    max-width="160px"
+                    alt="logo"
+                    contain
+                    eager
+                    class="app-logo me-3 text-center"
+                ></v-img>
+              </div>
+            </v-col>
+          </v-row>
+          <v-row class="pb-4">
             <v-col>
-              <h2>ໃບບິນເກັບເງິນຄ່າຂີ້ເຫື້ອຍ</h2>
+              <h2 class="text-center">ໃບບິນເກັບເງິນຄ່າຂີ້ເຫື້ອຍ</h2>
               <!-- <p v-if="invoice.plan_month">{{ invoice.plan_month.name }}</p> -->
             </v-col>
           </v-row>
           <v-row>
             <v-col>
-              <p>ຂໍ້ມູນບິນ</p>
+              <h3>ຂໍ້ມູນບິນ</h3>
               <h3>
+                ເລກບິນ:
+                <span>{{
+                  (invoice.invoice_id)
+                }}</span>
+              </h3> <h3>
                 ສະຖານະບິນ:
                 <span :class="invoiceStatusColor">{{
                   invoiceStatus(invoice.status)
@@ -35,7 +55,7 @@
               </h3>
             </v-col>
             <v-col>
-              <p>ຂໍ້ມູນລູກຄ້າ</p>
+              <h3>ຂໍ້ມູນລູກຄ້າ</h3>
               <h3 v-if="invoice.customer">
                 ຊື່: {{ invoice.customer.name }} {{ invoice.customer.surname }}
               </h3>
@@ -48,30 +68,68 @@
             <v-col>ລາຍລະອຽດ</v-col>
           </v-row>
           <v-divider class="my-6 c-divider"></v-divider>
-          <v-row class="mx-12">
-            <v-col>
-              <h3>ຈຳນວນຖົງ: {{ invoice.total_bag }}</h3>
-              <h3>ຈຳນວນຖົງທີ່ກາຍ: {{ invoice.exceed_bag }}</h3>
-            </v-col>
-            <v-col>
-              <h3>ລວມ: {{ Intl.NumberFormat().format(invoice.sub_total) }}</h3>
-              <h3>
-                ສ່ວນຫຼຸດ: {{ Intl.NumberFormat().format(invoice.discount) }}
-              </h3>
-              <h3>
-                ຈຳນວນເງິນທີ່ກາຍ:
-                {{ Intl.NumberFormat().format(invoice.exceed_bag_charge) }}
-              </h3>
-              <h3>
-                ຈຳນວນເງິນທີ່ໄລ່ເພີມ:
-                {{ Intl.NumberFormat().format(invoice.new_exceed_bag_charge) }}
-              </h3>
-              <v-divider class="my-2"></v-divider>
-              <h3>
-                ລວມທັງໝົດ: {{ Intl.NumberFormat().format(invoice.total) }}
-              </h3>
-            </v-col>
-          </v-row>
+
+          <v-simple-table>
+            <template v-slot:default>
+              <tbody style="font-size: 18px;">
+              <tr
+              >
+                <td>ຈຳນວນຖົງ:</td>
+                <td>{{ invoice.total_bag }}</td>
+              </tr>
+              <tr>
+                <td>ຈຳນວນຖົງທີ່ກາຍ:</td>
+                <td>{{ invoice.exceed_bag }}</td>
+              </tr>
+
+              <tr>
+                <td>ລວມເງິນ:</td>
+                <td>{{ Intl.NumberFormat().format(invoice.sub_total) }}</td>
+              </tr>
+
+              <tr>
+                <td>ສ່ວນຫຼຸດ:</td>
+                <td>{{ Intl.NumberFormat().format(invoice.discount) }}</td>
+              </tr>
+
+              <tr>
+                <td>ຈຳນວນເງິນທີ່ກາຍ:</td>
+                <td>{{ Intl.NumberFormat().format(invoice.exceed_bag_charge) }}</td>
+              </tr>
+
+              <tr style="font-size: 20px;">
+                <td>ລວມທັງໝົດ:</td>
+                <td>{{ Intl.NumberFormat().format(invoice.total) }}</td>
+              </tr>
+
+              </tbody>
+            </template>
+          </v-simple-table>
+
+<!--          <v-row class="mx-12">-->
+<!--            <v-col>-->
+<!--              <h3>ຈຳນວນຖົງ: {{ invoice.total_bag }}</h3>-->
+<!--              <h3>ຈຳນວນຖົງທີ່ກາຍ: {{ invoice.exceed_bag }}</h3>-->
+<!--            </v-col>-->
+<!--            <v-col>-->
+<!--              <h3>ລວມ: {{ Intl.NumberFormat().format(invoice.sub_total) }}</h3>-->
+<!--              <h3>-->
+<!--                ສ່ວນຫຼຸດ: {{ Intl.NumberFormat().format(invoice.discount) }}-->
+<!--              </h3>-->
+<!--              <h3>-->
+<!--                ຈຳນວນເງິນທີ່ກາຍ:-->
+<!--                {{ Intl.NumberFormat().format(invoice.exceed_bag_charge) }}-->
+<!--              </h3>-->
+<!--              <h3>-->
+<!--                ຈຳນວນເງິນທີ່ໄລ່ເພີມ:-->
+<!--                {{ Intl.NumberFormat().format(invoice.new_exceed_bag_charge) }}-->
+<!--              </h3>-->
+<!--              <v-divider class="my-2"></v-divider>-->
+<!--              <h3>-->
+<!--                ລວມທັງໝົດ: {{ Intl.NumberFormat().format(invoice.total) }}-->
+<!--              </h3>-->
+<!--            </v-col>-->
+<!--          </v-row>-->
 
           <v-divider class="my-6 c-divider bottom"></v-divider>
           <v-row class="mb-n10">
