@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <v-breadcrumbs large class="pa-0"> ຂີ້ເຫື້ຍອທີ່ລໍຖ້າເກັບ</v-breadcrumbs>
+        <v-breadcrumbs large class="pa-0"> ຂີ້ເຫື້ຍອທີ່ຍັກເລີກ</v-breadcrumbs>
       </v-col>
 <!--      <v-col>-->
 <!--        <v-text-field-->
@@ -44,7 +44,7 @@
             </template>
  -->
         <template v-slot:item.status="{ item }">
-          <v-chip color="info">{{ item.status }}</v-chip>
+          <v-chip color="orange" label>{{ item.status }}</v-chip>
         </template>
         <template v-slot:item.amount="{ item }">
           <div v-if="item.collection_type == 'bag'">
@@ -94,7 +94,7 @@ export default {
       per_page: 15,
       search: "",
       oldVal: "",
-      statuses: ["pending"],
+      statuses: ["canceled"],
 
       headers: [
         { text: "ລຳດັບ", value: "route_plan_detail.priority" },
@@ -150,8 +150,11 @@ export default {
         });
     },
     statusColor(value) {
+      console.log(value)
       if (value == "pending") return "info";
       else if (value == "success") return "success";
+      else if(value == "reject") return "error";
+      else if(value == "cancel") return  "orange";
       else return "error";
     },
     getUnit(value) {

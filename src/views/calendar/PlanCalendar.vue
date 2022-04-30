@@ -111,7 +111,7 @@
               <div>{{ item.driver.vehicle.car_id }} ({{ item.driver.name }})</div>
             </template>
             <template v-slot:item.date="{ item }">
-              <v-chip color="success">{{ item.date }}</v-chip>
+              <v-chip :color="getStatus(item.is_cancelled)">{{ item.date }}</v-chip>
             </template>
             <template v-slot:item.created_at="{ item }">
               <div
@@ -168,6 +168,12 @@
                     <v-list-item-title @click="deleteItem(item.id)">
                       <v-icon small class="mr-2"> mdi-delete</v-icon>
                       ລຶບຂໍ່ມູນ
+                    </v-list-item-title>
+                  </v-list-item>
+                  <v-list-item link>
+                    <v-list-item-title @click="cancelItem(item.id)">
+                      <v-icon small class="mr-2"> mdi-close</v-icon>
+                      ຍົກເລີກ
                     </v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -731,6 +737,41 @@ export default {
             });
       }
     },
+
+    cancelItem(id) {
+      this.loading = true;
+      this.$axios
+          .post(
+              "plan-calendar/" +
+              id + "/cancel"
+          )
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.loading = false;
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
+                this.$store.commit("modalDelete_State", false);
+                this.fetchData();
+              }, 100);
+            }
+          })
+          .catch((error) => {
+            this.$store.commit("modalDelete_State", false);
+            this.loading = false;
+            if (error.response.status == 422) {
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response.data.message,
+              });
+            }
+          });
+    },
+
     closeAddModal() {
       this.$store.commit("modalAdd_State", false);
       this.dates = [];
@@ -813,7 +854,15 @@ export default {
       } else {
         return value.name + ' ' + '(ຍັງບໍທັນມີລົດ)'
       }
-    }
+    },
+    getStatus(value) {
+      console.log(value)
+      if (value == '1') {
+        return 'error';
+      } else  if(value == '0'){
+        return  'success';
+      }
+    },
   },
   watch: {
     search: function (value) {

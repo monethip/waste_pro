@@ -41,6 +41,11 @@
               ປະຕິເສດການເກັບ
             </v-badge>
           </v-tab>
+          <v-tab href="#tab-6">
+            <v-badge color="orange" :content="summary.canceled_count">
+              ຍົກເລີກການເກັບ
+            </v-badge>
+          </v-tab>
 
         </v-tabs>
         <!-- <hr /> -->
@@ -89,6 +94,16 @@
             </v-card>
           </v-tab-item>
         </v-tabs-items>
+
+        <v-tabs-items v-model="tab">
+          <v-tab-item value="tab-6">
+            <v-card flat>
+              <v-card-text>
+                <cancel-trash />
+              </v-card-text>
+            </v-card>
+          </v-tab-item>
+        </v-tabs-items>
       </v-card-text>
     </v-card>
   </v-container>
@@ -100,6 +115,7 @@ import pendingTrash from "@views/calendar/CalendarTab/pendingTrash";
 import successTrash from "@views/calendar/CalendarTab/successTrash";
 import waitToConfirmTrash from "@views/calendar/CalendarTab/waitConfirmTrash";
 import rejectTrash from "@views/calendar/CalendarTab/rejectTrash";
+import cancelTrash from "@views/calendar/CalendarTab/cancelTrash";
 import trashMixin from "@/views/calendar/trashMixin";
 export default {
   title() {
@@ -113,6 +129,7 @@ export default {
     successTrash,
     waitToConfirmTrash,
     rejectTrash,
+    cancelTrash
   },
   data() {
     return {
@@ -163,6 +180,8 @@ export default {
     }
     else if (this.$route.query.tab == "trash-reject") {
       this.tab = "tab-5";
+    }    else if (this.$route.query.tab == "trash-cancel") {
+      this.tab = "tab-6";
     }
     this.fetchDataPlanMonth();
   },
@@ -200,6 +219,13 @@ export default {
             .push({
               name: "PlanCalendarDetail",
               query: { tab: "trash-reject" },
+            })
+            .catch(() => {});
+      } else if (value == "tab-6") {
+        this.$router
+            .push({
+              name: "PlanCalendarDetail",
+              query: { tab: "trash-cancel" },
             })
             .catch(() => {});
       }

@@ -44,7 +44,7 @@
             </template>
  -->
         <template v-slot:item.status="{ item }">
-          <v-chip :color="statusColor(item.status)">{{ item.status }}</v-chip>
+          <v-chip color="error" label>{{ item.status }}</v-chip>
         </template>
         <template v-slot:item.amount="{ item }">
           <div v-if="item.collection_type == 'bag'">
