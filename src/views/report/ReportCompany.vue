@@ -146,6 +146,9 @@
 <!--                  item.status-->
 <!--                }}</v-chip>-->
 <!--              </template>-->
+              <template v-slot:item.cost_by="{ item }">
+                <div>{{ costBy(item.cost_by) }}</div>
+              </template>
               <template v-slot:item.status="{ item }">
                 <v-chip label
                         :color="statusColor(item.user.status)"
@@ -377,6 +380,11 @@ export default {
           this.loading = false;
         });
     },
+    costBy(value) {
+      if (value == "container") return "ຄອນເທັນເນີ";
+      else if (value == "fix_cost") return "ທຸລະກິດເປັນຖ້ຽວ";
+      else if (value == "chartered") return "ມອບເໝົາ";
+    }
   },
   watch: {
     search: function (value) {

@@ -1,4 +1,4 @@
-pendingTrash.vue<template>
+<template>
   <v-container>
     <v-row>
       <v-col>
