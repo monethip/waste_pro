@@ -29,12 +29,15 @@
                   type="number"
                   :rules="phoneRule"
                   class="input-number"
-                  @keyup.enter="sendOtp"
+                  @keyup.enter="getOtp"
               ></v-text-field>
 
               <p class="errors">
                 {{ error }}
               </p>
+<!--              <p class="errors">-->
+<!--                {{ server_errors.start_month }}-->
+<!--              </p>-->
 
               <div class="text-center">
                 <v-btn
@@ -42,7 +45,7 @@
                     class="login mt-6 py-6"
                     :loading="loading"
                     :disabled="loading"
-                    @click="sendOtp"
+                    @click="getOtp"
                 >Get OTP
                 </v-btn
                 >
@@ -120,7 +123,8 @@ export default {
   }),
 
   methods: {
-    sendOtp() {
+    getOtp() {
+      this.initReCaptcha();
       if (this.phone.length == 8) {
         //Check Phone number
         this.loading = true;
@@ -131,6 +135,7 @@ export default {
               phone:this.phone,
             })
             .then((res) => {
+              console.log(res)
               if (res.data.code === 200) {
                 console.error(res.data.data.collect)
                 if(res.data.data.collect === true){
@@ -139,45 +144,32 @@ export default {
                     let countryCode = "+85620"; //laos
                     let phoneNumber = countryCode + this.phone;
                     let appVerifier = this.appVerifier;
+                  firebase.auth().languageCode = "en";
+                  console.log("hii")
                     firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
                         .then(confirmationResult => {
+                          console.log(confirmationResult)
                           this.verifyCode = true;
                           this.verifyPhone = false;
                           window.confirmationResult = confirmationResult;
-                          this.$store.commit("Toast_State", {
-                            value: true,
-                            color: "error",
-                            msg: "Success",
-                          });
                           this.loading = false;
                         })
-                        .catch(() => {
+                        .catch((error) => {
+                          this.error = error;
                           this.loading = false;
-                          this.$store.commit("Toast_State", {
-                            value: true,
-                            color: "error",
-                            msg: "SMS not sent",
-                          });
                         });
                 } else if(res.data.data.collect === false){
                   this.loading = false;
-                  this.$store.commit("Toast_State", {
-                    value: true,
-                    color: "error",
-                    msg: "ເບີບໍ່ຖືກຕ້ອງ",
-                  });
+                  this.error = "ເບີໂທບໍ່ຖືກຕ້ອງ";
                 } else {
                     this.loading = false;
-                    this.$store.commit("Toast_State", {
-                      value: true,
-                      color: "error",
-                      msg: "ມີບາງຢ່າງຜິດພາດ ກະລຸນາລອງໃໝ່",
-                    });
+                  this.error = "ມີບາງຢ່າງຜິດພາດ ກະລຸນາລອງໃໝ່";
                 }
                 this.loading = false;
               }
             })
-            .catch(() => {
+            .catch((error) => {
+              this.error = error;
               this.loading = false;
             });
       }
@@ -260,10 +252,13 @@ export default {
     handleClearInput() {
       this.$refs.otpInput.clearInput();
     },
-
+  },
+  watch:{
+    "phone":function (){
+      this.error = "";
+    }
   },
   created() {
-    this.initReCaptcha();
     const data = localStorage.getItem('confirmAccount');
     this.showPhone = localStorage.getItem('phone');
     this.user = JSON.parse(data);

@@ -776,7 +776,6 @@ export default {
       this.placeMarker();
     },
     placeMarker() {
-      console.log("marker")
       this.markers = [];
       this.places = [];
       if (this.currentPlace) {
@@ -788,7 +787,6 @@ export default {
         this.latlng = marker;
         this.animateMarker();
       } else {
-        console.log("oooooo")
         const marker = {
           lat: parseFloat(this.latlng.lat),
           lng: parseFloat(this.latlng.lng),

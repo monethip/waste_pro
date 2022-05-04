@@ -117,7 +117,7 @@
               </v-avatar>
             </template>
             <template v-slot:item.vehicle="{ item }">
-            <div>
+            <div v-if="item.vehicle">
               {{item.vehicle.car_id}} ({{item.vehicle.car_number}})
             </div>
             </template>
@@ -711,6 +711,7 @@ export default {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data.data;
               this.pagination = res.data.data.pagination;
+            console.log(this.data)
               this.data.map((item) => {
                 if (item.status == "active") {
                   this.status = true;
