@@ -711,7 +711,6 @@ export default {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data.data;
               this.pagination = res.data.data.pagination;
-            console.log(this.data)
               this.data.map((item) => {
                 if (item.status == "active") {
                   this.status = true;

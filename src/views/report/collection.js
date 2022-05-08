@@ -63,6 +63,7 @@ export default {
                 { text: "ຈຳນວນຖົງ", value: "bag", sortable: false, align: "center" },
                 { text: "ສະຖານທີ່", value: "name", sortable: false },
                 { text: "ສະຖານະ", value: "status", sortable: false },
+                { text: "Deleted", value: "date_deleted_at", sortable: false },
                 // { text: "", value: "actions", sortable: false },
             ],
             company: [
@@ -77,6 +78,7 @@ export default {
                 // },
                 { text: "ສະຖານທີ່", value: "name", sortable: false },
                 { text: "ສະຖານະ", value: "status", sortable: false },
+                { text: "Deleted", value: "date_deleted_at", sortable: false },
                 // { text: "", value: "actions", sortable: false },
             ],
         };
@@ -135,7 +137,6 @@ export default {
                             this.$store.commit("Loading_State", false);
                             this.homeCollection = res.data.data.details.data;
                             this.collections = res.data.data.details.data;
-                            console.log(this.homeCollection)
                             this.summary = res.data.data.summary;
                             this.pagination = res.data.data.details.pagination;
                         }, 300);
@@ -279,8 +280,9 @@ export default {
         //     this.collectionType = "company";
         //     // this.fetchData();
         // }
-        console.log("Collection")
         this.fetchData();
+        this.company.forEach((item, index) => this.$set(item, 'key', index));
+        this.customers.forEach((item, index) => this.$set(item, 'key', index));
         this.pagination = [];
     },
 };

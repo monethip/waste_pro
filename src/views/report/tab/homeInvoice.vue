@@ -117,8 +117,10 @@ export default {
       search: "",
       oldVal: "",
       headers: [
+        { text: "Invoice Id", value: "invoice_id", sortable: false },
         { text: "ວັນທີ", value: "month", sortable: false },
         { text: "ລູກຄ້າ", value: "full_name" },
+        { text: "ຈຳນວນເກັບ", value: "total_time", sortable: false },
         { text: "ຈຳນວນຖົງ", value: "total_bag", sortable: false },
         { text: "ສ່ວນຫຼຸດ", value: "discount" },
         { text: "SubTotal", value: "sub_total", sortable: false },

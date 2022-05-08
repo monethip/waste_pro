@@ -175,6 +175,12 @@
                     }}
                   </v-chip>
                 </template>
+                <template v-slot:item.date_deleted_at="{ item }">
+                  <v-chip  v-if="item.date_deleted_at"  label color="error">{{
+                      item.date_deleted_at
+                    }}
+                  </v-chip>
+                </template>
               </v-data-table
               >
               <br/>
@@ -260,6 +266,12 @@
                     <template v-slot:item.status="{ item }">
                       <v-chip label :color="companyStatus(item.status)">{{
                           item.status
+                        }}
+                      </v-chip>
+                    </template>
+                    <template v-slot:item.date_deleted_at="{ item }">
+                      <v-chip label  v-if="item.date_deleted_at" color="error">{{
+                          item.date_deleted_at
                         }}
                       </v-chip>
                     </template>

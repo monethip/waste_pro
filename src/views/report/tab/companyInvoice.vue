@@ -118,8 +118,10 @@ export default {
       search: "",
       oldVal: "",
       headers: [
+        { text: "Invoice Id", value: "invoice_id", sortable: false },
         { text: "ວັນທີ", value: "month", sortable: false },
         { text: "ລູກຄ້າ", value: "company_name" },
+        { text: "ຈຳນວນເກັບ", value: "total_time", sortable: false },
         {
           text: "ຈຳນວນ Container",
           value: "total_container",

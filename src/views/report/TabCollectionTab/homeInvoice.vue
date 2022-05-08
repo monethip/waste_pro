@@ -192,7 +192,7 @@ export default {
       headers: [
         { text: "ວັນທີ", value: "date", sortable: false },
         { text: "ລູກຄ້າ", value: "full_name" },
-        { text: "ຈຳນວນຖົງ", value: "total_bag", sortable: false },
+        // { text: "ຈຳນວນຖົງ", value: "total_bag", sortable: false },
         { text: "ສ່ວນຫຼຸດ", value: "discount" },
         { text: "SubTotal", value: "sub_total", sortable: false },
         { text: "Total", value: "total", sortable: false },
