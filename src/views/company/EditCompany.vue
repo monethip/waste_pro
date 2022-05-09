@@ -497,17 +497,17 @@ export default {
         {
           id: 1,
           value: "container",
-          name:  "Container"
+          name:  "ຄອນເທັນເນີ"
         },
         {
           id: 2,
           value: "fix_cost",
-          name:  "Fixed Cost"
+          name:  "ທຸລະກິດເປັນຖ້ຽວ"
         },
         {
           id: 3,
           value: "chartered",
-          name: "Chartered"
+          name: "ມອບເໝົາ"
         },
       ],
 
