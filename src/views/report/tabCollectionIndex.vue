@@ -104,6 +104,19 @@
       <!--            label="ປະເພດລູກຄ້າ"-->
       <!--        ></v-select>-->
       <!--      </v-col>-->
+      <v-col>
+        <v-text-field
+            v-model="search"
+            clearable
+            outlined
+            dense
+            prepend-inner-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
+            @keyup.enter="Search()"
+        ></v-text-field>
+      </v-col>
 
     </v-row>
 
@@ -161,6 +174,7 @@
                   v-if="homeCollection"
                   :headers="headers"
                   :items="homeCollection"
+                  :search="search"
                   :disable-pagination="true"
                   hide-default-footer
               >
@@ -260,6 +274,7 @@
                   <v-data-table
                       :headers="company"
                       :items="collections"
+                      :search="search"
                       :disable-pagination="true"
                       hide-default-footer
                   >

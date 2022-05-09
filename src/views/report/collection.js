@@ -1,3 +1,4 @@
+import {GetOldValueOnInput} from "@/Helpers/GetValue";
 
 export default {
     title() {
@@ -27,6 +28,7 @@ export default {
             homeCollection: [],
             summary: {},
             selectedDuration: "year",
+            search:"",
             duration: [
                 {
                     name: "ປີ",
@@ -90,6 +92,7 @@ export default {
             data.set("per_page", this.per_page);
             data.set("type", this.collectionType);
             data.set("duration", this.selectedDuration);
+            data.set("filter", this.search);
             //Check for yearn null or not
             if ((this.selectedDuration == 'year')) {
                 if(this.year_from !== "" && this.year_to !== ""){
@@ -228,7 +231,10 @@ export default {
             if (value == "container") return "ຄອນເທັນເນີ";
             else if (value == "fix_cost") return "ທຸລະກິດເປັນຖ້ຽວ";
             else if (value == "chartered") return "ມອບເໝົາ";
-        }
+        },
+        Search() {
+            GetOldValueOnInput(this);
+        },
     },
     watch: {
         // pagination:function (){
