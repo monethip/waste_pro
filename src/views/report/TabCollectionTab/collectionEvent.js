@@ -108,6 +108,7 @@ export default {
 
         exportData() {
             let data = new FormData();
+            data.set("type", this.collectionType);
             data.append("duration", this.selectedDuration);
             data.append("download", 1)
             if ((this.year_from !== "" && this.year_to !== "") && (this.selectedDuration == 'year')) {
@@ -126,38 +127,21 @@ export default {
             this.$axios
                 .post(
                     "report-collection",
-                    data,
-                    { responseType: "blob" }
+                    data
                 )
                 .then((res) => {
                     if (res.status == 200) {
-                        setTimeout(() => {
-                            this.loading = false;
-                            const fileUrl = window.URL.createObjectURL(
-                                new Blob([res.data])
-                            );
-                            const fileLink = document.createElement("a");
-                            fileLink.href = fileUrl;
-                            fileLink.setAttribute(
-                                "download",
-                                "Report_Collection" + ".xlsx"
-                            );
-                            document.body.appendChild(fileLink);
-                            fileLink.click();
-                            document.body.removeChild(fileLink);
-                        }, 300);
-                        this.$router.push({
-                            name: "Report-Trash",
-                        });
+                        window.open(res.data.data.download_link)
+                        this.loading = false;
                     }
                 })
                 .catch((error) => {
+                    this.loading = false;
                     this.$store.commit("Toast_State", {
                         value: true,
                         color: "error",
                         msg: error.response.data.message,
                     });
-                    this.loading = false;
                 });
         },
         viewPage(id) {

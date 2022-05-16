@@ -28,7 +28,7 @@ export default {
             homeCollection: [],
             summary: {},
             selectedDuration: "year",
-            search:"",
+            search: "",
             duration: [
                 {
                     name: "ປີ",
@@ -48,39 +48,39 @@ export default {
                 },
             ],
             collectionType: "home",
-            collectionTypes:[
+            collectionTypes: [
                 {
-                    value:'home',
-                    text:'ຄົວເຮືອນ',
+                    value: 'home',
+                    text: 'ຄົວເຮືອນ',
                 },
                 {
-                    value:'company',
-                    text:'ບໍລິສັດ',
+                    value: 'company',
+                    text: 'ບໍລິສັດ',
                 }
             ],
 
             headers: [
-                { text: "ວັນທີ", value: "date", sortable: false },
-                { text: "ລູກຄ້າ", value: "full_name" },
-                { text: "ຈຳນວນຖົງ", value: "bag", sortable: false, align: "center" },
-                { text: "ສະຖານທີ່", value: "name", sortable: false },
-                { text: "ສະຖານະ", value: "status", sortable: false },
-                { text: "Deleted", value: "date_deleted_at", sortable: false },
+                {text: "ວັນທີ", value: "date", sortable: false},
+                {text: "ລູກຄ້າ", value: "full_name"},
+                {text: "ຈຳນວນຖົງ", value: "bag", sortable: false, align: "center"},
+                {text: "ສະຖານທີ່", value: "name", sortable: false},
+                {text: "ສະຖານະ", value: "status", sortable: false},
+                {text: "Deleted", value: "date_deleted_at", sortable: false},
                 // { text: "", value: "actions", sortable: false },
             ],
             company: [
-                { text: "ວັນທີ", value: "date", sortable: false },
-                { text: "ບໍລິສັດ", value: "company_name" },
-                { text: "ປະເພດບໍລິການ", value: "collection_type" },
+                {text: "ວັນທີ", value: "date", sortable: false},
+                {text: "ບໍລິສັດ", value: "company_name"},
+                {text: "ປະເພດບໍລິການ", value: "collection_type"},
                 // {
                 //     text: "Container",
                 //     value: "container",
                 //     sortable: false,
                 //     align: "center",
                 // },
-                { text: "ສະຖານທີ່", value: "name", sortable: false },
-                { text: "ສະຖານະ", value: "status", sortable: false },
-                { text: "Deleted", value: "date_deleted_at", sortable: false },
+                {text: "ສະຖານທີ່", value: "name", sortable: false},
+                {text: "ສະຖານະ", value: "status", sortable: false},
+                {text: "Deleted", value: "date_deleted_at", sortable: false},
                 // { text: "", value: "actions", sortable: false },
             ],
         };
@@ -95,12 +95,12 @@ export default {
             data.set("filter", this.search);
             //Check for yearn null or not
             if ((this.selectedDuration == 'year')) {
-                if(this.year_from !== "" && this.year_to !== ""){
+                if (this.year_from !== "" && this.year_to !== "") {
                     data.set("year_from", this.moment(this.year_from).format("YYYY"));
                     data.set("year_to", this.moment(this.year_to).format("YYYY"));
-                } else if(this.year_from !== ""){
+                } else if (this.year_from !== "") {
                     data.set("year_from", this.moment(this.year_from).format("YYYY"));
-                } else if(this.year_to !== ""){
+                } else if (this.year_to !== "") {
                     data.set("year_to", this.moment(this.year_to).format("YYYY"));
                 }
             }
@@ -176,44 +176,27 @@ export default {
             this.$axios
                 .post(
                     "report-collection",
-                    data,
-                    { responseType: "blob" }
+                    data
                 )
                 .then((res) => {
                     if (res.status == 200) {
-                        setTimeout(() => {
-                            this.loading = false;
-                            const fileUrl = window.URL.createObjectURL(
-                                new Blob([res.data])
-                            );
-                            const fileLink = document.createElement("a");
-                            fileLink.href = fileUrl;
-                            fileLink.setAttribute(
-                                "download",
-                                "Report_Collection" + ".xlsx"
-                            );
-                            document.body.appendChild(fileLink);
-                            fileLink.click();
-                            document.body.removeChild(fileLink);
-                        }, 300);
-                        this.$router.push({
-                            name: "Report-Trash",
-                        });
+                        window.open(res.data.data.download_link)
+                        this.loading = false;
                     }
                 })
                 .catch((error) => {
+                    this.loading = false;
                     this.$store.commit("Toast_State", {
                         value: true,
                         color: "error",
                         msg: error.response.data.message,
                     });
-                    this.loading = false;
                 });
         },
         viewPage(id) {
             this.$router.push({
                 name: "InvoiceDetail",
-                params: { id },
+                params: {id},
             });
         },
         homeStatus(value) {
@@ -221,12 +204,12 @@ export default {
             else if (value == "pending") return "primary";
             else return "info";
         },
-        companyStatus(value){
+        companyStatus(value) {
             if (value == "success") return "success";
             else if (value == "pending") return "primary";
             else return "info";
         },
-        costBy(value){
+        costBy(value) {
             console.log(value)
             if (value == "container") return "ຄອນເທັນເນີ";
             else if (value == "fix_cost") return "ທຸລະກິດເປັນຖ້ຽວ";
@@ -240,8 +223,8 @@ export default {
         // pagination:function (){
         //     this.fetchData();
         // },
-        collectionType:function (){
-          this.fetchData();
+        collectionType: function () {
+            this.fetchData();
         },
         selectedDuration: function () {
             this.fetchData();
@@ -251,7 +234,7 @@ export default {
                 this.fetchData();
             }
         },
-        year_from:function (){
+        year_from: function () {
             this.fetchData();
         },
         tab: function (value) {
@@ -260,8 +243,9 @@ export default {
                 this.pagination.current_page = '';
                 this.fetchData();
                 this.$router
-                    .push({ name: "Report-Trash", query: { tab: "home" } })
-                    .catch(() => { });
+                    .push({name: "Report-Trash", query: {tab: "home"}})
+                    .catch(() => {
+                    });
             } else if (value == "tab-2") {
                 this.collectionType = "company";
                 this.pagination.current_page = '';
@@ -269,9 +253,10 @@ export default {
                 this.$router
                     .push({
                         name: "Report-Trash",
-                        query: { tab: "company" },
+                        query: {tab: "company"},
                     })
-                    .catch(() => { });
+                    .catch(() => {
+                    });
             }
         },
     },

@@ -136,7 +136,9 @@
               <div v-if="summary">
                 <v-row v-for="(sum, index) in summary" :key="index.id" class="mb-n6 mt-0">
                   <v-col>
-                    <h3>ປີ {{ sum.year }}</h3>
+                    <p v-if="selectedDuration =='year'">{{ sum.year }}</p>
+                    <p v-if="selectedDuration =='month'">{{ sum.month }}</p>
+                    <p v-if="selectedDuration =='date'">{{ moment(sum.date).format("DD-MM-YY") }}</p>
                   </v-col>
                   <v-col>
                     <p v-if="sum.home">
@@ -218,11 +220,29 @@
                 <div v-if="collectionType == 'company'">
                   <v-row v-for="(sum, index) in summary" :key="index" class="mb-n6 mt-n6">
                     <v-col>
-                      <h3>ປີ {{ sum.year }}</h3>
+                      <p v-if="selectedDuration =='year'">{{ sum.year }}</p>
+                      <p v-if="selectedDuration =='month'">{{ sum.month }}</p>
+                      <p v-if="selectedDuration =='date'">{{ moment(sum.date).format("DD-MM-YY") }}</p>
                     </v-col>
                     <v-col>
                       <p>
-                        ລວມ Container
+                        Canceled
+                        <span class="success--text">{{
+                            sum.company.canceled_count
+                          }}</span>
+                      </p>
+                    </v-col>
+                    <v-col>
+                      <p>
+                        Deleted
+                        <span class="success--text">{{
+                            sum.company.deleted_count
+                          }}</span>
+                      </p>
+                    </v-col>
+                    <v-col>
+                      <p>
+                        ຈຳນວນ Container
                         <span class="success--text">{{
                             sum.company.container_amount
                           }}</span>
@@ -230,7 +250,7 @@
                     </v-col>
                     <v-col>
                       <p>
-                        ລວມເກັບເປັນ Container
+                        Container(ຄັ້ງ)
                         <span class="success--text">{{
                             sum.company.number_of_times_to_collect_by_container
                           }}</span>
@@ -238,7 +258,7 @@
                     </v-col>
                     <v-col>
                       <p>
-                        ລວມເກັບຕາມລາຄາ
+                        ເກັບເປັນຖ້ຽວ
                         <span class="success--text">{{
                             sum.company.number_of_times_to_collect_by_fix_cost
                           }}</span>
@@ -246,7 +266,7 @@
                     </v-col>
                     <v-col>
                       <p>
-                        ຍົກເລີກ
+                        ປະຕິເສດ
                         <span class="success--text">{{ sum.company.reject_count }}</span>
                       </p>
                     </v-col>
@@ -258,7 +278,7 @@
                     </v-col>
                     <v-col>
                       <p>
-                        ລວມ
+                        ລໍຖ້າຢືນຢັນ
                         <span class="success--text">{{
                             sum.company.wait_to_confirm_count
                           }}</span>
@@ -266,7 +286,7 @@
                     </v-col>
                     <v-col>
                       <p>
-                        ສຳເລັດທັງໝົດ
+                        ສຳເລັດ
                         <span class="success--text">{{ sum.company.success_count }}</span>
                       </p>
                     </v-col>

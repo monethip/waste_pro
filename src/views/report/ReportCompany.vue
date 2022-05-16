@@ -361,16 +361,18 @@ export default {
         )
         .then((res) => {
           if (res.status == 200) {
-            setTimeout(() => {
-              this.loading = false;
-              const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
-              const fileLink = document.createElement("a");
-              fileLink.href = fileUrl;
-              fileLink.setAttribute("download", "customer" + ".xlsx");
-              document.body.appendChild(fileLink);
-              fileLink.click();
-              document.body.removeChild(fileLink);
-            }, 300);
+            window.open(res.data.data.download_link)
+            this.loading = false;
+            // setTimeout(() => {
+            //   this.loading = false;
+            //   const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
+            //   const fileLink = document.createElement("a");
+            //   fileLink.href = fileUrl;
+            //   fileLink.setAttribute("download", "customer" + ".xlsx");
+            //   document.body.appendChild(fileLink);
+            //   fileLink.click();
+            //   document.body.removeChild(fileLink);
+            // }, 300);
           }
         })
         .catch(() => {

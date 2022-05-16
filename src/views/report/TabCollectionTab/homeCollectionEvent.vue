@@ -96,7 +96,9 @@
       <div v-if="summary">
         <v-row v-for="(sum, index) in summary" :key="index" class="mb-n6 mt-0">
           <v-col>
-            <p>ປີ {{ sum.year }}</p>
+            <p v-if="selectedDuration =='year'">{{ sum.year }}</p>
+            <p v-if="selectedDuration =='month'">{{ sum.month }}</p>
+            <p v-if="selectedDuration =='date'">{{ moment(sum.date).format("DD-MM-YY") }}</p>
           </v-col>
           <v-col>
             <p>
