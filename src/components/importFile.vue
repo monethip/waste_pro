@@ -43,7 +43,7 @@
 export default {
   data() {
     return {
-      filename: "",
+      filename: null,
       loading: false,
       server_errors: {},
     };
@@ -60,7 +60,7 @@ export default {
             if (res.data.code == 200) {
               setTimeout(() => {
                 this.loading = false;
-                this.filename = "";
+                this.filename = null;
                 this.reset();
                 this.$store.commit("Toast_State", {
                   value: true,
