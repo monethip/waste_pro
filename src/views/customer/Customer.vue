@@ -1,16 +1,22 @@
 <template>
   <v-container>
-    <v-row class="mb-n6">
+    <v-row>
       <v-col>
         <v-btn class="btn-primary mr-4" @click="createPage()"
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
-        <v-btn class="btn-primary" @click="importData()"
+        <v-btn class="btn-primary mr-4" @click="importData()"
         >
           <v-icon>mdi-file-import</v-icon>
         </v-btn>
+        <v-btn class="btn-primary" @click="exportData()"
+        >
+          <v-icon>mdi-file-export</v-icon>
+        </v-btn>
       </v-col>
+    </v-row>
+    <v-row class="mb-n6">
       <v-col>
         <v-menu
             v-model="start_menu"
@@ -413,52 +419,52 @@
 
     <v-dialog v-model="importFile" width="720" persistent>
       <template>
-       <v-card>
-         <v-card-title>
-           <p>Import Customer</p>
-         </v-card-title>
-         <v-card-text>
-           <v-form ref="form" lazy-validation>
-             <v-file-input
-                 label="File (xlsx)"
-                 show-size
-                 accept=".xlsx"
-                 truncate-length="60"
-                 v-model="file"
-                 counter
-                 outlined
-             ></v-file-input>
-             <p v-if="successes.length">
-               ສຳເລັດ {{ successes.length }} ລາຍການ
-             </p>
-             <p class="errors" v-if="errors.length">
-               ຜິດພາດ {{ errors.length }} ລາຍການ
-             </p>
-             <div v-if="errors.length">
-               <p class="errors" v-for="(error,index) in errors" :key="index">
-                 {{error}}
-               </p>
-             </div>
-             <p class="errors">
-              {{server_errors.file }}
-             </p>
-           </v-form>
-           <v-card-actions>
-             <v-spacer></v-spacer>
-             <v-btn color="blue darken-1" text @click="closeImport">Cancel</v-btn>
-             <v-btn
-                 color="blue darken-1"
-                 text
-                 :loading="loading"
-                 :disabled="loading"
-                 @click="importFileForm"
-             >OK
-             </v-btn
-             >
-             <v-spacer></v-spacer>
-           </v-card-actions>
-         </v-card-text>
-       </v-card>
+        <v-card>
+          <v-card-title>
+            <p>Import Customer</p>
+          </v-card-title>
+          <v-card-text>
+            <v-form ref="form" lazy-validation>
+              <v-file-input
+                  label="File (xlsx)"
+                  show-size
+                  accept=".xlsx"
+                  truncate-length="60"
+                  v-model="file"
+                  counter
+                  outlined
+              ></v-file-input>
+              <p v-if="successes.length">
+                ສຳເລັດ {{ successes.length }} ລາຍການ
+              </p>
+              <p class="errors" v-if="errors.length">
+                ຜິດພາດ {{ errors.length }} ລາຍການ
+              </p>
+              <div v-if="errors.length">
+                <p class="errors" v-for="(error,index) in errors" :key="index">
+                  {{ error }}
+                </p>
+              </div>
+              <p class="errors">
+                {{ server_errors.file }}
+              </p>
+            </v-form>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeImport">Cancel</v-btn>
+              <v-btn
+                  color="blue darken-1"
+                  text
+                  :loading="loading"
+                  :disabled="loading"
+                  @click="importFileForm"
+              >OK
+              </v-btn
+              >
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card-text>
+        </v-card>
       </template>
     </v-dialog>
 
@@ -499,10 +505,10 @@ export default {
       tab: null,
       customers: [],
       loading: false,
-      importFile:false,
-      file:null,
-      errors:[],
-      successes:[],
+      importFile: false,
+      file: null,
+      errors: [],
+      successes: [],
       customerId: "",
       //Pagination
       offset: 12,
@@ -685,17 +691,17 @@ export default {
             this.loading = false;
           });
     },
-    importData(){
+    importData() {
       this.importFile = true;
     },
-    importFileForm(){
+    importFileForm() {
       let data = new FormData();
-      data.append('file',this.file);
+      data.append('file', this.file);
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
             .post("import-customer",
-              data,
+                data,
                 {
                   headers: {"Content-Type": "multipart/form-data"},
                 }
@@ -731,7 +737,38 @@ export default {
             });
       }
     },
-    closeImport(){
+    exportData() {
+      this.loading = true;
+      this.$axios
+          .get("import-example",
+              {
+                params: queryOption([
+                  {example_type: 'import_customer'},
+                ]),
+              },
+          )
+          .then((res) => {
+            if (res.data.code == 200) {
+              window.open(res.data.data.download_link)
+              this.loading = false;
+            }
+          })
+          .catch((error) => {
+            this.loading = false;
+            if (error.response.status == 422) {
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response.data.message,
+              });
+              let obj = error.response.data.errors;
+              for (let [key, customer] of Object.entries(obj)) {
+                this.server_errors[key] = customer[0];
+              }
+            }
+          });
+    },
+    closeImport() {
       this.file = null;
       this.errors = '';
       this.successes = '';
