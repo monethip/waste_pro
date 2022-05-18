@@ -11,60 +11,60 @@
         </v-btn>
       </v-col>
 
-<!--      <v-col>-->
-<!--        <v-menu-->
-<!--            v-model="start_menu"-->
-<!--            :close-on-content-click="false"-->
-<!--            :nudge-right="40"-->
-<!--            transition="scale-transition"-->
-<!--            offset-y-->
-<!--            min-width="auto"-->
-<!--        >-->
-<!--          <template v-slot:activator="{ on, attrs }">-->
-<!--            <v-text-field-->
-<!--                v-model="start_date"-->
-<!--                label="ເລີ່ມວັນທີ"-->
-<!--                readonly-->
-<!--                outlined-->
-<!--                v-bind="attrs"-->
-<!--                v-on="on"-->
-<!--                dense-->
-<!--            ></v-text-field>-->
-<!--          </template>-->
-<!--          <v-date-picker-->
-<!--              v-model="start_date"-->
-<!--              @input="fetchData()"-->
-<!--          ></v-date-picker>-->
-<!--        </v-menu>-->
-<!--      </v-col>-->
+      <v-col>
+        <v-menu
+            v-model="start_menu"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+                v-model="start_date"
+                label="ເລີ່ມວັນທີ"
+                readonly
+                outlined
+                v-bind="attrs"
+                v-on="on"
+                dense
+            ></v-text-field>
+          </template>
+          <v-date-picker
+              v-model="start_date"
+              @input="fetchData()"
+          ></v-date-picker>
+        </v-menu>
+      </v-col>
 
-<!--      <v-col>-->
-<!--        <v-menu-->
-<!--            v-model="end_menu"-->
-<!--            :close-on-content-click="false"-->
-<!--            :nudge-right="40"-->
-<!--            transition="scale-transition"-->
-<!--            offset-y-->
-<!--            min-width="auto"-->
-<!--        >-->
-<!--          <template v-slot:activator="{ on, attrs }">-->
-<!--            <v-text-field-->
-<!--                v-model="end_date"-->
-<!--                label="ຫາວັນທີ"-->
-<!--                readonly-->
-<!--                outlined-->
-<!--                v-bind="attrs"-->
-<!--                v-on="on"-->
-<!--                dense-->
-<!--            ></v-text-field>-->
-<!--          </template>-->
-<!--          <v-date-picker-->
-<!--              v-model="end_date"-->
-<!--              @input="fetchData()"-->
-<!--          ></v-date-picker>-->
-<!--        </v-menu>-->
-<!--      </v-col>-->
-<!--      -->
+      <v-col>
+        <v-menu
+            v-model="end_menu"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+                v-model="end_date"
+                label="ຫາວັນທີ"
+                readonly
+                outlined
+                v-bind="attrs"
+                v-on="on"
+                dense
+            ></v-text-field>
+          </template>
+          <v-date-picker
+              v-model="end_date"
+              @input="fetchData()"
+          ></v-date-picker>
+        </v-menu>
+      </v-col>
+
       <v-col>
         <v-autocomplete
             outlined
@@ -75,6 +75,32 @@
             item-value="name"
             label="ປະເພດລູກຄ້າ"
         ></v-autocomplete>
+      </v-col>
+      <v-col>
+        <v-text-field
+            v-model="car_id"
+            clearable
+            outlined
+            dense
+            prepend-inner-icon="mdi-magnify"
+            label="Car Id"
+            single-line
+            hide-details
+            @keyup.enter="fetchData()"
+        ></v-text-field>
+      </v-col>
+      <v-col>
+        <v-text-field
+            v-model="search"
+            clearable
+            outlined
+            dense
+            prepend-inner-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
+            @keyup.enter="Search()"
+        ></v-text-field>
       </v-col>
     </v-row>
     <div>
@@ -317,6 +343,7 @@
 
 <script>
 import queryOption from "@/Helpers/queryOption";
+import {GetOldValueOnInput} from "@/Helpers/GetValue";
 
 export default {
   name: "Customer",
@@ -338,6 +365,7 @@ export default {
       per_page: 15,
       search: "",
       oldVal: "",
+      car_id:"",
       //Filter
       selectedCustomerType: "home",
       customer_types: [
@@ -364,8 +392,10 @@ export default {
             params: queryOption([
               // {page: this.pagination.current_page},
               // {per_page: this.per_page},
-              // {date_from: this.start_date},
-              // {date_end: this.end_date},
+              {date_from: this.start_date},
+              {date_to: this.end_date},
+              {filter: this.search},
+              {car_id: this.car_id},
               {customer_type: this.selectedCustomerType},
             ]),
           })
@@ -391,6 +421,7 @@ export default {
                 params: queryOption([
                   {download: 'excel'},
                   {customer_type: this.selectedCustomerType},
+
                 ]),
               },
               {responseType: "blob"}
@@ -406,8 +437,21 @@ export default {
             this.loading = false;
           });
     },
+    Search() {
+      GetOldValueOnInput(this);
+    },
   },
   watch: {
+    search: function (value) {
+      if (value == "") {
+        this.fetchData();
+      }
+    },
+    car_id: function (value) {
+      if (value == "") {
+        this.fetchData();
+      }
+    },
     selectedCustomerType: function () {
       this.fetchData();
     },

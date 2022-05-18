@@ -10,60 +10,81 @@
         >Export
         </v-btn>
       </v-col>
-<!--      -->
-<!--      <v-col>-->
-<!--        <v-menu-->
-<!--            v-model="start_menu"-->
-<!--            :close-on-content-click="false"-->
-<!--            :nudge-right="40"-->
-<!--            transition="scale-transition"-->
-<!--            offset-y-->
-<!--            min-width="auto"-->
-<!--        >-->
-<!--          <template v-slot:activator="{ on, attrs }">-->
-<!--            <v-text-field-->
-<!--                v-model="start_date"-->
-<!--                label="ເລີ່ມວັນທີ"-->
-<!--                readonly-->
-<!--                outlined-->
-<!--                v-bind="attrs"-->
-<!--                v-on="on"-->
-<!--                dense-->
-<!--            ></v-text-field>-->
-<!--          </template>-->
-<!--          <v-date-picker-->
-<!--              v-model="start_date"-->
-<!--              @input="fetchData()"-->
-<!--          ></v-date-picker>-->
-<!--        </v-menu>-->
-<!--      </v-col>-->
-<!--      -->
-<!--      <v-col>-->
-<!--        <v-menu-->
-<!--            v-model="end_menu"-->
-<!--            :close-on-content-click="false"-->
-<!--            :nudge-right="40"-->
-<!--            transition="scale-transition"-->
-<!--            offset-y-->
-<!--            min-width="auto"-->
-<!--        >-->
-<!--          <template v-slot:activator="{ on, attrs }">-->
-<!--            <v-text-field-->
-<!--                v-model="end_date"-->
-<!--                label="ຫາວັນທີ"-->
-<!--                readonly-->
-<!--                outlined-->
-<!--                v-bind="attrs"-->
-<!--                v-on="on"-->
-<!--                dense-->
-<!--            ></v-text-field>-->
-<!--          </template>-->
-<!--          <v-date-picker-->
-<!--              v-model="end_date"-->
-<!--              @input="fetchData()"-->
-<!--          ></v-date-picker>-->
-<!--        </v-menu>-->
-<!--      </v-col>-->
+      <v-col>
+        <v-autocomplete
+            outlined
+            dense
+            :items="districts"
+            v-model="selectedDistrict"
+            item-text="name"
+            item-value="id"
+            label="ເມືອງ"
+        ></v-autocomplete>
+      </v-col>
+      <v-col>
+        <v-autocomplete
+            outlined
+            dense
+            :items="villages"
+            v-model="selectedVillage"
+            item-text="name"
+            item-value="id"
+            label="ບ້ານ"
+        ></v-autocomplete>
+      </v-col>
+      <v-col>
+        <v-menu
+            v-model="start_menu"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+                v-model="start_date"
+                label="ເລີ່ມວັນທີ"
+                readonly
+                outlined
+                v-bind="attrs"
+                v-on="on"
+                dense
+            ></v-text-field>
+          </template>
+          <v-date-picker
+              v-model="start_date"
+              @input="fetchData()"
+          ></v-date-picker>
+        </v-menu>
+      </v-col>
+
+      <v-col>
+        <v-menu
+            v-model="end_menu"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+                v-model="end_date"
+                label="ຫາວັນທີ"
+                readonly
+                outlined
+                v-bind="attrs"
+                v-on="on"
+                dense
+            ></v-text-field>
+          </template>
+          <v-date-picker
+              v-model="end_date"
+              @input="fetchData()"
+          ></v-date-picker>
+        </v-menu>
+      </v-col>
 
       <v-col>
         <v-autocomplete
@@ -249,6 +270,10 @@ export default {
       search: "",
       oldVal: "",
       //Filter
+      districts: [],
+      selectedDistrict: "",
+      villages: [],
+      selectedVillage: "",
       selectedCustomerType: "home",
       customer_types: [
         {
@@ -274,8 +299,9 @@ export default {
             params: queryOption([
               // {page: this.pagination.current_page},
               // {per_page: this.per_page},
-              // {date_from: this.start_date},
-              // {date_end: this.end_date},
+              {date_from: this.start_date},
+              {date_to: this.end_date},
+              {village_id: this.selectedVillage},
               {customer_type: this.selectedCustomerType},
             ]),
           })
@@ -290,6 +316,32 @@ export default {
             this.$store.commit("Loading_State", false);
             this.start_menu = false;
             this.end_menu = false;
+          });
+    },
+    fetchAddress() {
+      this.$axios
+          .get("info/address", {params: {filter: "ນະຄອນຫລວງວຽງຈັນ"}})
+          .then((res) => {
+            if (res.data.code == 200) {
+              this.address = res.data.data;
+              this.address.map((item) => {
+                this.districts = item.districts;
+              });
+            }
+          })
+          .catch(() => {
+          });
+    },
+
+    fetchVillage() {
+      this.$axios
+          .get("info/district/" + this.selectedDistrict + "/village")
+          .then((res) => {
+            if (res.data.code == 200) {
+              this.villages = res.data.data;
+            }
+          })
+          .catch(() => {
           });
     },
 
@@ -321,11 +373,21 @@ export default {
     },
   },
   watch: {
+    selectedVillage: function () {
+      this.fetchData();
+    },
+    selectedDistrict: function () {
+      if (this.selectedDistrict) {
+        // this.fetchData();
+      }
+      this.fetchVillage();
+    },
     selectedCustomerType: function () {
       this.fetchData();
     },
   },
   created() {
+    this.fetchAddress();
     this.fetchData();
   },
 };
