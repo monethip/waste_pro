@@ -13,6 +13,11 @@
     border-color: $primary-color !important;
     color: white !important;
 }
+.btn-success{
+  background-color: $success-color !important;
+  border-color: $success-color !important;
+  color: white !important;
+}
 .tab-color{
     background-color: $primary-color !important;
 }
@@ -55,7 +60,7 @@
       color: $red-color;
   }
   .succes-color{
-      color: $succe-color;
+      color: $success-color;
   }
   .input-number input[type='number'] {
     -moz-appearance: textfield;

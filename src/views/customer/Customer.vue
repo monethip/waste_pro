@@ -10,7 +10,7 @@
         >
           <v-icon>mdi-file-import</v-icon>
         </v-btn>
-        <v-btn class="btn-primary" @click="exportData()"
+        <v-btn class="btn-success" @click="exportData()"
         >
           <v-icon>mdi-file-export</v-icon>
         </v-btn>
@@ -434,13 +434,13 @@
                   counter
                   outlined
               ></v-file-input>
-              <p v-if="successes.length">
+              <p v-if="!successes.length == 0">
                 ສຳເລັດ {{ successes.length }} ລາຍການ
               </p>
-              <p class="errors" v-if="errors.length">
+              <p class="errors" v-if="!errors.length == 0">
                 ຜິດພາດ {{ errors.length }} ລາຍການ
               </p>
-              <div v-if="errors.length">
+              <div v-if="!errors.length == 0">
                 <p class="errors" v-for="(error,index) in errors" :key="index">
                   {{ error }}
                 </p>
@@ -708,11 +708,11 @@ export default {
             )
             .then((res) => {
               if (res.data.code == 200) {
+                this.loading = false;
                 this.errors = res.data.data.errors;
                 this.successes = res.data.data.data;
                 this.file = null;
                 setTimeout(() => {
-                  this.loading = false;
                   this.$store.commit("Toast_State", {
                     value: true,
                     color: "success",
