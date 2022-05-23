@@ -127,6 +127,9 @@
                           type="text"
                       >
                       </v-text-field>
+                      <p class="errors">
+                        {{ server_errors.description }}
+                      </p>
                     </v-col>
                   </v-row>
                   <v-row>
@@ -145,8 +148,6 @@
                           color="error"
                           class="white--text px-12 c-btn"
                           medium
-                          :loading="loading"
-                          :disabled="loading"
                           @click="confirmDialog = false"
                       >
                         Close
@@ -250,7 +251,6 @@ export default {
           });
     },
     openUpdate(data) {
-      console.log(data)
       this.editItem = data;
       this.confirmDialog = true;
     },
@@ -262,8 +262,9 @@ export default {
       if(this.confirm_status == 'reject'){
         formData.append('description',this.description)
       }
+      formData.append('_method','PUT')
       this.$axios
-          .put("admin-collection/" + this.editItem.id + "/status",formData)
+          .post("admin-collection/" + this.editItem.id + "/status",formData)
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
@@ -319,6 +320,9 @@ export default {
         this.fetchData();
       }
     },
+    "description":function (){
+      this.server_errors.description = "";
+    }
   },
   created() {
     this.fetchData();

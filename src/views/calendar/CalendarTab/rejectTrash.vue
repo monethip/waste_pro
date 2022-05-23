@@ -65,6 +65,12 @@
           >
             mdi-eye
           </v-icon>
+          <v-icon
+              small
+              @click="openUpdate(item)"
+          >
+            mdi-truck
+          </v-icon>
         </template> </v-data-table
       ><br />
       <template>
@@ -76,6 +82,84 @@
         ></Pagination>
       </template>
     </div>
+
+    <!-- confirm payment -->
+    <v-dialog v-model="confirmDialog" max-width="620px" persistent>
+      <template @close="close">
+        <v-card>
+          <v-card-text>
+            <v-card-title>
+              <p>
+                <v-icon class="primary-color" large color="success"
+                >mdi-checkbox-marked-circle-outline
+                </v-icon
+                >
+                ຢືນຢັນການເກັບຂີ້ເຫື້ອຍ
+              </p>
+            </v-card-title>
+            <v-container>
+              <v-form ref="form" lazy-validation>
+                <div>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-select
+                          v-model="confirm_status"
+                          label="ສະຖານະການຊຳລະ"
+                          outlined
+                          dense
+                          :items="confirm_statues"
+                          item-text="name"
+                          item-value="value"
+                      >
+                      </v-select>
+                    </v-col>
+                  </v-row>
+
+                  <v-row v-if="confirm_status =='reject'">
+                    <v-col cols="12">
+                      <v-text-field
+                          v-model="description"
+                          label="Description"
+                          outlined
+                          dense
+                          type="text"
+                      >
+                      </v-text-field>
+                      <p class="errors">
+                        {{ server_errors.description }}
+                      </p>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-card-actions>
+                      <v-btn
+                          color="blue"
+                          class="white--text px-12 c-btn"
+                          medium
+                          :loading="loading"
+                          :disabled="loading"
+                          @click="confirmStatus()"
+                      >
+                        ຢືນຢັນ
+                      </v-btn>
+                      <v-btn
+                          color="error"
+                          class="white--text px-12 c-btn"
+                          medium
+                          @click="confirmDialog = false"
+                      >
+                        Close
+                      </v-btn>
+                    </v-card-actions>
+                  </v-row>
+                </div>
+              </v-form>
+            </v-container>
+          </v-card-text>
+        </v-card>
+      </template>
+    </v-dialog>
+
   </v-container>
 </template>
 
@@ -95,6 +179,17 @@ export default {
       search: "",
       oldVal: "",
       statuses: ["reject"],
+      confirm_status: 'success',
+      confirm_statues: [
+        {
+          name: 'Success',
+          value: 'success'
+        },
+      ],
+      confirmDialog: false,
+      editItem: {},
+      description: '',
+      server_errors: {},
 
       headers: [
         { text: "ລຳດັບ", value: "route_plan_detail.priority" },
@@ -149,6 +244,50 @@ export default {
           }
         });
     },
+    openUpdate(data) {
+      this.editItem = data;
+      this.confirmDialog = true;
+    },
+
+    confirmStatus() {
+      this.loading = true;
+      let formData = new FormData();
+      formData.append('status',this.confirm_status)
+      if(this.confirm_status == 'reject'){
+        formData.append('description',this.description)
+      }
+      formData.append('_method','PUT')
+      this.$axios
+          .post("admin-collection/" + this.editItem.id + "/status",formData)
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.loading = false;
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
+                this.fetchData();
+                this.confirmDialog = false;
+              }, 300);
+            }
+          })
+          .catch((error) => {
+            this.loading = false;
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
+            if (error.response.status == 422) {
+              let obj = error.response.data.errors;
+              for (let [key, data] of Object.entries(obj)) {
+                this.server_errors[key] = data[0];
+              }
+            }
+          });
+    },
     statusColor(value) {
       if (value == "pending") return "info";
       else if (value == "success") return "success";
@@ -174,6 +313,9 @@ export default {
         this.fetchData();
       }
     },
+    "description":function (){
+      this.server_errors.description = "";
+    }
   },
   created() {
     this.fetchData();
