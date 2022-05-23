@@ -116,7 +116,7 @@
             <v-card-text>
               <v-row>
                 <v-col>
-                  <v-icon large @click="customer()">mdi-office-building</v-icon>
+                  <v-icon large @click="company()">mdi-office-building</v-icon>
                 </v-col>
                 <v-divider class="mx-4" vertical></v-divider>
                 <v-col>
@@ -154,7 +154,7 @@
                   <h3 class="my-2">ຈຳນວນຂີ້ເຫຍື້ອ</h3>
                   <v-row>
                     <v-col>
-                      <v-icon large @click="user()">mdi-package</v-icon>
+                      <v-icon large @click="reportTrash()">mdi-package</v-icon>
                       <v-row>
                         <v-col>
                           <h4 v-if="data.last_month_collection">
@@ -218,7 +218,7 @@
                   <h3 class="my-2">ລາຍໄດ້ສະເລ່ຍ</h3>
                   <v-row>
                     <v-col>
-                      <v-icon large @click="user()">mdi-cash-plus</v-icon>
+                      <v-icon large @click="reportTrashInvoice()">mdi-cash-plus</v-icon>
                       <v-row>
                         <v-col>
                           <h4 v-if="data.last_month_invoice">
@@ -390,6 +390,15 @@ export default {
     },
     customer() {
       this.$router.push("customer");
+    },
+    company() {
+      this.$router.push("company");
+    },
+    reportTrash() {
+      this.$router.push("/report/trash");
+    },
+    reportTrashInvoice() {
+      this.$router.push("/report/invoice");
     },
     package() {
       this.$router.push("package");
