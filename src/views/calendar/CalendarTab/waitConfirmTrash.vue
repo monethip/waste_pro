@@ -263,7 +263,7 @@ export default {
         formData.append('description',this.description)
       }
       this.$axios
-          .post("admin-collection/" + this.editItem.id + "/status",formData)
+          .put("admin-collection/" + this.editItem.id + "/status",formData)
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
