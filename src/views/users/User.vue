@@ -1071,7 +1071,6 @@ export default {
             .post("unique-phone", {phone:this.phone})
             .then((res) => {
               if (res.data.code === 200) {
-                  console.error(res.data.data.exists)
                   if(res.data.data.exists === false){
                     this.initReCaptcha();
                     this.sendOtp();
@@ -1124,7 +1123,6 @@ export default {
             if (res) {
               const token = (res.user);
               this.id_token = token._lat;
-              console.log(this.id_token);
               this.stepValue = 3;
             }
           })
@@ -1348,7 +1346,6 @@ export default {
     },
 
     deleteItem(id) {
-      console.log(id)
       this.userID = id;
       this.$store.commit("modalDelete_State", true);
     },
@@ -1372,13 +1369,15 @@ export default {
           }
         })
         .catch((error) => {
-          this.$store.commit("Toast_State", {
-            value: true,
-            color: "error",
-            msg: error.response.data.message,
-          });
-          this.$store.commit("modalDelete_State", false);
           this.loading = false;
+           // setTimeout(() =>{
+             this.$store.commit("Toast_State", {
+               value: true,
+               color: "error",
+               msg: error.response.data.message,
+             });
+           // },300);
+          this.$store.commit("modalDelete_State", false);
         });
     },
     //Permission

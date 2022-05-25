@@ -682,13 +682,13 @@ export default {
             }
           })
           .catch((error) => {
+            this.loading = false;
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
               msg: error.response.data.message,
             });
             this.$store.commit("modalDelete_State", false);
-            this.loading = false;
           });
     },
     importData() {
