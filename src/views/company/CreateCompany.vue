@@ -24,6 +24,7 @@
                         accept="image/*"
                         multiple
                     />
+
                     <span class="file-cta">
                       <span class="file-icon">
                         <v-icon
@@ -53,27 +54,66 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col
-                class="mt-5"
-                v-for="(item, index) in preview_list"
-                :key="index"
-            >
-              <v-avatar class="avatar rounded mr-2" size="94px">
-                <img :src="item" alt="Image"/>
-              </v-avatar>
-              <p class="mb-0">File name: {{ image_list[index].name }}</p>
-              <span>size: {{ image_list[index].size / 1024 }}KB</span>
-              <div @click="RemoveItem(item)">
-                <v-icon style="cursor: pointer">mdi-delete</v-icon>
-              </div>
-            </v-col>
+            <div v-if="image_list.length > 0" style="display: inline-flex">
+              <v-col
+                  v-for="(item, index) in preview_list"
+                  :key="index"
+                  class="mt-5 text-center"
+              >
+                <div>
+                  <v-avatar class="avatar rounded mr-6" size="94px">
+                    <img :src="item" alt="Image"/>
+                  </v-avatar>
+                  <p class="mb-0 body-2">
+                    Name: {{ image_list[index].name }}
+                  </p>
+                  <span class="body-2"
+                  >size: {{ image_list[index].size / 1024 }}KB</span
+                  >
+                  <div @click="RemoveItem(item)" class="mt-2">
+                    <v-icon style="cursor: pointer">mdi-delete</v-icon>
+                  </div>
+                </div>
+              </v-col>
+            </div>
+<!--            <div v-else>-->
+<!--              <v-col class="mt-5 text-center">-->
+<!--                <div v-for="(item, index) in data.media"-->
+<!--                     :key="index">-->
+<!--                  <input type="hidden" name="image-url" :value="item.url">-->
+<!--                <v-avatar-->
+<!--                    class="avatar rounded mr-6"-->
+<!--                    size="94px"-->
+<!--                >-->
+<!--                  <img :src="item.url" alt="Image"/>-->
+<!--                </v-avatar>-->
+<!--                </div>-->
+<!--              </v-col>-->
+<!--            </div>-->
           </v-row>
+
+<!--          <v-row>-->
+<!--            <v-col-->
+<!--                class="mt-5"-->
+<!--                v-for="(item, index) in preview_list"-->
+<!--                :key="index"-->
+<!--            >-->
+<!--              <v-avatar class="avatar rounded mr-2" size="94px">-->
+<!--                <img :src="item" alt="Image"/>-->
+<!--              </v-avatar>-->
+<!--              <p class="mb-0">File name: {{ image_list[index].name }}</p>-->
+<!--              <span>size: {{ image_list[index].size / 1024 }}KB</span>-->
+<!--              <div @click="RemoveItem(item)">-->
+<!--                <v-icon style="cursor: pointer">mdi-delete</v-icon>-->
+<!--              </div>-->
+<!--            </v-col>-->
+<!--          </v-row>-->
           <v-row>
             <v-col cols="4">
               <v-text-field
                   label="ຊື່ບໍລິສັດ *"
                   required
-                  v-model="data.company_name"
+                  v-model="data.name"
                   :rules="nameRules"
                   outlined
                   dense
@@ -483,6 +523,7 @@
 
 <script>
 export default {
+  props: ["items"],
   data() {
     return {
       data: {
@@ -689,6 +730,7 @@ export default {
       this.$router.go(-1);
     },
     AddData() {
+      console.log(this.image_list)
       let formData = new FormData();
       this.image_list.map((item) => {
         formData.append("images[]", item);
@@ -699,7 +741,7 @@ export default {
       this.selectedFavoriteDate.map((item) => {
         formData.append("favorite_dates[]", item);
       });
-      formData.append("company_name", this.data.company_name);
+      formData.append("company_name", this.data.name);
       formData.append("village_id", this.selectedVillage);
       formData.append("lat", this.latlng.lat);
       formData.append("lng", this.latlng.lng);
@@ -716,7 +758,7 @@ export default {
       formData.append("start_date", this.start_date);
       formData.append("can_collect", this.start_collect);
       formData.append("collect_description", this.data.collect_description);
-
+      console.log(formData)
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
@@ -751,7 +793,6 @@ export default {
                 }
               }
               this.loading = false;
-              this.fetchData();
             });
       }
     },
@@ -905,7 +946,6 @@ export default {
     // },
 
     changeLat(){
-      console.log("hee");
       this.placeMarker();
       // this.onDataChange();
       // this.onSave();
@@ -917,6 +957,11 @@ export default {
       // console.log(marker)
       // this.markers.push({position: marker});
 
+    },
+    getRequest(){
+      if(this.items){
+        this.data = this.items;
+      }
     }
   },
   watch: {
@@ -961,10 +1006,6 @@ export default {
       } else if (this.selectedCost == 'fixed_cost')
         this.showFixed = true;
     },
-    // "latlng.lng": function () {
-    //   console.log("hi")
-    //   this.placeMarker();
-    // }
   },
   mounted() {
     this.geolocate();
@@ -972,6 +1013,7 @@ export default {
   created() {
     this.fetchAddress();
     this.fetchFavorite();
+    this.getRequest();
   },
 };
 </script>

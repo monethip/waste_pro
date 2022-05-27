@@ -17,6 +17,7 @@
           v-for="(item, index) in data.media"
           :key="index"
           :src="item.url"
+          @click="showImage(item.url)"
           reverse-transition="fade-transition"
           transition="fade-transition"
         ></v-carousel-item>
@@ -109,7 +110,7 @@
             <v-divider inset></v-divider>
             <v-list-item>
               <v-list-item-icon>
-                <v-icon color="indigo"> mdi-map-marker </v-icon>
+                <v-icon color="indigo"> mdi-home </v-icon>
               </v-list-item-icon>
 
               <v-list-item-content>
@@ -123,6 +124,21 @@
                 >
                   <v-list-item-subtitle>{{ detail.name }}</v-list-item-subtitle>
                 </div>
+              </v-list-item-content>
+            </v-list-item>
+
+            <v-divider inset></v-divider>
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon color="indigo"> mdi-map-marker </v-icon>
+              </v-list-item-icon>
+
+              <v-list-item-content>
+                <v-list-item-title v-if="data.lat"
+                >Lat: {{ data.lat }},
+                  Lng: {{ data.lng }}</v-list-item-title
+                >
+<!--                  <v-list-item-subtitle>{{ detail.name }}</v-list-item-subtitle>-->
               </v-list-item-content>
             </v-list-item>
           </v-row>
@@ -147,9 +163,25 @@
             </v-col>
           </v-row>
         </v-container>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+              color="blue darken-1"
+              text
+              :loading="loading"
+              :disabled="loading"
+              @click="addCustomer(data)"
+          >
+            ເພີ່ມເຂົ້າຖານລູກຄ້າ
+          </v-btn>
+        </v-card-actions>
       </v-card-text>
     </v-card>
-
+    <ModalView>
+      <template>
+          <v-img :src="imageUrl" alt="Image" width="auto" height="auto" dark> </v-img>
+      </template>
+    </ModalView>
   </v-container>
 </template>
 
@@ -161,7 +193,7 @@ export default {
       loading: false,
       server_errors: {},
       village_details: [],
-
+      imageUrl:"",
       errormsg: "",
       preview_list: [],
       image_list: [],
@@ -193,6 +225,12 @@ export default {
     };
   },
   methods: {
+    showImage(url){
+      if(url != null){
+        this.imageUrl = url;
+        this.$store.commit("modalView_State", true);
+      }
+    },
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
@@ -233,6 +271,9 @@ export default {
         lng: parseFloat(data.lng),
       };
     },
+    addCustomer(data){
+      this.$router.push({name:'CreateCompany',params:{items:data}});
+    }
   },
   created() {
     this.fetchData();

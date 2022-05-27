@@ -1,6 +1,16 @@
 <template>
   <v-container>
     <v-data-table :headers="header" :items="data" hide-default-footer>
+      <template v-slot:item.media="{ item }">
+        <v-avatar
+            class="mr-1"
+            size="36px"
+            v-for="(img, index) in item.media"
+            :key="index"
+        >
+          <img v-if="img.url" :src="img.url"/>
+        </v-avatar>
+      </template>
       <template v-slot:[`item.created_at`]="{ item }">
         <div>{{ moment(item.created_at).format("DD-MM-YY hh:mm") }}</div>
       </template>
@@ -95,7 +105,7 @@ export default {
         { text: "Email", value: "email" },
         { text: "ຜູ້ຮັບຜິດຊອບ", value: "coordinator" },
         { text: "Status", value: "status" },
-        { text: "Image", value: "image" },
+        { text: "Image", value: "media" },
         { text: "Created", value: "created_at" },
         { text: "", value: "action" },
       ],

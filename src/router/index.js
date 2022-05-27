@@ -246,6 +246,7 @@ const routes = [
         path: '/create/company',
         name: 'CreateCompany',
         component: () => import('@/views/company/CreateCompany.vue'),
+        props:true,
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
