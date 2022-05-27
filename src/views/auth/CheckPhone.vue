@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <div id="recaptcha-container"></div>
     <v-row align="center" justify="center">
       <v-col cols="12" sm="12" md="12">
         <v-card class="elevation-1" max-width="600" style="    display: flex;
@@ -35,9 +36,9 @@
               <p class="errors">
                 {{ error }}
               </p>
-<!--              <p class="errors">-->
-<!--                {{ server_errors.start_month }}-->
-<!--              </p>-->
+              <!--              <p class="errors">-->
+              <!--                {{ server_errors.start_month }}-->
+              <!--              </p>-->
 
               <div class="text-center">
                 <v-btn
@@ -57,23 +58,23 @@
               </h2>
               <p class="text-center display-5 black--text mb-8 mt-0">Input Code from SMS</p>
               <v-form ref="form" lazy-validation>
-                 <v-row>
-                   <v-col cols="12" sm="12" md="12">
-                     <div style="display: flex; flex-direction: row;">
-                     <v-otp-input
-                         ref="otpInput"
-                         input-classes="otp-input"
-                         separator=""
-                         :num-inputs="6"
-                         :should-auto-focus="true"
-                         :is-input-num="true"
-                         @on-complete="handleOnComplete"
-                         class="otp"
-                     />
-                     <v-btn text @click="handleClearInput()" small style="margin:auto;">Clear</v-btn>
-                     </div>
-                   </v-col>
-                 </v-row>
+                <v-row>
+                  <v-col cols="12" sm="12" md="12">
+                    <div style="display: flex; flex-direction: row;">
+                      <v-otp-input
+                          ref="otpInput"
+                          input-classes="otp-input"
+                          separator=""
+                          :num-inputs="6"
+                          :should-auto-focus="true"
+                          :is-input-num="true"
+                          @on-complete="handleOnComplete"
+                          class="otp"
+                      />
+                      <v-btn text @click="handleClearInput()" small style="margin:auto;">Clear</v-btn>
+                    </div>
+                  </v-col>
+                </v-row>
                 <div class="text-center">
                   <v-btn
                       block
@@ -91,7 +92,6 @@
         </v-card>
       </v-col>
     </v-row>
-    <div id="recaptcha-container"></div>
   </v-container>
 </template>
 <script>
@@ -130,39 +130,39 @@ export default {
         this.loading = true;
         this.$axios
             .post("auth/check-phone", {
-              credential:this.user.credential,
-              password:this.user.password,
-              phone:this.phone,
+              credential: this.user.credential,
+              password: this.user.password,
+              phone: this.phone,
             })
             .then((res) => {
-              console.log(res)
               if (res.data.code === 200) {
-                console.error(res.data.data.collect)
-                if(res.data.data.collect === true){
+                console.error(res.data)
+                if (res.data.data.collect === true) {
                   //Send OTP
-                    this.loading = true;
-                    let countryCode = "+85620"; //laos
-                    let phoneNumber = countryCode + this.phone;
-                    let appVerifier = this.appVerifier;
-                  firebase.auth().languageCode = "en";
-                  console.log("hii")
+                  this.loading = true;
+                  let countryCode = "+85620"; //laos
+                  let phoneNumber = countryCode + this.phone;
+                  const appVerifier = this.appVerifier;
+
+                  setTimeout(() => {
+                    firebase.auth().languageCode = "en";
                     firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
                         .then(confirmationResult => {
-                          console.log(confirmationResult)
+                          window.confirmationResult = confirmationResult;
                           this.verifyCode = true;
                           this.verifyPhone = false;
-                          window.confirmationResult = confirmationResult;
                           this.loading = false;
                         })
                         .catch((error) => {
                           this.error = error;
                           this.loading = false;
-                        });
-                } else if(res.data.data.collect === false){
+                        }, 15000);
+                  })
+                } else if (res.data.data.collect === false) {
                   this.loading = false;
                   this.error = "ເບີໂທບໍ່ຖືກຕ້ອງ";
                 } else {
-                    this.loading = false;
+                  this.loading = false;
                   this.error = "ມີບາງຢ່າງຜິດພາດ ກະລຸນາລອງໃໝ່";
                 }
                 this.loading = false;
@@ -227,24 +227,16 @@ export default {
     //   }
     // },
     initReCaptcha() {
-      setTimeout(() => {
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-            "recaptcha-container",
-            {
-              size: "invisible",
-              // callback: function (response) {
-              //   // reCAPTCHA solved, allow signInWithPhoneNumber.
-              //   // ...
-              // },
-              "expired-callback": function () {
-                // Response expired. Ask user to solve reCAPTCHA again.
-                // ...
-              },
-            }
-        );
-        //
-        this.appVerifier = window.recaptchaVerifier;
-      }, 1000);
+      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+          "recaptcha-container",
+          {
+            size: "invisible",
+            "expired-callback": function () {
+            },
+          }
+      );
+      //
+      this.appVerifier = window.recaptchaVerifier;
     },
     handleOnComplete(value) {
       this.code = value;
@@ -253,8 +245,8 @@ export default {
       this.$refs.otpInput.clearInput();
     },
   },
-  watch:{
-    "phone":function (){
+  watch: {
+    "phone": function () {
       this.error = "";
     }
   },
@@ -309,6 +301,7 @@ export default {
   -webkit-appearance: none;
   margin: 0;
 }
+
 @media only screen and (max-width: 600px) {
   //.otp{
   //  padding: 4px 4px;
