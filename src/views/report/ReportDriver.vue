@@ -259,25 +259,18 @@ export default {
           .post(
               "export-driver/",
               {
-                filter: this.search,
                 status: this.selectedStatus,
                 date_from: this.start_date,
                 date_end: this.end_date,
               },
-              {responseType: "blob"}
+              // {responseType: "blob"}
           )
           .then((res) => {
             if (res.status == 200) {
-              setTimeout(() => {
+                if(res.data.data.download_link != null){
+                  window.open(res.data.data.download_link)
+                }
                 this.loading = false;
-                const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
-                const fileLink = document.createElement("a");
-                fileLink.href = fileUrl;
-                fileLink.setAttribute("download", "driver" + ".xlsx");
-                document.body.appendChild(fileLink);
-                fileLink.click();
-                document.body.removeChild(fileLink);
-              }, 300);
             }
           })
           .catch((error) => {
@@ -286,7 +279,6 @@ export default {
               color: "error",
               msg: error.response.data.message,
             });
-            this.$store.commit("modalDelete_State", false);
             this.loading = false;
           });
     },

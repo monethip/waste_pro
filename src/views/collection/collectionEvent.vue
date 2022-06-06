@@ -94,6 +94,7 @@
               <th class="text-left">Subtotal</th>
               <th class="text-left">ການບໍລິການ</th>
               <th class="text-left">ການຊຳລະ</th>
+              <th class="text-left">ລາຍລະອຽດ</th>
               <th class="text-left">Image</th>
             </tr>
             </thead>
@@ -112,6 +113,7 @@
               <td>
                 <v-chip label color="success">{{ user.payment_status }}</v-chip>
               </td>
+              <td>{{ user.description }}</td>
               <td>
                 <v-avatar
                     size="36px"

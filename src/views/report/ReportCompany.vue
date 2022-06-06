@@ -357,11 +357,13 @@ export default {
               {filter: this.search},
               {district_id: this.selectedDistrict}]),
           },
-          { responseType: "blob" }
+          // { responseType: "blob" }
         )
         .then((res) => {
           if (res.status == 200) {
-            window.open(res.data.data.download_link)
+            if(res.data.data.download_link != null){
+              window.open(res.data.data.download_link)
+            }
             this.loading = false;
             // setTimeout(() => {
             //   this.loading = false;
@@ -376,9 +378,7 @@ export default {
           }
         })
         .catch(() => {
-          this.fetchData();
           this.$store.commit("Toast_State", this.toast_error);
-          this.$store.commit("modalDelete_State", false);
           this.loading = false;
         });
     },

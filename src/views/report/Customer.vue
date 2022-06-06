@@ -340,30 +340,31 @@ export default {
               {date_end: this.end_date},
               {villages: this.selectedVillage},
               {statuses: this.selectedStatus},
-              {filter: this.search},
               {district_id: this.selectedDistrict}]),
           },
-          { responseType: "blob" }
+          // { responseType: "blob" }
         )
         .then((res) => {
           if (res.status == 200) {
-            setTimeout(() => {
-              this.loading = false;
-              const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
-              console.log(fileUrl)
-              const fileLink = document.createElement("a");
-              fileLink.href = fileUrl;
-              fileLink.setAttribute("download", "customer" + ".xlsx");
-              document.body.appendChild(fileLink);
-              fileLink.click();
-              document.body.removeChild(fileLink);
-            }, 300);
+            if(res.data.data.download_link != null){
+              window.open(res.data.data.download_link)
+            }
+            this.loading = false;
+            // setTimeout(() => {
+            //   this.loading = false;
+            //   const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
+            //   console.log(fileUrl)
+            //   const fileLink = document.createElement("a");
+            //   fileLink.href = fileUrl;
+            //   fileLink.setAttribute("download", "customer" + ".xlsx");
+            //   document.body.appendChild(fileLink);
+            //   fileLink.click();
+            //   document.body.removeChild(fileLink);
+            // }, 300);
           }
         })
         .catch(() => {
-          this.fetchData();
           this.$store.commit("Toast_State", this.toast_error);
-          this.$store.commit("modalDelete_State", false);
           this.loading = false;
         });
     },

@@ -131,7 +131,9 @@ export default {
                 )
                 .then((res) => {
                     if (res.status == 200) {
-                        window.open(res.data.data.download_link)
+                      if(res.data.data != null){
+                          window.open(res.data.data.download_link)
+                      }
                         this.loading = false;
                     }
                 })

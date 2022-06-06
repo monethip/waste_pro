@@ -112,28 +112,29 @@ export default {
                     //         download: 1,
                     //     }
                     // },
-                    { responseType: "blob" }
+                    // { responseType: "blob" }
                 )
                 .then((res) => {
                     if (res.status == 200) {
-                        setTimeout(() => {
-                            this.loading = false;
-                            const fileUrl = window.URL.createObjectURL(
-                                new Blob([res.data])
-                            );
-                            const fileLink = document.createElement("a");
-                            fileLink.href = fileUrl;
-                            fileLink.setAttribute(
-                                "download",
-                                "Report_Invoice" + ".xlsx"
-                            );
-                            document.body.appendChild(fileLink);
-                            fileLink.click();
-                            document.body.removeChild(fileLink);
-                        }, 300);
-                        this.$router.push({
-                            name: "Report-Invoice",
-                        });
+                        if(res.data.data.download_link != null){
+                            window.open(res.data.data.download_link)
+                        }
+                        this.loading = false;
+                        // setTimeout(() => {
+                        //     this.loading = false;
+                        //     const fileUrl = window.URL.createObjectURL(
+                        //         new Blob([res.data])
+                        //     );
+                        //     const fileLink = document.createElement("a");
+                        //     fileLink.href = fileUrl;
+                        //     fileLink.setAttribute(
+                        //         "download",
+                        //         "Report_Invoice" + ".xlsx"
+                        //     );
+                        //     document.body.appendChild(fileLink);
+                        //     fileLink.click();
+                        //     document.body.removeChild(fileLink);
+                        // }, 300);
                     }
                 })
                 .catch((error) => {
