@@ -28,11 +28,11 @@
               v-bind="attrs"
               v-on="on"
               dense
+              clearable
             ></v-text-field>
           </template>
           <v-date-picker
             v-model="start_date"
-            @input="fetchData()"
           ></v-date-picker>
         </v-menu>
       </v-col>
@@ -54,11 +54,11 @@
               v-bind="attrs"
               v-on="on"
               dense
+              clearable
             ></v-text-field>
           </template>
           <v-date-picker
             v-model="end_date"
-            @input="fetchData()"
           ></v-date-picker>
         </v-menu>
       </v-col>
@@ -71,6 +71,7 @@
           item-text="name"
           item-value="id"
           label="ເມືອງ"
+          clearable
         ></v-autocomplete>
       </v-col>
       <v-col>
@@ -83,6 +84,7 @@
           item-value="id"
           label="ບ້ານ"
           multiple
+          clearable
         ></v-autocomplete>
       </v-col>
       <v-col>
@@ -95,6 +97,7 @@
           item-value="name"
           label="ສະຖານະ"
           multiple
+          clearable
         ></v-select>
       </v-col>
       <v-col>
@@ -389,20 +392,42 @@ export default {
     }
   },
   watch: {
+    start_date: function () {
+      this.pagination.current_page ='';
+      if(this.end_date !== '' && this.start_date !== ''){
+        if(this.start_date > this.end_date){
+          this.start_date = '';
+        }
+      }
+      this.fetchData();
+    },
+    end_date: function () {
+      this.pagination.current_page ='';
+      if(this.end_date !== '' && this.start_date !== ''){
+        if(this.end_date < this.start_date){
+          this.end_date = '';
+        }
+      }
+      this.fetchData();
+    },
     search: function (value) {
+      this.pagination.current_page ='';
       if (value == "") {
         this.fetchData();
       }
     },
 
     selectedVillage: function () {
+      this.pagination.current_page ='';
       this.fetchData();
     },
     selectedDistrict: function () {
+      this.pagination.current_page ='';
       this.fetchVillage();
       this.fetchData();
     },
     selectedStatus: function () {
+      this.pagination.current_page ='';
       this.fetchData();
     },
   },

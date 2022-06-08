@@ -19,11 +19,11 @@
               v-bind="attrs"
               v-on="on"
               dense
+              clearable
             ></v-text-field>
           </template>
           <v-date-picker
             v-model="start_date"
-            @input="fetchData()"
           ></v-date-picker>
         </v-menu>
       </v-col>
@@ -45,11 +45,11 @@
               v-bind="attrs"
               v-on="on"
               dense
+              clearable
             ></v-text-field>
           </template>
           <v-date-picker
             v-model="end_date"
-            @input="fetchData()"
           ></v-date-picker>
         </v-menu>
       </v-col>
@@ -64,7 +64,7 @@
           item-value="name"
           label="Roles"
           multiple
-          @input="fetchData()"
+          clearable
         ></v-select>
         <v-spacer></v-spacer>
       </v-col>
@@ -79,7 +79,7 @@
           item-value="id"
           label="Users"
           multiple
-          @input="fetchData()"
+          clearable
         ></v-autocomplete>
         <v-spacer></v-spacer>
       </v-col>
@@ -94,6 +94,7 @@
           item-value="model_name"
           label="Model Name"
           multiple
+          clearable
         ></v-select>
       </v-col>
     </v-row>
@@ -331,15 +332,33 @@ export default {
   },
   watch: {
     selectedModel: function () {
+      this.pagination.current_page ='';
       this.fetchData();
     },
-
-    date_from: function () {
+    start_date: function () {
+      this.pagination.current_page ='';
+      if(this.end_date != ''){
+        if(this.start_date > this.end_date){
+          this.start_date = '';
+        }
+      }
       this.fetchData();
     },
-    date_end: function () {
+    end_date: function () {
+      this.pagination.current_page ='';
+      if(this.end_date < this.start_date){
+        this.end_date = '';
+      }
       this.fetchData();
     },
+    selectedRoles: function (){
+      this.pagination.current_page ='';
+      this.fetchData();
+    },
+    selectedUsers:function (){
+      this.pagination.current_page ='';
+      this.fetchData();
+    }
   },
   created() {
     this.fetchData();

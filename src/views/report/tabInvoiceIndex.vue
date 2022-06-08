@@ -14,7 +14,6 @@
           item-text="name"
           item-value="duration"
           label="ຊ່ວງເວລາ"
-          @input="fetchData()"
         ></v-select>
       </v-col>
       <v-col v-if="selectedDuration == 'year'">
@@ -24,7 +23,6 @@
             v-model="year_from"
             type="year"
             placeholder="ເລີ່ມປີ"
-            @input="fetchData()"
           ></date-picker>
         </section>
       </v-col>
@@ -34,7 +32,6 @@
             v-model="year_to"
             type="year"
             placeholder="ຫາປີ"
-            @input="fetchData()"
           ></date-picker>
         </section>
       </v-col>
@@ -44,7 +41,6 @@
             v-model="month_from"
             type="month"
             placeholder="ເລີ່ມເດືອນ"
-            @input="fetchData()"
           ></date-picker>
         </section>
       </v-col>
@@ -54,7 +50,6 @@
             v-model="month_to"
             type="month"
             placeholder="ຫາເດືອນ"
-            @input="fetchData()"
           ></date-picker>
         </section>
       </v-col>

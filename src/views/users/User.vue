@@ -29,7 +29,6 @@
                   item-value="name"
                   label="Roles"
                   multiple
-                  @input="fetchData()"
                 ></v-select>
                 <v-spacer></v-spacer>
               </v-col>
@@ -932,11 +931,11 @@ export default {
       otp:"",
       isStepTwo:false,
       headers: [
-        { text: "User Name", value: "name" },
+        { text: "User Name", value: "name",width:"150px" },
         { text: "Phone", value: "phone", sortable: false },
         { text: "Email", value: "email", sortable: false },
-        { text: "Role", value: "roles", sortable: false },
-        { text: "Permission", value: "permissions", sortable: false },
+        { text: "Role", value: "roles", sortable: false,width:"150px" },
+        { text: "Permission", value: "permissions", sortable: false,width:"750px" },
         { text: "Status", value: "status", sortable: false, align: "center" },
         { text: "", value: "actions", sortable: false },
       ],
@@ -1660,10 +1659,15 @@ export default {
       this.server_errors.permissions = "";
     },
     search: function (value) {
+      this.pagination.current_page ='';
       if (value === "") {
         this.fetchData();
       }
     },
+    selectedRoles: function (){
+      this.pagination.current_page ='';
+      this.fetchData();
+    }
   },
   created() {
     this.fetchRole();

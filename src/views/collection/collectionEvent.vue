@@ -25,6 +25,7 @@
                 v-bind="attrs"
                 v-on="on"
                 dense
+                clearable
             ></v-text-field>
           </template>
           <v-date-picker
@@ -44,6 +45,7 @@
             item-value="name"
             label="ສະຖານະບໍລິການ"
             multiple
+            clearable
         ></v-select>
       </v-col>
       <v-col cols="4">
@@ -57,6 +59,7 @@
             item-value="name"
             label="ສະຖານະການຊຳລະ"
             multiple
+            clearable
         ></v-select>
       </v-col>
     </v-row>
@@ -868,12 +871,20 @@ export default {
     },
   },
   watch: {
+    month: function (value){
+      if(value !== ''){
+        this.pagination.current_page ='';
+        this.fetchData();
+      }
+    },
     search: function (value) {
+      this.pagination.current_page ='';
       if (value == "") {
         this.fetchData();
       }
     },
     selectedStatus: function () {
+      this.pagination.current_page ='';
       this.fetchData();
     },
     selectedPackage: function () {

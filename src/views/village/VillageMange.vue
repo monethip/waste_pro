@@ -510,12 +510,14 @@ export default {
   },
   watch: {
     selectedDistrict: function () {
+      this.pagination.current_page ='';
       this.fetchVillage();
       this.server_errors.district_id = "";
     },
 
     search: function (value) {
       if (value == "") {
+        this.pagination.current_page ='';
         this.fetchVillage();
       }
     },

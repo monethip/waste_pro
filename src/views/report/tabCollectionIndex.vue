@@ -34,7 +34,6 @@
               type="year"
               format="YYYY"
               placeholder="ເລີ່ມປີ"
-              @input="fetchData()"
           ></date-picker>
         </section>
       </v-col>
@@ -45,7 +44,6 @@
               type="year"
               format="YYYY"
               placeholder="ຫາປີ"
-              @input="fetchData()"
           ></date-picker>
         </section>
       </v-col>
@@ -55,7 +53,6 @@
               v-model="month_from"
               type="month"
               placeholder="ເລີ່ມເດືອນ"
-              @input="fetchData()"
           ></date-picker>
         </section>
       </v-col>
@@ -65,7 +62,6 @@
               v-model="month_to"
               type="month"
               placeholder="ຫາເດືອນ"
-              @input="fetchData()"
           ></date-picker>
         </section>
       </v-col>
@@ -77,7 +73,6 @@
               v-model="date_from"
               type="date"
               placeholder="ເລີ່ມວັນທີ"
-              @input="fetchData()"
           ></date-picker>
         </section>
       </v-col>
@@ -88,7 +83,6 @@
               v-model="date_to"
               type="date"
               placeholder="ຫາວັນທີ"
-              @input="fetchData()"
           ></date-picker>
         </section>
       </v-col>
@@ -172,7 +166,7 @@
                   </v-col>
                 </v-row>
               </div>
-              <v-data-table
+              <v-simple-table
                   v-if="homeCollection"
                   :headers="headers"
                   :items="homeCollection"
@@ -197,7 +191,7 @@
                     }}
                   </v-chip>
                 </template>
-              </v-data-table
+              </v-simple-table
               >
               <br/>
               <template>

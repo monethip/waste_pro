@@ -30,6 +30,7 @@
             item-text="name"
             item-value="id"
             label="ບ້ານ"
+            clearable
         ></v-autocomplete>
       </v-col>
       <v-col>
@@ -50,11 +51,11 @@
                 v-bind="attrs"
                 v-on="on"
                 dense
+                clearable
             ></v-text-field>
           </template>
           <v-date-picker
               v-model="start_date"
-              @input="fetchData()"
           ></v-date-picker>
         </v-menu>
       </v-col>
@@ -77,11 +78,11 @@
                 v-bind="attrs"
                 v-on="on"
                 dense
+                clearable
             ></v-text-field>
           </template>
           <v-date-picker
               v-model="end_date"
-              @input="fetchData()"
           ></v-date-picker>
         </v-menu>
       </v-col>
@@ -95,6 +96,7 @@
             item-text="display"
             item-value="name"
             label="ປະເພດລູກຄ້າ"
+            clearable
         ></v-autocomplete>
       </v-col>
     </v-row>
@@ -376,6 +378,7 @@ export default {
   },
   watch: {
     selectedVillage: function () {
+      this.pagination.current_page ='';
       this.fetchData();
     },
     selectedDistrict: function () {
@@ -385,6 +388,23 @@ export default {
       this.fetchVillage();
     },
     selectedCustomerType: function () {
+      this.pagination.current_page ='';
+      this.fetchData();
+    },
+    start_date: function () {
+      this.pagination.current_page ='';
+      if(this.end_date != ''){
+        if(this.start_date > this.end_date){
+          this.start_date = '';
+        }
+      }
+      this.fetchData();
+    },
+    end_date: function () {
+      this.pagination.current_page ='';
+      if(this.end_date < this.start_date){
+        this.end_date = '';
+      }
       this.fetchData();
     },
   },

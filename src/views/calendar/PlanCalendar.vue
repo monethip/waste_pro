@@ -60,7 +60,6 @@
           </template>
           <v-date-picker
               v-model="date"
-              @input="fetchData()"
           ></v-date-picker>
         </v-menu>
       </v-col>
@@ -866,6 +865,7 @@ export default {
   },
   watch: {
     search: function (value) {
+      this.pagination.current_page ='';
       if (value == "") {
         this.fetchData();
       }
@@ -889,12 +889,15 @@ export default {
       this.server_errors.date = "";
     },
     date: function () {
+      this.pagination.current_page ='';
       this.fetchData();
     },
     selectedDriverId: function () {
+      this.pagination.current_page ='';
       this.fetchData();
     },
     selectedCustomerType: function () {
+      this.pagination.current_page ='';
       this.fetchData();
     },
   },

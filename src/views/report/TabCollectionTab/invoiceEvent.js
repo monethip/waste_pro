@@ -1,4 +1,5 @@
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import moment from "moment";
 export default {
     title() {
         return `Vientiane Waste Co-Dev|Report Invoice`;
@@ -164,14 +165,63 @@ export default {
         },
     },
     watch: {
-        // selectedDuration: function () {
-        //     this.fetchData();
-        // },
+        selectedDuration: function () {
+            this.pagination.current_page ='';
+            this.fetchData();
+        },
         search: function (value) {
+            this.pagination.current_page ='';
             if (value == "") {
                 this.fetchData();
             }
         },
+
+        year_from: function (value) {
+            let year_from = moment(value).format("YYYY")
+            let year_to = moment(this.year_to).format("YYYY")
+            this.pagination.current_page ='';
+            if(year_from !== '' && year_to !== ''){
+                if(year_from > year_to){
+                    this.year_from = '';
+                }
+            }
+            this.fetchData();
+        },
+        year_to: function (value) {
+            let year_to = moment(value).format("YYYY")
+            let year_from = moment(this.year_from).format("YYYY")
+            this.pagination.current_page ='';
+            if(year_to !== '' && year_from !== ''){
+                if(year_to < year_from){
+                    this.year_to = '';
+                }
+            }
+            this.fetchData();
+        },
+        month_from: function (value){
+            let month_from = moment(value).format("YYYY-MM")
+            let month_to = moment(this.month_to).format("YYYY-MM")
+            if(month_from !== '' && month_to !== ''){
+                if(month_from > month_to){
+                    this.month_from = '';
+                }
+            }
+            this.pagination.current_page ='';
+            this.fetchData();
+        },
+        month_to: function (value){
+            let month_from = moment(this.month_from).format("YYYY-MM")
+            let month_to = moment(value).format("YYYY-MM")
+            this.pagination.current_page ='';
+            if(month_from !== '' && month_to !== ''){
+                if(month_to < month_from){
+                    this.month_to = '';
+                }
+            }
+            this.pagination.current_page ='';
+            this.fetchData();
+        },
+
         tab: function (value) {
             if (value == "tab-1") {
                 this.fetchData();

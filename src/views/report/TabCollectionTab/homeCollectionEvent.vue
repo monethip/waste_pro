@@ -32,7 +32,6 @@
                 type="year"
                 format="YYYY"
                 placeholder="ເລີ່ມປີ"
-                @input="fetchData()"
             ></date-picker>
           </section>
         </v-col>
@@ -43,7 +42,6 @@
                 type="year"
                 format="YYYY"
                 placeholder="ຫາປີ"
-                @input="fetchData()"
             ></date-picker>
           </section>
         </v-col>

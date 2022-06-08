@@ -30,7 +30,6 @@
           </template>
           <v-date-picker
               v-model="start_date"
-              @input="fetchData()"
           ></v-date-picker>
         </v-menu>
       </v-col>
@@ -57,7 +56,6 @@
           </template>
           <v-date-picker
               v-model="end_date"
-              @input="fetchData()"
           ></v-date-picker>
         </v-menu>
       </v-col>
@@ -130,6 +128,7 @@
                 item-value="value"
                 label="ປະເພດບໍລິການ"
                 multiple
+                clearable
             ></v-select>
             <v-spacer></v-spacer>
           <v-text-field
@@ -615,31 +614,52 @@ export default {
     }
   },
   watch: {
+    start_date: function () {
+      this.server_errors.start_month = "";
+      this.pagination.current_page ='';
+      if(this.end_date != ''){
+        if(this.start_date > this.end_date){
+          this.start_date = '';
+        }
+      }
+      this.fetchData();
+    },
+    end_date: function () {
+      this.pagination.current_page ='';
+      if(this.end_date < this.start_date){
+        this.end_date = '';
+      }
+      this.fetchData();
+    },
     search: function (value) {
+      this.pagination.current_page ='';
       if (value == "") {
         this.fetchData();
       }
     },
     selectedVillage: function () {
+      this.pagination.current_page ='';
       this.fetchData();
     },
     selectedDistrict: function () {
+      this.pagination.current_page ='';
       this.fetchVillage();
       this.fetchData();
     },
     selectedStatus: function () {
+      this.pagination.current_page ='';
       this.fetchData();
     },
     selectedPackage: function () {
       this.server_errors.package_id = "";
     },
-    start_date: function () {
-      this.server_errors.start_month = "";
-    },
+
     selectedCustomerStatus: function () {
+      this.pagination.current_page ='';
       this.fetchData();
     },
     selectedCost:function (){
+      this.pagination.current_page ='';
       this.fetchData();
     },
     "user.name": function () {
