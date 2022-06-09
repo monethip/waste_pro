@@ -210,6 +210,11 @@ export default {
             else if (value == "pending") return "primary";
             else return "info";
         },
+        statusText(status){
+            if(status == 'pending') return 'ລໍຖ້າ';
+            else if(status == 'success') return 'ສຳເລັດ';
+            else return status;
+        },
         costBy(value) {
             if (value == "container") return "ຄອນເທັນເນີ";
             else if (value == "fix_cost") return "ທຸລະກິດເປັນຖ້ຽວ";

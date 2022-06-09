@@ -138,7 +138,7 @@
              </template>
              <template v-slot:item.status="{ item }">
                <v-chip label :color="statusColor(item.payment_status)">{{
-                   item.payment_status
+                    paymentStatusText(item.payment_status)
                  }}</v-chip>
              </template>
              <template v-slot:item.created_at="{ item }">
@@ -207,6 +207,13 @@ export default {
       else if (value == "rejected") return "error"
       else return "info";
     },
+    paymentStatusText(status){
+      if(status == 'pending') return 'ລໍຖ້າເກັບເງິນ';
+      else if(status == 'to_confirm_payment') return 'ລໍຖ້າຢືນຢັນຊຳລະ';
+      else if (status == 'rejected') return 'ປະຕິເສດການຊຳລະ';
+      else if(status == 'success') return 'ຊຳລະສຳເລັດ';
+      else return  '';
+    }
   },
   watch: {
     tab: function () {

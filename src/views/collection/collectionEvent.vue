@@ -97,7 +97,7 @@
               <th class="text-left">Subtotal</th>
               <th class="text-left">ການບໍລິການ</th>
               <th class="text-left">ການຊຳລະ</th>
-              <th class="text-left">ລາຍລະອຽດ</th>
+              <th class="text-left" style="width: 280px;">ລາຍລະອຽດ</th>
               <th class="text-left">Image</th>
             </tr>
             </thead>
@@ -111,12 +111,12 @@
               <td>{{ user.total }}</td>
               <td>{{ user.sub_total }}</td>
               <td>
-                <v-chip label color="primary"> {{ user.collect_status }}</v-chip>
+                <v-chip label color="primary">{{collectStatus(user.collect_status)}}</v-chip>
               </td>
               <td>
-                <v-chip label color="success">{{ user.payment_status }}</v-chip>
+                <v-chip label color="success">{{paymentStatusText(user.payment_status)}}</v-chip>
               </td>
-              <td>{{ user.description }}</td>
+              <td style="width: 280px;">{{ user.description }}</td>
               <td>
                 <v-avatar
                     size="36px"
@@ -521,33 +521,33 @@ export default {
         {
           id: 1,
           name: "requested",
-          dis_play: "requested"
+          dis_play: "ຮ້ອງຂໍເກັບຂີ້ເຫື້ອຍ"
         },
         {
           id: 2,
           name: "rejected",
-          dis_play: "rejected"
+          dis_play: "ປະຕິເສດເກັບຂີ້ເຫື້ອຍ"
         },
         {
           id: 3,
           name: "approved",
-          dis_play: "approved"
+          dis_play: "ອະນຸມັດເກັບຂີ້ເຫື້ອຍ"
 
         },
         {
           id: 4,
           name: "collected",
-          dis_play: "collected"
+          dis_play: "ເກັບຂີເຫື້ອຍສຳເລັດ"
         },
         {
           id: 5,
           name: "collect_confirm",
-          dis_play: "collect_confirm"
+          dis_play: "ລູກຄ້າຢືນຢັນການເກັບ"
         },
         {
           id: 5,
           name: "collect_reject",
-          dis_play: "collect_reject"
+          dis_play: "ການເກັບຖືກປະຕິເສດ"
         },
       ],
       selectedPaymentStatus: [],
@@ -555,22 +555,22 @@ export default {
         {
           id: 1,
           name: "pending",
-          dis_play: "pending"
+          dis_play: "ລໍຖ້າເກັບເງິນ"
         },
         {
           id: 2,
           name: "to_confirm_payment",
-          dis_play: "to_confirm_payment"
+          dis_play: "ລໍຖ້າຢືນຢັນຊຳລະ"
         },
         {
           id: 3,
           name: "rejected",
-          dis_play: "rejected"
+          dis_play: "ປະຕິເສດການຊຳລະ"
         },
         {
           id: 4,
           name: "success",
-          dis_play: "success"
+          dis_play: "ຊຳລະສຳເລັດ"
         },
       ],
 
@@ -605,8 +605,8 @@ export default {
           value: "collect_status",
           align: "center",
         },
-        {text: "Payment Status", value: "payment_status", align: "center"},
-        {text: "Image", value: "media"},
+        {text: "Payment Status", value: "payment_status", align: "center",width:"200px"},
+        {text: "Image", value: "media",width:"250px"},
         {text: "", value: "actions", sortable: false},
       ],
     };
@@ -869,6 +869,23 @@ export default {
       else if (value == "inactive") return "error";
       else return "info";
     },
+
+    collectStatus(status){
+      if(status == 'requested') return 'ຮ້ອງຂໍເກັບຂີ້ເຫື້ອຍ';
+      else if(status == 'rejected') return 'ປະຕິເສດເກັບຂີ້ເຫື້ອຍ';
+      else if (status == 'approved') return 'ອະນຸມັດເກັບຂີ້ເຫື້ອຍ';
+      else if(status == 'collected') return 'ເກັບຂີເຫື້ອຍສຳເລັດ';
+      else if(status == 'collect_confirm') return 'ລູກຄ້າຢືນຢັນການເກັບ';
+      else if(status == 'collect_reject') return 'ການເກັບຖືກປະຕິເສດ';
+      else return  '';
+    },
+    paymentStatusText(status){
+      if(status == 'pending') return 'ລໍຖ້າເກັບເງິນ';
+      else if(status == 'to_confirm_payment') return 'ລໍຖ້າຢືນຢັນຊຳລະ';
+      else if (status == 'rejected') return 'ປະຕິເສດການຊຳລະ';
+      else if(status == 'success') return 'ຊຳລະສຳເລັດ';
+      else return  '';
+    }
   },
   watch: {
     month: function (value){

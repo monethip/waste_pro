@@ -181,7 +181,7 @@
                 <!--        </template>-->
                 <template v-slot:item.status="{ item }">
                   <v-chip label :color="homeStatus(item.status)">{{
-                      item.status
+                      statusText(item.status)
                     }}
                   </v-chip>
                 </template>
@@ -294,7 +294,7 @@
                   >
                     <template v-slot:item.status="{ item }">
                       <v-chip label :color="companyStatus(item.status)">{{
-                          item.status
+                           statusText(item.status)
                         }}
                       </v-chip>
                     </template>

@@ -151,7 +151,8 @@
              <!--          </div>-->
              <!--        </template>-->
              <template v-slot:item.status="{ item }">
-               <div>{{item.collect_status}}</div>
+<!--               <div>{{item.collect_status}}</div>-->
+               <v-chip label color="primary">{{collectStatus(item.collect_status)}}</v-chip>
              </template>
            </v-data-table
            >
@@ -195,7 +196,7 @@ export default {
       headers: [
         { text: "ວັນທີ", value: "date", sortable: false },
         { text: "ລູກຄ້າ", value: "full_name" },
-        { text: "ຈຳນວນຖົງ", value: "bag", sortable: false, align: "center" },
+        // { text: "ຈຳນວນຖົງ", value: "bag", sortable: false, align: "center" },
         { text: "ສະຖານທີ່", value: "name", sortable: false },
         { text: "ສະຖານະ", value: "status", sortable: false },
         // { text: "", value: "actions", sortable: false },
@@ -210,6 +211,15 @@ export default {
       if (value == "success") return "success";
       else if (value == "pending") return "primary";
       else return "info";
+    },
+    collectStatus(status){
+      if(status == 'requested') return 'ຮ້ອງຂໍເກັບຂີ້ເຫື້ອຍ';
+      else if(status == 'rejected') return 'ປະຕິເສດເກັບຂີ້ເຫື້ອຍ';
+      else if (status == 'approved') return 'ອະນຸມັດເກັບຂີ້ເຫື້ອຍ';
+      else if(status == 'collected') return 'ເກັບຂີເຫື້ອຍສຳເລັດ';
+      else if(status == 'collect_confirm') return 'ລູກຄ້າຢືນຢັນການເກັບ';
+      else if(status == 'collect_reject') return 'ການເກັບຖືກປະຕິເສດ';
+      else return  '';
     },
   },
   watch: {
