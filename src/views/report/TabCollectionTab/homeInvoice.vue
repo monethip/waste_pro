@@ -93,7 +93,7 @@
         </v-col>
         <v-col>
           <p>
-            ຊຳລະສຳເລັດ
+            ການຊຳລະທີ່ລໍຖ້າຢືນຢັນ
             <span class="success--text">{{
               Intl.NumberFormat().format(sum.to_confirm_payment_total)
             }}</span>
@@ -101,7 +101,7 @@
         </v-col>
         <v-col>
           <p>
-            ສຳເລັດທັງໝົດ
+            ສຳເລັດ
             <span class="success--text">{{
               Intl.NumberFormat().format(sum.success_total)
             }}</span>
@@ -109,7 +109,7 @@
         </v-col>
         <v-col>
           <p>
-            ລວມ
+            ລໍຖ້າການອານຸມັດ
             <span class="success--text"
               >{{ Intl.NumberFormat().format(sum.pending_total) }}
             </span>

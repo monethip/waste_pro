@@ -118,6 +118,44 @@
       <v-col>
         <p class="text">ລວມຫົວໜ່ວຍທຸລະກິດ {{ pagination.total }} </p>
       </v-col>
+      <v-col>
+        <v-select
+            outlined
+            dense
+            :items="can_collects"
+            v-model="selectedCanCollect"
+            item-text="name"
+            item-value="value"
+            label="ເກັບເລີຍໄດ້ບໍ່"
+            clearable
+        ></v-select>
+      </v-col>
+      <v-col>
+        <v-select
+            outlined
+            dense
+            :items="customerStatus"
+            v-model="selectedCustomerStatus"
+            item-text="name"
+            item-value="value"
+            label="ສະຖານະແຜນ"
+            multiple
+            clearable
+        ></v-select>
+      </v-col>
+   <v-col>
+     <v-select
+         outlined
+         dense
+         :items="costs"
+         v-model="selectedCost"
+         item-text="name"
+         item-value="value"
+         label="ປະເພດບໍລິການ"
+         multiple
+         clearable
+     ></v-select>
+   </v-col>
     </v-row>
     <div>
       <v-card>
@@ -239,6 +277,50 @@ export default {
           name: "trial",
         },
       ],
+      selectedCanCollect: "",
+      can_collects: [
+        {
+          id: 1,
+          name: "ເກັບໄດ້",
+          value: '1',
+        },
+        {
+          id: 2,
+          name: "ເກັບບໍໄດ້",
+          value: '0',
+        },
+      ],
+      selectedCustomerStatus: [],
+      customerStatus: [
+        {
+          id: 1,
+          value: "calendar",
+          name: "ຍັງບໍມີຕາຕະລາງ",
+        },
+        {
+          id: 2,
+          value: "route_plan",
+          name: "ຍັງບໍມີແຜນ",
+        },
+      ],
+      selectedCost: [],
+      costs: [
+        {
+          id: 1,
+          value: "container",
+          name: "ຄອນເທັນເນີ"
+        },
+        {
+          id: 2,
+          value: "fix_cost",
+          name: "ທຸລະກິດເປັນຖ້ຽວ"
+        },
+        {
+          id: 3,
+          value: "chartered",
+          name: "ມອບເໝົາ"
+        },
+      ],
 
       headers: [
         { text: "ຊື່", value: "company_name" },
@@ -275,7 +357,11 @@ export default {
             {date_end: this.end_date},
             {villages: this.selectedVillage},
             {statuses: this.selectedStatus},
-            {district_id: this.selectedDistrict}]),
+            {can_collect: this.selectedCanCollect},
+            {cost_by: this.selectedCost},
+            {without: this.selectedCustomerStatus},
+            {district_id: this.selectedDistrict}
+          ]),
         })
         .then((res) => {
           if (res.data.code == 200) {
@@ -357,8 +443,11 @@ export default {
               {date_end: this.end_date},
               {villages: this.selectedVillage},
               {statuses: this.selectedStatus},
-              {filter: this.search},
-              {district_id: this.selectedDistrict}]),
+              {can_collect: this.selectedCanCollect},
+              {cost_by: this.selectedCost},
+              {without: this.selectedCustomerStatus},
+              {district_id: this.selectedDistrict}
+            ]),
           },
           // { responseType: "blob" }
         )
@@ -427,6 +516,18 @@ export default {
       this.fetchData();
     },
     selectedStatus: function () {
+      this.pagination.current_page ='';
+      this.fetchData();
+    },
+    selectedCanCollect: function () {
+      this.pagination.current_page ='';
+      this.fetchData();
+    },
+    selectedCustomerStatus: function () {
+      this.pagination.current_page ='';
+      this.fetchData();
+    },
+    selectedCost:function (){
       this.pagination.current_page ='';
       this.fetchData();
     },

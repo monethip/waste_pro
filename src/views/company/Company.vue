@@ -85,7 +85,6 @@
             clearable
         ></v-autocomplete>
       </v-col>
-
       <v-col>
         <v-select
             outlined
@@ -93,8 +92,9 @@
             :items="status"
             v-model="selectedStatus"
             item-text="name"
-            item-value="value"
-            label="ເກັບເລີຍໄດ້ບໍ່"
+            item-value="name"
+            label="ສະຖານະ"
+            multiple
             clearable
         ></v-select>
       </v-col>
@@ -106,7 +106,7 @@
             v-model="selectedCustomerStatus"
             item-text="name"
             item-value="value"
-            label="ສະຖານະລູກຄ້າ"
+            label="ສະຖານະແຜນ"
             multiple
             clearable
         ></v-select>
@@ -119,18 +119,29 @@
           <v-divider class="mx-4" vertical></v-divider>
           <v-spacer></v-spacer>
 
-            <v-select
-                outlined
-                dense
-                :items="costs"
-                v-model="selectedCost"
-                item-text="name"
-                item-value="value"
-                label="ປະເພດບໍລິການ"
-                multiple
-                clearable
-            ></v-select>
-            <v-spacer></v-spacer>
+          <v-select
+              outlined
+              dense
+              :items="can_collects"
+              v-model="selectedCanCollect"
+              item-text="name"
+              item-value="value"
+              label="ເກັບເລີຍໄດ້ບໍ່"
+              clearable
+          ></v-select>
+          <v-spacer></v-spacer>
+          <v-select
+              outlined
+              dense
+              :items="costs"
+              v-model="selectedCost"
+              item-text="name"
+              item-value="value"
+              label="ປະເພດບໍລິການ"
+              multiple
+              clearable
+          ></v-select>
+          <v-spacer></v-spacer>
           <v-text-field
               outlined
               dense
@@ -365,8 +376,23 @@ export default {
       selectedDistrict: "",
       villages: [],
       selectedVillage: [],
-      selectedStatus: "",
+      selectedStatus: [],
       status: [
+        {
+          id: 1,
+          name: "active",
+        },
+        {
+          id: 2,
+          name: "inactive",
+        },
+        {
+          id: 3,
+          name: "trial",
+        },
+      ],
+      selectedCanCollect: "",
+      can_collects: [
         {
           id: 1,
           name: "ເກັບໄດ້",
@@ -432,17 +458,18 @@ export default {
       this.$axios
           .get("company", {
                 params: queryOption([
-                  {page: this.pagination.current_page},
-                  {per_page: this.per_page},
-                  {filter: this.search},
-                  {date_from: this.start_date},
-                  {date_end: this.end_date},
-                  {without: this.selectedCustomerStatus},
-                  {villages: this.selectedVillage},
-                  {can_collect: this.selectedStatus},
-                  {district_id: this.selectedDistrict},
-                  {cost_by: this.selectedCost},
-                ]
+                      {page: this.pagination.current_page},
+                      {per_page: this.per_page},
+                      {filter: this.search},
+                      {date_from: this.start_date},
+                      {date_end: this.end_date},
+                      {statuses: this.selectedStatus},
+                      {without: this.selectedCustomerStatus},
+                      {villages: this.selectedVillage},
+                      {can_collect: this.selectedCanCollect},
+                      {district_id: this.selectedDistrict},
+                      {cost_by: this.selectedCost},
+                    ]
                 ),
               }
           )
@@ -616,38 +643,38 @@ export default {
   watch: {
     start_date: function () {
       this.server_errors.start_month = "";
-      this.pagination.current_page ='';
-      if(this.end_date != ''){
-        if(this.start_date > this.end_date){
+      this.pagination.current_page = '';
+      if (this.end_date != '') {
+        if (this.start_date > this.end_date) {
           this.start_date = '';
         }
       }
       this.fetchData();
     },
     end_date: function () {
-      this.pagination.current_page ='';
-      if(this.end_date < this.start_date){
+      this.pagination.current_page = '';
+      if (this.end_date < this.start_date) {
         this.end_date = '';
       }
       this.fetchData();
     },
     search: function (value) {
-      this.pagination.current_page ='';
+      this.pagination.current_page = '';
       if (value == "") {
         this.fetchData();
       }
     },
     selectedVillage: function () {
-      this.pagination.current_page ='';
+      this.pagination.current_page = '';
       this.fetchData();
     },
     selectedDistrict: function () {
-      this.pagination.current_page ='';
+      this.pagination.current_page = '';
       this.fetchVillage();
       this.fetchData();
     },
     selectedStatus: function () {
-      this.pagination.current_page ='';
+      this.pagination.current_page = '';
       this.fetchData();
     },
     selectedPackage: function () {
@@ -655,11 +682,15 @@ export default {
     },
 
     selectedCustomerStatus: function () {
-      this.pagination.current_page ='';
+      this.pagination.current_page = '';
       this.fetchData();
     },
-    selectedCost:function (){
-      this.pagination.current_page ='';
+    selectedCost: function () {
+      this.pagination.current_page = '';
+      this.fetchData();
+    },
+    selectedCanCollect: function () {
+      this.pagination.current_page = '';
       this.fetchData();
     },
     "user.name": function () {

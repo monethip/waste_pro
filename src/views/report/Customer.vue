@@ -101,6 +101,19 @@
         ></v-select>
       </v-col>
       <v-col>
+        <v-select
+            outlined
+            dense
+            :items="customerStatus"
+            v-model="selectedCustomerStatus"
+            item-text="name"
+            item-value="value"
+            label="ສະຖານະແຜນ"
+            multiple
+            clearable
+        ></v-select>
+      </v-col>
+      <v-col>
         <v-text-field
           outlined
           dense
@@ -224,6 +237,19 @@ export default {
           name: "trial",
         },
       ],
+      selectedCustomerStatus: [],
+      customerStatus: [
+        {
+          id: 1,
+          value: "calendar",
+          name: "ຍັງບໍມີຕາຕະລາງເກັບ",
+        },
+        {
+          id: 2,
+          value: "route_plan",
+          name: "ຍັງບໍມີແຜນ",
+        },
+      ],
 
       headers: [
         { text: "ຊື່", value: "name" },
@@ -260,6 +286,7 @@ export default {
             {date_end: this.end_date},
             {villages: this.selectedVillage},
             {statuses: this.selectedStatus},
+            {without: this.selectedCustomerStatus},
             {district_id: this.selectedDistrict}]),
 
         })
@@ -411,6 +438,10 @@ export default {
       this.pagination.current_page ='';
       this.fetchData();
     },
+    selectedCustomerStatus: function (){
+      this.pagination.current_page ='';
+      this.fetchData();
+    }
   },
   created() {
     this.fetchData();

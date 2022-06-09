@@ -116,7 +116,7 @@
             v-model="selectedCustomerStatus"
             item-text="name"
             item-value="value"
-            label="ສະຖານະລູກຄ້າ"
+            label="ສະຖານະແຜນ"
             multiple
             clearable
         ></v-select>
@@ -560,7 +560,7 @@ export default {
         {
           id: 1,
           value: "calendar",
-          name: "ຍັງບໍມີຕາຕະລາງ",
+          name: "ຍັງບໍມີຕາຕະລາງເກັບ",
         },
         {
           id: 2,
@@ -585,7 +585,6 @@ export default {
   },
   methods: {
     fetchData() {
-
       this.$store.commit("Loading_State", true);
       this.$axios
           .get("customer",
