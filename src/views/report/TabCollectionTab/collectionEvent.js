@@ -127,7 +127,7 @@ export default {
             this.loading = true;
             this.$axios
                 .post(
-                    "report-collection",
+                    "report-event-collection",
                     data
                 )
                 .then((res) => {
