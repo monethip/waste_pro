@@ -89,6 +89,34 @@
           </section>
         </v-col>
       </v-row>
+    <v-row>
+      <v-col cols>
+        <v-select
+            outlined
+            dense
+            :items="collectionStatus"
+            v-model="selectedCollectionStatus"
+            item-text="dis_play"
+            item-value="name"
+            label="ສະຖານະບໍລິການ"
+            multiple
+            clearable
+        ></v-select>
+      </v-col>
+      <v-col col>
+        <v-select
+            outlined
+            dense
+            :items="paymentStatus"
+            v-model="selectedPaymentStatus"
+            item-text="dis_play"
+            item-value="name"
+            label="ສະຖານະການຊຳລະ"
+            multiple
+            clearable
+        ></v-select>
+      </v-col>
+    </v-row>
 
     <div>
       <div v-if="summary">
@@ -150,6 +178,9 @@
              <!--            <span class="success&#45;&#45;text">{{ item.status }}</span>-->
              <!--          </div>-->
              <!--        </template>-->
+<!--             <template>-->
+<!--               <v-chip label color="primary">{{paymentStatusText(item.payment_status)}}</v-chip>-->
+<!--             </template>-->
              <template v-slot:item.status="{ item }">
 <!--               <div>{{item.collect_status}}</div>-->
                <v-chip label color="primary">{{collectStatus(item.collect_status)}}</v-chip>
@@ -198,7 +229,8 @@ export default {
         { text: "ລູກຄ້າ", value: "full_name" },
         // { text: "ຈຳນວນຖົງ", value: "bag", sortable: false, align: "center" },
         { text: "ສະຖານທີ່", value: "name", sortable: false },
-        { text: "ສະຖານະ", value: "status", sortable: false },
+        { text: "ສະຖານະເກັບ", value: "status", sortable: false },
+        // { text: "ສະຖານະຊຳລະ", value: "payment_status", sortable: false },
         // { text: "", value: "actions", sortable: false },
       ],
     };
@@ -221,6 +253,13 @@ export default {
       else if(status == 'collect_reject') return 'ການເກັບຖືກປະຕິເສດ';
       else return  '';
     },
+    paymentStatusText(status){
+      if(status == 'pending') return 'ລໍຖ້າເກັບເງິນ';
+      else if(status == 'to_confirm_payment') return 'ລໍຖ້າຢືນຢັນຊຳລະ';
+      else if (status == 'rejected') return 'ປະຕິເສດການຊຳລະ';
+      else if(status == 'success') return 'ຊຳລະສຳເລັດ';
+      else return  '';
+    }
   },
   watch: {
     tab: function () {

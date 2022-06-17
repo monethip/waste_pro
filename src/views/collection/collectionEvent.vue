@@ -40,7 +40,6 @@
             dense
             :items="collectionStatus"
             v-model="selectedCollectionStatus"
-            @input="fetchData()"
             item-text="dis_play"
             item-value="name"
             label="ສະຖານະບໍລິການ"
@@ -54,7 +53,6 @@
             dense
             :items="paymentStatus"
             v-model="selectedPaymentStatus"
-            @input="fetchData()"
             item-text="dis_play"
             item-value="name"
             label="ສະຖານະການຊຳລະ"
@@ -888,6 +886,15 @@ export default {
     }
   },
   watch: {
+    selectedPaymentStatus:function (){
+      this.pagination.current_page ='';
+      this.fetchData();
+    },
+    selectedCollectionStatus:function (){
+      this.pagination.current_page ='';
+      this.fetchData();
+    },
+
     month: function (value){
       if(value !== ''){
         this.pagination.current_page ='';

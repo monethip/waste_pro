@@ -69,6 +69,34 @@
 <!--        </v-text-field>-->
 <!--      </v-col>-->
     </v-row>
+    <v-row>
+      <v-col cols>
+        <v-select
+            outlined
+            dense
+            :items="collectionStatus"
+            v-model="selectedCollectionStatus"
+            item-text="dis_play"
+            item-value="name"
+            label="ສະຖານະບໍລິການ"
+            multiple
+            clearable
+        ></v-select>
+      </v-col>
+      <v-col col>
+        <v-select
+            outlined
+            dense
+            :items="paymentStatus"
+            v-model="selectedPaymentStatus"
+            item-text="dis_play"
+            item-value="name"
+            label="ສະຖານະການຊຳລະ"
+            multiple
+            clearable
+        ></v-select>
+      </v-col>
+    </v-row>
 
     <div>
       <v-row v-for="(sum, index) in summary" :key="index">

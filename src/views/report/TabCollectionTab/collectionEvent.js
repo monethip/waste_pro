@@ -49,6 +49,64 @@ export default {
                 },
             ],
             collectionType: "home",
+
+            selectedCollectionStatus: [],
+            collectionStatus: [
+                {
+                    id: 1,
+                    name: "requested",
+                    dis_play: "ຮ້ອງຂໍເກັບຂີ້ເຫື້ອຍ"
+                },
+                {
+                    id: 2,
+                    name: "rejected",
+                    dis_play: "ປະຕິເສດເກັບຂີ້ເຫື້ອຍ"
+                },
+                {
+                    id: 3,
+                    name: "approved",
+                    dis_play: "ອະນຸມັດເກັບຂີ້ເຫື້ອຍ"
+
+                },
+                {
+                    id: 4,
+                    name: "collected",
+                    dis_play: "ເກັບຂີເຫື້ອຍສຳເລັດ"
+                },
+                {
+                    id: 5,
+                    name: "collect_confirm",
+                    dis_play: "ລູກຄ້າຢືນຢັນການເກັບ"
+                },
+                {
+                    id: 5,
+                    name: "collect_reject",
+                    dis_play: "ການເກັບຖືກປະຕິເສດ"
+                },
+            ],
+            selectedPaymentStatus: [],
+            paymentStatus: [
+                {
+                    id: 1,
+                    name: "pending",
+                    dis_play: "ລໍຖ້າເກັບເງິນ"
+                },
+                {
+                    id: 2,
+                    name: "to_confirm_payment",
+                    dis_play: "ລໍຖ້າຢືນຢັນຊຳລະ"
+                },
+                {
+                    id: 3,
+                    name: "rejected",
+                    dis_play: "ປະຕິເສດການຊຳລະ"
+                },
+                {
+                    id: 4,
+                    name: "success",
+                    dis_play: "ຊຳລະສຳເລັດ"
+                },
+            ],
         };
     },
     methods: {
@@ -69,6 +127,8 @@ export default {
                 data.append("date_from", this.moment(this.date_from).format("YYYY-MM-DD"));
                 data.append("date_to", this.moment(this.date_to).format("YYYY-MM-DD"));
             }
+            data.append("collect_status", this.selectedCollectionStatus);
+            data.append("payment_status", this.selectedPaymentStatus);
             this.$store.commit("Loading_State", true);
             this.$axios
                 .post("report-event-collection", data
@@ -124,6 +184,8 @@ export default {
                 data.append("date_from", this.moment(this.date_from).format("YYYY-MM-DD"));
                 data.append("date_to", this.moment(this.date_to).format("YYYY-MM-DD"));
             }
+            data.append("collect_status", this.selectedCollectionStatus);
+            data.append("payment_status", this.selectedPaymentStatus);
             this.loading = true;
             this.$axios
                 .post(
@@ -158,6 +220,14 @@ export default {
         },
     },
     watch: {
+        selectedPaymentStatus:function (){
+            this.pagination.current_page ='';
+            this.fetchData();
+        },
+        selectedCollectionStatus:function (){
+            this.pagination.current_page ='';
+            this.fetchData();
+        },
         selectedDuration: function () {
             this.pagination.current_page ='';
             this.fetchData();

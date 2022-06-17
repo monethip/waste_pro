@@ -819,28 +819,38 @@ export default {
     placeMarker() {
       this.markers = [];
       this.places = [];
-      if (this.currentPlace) {
+      if(this.data.lat){
         const marker = {
-          lat: this.currentPlace.geometry.location.lat(),
-          lng: this.currentPlace.geometry.location.lng(),
+          lat: parseFloat(this.data.lat),
+          lng: parseFloat(this.data.lng),
         };
         this.markers.push({position: marker});
         this.latlng = marker;
-        this.animateMarker();
       } else {
-        const marker = {
-          lat: parseFloat(this.latlng.lat),
-          lng: parseFloat(this.latlng.lng),
-        };
-        this.markers.push({position: marker});
-        this.animateMarker();
+        if (this.currentPlace) {
+          const marker = {
+            lat: this.currentPlace.geometry.location.lat(),
+            lng: this.currentPlace.geometry.location.lng(),
+          };
+          this.markers.push({position: marker});
+          this.latlng = marker;
+          this.animateMarker();
+        } else {
+          const marker = {
+            lat: parseFloat(this.latlng.lat),
+            lng: parseFloat(this.latlng.lng),
+          };
+          this.markers.push({position: marker});
+          this.animateMarker();
+        }
+        // set address
+        if (this.$refs.searchInput) {
+          this.address = this.$refs.searchInput.$el.value;
+        } else {
+          // this.address = this.currentPlace.formatted_address;
+        }
       }
-      // set address
-      if (this.$refs.searchInput) {
-        this.address = this.$refs.searchInput.$el.value;
-      } else {
-        // this.address = this.currentPlace.formatted_address;
-      }
+
       this.onDataChange();
     },
     animateMarker() {
