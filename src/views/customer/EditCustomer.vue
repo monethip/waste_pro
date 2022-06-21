@@ -169,7 +169,7 @@
                     outlined
                     dense
                     :items="favorite_dates"
-                    v-model="favorite_dates.selectedFavoriteDate"
+                    v-model="selectedFavoriteDate"
                     item-text="name"
                     item-value="name"
                     label="ວັນພິເສດ"
@@ -526,7 +526,9 @@ export default {
                 this.selectedDistrict = res.data.data.district.id;
                 // this.selectedVillage = res.data.data.village.id;
                 this.selectedVillage = res.data.data.village_id;
-                console.log(this.selectedVillage)
+                res.data.data.favorite_dates.map((item)=>{
+                  this.selectedFavoriteDate.push(item.name);
+                });
                 res.data.data.village_details.map((item) => {
                   this.selectedVillageDetail.push(item.id);
                 });
@@ -892,6 +894,7 @@ export default {
   created() {
     this.fetchAddress();
     this.fetchData();
+    this.fetchFavorite();
   },
 };
 </script>

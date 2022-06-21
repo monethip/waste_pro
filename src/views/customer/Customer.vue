@@ -201,6 +201,14 @@
                     </v-chip
                     >
                   </template>
+                  <template v-slot:item.favorite_dates="{ item }">
+                    <div
+                        v-for="(data, index) in item.favorite_dates"
+                        :key="index"
+                    >
+                      <div>{{ data.name }}</div>
+                    </div>
+                  </template>
 
                   <template v-slot:item.actions="{ item }">
                     <v-menu offset-y>
@@ -585,13 +593,14 @@ export default {
 
       headers: [
         {text: "ID", value: "customer_id"},
-        {text: "ຊື່", value: "name"},
-        {text: "ນາມສະກຸນ", value: "surname"},
-        {text: "Phone", value: "user.phone", sortable: false},
-        {text: "ທີ່ຢູ່", value: "district.name", sortable: false},
-        {text: "ປະເພດບໍລິການ", value: "package.name", sortable: false},
-        {text: "ສະຖານະແພັກເກດ", value: "status"},
-        {text: "ສະຖານະເກັບ", value: "can_collect", align: "center"},
+        {text: "ຊື່", value: "name",width:"200px"},
+        {text: "ນາມສະກຸນ", value: "surname",width:"200px"},
+        {text: "Phone", value: "user.phone",width:"200px", sortable: false},
+        {text: "ທີ່ຢູ່", value: "district.name",width:"200px", sortable: false},
+        {text: "ປະເພດບໍລິການ", value: "package.name",width:"200px", sortable: false},
+        {text: "ສະຖານະແພັກເກດ", value: "status",width:"200px"},
+        {text: "ວັນພິເສດ", value: "favorite_dates",width:"100px"},
+        {text: "ສະຖານະເກັບ", value: "can_collect", align: "center",width:"200px"},
         {text: "Profile", value: "media"},
         {text: "", value: "actions", sortable: false},
       ],
