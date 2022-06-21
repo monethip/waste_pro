@@ -127,8 +127,12 @@ export default {
                 data.append("date_from", this.moment(this.date_from).format("YYYY-MM-DD"));
                 data.append("date_to", this.moment(this.date_to).format("YYYY-MM-DD"));
             }
-            data.append("collect_statuses", this.selectedCollectionStatus);
-            data.append("payment_statuses", this.selectedPaymentStatus);
+            this.selectedCollectionStatus.map((item) => {
+                data.append("collect_statuses[]", item);
+            });
+            this.selectedPaymentStatus.map((item) => {
+                data.append("payment_statuses[]", item);
+            });
             this.$store.commit("Loading_State", true);
             this.$axios
                 .post("report-event-collection", data
@@ -184,8 +188,12 @@ export default {
                 data.append("date_from", this.moment(this.date_from).format("YYYY-MM-DD"));
                 data.append("date_to", this.moment(this.date_to).format("YYYY-MM-DD"));
             }
-            data.append("collect_status", this.selectedCollectionStatus);
-            data.append("payment_status", this.selectedPaymentStatus);
+            this.selectedCollectionStatus.map((item) => {
+                data.append("collect_statuses[]", item);
+            });
+            this.selectedPaymentStatus.map((item) => {
+                data.append("payment_statuses[]", item);
+            });
             this.loading = true;
             this.$axios
                 .post(

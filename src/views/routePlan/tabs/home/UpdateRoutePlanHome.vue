@@ -221,15 +221,27 @@
           <v-card-text>
             <v-container>
               <v-row class="mb-n6">
+                <v-col cols>
+                  <v-select
+                      outlined
+                      dense
+                      :items="favorite_dates"
+                      v-model="selectedFavoriteDate"
+                      item-text="name"
+                      item-value="name"
+                      label="ວັນພິເສດ"
+                      multiple
+                  ></v-select>
+                </v-col>
                 <v-col>
                   <v-autocomplete
-                    outlined
-                    dense
-                    :items="districts"
-                    v-model="selectedDistrict"
-                    item-text="name"
-                    item-value="id"
-                    label="ເມືອງ"
+                      outlined
+                      dense
+                      :items="districts"
+                      v-model="selectedDistrict"
+                      item-text="name"
+                      item-value="id"
+                      label="ເມືອງ"
                   ></v-autocomplete>
                 </v-col>
               </v-row>
@@ -380,6 +392,9 @@ export default {
       name: "",
       server_errors: {},
       plan: {},
+
+      favorite_dates: [],
+      selectedFavoriteDate: [],
       headers: [
         { text: "", value: "" },
         { text: "ລຳດັບ", value: "" },
@@ -634,6 +649,7 @@ export default {
             page: this.pagination.current_page,
             per_page: this.per_page,
             // filter: this.search,
+            favorite_dates: this.selectedFavoriteDate,
             villages: this.selectedVillage,
             without:['route_plan','calendar']
           },
@@ -783,9 +799,26 @@ export default {
         this.infoCurrentKey = key;
       }
     },
+    fetchFavorite() {
+      this.$axios
+          .get("favorite-date")
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.favorite_dates = res.data.data;
+              }, 100);
+            }
+          })
+          .catch(() => {
+          });
+    },
 
   },
   watch: {
+    selectedFavoriteDate: function () {
+      this.pagination.current_page = '';
+      this.fetchAddCustomer();
+    },
     search: function (value) {
       if (value == "") {
         this.fetchData();
@@ -800,6 +833,7 @@ export default {
     },
   },
   created() {
+    this.fetchFavorite();
     this.fetchData();
     this.fetchDetail();
   },

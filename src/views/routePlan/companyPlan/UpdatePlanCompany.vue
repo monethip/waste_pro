@@ -233,16 +233,17 @@
           <v-card-text>
             <v-container>
               <v-row class="mb-n6">
-                <v-col>
-                  <v-autocomplete
+                <v-col cols>
+                  <v-select
                       outlined
                       dense
-                      :items="districts"
-                      v-model="selectedDistrict"
+                      :items="favorite_dates"
+                      v-model="selectedFavoriteDate"
                       item-text="name"
-                      item-value="id"
-                      label="ເມືອງ"
-                  ></v-autocomplete>
+                      item-value="name"
+                      label="ວັນພິເສດ"
+                      multiple
+                  ></v-select>
                 </v-col>
                 <v-col>
                   <v-select
@@ -255,6 +256,19 @@
                       label="ປະເພດບໍລິການ"
                       multiple
                   ></v-select>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-autocomplete
+                      outlined
+                      dense
+                      :items="districts"
+                      v-model="selectedDistrict"
+                      item-text="name"
+                      item-value="id"
+                      label="ເມືອງ"
+                  ></v-autocomplete>
                 </v-col>
               </v-row>
               <v-row>
@@ -422,6 +436,9 @@ export default {
       plan: {},
 
       selectedCost: [],
+
+      favorite_dates: [],
+      selectedFavoriteDate: [],
       costs: [
         {
           id: 1,
@@ -696,6 +713,7 @@ export default {
                   {villages: this.selectedVillage},
                   {district_id: this.selectedDistrict},
                   {cost_by: this.selectedCost},
+                  {favorite_dates: this.selectedFavoriteDate},
                   {without: ['route_plan', 'calendar']}
                 ]
             ),
@@ -847,8 +865,25 @@ export default {
         this.infoCurrentKey = key;
       }
     },
+    fetchFavorite() {
+      this.$axios
+          .get("favorite-date")
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.favorite_dates = res.data.data;
+              }, 100);
+            }
+          })
+          .catch(() => {
+          });
+    },
   },
   watch: {
+    selectedFavoriteDate: function () {
+      this.pagination.current_page = '';
+      this.fetchAddCustomer();
+    },
     search: function (value) {
       if (value == "") {
         this.fetchData();
@@ -868,6 +903,7 @@ export default {
   created() {
     this.fetchData();
     this.fetchDetail();
+    this.fetchFavorite();
   },
 };
 </script>

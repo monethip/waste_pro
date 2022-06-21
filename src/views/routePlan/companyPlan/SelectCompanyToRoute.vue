@@ -67,37 +67,6 @@
             clearable
         ></v-autocomplete>
       </v-col>
-      <!--
-      <v-col>
-        <v-autocomplete
-          outlined
-          dense
-          :items="villages"
-          v-model="selectedVillage"
-          item-text="name"
-          item-value="id"
-          label="ບ້ານ"
-          multiple
-        ></v-autocomplete>
-      </v-col>
-      -->
-      <!--
-      <v-col>
-        <v-text-field
-          outlined
-          dense
-          clearable
-          prepend-inner-icon="mdi-magnify"
-          label="ຊື່ລູກຄ້າ"
-          type="text"
-          v-model="search"
-          @keyup.enter="Search()"
-        >
-        </v-text-field>
-      </v-col>
-      -->
-    </v-row>
-    <v-row>
       <v-col>
         <v-autocomplete
             v-model="selectedVillage"
@@ -124,7 +93,20 @@
           </template>
         </v-autocomplete>
       </v-col>
-
+    </v-row>
+    <v-row>
+      <v-col cols>
+        <v-select
+            outlined
+            dense
+            :items="favorite_dates"
+            v-model="selectedFavoriteDate"
+            item-text="name"
+            item-value="name"
+            label="ວັນພິເສດ"
+            multiple
+        ></v-select>
+      </v-col>
       <v-col>
         <v-autocomplete
             outlined
@@ -265,7 +247,8 @@ export default {
           name: "ມອບເໝົາ"
         },
       ],
-
+      favorite_dates: [],
+      selectedFavoriteDate: [],
       headers: [
         {text: "ID", value: "customer_id"},
         {text: "ບໍລິສັດ", value: "company_name"},
@@ -313,6 +296,7 @@ export default {
               {district_id: this.selectedDistrict},
               {filter: this.search},
               {cost_by: this.selectedCost},
+              {favorite_dates: this.selectedFavoriteDate},
             ]),
           })
           .then((res) => {
@@ -506,7 +490,20 @@ export default {
       if (value == "container") return "ຄອນເທັນເນີ";
       else if (value == "fix_cost") return "ທຸລະກິດເປັນຖ້ຽວ";
       else if (value == "chartered") return "ມອບເໝົາ";
-    }
+    },
+    fetchFavorite() {
+      this.$axios
+          .get("favorite-date")
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.favorite_dates = res.data.data;
+              }, 100);
+            }
+          })
+          .catch(() => {
+          });
+    },
   },
   computed: {
     selectedAllVillage() {
@@ -522,28 +519,38 @@ export default {
     },
   },
   watch: {
+    selectedFavoriteDate: function () {
+      this.pagination.current_page = '';
+      this.fetchData();
+    },
     search: function (value) {
+      this.pagination.current_page = '';
       if (value == "") {
         this.fetchData();
       }
     },
     selectedVillage: function () {
+      this.pagination.current_page = '';
       this.fetchData();
     },
     selectedDistrict: function () {
+      this.pagination.current_page = '';
       this.fetchVillage();
       this.fetchData();
     },
     selectedCustomerStatus: function () {
+      this.pagination.current_page = '';
       this.fetchData();
     },
     selectedCost:function (){
+      this.pagination.current_page = '';
       this.fetchData();
     },
   },
   created() {
     this.fetchData();
     this.fetchAddress();
+    this.fetchFavorite();
   },
 };
 </script>

@@ -170,6 +170,6 @@ export default {
   margin-bottom: 12px;
   font-size: 16px;
   background: #eee;
-  border-radius: 2 px;
+  border-radius: 2px;
 }
 </style>

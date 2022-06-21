@@ -67,21 +67,32 @@
             clearable
         ></v-autocomplete>
       </v-col>
-      <!--
       <v-col>
         <v-autocomplete
-          outlined
-          dense
-          :items="villages"
-          v-model="selectedVillage"
-          item-text="name"
-          item-value="id"
-          label="ບ້ານ"
-          multiple
-        ></v-autocomplete>
+            v-model="selectedVillage"
+            :items="villages"
+            item-text="name"
+            item-value="id"
+            label="ເລືອກບ້ານ"
+            outlined
+            chips
+            multiple
+            dense
+            clearable
+        >
+          <template v-slot:selection="data">
+            <v-chip
+                v-bind="data.attrs"
+                :input-value="data.selected"
+                close
+                @click="data.select"
+                @click:close="remove(data.item)"
+            >
+              {{ data.item.name }}
+            </v-chip>
+          </template>
+        </v-autocomplete>
       </v-col>
-      -->
-
     </v-row>
     <!--
     <v-row class="mb-n4">
@@ -116,33 +127,19 @@
     </v-row>
 -->
     <v-row>
-      <v-col>
-        <v-autocomplete
-            v-model="selectedVillage"
-            :items="villages"
-            item-text="name"
-            item-value="id"
-            label="ເລືອກບ້ານ"
-            outlined
-            chips
-            multiple
-            dense
-            clearable
-        >
-          <template v-slot:selection="data">
-            <v-chip
-                v-bind="data.attrs"
-                :input-value="data.selected"
-                close
-                @click="data.select"
-                @click:close="remove(data.item)"
-            >
-              {{ data.item.name }}
-            </v-chip>
-          </template>
-        </v-autocomplete>
-      </v-col>
 
+      <v-col cols>
+        <v-select
+            outlined
+            dense
+            :items="favorite_dates"
+            v-model="selectedFavoriteDate"
+            item-text="name"
+            item-value="name"
+            label="ວັນພິເສດ"
+            multiple
+        ></v-select>
+      </v-col>
       <v-col>
         <v-autocomplete
             outlined
@@ -250,6 +247,8 @@ export default {
         },
       ],
 
+      favorite_dates: [],
+      selectedFavoriteDate: [],
       headers: [
         {text: "ID", value: "customer_id"},
         {text: "ຊື່", value: "name"},
@@ -299,7 +298,8 @@ export default {
               {without: this.selectedCustomerStatus},
               {villages: this.selectedVillage},
               {district_id: this.selectedDistrict},
-              {filter: this.search},
+              {favorite_dates: this.selectedFavoriteDate},
+              {favorite_dates: this.selectedFavoriteDate},
             ]),
 
           })
@@ -491,6 +491,19 @@ export default {
         }
       });
     },
+    fetchFavorite() {
+      this.$axios
+          .get("favorite-date")
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.favorite_dates = res.data.data;
+              }, 100);
+            }
+          })
+          .catch(() => {
+          });
+    },
   },
   computed: {
     selectedAllVillage() {
@@ -506,23 +519,32 @@ export default {
     },
   },
   watch: {
+    selectedFavoriteDate: function () {
+      this.pagination.current_page = '';
+      this.fetchData();
+    },
     search: function (value) {
+      this.pagination.current_page = '';
       if (value == "") {
         this.fetchData();
       }
     },
     selectedVillage: function () {
+      this.pagination.current_page = '';
       this.fetchData();
     },
     selectedDistrict: function () {
+      this.pagination.current_page = '';
       this.fetchData();
       this.fetchVillage();
     },
     selectedCustomerStatus: function () {
+      this.pagination.current_page = '';
       this.fetchData();
     },
   },
   created() {
+    this.fetchFavorite();
     this.fetchData();
     this.fetchAddress();
   },
