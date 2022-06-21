@@ -758,7 +758,6 @@ export default {
       formData.append("start_date", this.start_date);
       formData.append("can_collect", this.start_collect);
       formData.append("collect_description", this.data.collect_description);
-      console.log(formData)
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios

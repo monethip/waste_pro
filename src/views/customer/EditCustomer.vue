@@ -90,32 +90,33 @@
               </div>
             </v-row>
             <v-row>
-              <v-col cols="6">
+              <v-col cols>
                 <v-text-field
                     label="Name *"
                     required
                     v-model="data.name"
                     :rules="nameRules"
+                    outlined
+                    dense
                 ></v-text-field>
                 <p class="errors">
                   {{ server_errors.name }}
                 </p>
               </v-col>
-              <v-col cols="6">
+              <v-col cols>
                 <v-text-field
                     label="Surname *"
                     required
                     v-model="data.surname"
                     :rules="nameRules"
+                    outlined
+                    dense
                 ></v-text-field>
                 <p class="errors">
                   {{ server_errors.surname }}
                 </p>
               </v-col>
-            </v-row>
-
-            <v-row>
-              <v-col cols="4">
+              <v-col cols>
                 <v-text-field
                     label="ເຮືອນເລກທີ *"
                     required
@@ -123,13 +124,18 @@
                     :rules="houseNumberRules"
                     type="number"
                     class="input-number"
+                    outlined
+                    dense
                 ></v-text-field>
                 <p class="errors">
                   {{ server_errors.house_number }}
                 </p>
               </v-col>
+            </v-row>
 
-              <v-col cols="4">
+            <v-row>
+
+              <v-col cols>
                 <v-text-field
                     v-if="data.user"
                     label="ເບີໂທ *"
@@ -138,26 +144,42 @@
                     :rules="phoneRules"
                     type="number"
                     class="input-number"
+                    outlined
+                    dense
                 ></v-text-field>
                 <p class="errors">
                   {{ server_errors.phone }}
                 </p>
               </v-col>
 
-              <v-col cols="4">
+              <v-col cols>
                 <v-text-field
                     v-if="data.user"
                     label="Email"
                     v-model="data.user.email"
+                    outlined
+                    dense
                 ></v-text-field>
                 <p class="errors">
                   {{ server_errors.email }}
                 </p>
               </v-col>
+              <v-col cols>
+                <v-select
+                    outlined
+                    dense
+                    :items="favorite_dates"
+                    v-model="favorite_dates.selectedFavoriteDate"
+                    item-text="name"
+                    item-value="name"
+                    label="ວັນພິເສດ"
+                    multiple
+                ></v-select>
+              </v-col>
             </v-row>
 
             <v-row>
-              <v-col cols="4">
+              <v-col cols>
                 <v-checkbox v-model="can_collect">
                   <template v-slot:label>
                     <div>ສາມາດເກັບຂີ້ເຫື້ອຍເລີຍໄດ້ບໍ່ ?</div>
@@ -167,7 +189,7 @@
                   {{ server_errors.can_collect }}
                 </p>
               </v-col>
-              <v-col cols="4">
+              <v-col cols>
                 <v-autocomplete
                     required
                     :items="districts"
@@ -176,13 +198,15 @@
                     item-value="id"
                     label="District *"
                     :rulesDistrict="rulesDistrict"
+                    outlined
+                    dense
                 ></v-autocomplete>
                 <p class="errors">
                   {{ errormsg }}
                 </p>
               </v-col>
 
-              <v-col cols="4">
+              <v-col cols>
                 <v-autocomplete
                     required
                     :items="villages"
@@ -191,6 +215,8 @@
                     item-value="id"
                     label="Village *"
                     :rules="ruleVillage"
+                    outlined
+                    dense
                 ></v-autocomplete>
                 <p class="errors">
                   {{ errormsg }}
@@ -250,6 +276,8 @@
                     chips
                     deletable-chips
                     multiple
+                    outlined
+                    dense
                 >
                   <!--                    <v-chip v-for="(i,k) in data.village_details" :key="k" close>{{i.name}}</v-chip>-->
                   <template v-slot:append-outer>
@@ -278,6 +306,8 @@
                     v-model="data.lat"
                     type="number"
                     class="input-number"
+                    outlined
+                    dense
                 ></v-text-field>
               </v-col>
               <v-col cols="6">
@@ -286,6 +316,8 @@
                     v-model="data.lng"
                     type="number"
                     class="input-number"
+                    outlined
+                    dense
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -423,6 +455,8 @@ export default {
       image_list: [],
       image: [],
 
+      favorite_dates: [],
+      selectedFavoriteDate: [],
       //Map
       latlng: {
         lat: 18.1189434,
@@ -588,6 +622,9 @@ export default {
       });
       this.selectedVillageDetail.map((item) => {
         formData.append("village_details[]", item);
+      });
+      this.selectedFavoriteDate.map((item) => {
+        formData.append("favorite_dates[]", item);
       });
       formData.append("name", this.data.name);
       formData.append("surname", this.data.surname);
@@ -782,6 +819,20 @@ export default {
       }
       this.itemDetailValue = '';
       this.addItemDetail = false;
+    },
+
+    fetchFavorite() {
+      this.$axios
+          .get("favorite-date")
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.favorite_dates = res.data.data;
+              }, 100);
+            }
+          })
+          .catch(() => {
+          });
     },
   },
   watch: {

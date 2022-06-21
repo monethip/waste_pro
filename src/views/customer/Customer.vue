@@ -15,8 +15,6 @@
           <v-icon>mdi-file-export</v-icon>
         </v-btn>
       </v-col>
-    </v-row>
-    <v-row class="mb-n6">
       <v-col>
         <v-menu
             v-model="start_menu"
@@ -69,6 +67,8 @@
           ></v-date-picker>
         </v-menu>
       </v-col>
+    </v-row>
+    <v-row class="mb-n6">
       <v-col>
         <v-autocomplete
             outlined
@@ -119,6 +119,18 @@
             label="ສະຖານະແຜນ"
             multiple
             clearable
+        ></v-select>
+      </v-col>
+      <v-col cols>
+        <v-select
+            outlined
+            dense
+            :items="favorite_dates"
+            v-model="selectedFavoriteDate"
+            item-text="name"
+            item-value="name"
+            label="ວັນພິເສດ"
+            multiple
         ></v-select>
       </v-col>
 
@@ -568,6 +580,8 @@ export default {
           name: "ຍັງບໍມີແຜນ",
         },
       ],
+      favorite_dates: [],
+      selectedFavoriteDate: [],
 
       headers: [
         {text: "ID", value: "customer_id"},
@@ -598,7 +612,9 @@ export default {
                   {without: this.selectedCustomerStatus},
                   {villages: this.selectedVillage},
                   {statuses: this.selectedStatus},
-                  {district_id: this.selectedDistrict}]),
+                  {district_id: this.selectedDistrict},
+                  {favorite_dates: this.selectedFavoriteDate}
+                ]),
               }
           )
           .then((res) => {
@@ -949,8 +965,25 @@ export default {
       else if (value == "inactive") return "error";
       else return "info";
     },
+    fetchFavorite() {
+      this.$axios
+          .get("favorite-date")
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.favorite_dates = res.data.data;
+              }, 100);
+            }
+          })
+          .catch(() => {
+          });
+    },
   },
   watch: {
+    selectedFavoriteDate: function () {
+      this.pagination.current_page ='';
+      this.fetchData();
+    },
     start_date: function () {
       this.pagination.current_page ='';
       if(this.end_date != ''){
@@ -1002,6 +1035,7 @@ export default {
   created() {
     this.fetchData();
     this.fetchAddress();
+    this.fetchFavorite();
   },
 };
 </script>

@@ -76,6 +76,8 @@
                   required
                   v-model="data.name"
                   :rules="nameRules"
+                  outlined
+                  dense
               ></v-text-field>
               <p class="errors">
                 {{ server_errors.name }}
@@ -87,6 +89,8 @@
                   required
                   v-model="data.surname"
                   :rules="surNameRules"
+                  outlined
+                  dense
               ></v-text-field>
               <p class="errors">
                 {{ server_errors.surname }}
@@ -102,6 +106,8 @@
                   :rules="houseNumberRules"
                   type="number"
                   class="input-number"
+                  outlined
+                  dense
               ></v-text-field>
               <p class="errors">
                 {{ server_errors.house_number }}
@@ -115,6 +121,8 @@
                   :rules="phoneRules"
                   type="number"
                   class="input-number"
+                  outlined
+                  dense
               ></v-text-field>
               <p class="errors">
                 {{ server_errors.phone }}
@@ -125,6 +133,8 @@
                   label="Email"
                   v-model="data.email"
                   type="email"
+                  outlined
+                  dense
               ></v-text-field>
               <p class="errors">
                 {{ server_errors.email }}
@@ -132,7 +142,7 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="6">
+            <v-col cols>
               <v-autocomplete
                   required
                   :items="districts"
@@ -141,12 +151,14 @@
                   item-value="id"
                   label="District *"
                   :rulesDistrict="rulesDistrict"
+                  outlined
+                  dense
               ></v-autocomplete>
               <p class="errors">
                 {{ server_errors.district_id }}
               </p>
             </v-col>
-            <v-col cols="6">
+            <v-col cols>
               <v-autocomplete
                   required
                   :items="villages"
@@ -155,10 +167,24 @@
                   item-value="id"
                   label="Village *"
                   :rules="ruleVillage"
+                  outlined
+                  dense
               ></v-autocomplete>
               <p class="errors">
                 {{ server_errors.village_id }}
               </p>
+            </v-col>
+            <v-col cols>
+              <v-select
+                  outlined
+                  dense
+                  :items="favorite_dates"
+                  v-model="selectedFavoriteDate"
+                  item-text="name"
+                  item-value="name"
+                  label="ວັນພິເສດ"
+                  multiple
+              ></v-select>
             </v-col>
           </v-row>
 
@@ -173,6 +199,8 @@
                   chips
                   deletable-chips
                   multiple
+                  outlined
+                  dense
               >
                 <!--                    <v-chip v-for="(i,k) in data.village_details" :key="k" close>{{i.name}}</v-chip>-->
                 <template v-slot:append-outer>
@@ -207,6 +235,8 @@
                   v-model="data.password"
                   :rules="passwordRules"
                   required
+                  outlined
+                  dense
               ></v-text-field>
               <p class="errors">
                 {{ server_errors.password }}
@@ -219,6 +249,8 @@
                   v-model="data.password_confirmation"
                   :rules="passwordConfirmRules"
                   required
+                  outlined
+                  dense
               ></v-text-field>
               <p class="errors">
                 {{ server_errors.password_confirmation }}
@@ -234,6 +266,8 @@
                   v-model="latlng.lat"
                   type="number"
                   class="input-number"
+                  outlined
+                  dense
               ></v-text-field>
             </v-col>
             <v-col cols="6">
@@ -242,6 +276,8 @@
                   v-model="latlng.lng"
                   type="number"
                   class="input-number"
+                  outlined
+                  dense
               ></v-text-field>
             </v-col>
 
@@ -403,6 +439,9 @@ export default {
       image_list: [],
       image: [],
 
+      favorite_dates: [],
+      selectedFavoriteDate: [],
+
       //Validation
       emailRules: [
         (v) => !!v || "E-mail is required",
@@ -512,13 +551,15 @@ export default {
       this.$router.go(-1);
     },
     AddData() {
-      console.log(this.selectedVillageDetail);
       let formData = new FormData();
       this.image_list.map((item) => {
         formData.append("images[]", item);
       });
       this.selectedVillageDetail.map((item) => {
         formData.append("village_details[]", item);
+      });
+      this.selectedFavoriteDate.map((item) => {
+        formData.append("favorite_dates[]", item);
       });
       formData.append("name", this.data.name);
       formData.append("surname", this.data.surname);
@@ -720,6 +761,19 @@ export default {
       this.itemDetailValue = '';
       this.addItemDetail = false;
     },
+    fetchFavorite() {
+      this.$axios
+          .get("favorite-date")
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.favorite_dates = res.data.data;
+              }, 100);
+            }
+          })
+          .catch(() => {
+          });
+    },
 
   },
   watch: {
@@ -759,6 +813,7 @@ export default {
     this.geolocate();
   },
   created() {
+    this.fetchFavorite();
     this.fetchAddress();
   },
 };

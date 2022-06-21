@@ -98,6 +98,8 @@
             clearable
         ></v-select>
       </v-col>
+    </v-row>
+    <v-row>
       <v-col>
         <v-select
             outlined
@@ -111,6 +113,59 @@
             clearable
         ></v-select>
       </v-col>
+      <v-col>
+        <v-select
+            outlined
+            dense
+            :items="can_collects"
+            v-model="selectedCanCollect"
+            item-text="name"
+            item-value="value"
+            label="ເກັບເລີຍໄດ້ບໍ່"
+            clearable
+        ></v-select>
+      </v-col>
+
+      <v-col>
+        <v-select
+            outlined
+            dense
+            :items="costs"
+            v-model="selectedCost"
+            item-text="name"
+            item-value="value"
+            label="ປະເພດບໍລິການ"
+            multiple
+            clearable
+        ></v-select>
+      </v-col>
+
+      <v-col>
+        <v-select
+            outlined
+            dense
+            :items="favorite_dates"
+            v-model="selectedFavoriteDate"
+            item-text="name"
+            item-value="name"
+            label="ວັນພິເສດ"
+            multiple
+        ></v-select>
+      </v-col>
+      <v-col>
+
+        <v-text-field
+            outlined
+            dense
+            clearable
+            prepend-inner-icon="mdi-magnify"
+            label="ຄົ້ນຫາ"
+            type="text"
+            v-model="search"
+            @keyup.enter="Search()"
+        >
+        </v-text-field>
+      </v-col>
     </v-row>
     <div>
       <v-card>
@@ -118,41 +173,6 @@
           ຂໍ້ມູນຫົວໜ່ວຍທຸລະກິດ ({{ pagination.total }})
           <v-divider class="mx-4" vertical></v-divider>
           <v-spacer></v-spacer>
-
-          <v-select
-              outlined
-              dense
-              :items="can_collects"
-              v-model="selectedCanCollect"
-              item-text="name"
-              item-value="value"
-              label="ເກັບເລີຍໄດ້ບໍ່"
-              clearable
-          ></v-select>
-          <v-spacer></v-spacer>
-          <v-select
-              outlined
-              dense
-              :items="costs"
-              v-model="selectedCost"
-              item-text="name"
-              item-value="value"
-              label="ປະເພດບໍລິການ"
-              multiple
-              clearable
-          ></v-select>
-          <v-spacer></v-spacer>
-          <v-text-field
-              outlined
-              dense
-              clearable
-              prepend-inner-icon="mdi-magnify"
-              label="ຄົ້ນຫາ"
-              type="text"
-              v-model="search"
-              @keyup.enter="Search()"
-          >
-          </v-text-field>
         </v-card-title>
         <v-card-text>
           <v-data-table
@@ -437,7 +457,8 @@ export default {
       ],
       user: {},
       item: {},
-
+      favorite_dates: [],
+      selectedFavoriteDate: [],
       headers: [
         {text: "ບໍລິສັດ", value: "company_name"},
         {text: "ບ້ານ", value: "village.name", sortable: false},
@@ -469,6 +490,7 @@ export default {
                       {can_collect: this.selectedCanCollect},
                       {district_id: this.selectedDistrict},
                       {cost_by: this.selectedCost},
+                      {favorite_dates: this.selectedFavoriteDate}
                     ]
                 ),
               }
@@ -638,9 +660,26 @@ export default {
       if (value == "container") return "ຄອນເທັນເນີ";
       else if (value == "fix_cost") return "ທຸລະກິດເປັນຖ້ຽວ";
       else if (value == "chartered") return "ມອບເໝົາ";
-    }
+    },
+    fetchFavorite() {
+      this.$axios
+          .get("favorite-date")
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.favorite_dates = res.data.data;
+              }, 100);
+            }
+          })
+          .catch(() => {
+          });
+    },
   },
   watch: {
+    selectedFavoriteDate: function () {
+      this.pagination.current_page = '';
+      this.fetchData();
+    },
     start_date: function () {
       this.server_errors.start_month = "";
       this.pagination.current_page = '';
@@ -706,6 +745,7 @@ export default {
   created() {
     this.fetchData();
     this.fetchAddress();
+    this.fetchFavorite();
   },
 };
 </script>

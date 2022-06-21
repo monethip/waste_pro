@@ -112,8 +112,8 @@ export default {
                 data.append("month_from", this.moment(this.month_from).format("YYYY-MM"));
                 data.append("month_to", this.moment(this.month_to).format("YYYY-MM"));
             }
-            data.append("collect_status", this.selectedCollectionStatus);
-            data.append("payment_status", this.selectedPaymentStatus);
+            data.append("collect_statuses", this.selectedCollectionStatus);
+            data.append("payment_statuses", this.selectedPaymentStatus);
             this.$store.commit("Loading_State", true);
             this.$axios
                 .post("report-event-collection-payment", data
