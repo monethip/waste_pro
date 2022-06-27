@@ -82,6 +82,52 @@
              -->
       </v-card-title>
       <v-card-text>
+        <v-row>
+          <v-col class="sum-total">
+              ຄຳຂໍຖືກອານຸມັດ: {{summaryData.collection_summary_report.approved_count}}
+          </v-col>
+          <v-col class="sum-total">
+            ຄຳຂໍຖືກຍົກເລີກ: {{summaryData.collection_summary_report.canceled_count}}
+          </v-col>
+          <v-col class="sum-total">
+            ລົງເກັບແລະລູກຄ້າຢືຢັນແລ້ວ: {{summaryData.collection_summary_report.collect_confirm_count}}
+          </v-col>
+          <v-col class="sum-total">
+            ລູກຄ້າປະຕິເສດການລົງເກັບ: {{summaryData.collection_summary_report.collect_reject_count}}
+          </v-col>
+          <v-col class="sum-total">
+            ລົງເກັບແລ້ວ(ລໍຖ້າຢືນຢັນ): {{summaryData.collection_summary_report.collected_count}}
+          </v-col>
+          <v-col class="sum-total">
+            ຕ້ອງລົງເກັບທັງໝົດ: {{summaryData.collection_summary_report.number_of_times_to_collect}}
+          </v-col>
+          <v-col class="sum-total">
+            ຄຳຂໍທີ່ປະຕິເສດແລ້ວ: {{summaryData.collection_summary_report.rejected_count}}
+          </v-col>
+          <v-col class="sum-total">
+            ຄຳຂໍລໍຖ້າຢືນຢັນ: {{summaryData.collection_summary_report.requested_count}}
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col class="sum-total">
+           ການຊຳລະຖືກອະນຸມັດ: {{summaryData.payment_summary_report.approved_total}}
+          </v-col>
+          <v-col class="sum-total">
+            ຍອດທີ່ຍັງບໍ່ຈ່າຍ:  {{ Intl.NumberFormat().format(summaryData.payment_summary_report.pending_total) }}
+          </v-col>
+          <v-col class="sum-total">
+            ຍອດທີ່ປະຕິເສດ: {{Intl.NumberFormat().format(summaryData.payment_summary_report.rejected_total)}}
+          </v-col>
+          <v-col class="sum-total">
+            ຍອດທີ່ຈ່າຍແລ້ວ: {{Intl.NumberFormat().format(summaryData.payment_summary_report.success_total)}}
+          </v-col>
+          <v-col class="sum-total">
+            ຍອດທີ່ຈ່າຍແລ້ວ(ລໍຖ້າການຢືນຢັນ): {{Intl.NumberFormat().format(summaryData.payment_summary_report.to_confirm_payment_total)}}
+          </v-col>
+
+        </v-row>
+
         <v-simple-table>
           <template v-slot:default>
             <thead>
@@ -105,17 +151,17 @@
               <td>{{ user.name }} {{ user.surname }}</td>
               <td>{{ user.phone }}</td>
               <td>{{ user.village.name }}</td>
-              <td>{{ user.discount }}</td>
-              <td>{{ user.total }}</td>
-              <td>{{ user.sub_total }}</td>
+              <td>{{ Intl.NumberFormat().format(user.discount )}}</td>
+              <td>{{ Intl.NumberFormat().format(user.total )}}</td>
+              <td>{{Intl.NumberFormat().format( user.sub_total) }}</td>
               <td>
                 <v-chip label color="primary">{{collectStatus(user.collect_status)}}</v-chip>
               </td>
               <td>
                 <v-chip label color="success">{{paymentStatusText(user.payment_status)}}</v-chip>
               </td>
-              <td style="width: 280px;">{{ user.description }}</td>
-              <td>
+              <td style="width: 380px;">{{ user.description }}</td>
+              <td style="width: 380px;">
                 <v-avatar
                     size="36px"
                     v-for="(img, index) in user.media"
@@ -502,6 +548,9 @@ export default {
     return {
       title: "Collection",
       month: "",
+      curent_month: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+        .toISOString()
+        .substr(0, 10),
       start_menu: false,
 
       collections: [],
@@ -515,6 +564,7 @@ export default {
       oldVal: "",
       server_errors: {},
       selectedCollectionStatus: [],
+      summaryData:{},
       collectionStatus: [
         {
           id: 1,
@@ -604,7 +654,7 @@ export default {
           align: "center",
         },
         {text: "Payment Status", value: "payment_status", align: "center",width:"200px"},
-        {text: "Image", value: "media",width:"250px"},
+        {text: "Image", value: "media",width:"350px"},
         {text: "", value: "actions", sortable: false},
       ],
     };
@@ -617,7 +667,7 @@ export default {
       this.imageUrl = URL.createObjectURL(file);
     },
     fetchData() {
-      // let date = this.moment(this.month).format('YYYY-MM');
+      let date = this.moment(this.month).format('YYYY-MM');
       this.$store.commit("Loading_State", true);
       this.$axios
           .get("collection-event", {
@@ -626,7 +676,7 @@ export default {
               {per_page: this.per_page},
               {collect_status: this.selectedCollectionStatus},
               {payment_status: this.selectedPaymentStatus},
-              // {month: date},
+              {month: date},
             ])
           })
           .then((res) => {
@@ -634,6 +684,31 @@ export default {
               this.$store.commit("Loading_State", false);
               this.collections = res.data.data.data;
               this.pagination = res.data.data.pagination;
+            }
+          })
+          .catch((error) => {
+            this.$store.commit("Loading_State", false);
+            if (error.response.status == 422) {
+              let obj = error.response.data.errors;
+              for (let [key, message] of Object.entries(obj)) {
+                this.server_errors[key] = message[0];
+              }
+            }
+          });
+    },
+
+    fetchSummaryData() {
+      let date = this.moment(this.month).format('YYYY-MM');
+      this.$axios
+          .get("collection-event-summary", {
+            params: queryOption([
+              {month: date},
+            ])
+          })
+          .then((res) => {
+            if (res.data.code == 200) {
+              this.summaryData = res.data.data;
+              console.log(this.summaryData);
             }
           })
           .catch((error) => {
@@ -889,6 +964,7 @@ export default {
     selectedPaymentStatus:function (){
       this.pagination.current_page ='';
       this.fetchData();
+      this.fetchSummaryData();
     },
     selectedCollectionStatus:function (){
       this.pagination.current_page ='';
@@ -899,6 +975,7 @@ export default {
       if(value !== ''){
         this.pagination.current_page ='';
         this.fetchData();
+        this.fetchSummaryData();
       }
     },
     search: function (value) {
@@ -952,7 +1029,9 @@ export default {
     },
   },
   created() {
+    this.month = this.moment(this.curent_month).format('YYYY-MM');
     this.fetchData();
+    this.fetchSummaryData()
   },
 };
 </script>
@@ -970,5 +1049,8 @@ export default {
       cursor: move;
     }
   }
+}
+.sum-total {
+  color: #000000;
 }
 </style>
