@@ -30,6 +30,7 @@ export default {
             summary: {},
             selectedDuration: "year",
             search: "",
+            summaryMerge:{},
             duration: [
                 {
                     name: "ປີ",
@@ -44,7 +45,7 @@ export default {
                     duration: "date"
                 },
                 {
-                    name: "Merge",
+                    name: "ລວມ",
                     duration: "merge"
                 },
             ],
@@ -142,6 +143,8 @@ export default {
                             this.homeCollection = res.data.data.details.data;
                             this.collections = res.data.data.details.data;
                             this.summary = res.data.data.summary;
+                            this.summaryMerge = res.data.data.summary;
+                            console.log(this.summaryMerge)
                             this.pagination = res.data.data.details.pagination;
                         }, 300);
                     }
