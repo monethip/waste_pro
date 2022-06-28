@@ -101,11 +101,12 @@
     <div>
       <v-row v-for="(sum, index) in summary" :key="index">
         <v-col>
-          <p>ປີ {{ sum.year }}</p>
+          <p v-if="sum.year">ປີ {{ sum.year }}</p>
+          <p v-if="sum.month">ເດືອນ {{ sum.month }}</p>
         </v-col>
         <v-col>
           <p>
-            ອະນຸມັດ
+            ຄຳຂໍຖືກອານຸມັດ
             <span class="success--text">{{
               Intl.NumberFormat().format(sum.approved_total)
             }}</span>
@@ -113,7 +114,7 @@
         </v-col>
         <v-col>
           <p>
-            ຍົກເລີກ
+            ຄຳຂໍທີ່ປະຕິເສດແລ້ວ
             <span class="success--text">{{
               Intl.NumberFormat().format(sum.rejected_total)
             }}</span>
@@ -121,7 +122,7 @@
         </v-col>
         <v-col>
           <p>
-            ການຊຳລະທີ່ລໍຖ້າຢືນຢັນ
+            ລໍຖ້າຢືນຢັນຊຳລະ
             <span class="success--text">{{
               Intl.NumberFormat().format(sum.to_confirm_payment_total)
             }}</span>
@@ -129,7 +130,7 @@
         </v-col>
         <v-col>
           <p>
-            ສຳເລັດ
+            ເກັບສຳເລັດ
             <span class="success--text">{{
               Intl.NumberFormat().format(sum.success_total)
             }}</span>
