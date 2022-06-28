@@ -1,6 +1,5 @@
 <template>
   <v-container>
-
     <v-breadcrumbs large class="pt-0">ລາຍງານຂໍ້ມູນບິນເກັບຂີ້ເຫື້ອຍພິເສດ</v-breadcrumbs>
     <v-row class="mb-n6">
       <v-col>
@@ -54,20 +53,6 @@
           ></date-picker>
         </section>
       </v-col>
-
-<!--      <v-col>-->
-<!--        <v-text-field-->
-<!--            outlined-->
-<!--            dense-->
-<!--            clearable-->
-<!--            prepend-inner-icon="mdi-magnify"-->
-<!--            label="ຊື່ລູກຄ້າ,ເລກບິນ"-->
-<!--            type="text"-->
-<!--            v-model="search"-->
-<!--            @keyup.enter="Search()"-->
-<!--        >-->
-<!--        </v-text-field>-->
-<!--      </v-col>-->
     </v-row>
     <v-row>
       <v-col cols>
@@ -106,15 +91,7 @@
         </v-col>
         <v-col>
           <p>
-            ຄຳຂໍຖືກອານຸມັດ
-            <span class="success--text">{{
-              Intl.NumberFormat().format(sum.approved_total)
-            }}</span>
-          </p>
-        </v-col>
-        <v-col>
-          <p>
-            ຄຳຂໍທີ່ປະຕິເສດແລ້ວ
+            ຍອດທີ່ປະຕິເສດ
             <span class="success--text">{{
               Intl.NumberFormat().format(sum.rejected_total)
             }}</span>
@@ -122,7 +99,7 @@
         </v-col>
         <v-col>
           <p>
-            ລໍຖ້າຢືນຢັນຊຳລະ
+            ຍອດທີ່ຈ່າຍແລ້ວ(ລໍຖ້າການຢືນຢັນ)
             <span class="success--text">{{
               Intl.NumberFormat().format(sum.to_confirm_payment_total)
             }}</span>
@@ -130,7 +107,7 @@
         </v-col>
         <v-col>
           <p>
-            ເກັບສຳເລັດ
+            ຍອດທີ່ຈ່າຍແລ້ວ
             <span class="success--text">{{
               Intl.NumberFormat().format(sum.success_total)
             }}</span>
@@ -138,7 +115,7 @@
         </v-col>
         <v-col>
           <p>
-            ລໍຖ້າການອານຸມັດ
+            ຍອດທີ່ປະຕິເສດ
             <span class="success--text"
               >{{ Intl.NumberFormat().format(sum.pending_total) }}
             </span>

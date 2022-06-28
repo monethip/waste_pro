@@ -137,8 +137,6 @@ export default {
                             this.$store.commit("Loading_State", false);
                             this.invoices = res.data.data.details.data;
                             this.summary = res.data.data.summary;
-                            console.log(this.invoices)
-                            console.log(this.summary)
                             this.pagination = res.data.data.details.pagination;
                         }, 300);
                     }
