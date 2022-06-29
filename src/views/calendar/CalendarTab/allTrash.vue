@@ -58,6 +58,9 @@
             <v-chip color="primary">{{ item.bag }}</v-chip>
             <span> {{ getUnit(item.collection_type) }}</span>
           </div>
+          <div v-else-if="item.collection_type == 'fix_cost'">
+            <span> {{ getUnit(item.collection_type) }}</span>
+          </div>
           <div v-else>
             <v-chip color="success">{{ item.container }}</v-chip>
             <span> {{ getUnit(item.collection_type) }}</span>
