@@ -332,7 +332,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Company Customer',
+                    text: 'ລູກຄ້າຫົວໜ່ວຍທຸລະກິດ',
                     disabled: false,
                     href: '/company',
                 },
@@ -472,7 +472,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Home Customer',
+                    text: 'ລູກຄ້າຄົວເຮືອນ',
                     disabled: false,
                     href: '/customer'
                 },
@@ -493,12 +493,12 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Home Customer',
+                    text: 'ລູກຄ້າຄົວເຮືອນ',
                     disabled: false,
                     href: '/customer'
                 },
                 {
-                    text: 'Edit',
+                    text: 'ແກ້ໄຂ',
                     disabled: true,
                     href: '/customer'
                 }
@@ -515,12 +515,12 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Home Customer',
+                    text: 'ລູກຄ້າຄົວເຮືອນ',
                     disabled: false,
                     href: '/customer'
                 },
                 {
-                    text: 'View',
+                    text: 'ລາຍລະອຽດ',
                     disabled: true,
                     href: '/customer'
                 }
@@ -537,7 +537,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Village',
+                    text: 'ຂໍ້ມູນບ້ານ',
                     disabled: true,
                     href: '/village'
                 }
@@ -562,12 +562,12 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Village',
+                    text: 'ຂໍ້ມູນບ້ານ',
                     disabled: false,
                     href: '/village'
                 },
                 {
-                    text: 'Detail',
+                    text: 'ລາຍລະອຽດ',
                     disabled: true,
                     href: '/village'
                 }
@@ -600,7 +600,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Vehicle',
+                    text: 'ພາຫະນະ',
                     disabled: true,
                     href: '/vehicle'
                 }
@@ -616,7 +616,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Village Detail',
+                    text: 'ລາຍລະອຽດທີ່ຢູ່',
                     disabled: true,
                     href: '/vehicle'
                 }
@@ -856,12 +856,12 @@ const routes = [
                     href: '/routeplan'
                 },
                 {
-                    text: 'Home Customer',
+                    text: 'ລູກຄ້າຄົວເຮືອນ',
                     disabled: false,
                     href: '/select/home'
                 },
                 {
-                    text: 'Create',
+                    text: 'ເພີ່ມຂໍ້ມູນ',
                     disabled: true,
                 }
             ]
@@ -881,7 +881,7 @@ const routes = [
                     href: '/routeplan'
                 },
                 {
-                    text: 'Edit',
+                    text: 'ແກ້ໄຂ',
                     disabled: true,
                 }
             ]
@@ -984,7 +984,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Invoice',
+                    text: 'ບິນເກັບເງິນຄ່າຂີ້ເຫື້ອຍ',
                     disabled: true,
                     href: '/invoice'
                 }
@@ -1001,7 +1001,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Reject',
+                    text: 'ປະຕິເສດ',
                     disabled: true,
                     href: '/reject'
                 }
@@ -1017,12 +1017,12 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Invoice',
+                    text: 'ໃບບິນເກັບເງິນຄ່າຂີ້ເຫື້ອຍ',
                     disabled: false,
                     href: '/invoice'
                 },
                 {
-                    text: 'Monthly',
+                    text: 'ລາຍເດືອນ',
                     disabled: true,
                     href: '/invoice'
                 }
@@ -1038,17 +1038,17 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Invoice',
+                    text: 'ບິນເກັບເງິນຄ່າຂີ້ເຫື້ອຍ',
                     disabled: false,
                     href: '/invoice'
                 },
                 {
-                    text: 'Monthly',
+                    text: 'ລາຍເດືອນ',
                     disabled: true,
                     href: '/invoice'
                 },
                 {
-                    text: 'Invoice Detail',
+                    text: 'ລາຍເດືອນ',
                     disabled: true,
                     href: ''
                 }
@@ -1093,7 +1093,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Report Trash',
+                    text: 'ລາຍງານເກັບຂີ້ເຫຍື້ອ',
                     disabled: true,
                     href: '/report/trash'
                 },
@@ -1110,7 +1110,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Report Driver Collection',
+                    text: 'ລາຍງານເກັບຂີ້ເຫຍື້ອຕາມລົດ',
                     disabled: true,
                     href: '/report/driver/collection'
                 },
@@ -1127,7 +1127,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Report by address Collection',
+                    text: 'ລາຍງານເກັບຂີ້ເຫຍື້ອຕາມບ້ານ',
                     disabled: true,
                     href: '/report/address/collection'
                 },
@@ -1144,7 +1144,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Report Customer',
+                    text: 'ລາຍງານລູກຄ້າຄົວເຮືອນ',
                     disabled: true,
                     href: '/report/customer'
                 },
@@ -1161,12 +1161,12 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Report Customer',
+                    text: 'ລາຍງານລູກຄ້າ',
                     disabled: false,
                     href: '/report/customer'
                 },
                 {
-                    text: 'Detail',
+                    text: 'ລາຍລະອຽດ',
                     disabled: true,
                 },
             ]
@@ -1182,7 +1182,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Report Company',
+                    text: 'ລາຍງານຂໍ້ມູນຫົວໜ່ວຍທຸລະກິດ',
                     disabled: true,
                     href: '/report/company'
                 },
@@ -1198,7 +1198,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Report Driver',
+                    text: 'ລາຍງານພະນັກງານຂັບລົດ',
                     disabled: true,
                     href: '/report/driver'
                 },
@@ -1214,12 +1214,12 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Report Company',
+                    text: 'ລາຍງານຂໍ້ມູນຫົວໜ່ວຍທຸລະກິດ',
                     disabled: false,
                     href: '/report/company'
                 },
                 {
-                    text: 'Detail',
+                    text: 'ລາຍລະອຽດ',
                     disabled: true,
                 },
             ]

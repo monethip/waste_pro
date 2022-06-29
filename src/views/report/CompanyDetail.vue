@@ -153,10 +153,13 @@
                         </v-list-item-icon>
                         <v-list-item-content>
                           <v-list-item-subtitle>ປະເພດບໍລິການ</v-list-item-subtitle>
-                          <v-list-item-title>{{ data.cost_by }}</v-list-item-title>
-                          <v-list-item-subtitle v-if="data.cost_by == 'fix_cost'">{{
-                              Intl.NumberFormat().format(data.fix_cost)
-                            }}</v-list-item-subtitle>
+                          <v-list-item-title v-if="data.cost_by == 'fix_cost'">ທຸລະກິດເປັນຖ້ຽວ</v-list-item-title>
+                          <v-list-item-title v-if="data.cost_by == 'container'">ຄອນເທັນເນີ</v-list-item-title>
+                          <v-list-item-title v-if="data.cost_by == 'chartered'">ມອບເໝົາ</v-list-item-title>
+
+<!--                          <v-list-item-subtitle v-if="data.cost_by == 'fix_cost'">{{-->
+<!--                              Intl.NumberFormat().format(data.fix_cost)-->
+<!--                            }}</v-list-item-subtitle>-->
                         </v-list-item-content>
                       </v-list-item>
                       <v-divider inset></v-divider>

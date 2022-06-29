@@ -115,7 +115,7 @@
         </v-col>
         <v-col>
           <p>
-            ຍອດທີ່ປະຕິເສດ
+            ຍອດທີ່ຍັງບໍ່ຈ່າຍ
             <span class="success--text"
               >{{ Intl.NumberFormat().format(sum.pending_total) }}
             </span>
