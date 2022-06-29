@@ -180,7 +180,9 @@ export default {
     },
     getUnit(value) {
       if (value == "bag") return "ຖົງ";
-      else return "Container";
+      else if (value == "fix_cost") return "ມອບເໝົາ"
+      else if (value == "container") return "ຄອນເທັນເນີ"
+      else return '';
     },
     Search() {
       GetOldValueOnInput(this);

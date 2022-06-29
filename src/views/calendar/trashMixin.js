@@ -1,4 +1,5 @@
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import {GetOldValueOnInput} from "@/Helpers/GetValue";
+
 export default {
     name: "Customer",
     // props: ["calendars", "pagination"],
@@ -18,9 +19,9 @@ export default {
             statuses: [],
             plan_monthId: this.$route.params.id,
             headers: [
-                { text: "ລຳດັບ", value: "route_plan_detail.priority" },
-                { text: "ຊື່ລູກຄ້າ", value: "customer" },
-                { text: "ເລີ່ມວັນທີ", value: "route_plan_detail.customer.start_month" },
+                {text: "ລຳດັບ", value: "route_plan_detail.priority"},
+                {text: "ຊື່ລູກຄ້າ", value: "customer"},
+                {text: "ເລີ່ມວັນທີ", value: "route_plan_detail.customer.start_month"},
 
                 {
                     text: "ຈຳນວນຂີ້ເຫື້ຍອ",
@@ -34,7 +35,7 @@ export default {
                     align: "center",
                     sortable: false,
                 },
-                { text: "", value: "actions", sortable: false },
+                {text: "", value: "actions", sortable: false},
             ],
         };
     },
@@ -75,7 +76,9 @@ export default {
         },
         getUnit(value) {
             if (value == "bag") return "ຖົງ";
-            else return "Container";
+            else if (value == "fix_cost") return "ມອບເໝົາ"
+            else if (value == "container") return "ຄອນເທັນເນີ"
+            else return '';
         },
         Search() {
             GetOldValueOnInput(this);
@@ -83,7 +86,7 @@ export default {
         viewPage(plan_calendar, id) {
             this.$router.push({
                 name: "TrashDetail",
-                params: { plan_calendar, id },
+                params: {plan_calendar, id},
             });
         },
     },
