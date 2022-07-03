@@ -9,11 +9,11 @@
       ເລືອກລູກຄ້າເຂົ້າແຜນເສັ້ນທາງ
       <v-spacer></v-spacer>
       <span class="mr-4"
-      ><v-icon color="red">mdi-map-marker</v-icon>ຢູ່ໃນແຜນແລ້ວ</span
+      ><v-icon color="red">mdi-map-marker</v-icon>ຍັງບໍທັນຢູ່ໃນແຜນ</span
       >
       <span
       ><v-icon style="color: #49a3da">mdi-map-marker</v-icon
-      >ຍັງບໍທັນຢູ່ໃນແຜນ</span
+      >ຢູ່ໃນແຜນແລ້ວ</span
       >
     </v-breadcrumbs>
     <v-row class="my-n4">
@@ -224,7 +224,7 @@ export default {
       //Pagination
       offset: 12,
       pagination: {},
-      per_page: 50,
+      per_page: 1500,
       search: "",
       oldVal: "",
       //Filter

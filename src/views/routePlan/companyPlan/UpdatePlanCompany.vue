@@ -8,13 +8,13 @@
       >
       ແກ້ໄຂແຜນເສັ້ນທາງ
       <v-spacer></v-spacer>
-<!--      <span class="mr-4"-->
-<!--      ><v-icon color="red">mdi-map-marker</v-icon>ຢູ່ໃນແຜນແລ້ວ</span-->
-<!--      >-->
-<!--      <span-->
-<!--      ><v-icon style="color: #49a3da">mdi-map-marker</v-icon-->
-<!--      >ຍັງບໍທັນຢູ່ໃນແຜນ</span-->
-<!--      >-->
+      <span class="mr-4"
+      ><v-icon color="red">mdi-map-marker</v-icon>ຍັງບໍທັນຢູ່ໃນແຜນ</span
+      >
+      <span
+      ><v-icon style="color: #49a3da">mdi-map-marker</v-icon
+      >ຢູ່ໃນແຜນແລ້ວ</span
+      >
     </v-breadcrumbs>
 
     <v-row>
