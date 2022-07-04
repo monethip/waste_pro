@@ -56,9 +56,14 @@
             </v-col>
             <v-col>
               <h3>ຂໍ້ມູນລູກຄ້າ</h3>
-              <h3 v-if="invoice.customer">
-                ຊື່: {{ invoice.customer.name }} {{ invoice.customer.surname }}
-              </h3>
+              <div>
+                <h3 v-if="invoice.customer.customer_type = 'company'">
+                  {{ invoice.customer.company_name }}
+                </h3>
+                <h3 v-else-if="invoice.customer.customer_type = 'home'">
+                  ຊື່: {{ invoice.customer.name }} {{ invoice.customer.surname }}
+                </h3>
+              </div>
               <h3 v-if="invoice.customer">
                 ວັນທີສະໝັກ: {{ invoice.customer.start_month }}
               </h3>
