@@ -203,8 +203,11 @@
             <template v-slot:item.cost_by="{ item }">
               <div>{{ costBy(item.cost_by) }}</div>
             </template>
-            <template v-slot:item.fix_cost="{ item }">
-              <div>{{ Intl.NumberFormat().format(item.fix_cost) }}</div>
+            <template v-slot:item.price="{ item }">
+              <div v-if="item.cost_by !== 'bag'">{{ Intl.NumberFormat().format(item.fix_cost) }}</div>
+              <div v-if="item.cost_by == 'bag'">
+                <div v-if="item.current_bag_price">{{Intl.NumberFormat().format(item.current_bag_price.price)}}</div>
+              </div>
             </template>
 
             <template v-slot:item.can_collect="{ item }">
@@ -457,6 +460,11 @@ export default {
           value: "chartered",
           name: "ມອບເໝົາ"
         },
+        {
+          id: 4,
+          value: "bag",
+          name: "ບໍລິມາດ"
+        },
       ],
       user: {},
       item: {},
@@ -467,7 +475,7 @@ export default {
         {text: "ບ້ານ", value: "village.name", sortable: false,width: "100px"},
         {text: "ເມືອງ", value: "district.name", sortable: false,width: "200px"},
         {text: "ປະເພດບໍລິການ", value: "cost_by",width: "200px"},
-        {text: "ມູນຄ່າສັນຍາ", value: "fix_cost",width: "200px"},
+        {text: "ມູນຄ່າສັນຍາ", value: "price",width: "200px"},
         {text: "ສະຖານະເກັບ", value: "can_collect", align: "center",width: "200px"},
         {text: "ວັນພິເສດ", value: "favorite_dates",width: "120px"},
         {text: "ລາຍລະອຽດບັນຈຸພັນ", value: "collect_description", sortable: false,width: "200px"},
@@ -663,6 +671,8 @@ export default {
       if (value == "container") return "ຄອນເທັນເນີ";
       else if (value == "fix_cost") return "ທຸລະກິດເປັນຖ້ຽວ";
       else if (value == "chartered") return "ມອບເໝົາ";
+      else if (value == "bag") return "ບໍລິມາດ";
+      else return '';
     },
     fetchFavorite() {
       this.$axios

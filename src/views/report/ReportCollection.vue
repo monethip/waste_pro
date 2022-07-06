@@ -73,7 +73,7 @@
             v-model="selectedCustomerType"
             item-text="display"
             item-value="name"
-            label="ປະເພດລູກຄ້າ"
+            label="ປະເພດລູກການເກັບ"
         ></v-autocomplete>
       </v-col>
       <v-col>

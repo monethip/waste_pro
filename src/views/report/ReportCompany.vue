@@ -320,6 +320,11 @@ export default {
           value: "chartered",
           name: "ມອບເໝົາ"
         },
+        {
+          id: 4,
+          value: "bag",
+          name: "ບໍລິມາດ"
+        },
       ],
 
       headers: [
@@ -478,7 +483,9 @@ export default {
       if (value == "container") return "ຄອນເທັນເນີ";
       else if (value == "fix_cost") return "ທຸລະກິດເປັນຖ້ຽວ";
       else if (value == "chartered") return "ມອບເໝົາ";
-    }
+      else if (value == "bag") return "ບໍລິມາດ";
+      else return '';
+    },
   },
   watch: {
     start_date: function () {

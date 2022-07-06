@@ -307,7 +307,7 @@
                   label="ປະເພດບໍລິການ"
                 ></v-select>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="6" v-if="showFixed">
                 <v-text-field
                   label="ມູນຄ່າສັນຍາ *"
                   type="number"
@@ -483,6 +483,7 @@ export default {
 
       selectItemDetail: '',
       addItemDetail: false,
+      showFixed: false,
 
       itemDetailValue: '',
       itemDetailValues: [],
@@ -497,17 +498,22 @@ export default {
         {
           id: 1,
           value: "container",
-          name:  "ຄອນເທັນເນີ"
+          name: "ຄອນເທັນເນີ"
         },
         {
           id: 2,
           value: "fix_cost",
-          name:  "ທຸລະກິດເປັນຖ້ຽວ"
+          name: "ທຸລະກິດເປັນຖ້ຽວ"
         },
         {
           id: 3,
           value: "chartered",
           name: "ມອບເໝົາ"
+        },
+        {
+          id: 4,
+          value: "bag",
+          name: "ບໍລິມາດ"
         },
       ],
 
@@ -681,9 +687,9 @@ export default {
       formData.append("phone", this.data.user.phone);
       formData.append("email", this.data.user.email);
       formData.append("cost_by", this.data.cost_by);
-      // if (this.data.cost_by == "fix_cost") {
+      if(this.selectedCost !== 'bag'){
         formData.append("fix_cost", this.data.fix_cost);
-      // }
+      }
       formData.append("start_date", this.data.start_month);
       if (this.data.can_collect == true) {
         formData.append("can_collect", 1);
@@ -927,6 +933,20 @@ export default {
     },
     "data.user.email": function () {
       this.server_errors.email = "";
+    },
+    "data.cost_by": function (value) {
+      if (value == 'container') {
+        // this.fix_cost = '';
+        this.showFixed = true;
+      } else if(value == 'bag'){
+        this.showFixed = false;
+      }
+      else if (value == 'fixed_cost'){
+        this.showFixed = true;
+      }
+      else if(value == 'chartered'){
+        this.showFixed = true;
+      }
     },
     // "data.can_collect": function () {
     //   console.log(this.data.can_collect);

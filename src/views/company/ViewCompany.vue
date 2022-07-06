@@ -143,9 +143,12 @@
               <v-list-item-content>
                 <v-list-item-subtitle>ປະເພດບໍລິການ</v-list-item-subtitle>
                 <v-list-item-title>{{ data.cost_by }}</v-list-item-title>
-                <v-list-item-subtitle v-if="data.cost_by == 'fix_cost'">{{
-                  Intl.NumberFormat().format(data.fix_cost)
+                <v-list-item-subtitle v-if="data.cost_by == 'bag'">ມູນຄ່າສັນຍາ {{
+                  Intl.NumberFormat().format(data.current_bag_price.price)
                 }}</v-list-item-subtitle>
+                <v-list-item-subtitle v-if="data.cost_by !== 'bag'">ມູນຄ່າສັນຍາ {{
+                    Intl.NumberFormat().format(data.fix_cost)
+                  }}</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
             <v-divider inset></v-divider>

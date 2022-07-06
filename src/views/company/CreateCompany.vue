@@ -284,7 +284,7 @@
                   label="ປະເພດບໍລິການ"
               ></v-select>
             </v-col>
-            <v-col>
+            <v-col v-if="showFixed">
               <v-text-field
                   label="ມູນຄ່າສັນຍາ *"
                   type="number"
@@ -571,6 +571,11 @@ export default {
           value: "chartered",
           name: "ມອບເໝົາ"
         },
+        {
+          id: 4,
+          value: "bag",
+          name: "ບໍລິມາດ"
+        },
       ],
       favorite_dates: [],
       selectedFavoriteDate: [],
@@ -730,7 +735,6 @@ export default {
       this.$router.go(-1);
     },
     AddData() {
-      console.log(this.image_list)
       let formData = new FormData();
       this.image_list.map((item) => {
         formData.append("images[]", item);
@@ -754,7 +758,9 @@ export default {
       formData.append("coordinator_phone", this.data.coordinator_phone);
       formData.append("coordinator_email", this.data.coordinator_email);
       formData.append("cost_by", this.selectedCost);
-      formData.append("fix_cost", this.fix_cost);
+      if(this.selectedCost !== 'bag'){
+        formData.append("fix_cost", this.fix_cost);
+      }
       formData.append("start_date", this.start_date);
       formData.append("can_collect", this.start_collect);
       formData.append("collect_description", this.data.collect_description);
@@ -1011,9 +1017,17 @@ export default {
     "selectedCost": function () {
       if (this.selectedCost == 'container') {
         this.fix_cost = '';
-        this.showFixed = false;
-      } else if (this.selectedCost == 'fixed_cost')
         this.showFixed = true;
+      } else if(this.selectedCost == 'bag'){
+        this.showFixed = false;
+        this.fix_cost = '';
+      }
+      else if (this.selectedCost == 'fixed_cost'){
+        this.showFixed = true;
+      }
+      else if(this.selectedCost == 'chartered'){
+        this.showFixed = true;
+      }
     },
   },
   mounted() {
