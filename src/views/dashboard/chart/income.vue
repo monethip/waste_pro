@@ -89,7 +89,7 @@
         type="bar"
         height="350"
         :options="chartOptions"
-        :series="series"
+        :series="translatedSeries"
     ></apexchart>
   </div>
 </template>
@@ -135,7 +135,7 @@ export default {
         plotOptions: {
           bar: {
             // horizontal: true,
-            columnWidth: "100%",
+            columnWidth: "50%",
             endingShape: "rounded",
           },
         },
@@ -185,6 +185,32 @@ export default {
           },
         },
       },
+      translated: [
+        {
+          key:"sum_total",
+          value:"ລວມ"
+        },
+        {
+          key:"total_approved",
+          value:"ອະນຸມັດ"
+        },
+        {
+          key:"total_created",
+          value:"ສ້າງບິນ"
+        },
+        {
+          key:"total_rejected",
+          value:"ຍົກເລີກ"
+        },
+        {
+          key:"total_success",
+          value:"ສຳເລັດ"
+        },
+        {
+          key:"total_to_confirm_payment",
+          value:"ສຳເລັດທັງໝົດ"
+        },
+      ],
     };
   },
   methods: {
@@ -208,6 +234,8 @@ export default {
             if (res.data.code == 200) {
               this.$store.commit("Loading_State", false);
               this.homeInvoice = res.data.data.summary;
+              this.series = [],
+                  this.chartOptions = [],
               this.homeInvoice.map((item) => {
                 if (this.selectedCollection == "home") {
                   // this.series[0].data.push(item.home.sum_total);
@@ -238,11 +266,8 @@ export default {
                         })
                       }
                     }
-
                   }
                 }
-
-
                 window.dispatchEvent(new Event("resize"));
               });
             }
@@ -259,6 +284,21 @@ export default {
       }
       return false;
     },
+  },
+  computed:{
+    translatedSeries(){
+      const data = [];
+      this.series.map((item) => {
+        const [translatedItem] = this.translated.filter((f) => f.key === item.name)
+        if(translatedItem) {
+          data.push({
+            name: translatedItem.value,
+            data: item.data
+          })
+        }
+      })
+      return data;
+    }
   },
   watch: {
     selectedCollection: function () {

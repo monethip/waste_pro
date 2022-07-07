@@ -79,7 +79,7 @@
         ></v-select>
       </v-col>
     </v-row>
-    <apexchart :options="options" :series="series"></apexchart>
+    <apexchart :options="options" :series="translatedSeries"></apexchart>
   </div>
 </template>
 <script>
@@ -118,7 +118,6 @@ export default {
           offsetX: 0,
           offsetY: 0,
           style: {
-            color: "#00c1d2",
             fontSize: "14px",
           },
         },
@@ -199,7 +198,56 @@ export default {
       //     ],
       //   },
       // ],
+      translated: [
+        {
+          key: "success_count",
+          value: "ເກັບສໍາເລັດ"
+        },
+        {
+          key: "wait_to_confirm_count",
+          value: "ລໍຖ້າຢືນຢັນ"
+        },
+        {
+          key: "reject_count",
+          value: "ປະຕິເສດການເກັບ"
+        },
+        {
+          key: "pending_count",
+          value: "ລໍຖ້າເກັບ"
+        },
+        {
+          key: "total_bag_amount",
+          value: "ຈຳນວນຖົງ"
+        },
+        {
+          key: "total_number_of_times_to_collect",
+          value: "ຈຳນວນຄັ້ງທີ່ລົງເກັບ"
+        },
+        {
+          key: "total_pending_count",
+          value: "ລໍຖ້າເກັບ"
+        },
+        {
+          key: "total_success_count",
+          value: "ເກັບສໍາເລັດ"
+        },
+      ],
     };
+  },
+  computed: {
+    translatedSeries() {
+      const data = [];
+      this.series.map((item) => {
+        const [translatedItem] = this.translated.filter((f) => f.key === item.name)
+        if (translatedItem) {
+          data.push({
+            name: translatedItem.value,
+            data: item.data
+          })
+        }
+      })
+      return data;
+    }
   },
   methods: {
     async fetchData() {
@@ -224,50 +272,52 @@ export default {
           .post("report-collection", data)
           .then((res) => {
             if (res.data.code == 200) {
-                this.$store.commit("Loading_State", false);
-                this.homeCollection = res.data.data.summary;
+              this.$store.commit("Loading_State", false);
+              this.series = [],
+                  this.chartOptions = [],
+                  this.homeCollection = res.data.data.summary;
+              if (this.homeCollection.length == 0) {
+                dataSet.labels = [];
+                dataSet.data = [];
+              }
+              // this.compnayCollection = res.data.data
 
-                if (this.homeCollection.length == 0) {
-                  dataSet.labels = [];
-                  dataSet.data = [];
-                }
-                // this.compnayCollection = res.data.data
-
-                this.homeCollection.map((item) => {
-                  if (this.selectedCollection == "home") {
-                    this.options.labels.push(item.month);
-                    for (const [sumKey, sumItem] of Object.entries(item.home)) {
-                        const serieIndex = this.series.findIndex(item => item.name == sumKey)
-                        if (serieIndex != -1) {
-                          this.series[serieIndex].data.push(sumItem)
-                        } else {
-                          this.series.push({
-                            name: sumKey,
-                            data: [sumItem]
-                          })
-                        }
+              this.homeCollection.map((item) => {
+                if (this.selectedCollection == "home") {
+                  this.options.labels.push(item.month);
+                  for (const [sumKey, sumItem] of Object.entries(item.home)) {
+                    const serieIndex = this.series.findIndex(item => item.name == sumKey)
+                    if (serieIndex != -1) {
+                      this.series[serieIndex].data.push(sumItem)
+                    } else {
+                      this.series.push({
+                        name: sumKey,
+                        data: [sumItem]
+                      })
                     }
-                    window.dispatchEvent(new Event("resize"));
-                  } else if (this.selectedCollection == "company") {
-                    // dataSet.data.push(item.company.container_amount);
-                    dataSet.labels.push(item.month);
-                    for (const [sumKey, sumItem] of Object.entries(item.company)) {
-                      if (this.inArray(sumKey, ['success_count', 'wait_to_confirm_count', 'reject_count', 'pending_count'])) {
-                        const serieIndex = this.series.findIndex(item => item.name == sumKey)
-                        if (serieIndex != -1) {
-                          this.series[serieIndex].data.push(sumItem)
-                        } else {
-                          this.series.push({
-                            name: sumKey,
-                            data: [sumItem]
-                          })
-                        }
-                      }
-
-                    }
-                    window.dispatchEvent(new Event("resize"));
                   }
-                });
+                  window.dispatchEvent(new Event("resize"));
+                } else if (this.selectedCollection == "company") {
+                  // dataSet.data.push(item.company.container_amount);
+                  dataSet.labels.push(item.month);
+                  for (const [sumKey, sumItem] of Object.entries(item.company)) {
+                    if (this.inArray(sumKey, ['success_count', 'wait_to_confirm_count', 'reject_count', 'pending_count'])) {
+                      const serieIndex = this.series.findIndex(item => item.name == sumKey)
+                      if (serieIndex != -1) {
+                        this.series[serieIndex].data.push(sumItem)
+                      } else {
+                        this.series.push({
+                          name: sumKey,
+                          data: [sumItem]
+                        })
+                      }
+                    }
+
+                  }
+                  window.dispatchEvent(new Event("resize"));
+                }
+              });
+              console.log(this.series, 'series')
             }
           })
           .catch(() => {
@@ -279,7 +329,7 @@ export default {
       window.dispatchEvent(new Event("resize"));
     },
     inArray(needle, haystack) {
-      console.log(haystack)
+      // console.log(haystack)
       let length = haystack.length;
       for (let i = 0; i < length; i++) {
         if (haystack[i] == needle) return true;

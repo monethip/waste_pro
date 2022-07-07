@@ -24,7 +24,7 @@
         </v-icon>
       </template>
     </v-data-table>
-    <!--
+
     <template>
       <Pagination
         v-if="pagination.total_pages > 1"
@@ -33,7 +33,7 @@
         @paginate="fetchData()"
       ></Pagination>
     </template>
-    -->
+
 
     <!-- Add Modal -->
     <ModalAdd>
@@ -381,18 +381,18 @@ export default {
       this.$axios
         .get(
           "package"
-          // , {
-          //   params: {
-          //     page: this.pagination.current_page,
-          //     per_page: this.per_page,
-          //   },
-          // }
+          , {
+            params: {
+              page: this.pagination.current_page,
+              per_page: this.per_page,
+            },
+          }
         )
         .then((res) => {
           if (res.data.code == 200) {
               this.$store.commit("Loading_State", false);
-              this.packages = res.data.data;
-              // this.pagination = res.data.data.pagination;
+              this.packages = res.data.data.data;
+              this.pagination = res.data.data.pagination;
           }
         })
         .catch((error) => {
