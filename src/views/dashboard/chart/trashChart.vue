@@ -317,15 +317,11 @@ export default {
                   window.dispatchEvent(new Event("resize"));
                 }
               });
-              console.log(this.series, 'series')
             }
           })
           .catch(() => {
             this.$store.commit("Loading_State", false);
           });
-      // this.series[0].data = dataSet.data;
-      // this.options.labels.include(dataSet.labels);
-      // console.log(this.options.labels);
       window.dispatchEvent(new Event("resize"));
     },
     inArray(needle, haystack) {

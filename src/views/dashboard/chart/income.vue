@@ -173,16 +173,16 @@ export default {
           opacity: 1,
         },
         tooltip: {
-          y: {
-            formatter: function (text,val) {
-              return Intl.NumberFormat().format(val) + " Kip";
-            },
-          },
-          x: {
-            formatter: function (val) {
-              return "ເດືອນ " + val;
-            },
-          },
+          // y: {
+          //   formatter: function (text,val) {
+          //     return Intl.NumberFormat().format(val) + " Kip";
+          //   },
+          // },
+          // x: {
+          //   formatter: function (val) {
+          //     return "ເດືອນ " + val;
+          //   },
+          // },
         },
       },
       translated: [
@@ -234,8 +234,7 @@ export default {
             if (res.data.code == 200) {
               this.$store.commit("Loading_State", false);
               this.homeInvoice = res.data.data.summary;
-              this.series = [],
-                  this.chartOptions = [],
+              this.series = []
               this.homeInvoice.map((item) => {
                 if (this.selectedCollection == "home") {
                   // this.series[0].data.push(item.home.sum_total);
@@ -306,12 +305,10 @@ export default {
     },
     month_to: function () {
       this.chartOptions.labels = [];
-      this.series[0].data = [];
       this.fetchData();
     },
     month_from: function () {
       this.chartOptions.labels = [];
-      this.series[0].data = [];
       this.fetchData();
     },
   },
