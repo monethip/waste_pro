@@ -136,7 +136,6 @@ export default {
             })
             .then((res) => {
               if (res.data.code === 200) {
-                console.error(res.data)
                 if (res.data.data.collect === true) {
                   //Send OTP
                   this.loading = true;

@@ -709,7 +709,6 @@ export default {
                   {page: this.pagination.current_page},
                   {per_page: this.per_page},
                   {filter: this.search},
-                  {without: this.selectedCustomerStatus},
                   {villages: this.selectedVillage},
                   {district_id: this.selectedDistrict},
                   {cost_by: this.selectedCost},
@@ -894,6 +893,7 @@ export default {
       this.fetchAddCustomer();
     },
     selectedDistrict: function () {
+      this.fetchAddCustomer();
       this.fetchVillage();
     },
     selectedCost:function (){

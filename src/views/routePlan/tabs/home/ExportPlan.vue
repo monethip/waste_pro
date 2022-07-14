@@ -60,6 +60,7 @@
           item-text="name"
           item-value="id"
           label="ເມືອງ"
+          clearable
         ></v-autocomplete>
       </v-col>
       <!--
@@ -136,6 +137,7 @@
           chips
           color="blue-grey lighten-2"
           multiple
+          clearable
         >
           <template v-slot:selection="data">
             <v-chip
@@ -210,6 +212,7 @@
 
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import queryOption from "@/Helpers/queryOption";
 export default {
   name: "Customer",
   data() {
@@ -270,12 +273,14 @@ export default {
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("customer", {
-          params: {
-            page: this.pagination.current_page,
-            per_page: this.per_page,
-            // filter: this.search,
-            villages: this.selectedVillage,
-          },
+          params: queryOption([
+                {page: this.pagination.current_page},
+                {per_page: this.per_page},
+                {villages: this.selectedVillage},
+                {district_id: this.selectedDistrict},
+                {without: ['route_plan', 'calendar']}
+              ]
+          ),
         })
         .then((res) => {
           if (res.data.code == 200) {
@@ -487,6 +492,7 @@ export default {
       this.fetchData();
     },
     selectedDistrict: function () {
+      this.fetchData();
       this.fetchVillage();
     },
   },

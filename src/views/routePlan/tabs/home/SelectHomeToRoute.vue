@@ -299,7 +299,6 @@ export default {
               {villages: this.selectedVillage},
               {district_id: this.selectedDistrict},
               {favorite_dates: this.selectedFavoriteDate},
-              {favorite_dates: this.selectedFavoriteDate},
             ]),
 
           })
