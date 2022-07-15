@@ -274,7 +274,7 @@ export default {
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("company", {
-          params: queryOption([
+                params: queryOption([
                 {page: this.pagination.current_page},
                 {per_page: this.per_page},
                 {villages: this.selectedVillage},

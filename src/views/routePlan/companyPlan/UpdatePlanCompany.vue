@@ -268,6 +268,7 @@
                       item-text="name"
                       item-value="id"
                       label="ເມືອງ"
+                      clearable
                   ></v-autocomplete>
                 </v-col>
               </v-row>
@@ -855,8 +856,9 @@ export default {
       }
     },
     toggleInfo(m, key) {
+      console.log(m)
       this.infoPosition = this.getMarkers(m);
-      this.infoContent = m.name + " (" + m.house_number + ") ";
+      this.infoContent = m.customer.company_name;
       if (this.infoCurrentKey == key) {
         this.infoOpened = !this.infoOpened;
       } else {

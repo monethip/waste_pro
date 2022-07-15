@@ -20,7 +20,7 @@
         <GmapMap
           v-if="customers"
           :center="getCenter()"
-          :zoom="14"
+          :zoom="16"
           style="width: 100%; height: 400px"
           :disableDefaultUI="true"
         >
@@ -253,7 +253,7 @@ export default {
   },
   methods: {
     afterAdd(evt) {
-      console.log(evt);
+      // console.log(evt);
       // const element = evt.moved.element;
       const oldIndex = evt.moved.oldIndex;
       const newIndex = evt.moved.newIndex;
@@ -274,7 +274,6 @@ export default {
       this.customers = this.items;
       // localStorage.setItem("customers", this.customers);
       this.selectedVillage = this.villages;
-      console.log(this.customers);
     },
 
     closeDelete() {
@@ -374,19 +373,20 @@ export default {
     getCenter() {
       if (this.customers.length) {
         if (parseFloat(this.customers[0].lat) == null) {
+          console.log(this.latlng)
           return this.latlng;
         } else {
-          const latlng = {
-            lat: parseFloat(this.customers[0].lat),
-            lng: parseFloat(this.customers[0].lng),
-          };
-          return latlng;
+            const latlng = {
+              lat: parseFloat(this.customers[0].lat),
+              lng: parseFloat(this.customers[0].lng),
+            };
+            return latlng;
         }
       }
       return this.latlng;
     },
     getSiteIcon(status) {
-      var pin1 = {
+      const pin1 = {
         url: require("@coms/../../src/assets/pin1.svg"),
         zoomControl: true,
         mapTypeControl: false,
@@ -408,7 +408,7 @@ export default {
           b: "px",
         },
       };
-      var pin2 = {
+      const pin2 = {
         url: require("@coms/../../src/assets/pin2.svg"),
         zoomControl: true,
         mapTypeControl: false,
@@ -453,7 +453,7 @@ export default {
     },
     toggleInfo(m, key) {
       this.infoPosition = this.getMarkers(m);
-      this.infoContent = m.name + " (" + m.house_number + ") ";
+      this.infoContent = m.company_name + " (" + m.village.name + ") ";
       if (this.infoCurrentKey == key) {
         this.infoOpened = !this.infoOpened;
       } else {

@@ -172,12 +172,19 @@
       <v-card>
         <v-card flat>
           <v-card-text>
+            <v-row>
+              <v-col>
+                <p v-if="selectedRows.length">ລູກຄ້່ທີ່ເລືອກ {{selectedRows.length}}</p>
+              </v-col>
+            </v-row>
             <v-data-table
                 :headers="headers"
                 :items="customers"
                 :search="search"
                 :disable-pagination="true"
                 hide-default-footer
+                v-model="selectedRows"
+                show-select
             >
               <template v-slot:item.address_detail="{ item }">
                 <div v-for="(data, index) in item.village_details" :key="index">
@@ -249,6 +256,7 @@ export default {
 
       favorite_dates: [],
       selectedFavoriteDate: [],
+      selectedRows: [],
       headers: [
         {text: "ID", value: "customer_id"},
         {text: "ຊື່", value: "name"},
@@ -359,11 +367,11 @@ export default {
     createPage() {
       //  var a = [];
       // console.log(this.customers);
-      if (this.customers.length > 0) {
+      if (this.selectedRows.length > 0) {
         this.$router.push({
           name: "CreateRoutePlan",
           params: {
-            items: this.customers,
+            items: this.selectedRows,
           },
         });
       } else {

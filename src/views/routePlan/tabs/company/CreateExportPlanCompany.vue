@@ -240,7 +240,7 @@ export default {
     deleteItemConfirm() {
       this.selectedCustomer = [];
       this.loading = true;
-      for (var i = 0; i < this.selectedRows.length; i++) {
+      for (let i = 0; i < this.selectedRows.length; i++) {
         const index = this.customers.indexOf(this.selectedRows[i]);
         this.selectedCustomer.push(this.customers[index]);
         this.customers.splice(index, 1);
@@ -340,7 +340,7 @@ export default {
       }
     },
     getSiteIcon(status) {
-      var pin1 = {
+      const pin1 = {
         url: require("@coms/../../src/assets/pin1.svg"),
         zoomControl: true,
         mapTypeControl: false,
@@ -362,7 +362,7 @@ export default {
           b: "px",
         },
       };
-      var pin2 = {
+      const pin2 = {
         url: require("@coms/../../src/assets/pin2.svg"),
         zoomControl: true,
         mapTypeControl: false,
