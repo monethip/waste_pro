@@ -26,14 +26,21 @@
               <v-list-item-icon>
                 <v-icon color="indigo"> mdi-account-circle-outline </v-icon>
               </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title v-if="detail.route_plan_detail"
-                  >{{ detail.route_plan_detail.customer.name }}
-                  {{
-                    detail.route_plan_detail.customer.surname
-                  }}</v-list-item-title
+              <v-list-item-content v-if="detail.route_plan_detail">
+                <v-list-item-title v-if="detail.route_plan_detail.customer.customer_type =='home'"
+                  >
+                    {{ detail.route_plan_detail.customer.name }}
+                    {{
+                      detail.route_plan_detail.customer.surname
+                    }}
+                </v-list-item-title
                 >
-                <v-list-item-subtitle>ຊື່ ແລະ ນາມສະກຸນ</v-list-item-subtitle>
+                <v-list-item-title v-if="detail.route_plan_detail.customer.customer_type =='company'"
+                  >
+                  {{ detail.route_plan_detail.customer.company_name }}
+                </v-list-item-title
+                >
+                <v-list-item-subtitle>ຊື່</v-list-item-subtitle>
               </v-list-item-content>
               <v-spacer></v-spacer>
               <v-list-item-icon>
@@ -42,15 +49,20 @@
                 >
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-title v-if="detail.collection_type == 'bag'">
+                <v-list-item-title v-if="detail.collection_type == 'bag' || detail.collection_type == 'chartered'">
                   {{ detail.bag }} ຖົງ</v-list-item-title
                 >
                 <v-list-item-title
-                  v-else-if="detail.collection_type == 'constainer'"
+                  v-else-if="detail.collection_type == 'container'"
                 >
                   {{ detail.container }} Container</v-list-item-title
+                ><v-list-item-title
+                  v-else-if="detail.collection_type == 'fix_cost'"
+                >
+                   ມອບເໝົາ</v-list-item-title
                 >
                 <v-list-item-subtitle>ຈຳນວນ</v-list-item-subtitle>
+<!--                <v-list-item-subtitle v-if="detail.route_plan_detail.customer.fix_cost">{{Intl.NumberFormat().format(detail.route_plan_detail.customer.fix_cost)}}</v-list-item-subtitle>-->
               </v-list-item-content>
             </v-list-item>
             <v-divider inset></v-divider>
@@ -110,6 +122,11 @@
                 </div>
               </v-list-item-content>
             </v-list-item>
+          </v-row>
+          <v-row>
+            <v-col>
+              <p>{{detail.description}}</p>
+            </v-col>
           </v-row>
 
           <v-row>

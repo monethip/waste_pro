@@ -948,7 +948,7 @@ const routes = [
         }
     },
     {
-        path: '/plan-calendar/:plan_calendar/detail/:id',
+        path: '/plan-calendar/:plan_calendar/trash/detail/:id',
         name: 'TrashDetail',
         component: () => import('@/views/calendar/trashDetail.vue'),
         meta: {

@@ -98,6 +98,17 @@
                   {{ item.customer.surname }}
                 </div>
               </template>
+              <template v-slot:item.favorite_dates="{ item }">
+                <div
+                    v-for="(data, index) in item.customer.favorite_dates"
+                    :key="index"
+                >
+                  <div>{{ data.name }}</div>
+                </div>
+              </template>
+              <template v-slot:item.cost_by="{ item }">
+                <div>{{ costBy(item.customer.cost_by) }}</div>
+              </template>
               <template v-slot:item.status="{ item }">
                 <v-chip
                   v-if="item.customer"
@@ -158,7 +169,9 @@ export default {
         { text: "ລຳດັບ", value: "priority", sortable: false, align: "center" },
         { text: "ລູກຄ້າ", value: "customer" },
         { text: "ສະຖານະ", value: "status", sortable: false },
-        { text: "ເຮືອນເລກທີ", value: "customer.house_number", sortable: false },
+        { text: "ປະເພດບໍລິການ", value: "cost_by", sortable: false },
+        {text: "ວັນພິເສດ", value: "favorite_dates",width: "120px"},
+        { text: "ລາຍລະອຽດ", value: "customer.collect_description", sortable: false },
         { text: "", value: "actions", sortable: false },
       ],
       //Map
@@ -361,6 +374,13 @@ export default {
       if (value == "active") return "success";
       else if (value == "inactive") return "error";
       else return "info";
+    },
+    costBy(value) {
+      if (value == "container") return "ຄອນເທັນເນີ";
+      else if (value == "fix_cost") return "ທຸລະກິດເປັນຖ້ຽວ";
+      else if (value == "chartered") return "ມອບເໝົາ";
+      else if (value == "bag") return "ບໍລິມາດ";
+      else return '';
     },
   },
 

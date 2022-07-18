@@ -47,7 +47,7 @@
           <v-chip color="error" label>{{ item.status }}</v-chip>
         </template>
         <template v-slot:item.amount="{ item }">
-          <div v-if="item.collection_type == 'bag'">
+          <div v-if="item.collection_type == 'bag' || item.collection_type == 'chartered'">
             <v-chip color="primary">{{ item.bag }}</v-chip>
             <span> {{ getUnit(item.collection_type) }}</span>
           </div>
@@ -298,6 +298,7 @@ export default {
     },
     getUnit(value) {
       if (value == "bag") return "ຖົງ";
+      else if(value == 'chartered') return "ຖົງ";
       else if (value == "fix_cost") return "ມອບເໝົາ"
       else if (value == "container") return "ຄອນເທັນເນີ"
       else return '';

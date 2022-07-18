@@ -54,7 +54,7 @@
           <v-chip label :color="statusColor(item.status)">{{ item.status }}</v-chip>
         </template>
         <template v-slot:item.amount="{ item }">
-          <div v-if="item.collection_type == 'bag'">
+          <div v-if="item.collection_type == 'bag' || item.collection_type == 'chartered'">
             <v-chip color="primary">{{ item.bag }}</v-chip>
             <span> {{ getUnit(item.collection_type) }}</span>
           </div>
