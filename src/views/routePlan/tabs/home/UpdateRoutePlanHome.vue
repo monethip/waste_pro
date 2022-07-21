@@ -241,6 +241,19 @@
                   <v-autocomplete
                       outlined
                       dense
+                      :items="customerStatus"
+                      v-model="selectedCustomerStatus"
+                      item-text="name"
+                      item-value="value"
+                      label="ສະຖານະລູກຄ້າ"
+                      multiple
+                      clearable
+                  ></v-autocomplete>
+                </v-col>
+                <v-col>
+                  <v-autocomplete
+                      outlined
+                      dense
                       :items="districts"
                       v-model="selectedDistrict"
                       item-text="name"
@@ -432,6 +445,19 @@ export default {
         {text: "", value: "actions", sortable: false},
       ],
       //Map
+      selectedCustomerStatus: [],
+      customerStatus: [
+        {
+          id: 1,
+          value: "calendar",
+          name: "ຍັງບໍມີຕາຕະລາງ",
+        },
+        {
+          id: 2,
+          value: "route_plan",
+          name: "ຍັງບໍມີແຜນ",
+        },
+      ],
       latlng: {
         lat: 18.1189434,
         lng: 102.290218,
@@ -651,15 +677,6 @@ export default {
       this.$store.commit("Loading_State", true);
       this.$axios
           .get("customer", {
-            //     params: {
-            //       page: this.pagination.current_page,
-            //       per_page: this.per_page,
-            //       // filter: this.search,
-            //       favorite_dates: this.selectedFavoriteDate,
-            //       villages: this.selectedVillage,
-            // {district_id: this.selectedDistrict},
-            //       without:['route_plan','calendar']
-            //     },
             params: queryOption([
               {page: this.pagination.current_page},
               {per_page: this.per_page},
@@ -667,6 +684,7 @@ export default {
               {villages: this.selectedVillage},
               {district_id: this.selectedDistrict},
               {favorite_dates: this.selectedFavoriteDate},
+              {without: this.selectedCustomerStatus},
             ]),
           })
           .then((res) => {
@@ -833,6 +851,10 @@ export default {
   },
   watch: {
     selectedFavoriteDate: function () {
+      this.pagination.current_page = '';
+      this.fetchAddCustomer();
+    },
+    selectedCustomerStatus: function () {
       this.pagination.current_page = '';
       this.fetchAddCustomer();
     },

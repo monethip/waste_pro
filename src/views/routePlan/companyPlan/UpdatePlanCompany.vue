@@ -155,7 +155,7 @@
                   <div class="mb-2">
                     <v-btn text color="primary" @click="addCustomer"
                     >
-                      <v-icon medium> mdi-plus</v-icon>
+                      <v-icon medium> mdi-plus</v-icon> ເພີ່ມລູກຄ້າ
                     </v-btn
                     >
                   </div>
@@ -244,6 +244,19 @@
                       label="ວັນພິເສດ"
                       multiple
                   ></v-select>
+                </v-col>
+                <v-col>
+                  <v-autocomplete
+                      outlined
+                      dense
+                      :items="customerStatus"
+                      v-model="selectedCustomerStatus"
+                      item-text="name"
+                      item-value="value"
+                      label="ສະຖານະລູກຄ້າ"
+                      multiple
+                      clearable
+                  ></v-autocomplete>
                 </v-col>
                 <v-col>
                   <v-select
@@ -341,15 +354,15 @@
                 </template>
               </v-data-table>
 
-              <!--              <br />-->
-              <!--              <template>-->
-              <!--                <Pagination-->
-              <!--                  v-if="pagination.total_pages > 1"-->
-              <!--                  :pagination="pagination"-->
-              <!--                  :offset="offset"-->
-              <!--                  @paginate="fetchAddCustomer()"-->
-              <!--                ></Pagination>-->
-              <!--              </template>-->
+                            <br />
+                            <template>
+                              <Pagination
+                                v-if="pagination.total_pages > 1"
+                                :pagination="pagination"
+                                :offset="offset"
+                                @paginate="fetchAddCustomer()"
+                              ></Pagination>
+                            </template>
             </v-container>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -455,6 +468,19 @@ export default {
           id: 3,
           value: "chartered",
           name: "ມອບເໝົາ"
+        },
+      ],
+      selectedCustomerStatus: [],
+      customerStatus: [
+        {
+          id: 1,
+          value: "calendar",
+          name: "ຍັງບໍມີຕາຕະລາງ",
+        },
+        {
+          id: 2,
+          value: "route_plan",
+          name: "ຍັງບໍມີແຜນ",
         },
       ],
 
@@ -714,7 +740,7 @@ export default {
                   {district_id: this.selectedDistrict},
                   {cost_by: this.selectedCost},
                   {favorite_dates: this.selectedFavoriteDate},
-                  {without: ['route_plan', 'calendar']}
+                  {without: this.selectedCustomerStatus},
                 ]
             ),
           })
@@ -885,9 +911,13 @@ export default {
       this.pagination.current_page = '';
       this.fetchAddCustomer();
     },
+    selectedCustomerStatus: function () {
+      this.pagination.current_page = '';
+      this.fetchAddCustomer();
+    },
     search: function (value) {
       if (value == "") {
-        this.fetchData();
+        this.fetchAddCustomer();
       }
     },
 

@@ -182,35 +182,57 @@
                 ເມືອງ
               </th>
               <th class="text-left text-table-header">
-               Sub Container
+                ຈຳນວນຕູ້ຄອນເທນເນີ
               </th>
               <th class="text-left text-table-header">
-                Container Time
+                ຈຳນວນຕູ້ຄອນເທນເນີທັງໝົດ
               </th>
               <th class="text-left text-table-header">
-                ມອບເໝົາ
-              </th><th class="text-left text-table-header">
-                ຖ້ຽວພິເສດ
+                ຄັ້ງລົງເກັບ (ປະເພດເປັນຖ້ຽວ)
               </th>
               <th class="text-left text-table-header">
-                ຈຳນວນຄັ້ງ
+                ຄັ້ງລົງເກັບທັງໝົດ (ປະເພດເປັນຖ້ຽວ)
+              </th>
+              <th class="text-left text-table-header">
+                ຈຳນວນຖົງ (ມອບເໝົາ)
+              </th>
+              <th class="text-left text-table-header">
+              ຈຳນວນຖົງທັງໝົດ (ມອບເໝົາ)
+              </th>
+              <th class="text-left text-table-header">
+                ຈຳນວນຖົງ (ບໍລິມາດ)
               </th>
               <th class="text-center text-table-header">
-                Total Container
+                ຈຳນວນຖົງທັງໝົດ (ບໍລິມາດ)
               </th>
               <th class="text-center text-table-header">
-                 Container Time
+                ຄັ້ງລົງເກັບ (ປະເພດຄອນເທນເນີ)
               </th>
               <th class="text-center text-table-header">
-                ມອບເໝົາ
+                ຄັ້ງລົງເກັບທັງໝົດ (ປະເພດຄອນເທນເນີ)
               </th>
 
               <th class="text-center text-table-header">
-                ຖ້ຽວພິເສດ
+                ຄັ້ງລົງເກັບ (ປະເພດເປັນຖ້ຽວ)
               </th>
 
               <th class="text-center text-table-header">
-                Collect Time
+                ຄັ້ງລົງເກັບທັງໝົດ (ປະເພດເປັນຖ້ຽວ)
+              </th>
+
+              <th class="text-center text-table-header">
+                ຄັ້ງລົງເກັບ (ບໍລິມາດ)
+              </th>
+              <th class="text-center text-table-header">
+                ຄັ້ງລົງເກັບທັງໝົດ (ບໍລິມາດ)
+              </th>
+
+              <th class="text-center text-table-header">
+                ຄັ້ງລົງເກັບທັງໝົດ (ຕາມບ້ານ)
+              </th>
+
+              <th class="text-center text-table-header">
+                ຄັ້ງລົງເກັບທັງໝົດ
               </th>
             </tr>
             </thead>
@@ -232,37 +254,61 @@
                 <td class="text-table-body">
                   {{ item.subtotal_container }}
                 </td>
-                <td class="text-table-body">
-                  {{ item.container_collect_time }}
-                </td>
-                <td class="text-table-body">
-                  {{ item.chartered_collect_time }}
-                </td>
-                <td class="text-table-body">
-                  {{ item.fix_cost_collect_time }}
-                </td>
-                <td class="text-table-body">
-                  {{ item.subtotal_collect_time }}
-                </td>
-
                 <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
                   <v-chip color="success">
                     {{ driver.total_container }}
                   </v-chip>
+                </td>
+                <td class="text-table-body">
+                  {{ item.subtotal_bag_chartered }}
+                </td>
+                <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
+                  <v-chip color="success">
+                    {{ driver.total_bag_chartered }}
+                  </v-chip>
+                </td>
+                <td class="text-table-body">
+                  {{ item.subtotal_bag_bag}}
+                </td>
+                <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
+                  <v-chip color="success">
+                    {{ driver.total_bag_bag }}
+                  </v-chip>
+                </td>
+                <td class="text-table-body">
+                  {{ item.container_collect_time }}
                 </td>
                 <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
                   <v-chip color="success">
                     {{ driver.total_container_collect_time }}
                   </v-chip>
                 </td>
+                <td class="text-table-body">
+                  {{ item.fix_cost_collect_time }}
+                </td>
+                <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
+                  <v-chip color="success">
+                    {{ driver.total_fix_cost_collect_time }}
+                  </v-chip>
+                </td>
+                <td class="text-table-body">
+                  {{ item.chartered_collect_time }}
+                </td>
                 <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
                   <v-chip color="success">
                     {{ driver.total_chartered_collect_time }}
                   </v-chip>
-                </td>    <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
+                </td>
+                <td class="text-table-body">
+                  {{ item.bag_collect_time }}
+                </td>
+                <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
                   <v-chip color="success">
-                    {{ driver.total_fix_cost_collect_time }}
+                    {{ driver.total_bag_collect_time }}
                   </v-chip>
+                </td>
+                <td class="text-table-body">
+                  {{ item.subtotal_collect_time }}
                 </td>
                 <td class="text-center" v-if="iSub === 0" :rowspan="driver.data.length">
                   <v-chip color="success">
@@ -467,6 +513,9 @@ export default {
 @import "../../../public/scss/main.scss";
 .text-table-header{
   font-size: 14px !important;
+}
+.v-data-table > .v-data-table__wrapper > table > thead > tr > th,td {
+  min-width: 140px !important;
 }
 .text-table-body{
   font-size: 13px !important;
