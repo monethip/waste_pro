@@ -2,7 +2,7 @@
   <div>
   <v-container>
     <v-breadcrumbs large class="pt-0"
-    >ລາຍງານຂໍ້ມູນການເກັບຂີ້ເຫື້ອຍພິເສດ
+    >ລາຍງານຂໍ້ມູນການເກັບຂີ້ເຫື້ຍອພິເສດ
     </v-breadcrumbs
     >
     <v-row class="mb-n6">

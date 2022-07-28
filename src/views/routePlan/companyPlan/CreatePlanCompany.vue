@@ -108,9 +108,11 @@
                     <td>{{ user.id }}</td>
                     <td>{{ user.company_name }}</td>
                     <td>{{ user.user.phone }}</td>
-                    <td>{{ user.address_detail }}</td>
                     <td>{{ user.village.name }}</td>
                     <td>{{ user.district.name }}</td>
+                    <td>{{ user.collect_description }}</td>
+<!--                    {text: "ລາຍລະອຽດການບໍລິການ", value: "collect_description"},-->
+
                     <td>
                       <!--
                         <v-icon small class="mr-2" @click="viewPage(user.id)">
@@ -228,9 +230,9 @@ export default {
         { text: "Id", value: "id" },
         { text: "ບໍລິສັດ", value: "company_name" },
         { text: "Phone", value: "user.phone", sortable: false },
-        { text: "ລາຍລະອຽດທີ່ຢູ່", value: "address_detail" },
         { text: "ບ້ານ", value: "village.name", sortable: true },
         { text: "ເມືອງ", value: "district.name", sortable: true },
+        { text: "ລາຍລະອຽດການບໍລິການ", value: "collect_description", sortable: true },
         { text: "", value: "actions", sortable: false },
       ],
       //Map

@@ -170,7 +170,7 @@
                     </v-list-item-title>
                   </v-list-item>
                   <v-list-item link>
-                    <v-list-item-title @click="cancelItem(item.id)">
+                    <v-list-item-title @click="confirmCancel(item.id)">
                       <v-icon small class="mr-2"> mdi-close</v-icon>
                       ຍົກເລີກ
                     </v-list-item-title>
@@ -453,6 +453,33 @@
         </v-card-actions>
       </template>
     </ModalDelete>
+
+    <v-dialog v-model="cancelDialog" max-width="520px" persistent>
+      <v-card class="pa-2">
+        <v-card-text>
+          <v-container class="text-center">
+            <h3 class="py-2">ຕ້ອງການຍົກເລີກຂໍ້ມູນນີ້ບໍ່ ?</h3>
+          </v-container>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="warning" @click="cancelDialog = false" class="elevation-0">
+              Close
+            </v-btn>
+            <v-btn
+                color="success"
+                class="elevation-0"
+                :loading="loading"
+                :disabled="loading"
+                @click="cancelItem()"
+            >
+              ຢືນຢັນການຍົກເລີກ
+            </v-btn>
+            <v-spacer></v-spacer>
+          </v-card-actions>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
   </v-container>
 </template>
 
@@ -467,6 +494,7 @@ export default {
       tab: null,
       calendars: [],
       loading: false,
+      cancelDialog:false,
       calendarId: "",
       //Pagination
       offset: 12,
@@ -735,16 +763,19 @@ export default {
       }
     },
 
-    cancelItem(id) {
+    confirmCancel(id){
+      this.calendarId = id;
+      this.cancelDialog = true;
+    },
+    cancelItem() {
       this.loading = true;
       this.$axios
           .post(
               "plan-calendar/" +
-              id + "/cancel"
+              this.calendarId + "/cancel"
           )
           .then((res) => {
             if (res.data.code == 200) {
-              setTimeout(() => {
                 this.loading = false;
                 this.$store.commit("Toast_State", {
                   value: true,
@@ -753,10 +784,12 @@ export default {
                 });
                 this.$store.commit("modalDelete_State", false);
                 this.fetchData();
-              }, 100);
+              this.calendarId = "";
+              this.cancelDialog = false;
             }
           })
           .catch((error) => {
+            this.cancelDialog = false;
             this.$store.commit("modalDelete_State", false);
             this.loading = false;
             if (error.response.status == 422) {

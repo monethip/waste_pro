@@ -148,7 +148,7 @@
             v-model="selectedFavoriteDate"
             item-text="name"
             item-value="name"
-            label="ວັນພິເສດ"
+            label="ມື້ບໍລິການ"
             multiple
         ></v-select>
       </v-col>
@@ -190,6 +190,14 @@
               >
                 <img v-if="img.url" :src="img.url"/>
               </v-avatar>
+            </template>
+            <template v-slot:item.village_detail="{ item }">
+              <div
+                  v-for="(data, index) in item.village_details"
+                  :key="index"
+              >
+                <div>{{ data.name }}</div>
+              </div>
             </template>
             <template v-slot:item.favorite_dates="{ item }">
               <div
@@ -474,10 +482,11 @@ export default {
         {text: "ບໍລິສັດ", value: "company_name",width:"200px"},
         {text: "ບ້ານ", value: "village.name", sortable: false,width: "100px"},
         {text: "ເມືອງ", value: "district.name", sortable: false,width: "200px"},
+        {text: "ລາຍລະອຽດທີ່ຢູ່", value: "village_detail", sortable: false,width: "200px"},
         {text: "ປະເພດບໍລິການ", value: "cost_by",width: "200px"},
         {text: "ມູນຄ່າສັນຍາ", value: "price",width: "200px"},
         {text: "ສະຖານະເກັບ", value: "can_collect", align: "center",width: "200px"},
-        {text: "ວັນພິເສດ", value: "favorite_dates",width: "120px"},
+        {text: "ມື້ບໍລິການ", value: "favorite_dates",width: "120px"},
         {text: "ລາຍລະອຽດບັນຈຸພັນ", value: "collect_description", sortable: false,width: "200px"},
         {text: "", value: "media"},
         {text: "", value: "actions", sortable: false},

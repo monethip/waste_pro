@@ -129,7 +129,7 @@
             v-model="selectedFavoriteDate"
             item-text="name"
             item-value="name"
-            label="ວັນພິເສດ"
+            label="ມື້ບໍລິການ"
             multiple
         ></v-select>
       </v-col>
@@ -200,6 +200,20 @@
                     >{{ CanCollect(item.can_collect) }}
                     </v-chip
                     >
+                  </template>
+                  <template v-slot:item.village_detail="{ item }">
+                    <div
+                        v-for="(data, index) in item.village_details"
+                        :key="index"
+                    >
+                      <div>{{ data.name }}</div>
+                    </div>
+                  </template>
+                  <template v-slot:item.price="{ item }">
+                    <div
+                    >
+                      <div>{{ Intl.NumberFormat().format(item.package.price) }}</div>
+                    </div>
                   </template>
                   <template v-slot:item.favorite_dates="{ item }">
                     <div
@@ -596,10 +610,12 @@ export default {
         {text: "ຊື່", value: "name",width:"200px"},
         {text: "ນາມສະກຸນ", value: "surname",width:"200px"},
         {text: "Phone", value: "user.phone",width:"200px", sortable: false},
-        {text: "ທີ່ຢູ່", value: "district.name",width:"200px", sortable: false},
-        {text: "ປະເພດບໍລິການ", value: "package.name",width:"200px", sortable: false},
+        {text: "ບ້ານ", value: "village.name",width:"120px", sortable: false},
+        {text: "ເມືອງ", value: "district.name",width:"120px", sortable: false},
+        {text: "ລາຍລະອຽດທີ່ຢູ່", value: "village_detail",width:"200px", sortable: false},
+        {text: "ມູນຄ່າສັນຍາ", value: "price",width:"200px", sortable: false},
         {text: "ສະຖານະແພັກເກດ", value: "status",width:"200px"},
-        {text: "ວັນພິເສດ", value: "favorite_dates",width:"100px"},
+        {text: "ມື້ບໍລິການ", value: "favorite_dates",width:"100px"},
         {text: "ສະຖານະເກັບ", value: "can_collect", align: "center",width:"200px"},
         {text: "Profile", value: "media"},
         {text: "", value: "actions", sortable: false},

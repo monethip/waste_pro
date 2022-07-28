@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-breadcrumbs large class="pt-0">ລາຍງານຂໍ້ມູນບິນເກັບຂີ້ເຫື້ອຍພິເສດ</v-breadcrumbs>
+    <v-breadcrumbs large class="pt-0">ລາຍງານຂໍ້ມູນບິນເກັບຂີ້ເຫື້ຍອພິເສດ</v-breadcrumbs>
     <v-row class="mb-n6">
       <v-col>
         <v-btn class="btn-primary" @click="exportData()">Export </v-btn>

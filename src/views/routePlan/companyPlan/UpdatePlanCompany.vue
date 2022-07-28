@@ -241,7 +241,7 @@
                       v-model="selectedFavoriteDate"
                       item-text="name"
                       item-value="name"
-                      label="ວັນພິເສດ"
+                      label="ມື້ບໍລິການ"
                       multiple
                   ></v-select>
                 </v-col>
@@ -500,6 +500,7 @@ export default {
         {text: "Id", value: "id"},
         {text: "ລູກຄ້າ", value: ""},
         {text: "ທີ່ຢູ່", value: "address_detail"},
+        {text: "ລາຍລະອຽດການບໍລິການ", value: "collect_description"},
         {text: "", value: "actions", sortable: false},
       ],
 
@@ -509,6 +510,7 @@ export default {
         {text: "ລູກຄ້າ", value: ""},
         {text: "Phone", value: "user.phone", sortable: false},
         {text: "ທີ່ຢູ່", value: "address_detail"},
+        {text: "ລາຍລະອຽດການບໍລິການ", value: "collect_description"},
         // { text: "ບ້ານ", value: "village.name", sortable: true },
         // { text: "ເມືອງ", value: "district.name", sortable: true },
         {text: "", value: "actions", sortable: false},

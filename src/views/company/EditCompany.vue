@@ -380,7 +380,7 @@
                     v-model="data.favorite_dates"
                     item-text="name"
                     item-value="name"
-                    label="ວັນພິເສດ"
+                    label="ມື້ບໍລິການ"
                     multiple
                 ></v-select>
               </v-col>

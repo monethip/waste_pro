@@ -135,7 +135,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <div v-for="item in group_menu" :key="item.id">
+        <div v-for="item in group_menu" :key="item.id" class="group-menu">
           <v-list-group
             :prepend-icon="item.icon"
             no-action
@@ -147,7 +147,7 @@
                 <v-list-item-title>{{ item.title }}</v-list-item-title>
               </v-list-item-content>
             </template>
-            <div v-for="(i, index) in item.menu" :key="index">
+            <div v-for="(i, index) in item.menu" :key="index" style="padding-left: 22px">
               <v-list-item
                 exact
                 color="primary-color"
@@ -310,7 +310,7 @@ export default {
             },
             {
               icon: "mdi-account-group",
-              title: "ລູກຄ້າທີ່ສົງຄຳຮ້ອງຂໍເຂົ້າມາ",
+              title: "ລູກຄ້າສົງຄຳຮ້ອງຂໍເຂົ້າມາ",
               to: "/company-request",
               permissions: ["get_customer"],
             },
@@ -521,5 +521,14 @@ export default {
 .v-main__wrap.v-content__wrap {
   background: #eee !important;
 }
+/**
+.v-application--is-ltr .v-list-item__action:first-child, .v-application--is-ltr .v-list-item__icon:first-child {
+  margin-right: 22px !important;
+}
+.group-menu .v-application--is-ltr .v-list-item__icon:first-child {
+  margin-right: 22px !important;
+}
+88
+ */
 
 </style>

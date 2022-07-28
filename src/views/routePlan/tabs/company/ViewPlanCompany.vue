@@ -170,7 +170,7 @@ export default {
         { text: "ລູກຄ້າ", value: "customer" },
         { text: "ສະຖານະ", value: "status", sortable: false },
         { text: "ປະເພດບໍລິການ", value: "cost_by", sortable: false },
-        {text: "ວັນພິເສດ", value: "favorite_dates",width: "120px"},
+        {text: "ມື້ບໍລິການ", value: "favorite_dates",width: "120px"},
         { text: "ລາຍລະອຽດ", value: "customer.collect_description", sortable: false },
         { text: "", value: "actions", sortable: false },
       ],
