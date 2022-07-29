@@ -210,7 +210,7 @@
                     </div>
                   </template>
                   <template v-slot:item.price="{ item }">
-                    <div
+                    <div v-if="item.package"
                     >
                       <div>{{ Intl.NumberFormat().format(item.package.price) }}</div>
                     </div>
