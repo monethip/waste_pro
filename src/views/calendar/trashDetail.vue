@@ -77,7 +77,7 @@
                 <v-list-item-title v-if="detail.route_plan_detail">
                   {{ detail.route_plan_detail.priority }}</v-list-item-title
                 >
-                <v-list-item-subtitle>ລຳດັບເກັບຂີ້ເຫື້ອຍ</v-list-item-subtitle>
+                <v-list-item-subtitle>ລຳດັບເກັບຂີ້ເຫື້ຍອ</v-list-item-subtitle>
               </v-list-item-content>
               <v-spacer></v-spacer>
               <v-list-item-icon>

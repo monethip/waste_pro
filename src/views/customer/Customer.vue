@@ -348,7 +348,7 @@
                   <v-col cols="12">
                     <v-checkbox v-model="start_collect">
                       <template v-slot:label>
-                        <div>ສາມາດເກັບຂີ້ເຫື້ອຍເລີຍໄດ້ບໍ່ ?</div>
+                        <div>ສາມາດເກັບຂີ້ເຫື້ຍອເລີຍໄດ້ບໍ່ ?</div>
                       </template>
                     </v-checkbox>
                     <p class="errors">

@@ -1,59 +1,13 @@
 <template>
   <v-container>
-    <v-breadcrumbs large class="mt-n4">
-      <v-btn text class="text-primary" @click="backPrevios()"
-      >
-        <v-icon>mdi-keyboard-backspace</v-icon>
-      </v-btn
-      >
-      ເລືອກລູກຄ້າເຂົ້າແຜນເສັ້ນທາງ
-      <v-spacer></v-spacer>
-      <span class="mr-4"
-      ><v-icon color="red">mdi-map-marker</v-icon>ຍັງບໍທັນຢູ່ໃນແຜນ</span
-      >
-      <span
-      ><v-icon style="color: #49a3da">mdi-map-marker</v-icon
-      >ຢູ່ໃນແຜນແລ້ວ</span
-      >
-    </v-breadcrumbs>
-    <v-row class="my-n4">
-      <v-col cols="12" class="mb-4">
-        <GmapMap
-            :center="getCenter()"
-            :zoom="14"
-            style="width: 100%; height: 450px"
-            :disableDefaultUI="true"
-        >
-          <gmap-info-window
-              :options="infoOptions"
-              :position="infoPosition"
-              :opened="infoOpened"
-              :conent="infoContent"
-              @closeclick="infoOpened = false"
-          >{{ infoContent }}
-          </gmap-info-window>
-          <GmapMarker
-              :key="index"
-              v-for="(m, index) in customers"
-              :position="getMarkers(m)"
-              @click="toggleInfo(m, index)"
-              :draggable="false"
-              :icon="getSiteIcon(m)"
-              :animation="2"
-              :clickable="true"
-          />
-        </GmapMap>
-      </v-col>
-    </v-row>
     <v-row class="mb-n6">
       <v-col>
-        <v-btn class="btn-primary" @click="createPage()"
-        >Next
-          <v-icon>mdi-arrow-right-bold-circle-outline</v-icon>
-        </v-btn>
-      </v-col>
-      <v-col>
-        <h4>ເລືອກລູກຄ້າເພື່ອສ້າງແຜນເສັ້ນທາງ {{ pagination.total }} ຄົນ</h4>
+        <v-breadcrumbs large class="pa-0">
+          <v-btn text class="text-primary" @click="backPrevios()">
+            <v-icon>mdi-chevron-left</v-icon></v-btn
+          >
+          ເລືອກລູກຄ້າ</v-breadcrumbs
+        >
       </v-col>
       <v-col>
         <v-autocomplete
@@ -93,6 +47,19 @@
           </template>
         </v-autocomplete>
       </v-col>
+      <v-col>
+        <v-select
+            outlined
+            dense
+            :items="costs"
+            v-model="selectedCost"
+            item-text="name"
+            item-value="value"
+            label="ປະເພດບໍລິການ"
+            multiple
+            clearable
+        ></v-select>
+      </v-col>
     </v-row>
     <v-row>
       <v-col cols>
@@ -121,19 +88,6 @@
         ></v-autocomplete>
       </v-col>
       <v-col>
-        <v-select
-            outlined
-            dense
-            :items="costs"
-            v-model="selectedCost"
-            item-text="name"
-            item-value="value"
-            label="ປະເພດບໍລິການ"
-            multiple
-            clearable
-        ></v-select>
-      </v-col>
-      <v-col>
         <v-text-field
             outlined
             dense
@@ -154,7 +108,7 @@
           <v-card-text>
             <v-row>
               <v-col>
-               <p v-if="selectedRows.length">ລູກຄ້່ທີ່ເລືອກ {{selectedRows.length}}</p>
+                <p v-if="selectedRows.length">ລູກຄ້່ທີ່ເລືອກ {{selectedRows.length}}</p>
               </v-col>
             </v-row>
             <v-data-table
@@ -163,8 +117,6 @@
                 :search="search"
                 :disable-pagination="true"
                 hide-default-footer
-                v-model="selectedRows"
-                show-select
             >
               <template v-slot:item.address_detail="{ item }">
                 <div v-for="(data, index) in item.village_details" :key="index">
@@ -176,9 +128,15 @@
               </template>
 
               <template v-slot:item.actions="{ item }">
-                <v-icon small class="mr-2" @click="viewPage(item.id)">
-                  mdi-eye
-                </v-icon>
+                <v-btn class="btn-primary mr-4 elevation-0" @click="createPage(item)"
+                >ສ້າງບິນລ່ວງໜ້າ
+                </v-btn>
+                <v-btn class="btn-primary mr-2 elevation-0" @click="createCustomBill(item)"
+                >ສ້າງບິນແບບກຳນົດເອງ
+                </v-btn>
+<!--                <v-icon small class="mr-2" @click="viewPage(item.id)">-->
+<!--                  mdi-eye-->
+<!--                </v-icon>-->
               </template>
             </v-data-table
             >
@@ -214,7 +172,7 @@ export default {
       //Pagination
       offset: 12,
       pagination: {},
-      per_page: 20,
+      per_page: 1500,
       search: "",
       oldVal: "",
       //Filter
@@ -257,6 +215,7 @@ export default {
       favorite_dates: [],
       selectedFavoriteDate: [],
       selectedRows: [],
+      selectedCustomer: {},
       headers: [
         {text: "ID", value: "customer_id"},
         {text: "ບໍລິສັດ", value: "company_name"},
@@ -264,8 +223,6 @@ export default {
         {text: "ປະເພດບໍລິການ", value: "cost_by", sortable: true},
         {text: "ບ້ານ", value: "village.name", sortable: true},
         {text: "ເມືອງ", value: "district.name", sortable: true},
-        // {text: "ລາຍລະອຽດທີ່ຢູ່", value: "address_detail"},
-        {text: "ລາຍລະອຽດການບໍລິການ", value: "collect_description"},
         // { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
         {text: "", value: "actions", sortable: false},
       ],
@@ -362,24 +319,43 @@ export default {
           });
     },
 
-    createPage() {
+    createPage(data) {
       //  var a = [];
-      if (this.selectedRows.length > 0) {
+      // if (this.selectedRows.length > 0) {
         this.$router.push({
-          name: "CreateRoutePlanCompany",
+          name: "create-future-customer",
           params: {
-            items: this.selectedRows,
+            items: data,
             // items: this.customers,
           },
         });
-      } else {
-        this.$store.commit("Toast_State", {
-          value: true,
-          color: "error",
-          msg: "ກາລຸນາເລືອກບ້ານ ແລະ ລູກຄ້າກ່ອນ",
-        });
-      }
+      // } else {
+      //   this.$store.commit("Toast_State", {
+      //     value: true,
+      //     color: "error",
+      //     msg: "ກາລຸນາເລືອກບ້ານ ແລະ ລູກຄ້າກ່ອນ",
+      //   });
+      // }
     },
+    createCustomBill(data) {
+      //  var a = [];
+      // if (this.selectedRows.length > 0) {
+        this.$router.push({
+          name: "create-custom-bill",
+          params: {
+            items: data,
+            // items: this.customers,
+          },
+        });
+      // } else {
+      //   this.$store.commit("Toast_State", {
+      //     value: true,
+      //     color: "error",
+      //     msg: "ກາລຸນາເລືອກບ້ານ ແລະ ລູກຄ້າກ່ອນ",
+      //   });
+      // }
+    },
+
     viewPage(id) {
       this.$router.push({
         name: "ViewCustomer",
@@ -394,108 +370,6 @@ export default {
       GetOldValueOnInput(this);
     },
 
-    //Google map
-    getCenter() {
-      if (this.customers.length) {
-        if (parseFloat(this.customers[0].lat) == null) {
-          return this.latlng;
-        } else {
-          const latlng = {
-            lat: parseFloat(this.customers[0].lat),
-            lng: parseFloat(this.customers[0].lng),
-          };
-          return latlng;
-        }
-      }
-      return this.latlng;
-    },
-    getMarkers(m) {
-      if (m.customer !== null) {
-        return {
-          lat: parseFloat(m.lat),
-          lng: parseFloat(m.lng),
-        };
-      }
-    },
-    getSiteIcon(status) {
-      const pin1 = {
-        url: require("@coms/../../src/assets/pin1.svg"),
-        zoomControl: true,
-        mapTypeControl: false,
-        scaleControl: false,
-        streetViewControl: false,
-        rotateControl: false,
-        fullscreenControl: false,
-        disableDefaultUi: false,
-        size: {
-          width: 35,
-          height: 55,
-          f: "px",
-          b: "px",
-        },
-        scaledSize: {
-          width: 35,
-          height: 55,
-          f: "px",
-          b: "px",
-        },
-      };
-      const pin2 = {
-        url: require("@coms/../../src/assets/pin2.svg"),
-        zoomControl: true,
-        mapTypeControl: false,
-        scaleControl: false,
-        streetViewControl: false,
-        rotateControl: false,
-        fullscreenControl: false,
-        disableDefaultUi: false,
-        size: {
-          width: 35,
-          height: 55,
-          f: "px",
-          b: "px",
-        },
-        scaledSize: {
-          width: 35,
-          height: 55,
-          f: "px",
-          b: "px",
-        },
-      };
-
-      try {
-        switch (status.route_plan_details_count) {
-          case 0:
-            return pin1;
-          case 1:
-            return pin2;
-        }
-      } catch (e) {
-        return pin1;
-      }
-    },
-    toggleInfo(m, key) {
-      this.infoPosition = this.getMarkers(m);
-      this.infoContent = m.company_name + " (" + m.user.phone + ") ";
-      if (this.infoCurrentKey == key) {
-        this.infoOpened = !this.infoOpened;
-      } else {
-        this.infoOpened = true;
-        this.infoCurrentKey = key;
-      }
-    },
-
-    toggle() {
-      this.$nextTick(() => {
-        if (this.selectedAllVillage) {
-          this.selectedVillage = [];
-        } else {
-          setTimeout(() => {
-            this.selectedVillage = this.villages.slice();
-          }, 300);
-        }
-      });
-    },
     costBy(value) {
       if (value == "container") return "ຄອນເທັນເນີ";
       else if (value == "fix_cost") return "ທຸລະກິດເປັນຖ້ຽວ";
@@ -566,5 +440,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../../../../public/scss/main.scss";
+@import "../../../../../public/scss/main.scss";
 </style>

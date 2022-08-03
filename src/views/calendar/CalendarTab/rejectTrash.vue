@@ -97,7 +97,7 @@
                 >mdi-checkbox-marked-circle-outline
                 </v-icon
                 >
-                ຢືນຢັນການເກັບຂີ້ເຫື້ອຍ
+                ຢືນຢັນການເກັບຂີ້ເຫື້ຍອ
               </p>
             </v-card-title>
             <v-container>

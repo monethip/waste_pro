@@ -4,7 +4,7 @@
       <v-btn text class="text-primary" @click="backPrevios()"
         ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
-      ສ້າງແຜນເສັ້ນທາງເກັບຂີເຫື້ອຍ</v-breadcrumbs
+      ສ້າງແຜນເສັ້ນທາງເກັບຂີເຫື້ຍອ</v-breadcrumbs
     >
     <v-stepper v-model="step">
       <v-stepper-header>

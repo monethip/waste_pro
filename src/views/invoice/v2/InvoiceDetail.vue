@@ -13,21 +13,21 @@
     <div>
       <v-card>
         <v-card-text class="px-16 py-16">
-          <v-row>
-            <v-col >
-              <div class="text-center mx-auto">
-                <v-img
-                    :src="require('../../assets/logo_waste.png')"
-                    max-height="160px"
-                    max-width="160px"
-                    alt="logo"
-                    contain
-                    eager
-                    class="app-logo me-3 text-center"
-                ></v-img>
-              </div>
-            </v-col>
-          </v-row>
+<!--          <v-row>-->
+<!--            <v-col >-->
+<!--              <div class="text-center mx-auto">-->
+<!--                <v-img-->
+<!--                    :src="require('../../../assets/logo_waste.png')"-->
+<!--                    max-height="160px"-->
+<!--                    max-width="160px"-->
+<!--                    alt="logo"-->
+<!--                    contain-->
+<!--                    eager-->
+<!--                    class="app-logo me-3 text-center"-->
+<!--                ></v-img>-->
+<!--              </div>-->
+<!--            </v-col>-->
+<!--          </v-row>-->
           <v-row class="pb-4">
             <v-col>
               <h2 class="text-center">ໃບບິນເກັບເງິນຄ່າຂີ້ເຫື້ຍອ</h2>
@@ -39,16 +39,23 @@
               <h3>ຂໍ້ມູນບິນ</h3>
               <h3>
                 ເລກບິນ:
-                <span>{{
-                  (invoice.invoice_id)
-                }}</span>
-              </h3> <h3>
-                ສະຖານະບິນ:
-                <span :class="invoiceStatusColor">{{
-                  invoiceStatus(invoice.status)
+                <span v-if="invoice.billing">{{
+                  (invoice.billing.billing_display_id)
                 }}</span>
               </h3>
-              <h3>ປະເພດບິນ: {{ invoice.type }}</h3>
+              <h3>
+                ລາຍລະອຽດ:
+                <span v-if="invoice.billing">{{
+                  (invoice.billing.content)
+                }}</span>
+              </h3>
+              <h3>
+                ສະຖານະບິນ:
+                <span v-if="invoice.billing" :class="invoiceStatusColor">{{
+                  invoiceStatus(invoice.billing.status)
+                }}</span>
+              </h3>
+              <h3 v-if="invoice.billing">ປະເພດບິນ: {{ invoice.billing.display_type }}</h3>
               <h3>
                 ວັນທີ:
                 {{ moment(invoice.created_at).format("DD-MM-YY") }}
@@ -56,16 +63,21 @@
             </v-col>
             <v-col>
               <h3>ຂໍ້ມູນລູກຄ້າ</h3>
-              <div>
-                <h3 v-if="invoice.customer.customer_type = 'company'">
-                  {{ invoice.customer.company_name }}
-                </h3>
-                <h3 v-else-if="invoice.customer.customer_type = 'home'">
-                  ຊື່: {{ invoice.customer.name }} {{ invoice.customer.surname }}
+              <div v-if="invoice.billing">
+                <h3 v-if="invoice.billing.user.customer.customer_type = 'company'">
+                  ລະຫັດລູກຄ້າ:  {{ invoice.billing.user.customer.customer_id }}
                 </h3>
               </div>
-              <h3 v-if="invoice.customer">
-                ວັນທີສະໝັກ: {{ invoice.customer.start_month }}
+              <div v-if="invoice.billing">
+                <h3 v-if="invoice.billing.user.customer.customer_type = 'company'">
+                  ຊື່:  {{ invoice.billing.user.customer.company_name }}   {{ invoice.billing.user.name }}
+                </h3>
+                <h3 v-else-if="invoice.billing.user.customer.customer_type = 'home'">
+                  ຊື່: {{ invoice.billing.user.customer.name }} {{ invoice.billing.user.customer.surname }}
+                </h3>
+              </div>
+              <h3 v-if="invoice.billing">
+                ວັນທີສະໝັກ: {{ invoice.billing.user.customer.start_month }}
               </h3>
             </v-col>
           </v-row>
@@ -76,76 +88,76 @@
 
           <v-simple-table>
             <template v-slot:default>
-              <tbody style="font-size: 18px;">
-              <tr
-              >
-                <td>ຈຳນວນຖົງ:</td>
-                <td>{{ invoice.total_bag }}</td>
-              </tr>
+              <thead>
               <tr>
-                <td>ຈຳນວນຖົງທີ່ກາຍ:</td>
-                <td>{{ invoice.exceed_bag }}</td>
+                <th class="text-left">
+                  ລຳດັບ
+                </th>
+                <th class="text-left">
+                  ລາຍການ
+                </th>
+                <th class="text-left">
+                  ລາຍລະອຽດ
+                </th>
+                <th class="text-left">
+                  Content
+                </th>
+                <th class="text-left">
+                  ຈຳນວນ
+                </th>
+                <th class="text-left">
+                  ລາຄາ
+                </th>
+                <th class="text-left">
+                  ລວມ
+                </th>
+              </tr>
+              </thead>
+              <tbody v-if="invoice.billing">
+              <tr v-for="(data,index) in invoice.billing.billing_details" :key="index">
+                <td>{{index +1}}</td>
+                <td>{{ data.item }}</td>
+                <td>{{ data.content }}</td>
+                <td>{{ data.item_la }}</td>
+                <td>{{ Intl.NumberFormat().format(data.quantity) }}</td>
+                <td>{{ Intl.NumberFormat().format(data.price )}}</td>
+                <td>{{ Intl.NumberFormat().format(data.total) }}</td>
               </tr>
 
-              <tr>
-                <td>ລວມເງິນ:</td>
-                <td>{{ Intl.NumberFormat().format(invoice.sub_total) }}</td>
-              </tr>
-
-              <tr>
-                <td>ສ່ວນຫຼຸດ:</td>
-                <td>{{ Intl.NumberFormat().format(invoice.discount) }}</td>
-              </tr>
-
-              <tr>
-                <td>ຈຳນວນເງິນທີ່ກາຍ:</td>
-                <td>{{ Intl.NumberFormat().format(invoice.exceed_bag_charge) }}</td>
-              </tr>
-
-              <tr style="font-size: 20px;">
-                <td>ລວມທັງໝົດ:</td>
-                <td>{{ Intl.NumberFormat().format(invoice.total) }}</td>
-              </tr>
+<!--              <v-divider></v-divider>-->
 
               </tbody>
             </template>
           </v-simple-table>
 
-<!--          <v-row class="mx-12">-->
+
+          <v-divider class="my-6 c-divider total-height bottom"></v-divider>
+          <v-simple-table>
+            <tbody class="tb-result">
+            <tr>
+              <td :colspan="4" style="font-size:16px;font-weight: 600;">ລວມເງິນ:</td>
+              <td :colspan="4" style="font-size:16px;font-weight: 600;" v-if="invoice.billing">{{ Intl.NumberFormat().format(invoice.billing.sub_total) }}</td>
+            </tr>
+            <tr>
+              <td :colspan="4" style="font-size:16px;font-weight: 600;">ສ່ວນຫຼຸດ:</td>
+              <td :colspan="4" style="font-size:16px;font-weight: 600;" v-if="invoice.billing">{{ Intl.NumberFormat().format(invoice.billing.discount) }}</td>
+            </tr>
+            <tr style="font-size: 20px;">
+              <td :colspan="4" style="font-size:16px;font-weight: 600;">ລວມທັງໝົດ:</td>
+              <td :colspan="4" style="font-size:16px;font-weight: 600;" v-if="invoice.billing">{{ Intl.NumberFormat().format(invoice.billing.total) }}</td>
+            </tr>
+            </tbody>
+            <br/>
+          </v-simple-table>
+<!--          <v-row class="mb-n10">-->
 <!--            <v-col>-->
-<!--              <h3>ຈຳນວນຖົງ: {{ invoice.total_bag }}</h3>-->
-<!--              <h3>ຈຳນວນຖົງທີ່ກາຍ: {{ invoice.exceed_bag }}</h3>-->
-<!--            </v-col>-->
-<!--            <v-col>-->
-<!--              <h3>ລວມ: {{ Intl.NumberFormat().format(invoice.sub_total) }}</h3>-->
-<!--              <h3>-->
-<!--                ສ່ວນຫຼຸດ: {{ Intl.NumberFormat().format(invoice.discount) }}-->
-<!--              </h3>-->
-<!--              <h3>-->
-<!--                ຈຳນວນເງິນທີ່ກາຍ:-->
-<!--                {{ Intl.NumberFormat().format(invoice.exceed_bag_charge) }}-->
-<!--              </h3>-->
-<!--              <h3>-->
-<!--                ຈຳນວນເງິນທີ່ໄລ່ເພີມ:-->
-<!--                {{ Intl.NumberFormat().format(invoice.new_exceed_bag_charge) }}-->
-<!--              </h3>-->
-<!--              <v-divider class="my-2"></v-divider>-->
-<!--              <h3>-->
-<!--                ລວມທັງໝົດ: {{ Intl.NumberFormat().format(invoice.total) }}-->
-<!--              </h3>-->
+<!--              <p>ການຊຳລະ</p>-->
 <!--            </v-col>-->
 <!--          </v-row>-->
-
-          <v-divider class="my-6 c-divider bottom"></v-divider>
-          <v-row class="mb-n10">
-            <v-col>
-              <p>ການຊຳລະ</p>
-            </v-col>
-          </v-row>
           <v-row>
             <v-col>
               <h3>
-                ວັນທິຊຳລະ: {{ moment(invoice.updated_at).format("DD-MM-YY") }}
+                ຊຳລະບໍ່ໃຫ້ກາຍວັນທີ: {{ moment(invoice.end_month).format("DD-MM-YY") }}
               </h3>
               <h3>ປະເພດຊຳລະ: {{ invoice.payment_method }}</h3>
             </v-col>
@@ -214,7 +226,7 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("invoice/" + this.$route.params.id)
+        .get("future-invoice/" + this.$route.params.id)
         .then((res) => {
           if (res.data.code == 200) {
               this.$store.commit("Loading_State", false);
@@ -264,13 +276,15 @@ export default {
   },
   watch: {},
   created() {
-    this.fetchData();
+    if(this.$route.params.id){
+      this.fetchData();
+    }
   },
 };
 </script>
 
 <style lang="scss">
-@import "../../../public/scss/main.scss";
+@import "../../../../public/scss/main.scss";
 h3 {
   line-height: 28px !important;
   font-size: 16px;
@@ -281,6 +295,12 @@ h3 {
   background: $primary-color;
   opacity: 0.8;
   max-height: 20px;
+  .total-height {
+    height: 4px;
+  }
+}
+.c-divider.total-height {
+  height: 4px;
 }
 .c-divider.bottom {
   border-top: none;

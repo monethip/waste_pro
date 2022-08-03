@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-breadcrumbs large class="pt-0"
-      >ລາຍງານຂໍ້ມູນການເກັບຂີ້ເຫື້ອຍ</v-breadcrumbs
+      >ລາຍງານຂໍ້ມູນການເກັບຂີ້ເຫື້ຍອ</v-breadcrumbs
     >
     <v-row class="mb-n6">
       <v-col>

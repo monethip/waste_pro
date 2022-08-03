@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-breadcrumbs large class="pt-0"
-    >ລາຍງານຂໍ້ມູນການເກັບຂີ້ເຫື້ອຍ
+    >ລາຍງານຂໍ້ມູນການເກັບຂີ້ເຫື້ຍອ
     </v-breadcrumbs
     >
     <v-row class="mb-n6">
@@ -131,7 +131,7 @@
                 <div v-if="summaryMerge.home">
                   <v-row>
                     <v-col class="sum-total">
-                      ຈຳນວນຖົງຂີ້ເຫື້ອຍ: {{ summaryMerge.home.total_bag_amount }}
+                      ຈຳນວນຖົງຂີ້ເຫື້ຍອ: {{ summaryMerge.home.total_bag_amount }}
                     </v-col>
                     <v-col class="sum-total">
                       ເກັບທັງໝົດ: {{ summaryMerge.home.total_number_of_times_to_collect }}
@@ -156,7 +156,7 @@
                    </v-col>
                    <v-col>
                      <p v-if="sum.home" class="sum-title">
-                       ຈຳນວນຖົງຂີ້ເຫື້ອຍ
+                       ຈຳນວນຖົງຂີ້ເຫື້ຍອ
                        <span class="success--text">{{ sum.home.total_bag_amount }}</span>
                      </p>
                    </v-col>
@@ -239,7 +239,7 @@
                     <div v-if="summaryMerge.company">
                       <v-row>
                         <v-col class="sum-total">
-                          ຈຳນວນຖົງຂີ້ເຫື້ອຍ: {{ summaryMerge.company.total_bag_amount }}
+                          ຈຳນວນຖົງຂີ້ເຫື້ຍອ: {{ summaryMerge.company.total_bag_amount }}
                         </v-col>
                         <v-col class="sum-total">
                           ເກັບທັງໝົດ: {{ summaryMerge.company.total_number_of_times_to_collect }}

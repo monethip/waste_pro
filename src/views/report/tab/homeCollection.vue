@@ -8,7 +8,7 @@
           </v-col>
           <v-col>
             <p v-if="sum.home">
-              ຈຳນວນຖົງຂີ້ເຫື້ອຍ
+              ຈຳນວນຖົງຂີ້ເຫື້ຍອ
               <span class="success--text">{{ sum.home.total_bag_amount }}</span>
             </p>
           </v-col>

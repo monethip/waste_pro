@@ -44,23 +44,23 @@ export default {
                 {
                     id: 1,
                     name: "requested",
-                    dis_play: "ຮ້ອງຂໍເກັບຂີ້ເຫື້ອຍ"
+                    dis_play: "ຮ້ອງຂໍເກັບຂີ້ເຫື້ຍອ"
                 },
                 {
                     id: 2,
                     name: "rejected",
-                    dis_play: "ປະຕິເສດເກັບຂີ້ເຫື້ອຍ"
+                    dis_play: "ປະຕິເສດເກັບຂີ້ເຫື້ຍອ"
                 },
                 {
                     id: 3,
                     name: "approved",
-                    dis_play: "ອະນຸມັດເກັບຂີ້ເຫື້ອຍ"
+                    dis_play: "ອະນຸມັດເກັບຂີ້ເຫື້ຍອ"
 
                 },
                 {
                     id: 4,
                     name: "collected",
-                    dis_play: "ເກັບຂີເຫື້ອຍສຳເລັດ"
+                    dis_play: "ເກັບຂີເຫື້ຍອສຳເລັດ"
                 },
                 {
                     id: 5,

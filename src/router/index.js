@@ -984,13 +984,195 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'ບິນເກັບເງິນຄ່າຂີ້ເຫື້ອຍ',
+                    text: 'ບິນເກັບເງິນຄ່າຂີ້ເຫື້ຍອ',
                     disabled: true,
                     href: '/invoice'
                 }
             ]
         }
     },
+    //v2 Invoice
+    {
+        path: '/billing',
+        name: 'billing',
+        component: () => import('@/views/invoice/v2/billing/index.vue'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'ບິນເກັບເງິນຄ່າຂີ້ເຫື້ຍອ',
+                    disabled: true,
+                    href: '/invoice'
+                }
+            ]
+        }
+    },
+    //Custom bill
+    {
+        path: '/v2/custom-bill',
+        name: 'custom-bill',
+        component: () => import('@/views/invoice/v2/custom/CustomBill.vue'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'ບິນແບບກຳນົດເອງ',
+                    disabled: true,
+                    href: '/invoice'
+                }
+            ]
+        }
+    },
+    {
+        path: '/v2/create/custom-bill',
+        name: 'create-custom-bill',
+        component: () => import('@/views/invoice/v2/custom/CreateCustomBill.vue'),
+        props:true,
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'ບິນແບບກຳນົດເອງ',
+                    disabled: false,
+                    href: '/v2/custom-bill'
+                },
+                {
+                    text: 'ສ້າງບິນ',
+                    disabled: true,
+                    href: '/invoice'
+                }
+            ]
+        }
+    },
+
+    // v2 event invoice
+    {
+        path: '/v2/event-invoice',
+        name: 'event-invoice',
+        component: () => import('@views/invoice/v2/event/EventInvoice.vue'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Event Invoice',
+                    disabled: true,
+                    href: '/invoice'
+                }
+            ]
+        }
+    },
+    {
+        path: '/v2/create/event-invoice',
+        name: 'CreateCollectionEventInvoice',
+        component: () => import('../views/invoice/v2/event/CreateEventInvoice.vue'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Collection Invoice',
+                    disabled: false,
+                    href: '/collection-event'
+                },
+                {
+                    text: 'Create',
+                    disabled: true,
+                }
+            ]
+        }
+    },
+    {
+        path: '/v2/edit/event-invoice/:id',
+        name: 'EditCollectionEventInvoice',
+        component: () => import('../views/invoice/v2/event/EditEventInvoice.vue'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Collection Invoice',
+                    disabled: false,
+                    href: '/collection-event'
+                },
+                {
+                    text: 'Edit',
+                    disabled: true,
+                }
+            ]
+        }
+    },
+    {
+        path: '/future-invoice',
+        name: 'future-invoice',
+        component: () => import('@views/invoice/v2/future/FutureInvoice.vue'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'ຈັດການບິນລ່ວງໜ້າ',
+                    disabled: true,
+                    href: '/invoice'
+                }
+            ]
+        }
+    },
+    {
+        path: '/v2/invoice/:id',
+        name: 'invoice-detail',
+        component: () => import('@views/invoice/v2/InvoiceDetail.vue'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'ຈັດການບິນລ່ວງໜ້າ',
+                    disabled: true,
+                    href: '/invoice'
+                }
+            ]
+        }
+    },
+    //chose customer to create future invoice
+    {
+        path: '/chose/customer',
+        name: 'chose-customer',
+        component: () => import('@views/invoice/v2/future/BeforeCreate.vue'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'ເລືອກລຸກຄ້າ',
+                    disabled: true,
+                    href: '/invoice'
+                }
+            ]
+        }
+    },
+    //create invoice future
+    {
+        path: '/create/future/invoice',
+        name: 'create-future-customer',
+        component: () => import('@views/invoice/v2/future/CreateFutureInvoice.vue'),
+        props: true,
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'ສ້າງບິນ',
+                    disabled: true,
+                    href: '/invoice'
+                }
+            ]
+        }
+    },
+
 
     {
         path: '/reject',
@@ -1017,7 +1199,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'ໃບບິນເກັບເງິນຄ່າຂີ້ເຫື້ອຍ',
+                    text: 'ໃບບິນເກັບເງິນຄ່າຂີ້ເຫື້ຍອ',
                     disabled: false,
                     href: '/invoice'
                 },
@@ -1038,7 +1220,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'ບິນເກັບເງິນຄ່າຂີ້ເຫື້ອຍ',
+                    text: 'ບິນເກັບເງິນຄ່າຂີ້ເຫື້ຍອ',
                     disabled: false,
                     href: '/invoice'
                 },

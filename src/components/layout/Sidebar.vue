@@ -367,6 +367,39 @@ export default {
             },
           ],
         },
+
+        {
+          title: "ຈັດການຂໍ້ມູນບິນ",
+          icon: "mdi-credit-card",
+          group_permissions: ["get_invoice"],
+          menu: [
+            {
+              icon: "mdi-note-outline",
+              title: "ບິນທັງໝົດ",
+              to: "/billing",
+              permissions: ["get_invoice"],
+            },
+            {
+              icon: "mdi-note-outline",
+              title: "ບິນເກັບຂີ້ເຫື້ຍອພິເສດ",
+              to: "/v2/event-invoice",
+              permissions: ["get_invoice"],
+            },
+            {
+              icon: "mdi-note-outline",
+              title: "ບິນ ແບບກຳນົດເອງ",
+              to: "/v2/custom-bill",
+              permissions: ["get_invoice"],
+            },
+            {
+              icon: "mdi-note-outline",
+              title: "ຈັດການບິນລ່ວງໜ້າ",
+              to: "/future-invoice",
+              permissions: ["get_invoice"],
+            },
+          ],
+        },
+
         {
           title: "ລາຍງານ",
           icon: "mdi-finance",

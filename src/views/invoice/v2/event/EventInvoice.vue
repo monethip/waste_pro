@@ -82,36 +82,36 @@
              -->
       </v-card-title>
       <v-card-text>
-        <v-row>
-          <v-col class="sum-total">
-              ຄຳຂໍຖືກອານຸມັດ: {{summaryData.collection_summary_report.approved_count}}
-          </v-col>
-          <v-col class="sum-total">
-            ຄຳຂໍຖືກຍົກເລີກ: {{summaryData.collection_summary_report.canceled_count}}
-          </v-col>
-          <v-col class="sum-total">
-            ລົງເກັບແລະລູກຄ້າຢືຢັນແລ້ວ: {{summaryData.collection_summary_report.collect_confirm_count}}
-          </v-col>
-          <v-col class="sum-total">
-            ລູກຄ້າປະຕິເສດການລົງເກັບ: {{summaryData.collection_summary_report.collect_reject_count}}
-          </v-col>
-          <v-col class="sum-total">
-            ລົງເກັບແລ້ວ(ລໍຖ້າຢືນຢັນ): {{summaryData.collection_summary_report.collected_count}}
-          </v-col>
-          <v-col class="sum-total">
-            ຕ້ອງລົງເກັບທັງໝົດ: {{summaryData.collection_summary_report.number_of_times_to_collect}}
-          </v-col>
-          <v-col class="sum-total">
-            ຄຳຂໍທີ່ປະຕິເສດແລ້ວ: {{summaryData.collection_summary_report.rejected_count}}
-          </v-col>
-          <v-col class="sum-total">
-            ຄຳຂໍລໍຖ້າຢືນຢັນ: {{summaryData.collection_summary_report.requested_count}}
-          </v-col>
-        </v-row>
+<!--        <v-row>-->
+<!--          <v-col class="sum-total">-->
+<!--            ຄຳຂໍຖືກອານຸມັດ: {{summaryData.collection_summary_report.approved_count}}-->
+<!--          </v-col>-->
+<!--          <v-col class="sum-total">-->
+<!--            ຄຳຂໍຖືກຍົກເລີກ: {{summaryData.collection_summary_report.canceled_count}}-->
+<!--          </v-col>-->
+<!--          <v-col class="sum-total">-->
+<!--            ລົງເກັບແລະລູກຄ້າຢືຢັນແລ້ວ: {{summaryData.collection_summary_report.collect_confirm_count}}-->
+<!--          </v-col>-->
+<!--          <v-col class="sum-total">-->
+<!--            ລູກຄ້າປະຕິເສດການລົງເກັບ: {{summaryData.collection_summary_report.collect_reject_count}}-->
+<!--          </v-col>-->
+<!--          <v-col class="sum-total">-->
+<!--            ລົງເກັບແລ້ວ(ລໍຖ້າຢືນຢັນ): {{summaryData.collection_summary_report.collected_count}}-->
+<!--          </v-col>-->
+<!--          <v-col class="sum-total">-->
+<!--            ຕ້ອງລົງເກັບທັງໝົດ: {{summaryData.collection_summary_report.number_of_times_to_collect}}-->
+<!--          </v-col>-->
+<!--          <v-col class="sum-total">-->
+<!--            ຄຳຂໍທີ່ປະຕິເສດແລ້ວ: {{summaryData.collection_summary_report.rejected_count}}-->
+<!--          </v-col>-->
+<!--          <v-col class="sum-total">-->
+<!--            ຄຳຂໍລໍຖ້າຢືນຢັນ: {{summaryData.collection_summary_report.requested_count}}-->
+<!--          </v-col>-->
+<!--        </v-row>-->
 
         <v-row>
           <v-col class="sum-total">
-           ການຊຳລະຖືກອະນຸມັດ: {{summaryData.payment_summary_report.approved_total}}
+            ການຊຳລະຖືກອະນຸມັດ: {{summaryData.payment_summary_report.approved_total}}
           </v-col>
           <v-col class="sum-total">
             ຍອດທີ່ຍັງບໍ່ຈ່າຍ:  {{ Intl.NumberFormat().format(summaryData.payment_summary_report.pending_total) }}
@@ -132,39 +132,59 @@
           <template v-slot:default>
             <thead>
             <tr>
-              <th class="text-left">#</th>
+<!--              <th class="text-left">#</th>-->
+              <th class="text-left">Bill Number</th>
               <th class="text-left">Name</th>
               <th class="text-left">Phone</th>
-              <th class="text-left">Village</th>
-              <th class="text-left">Discount</th>
-              <th class="text-left">Total</th>
+<!--              <th class="text-left">Village</th>-->
+<!--              <th class="text-left">Discount</th>-->
               <th class="text-left">Subtotal</th>
+              <th class="text-left">Total</th>
               <th class="text-left">ການບໍລິການ</th>
               <th class="text-left">ການຊຳລະ</th>
+              <th class="text-left">ຜູ້ຮ້ອງຂໍ</th>
               <th class="text-left" style="width: 280px;">ລາຍລະອຽດ</th>
-              <th class="text-left">Image</th>
+              <th class="text-left">Location Image</th>
+              <th class="text-left">Collection Image</th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(user, index) in collections" :key="index">
-              <td>{{ index + 1 }}</td>
-              <td>{{ user.name }} {{ user.surname }}</td>
-              <td>{{ user.phone }}</td>
-              <td>{{ user.village.name }}</td>
-              <td>{{ Intl.NumberFormat().format(user.discount )}}</td>
-              <td>{{ Intl.NumberFormat().format(user.total )}}</td>
-              <td>{{Intl.NumberFormat().format( user.sub_total) }}</td>
+            <tr v-for="(data, index) in collections" :key="index">
+<!--              <td>{{ index + 1 }}</td>-->
+              <td><div v-if="data.billing">
+                {{ data.billing.billing_display_id }}
+              </div></td>
+              <td>{{ data.name }} {{ data.surname }}</td>
+              <td>{{ data.phone }}</td>
+<!--              <td>{{ user.village.name }}</td>-->
+<!--              <td>{{ Intl.NumberFormat().format(data.billing.discount )}}</td>-->
+              <td>{{Intl.NumberFormat().format( data.billing.sub_total) }}</td>
+              <td>{{ Intl.NumberFormat().format(data.billing.total )}}</td>
               <td>
-                <v-chip label color="primary">{{collectStatus(user.collect_status)}}</v-chip>
+                <v-chip label color="primary">{{collectStatus(data.collect_status)}}</v-chip>
               </td>
               <td>
-                <v-chip label color="success">{{paymentStatusText(user.payment_status)}}</v-chip>
+                <v-chip label color="success">{{paymentStatusText(data.billing.payment_method)}}</v-chip>
               </td>
-              <td style="width: 380px;">{{ user.description }}</td>
+              <td style="width: 380px;">
+                <div v-if="data.requested_by">
+                  {{ data.requested_by.name }}
+                </div>
+              </td>
+              <td style="width: 380px;">{{ data.description }}</td>
               <td style="width: 380px;">
                 <v-avatar
                     size="36px"
-                    v-for="(img, index) in user.media"
+                    v-for="(img, index) in data.image_collect_locations"
+                    :key="index"
+                >
+                  <img v-if="img.url" :src="img.url"/>
+                </v-avatar>
+              </td>
+              <td style="width: 380px;">
+                <v-avatar
+                    size="36px"
+                    v-for="(img, index) in data.image_collecteds"
                     :key="index"
                 >
                   <img v-if="img.url" :src="img.url"/>
@@ -186,13 +206,13 @@
                     >
                   </template>
                   <v-list>
-                    <v-list-item link @click="viewPage(user.id)">
+                    <v-list-item link @click="viewPage(data.id)">
                       <v-list-item-title>
                         <v-icon small class="mr-2"> mdi-eye</v-icon>
                         ລາຍລະອຽດ
                       </v-list-item-title>
                     </v-list-item>
-                    <v-list-item link @click="editPage(user.id)">
+                    <v-list-item link @click="editPage(data.id)">
                       <v-list-item-title>
                         <v-icon small class="mr-2"> mdi-pencil</v-icon>
                         ແກ້ໄຂ
@@ -206,7 +226,7 @@
                     <!--                        "-->
                     <!--                      >-->
                     <div>
-                      <v-list-item link @click="paymentPage(user)">
+                      <v-list-item link @click="paymentPage(data)">
                         <v-list-item-title>
                           <v-icon small class="mr-2">mdi-cash</v-icon>
                           ຊຳລະ
@@ -220,7 +240,7 @@
                     <!--                        "-->
                     <!--                      >-->
                     <div>
-                      <v-list-item link @click="paymentConfirmModal(user)">
+                      <v-list-item link @click="paymentConfirmModal(data)">
                         <v-list-item-title>
                           <v-icon small class="mr-2">mdi-card</v-icon>
                           ຢືນຢັນການຊຳລະ
@@ -229,11 +249,11 @@
                     </div>
                     <div
                         v-if="
-                          user.collect_status == 'approved' &&
-                          user.payment_status == 'to_confirm_payment'
+                          data.collect_status == 'approved' &&
+                          data.payment_status == 'to_confirm_payment'
                         "
                     >
-                      <v-list-item link @click="paymentConfirmModal(user)">
+                      <v-list-item link @click="paymentConfirmModal(data)">
                         <v-list-item-title>
                           <v-icon small> mdi-cash-remove</v-icon>
                           ປະຕິເສດການຊຳລະ
@@ -549,8 +569,8 @@ export default {
       title: "Collection",
       month: "",
       curent_month: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-        .toISOString()
-        .substr(0, 10),
+          .toISOString()
+          .substr(0, 10),
       start_menu: false,
 
       collections: [],
@@ -670,7 +690,7 @@ export default {
       let date = this.moment(this.month).format('YYYY-MM');
       this.$store.commit("Loading_State", true);
       this.$axios
-          .get("collection-event", {
+          .get("v2/collection-event", {
             params: queryOption([
               {page: this.pagination.current_page},
               {per_page: this.per_page},
@@ -683,6 +703,7 @@ export default {
             if (res.data.code == 200) {
               this.$store.commit("Loading_State", false);
               this.collections = res.data.data.data;
+              console.log(this.collections);
               this.pagination = res.data.data.pagination;
             }
           })
@@ -708,7 +729,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               this.summaryData = res.data.data;
-              console.log(this.summaryData);
+              // console.log(this.summaryData);
             }
           })
           .catch((error) => {
@@ -740,12 +761,12 @@ export default {
     },
     createPage() {
       this.$router.push({
-        name: "CreateCollectionEvent",
+        name: "CreateCollectionEventInvoice",
       });
     },
     editPage(id) {
       this.$router.push({
-        name: "EditCollectionEvent",
+        name: "EditCollectionEventInvoice",
         params: {id},
       });
     },
@@ -940,7 +961,7 @@ export default {
     statusColor(value) {
       if (value == "active") return "success";
       else if (value == "inactive") return "error";
-      else return "info";
+      else return "";
     },
 
     collectStatus(status){
@@ -1037,8 +1058,11 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../../../public/scss/main.scss";
+@import "../../../../../public/scss/main.scss";
 
+.v-data-table > .v-data-table__wrapper > table > thead > tr > th, td {
+  min-width: 130px !important;
+}
 .page--table {
   .page {
     &__table {

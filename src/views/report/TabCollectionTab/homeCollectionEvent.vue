@@ -291,10 +291,10 @@ export default {
       else return "info";
     },
     collectStatus(status) {
-      if (status == 'requested') return 'ຮ້ອງຂໍເກັບຂີ້ເຫື້ອຍ';
-      else if (status == 'rejected') return 'ປະຕິເສດເກັບຂີ້ເຫື້ອຍ';
-      else if (status == 'approved') return 'ອະນຸມັດເກັບຂີ້ເຫື້ອຍ';
-      else if (status == 'collected') return 'ເກັບຂີເຫື້ອຍສຳເລັດ';
+      if (status == 'requested') return 'ຮ້ອງຂໍເກັບຂີ້ເຫື້ຍອ';
+      else if (status == 'rejected') return 'ປະຕິເສດເກັບຂີ້ເຫື້ຍອ';
+      else if (status == 'approved') return 'ອະນຸມັດເກັບຂີ້ເຫື້ຍອ';
+      else if (status == 'collected') return 'ເກັບຂີເຫື້ຍອສຳເລັດ';
       else if (status == 'collect_confirm') return 'ລູກຄ້າຢືນຢັນການເກັບ';
       else if (status == 'collect_reject') return 'ການເກັບຖືກປະຕິເສດ';
       else return '';
