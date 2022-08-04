@@ -45,6 +45,22 @@
                   dense
                 ></v-text-field>
               </v-col>
+
+              <v-col>
+                <v-text-field
+                    v-model="searchPhone"
+                    clearable
+                    prepend-inner-icon="mdi-magnify"
+                    label="Phone"
+                    type="number"
+                    class="input-number"
+                    single-line
+                    hide-details
+                    @keyup.enter="SearchPhone()"
+                    outlined
+                    dense
+                ></v-text-field>
+              </v-col>
             </v-row>
           </v-card-title>
           <v-data-table
@@ -973,7 +989,9 @@ export default {
       offset: 12,
       pagination: {},
       per_page: 12,
+
       search: "",
+      searchPhone:"",
       oldVal: "",
       // resetPassword
       password: "",
@@ -1165,6 +1183,7 @@ export default {
             {page: this.pagination.current_page},
             {per_page: this.per_page},
             {filter: this.search},
+            {phone: this.searchPhone},
             {roles: this.selectedRoles},])
         })
         .then((res) => {
@@ -1615,6 +1634,9 @@ export default {
     Search() {
       GetOldValueOnInput(this);
     },
+    SearchPhone() {
+      GetOldValueOnInput(this);
+    },
 
     handleOnComplete(value) {
       this.code = value;
@@ -1661,6 +1683,13 @@ export default {
     search: function (value) {
       this.pagination.current_page ='';
       if (value === "") {
+        this.fetchData();
+      }
+    },
+
+    searchPhone: function (value) {
+      this.pagination.current_page ='';
+      if (value.length > 4) {
         this.fetchData();
       }
     },

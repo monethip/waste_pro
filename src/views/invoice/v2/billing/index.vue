@@ -630,7 +630,7 @@ export default {
           dis_play: "ຊຳລະສຳເລັດ"
         },
       ],
-  billingable_types:[
+      billingable_types:[
     {
       id: 1,
       name: "FutureInvoice",
@@ -703,7 +703,7 @@ export default {
               {page: this.pagination.current_page},
               {per_page: this.per_page},
               {billingable_type:this.selectedBillingable_type},
-              {status: this.selectedCollectionStatus},
+              {status: 'created'},
               {route_plans: this.selectedRoutePlan},
               {customer_type: this.selectedCustomerType},
               {filter: this.search},

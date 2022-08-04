@@ -995,7 +995,7 @@ const routes = [
     {
         path: '/billing',
         name: 'billing',
-        component: () => import('@/views/invoice/v2/billing/index.vue'),
+        component: () => import('@/views/invoice/v2/billing/tabIndex'),
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
