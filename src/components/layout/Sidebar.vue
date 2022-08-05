@@ -349,7 +349,7 @@ export default {
           ],
         },
         {
-          title: "ຈັດການບິນ",
+          title: "ບິນແບບເກົ່າ",
           icon: "mdi-note-outline",
           group_permissions: ["get_invoice"],
           menu: [

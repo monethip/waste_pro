@@ -98,7 +98,18 @@
         ຂໍ້ມູນບີນ ({{ pagination.total }})
         <v-divider class="mx-4" vertical></v-divider>
         <v-spacer></v-spacer>
-        <v-btn v-if="selectedRows.length > 0" class="btn-primary" :loading="loading" :disabled="loading" @click="approveAny">ອະນຸມັດບິນ</v-btn>
+<!--        <v-btn v-if="selectedRows.length > 0" class="btn-primary" :loading="loading" :disabled="loading" @click="approveAny">ອະນຸມັດບິນ</v-btn>-->
+<!--          <v-text-field-->
+<!--            outlined-->
+<!--            dense-->
+<!--            clearable-->
+<!--            prepend-inner-icon="mdi-magnify"-->
+<!--            label="ຄົ້ນຫາ"-->
+<!--            type="text"-->
+<!--            v-model="search"-->
+<!--            @keyup.enter="Search()"-->
+<!--          >-->
+<!--          </v-text-field>-->
 
       </v-card-title>
       <v-card-text>
@@ -155,8 +166,6 @@
             :search="search"
             :disable-pagination="true"
             hide-default-footer
-            v-model="selectedRows"
-            show-select
             fixed-header
             height="100vh"
         >
@@ -192,23 +201,24 @@
                     ລາຍລະອຽດ
                   </v-list-item-title>
                 </v-list-item>
-<!--                <v-list-item link>-->
-<!--                  <v-list-item-title @click="viewPage(item)">-->
-<!--                    <v-icon small class="mr-2"> mdi-pencil </v-icon>-->
-<!--                    ແກ້ໄຂບິນ-->
-<!--                  </v-list-item-title>-->
-<!--                </v-list-item>-->
-                <v-list-item link @click="paymentPage(item)">
-                  <v-list-item-title>
-                    <v-icon small class="mr-2">mdi-cash</v-icon>
-                    ຊຳລະ
+                <v-list-item link>
+                  <v-list-item-title @click="CancelBill(item)">
+                    <v-icon small class="mr-2"> mdi-pencil </v-icon>
+                    ຍົກເລີກ
                   </v-list-item-title>
                 </v-list-item>
+                <div v-if=" item.payment_method !== null
+                        ">
+                  <v-list-item link @click="paymentPage(item)">
+                    <v-list-item-title>
+                      <v-icon small class="mr-2">mdi-cash</v-icon>
+                      ຊຳລະ
+                    </v-list-item-title>
+                  </v-list-item>
+                </div>
 
                 <div
-                    v-if="
-                          item.collect_status == 'approved' &&
-                          item.payment_status == 'to_confirm_payment'
+                    v-if=" item.payment_method !== null
                         "
                 >
                   <v-list-item link @click="paymentConfirmModal(item)">
@@ -218,13 +228,15 @@
                     </v-list-item-title>
                   </v-list-item>
                 </div>
-                <v-list-item link @click="paymentConfirmModal(item)">
-                  <v-list-item-title>
-                    <v-icon small class="mr-2">mdi-card</v-icon>
-                    ຢືນຢັນການຊຳລະ
-                  </v-list-item-title>
-                </v-list-item>
-
+                <div v-if=" item.payment_method !== null
+                        ">
+                  <v-list-item link @click="paymentConfirmModal(item)">
+                    <v-list-item-title>
+                      <v-icon small class="mr-2">mdi-card</v-icon>
+                      ຢືນຢັນການຊຳລະ
+                    </v-list-item-title>
+                  </v-list-item>
+                </div>
               </v-list>
             </v-menu>
           </template>
@@ -672,15 +684,16 @@ export default {
       payment: {},
       confirm: {},
       headers: [
-        { text: "ບິນ", value: "content",width:"250px" },
+        { text: "ເລກບິນ", value: "content",width:"150px" },
         {text: "ລູກຄ້າ", value: "user"},
         {text: "ເບີໂທ", value: "user.phone", sortable: false},
         {text: "SubTotal", value: "sub_total"},
         {text: "Total", value: "total", sortable: false},
+        {text: "ປະເພດຊຳລະ", value: "payment_method", align: "center",width:"200px"},
         {
-          text: "ສ້າງວັນທີ",
+          text: "Created",
           value: "created_at",
-          width:"180px"
+          width:"250px"
         },
         {text: "", value: "actions", sortable: false},
       ],
@@ -702,7 +715,7 @@ export default {
               {page: this.pagination.current_page},
               {per_page: this.per_page},
               {billingable_type:this.selectedBillingable_type},
-              {status: 'created'},
+              {status: 'to_confirm_payment'},
               {route_plans: this.selectedRoutePlan},
               {customer_type: this.selectedCustomerType},
               {filter: this.search},
@@ -795,6 +808,10 @@ export default {
       });
     },
     paymentPage(item) {
+      this.payment = item;
+      this.$store.commit("modalAdd_State", true);
+    },
+    CancelBill(item) {
       this.payment = item;
       this.$store.commit("modalAdd_State", true);
     },
@@ -1116,9 +1133,12 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../../../../../public/scss/main.scss";
 
+.v-data-table > .v-data-table__wrapper > table > thead > tr > th, td {
+  min-width: 130px !important;
+}
 .page--table {
   .page {
     &__table {

@@ -1008,6 +1008,24 @@ const routes = [
             ]
         }
     },
+
+    // {
+    //     path: '/billing',
+    //     name: 'billing',
+    //     component: () => import('@/views/invoice/v2/billing/tabIndex'),
+    //     meta: {
+    //         layout: "admin",
+    //         middleware: [Middlewares.auth],
+    //         breadcrumb: [
+    //             {
+    //                 text: 'ບິນເກັບເງິນຄ່າຂີ້ເຫື້ຍອ',
+    //                 disabled: true,
+    //                 href: '/invoice'
+    //             }
+    //         ]
+    //     }
+    // },
+    //
     //Custom bill
     {
         path: '/v2/custom-bill',
