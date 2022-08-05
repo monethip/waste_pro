@@ -13,13 +13,14 @@
         <v-tabs v-model="tab">
           <v-tab href="#tab-1">ອະນຸມັດບິນ</v-tab>
           <v-tab href="#tab-2">ບິນທີ່ຕ້ອງຊຳລະ</v-tab>
-          <v-tab href="#tab-3">ຢືນຢັນການຊຳລະ</v-tab>
-          <v-tab href="#tab-4">ບິນທີ່ຍົກເລີກ</v-tab>
-          <v-tab href="#tab-5">ບິນທີ່ປະຕິເສດ</v-tab>
-          <v-tab href="#tab-6">ບິນທີ່ສຳເລັດ</v-tab>
+          <v-tab href="#tab-3"><span class="info--text">ຢືນຢັນການຊຳລະ</span></v-tab>
+          <v-tab href="#tab-4"><span class="success--text">ບິນທີ່ສຳເລັດ</span></v-tab>
+          <v-tab href="#tab-5"><span class="error--text">ບິນທີ່ປະຕິເສດ</span></v-tab>
+          <v-spacer></v-spacer>
+          <v-tab href="#tab-6"> <span class="error--text">ບິນທີ່ຍົກເລີກ</span></v-tab>
         </v-tabs>
         <!-- <hr /> -->
-        <v-tabs-items v-model="tab">
+        <v-tabs-items v-model="tab" class="primary-color">
           <v-tab-item value="tab-1">
             <v-card flat>
               <v-card-text>
@@ -49,7 +50,7 @@
         <v-tabs-items v-model="tab">
           <v-tab-item value="tab-4">
             <v-card flat>
-              <v-card-text> <canceled :tab="tab" /> </v-card-text>
+              <v-card-text> <success :tab="tab" /> </v-card-text>
             </v-card>
           </v-tab-item>
         </v-tabs-items>
@@ -63,7 +64,7 @@
         <v-tabs-items v-model="tab">
           <v-tab-item value="tab-6">
             <v-card flat>
-              <v-card-text> <success :tab="tab" /> </v-card-text>
+              <v-card-text> <canceled :tab="tab" /> </v-card-text>
             </v-card>
           </v-tab-item>
         </v-tabs-items>
@@ -105,11 +106,11 @@ export default {
       this.tab = "tab-2";
     } else if (this.$route.query.tab == "billing-confirm-payment") {
       this.tab = "tab-3";
-    } else if (this.$route.query.tab == "billing-canceled") {
+    } else if (this.$route.query.tab == "billing-success") {
       this.tab = "tab-4";
     } else if (this.$route.query.tab == "billing-reject") {
       this.tab = "tab-5";
-    }else if (this.$route.query.tab == "billing-success") {
+    } else if (this.$route.query.tab == "billing-canceled") {
       this.tab = "tab-6";
     }
   },
@@ -132,15 +133,16 @@ export default {
             .catch(() => {});
       } else if (value == "tab-4") {
         this.$router
-            .push({ name: "billing", query: { tab: "billing-canceled" } })
+            .push({ name: "billing", query: { tab: "billing-success" } })
             .catch(() => {});
-      } else if (value == "tab-5") {
+      }else if (value == "tab-5") {
         this.$router
             .push({ name: "billing", query: { tab: "billing-reject" } })
             .catch(() => {});
-      } else if (value == "tab-56") {
+      }
+      else if (value == "tab-6") {
         this.$router
-            .push({ name: "billing", query: { tab: "billing-success" } })
+            .push({ name: "billing", query: { tab: "billing-canceled" } })
             .catch(() => {});
       }
     },

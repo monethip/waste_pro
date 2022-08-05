@@ -232,7 +232,7 @@
     </v-card>
 
     <!-- Modal Add-->
-    <ModalAdd>
+    <ModalAdd max-width="800px" max-height="600px">
       <template @close="close">
         <v-card>
           <v-card-title>
@@ -782,11 +782,12 @@ export default {
     },
     ViewInvoice(id) {
       this.$router.push({
-        name: "invoice-detail",
+        name: "billing-detail",
         params: {id},
       });
     },
     paymentPage(item) {
+       console.log(item)
       this.payment = item;
       this.$store.commit("modalAdd_State", true);
     },

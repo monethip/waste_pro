@@ -207,16 +207,6 @@
                     ຍົກເລີກ
                   </v-list-item-title>
                 </v-list-item>
-                <div v-if=" item.payment_method !== null
-                        ">
-                  <v-list-item link @click="paymentPage(item)">
-                    <v-list-item-title>
-                      <v-icon small class="mr-2">mdi-cash</v-icon>
-                      ຊຳລະ
-                    </v-list-item-title>
-                  </v-list-item>
-                </div>
-
                 <div
                     v-if=" item.payment_method !== null
                         "
@@ -803,7 +793,7 @@ export default {
     },
     ViewInvoice(id) {
       this.$router.push({
-        name: "invoice-detail",
+        name: "billing-detail",
         params: {id},
       });
     },

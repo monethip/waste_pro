@@ -381,7 +381,7 @@ export default {
             },
             {
               icon: "mdi-note-outline",
-              title: "ບິນເກັບຂີ້ເຫື້ຍອພິເສດ",
+              title: "ເກັບຂີ້ເຫື້ຍອພິເສດ",
               to: "/v2/event-invoice",
               permissions: ["get_invoice"],
             },

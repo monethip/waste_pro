@@ -142,20 +142,20 @@ export default {
         { text: "ວັນທີ", value: "start_month" },
         { text: "ຫາວັນທີ", value: "end_month" },
         {
+          text: "ສ່ວນຫຼຸດ",
+          value: "discount",
+          align: "center",
+          sortable: false,
+        },
+        {
           text: "ລວມເງິນ",
           value: "sub_total",
           align: "center",
           sortable: false,
         },
         {
-          text: "ລວມເງິນ",
+          text: "ລວມທັງໝົດ",
           value: "total",
-          align: "center",
-          sortable: false,
-        },
-        {
-          text: "ສ່ວນຫຼຸດ",
-          value: "discount",
           align: "center",
           sortable: false,
         },

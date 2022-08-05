@@ -1008,6 +1008,22 @@ const routes = [
             ]
         }
     },
+    {
+        path: '/v2/billing/:id',
+        name: 'billing-detail',
+        component: () => import('@views/invoice/v2/billing/billingDetail.vue'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'ລາຍລະອຽດບິນ',
+                    disabled: true,
+                    href: '/invoice'
+                }
+            ]
+        }
+    },
 
     // {
     //     path: '/billing',

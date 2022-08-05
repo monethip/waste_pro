@@ -394,7 +394,7 @@ export default {
     },
     ViewInvoice(id) {
       this.$router.push({
-        name: "invoice-detail",
+        name: "billing-detail",
         params: {id},
       });
     },
