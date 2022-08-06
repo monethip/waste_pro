@@ -377,7 +377,7 @@
                     outlined
                     dense
                     :items="favorite_dates"
-                    v-model="data.favorite_dates"
+                    v-model="selectedFavoriteDate"
                     item-text="name"
                     item-value="name"
                     label="ມື້ບໍລິການ"
@@ -489,6 +489,7 @@ export default {
       itemDetailValues: [],
       villageDetail: {},
       favorite_dates: [],
+      selectedFavoriteDate: [],
 
 
       selectedCost: "",
@@ -576,6 +577,7 @@ export default {
               this.selectedDistrict = res.data.data.district.id;
               this.selectedVillage = res.data.data.village.id;
               this.selectedVillage = res.data.data.village_id;
+              this.selectedFavoriteDate = res.data.data.favorite_dates;
               res.data.data.village_details.map((item) => {
                 this.village_variation_id.push(item.village_variation_id);
                 this.selectedVillageDetail.push(item.id);
@@ -664,6 +666,7 @@ export default {
     },
 
     UpdateData() {
+      // console.log(this.selectedFavoriteDate)
       let formData = new FormData();
       if(this.data.user.email == null){
         this.data.user.email ='';
@@ -674,8 +677,8 @@ export default {
       this.selectedVillageDetail.map((item) => {
         formData.append("village_details[]", item);
       });
-      this.data.favorite_dates.map((item) => {
-        formData.append("favorite_dates[]", item.name);
+      this.selectedFavoriteDate.map((item) => {
+        formData.append("favorite_dates[]", item);
       });
       formData.append("company_name", this.data.company_name);
       formData.append("village_id", this.selectedVillage);
