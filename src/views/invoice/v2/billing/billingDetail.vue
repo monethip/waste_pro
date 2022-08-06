@@ -63,12 +63,12 @@
             </v-col>
             <v-col>
               <h3>ຂໍ້ມູນລູກຄ້າ</h3>
-              <div v-if="invoice.user.customer">
+              <div v-if="invoice.user">
                 <h3 v-if="invoice.user.customer.customer_type = 'company'">
                   ລະຫັດລູກຄ້າ:  {{ invoice.user.customer.customer_id }}
                 </h3>
               </div>
-              <div v-if="invoice.user.customer">
+              <div v-if="invoice.user">
                 <h3 v-if="invoice.user.customer.customer_type = 'company'">
                   ຊື່:  {{ invoice.user.customer.company_name }}   {{ invoice.user.name }}
                 </h3>
@@ -111,6 +111,8 @@
                 <th class="text-left">
                   ລວມ
                 </th>
+                <th class="text-left" v-if="invoice.status === 'created'">
+                </th>
               </tr>
               </thead>
               <tbody>
@@ -122,6 +124,17 @@
                 <td>{{ Intl.NumberFormat().format(data.quantity) }}</td>
                 <td>{{ Intl.NumberFormat().format(data.price )}}</td>
                 <td>{{ Intl.NumberFormat().format(data.total) }}</td>
+                <td v-if="invoice.status === 'created'">
+                  <v-icon
+                      color="success"
+                      small
+                      class="mr-2"
+                      @click="EditInvoice(data)"
+                  >
+                    mdi-pen
+                  </v-icon
+                  >
+                </td>
               </tr>
 
 <!--              <v-divider></v-divider>-->
@@ -171,15 +184,80 @@
               </div>
             </v-col>
           </v-row>
+
           <v-card-actions class="mt-6">
             <v-spacer></v-spacer>
-            <v-btn color="info" text :loading="loading" :disabled="loading" @click="Download(invoice)">
+            <v-btn color="info" text :loading="loading" :disabled="loading" @click="Download(invoice)"
+                   v-if="invoice.status ==='success'">
               Download
             </v-btn>
           </v-card-actions>
         </v-card-text>
       </v-card>
     </div>
+
+    <ModalAdd>
+      <template @close="close">
+        <v-card class="py-8 px-14">
+          <v-card-title>
+            <p>ແກ້ໄຂຂໍ້ມູນ {{ formData.content }}</p>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-form ref="form" lazy-validation>
+                <h3 class="my-4">ແກ້ໄຂຂໍ້ມູນ</h3>
+                <v-row>
+                  <v-col cols>
+                    <v-text-field
+                        v-model="formData.quantity"
+                        label="Quantity"
+                        outlined
+                        dense
+                        type="number"
+                        class="input-number"
+                    >
+                    </v-text-field>
+                    <p class="errors">
+                      {{ server_errors.qty }}
+                    </p>
+                  </v-col>
+                  <v-col cols>
+                    <v-text-field
+                        v-model="formData.price"
+                        label="Price"
+                        outlined
+                        dense
+                        type="number"
+                        class="input-number"
+                    >
+                    </v-text-field>
+                    <p class="errors">
+                      {{ server_errors.price }}
+                    </p>
+                  </v-col>
+                </v-row>
+              </v-form>
+            </v-container>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="error" class="elevation-0 btn mr-4 px-12" medium @click="closeAddModal()">
+                ປິດ
+              </v-btn>
+              <v-btn
+                  class="elevation-0 btn btn-primary px-12"
+                  medium
+                  :loading="loading"
+                  :disabled="loading"
+                  @click="updateInvoice()"
+              >
+                ອັບເດດ
+              </v-btn>
+            </v-card-actions>
+          </v-card-text>
+        </v-card>
+      </template>
+    </ModalAdd>
+
   </v-container>
 </template>
 
@@ -217,11 +295,13 @@ export default {
           name: "success",
         },
       ],
+      server_errors: {},
+      total: "",
+      formData: {}
     };
   },
   methods: {
     Download(link){
-      console.log(link.download_pdf_link);
       if(link != null){
         window.open(link.download_pdf_link)
       }
@@ -272,12 +352,46 @@ export default {
     //     return "success";
     //   }
     // },
+    closeAddModal() {
+      this.$store.commit("modalAdd_State", false);
+    },
+    EditInvoice(item) {
+      this.formData = item;
+      this.$store.commit("modalAdd_State", true);
 
-    editPage(id) {
-      this.$router.push({
-        name: "EditCustomer",
-        params: { id },
-      });
+    },
+    async updateInvoice() {
+      if (this.$refs.form.validate() == true) {
+        this.loading = true;
+        await this.$axios
+            .put("billing-detail/"+ this.formData.id,{
+              qty: this.formData.quantity,
+              price:this.formData.price,
+                }
+            )
+            .then((res) => {
+              if (res.data.code == 200) {
+                this.loading = false;
+                this.fetchData();
+                this.formData = {};
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
+                this.closeAddModal();
+              }
+            })
+            .catch((error) => {
+              this.loading = false;
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response.data.message,
+              });
+            });
+
+      }
     },
   },
   watch: {},

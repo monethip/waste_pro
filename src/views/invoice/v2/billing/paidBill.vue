@@ -788,7 +788,6 @@ export default {
       });
     },
     paymentPage(item) {
-       console.log(item)
       this.payment = item;
       this.$store.commit("modalAdd_State", true);
     },
