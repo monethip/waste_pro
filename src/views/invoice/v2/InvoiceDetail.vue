@@ -122,6 +122,17 @@
                 <td>{{ Intl.NumberFormat().format(data.quantity) }}</td>
                 <td>{{ Intl.NumberFormat().format(data.price )}}</td>
                 <td>{{ Intl.NumberFormat().format(data.total) }}</td>
+                <td>
+                    <v-icon
+                        color="success"
+                        small
+                        class="mr-2"
+                        @click="EditInvoice(item)"
+                    >
+                      mdi-eye
+                    </v-icon
+                    >
+                 </td>
               </tr>
 
 <!--              <v-divider></v-divider>-->
@@ -273,6 +284,9 @@ export default {
         params: { id },
       });
     },
+    EditInvoice() {
+
+    }
   },
   watch: {},
   created() {

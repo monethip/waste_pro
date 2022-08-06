@@ -221,13 +221,10 @@ export default {
         price: this.data.price,
         quantity:this.data.quantity,
       }
-
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-            .post("custom-bill", formData, {
-              headers: {"Content-Type": "multipart/form-data"},
-            })
+            .post("custom-bill", formData)
             .then((res) => {
               if (res.data.code == 200) {
                   this.loading = false;

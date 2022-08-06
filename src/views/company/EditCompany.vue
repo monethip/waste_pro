@@ -376,7 +376,7 @@
                 <v-select
                     outlined
                     dense
-                    :items="data.favorite_dates"
+                    :items="favorite_dates"
                     v-model="data.favorite_dates"
                     item-text="name"
                     item-value="name"
@@ -488,6 +488,7 @@ export default {
       itemDetailValue: '',
       itemDetailValues: [],
       villageDetail: {},
+      favorite_dates: [],
 
 
       selectedCost: "",
@@ -572,12 +573,8 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data;
-              // console.log(this.data)
-              //
-              // this.start_month = this.moment(res.data.data.start_month).format("YYYY-MM-DD");
-              // console.log(res.data.data.start_month)
-              // console.log(this.start_month
-              // );
+              this.selectedDistrict = res.data.data.district.id;
+              this.selectedVillage = res.data.data.village.id;
               this.selectedVillage = res.data.data.village_id;
               res.data.data.village_details.map((item) => {
                 this.village_variation_id.push(item.village_variation_id);
@@ -903,7 +900,19 @@ export default {
     //     })
     //     .catch(() => {});
     // },
-
+    fetchFavorite() {
+      this.$axios
+          .get("favorite-date")
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.favorite_dates = res.data.data;
+              }, 100);
+            }
+          })
+          .catch(() => {
+          });
+    },
   },
   watch: {
     selectedDistrict: function () {
@@ -935,16 +944,10 @@ export default {
       this.server_errors.email = "";
     },
     "data.cost_by": function (value) {
-      if (value == 'container') {
+      if (value == 'bag') {
         // this.fix_cost = '';
-        this.showFixed = true;
-      } else if(value == 'bag'){
         this.showFixed = false;
-      }
-      else if (value == 'fixed_cost'){
-        this.showFixed = true;
-      }
-      else if(value == 'chartered'){
+      } else{
         this.showFixed = true;
       }
     },
@@ -974,6 +977,7 @@ export default {
   created() {
     this.fetchAddress();
     this.fetchData();
+    this.fetchFavorite();
   },
 };
 </script>
