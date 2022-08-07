@@ -132,18 +132,16 @@
           <template v-slot:default>
             <thead>
             <tr>
-<!--              <th class="text-left">#</th>-->
-              <th class="text-left">Bill Number</th>
-              <th class="text-left">Name</th>
-              <th class="text-left">Phone</th>
-<!--              <th class="text-left">Village</th>-->
-<!--              <th class="text-left">Discount</th>-->
+              <th class="text-left">ບິນ</th>
+              <th class="text-left">ລູກຄ້າ</th>
+              <th class="text-left">ເບີໂທ</th>
               <th class="text-left">Subtotal</th>
               <th class="text-left">Total</th>
-              <th class="text-left">ການບໍລິການ</th>
+              <th class="text-left">ສະຖານະບໍລິການ</th>
               <th class="text-left">ຜູ້ຮ້ອງຂໍ</th>
-<!--              <th class="text-left" style="width: 280px;">ລາຍລະອຽດ</th>-->
+              <th class="text-left" style="width: 280px;">ລາຍລະອຽດ</th>
               <th class="text-left">ຮູບສະຖານທີ່</th>
+              <th class="text-left">ຮູບຂີ້ເຫື້ຍອ</th>
               <th class="text-left"></th>
             </tr>
             </thead>
@@ -151,7 +149,7 @@
             <tr v-for="(data, index) in collections" :key="index">
 <!--              <td>{{ index + 1 }}</td>-->
               <td><div v-if="data.billing">
-                {{ data.billing.billing_display_id }}
+                {{ data.billing.content }}
               </div></td>
               <td>{{ data.name }} {{ data.surname }}</td>
               <td>{{ data.phone }}</td>
@@ -159,9 +157,11 @@
 <!--              <td>{{ Intl.NumberFormat().format(data.billing.discount )}}</td>-->
               <td>{{Intl.NumberFormat().format( data.billing.sub_total) }}</td>
               <td>{{ Intl.NumberFormat().format(data.billing.total )}}</td>
-<!--              <td>-->
-<!--                <v-chip label color="primary">{{collectStatus(data.collect_status)}}</v-chip>-->
-<!--              </td>-->
+              <td>
+                <div v-if="data.collect_status">
+                  <v-chip label color="primary">{{collectStatus(data.collect_status)}}</v-chip>
+                </div>
+              </td>
               <td style="width: 380px;">
                 <div v-if="data.requested_by">
                   {{ data.requested_by.name }}
@@ -186,6 +186,7 @@
                   <img v-if="img.url" :src="img.url"/>
                 </v-avatar>
               </td>
+
               <!-- <td>{{ user.reject_description }}</td> -->
               <td>
                 <v-menu offset-y>
@@ -657,7 +658,6 @@ export default {
             if (res.data.code == 200) {
               this.$store.commit("Loading_State", false);
               this.collections = res.data.data.data;
-              console.log(this.collections);
               this.pagination = res.data.data.pagination;
             }
           })
@@ -726,7 +726,7 @@ export default {
     },
     viewPage(id) {
       this.$router.push({
-        name: "ViewCollectionEvent",
+        name: "EventInvoiceDetail",
         params: {id},
       });
     },
@@ -1015,7 +1015,7 @@ export default {
 @import "../../../../../public/scss/main.scss";
 
 .v-data-table > .v-data-table__wrapper > table > thead > tr > th, td {
-  min-width: 130px !important;
+  min-width: 150px !important;
 }
 .page--table {
   .page {

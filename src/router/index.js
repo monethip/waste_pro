@@ -1110,7 +1110,7 @@ const routes = [
                 {
                     text: 'Collection Invoice',
                     disabled: false,
-                    href: '/collection-event'
+                    href: '/v2/event-invoice'
                 },
                 {
                     text: 'Create',
@@ -1128,9 +1128,9 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Collection Invoice',
+                    text: 'Event Invoice',
                     disabled: false,
-                    href: '/collection-event'
+                    href: '/v2/event-invoice'
                 },
                 {
                     text: 'Edit',
@@ -1139,6 +1139,28 @@ const routes = [
             ]
         }
     },
+    {
+        path: '/v2/event-invoice/:id',
+        name: 'EventInvoiceDetail',
+        component: () => import('../views/invoice/v2/event/EventInvoiceDetail.vue'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Event Invoice',
+                    disabled: false,
+                    href: '/v2/event-invoice'
+                },
+                {
+                    text: 'View',
+                    disabled: true,
+                }
+            ]
+        }
+    },
+
+
     {
         path: '/future-invoice',
         name: 'future-invoice',

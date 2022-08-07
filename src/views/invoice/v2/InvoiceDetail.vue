@@ -113,8 +113,11 @@
                 <th class="text-left">
                   ລວມ
                 </th>
+                <div v-if="invoice.billing">
                   <th class="text-left" v-if="invoice.billing.status === 'created'">
                   </th>
+                </div>
+
 
               </tr>
               </thead>
