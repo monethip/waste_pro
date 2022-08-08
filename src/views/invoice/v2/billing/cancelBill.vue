@@ -67,7 +67,6 @@
             :disable-pagination="true"
             hide-default-footer
             fixed-header
-            height="100vh"
         >
           <template v-slot:item.user="{ item }">
               <div>{{item.user.name}} {{item.user.surname}}</div>
@@ -167,56 +166,7 @@ export default {
       search: "",
       oldVal: "",
       server_errors: {},
-      selectedCollectionStatus: "",
       summaryData:{},
-      collectionStatus: [
-        {
-          id: 1,
-          name: "requested",
-          dis_play: "ຮ້ອງຂໍເກັບຂີ້ເຫື້ຍອ"
-        },
-        {
-          id: 2,
-          name: "rejected",
-          dis_play: "ປະຕິເສດເກັບຂີ້ເຫື້ຍອ"
-        },
-        {
-          id: 3,
-          name: "approved",
-          dis_play: "ອະນຸມັດເກັບຂີ້ເຫື້ຍອ"
-
-        },
-        {
-          id: 4,
-          name: "collected",
-          dis_play: "ເກັບຂີເຫື້ຍອສຳເລັດ"
-        },
-        {
-          id: 5,
-          name: "collect_confirm",
-          dis_play: "ລູກຄ້າຢືນຢັນການເກັບ"
-        },
-        {
-          id: 5,
-          name: "collect_reject",
-          dis_play: "ການເກັບຖືກປະຕິເສດ"
-        },
-        {
-          id: 6,
-          name: "to_confirm_payment",
-          dis_play: "ລໍຖ້າຢືນຢັນຊຳລະ"
-        },
-        {
-          id: 7,
-          name: "rejected",
-          dis_play: "ປະຕິເສດການຊຳລະ"
-        },
-        {
-          id: 8,
-          name: "success",
-          dis_play: "ຊຳລະສຳເລັດ"
-        },
-      ],
       selectedPaymentStatus: "",
       paymentStatus: [
         {
@@ -282,9 +232,10 @@ export default {
       headers: [
         { text: "ບິນ", value: "content",width:"150px" },
         {text: "ລູກຄ້າ", value: "user"},
-        {text: "ເບີໂທ", value: "user.phone", sortable: false},
-        {text: "SubTotal", value: "sub_total"},
-        {text: "Total", value: "total", sortable: false},
+        {text: "ເບີໂທ", value: "user.phone", sortable: false,width: "120px"},
+        {text: "ສ່ວນຫຼຸດ", value: "discount",width: "150px"},
+        {text: "ລາຄາລວມ", value: "sub_total"},
+        {text: "ລວມທັງໝົດ", value: "total", sortable: false},
         {text: "Created", value: "created_at", align: "center",width:"200px"},
         {text: "", value: "actions", sortable: false},
       ],
@@ -396,220 +347,6 @@ export default {
       let route = this.$router.resolve({name: 'billing-detail',params: {id}});
       window.open(route.href, '_blank');
     },
-    paymentPage(item) {
-      this.payment = item;
-      this.$store.commit("modalAdd_State", true);
-    },
-    CancelBill(item) {
-      this.payment = item;
-      this.$store.commit("modalAdd_State", true);
-    },
-
-    Payment() {
-      if (this.paymentType !== "") {
-        let formData = new FormData();
-        formData.append("payment_method", this.payment_method);
-        formData.append("image_payments[]", this.image);
-        formData.append("_method", "PUT");
-        if (this.$refs.form.validate() == true) {
-          this.loading = true;
-          this.$axios
-              .post("pay-billing/" + this.payment.id, formData)
-              .then((res) => {
-                if (res.data.code == 200) {
-                    this.loading = false;
-                    this.paymentConfirmModal(this.payment);
-                    this.closeAddModal();
-                    this.fetchData();
-                    this.$refs.form.reset();
-                    this.$store.commit("Toast_State", {
-                      value: true,
-                      color: "success",
-                      msg: res.data.message,
-                    });
-                }
-              })
-              .catch((error) => {
-                this.loading = false;
-                this.$store.commit("Toast_State", {
-                  value: true,
-                  color: "error",
-                  msg: error.response.data.message,
-                });
-                if (error.response.status == 422) {
-                  let obj = error.response.data.errors;
-                  for (let [key, data] of Object.entries(obj)) {
-                    this.server_errors[key] = data[0];
-                  }
-                }
-                this.fetchData();
-              });
-        }
-      } else {
-        this.$store.commit("Toast_State", {
-          value: true,
-          color: "error",
-          msg: "ກາລຸນາເລືອກປະເພດການຊຳລະກ່ອນ",
-        });
-      }
-    },
-  async  approveAny() {
-      if (this.selectedRows.length > 0) {
-        const id = this.selectedRows.map(row =>row.id);
-          this.loading = true;
-       await this.$axios
-              .post("approve-billings", {billing_ids: id})
-              .then((res) => {
-                if (res.data.code == 200) {
-                    this.loading = false;
-                    this.fetchData();
-                    this.selectedRows = [];
-                    this.$store.commit("Toast_State", {
-                      value: true,
-                      color: "success",
-                      msg: res.data.message,
-                    });
-                }
-              })
-              .catch((error) => {
-                this.loading = false;
-                this.$store.commit("Toast_State", {
-                  value: true,
-                  color: "error",
-                  msg: error.response.data.message,
-                });
-              });
-
-      } else {
-        this.$store.commit("Toast_State", {
-          value: true,
-          color: "error",
-          msg: "ກາລຸນາເລືອກບິນກ່ອນ",
-        });
-      }
-    },
-
-   async confirmPayment() {
-      if (this.confirmType == "0") {
-        this.loading = true;
-      await this.$axios
-            .put("confirm-billing/" + this.confirm.id)
-            .then((res) => {
-              if (res.data.code == 200) {
-                setTimeout(() => {
-                  this.loading = false;
-                  this.fetchData();
-                  this.$store.commit("Toast_State", {
-                    value: true,
-                    color: "success",
-                    msg: res.data.message,
-                  });
-                  this.closeConfirmModal();
-                }, 300);
-              }
-            })
-            .catch(() => {
-              this.loading = false;
-              this.closeConfirmModal();
-            });
-      } else if (this.confirmType == "1") {
-        let data = new FormData();
-        data.append("reject_reason_id", this.reject_reason_id);
-        data.append("description", this.description);
-        data.append("_method", "PUT");
-        this.loading = true;
-        this.$axios
-            .post("reject-collection-event-payment/" + this.confirm.id, data)
-            .then((res) => {
-              if (res.data.code == 200) {
-                setTimeout(() => {
-                  this.loading = false;
-                  this.fetchData();
-                  this.$store.commit("Toast_State", {
-                    value: true,
-                    color: "success",
-                    msg: res.data.message,
-                  });
-                  this.closeConfirmModal();
-                }, 300);
-              }
-            })
-            .catch((error) => {
-              this.loading = false;
-              this.$store.commit("Toast_State", {
-                value: true,
-                color: "error",
-                msg: error.response.data.message,
-              });
-              if (error.response.status == 422) {
-                let obj = error.response.data.errors;
-                for (let [key, data] of Object.entries(obj)) {
-                  this.server_errors[key] = data[0];
-                }
-              }
-            });
-      } else if (this.confirmType == "") {
-        this.$store.commit("Toast_State", {
-          value: true,
-          color: "error",
-          msg: "ກາລຸນາເລືອກຂໍ້ມູນກ່ອນ",
-        });
-      } else {
-        this.$store.commit("Toast_State", {
-          value: true,
-          color: "error",
-          msg: "ກາລຸນາເລືອກຂໍ້ມູນກ່ອນ",
-        });
-      }
-    },
-
-    // confirmReject() {
-    //   let data = new FormData();
-    //   data.append("reject_reason_id", this.reject_reason_id);
-    //   data.append("description", this.description);
-    //   data.append("_method", "PUT");
-    //   this.loading = true;
-    //   this.$axios
-    //     .post("reject-collection-event-payment/" + this.payment.id, data)
-    //     .then((res) => {
-    //       if (res.data.code == 200) {
-    //         setTimeout(() => {
-    //           this.loading = false;
-    //           this.$store.commit("Toast_State", {
-    //             value: true,
-    //             color: "success",
-    //             msg: res.data.message,
-    //           });
-    //           this.fetchData();
-    //           this.closeConfirmModal();
-    //         }, 300);
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       this.loading = false;
-    //       this.$store.commit("Toast_State", {
-    //         value: true,
-    //         color: "error",
-    //         msg: error.response.data.message,
-    //       });
-    //       if (error.response.status == 422) {
-    //         var obj = error.response.data.errors;
-    //         for (let [key, data] of Object.entries(obj)) {
-    //           this.server_errors[key] = data[0];
-    //         }
-    //       }
-    //     });
-    // },
-
-    paymentConfirmModal(item) {
-      this.fetchReject();
-      this.confirm = item;
-      this.paymentDialog = true;
-    },
-    closeConfirmModal() {
-      this.paymentDialog = false;
-      this.confirmType = "";
-    },
 
     Search() {
       GetOldValueOnInput(this);
@@ -679,15 +416,7 @@ export default {
     start_date: function () {
       this.server_errors.start_month = "";
     },
-    "user.name": function () {
-      this.server_errors.name = "";
-    },
-    "user.surname": function () {
-      this.server_errors.name = "";
-    },
-    "user.phone": function () {
-      this.server_errors.phone = "";
-    },
+
 
     paymentType: function () {
       if (this.paymentType == 0) {
@@ -700,15 +429,6 @@ export default {
       }
       this.server_errors.payment_method = "";
     },
-    // confirmType: function () {
-    //   console.log(this.confirmType);
-    //   if (this.confirmType == 0) {
-    //     // this.confirmPayment();
-    //   }
-    // },
-    // bcel_reference_number: function () {
-    //   this.server_errors.bcel_reference_number = "";
-    // },
     image: function () {
       this.server_errors.image = "";
     },

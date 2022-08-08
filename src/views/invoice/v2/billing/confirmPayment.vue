@@ -121,7 +121,6 @@
             :disable-pagination="true"
             hide-default-footer
             fixed-header
-            height="100vh"
         >
           <template v-slot:item.user="{ item }">
               <div>{{item.user.name}} {{item.user.surname}}</div>
@@ -455,10 +454,11 @@ export default {
       confirm: {},
       headers: [
         { text: "ເລກບິນ", value: "content",width:"150px" },
-        {text: "ລູກຄ້າ", value: "user"},
+        {text: "ລູກຄ້າ", value: "user",width:"150px"},
         {text: "ເບີໂທ", value: "user.phone", sortable: false},
-        {text: "SubTotal", value: "sub_total"},
-        {text: "Total", value: "total", sortable: false},
+        {text: "ສ່ວນຫຼຸດ", value: "discount",width: "150px"},
+        {text: "ລາຄາລວມ", value: "sub_total"},
+        {text: "ລວມທັງໝົດ", value: "total", sortable: false},
         {text: "ປະເພດຊຳລະ", value: "payment_method", align: "center",width:"200px"},
         {
           text: "Created",
