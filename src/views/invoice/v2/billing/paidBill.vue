@@ -234,9 +234,9 @@
     <!-- Modal Add-->
     <ModalAdd>
       <template @close="close">
-        <v-card>
+        <v-card class="py-8 px-14">
           <v-card-title>
-            <p>ຊຳລະຄ່າຂີ້ເຫື້ຍອ {{ payment.name }} {{ payment.surname }}</p>
+            <p>ຊຳລະຄ່າຂີ້ເຫື້ຍອ {{ payment.content }}</p>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -252,7 +252,7 @@
                     >
                       <v-chip
                           large
-                          class="mr-6"
+                          class="mr-8"
                           color="info"
                           label
                           filter
@@ -276,7 +276,7 @@
                   </v-col>
                 </v-row>
                 <div v-if="paymentType == 1">
-                  <h3 class="my-4">ຫຼັກຖານການຊຳລະ</h3>
+                  <h3 class="my-4">ຮູບສຳເລັດການໂອນ</h3>
                   <v-row>
                     <v-col>
                       <label class="file-label">
@@ -346,17 +346,17 @@
             </v-container>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeAddModal()">
-                Close
+              <v-btn color="error" class="elevation-0 btn mr-4 px-12" medium @click="closeAddModal()">
+                ປິດ
               </v-btn>
               <v-btn
-                  color="blue darken-1"
-                  text
+                  class="elevation-0 btn btn-primary px-12"
+                  medium
                   :loading="loading"
                   :disabled="loading"
                   @click="Payment()"
               >
-                Pay
+                ຊຳລະ
               </v-btn>
             </v-card-actions>
           </v-card-text>
@@ -377,7 +377,7 @@
               ຢືນຢັນຊຳລະຄ່າຂີ້ເຫຍື້ອ
 
               <span class="primary-color"
-              >{{ confirm.name }} {{ confirm.surname }}</span
+              >{{ confirm.name }} {{ confirm.content }}</span
               >
             </p>
           </v-card-title>
@@ -461,15 +461,16 @@
               <v-card-actions class="mt-4">
                 <v-spacer></v-spacer>
                 <v-btn
-                    color="blue darken-1"
-                    text
+                    color="error"
+                    class="btn mr-4 px-12"
+                    medium
                     @click="paymentDialog = false"
                 >
-                  Close
+                  ປິດ
                 </v-btn>
                 <v-btn
                     color="info"
-                    class="white--text px-12 c-btn elevation-0"
+                    class="white--text px-12 btn-primary elevation-0"
                     medium
                     :loading="loading"
                     :disabled="loading"
@@ -781,10 +782,8 @@ export default {
       });
     },
     ViewInvoice(id) {
-      this.$router.push({
-        name: "invoice-detail",
-        params: {id},
-      });
+      let route = this.$router.resolve({name: 'billing-detail',params: {id}});
+      window.open(route.href, '_blank');
     },
     paymentPage(item) {
       this.payment = item;

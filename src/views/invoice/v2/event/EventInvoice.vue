@@ -109,50 +109,47 @@
 <!--          </v-col>-->
 <!--        </v-row>-->
 
-        <v-row>
-          <v-col class="sum-total">
-            ການຊຳລະຖືກອະນຸມັດ: {{summaryData.payment_summary_report.approved_total}}
-          </v-col>
-          <v-col class="sum-total">
-            ຍອດທີ່ຍັງບໍ່ຈ່າຍ:  {{ Intl.NumberFormat().format(summaryData.payment_summary_report.pending_total) }}
-          </v-col>
-          <v-col class="sum-total">
-            ຍອດທີ່ປະຕິເສດ: {{Intl.NumberFormat().format(summaryData.payment_summary_report.rejected_total)}}
-          </v-col>
-          <v-col class="sum-total">
-            ຍອດທີ່ຈ່າຍແລ້ວ: {{Intl.NumberFormat().format(summaryData.payment_summary_report.success_total)}}
-          </v-col>
-          <v-col class="sum-total">
-            ຍອດທີ່ຈ່າຍແລ້ວ(ລໍຖ້າການຢືນຢັນ): {{Intl.NumberFormat().format(summaryData.payment_summary_report.to_confirm_payment_total)}}
-          </v-col>
+<!--        <v-row>-->
+<!--          <v-col class="sum-total">-->
+<!--            ການຊຳລະຖືກອະນຸມັດ: {{summaryData.payment_summary_report.approved_total}}-->
+<!--          </v-col>-->
+<!--          <v-col class="sum-total">-->
+<!--            ຍອດທີ່ຍັງບໍ່ຈ່າຍ:  {{ Intl.NumberFormat().format(summaryData.payment_summary_report.pending_total) }}-->
+<!--          </v-col>-->
+<!--          <v-col class="sum-total">-->
+<!--            ຍອດທີ່ປະຕິເສດ: {{Intl.NumberFormat().format(summaryData.payment_summary_report.rejected_total)}}-->
+<!--          </v-col>-->
+<!--          <v-col class="sum-total">-->
+<!--            ຍອດທີ່ຈ່າຍແລ້ວ: {{Intl.NumberFormat().format(summaryData.payment_summary_report.success_total)}}-->
+<!--          </v-col>-->
+<!--          <v-col class="sum-total">-->
+<!--            ຍອດທີ່ຈ່າຍແລ້ວ(ລໍຖ້າການຢືນຢັນ): {{Intl.NumberFormat().format(summaryData.payment_summary_report.to_confirm_payment_total)}}-->
+<!--          </v-col>-->
 
-        </v-row>
+<!--        </v-row>-->
 
         <v-simple-table>
           <template v-slot:default>
             <thead>
             <tr>
-<!--              <th class="text-left">#</th>-->
-              <th class="text-left">Bill Number</th>
-              <th class="text-left">Name</th>
-              <th class="text-left">Phone</th>
-<!--              <th class="text-left">Village</th>-->
-<!--              <th class="text-left">Discount</th>-->
+              <th class="text-left">ບິນ</th>
+              <th class="text-left">ລູກຄ້າ</th>
+              <th class="text-left">ເບີໂທ</th>
               <th class="text-left">Subtotal</th>
               <th class="text-left">Total</th>
-              <th class="text-left">ການບໍລິການ</th>
-              <th class="text-left">ການຊຳລະ</th>
+              <th class="text-left">ສະຖານະບໍລິການ</th>
               <th class="text-left">ຜູ້ຮ້ອງຂໍ</th>
               <th class="text-left" style="width: 280px;">ລາຍລະອຽດ</th>
-              <th class="text-left">Location Image</th>
-              <th class="text-left">Collection Image</th>
+              <th class="text-left">ຮູບສະຖານທີ່</th>
+              <th class="text-left">ຮູບຂີ້ເຫື້ຍອ</th>
+              <th class="text-left"></th>
             </tr>
             </thead>
             <tbody>
             <tr v-for="(data, index) in collections" :key="index">
 <!--              <td>{{ index + 1 }}</td>-->
               <td><div v-if="data.billing">
-                {{ data.billing.billing_display_id }}
+                {{ data.billing.content }}
               </div></td>
               <td>{{ data.name }} {{ data.surname }}</td>
               <td>{{ data.phone }}</td>
@@ -161,10 +158,9 @@
               <td>{{Intl.NumberFormat().format( data.billing.sub_total) }}</td>
               <td>{{ Intl.NumberFormat().format(data.billing.total )}}</td>
               <td>
-                <v-chip label color="primary">{{collectStatus(data.collect_status)}}</v-chip>
-              </td>
-              <td>
-                <v-chip label color="success">{{paymentStatusText(data.billing.payment_method)}}</v-chip>
+                <div v-if="data.collect_status">
+                  <v-chip label color="primary">{{collectStatus(data.collect_status)}}</v-chip>
+                </div>
               </td>
               <td style="width: 380px;">
                 <div v-if="data.requested_by">
@@ -190,6 +186,7 @@
                   <img v-if="img.url" :src="img.url"/>
                 </v-avatar>
               </td>
+
               <!-- <td>{{ user.reject_description }}</td> -->
               <td>
                 <v-menu offset-y>
@@ -218,48 +215,6 @@
                         ແກ້ໄຂ
                       </v-list-item-title>
                     </v-list-item>
-
-                    <!--                      <div-->
-                    <!--                        v-if="-->
-                    <!--                          user.collect_status == 'approved' &&-->
-                    <!--                          user.payment_status == 'pending'-->
-                    <!--                        "-->
-                    <!--                      >-->
-                    <div>
-                      <v-list-item link @click="paymentPage(data)">
-                        <v-list-item-title>
-                          <v-icon small class="mr-2">mdi-cash</v-icon>
-                          ຊຳລະ
-                        </v-list-item-title>
-                      </v-list-item>
-                    </div>
-                    <!--                      <div-->
-                    <!--                        v-if="-->
-                    <!--                          user.collect_status == 'approved' &&-->
-                    <!--                          user.payment_status == 'to_confirm_payment'-->
-                    <!--                        "-->
-                    <!--                      >-->
-                    <div>
-                      <v-list-item link @click="paymentConfirmModal(data)">
-                        <v-list-item-title>
-                          <v-icon small class="mr-2">mdi-card</v-icon>
-                          ຢືນຢັນການຊຳລະ
-                        </v-list-item-title>
-                      </v-list-item>
-                    </div>
-                    <div
-                        v-if="
-                          data.collect_status == 'approved' &&
-                          data.payment_status == 'to_confirm_payment'
-                        "
-                    >
-                      <v-list-item link @click="paymentConfirmModal(data)">
-                        <v-list-item-title>
-                          <v-icon small> mdi-cash-remove</v-icon>
-                          ປະຕິເສດການຊຳລະ
-                        </v-list-item-title>
-                      </v-list-item>
-                    </div>
                   </v-list>
                 </v-menu>
               </td>
@@ -703,7 +658,6 @@ export default {
             if (res.data.code == 200) {
               this.$store.commit("Loading_State", false);
               this.collections = res.data.data.data;
-              console.log(this.collections);
               this.pagination = res.data.data.pagination;
             }
           })
@@ -771,10 +725,8 @@ export default {
       });
     },
     viewPage(id) {
-      this.$router.push({
-        name: "ViewCollectionEvent",
-        params: {id},
-      });
+      let route = this.$router.resolve({name: 'EventInvoiceDetail',params: {id}});
+      window.open(route.href, '_blank');
     },
     paymentPage(item) {
       this.payment = item;
@@ -1061,7 +1013,7 @@ export default {
 @import "../../../../../public/scss/main.scss";
 
 .v-data-table > .v-data-table__wrapper > table > thead > tr > th, td {
-  min-width: 130px !important;
+  min-width: 150px !important;
 }
 .page--table {
   .page {

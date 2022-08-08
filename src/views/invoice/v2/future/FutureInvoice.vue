@@ -142,20 +142,20 @@ export default {
         { text: "ວັນທີ", value: "start_month" },
         { text: "ຫາວັນທີ", value: "end_month" },
         {
+          text: "ສ່ວນຫຼຸດ",
+          value: "discount",
+          align: "center",
+          sortable: false,
+        },
+        {
           text: "ລວມເງິນ",
           value: "sub_total",
           align: "center",
           sortable: false,
         },
         {
-          text: "ລວມເງິນ",
+          text: "ລວມທັງໝົດ",
           value: "total",
-          align: "center",
-          sortable: false,
-        },
-        {
-          text: "ສ່ວນຫຼຸດ",
-          value: "discount",
           align: "center",
           sortable: false,
         },
@@ -214,10 +214,8 @@ export default {
       });
     },
     ViewInvoice(id) {
-      this.$router.push({
-        name: "invoice-detail",
-        params: {id},
-      });
+      let route = this.$router.resolve({name: 'invoice-detail',params: {id}});
+      window.open(route.href, '_blank');
     },
   },
   watch: {

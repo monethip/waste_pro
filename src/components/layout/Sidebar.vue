@@ -348,25 +348,25 @@ export default {
             },
           ],
         },
-        {
-          title: "ບິນແບບເກົ່າ",
-          icon: "mdi-note-outline",
-          group_permissions: ["get_invoice"],
-          menu: [
-            {
-              icon: "mdi-note-outline",
-              title: "ຈັດການຂໍ້ມູນບິນ",
-              to: "/invoice",
-              permissions: ["get_invoice"],
-            },
-            {
-              icon: "mdi-close-circle-outline",
-              title: "ເຫດຜົນຍົກເລີກບິນ",
-              to: "/reject",
-              permissions: ["get_invoice"],
-            },
-          ],
-        },
+        // {
+        //   title: "ບິນແບບເກົ່າ",
+        //   icon: "mdi-note-outline",
+        //   group_permissions: ["get_invoice"],
+        //   menu: [
+        //     {
+        //       icon: "mdi-note-outline",
+        //       title: "ຈັດການຂໍ້ມູນບິນ",
+        //       to: "/invoice",
+        //       permissions: ["get_invoice"],
+        //     },
+        //     {
+        //       icon: "mdi-close-circle-outline",
+        //       title: "ເຫດຜົນຍົກເລີກບິນ",
+        //       to: "/reject",
+        //       permissions: ["get_invoice"],
+        //     },
+        //   ],
+        // },
 
         {
           title: "ຈັດການຂໍ້ມູນບິນ",
@@ -381,7 +381,7 @@ export default {
             },
             {
               icon: "mdi-note-outline",
-              title: "ບິນເກັບຂີ້ເຫື້ຍອພິເສດ",
+              title: "ເກັບຂີ້ເຫື້ຍອພິເສດ",
               to: "/v2/event-invoice",
               permissions: ["get_invoice"],
             },

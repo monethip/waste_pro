@@ -58,11 +58,11 @@
         <v-select
             outlined
             dense
-            :items="collectionStatus"
-            v-model="selectedCollectionStatus"
+            :items="billingable_types"
+            v-model="selectedBillingable_type"
             item-text="dis_play"
             item-value="name"
-            label="ສະຖານະບໍລິການ"
+            label="ປະເພດບິນ"
             clearable
         ></v-select>
       </v-col>
@@ -184,13 +184,13 @@
               </template>
               <v-list>
                 <v-list-item link>
-                  <v-list-item-title @click="ViewInvoice(item.id)">
+                  <v-list-item-title @click="ViewInvoice(item.id)" target="_blank">
                     <v-icon small class="mr-2"> mdi-eye </v-icon>
                     ລາຍລະອຽດ
                   </v-list-item-title>
                 </v-list-item>
                 <v-list-item link>
-                  <v-list-item-title @click="CancelBill(item)">
+                  <v-list-item-title @click="DownloadBill(item)">
                     <v-icon small class="mr-2"> mdi-download </v-icon>
                     Download
                   </v-list-item-title>
@@ -368,13 +368,13 @@ export default {
       payment: {},
       confirm: {},
       headers: [
-        { text: "ບິນ", value: "content",width:"50px" },
-        {text: "ລູກຄ້າ", value: "user"},
+        { text: "ບິນ", value: "content",width:"200px" },
+        {text: "ລູກຄ້າ", value: "user",width: "150px"},
         {text: "ເບີໂທ", value: "user.phone", sortable: false},
         {text: "SubTotal", value: "discount",width: "120px"},
-        {text: "SubTotal", value: "sub_total"},
-        {text: "Total", value: "total", sortable: false},
-        {text: "ປະເພດຊຳລະ", value: "payment_method", align: "center",width:"200px"},
+        {text: "SubTotal", value: "sub_total",width: "120px"},
+        {text: "Total", value: "total",width: "120px", sortable: false},
+        {text: "ປະເພດຊຳລະ", value: "payment_method", align: "center",width:"150px"},
         {
           text: "Created",
           value: "created_at",
@@ -486,11 +486,12 @@ export default {
         params: {id},
       });
     },
+    DownloadBill(item){
+      window.open(item.download_pdf_link);
+    },
     ViewInvoice(id) {
-      this.$router.push({
-        name: "invoice-detail",
-        params: {id},
-      });
+      let route = this.$router.resolve({name: 'billing-detail',params: {id}});
+      window.open(route.href, '_blank');
     },
     paymentPage(item) {
       this.payment = item;
