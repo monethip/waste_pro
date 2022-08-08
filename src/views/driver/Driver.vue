@@ -6,13 +6,90 @@
           ><v-icon>mdi-plus</v-icon>
         </v-btn>
       </v-col>
+      <v-col>
+        <v-menu
+            v-model="start_menu"
+            :close-on-content-click="true"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+                v-model="start_date"
+                label="ເລີ່ມວັນທີ"
+                readonly
+                outlined
+                v-bind="attrs"
+                v-on="on"
+                dense
+            ></v-text-field>
+          </template>
+          <v-date-picker
+              v-model="start_date"
+              @input="fetchData()"
+          ></v-date-picker>
+        </v-menu>
+      </v-col>
+      <v-col>
+        <v-menu
+            v-model="end_menu"
+            :close-on-content-click="true"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+                v-model="end_date"
+                label="ຫາວັນທີ"
+                readonly
+                outlined
+                v-bind="attrs"
+                v-on="on"
+                dense
+            ></v-text-field>
+          </template>
+          <v-date-picker
+              v-model="end_date"
+              @input="fetchData()"
+          ></v-date-picker>
+        </v-menu>
+      </v-col>
+      <v-col>
+        <v-select
+            outlined
+            dense
+            :items="statuses"
+            v-model="selectedStatus"
+            item-text="name"
+            item-value="name"
+            label="ສະຖານະ"
+        ></v-select>
+      </v-col>
+
     </v-row>
     <v-row justify="center">
       <v-col>
         <v-card class="pa-2">
           <v-card-title>
-            ຂໍ້ມູນ Driver
+            ຂໍ້ມູນພະນັກງານຂັບລົດ ({{ pagination.total }})
+            <v-divider class="mx-4" vertical></v-divider>
             <v-spacer></v-spacer>
+            <!--
+            <v-select
+              outlined
+              dense
+              :items="statuses"
+              v-model="selectedStatus"
+              item-text="name"
+              item-value="name"
+              label="ສະຖານະ"
+            ></v-select>
+            <v-spacer></v-spacer>
+                        -->
             <v-text-field
               v-model="search"
               clearable
@@ -36,11 +113,17 @@
                 v-for="(img, index) in item.media"
                 :key="index"
               >
-                <img v-if="img.thumb" :src="img.thumb" />
+                <img v-if="img.url" :src="img.url" />
               </v-avatar>
+            </template>
+            <template v-slot:item.vehicle="{ item }">
+            <div v-if="item.vehicle">
+              {{item.vehicle.car_id}} ({{item.vehicle.car_number}})
+            </div>
             </template>
             <template v-slot:item.status="{ item }">
               <v-chip
+                  label
                 :color="statusColor(item.status)"
                 @click="switchStatus(item.id)"
                 >{{ item.status }}</v-chip
@@ -53,27 +136,6 @@
                 mdi-pencil
               </v-icon>
               <v-icon small @click="deleteItem(item.id)"> mdi-delete </v-icon>
-            </template>
-            <template v-slot:item.role="{ item }">
-              <v-icon small class="mr-2" @click="openModalRole(item)">
-                mdi-plus
-              </v-icon>
-              <v-icon small class="mr-2" @click="openModalUpdateRole(item)">
-                mdi-key-remove
-              </v-icon>
-            </template>
-
-            <template v-slot:item.permission="{ item }">
-              <v-icon small class="mr-2" @click="openModalPermission(item)">
-                mdi-plus
-              </v-icon>
-              <v-icon
-                small
-                class="mr-2"
-                @click="openModalUpdatePermissoin(item)"
-              >
-                mdi-key-remove
-              </v-icon>
             </template>
           </v-data-table>
           <br />
@@ -94,13 +156,13 @@
       <template @close="close">
         <v-card>
           <v-card-title>
-            <span class="headline">Add Driver</span>
+            <p>ເພີ່ມພະນັກງານຂັບລົດ</p>
           </v-card-title>
           <v-card-text>
             <v-container>
               <v-form ref="form" lazy-validation>
                 <v-row>
-                  <v-col align="center">
+                  <v-col>
                     <div class="field">
                       <div class="file is-large is-boxed">
                         <label class="file-label">
@@ -141,10 +203,23 @@
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col align="center" class="mt-5" v-if="imageUrl">
+                  <v-col class="mt-5" v-if="imageUrl">
                     <v-avatar class="avatar rounded" size="94px">
                       <img :src="imageUrl" alt="" />
                     </v-avatar>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="12">
+                    <v-text-field
+                        label="ID *"
+                        required
+                        v-model="user.card_id"
+                        :rules="idRules"
+                    ></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.card_id }}
+                    </p>
                   </v-col>
                 </v-row>
                 <v-row>
@@ -185,28 +260,30 @@
                   </v-col>
                   <v-col cols="6">
                     <v-text-field
-                      label="Email *"
+                      label="Email"
                       required
                       v-model="user.email"
-                      :rules="emailRules"
                     ></v-text-field>
                     <p class="errors">
                       {{ server_errors.email }}
                     </p>
                   </v-col>
+
                   <v-col cols="12">
-                    <v-text-field
-                      label="ທະບຽນລົດ *"
-                      required
-                      v-model="user.car_number"
-                      :rules="carnumberRules"
-                      type="number"
-                      class="input-number"
-                    ></v-text-field>
+                    <v-autocomplete
+                      v-model="selectedVehicle"
+                      :items="vehicles"
+                      :item-text="getVehicle"
+                      item-value="id"
+                      label="ເລືອກລົດ"
+                      dense
+                      :rules="vehicleRules"
+                    ></v-autocomplete>
                     <p class="errors">
-                      {{ server_errors.car_number }}
+                      {{ server_errors.vehicle_id }}
                     </p>
                   </v-col>
+
                   <v-col cols="6">
                     <v-text-field
                       label="Password *"
@@ -238,7 +315,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="closeAddModal()">
-                Close
+                ຍົກເລີກ
               </v-btn>
               <v-btn
                 color="blue darken-1"
@@ -247,7 +324,7 @@
                 :disabled="loading"
                 @click="AddItem()"
               >
-                Save
+                ບັນທຶກ
               </v-btn>
             </v-card-actions>
           </v-card-text>
@@ -260,13 +337,13 @@
       <template @close="close" v-slot="">
         <v-card>
           <v-card-title>
-            <span class="headline">Update Driver</span>
+            <p>ແກ້ໄຂພະນັກງານຂັບລົດ</p>
           </v-card-title>
           <v-card-text>
             <v-container>
               <v-form ref="form" lazy-validation>
                 <v-row>
-                  <v-col align="center">
+                  <v-col>
                     <div class="field">
                       <div class="file is-large is-boxed">
                         <label class="file-label">
@@ -305,20 +382,33 @@
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col align="center" class="mt-5" v-if="imageUrl">
+                  <v-col class="mt-5" v-if="imageUrl">
                     <v-avatar class="avatar rounded" size="94px">
                       <img :src="imageUrl" alt="" />
                     </v-avatar>
                   </v-col>
-                  <v-col align="center" class="mt-5" v-else>
+                  <v-col class="mt-5" v-else>
                     <v-avatar
                       v-for="(item, index) in edit_driver.media"
                       :key="index"
                       class="avatar rounded mr-6"
                       size="94px"
                     >
-                      <img :src="item.thumb" />
+                      <img :src="item.url" />
                     </v-avatar>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="12">
+                    <v-text-field
+                        label="ID *"
+                        required
+                        v-model="edit_driver.card_id"
+                        :rules="idRules"
+                    ></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.card_id }}
+                    </p>
                   </v-col>
                 </v-row>
                 <v-row>
@@ -364,23 +454,23 @@
                       label="Email *"
                       required
                       v-model="edit_driver.user.email"
-                      :rules="emailRules"
                     ></v-text-field>
                     <p class="errors">
                       {{ server_errors.email }}
                     </p>
                   </v-col>
                   <v-col cols="12">
-                    <v-text-field
-                      label="ທະບຽນລົດ *"
-                      required
-                      v-model="edit_driver.car_number"
-                      :rules="carnumberRules"
-                      type="number"
-                      class="input-number"
-                    ></v-text-field>
+                    <v-autocomplete
+                      v-model="edit_driver.vehicle_id"
+                      :items="vehicle"
+                      :item-text="getVehicle"
+                      item-value="id"
+                      label="ເລືອກລົດ"
+                      dense
+                      :rules="vehicleRules"
+                    ></v-autocomplete>
                     <p class="errors">
-                      {{ server_errors.car_number }}
+                      {{ server_errors.vehicle_id }}
                     </p>
                   </v-col>
                 </v-row>
@@ -429,23 +519,37 @@
 
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import queryOption from "@/Helpers/queryOption";
 export default {
   name: "User",
+  title() {
+    return `Vientiane Waste Co-Dev|${this.title}`;
+  },
   data() {
     return {
+      title: "Driver",
+      start_date: "",
+      end_date: "",
+      start_menu: false,
+      end_menu: false,
       headers: [
-        { text: "Name", value: "name" },
-        { text: "Surname Name", value: "surname" },
-        { text: "Car Number", value: "car_number" },
-        { text: "Phone", value: "user.phone", sortable: false },
+        { text: "ID", value: "card_id" },
+        { text: "ຊື່", value: "name" },
+        { text: "ນາມສະກຸນ", value: "surname" },
+        { text: "ທະບຽນລົດ", value: "vehicle" },
+        { text: "ເບີໂທ", value: "user.phone", sortable: false },
         { text: "Email", value: "user.email", sortable: false },
         { text: "Status", value: "status", sortable: false },
-        { text: "Image", value: "media", sortable: false },
+        { text: "Team", value: "team.name", sortable: false },
+        { text: "Profile", value: "media", sortable: false },
         { text: "", value: "actions", sortable: false },
       ],
       loading: false,
+      status: false,
       data: [],
-      user: {},
+      user: {
+        email:''
+      },
       edit_driver: {},
       userID: "",
       server_errors: {
@@ -462,12 +566,21 @@ export default {
       per_page: 12,
       search: "",
       oldVal: "",
-
-      //Validation
-      emailRules: [
-        (v) => !!v || "E-mail is required",
-        (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+      vehicle: [],
+      vehicles: [],
+      selectedVehicle: "",
+      selectedStatus: "",
+      statuses: [
+        {
+          id: 1,
+          name: "active",
+        },
+        {
+          id: 1,
+          name: "inactive",
+        },
       ],
+      //Validation
       passwordRules: [
         (v) => !!v || "Password is required",
         (v) =>
@@ -478,10 +591,14 @@ export default {
         (v) =>
           (v && v.length >= 8) || "Password must be more than 8 characters",
       ],
+      idRules: [
+        (v) => !!v || "Id is required",
+      ],
       nameRules: [
         (v) => !!v || "Name is required",
         (v) => (v && v.length >= 2) || "Name must be less than 2 characters",
       ],
+      vehicleRules: [(v) => !!v || "Vehicle is required"],
       phoneRules: [
         (v) => !!v || "Phone is required",
         (v) =>
@@ -494,20 +611,26 @@ export default {
         (v) =>
           Number.isInteger(Number(v)) || "The value must be an integer number",
       ],
-
-      toast: {
-        value: true,
-        color: "success",
-        msg: "Success",
-      },
-      toast_error: {
-        value: true,
-        color: "error",
-        msg: "Something when wrong!",
-      },
     };
   },
   methods: {
+    fetchVehicle() {
+      this.$axios
+        .get("vehicle")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.vehicle = res.data.data;
+              this.vehicle.filter(item =>{
+                if(item.driver == null || item.driver == ''){
+                  this.vehicles.push(item);
+                }
+              });
+            }, 300);
+          }
+        })
+        .catch({});
+    },
     onFileChange(e) {
       let input = e.target;
       let file = e.target.files[0];
@@ -515,15 +638,17 @@ export default {
       this.imageUrl = URL.createObjectURL(file);
     },
     openAddModal() {
+      this.fetchVehicle();
       this.$store.commit("modalAdd_State", true);
     },
     AddItem() {
       let formData = new FormData();
+      formData.append("card_id", this.user.card_id);
       formData.append("name", this.user.name);
       formData.append("surname", this.user.surname);
       formData.append("phone", this.user.phone);
       formData.append("email", this.user.email);
-      formData.append("car_number", this.user.car_number);
+      formData.append("vehicle_id", this.selectedVehicle);
       formData.append("image", this.image);
       formData.append("password", this.user.password);
       formData.append("password_confirmation", this.user.password_confirmation);
@@ -543,16 +668,23 @@ export default {
                 this.imageUrl = "";
                 this.fetchData();
                 this.reset();
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", this.toast_error);
-            this.fetchData();
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             if (error.response.status == 422) {
-              var obj = error.response.data.errors;
+              let obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
               }
@@ -564,27 +696,34 @@ export default {
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("driver", {
-          params: {
-            page: this.pagination.current_page,
-            per_page: this.per_page,
-            filter: this.search,
-          },
+          params: queryOption([
+            {page: this.pagination.current_page},
+            {per_page: this.per_page},
+            {filter: this.search},
+            {date_from: this.start_date},
+            {date_end: this.end_date},
+            {status: this.selectedStatus},
+            ]),
         })
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
               this.loading = false;
               this.$store.commit("Loading_State", false);
               this.data = res.data.data.data;
               this.pagination = res.data.data.pagination;
-            }, 300);
+              this.data.map((item) => {
+                if (item.status == "active") {
+                  this.status = true;
+                } else {
+                  this.status = false;
+                }
+              });
           }
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
+            let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
@@ -597,17 +736,23 @@ export default {
     },
     OpenModalEdit(item) {
       this.edit_driver = item;
+      this.fetchVehicle();
       this.$store.commit("modalEdit_State", true);
     },
     updateItem() {
+      if(this.edit_driver.user.email == null){
+        this.edit_driver.user.email = '';
+      }
       let formData = new FormData();
       formData.append("name", this.edit_driver.name);
+      formData.append("card_id", this.edit_driver.card_id);
       formData.append("surname", this.edit_driver.surname);
       formData.append("phone", this.edit_driver.user.phone);
       formData.append("email", this.edit_driver.user.email);
-      formData.append("car_number", this.edit_driver.car_number);
+      formData.append("vehicle_id", this.edit_driver.vehicle_id);
       formData.append("image", this.image);
       formData.append("_method", "PUT");
+
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
@@ -623,16 +768,23 @@ export default {
                 this.imageUrl = "";
                 this.fetchData();
                 this.reset();
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", this.toast_error);
-            this.fetchData();
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
             if (error.response.status == 422) {
-              var obj = error.response.data.errors;
+              let obj = error.response.data.errors;
               for (let [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
               }
@@ -661,15 +813,22 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.loading = false;
-              this.$store.commit("Toast_State", this.toast);
               this.$store.commit("modalDelete_State", false);
               this.fetchData();
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
+              });
             }, 300);
           }
         })
-        .catch(() => {
-          this.fetchData();
-          this.$store.commit("Toast_State", this.toast_error);
+        .catch((error) => {
+          this.$store.commit("Toast_State", {
+            value: true,
+            color: "error",
+            msg: error.response.data.message,
+          });
           this.$store.commit("modalDelete_State", false);
           this.loading = false;
         });
@@ -683,29 +842,61 @@ export default {
             setTimeout(() => {
               this.loading = false;
               this.fetchData();
-              this.$store.commit("Toast_State", this.toast);
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
+              });
             }, 300);
           }
         })
-        .catch(() => {
+        .catch((error) => {
           this.loading = false;
-          this.$store.commit("Toast_State", this.toast_error);
+          this.$store.commit("Toast_State", {
+            value: true,
+            color: "error",
+            msg: error.response.data.message,
+          });
           this.fetchData();
         });
     },
     statusColor(value) {
-      if (value == "active") return "success";
-      else if (value == "inactive") return "error";
+      if (value == "active") {
+        return "primary";
+      } else if (value == "inactive") return "error";
+      else return  "info"
     },
 
     reset() {
       this.$refs.form.reset();
+    },
+    getVehicle(value){
+      if(value !== null){
+        return value.car_id +' '+'('+value.car_number+')';
+      } else {
+        return '(ຍັງບໍທັນມີລົດ)'
+      }
     },
     Search() {
       GetOldValueOnInput(this);
     },
   },
   watch: {
+    selectedStatus: function () {
+      this.fetchData();
+    },
+    selectedVehicle: function (value) {
+      this.server_errors.vehicle_id = "";
+      if(value){
+        this.getVehicle(value);
+      }
+    },
+    "edit_driver.vehicle_id":function (value){
+      this.server_errors.vehicle_id = "";
+      if(value){
+        this.getVehicle(value);
+      }
+    },
     "user.name": function () {
       this.server_errors.name = "";
     },
@@ -718,8 +909,8 @@ export default {
     "user.email": function () {
       this.server_errors.email = "";
     },
-    "user.car_number": function () {
-      this.server_errors.car_number = "";
+    "user.vehicle_id": function () {
+      this.server_errors.vehicle_id = "";
     },
     "user.password": function () {
       this.server_errors.password = "";
@@ -735,9 +926,6 @@ export default {
     },
     "edit_driver.user.email": function () {
       this.server_errors.email = "";
-    },
-    "edit_driver.car_number": function () {
-      this.server_errors.car_number = "";
     },
     search: function (value) {
       if (value == "") {

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import About from './About.vue'
+import About from './Contact.vue'
 
   export default {
     name: 'About',

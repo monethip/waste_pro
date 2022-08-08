@@ -64,7 +64,7 @@
           <v-card-text>
             <v-data-table
               :headers="headers"
-              :items="customers"
+              :items="collections"
               :search="search"
               :disable-pagination="true"
               hide-default-footer
@@ -143,10 +143,13 @@
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
   name: "Customer",
+  title() {
+    return `Vientiane Waste Co-Dev|Report Trash`;
+  },
   data() {
     return {
       tab: null,
-      customers: [],
+      collections: [],
       loading: false,
       customerId: "",
       //Pagination
@@ -183,7 +186,7 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("customer", {
+        .get("report-collection", {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
@@ -192,16 +195,13 @@ export default {
         })
         .then((res) => {
           if (res.data.code == 200) {
-            setTimeout(() => {
-              this.$store.commit("Loading_State", false);
-              //   this.customers = res.data.data.data;
-              //   this.pagination = res.data.data.pagination;
-            }, 300);
+              this.collections = res.data.data.data;
+              this.pagination = res.data.data.pagination;
+            this.$store.commit("Loading_State", false);
           }
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
           if (error.response.status == 422) {
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
@@ -234,10 +234,9 @@ export default {
           }
         })
         .catch(() => {
-          this.fetchData();
+          this.loading = false;
           this.$store.commit("Toast_State", this.toast_error);
           this.$store.commit("modalDelete_State", false);
-          this.loading = false;
         });
     },
     createPage() {
@@ -252,7 +251,6 @@ export default {
       });
     },
     viewPage(id) {
-      console.log(id);
       this.$router.push({
         name: "ViewCustomer",
         params: { id },

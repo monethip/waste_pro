@@ -1,29 +1,47 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import User from './user';
+import auth from '@/store/modules/auth'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     isLogged: false,
-    username: "Monethip",
-
+    phone: "",
     modalAddState: false,
     modalEditState: false,
     modalDeleteState: false,
+    modalCheckTokenState:false,
+    isLogout:false,
     modalView: false,
     notificationToastState: false,
     progressLoading: false,
     message: '',
     color: '',
     isLoading: false,
+    breadcrumbs:[
+      // {
+      //   text: 'Dashboard',
+      //   disabled: false,
+      //   href: '/user',
+      // },
+      // {
+      //   text: 'Detail',
+      //   disabled: false,
+      //   href: 'dashboard',
+      // },
+    ]
   },
   mutations: {
+    // breadCrumbState(state,payload){
+    //   console.log(payload)
+    //   state.breadcrumbs = payload;
+    // },
+    checkConfirmLogout(state,value){
+      state.isLogout = value;
+    },
     SET_LOGGED_IN(state) {
       state.isLogged = true
     },
-
-
     modalAdd_State(state, value) {
       state.modalAddState = value;
     },
@@ -36,6 +54,10 @@ export default new Vuex.Store({
     modalDelete_State(state, value) {
       state.modalDeleteState = value;
     },
+    modalCheckToken_State(state, value) {
+      state.modalCheckTokenState = value;
+    },
+
     Toast_State(state, result) {
       state.notificationToastState = result.value;
       state.message = result.msg;
@@ -48,6 +70,6 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
-    User,
+    auth:auth(),
   }
 })

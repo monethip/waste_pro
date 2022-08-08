@@ -1,37 +1,43 @@
 <template>
   <v-container>
     <v-row class="mb-n6 text-right">
+      <v-col class="text-left">
+        ຂໍ້ມູນທີ່ຢູ່
+        <v-spacer></v-spacer>
+      </v-col>
       <v-col>
-        <v-btn class="btn-primary" @click="OpenModalAddVillage()"
-          ><v-icon color>mdi-plus</v-icon>Add Village
-        </v-btn>
+        <v-btn class="btn-primary" @click="OpenModalAddVillage()"></v-btn>
+        <v-icon color>mdi-plus</v-icon>Add Village
       </v-col>
     </v-row>
-    <v-card class="mx-auto my-12" elevation="2">
+    <v-card class="mx-auto my-6" elevation="2">
       <v-card-text>
-        <v-card-title>
-          <v-spacer></v-spacer>
-          <v-autocomplete
-            required
-            :items="districts"
-            v-model="selectedDistrict"
-            item-text="name"
-            item-value="id"
-            label="District"
-            :rulesDistrict="rulePermission"
-            outlined
-            dense
-          ></v-autocomplete>
-          <v-spacer></v-spacer>
-          <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Search"
-            single-line
-            outlined
-            dense
-          ></v-text-field>
-        </v-card-title>
+        <v-row>
+          <v-col>
+            <v-autocomplete
+              required
+              :items="districts"
+              v-model="selectedDistrict"
+              item-text="name"
+              item-value="id"
+              label="ເມືອງ"
+              outlined
+              dense
+            ></v-autocomplete>
+          </v-col>
+          <v-col>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              outlined
+              dense
+              @keyup.enter="Search()"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+
         <v-data-table
           :headers="headers"
           :items="villages"
@@ -39,45 +45,13 @@
           :disable-pagination="true"
           hide-default-footer
         >
-          <template v-slot:[`item.variation`]="{ item }">
-            <v-icon
-              medium
-              class="mr-2"
-              color="green"
-              @click="openModalVariation(item)"
-            >
-              mdi-plus
-            </v-icon>
-            <v-icon
-              small
-              class="mr-2"
-              color="blue darken-4"
-              @click="openModalUpdateVariation(item)"
-            >
-              mdi-pencil
-            </v-icon>
-            <v-icon
-              small
-              class="mr-2"
-              color="red"
-              @click="openModaldeleteVariation(item)"
-            >
-              mdi-key-remove
-            </v-icon>
+          <template v-slot:item.variation="{ item }">
+            <v-icon small class="mr-2" color="green" @click="ViewVillage(item.id)">mdi-eye</v-icon>
           </template>
 
-          <template v-slot:[`item.actions`]="{ item }">
-            <v-icon
-              small
-              color="green"
-              class="mr-2"
-              @click="OpenModalEdit(item)"
-            >
-              mdi-account-edit
-            </v-icon>
-            <v-icon small color="red" @click="deleteItem(item.id)">
-              mdi-trash-can-outline
-            </v-icon>
+          <template v-slot:item.actions="{ item }">
+            <v-icon small color="green" class="mr-2" @click="OpenModalEdit(item)">mdi-pencil</v-icon>
+            <v-icon small color="red" @click="deleteItem(item.id)">mdi-trash-can-outline</v-icon>
           </template>
         </v-data-table>
         <template>
@@ -113,9 +87,7 @@
                       label="District *"
                       :rulesDistrict="rulesDistrict"
                     ></v-autocomplete>
-                    <p class="errors">
-                      {{ server_errors.district_id }}
-                    </p>
+                    <p class="errors">{{ server_errors.district_id }}</p>
                   </v-col>
                 </v-row>
                 <v-row>
@@ -127,29 +99,23 @@
                       prepend-inner-icon="mdi-home"
                       :rules="nameRules"
                     ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.name }}
-                    </p>
+                    <p class="errors">{{ server_errors.name }}</p>
                   </v-col>
                 </v-row>
               </v-form>
             </v-container>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeAddModal()">Close</v-btn>
+              <v-btn
+                color="blue darken-1"
+                text
+                :loading="loading"
+                :disabled="loading"
+                @click="AddItem()"
+              >Save</v-btn>
+            </v-card-actions>
           </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="closeAddModal()">
-              Close
-            </v-btn>
-            <v-btn
-              color="blue darken-1"
-              text
-              :loading="loading"
-              :disabled="loading"
-              @click="AddItem()"
-            >
-              Save
-            </v-btn>
-          </v-card-actions>
         </v-card>
       </template>
     </ModalAdd>
@@ -175,9 +141,7 @@
                       label="District *"
                       :rulesDistrict="rulesDistrict"
                     ></v-autocomplete>
-                    <p class="errors">
-                      {{ server_errors.district_id }}
-                    </p>
+                    <p class="errors">{{ server_errors.district_id }}</p>
                   </v-col>
                 </v-row>
                 <v-row>
@@ -188,27 +152,21 @@
                       required
                       :rules="nameRules"
                     ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.name }}
-                    </p>
+                    <p class="errors">{{ server_errors.name }}</p>
                   </v-col>
                 </v-row>
               </v-form>
             </v-container>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeUpdateVillage()">
-                ຍົກເລີກ
-              </v-btn>
+              <v-btn color="blue darken-1" text @click="closeUpdateVillage()">ຍົກເລີກ</v-btn>
               <v-btn
                 color="blue darken-1"
                 text
                 :loading="loading"
                 :disabled="loading"
                 @click="updateItem()"
-              >
-                ບັນທຶກ
-              </v-btn>
+              >ບັນທຶກ</v-btn>
             </v-card-actions>
           </v-card-text>
         </v-card>
@@ -227,223 +185,21 @@
             :loading="loading"
             :disabled="loading"
             @click="DeleteItemConfirm"
-            >OK</v-btn
-          >
+          >OK</v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </template>
     </ModalDelete>
-
-    <!--Add Variation -->
-    <v-dialog v-model="variationDialog" max-width="720px">
-      <v-card>
-        <v-card-title>
-          <span class="text-h5">Add Village Variation</span>
-          <v-spacer></v-spacer>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-form ref="form" lazy-validation>
-              <v-row>
-                <v-col>
-                  <v-text-field
-                    v-model="update_village.name"
-                    label="village"
-                    required
-                    readonly
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <v-select
-                    required
-                    v-model="SelectedVillageVariation"
-                    :items="variation"
-                    item-text="name"
-                    item-value="id"
-                    label="variation name*"
-                  ></v-select>
-                  <p class="errors">
-                    {{ errormsg }}
-                  </p>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <v-text-field
-                    v-model="number"
-                    label="number*"
-                    required
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-            </v-form>
-          </v-container>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="variationDialog = false">
-              Close
-            </v-btn>
-            <v-btn
-              color="blue darken-1"
-              text
-              :loading="loading"
-              :disabled="loading"
-              @click="AddVariation"
-            >
-              Add
-            </v-btn>
-          </v-card-actions>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-
-    <!--Edit Variation -->
-    <v-dialog v-model="UpdateVariationDialog" max-width="720px">
-      <v-card>
-        <v-card-title>
-          <span class="text-h5">Edit Village Variation</span>
-          <v-spacer></v-spacer>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-form ref="form" lazy-validation>
-              <!-- <v-row>
-                <v-col>
-                  <v-text-field
-                    v-model="update_villagevariation.name"
-                    label="village"
-                    required
-                    readonly
-                  ></v-text-field>
-                </v-col>
-              </v-row> -->
-              <v-row>
-                <v-col>
-                  <v-select
-                    required
-                    v-model="SelectedVillageVariation"
-                    :items="village_details"
-                    item-text="name"
-                    item-value="id"
-                    label="variation name*"
-                  ></v-select>
-                  <p class="errors">
-                    {{ errormsg }}
-                  </p>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <v-text-field
-                    v-model="village_details"
-                    :items="village_details"
-                    label="number*"
-                    required
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-            </v-form>
-          </v-container>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              color="blue darken-1"
-              text
-              @click="UpdateVariationDialog = false"
-            >
-              Close
-            </v-btn>
-            <v-btn
-              color="blue darken-1"
-              text
-              :loading="loading"
-              :disabled="loading"
-              @click="AddVariation"
-            >
-              Add
-            </v-btn>
-          </v-card-actions>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-
-    <!--Edit Variation -->
-    <v-dialog v-model="DeleteVariationDialog" max-width="720px">
-      <v-card>
-        <v-card-title>
-          <span class="text-h5">Edit Village Variation</span>
-          <v-spacer></v-spacer>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-form ref="form" lazy-validation>
-              <!-- <v-row>
-                <v-col>
-                  <v-text-field
-                    v-model="update_villagevariation.name"
-                    label="village"
-                    required
-                    readonly
-                  ></v-text-field>
-                </v-col>
-              </v-row> -->
-              <v-row>
-                <v-col>
-                  <v-select
-                    required
-                    v-model="SelectedVillageVariation"
-                    :items="village_details"
-                    item-text="name"
-                    item-value="id"
-                    label="variation name*"
-                  ></v-select>
-                  <p class="errors">
-                    {{ errormsg }}
-                  </p>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <v-text-field
-                    v-model="village_details"
-                    :items="village_details"
-                    label="number*"
-                    required
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-            </v-form>
-          </v-container>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              color="blue darken-1"
-              text
-              @click="DeleteVariationDialog = false"
-            >
-              Close
-            </v-btn>
-            <v-btn
-              color="blue darken-1"
-              text
-              :loading="loading"
-              :disabled="loading"
-              @click="AddVariation"
-            >
-              Add
-            </v-btn>
-          </v-card-actions>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
   </v-container>
 </template>
 
 <script>
+import { GetOldValueOnInput } from "@/Helpers/GetValue";
 export default {
   name: "Village",
+  title() {
+    return `Vientiane Waste Co-Dev|Address`;
+  },
   data() {
     return {
       loading: false,
@@ -451,16 +207,7 @@ export default {
       selectedDistrict: "",
       selectedVillage: "",
       listVillage: [],
-
-      SelectedVillageVariation: "",
-
-      //
-      variation: [],
-      edit_villagevariation: {},
-
-      variationDialog: false,
-      UpdateVariationDialog: false,
-      DeleteVariationDialog: false,
+      village_details: [],
 
       //getlistofdistrict
       getVillage: [],
@@ -479,27 +226,31 @@ export default {
 
       oldVal: "",
       server_errors: {},
-      rulesDistrict: [(v) => !!v || "District is required"],
+      rulesDistrict: [v => !!v || "District is required"],
       //Validation
-      nameRules: [(v) => !!v || "Name is required"],
-      rulePermission: [(v) => !!v || "Permission is required"],
+      nameRules: [v => !!v || "Name is required"],
 
       headers: [
         {
           text: "ລະຫັດ",
           align: "start",
           value: "id",
-          sortable: false,
+          sortable: false
         },
         {
           text: "ບ້ານ",
           align: "start",
           value: "name",
-          sortable: false,
+          sortable: false
         },
-        { text: "Add Variation ", value: "variation", sortable: false },
-        { text: "", value: "actions", sortable: false },
-      ],
+        {
+          text: "ລາຍລະອຽດທີ່ຢູ່",
+          value: "variation",
+          sortable: false,
+          align: "center"
+        },
+        { text: "", value: "actions", sortable: false }
+      ]
     };
   },
   created() {
@@ -523,12 +274,15 @@ export default {
       this.loading = true;
       this.$axios
         .delete("address/village/" + this.village_id)
-        .then((res) => {
+        .then(res => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.loading = false;
-              this.toast.msg = res.data.message;
-              this.$store.commi("Toast_State", this.toast);
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message
+              });
               this.$store.commit("modalDelete_State", false);
               this.fetchData();
             }, 300);
@@ -536,7 +290,6 @@ export default {
         })
         .catch(() => {
           this.fetchData();
-          this.$store.commit("Toast_State", this.toast_error);
           this.$store.commit("modalDelete_State", false);
           this.loading = false;
         });
@@ -557,9 +310,9 @@ export default {
         this.$axios
           .put("address/village/" + this.update_village.id, {
             name: this.update_village.name,
-            district_id: this.selectedDistrict,
+            district_id: this.selectedDistrict
           })
-          .then((res) => {
+          .then(res => {
             if (res.data.success == true) {
               setTimeout(() => {
                 this.loading = false;
@@ -567,16 +320,24 @@ export default {
                 this.update_village = {};
                 this.reset();
                 this.fetchData();
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message
+                });
               }, 300);
             }
           })
-          .catch((error) => {
+          .catch(error => {
             this.loading = false;
-            this.$store.commit("Toast_State", this.toast_error);
             this.fetchVillage();
             if (error.response.status == 422) {
-              var obj = error.response.data.errors;
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response.data.message
+              });
+              let obj = error.response.data.errors;
               for (let [key, villages] of Object.entries(obj)) {
                 this.server_errors[key] = villages[0];
               }
@@ -589,17 +350,15 @@ export default {
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
-        .then((res) => {
+        .then(res => {
           if (res.data.code == 200) {
-            setTimeout(() => {
-              this.getVillage = res.data.data;
-              this.getVillage.map((item) => {
-                this.districts = item.districts;
-                this.selectedDistrict = this.districts[0].id;
-                this.$store.commit("Loading_State", false);
-                this.fetchVillage();
-              });
-            }, 300);
+            this.getVillage = res.data.data;
+            this.getVillage.map(item => {
+              this.districts = item.districts;
+              this.selectedDistrict = this.districts[0].id;
+              this.$store.commit("Loading_State", false);
+              this.fetchVillage();
+            });
           }
         })
         .catch(() => {});
@@ -607,93 +366,50 @@ export default {
 
     fetchVillage() {
       this.$store.commit("Loading_State", true);
-      console.log(this.search);
       this.$axios
         .get("info/district/" + this.selectedDistrict + "/village", {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
-            filter: this.search,
-          },
+            filter: this.search
+          }
         })
-        .then((res) => {
+        .then(res => {
           if (res.data.code == 200) {
-            setTimeout(() => {
-              this.villages = res.data.data.data;
-              this.pagination = res.data.data.pagination;
-              this.$store.commit("Loading_State", false);
-            }, 300);
+            this.villages = res.data.data.data;
+            this.pagination = res.data.data.pagination;
+            this.$store.commit("Loading_State", false);
           }
         })
         .catch(() => {});
     },
 
-    fetchVariation() {
-      var variation = [];
-      this.$axios
-        .get("info/village-variation")
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.loading = false;
-              this.variation = res.data.data;
-              this.edit_villagevariation.variation.map((item) => {
-                variation.push(item.name);
-              });
-            }, 300);
-          }
-        })
-        .catch((error) => {
-          this.loading = false;
-          this.fetchData();
-          if (error.response.status == 422) {
-            var obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
-              this.server_errors[key] = message[0];
-            }
-          }
-        });
-    },
-
-    AddVariation() {
-      if (this.$refs.form.validate() == true) {
-        this.loading = true;
-        this.$axios
-          .post(
-            "address/village/" + this.update_village.id + "/village-detail",
-            {
-              name: this.number,
-              village_variation_id: this.SelectedVillageVariation,
-            }
-          )
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.loading = false;
-                this.fetchData();
-                this.reset();
-                this.variationDialog = false;
-                this.$store.commit("Toast_State", this.toast);
-              }, 300);
-            }
-          })
-          .catch((error) => {
-            if (error.response.data.code == 422) {
-              this.errormsg = error.response.data.message;
-            }
-            this.$store.commit("Toast_State", this.toast_error);
-            this.fetchData();
-          });
-        this.loading = false;
-      }
-    },
-
-    openModalVariation(item) {
-      this.edit_villagevariation = item;
-      this.update_village = item;
-      this.fetchVariation();
-      this.variationDialog = true;
-    },
+    // fetchVariation() {
+    //   var variation = [];
+    //   this.$axios
+    //     .get("info/village-variation")
+    //     .then((res) => {
+    //       if (res.data.code == 200) {
+    //         setTimeout(() => {
+    //           this.loading = false;
+    //           this.variation = res.data.data;
+    //           this.edit_villagevariation.variation.map((item) => {
+    //             variation.push(item.name);
+    //           });
+    //         }, 300);
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       this.loading = false;
+    //       this.fetchData();
+    //       if (error.response.status == 422) {
+    //         var obj = error.response.data.errors;
+    //         for (let [key, message] of Object.entries(obj)) {
+    //           this.server_errors[key] = message[0];
+    //         }
+    //       }
+    //     });
+    // },
 
     closeUpdateVillage() {
       this.reset(),
@@ -706,22 +422,11 @@ export default {
       this.$store.commit("modalAdd_State", false);
     },
 
-    openModalUpdateVariation(id) {
-      this.$router.push({
-        name: "EditVillage",
-        params: { id },
-      });
-    },
-
     ViewVillage(id) {
       this.$router.push({
         name: "ViewVillage",
-        params: { id },
+        params: { id }
       });
-    },
-
-    openModaldeleteVariation() {
-      this.DeleteVariationDialog = true;
     },
 
     AddItem() {
@@ -730,25 +435,33 @@ export default {
         this.$axios
           .post("address/village", {
             name: this.ban,
-            district_id: this.selectedDistrict,
+            district_id: this.selectedDistrict
           })
 
-          .then((res) => {
+          .then(res => {
             if (res.data.code == 200) {
               setTimeout(() => {
                 this.loading = false;
                 this.closeAddModal();
                 this.fetchData();
                 this.reset();
-                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message
+                });
               }, 300);
             }
           })
-          .catch((error) => {
+          .catch(error => {
             this.loading = false;
-            this.$store.commit("Toast_State", this.toast_error);
             this.fetchData();
             if (error.response.status == 422) {
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response.data.message
+              });
               var obj = error.response.data.error;
               for (let [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
@@ -757,18 +470,27 @@ export default {
           });
       }
     },
+    Search() {
+      GetOldValueOnInput(this);
+    }
   },
   watch: {
-    selectedDistrict: function () {
+    selectedDistrict: function() {
+      this.pagination.current_page = "";
       this.fetchVillage();
+      this.server_errors.district_id = "";
     },
 
-    search: function (value) {
+    search: function(value) {
       if (value == "") {
+        this.pagination.current_page = "";
         this.fetchVillage();
       }
     },
-  },
+    ban: function() {
+      this.server_errors.name = "";
+    }
+  }
 };
 </script>
 
@@ -776,5 +498,4 @@ export default {
 <style lang="scss">
 @import "../../../public/scss/main.scss";
 </style>
-
 

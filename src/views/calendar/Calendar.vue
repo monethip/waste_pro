@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row class="mb-n6">
+    <v-row>
       <v-col>
         <v-btn class="btn-primary" @click="AddPlan()"
           ><v-icon>mdi-plus</v-icon>
@@ -9,19 +9,19 @@
       <v-col>
         <p>ແຜນຕາຕະລາງວຽກແຕ່ລະເດືອນ</p>
       </v-col>
-      <v-col>
-        <v-text-field
-          outlined
-          dense
-          clearable
-          prepend-inner-icon="mdi-magnify"
-          label="ຊື່"
-          type="text"
-          v-model="search"
-          @keyup.enter="Search()"
-        >
-        </v-text-field>
-      </v-col>
+<!--      <v-col>-->
+<!--        <v-text-field-->
+<!--          outlined-->
+<!--          dense-->
+<!--          clearable-->
+<!--          prepend-inner-icon="mdi-magnify"-->
+<!--          label="ຊື່"-->
+<!--          type="text"-->
+<!--          v-model="search"-->
+<!--          @keyup.enter="Search()"-->
+<!--        >-->
+<!--        </v-text-field>-->
+<!--      </v-col>-->
     </v-row>
     <div>
       <v-card>
@@ -37,6 +37,17 @@
               <v-icon medium class="mr-2" @click="gotoPlanCalendar(item.id)"
                 >mdi-map-marker-path</v-icon
               >
+            </template>
+            <template v-slot:item.has_invoice="{ item }">
+              <v-chip :color="HasInvoiceColor(item.has_invoice)"
+              >{{HasInvoice(item.has_invoice)}}
+              </v-chip>
+            </template>
+            <template v-slot:item.created_at="{ item }">
+              <div
+              >
+                {{ moment(item.created_at).format("hh:mm:ss DD-MM-YY") }}
+              </div>
             </template>
             <template v-slot:item.actions="{ item }">
               <v-icon small class="mr-2" @click="editModal(item)">
@@ -87,7 +98,7 @@
                     <v-menu
                       :rules="monthRules"
                       v-model="start_menu"
-                      :close-on-content-click="false"
+                      :close-on-content-click="true"
                       :nudge-right="40"
                       transition="scale-transition"
                       offset-y
@@ -104,7 +115,8 @@
                           dense
                         ></v-text-field>
                       </template>
-                      <v-date-picker v-model="start_date"></v-date-picker>
+                      <v-date-picker v-model="start_date" type="month"
+                      ></v-date-picker>
                     </v-menu>
                     <p class="errors">
                       {{ server_errors.month }}
@@ -160,8 +172,8 @@
                 <v-row>
                   <v-col cols="12">
                     <v-menu
-                      v-model="start_menu"
-                      :close-on-content-click="false"
+                      v-model="edit_date"
+                      :close-on-content-click="true"
                       :nudge-right="40"
                       transition="scale-transition"
                       offset-y
@@ -181,6 +193,7 @@
                       </template>
                       <v-date-picker
                         v-model="calendarEdit.month"
+                        type="month"
                       ></v-date-picker>
                     </v-menu>
                     <p class="errors">
@@ -233,11 +246,14 @@
 
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import queryOption from "@/Helpers/queryOption";
 export default {
   name: "Customer",
+  title() {
+    return `Vientiane Waste Co-Dev|Calendar`;
+  },
   data() {
     return {
-      tab: null,
       calendars: [],
       loading: false,
       calendarId: "",
@@ -248,10 +264,9 @@ export default {
       search: "",
       oldVal: "",
       //Add Package
-      start_date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-        .toISOString()
-        .substr(0, 10),
+      start_date: new Date().toISOString().substr(0, 7),
       start_menu: false,
+      edit_date:false,
       packages: [],
       selectedPackage: "",
       server_errors: {},
@@ -266,7 +281,13 @@ export default {
 
       headers: [
         { text: "ຊື່", value: "name" },
-        { text: "ວັນທີ", value: "month" },
+        { text: "ວັນທີເລີ່ມ", value: "month" },
+        {
+          text: "ມີບິນ",
+          value: "has_invoice",
+          align: "center",
+          sortable: false,
+        },
         {
           text: "ຈຳນວນຮອບ",
           value: "plan_calendars_count",
@@ -278,6 +299,12 @@ export default {
           value: "plan",
           sortable: false,
           align: "center",
+        },
+        {
+          text: "Created",
+          value: "created_at",
+          align: "center",
+          sortable: false,
         },
         { text: "", value: "actions", sortable: false },
       ],
@@ -299,29 +326,37 @@ export default {
     };
   },
   methods: {
+
+    // allowedDates: val => parseInt(val.split('-')[2], 10) % 2 === 0,
+    // allowedDates: val => parseInt(val.split('-')[2], 10) % 2 === 0,
+
+    allowedDates(val) {
+      return val >= new Date().toISOString().substr(0, 10);
+    },
+
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("plan-month", {
-          params: {
-            page: this.pagination.current_page,
-            per_page: this.per_page,
-          },
-        })
+          params: queryOption([
+            {page: this.pagination.current_page},
+            {per_page: this.per_page},
+          ]),
+        }
+        )
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.calendars = res.data.data.data;
               this.pagination = res.data.data.pagination;
-            }, 300);
+            }, 100);
           }
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
+            let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
@@ -362,14 +397,14 @@ export default {
           this.loading = false;
         });
     },
-
     SubmitPlan() {
+      const date = this.moment(`${this.start_date} ${1}`).format('YYYY-MM-DD');
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
           .post("plan-month/", {
             name: this.plan.name,
-            month: this.start_date,
+            month: date,
           })
           .then((res) => {
             if (res.data.code == 200) {
@@ -387,7 +422,7 @@ export default {
             this.$store.commit("Toast_State", this.toast_error);
             this.fetchData();
             if (error.response.status == 422) {
-              var obj = error.response.data.errors;
+              let obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
               }
@@ -400,15 +435,17 @@ export default {
     },
     editModal(item) {
       this.calendarEdit = item;
+      this.calendarEdit.month = this.moment(this.calendarEdit.month).format('YYYY-MM');
       this.$store.commit("modalEdit_State", true);
     },
     UpdatePlan() {
+      const date = this.moment(`${this.calendarEdit.month} ${1}`).format('YYYY-MM-DD');
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
           .put("plan-month/" + this.calendarEdit.id, {
             name: this.calendarEdit.name,
-            month: this.calendarEdit.month,
+            month: date,
           })
           .then((res) => {
             if (res.data.code == 200) {
@@ -424,7 +461,6 @@ export default {
           .catch((error) => {
             this.loading = false;
             this.$store.commit("Toast_State", this.toast_error);
-            this.fetchData();
             if (error.response.status == 422) {
               var obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
@@ -446,6 +482,23 @@ export default {
         params: { id },
       });
     },
+    reset() {
+      this.$refs.form.reset();
+    },
+    HasInvoiceColor(value){
+      if(value == '1'){
+        return 'success';
+      } else if(value == 0){
+        return 'error';
+      }
+    },
+    HasInvoice(value){
+      if(value == '1'){
+        return 'ມີບິນ';
+      } else if(value == 0){
+        return 'ບໍ່ມີ';
+      }
+    }
   },
   watch: {
     search: function (value) {

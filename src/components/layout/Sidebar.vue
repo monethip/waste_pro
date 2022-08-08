@@ -1,10 +1,74 @@
 <template>
   <div>
-    <v-app-bar flat absolute fixed app color="transparent">
+    <v-app-bar flat fixed app class="nav">
       <v-icon style="padding: 4px" @click="drawer = !drawer">
         mdi-order-bool-descending
       </v-icon>
+
+      <v-breadcrumbs divider=">" :items="$route.meta.breadcrumb">
+      </v-breadcrumbs>
+
       <v-spacer></v-spacer>
+      <v-menu bottom min-width="200px" rounded offset-y>
+        <template v-slot:activator="{ on }">
+          <v-btn text fab dark small class="mr-8" v-on="on">
+            <v-badge overlap color="orange">
+              <template v-slot:badge>{{ notifications.length }}</template>
+              <v-icon large color="grey darken-1"> notifications </v-icon>
+            </v-badge>
+          </v-btn>
+        </template>
+        <v-card>
+          <v-card-text class="px-0">
+            <v-list-item-content class="justify-center">
+              <v-list
+                two-line
+                style="max-height: 650px"
+                class="overflow-y-auto"
+              >
+                <v-list-item-group active-class="pink--text" multiple>
+                  <template v-for="(item, index) in notifications">
+                    <v-list-item :key="item.id" @click="viewPage(item.id)">
+                      <v-list-item-content>
+                        <v-list-item-title
+                          v-text="item.data.name"
+                        ></v-list-item-title>
+
+                        <v-list-item-subtitle
+                          class="text--primary"
+                          v-text="item.data.text"
+                        ></v-list-item-subtitle>
+
+                        <v-list-item-subtitle
+                          v-text="item.data.thanks"
+                        ></v-list-item-subtitle>
+                      </v-list-item-content>
+
+                      <v-list-item-action-text>
+                        <span class="primary-color">{{
+                          moment(item.created_at).format("DD-MM-YY")
+                        }}</span></v-list-item-action-text
+                      >
+                    </v-list-item>
+
+                    <v-divider
+                      v-if="index < notifications.length - 1"
+                      :key="index"
+                    ></v-divider>
+                  </template>
+                </v-list-item-group>
+              </v-list>
+              <v-divider></v-divider>
+              <v-list-item @click="viewAllNoti">
+                <div class="mx-auto text-center">
+                  <span class="primary-color">ອ່ານທັງໝົດ</span>
+                </div>
+              </v-list-item>
+            </v-list-item-content>
+          </v-card-text>
+        </v-card>
+      </v-menu>
+
       <v-menu bottom min-width="200px" rounded offset-y>
         <template v-slot:activator="{ on }">
           <v-btn icon x-large v-on="on">
@@ -41,8 +105,8 @@
         <router-link to="/" class="d-flex align-center text-decoration-none">
           <v-img
             :src="require('../../assets/logo-finalized.png')"
-            max-height="30px"
-            max-width="30px"
+            max-height="60px"
+            max-width="60px"
             alt="logo"
             contain
             eager
@@ -53,8 +117,6 @@
           </v-slide-x-transition>
         </router-link>
       </div>
-
-     
 
       <v-list expand shaped>
         <v-list-item
@@ -73,86 +135,35 @@
           </v-list-item-content>
         </v-list-item>
 
-        <!--User groups-->
-        <v-list-group
-          :prepend-icon="'mdi-account-group'"
-          no-action
-          color="indigo darken-4"
-        >
-          <template v-slot:activator>
-            <v-list-item-content>
-              <v-list-item-title>ຈັດການຂໍ້ມູນ</v-list-item-title>
-            </v-list-item-content>
-          </template>
-          <v-list-item
-            exact
+        <div v-for="item in group_menu" :key="item.id" class="group-menu">
+          <v-list-group
+            :prepend-icon="item.icon"
+            no-action
             color="indigo darken-4"
-            v-for="(item, k) in setting"
-            :key="k"
-            :to="item.to"
+            v-if="$can(item.group_permissions)"
           >
-            <v-list-item-action>
-              <v-icon>{{ item.icon }}</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title v-text="item.title" />
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-group>
-
-        <!--Route plan-->
-        <v-list-group
-          :prepend-icon="'mdi-map'"
-          no-action
-          color="indigo darken-4"
-        >
-          <template v-slot:activator>
-            <v-list-item-content>
-              <v-list-item-title>Route Plan</v-list-item-title>
-            </v-list-item-content>
-          </template>
-          <v-list-item
-            exact
-            color="indigo darken-4"
-            v-for="(item, k) in routes"
-            :key="k"
-            :to="item.to"
-          >
-            <v-list-item-action>
-              <v-icon>{{ item.icon }}</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title v-text="item.title" />
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-group>
-
-        <!--Report groups-->
-        <v-list-group
-          :prepend-icon="'mdi-chart-bubble'"
-          no-action
-          color="indigo darken-4"
-        >
-          <template v-slot:activator>
-            <v-list-item-content>
-              <v-list-item-title>ລາຍງານ</v-list-item-title>
-            </v-list-item-content>
-          </template>
-          <v-list-item
-            exact
-            color="indigo darken-4"
-            v-for="(item, k) in reports"
-            :key="k"
-            :to="item.to"
-          >
-            <v-list-item-action>
-              <v-icon>{{ item.icon }}</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title v-text="item.title" />
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-group>
+            <template v-slot:activator>
+              <v-list-item-content>
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item-content>
+            </template>
+            <div v-for="(i, index) in item.menu" :key="index" style="padding-left: 22px">
+              <v-list-item
+                exact
+                color="primary-color"
+                :to="i.to"
+                v-if="$can(i.permissions)"
+              >
+                <v-list-item-action>
+                  <v-icon>{{ i.icon }}</v-icon>
+                </v-list-item-action>
+                <v-list-item-content>
+                  <v-list-item-title v-text="i.title" />
+                </v-list-item-content>
+              </v-list-item>
+            </div>
+          </v-list-group>
+        </div>
       </v-list>
     </v-navigation-drawer>
   </div>
@@ -166,89 +177,289 @@ export default {
       drawer: true,
       userProfile: {},
       name: "",
+      //Pagination
+      offset: 12,
+      pagination: {},
+      per_page: 20,
+      notifications: [],
+      selectedStatus: "unread",
       items: [
         {
-          icon: "mdi-apps",
+          icon: "mdi-home",
           title: "ໜ້າຫຼັກ",
           to: "/",
+          permissions: ["create_user"],
         },
-        // {
-        //   icon: "mdi-calendar-month-outline",
-        //   title: "ແພັກເກັດ",
-        //   to: "/package",
-        // },
-        // {
-        //   icon: "mdi-home-account",
-        //   title: "ທີ່ຢູ່",
-        //   to: "/village",
-        // },
+        {
+          icon: "mdi-apps",
+          title: "Activity Log",
+          to: "/activity-log",
+          permissions: ["create_user"],
+        },
       ],
+      group_menu: [
+        {
+          title: "ຈັດການຂໍ້ມູນ",
+          icon: "mdi-cog",
+          group_permissions: [
+            "get_role",
+            "get_user",
+            "get_customer",
+            "get_driver",
+            "create_address",
+          ],
+          menu: [
+            {
+              icon: "mdi-file-import",
+              title: "Import User",
+              to: "/import-file",
+              permissions: ["create_driver"],
+            },
+            {
+              icon: "mdi-account-key",
+              title: "Roles",
+              to: "/role",
+              permissions: ["get_role", "create_role"],
+            },
+            {
+              icon: "mdi-package",
+              title: "ຈັດການຂໍ້ມູນບໍລິການ",
+              to: "package",
+              permissions: ["get_package", "get_customer"],
+            },
+            {
+              icon: "mdi-home-account",
+              title: "ຈັດການທີ່ຢູ່",
+              to: "/village",
+              permissions: ["create_address", "get_driver"],
+            },
+            {
+              icon: "mdi-home-account",
+              title: "ຈັດການລາຍລະອຽດທີ່ຢູ່",
+              to: "/village-variation",
+              permissions: ["create_address", "get_driver"],
+            },
+            {
+              icon: "mdi-car-multiple",
+              title: "ຈັດການພາຫະນະ",
+              to: "/vehicle",
+              permissions: ["get_vehicle"],
+            },
+          ],
+        },
+        {
+          title: "ຂໍ້ມູນຜູ້ໃຊ້",
+          icon: "mdi-account-supervisor",
+          group_permissions: [
+            "get_role",
+            "get_user",
+            "get_customer",
+            "get_driver",
+            "create_address",
+          ],
+          menu: [
+            {
+              icon: "mdi-account",
+              title: "Users",
+              to: "/user",
+              permissions: ["get_user"],
+            },
+            {
+              icon: "mdi-dump-truck",
+              title: "Drivers",
+              to: "/driver",
+              permissions: ["get_driver"],
+            },
+            {
+              icon: "mdi-badge-account",
+              title: "ພະນັກງານ",
+              to: "/employee",
+              permissions: ["get_employee"],
+            },
+            {
+              icon: "mdi-account-group",
+              title: "Team",
+              to: "/team",
+              permissions: ["get_team"],
+            },
+          ],
+        },
 
-      routes: [
         {
-          icon: "mdi-sitemap",
-          title: "Plan",
-          to: "/plan",
+          title: "ຂໍ້ມູນລູກຄ້າ",
+          icon: "mdi-database",
+          group_permissions: [
+            "get_role",
+            "get_user",
+            "get_customer",
+            "get_driver",
+            "create_address",
+          ],
+          menu: [
+            {
+              icon: "mdi-account-group",
+              title: "ລູກຄ້າຄົວເຮືອນ",
+              to: "/customer",
+              permissions: ["get_customer"],
+            },
+            {
+              icon: "mdi-office-building",
+              title: "ລູກຄ້າຫົວໜ່ວຍທຸລະກິດ",
+              to: "/company",
+              permissions: ["get_customer"],
+            },
+            {
+              icon: "mdi-account-group",
+              title: "ລູກຄ້າສົງຄຳຮ້ອງຂໍເຂົ້າມາ",
+              to: "/company-request",
+              permissions: ["get_customer"],
+            },
+          ],
         },
         {
-          icon: "mdi-calendar-month",
-          title: "Plan Calendar",
-          to: "/calendar",
-        },
-      ],
-      
-      setting: [
-        {
-          icon: "mdi-account-key",
-          title: "Roles",
-          to: "/role",
-        },
-        {
-          icon: "mdi-account",
-          title: "Users",
-          to: "/user",
-        },
-        {
-          icon: "mdi-dump-truck",
-          title: "Drivers",
-          to: "/driver",
+          title: "ແຜນເສັ້ນທາງ",
+          icon: "mdi-map",
+          group_permissions: ["get_route_plan"],
+          menu: [
+            {
+              icon: "mdi-sitemap",
+              title: "ເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ",
+              to: "/plan",
+              permissions: ["get_route_plan"],
+            },
+            {
+              icon: "mdi-calendar-month",
+              title: "ຈັດແຜນເດີນລົດ",
+              to: "/calendar",
+              permissions: ["update_plan_calendar"],
+            },
+          ],
         },
         {
-          icon: "mdi-account-group",
-          title: "Customer",
-          to: "/customer",
+          title: "ເກັບຂີ້ເຫື້ຍອພິເສດ",
+          icon: "mdi-trash-can",
+          group_permissions: ["manage_event", "get_customer"],
+          menu: [
+            {
+              icon: "mdi-trash-can",
+              title: "ເກັບຂີ້ເຫື້ຍອພິເສດ",
+              to: "/collection-event",
+              permissions: ["manage_event", "get_customer"],
+            },
+          ],
         },
         {
-          icon: "mdi-home-account",
-          title: "ທີ່ຢູ່",
-          to: "/village",
+          title: "ບິນແບບເກົ່າ",
+          icon: "mdi-note-outline",
+          group_permissions: ["get_invoice"],
+          menu: [
+            {
+              icon: "mdi-note-outline",
+              title: "ຈັດການຂໍ້ມູນບິນ",
+              to: "/invoice",
+              permissions: ["get_invoice"],
+            },
+            {
+              icon: "mdi-close-circle-outline",
+              title: "ເຫດຜົນຍົກເລີກບິນ",
+              to: "/reject",
+              permissions: ["get_invoice"],
+            },
+          ],
         },
+
         {
-          icon: "mdi-home-account",
-          title: "ຈັດການລາຍລະອຽດທີ່ຢູ່",
-          to: "/village-variation",
+          title: "ຈັດການຂໍ້ມູນບິນ",
+          icon: "mdi-credit-card",
+          group_permissions: ["get_invoice"],
+          menu: [
+            {
+              icon: "mdi-note-outline",
+              title: "ບິນທັງໝົດ",
+              to: "/billing",
+              permissions: ["get_invoice"],
+            },
+            {
+              icon: "mdi-note-outline",
+              title: "ບິນເກັບຂີ້ເຫື້ຍອພິເສດ",
+              to: "/v2/event-invoice",
+              permissions: ["get_invoice"],
+            },
+            {
+              icon: "mdi-note-outline",
+              title: "ບິນ ແບບກຳນົດເອງ",
+              to: "/v2/custom-bill",
+              permissions: ["get_invoice"],
+            },
+            {
+              icon: "mdi-note-outline",
+              title: "ຈັດການບິນລ່ວງໜ້າ",
+              to: "/future-invoice",
+              permissions: ["get_invoice"],
+            },
+          ],
         },
-      ],
-      reports: [
+
         {
-          icon: "mdi-chart-bubble",
-          title: "ລາຍງານການເກັບຂີ້ເຫຍື້ອ",
-          to: "/report/trash",
-        },
-        {
-          icon: "mdi-cash",
-          title: "ລາຍງານຂໍ້ມູນບັນຊີ",
-          to: "/report/invoice",
-        },
-        {
-          icon: "mdi-account",
-          title: "ລາຍງານຂໍ້ມູນຄົນຂັບລົດ",
-          to: "/report/driver",
-        },
-        {
-          icon: "mdi-account-group",
-          title: "ລາຍງານຂໍ້ມູນລູກຄ້າ",
-          to: "/report/customer",
+          title: "ລາຍງານ",
+          icon: "mdi-finance",
+          group_permissions: ["report", "report"],
+          menu: [
+            {
+              icon: "mdi-chart-bubble",
+              title: "ເກັບຂີ້ເຫຍື້ອຕາມລົດ",
+              to: "/report/driver/collection",
+              permissions: ["report"],
+            },
+            {
+              icon: "mdi-chart-bubble",
+              title: "ເກັບຂີ້ເຫຍື້ອຕາມບ້ານ",
+              to: "/report/address/collection",
+              permissions: ["report"],
+            },
+            {
+              icon: "mdi-chart-bubble",
+              title: "ລາຍງານການເກັບຂີ້ເຫຍື້ອ",
+              to: "/report/trash",
+              permissions: ["report"],
+            },
+            {
+              icon: "mdi-chart-bubble",
+              title: "ລາຍງານເກັບຂີ້ເຫຍື້ອພິເສດ",
+              to: "/report/event/trash",
+              permissions: ["report"],
+            },
+            {
+              icon: "mdi-cash",
+              title: "ລາຍງານຂໍ້ມູນບັນຊີ",
+              to: "/report/invoice",
+              permissions: ["report"],
+            },
+            {
+              icon: "mdi-cash",
+              title: "ຂໍ້ມູນບັນຊີເກັບພິເສດ",
+              to: "/report/event/invoice",
+              permissions: ["report"],
+            },
+            {
+              icon: "mdi-chart-areaspline",
+              title: "ລາຍງານຂໍ້ມູນຄົນຂັບລົດ",
+              to: "/report/driver",
+              permissions: ["report"],
+            },
+            {
+              icon: "mdi-chart-bar",
+              title: "ລາຍງານຂໍ້ມູນລູກຄ້າ",
+              to: "/report/customer",
+              permissions: ["report"],
+            },
+            {
+              icon: "mdi-chart-bar",
+              title: "ລາຍງານຫົວໜ່ວຍທຸລະກິດ",
+              to: "/report/company",
+              permissions: ["report"],
+            },
+          ],
         },
       ],
     };
@@ -268,22 +479,89 @@ export default {
   created() {
     this.userProfile = JSON.parse(window.localStorage.getItem("user"));
     this.name = this.userProfile.name.slice(0, 1);
+    this.fetchData();
   },
   methods: {
     ...mapActions({
       Logout: "User/destroyToken",
     }),
     userLogout() {
-      this.Logout();
+      this.$store.dispatch('auth/destroyToken');
+    },
+    fetchData() {
+      this.$store.commit("Loading_State", true);
+      this.$axios
+        .get("notification", {
+          params: {
+            page: this.pagination.current_page,
+            per_page: this.per_page,
+            status: this.selectedStatus,
+          },
+        })
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.$store.commit("Loading_State", false);
+              this.notifications = res.data.data.data;
+              this.pagination = res.data.data.pagination;
+            }, 300);
+          }
+        })
+        .catch((error) => {
+          this.$store.commit("Loading_State", false);
+          if (error.response.status == 422) {
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
+          }
+        });
+    },
+    viewAllNoti() {
+      this.$router.push({
+        name: "NotificationTab",
+      });
+    },
+    viewPage(id) {
+      this.$router.push({
+        name: "NotificationView",
+        params: { id },
+      });
     },
   },
 };
 </script>
+
 <style lang="scss" scoped>
+@import "../../../public/scss/main.scss";
 .v-application--is-ltr
   .v-list-group--no-action
   > .v-list-group__items
   > .v-list-item {
   padding-left: 28px !important;
 }
+.nav {
+  border-bottom: 1px solid #eee;
+  background: #fff !important;
+}
+.theme--light.v-navigation-drawer {
+  border-right: 1px solid #eee !important;
+}
+.v-main__wrap.v-content__wrap {
+  background: #eee !important;
+}
+.v-main__wrap.v-content__wrap {
+  background: #eee !important;
+}
+/**
+.v-application--is-ltr .v-list-item__action:first-child, .v-application--is-ltr .v-list-item__icon:first-child {
+  margin-right: 22px !important;
+}
+.group-menu .v-application--is-ltr .v-list-item__icon:first-child {
+  margin-right: 22px !important;
+}
+88
+ */
+
 </style>

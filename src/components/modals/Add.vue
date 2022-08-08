@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="active" persistent max-width="800px" max-height="800px">
+  <v-dialog v-model="active" persistent max-width="1000px" max-height="800px">
     <slot v-bind="{ close }" />
   </v-dialog>
 </template>

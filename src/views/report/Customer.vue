@@ -28,11 +28,11 @@
               v-bind="attrs"
               v-on="on"
               dense
+              clearable
             ></v-text-field>
           </template>
           <v-date-picker
             v-model="start_date"
-            @input="fetchData()"
           ></v-date-picker>
         </v-menu>
       </v-col>
@@ -54,11 +54,11 @@
               v-bind="attrs"
               v-on="on"
               dense
+              clearable
             ></v-text-field>
           </template>
           <v-date-picker
             v-model="end_date"
-            @input="fetchData()"
           ></v-date-picker>
         </v-menu>
       </v-col>
@@ -71,6 +71,7 @@
           item-text="name"
           item-value="id"
           label="ເມືອງ"
+          clearable
         ></v-autocomplete>
       </v-col>
       <v-col>
@@ -83,6 +84,7 @@
           item-value="id"
           label="ບ້ານ"
           multiple
+          clearable
         ></v-autocomplete>
       </v-col>
       <v-col>
@@ -95,6 +97,20 @@
           item-value="name"
           label="ສະຖານະ"
           multiple
+          clearable
+        ></v-select>
+      </v-col>
+      <v-col>
+        <v-select
+            outlined
+            dense
+            :items="customerStatus"
+            v-model="selectedCustomerStatus"
+            item-text="name"
+            item-value="value"
+            label="ສະຖານະແຜນ"
+            multiple
+            clearable
         ></v-select>
       </v-col>
       <v-col>
@@ -103,7 +119,7 @@
           dense
           clearable
           prepend-inner-icon="mdi-magnify"
-          label="ຊື່ລູກຄ້າ"
+          label="Search"
           type="text"
           v-model="search"
           @keyup.enter="Search()"
@@ -113,12 +129,11 @@
     </v-row>
     <v-row class="my-n4">
       <v-col>
-        <p class="text">ລວມ {{ pagination.total }} ຄົນ</p>
+        <p class="text">ລວມຄົວເຮືອນ {{ pagination.total }}</p>
       </v-col>
     </v-row>
     <div>
       <v-card>
-        <v-card flat>
           <v-card-text>
             <v-data-table
               :headers="headers"
@@ -138,7 +153,7 @@
               </template>
 
               <template v-slot:item.status="{ item }">
-                <v-chip :color="statusColor(item.status)">{{
+                <v-chip label :color="statusColor(item.status)">{{
                   item.status
                 }}</v-chip>
               </template>
@@ -174,7 +189,6 @@
               ></Pagination>
             </template>
           </v-card-text>
-        </v-card>
       </v-card>
     </div>
   </v-container>
@@ -182,8 +196,12 @@
 
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import queryOption from "@/Helpers/queryOption";
 export default {
   name: "Customer",
+  title() {
+    return `Vientiane Waste Co-Dev|Report Customer`;
+  },
   data() {
     return {
       start_date: "",
@@ -211,12 +229,25 @@ export default {
           name: "active",
         },
         {
-          id: 1,
+          id: 2,
           name: "inactive",
         },
         {
-          id: 1,
+          id: 3,
           name: "trial",
+        },
+      ],
+      selectedCustomerStatus: [],
+      customerStatus: [
+        {
+          id: 1,
+          value: "calendar",
+          name: "ຍັງບໍມີຕາຕະລາງເກັບ",
+        },
+        {
+          id: 2,
+          value: "route_plan",
+          name: "ຍັງບໍມີແຜນ",
         },
       ],
 
@@ -224,9 +255,9 @@ export default {
         { text: "ຊື່", value: "name" },
         { text: "ນາມສະກຸນ", value: "surname" },
         { text: "Phone", value: "user.phone", sortable: false },
-        { text: "ວັນທີ", value: "district.name", sortable: false },
-        { text: "ແພັກເກດ", value: "package.name" },
-        { text: "ວັນທີສະໝັກແພັກເກດ", value: "start_month", sortable: false },
+        { text: "ທີ່ຢູ່", value: "district.name", sortable: false },
+        { text: "ປະເພດບໍລິການ", value: "package.name" },
+        { text: "ວັນທີສະໝັກ", value: "created_at", sortable: false },
         { text: "ສະຖານະ", value: "status", sortable: false },
         { text: "", value: "actions", sortable: false },
       ],
@@ -247,15 +278,17 @@ export default {
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("customer", {
-          params: {
-            page: this.pagination.current_page,
-            per_page: this.per_page,
-            // filter: this.search,
-            date_from: this.start_date,
-            date_end: this.end_date,
-            statuses: this.selectedStatus,
-            villages: this.selectedVillage,
-          },
+          params: queryOption([
+            {page: this.pagination.current_page},
+            {per_page: this.per_page},
+            {filter: this.search},
+            {date_from: this.start_date},
+            {date_end: this.end_date},
+            {villages: this.selectedVillage},
+            {statuses: this.selectedStatus},
+            {without: this.selectedCustomerStatus},
+            {district_id: this.selectedDistrict}]),
+
         })
         .then((res) => {
           if (res.data.code == 200) {
@@ -266,16 +299,15 @@ export default {
               this.start_menu = false;
               this.end_menu = false;
             }, 300);
-            this.fetchAddress();
+            // this.fetchAddress();
           }
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
           this.start_menu = false;
           this.end_menu = false;
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
+            let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
@@ -314,7 +346,7 @@ export default {
 
     viewPage(id) {
       this.$router.push({
-        name: "ViewCustomer",
+        name: "ViewClient",
         params: { id },
       });
     },
@@ -322,68 +354,98 @@ export default {
       GetOldValueOnInput(this);
     },
     statusColor(value) {
-      if (value == "active") return "success";
+      if (value == "active") return "primary";
       else if (value == "inactive") return "error";
       else return "info";
     },
 
     exportData() {
       this.loading = true;
-      console.log(this.selectedStatus);
-      console.log(this.selectedVillage);
       this.$axios
         .post(
           "export-customer/",
           {
-            // filter: this.search,
-            // date_from: this.start_date,
-            // date_end: this.end_date,
-            // statuses: this.selectedStatus,
-            // villages: this.selectedVillage,
+            params: queryOption([
+              {date_from: this.start_date},
+              {date_end: this.end_date},
+              {villages: this.selectedVillage},
+              {statuses: this.selectedStatus},
+              {district_id: this.selectedDistrict}]),
           },
-          { responseType: "blob" }
+          // { responseType: "blob" }
         )
         .then((res) => {
           if (res.status == 200) {
-            setTimeout(() => {
-              this.loading = false;
-              const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
-              const fileLink = document.createElement("a");
-              fileLink.href = fileUrl;
-              fileLink.setAttribute("download", "customer" + ".xlsx");
-              document.body.appendChild(fileLink);
-              fileLink.click();
-              document.body.removeChild(fileLink);
-            }, 300);
+            if(res.data.data.download_link != null){
+              window.open(res.data.data.download_link)
+            }
+            this.loading = false;
+            // setTimeout(() => {
+            //   this.loading = false;
+            //   const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
+            //   console.log(fileUrl)
+            //   const fileLink = document.createElement("a");
+            //   fileLink.href = fileUrl;
+            //   fileLink.setAttribute("download", "customer" + ".xlsx");
+            //   document.body.appendChild(fileLink);
+            //   fileLink.click();
+            //   document.body.removeChild(fileLink);
+            // }, 300);
           }
         })
         .catch(() => {
-          this.fetchData();
           this.$store.commit("Toast_State", this.toast_error);
-          this.$store.commit("modalDelete_State", false);
           this.loading = false;
         });
     },
   },
   watch: {
+    start_date: function () {
+      this.pagination.current_page ='';
+      if(this.end_date !== '' && this.start_date !== ''){
+        if(this.start_date > this.end_date){
+          this.start_date = '';
+        }
+      }
+      this.fetchData();
+    },
+    end_date: function () {
+      this.pagination.current_page ='';
+      if(this.end_date !== '' && this.start_date !== ''){
+        if(this.end_date < this.start_date){
+          this.end_date = '';
+        }
+      }
+      this.fetchData();
+    },
     search: function (value) {
+      this.pagination.current_page ='';
       if (value == "") {
         this.fetchData();
       }
     },
 
     selectedVillage: function () {
+      this.pagination.current_page ='';
       this.fetchData();
     },
     selectedDistrict: function () {
+      this.pagination.current_page ='';
       this.fetchVillage();
-    },
-    selectedStatus: function () {
       this.fetchData();
     },
+    selectedStatus: function () {
+      this.pagination.current_page ='';
+      this.fetchData();
+    },
+    selectedCustomerStatus: function (){
+      this.pagination.current_page ='';
+      this.fetchData();
+    }
   },
   created() {
     this.fetchData();
+    this.fetchAddress();
   },
 };
 </script>

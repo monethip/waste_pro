@@ -4,12 +4,24 @@
       <v-btn text class="text-primary" @click="backPrevios()">
         <v-icon>mdi-chevron-left</v-icon></v-btn
       >
-      ລາຍລະອຽດລູກຄ້າ</v-breadcrumbs
+      ລາຍລະອຽດ</v-breadcrumbs
     >
     <v-card>
+      <!--
       <div v-for="(item, index) in data.media" :key="index">
-        <v-img :src="item.thumb" alt="Image" height="500px" dark> </v-img>
+        <v-img :src="item.url" alt="Image" height="500px" dark> </v-img>
       </div>
+      -->
+      <v-carousel v-if="data.media && data.media.length">
+        <v-carousel-item
+          v-for="(item, index) in data.media"
+          :key="index"
+          :src="item.url"
+          @click="showImage(item.url)"
+          reverse-transition="fade-transition"
+          transition="fade-transition"
+        ></v-carousel-item>
+      </v-carousel>
 
       <v-card-text>
         <v-container>
@@ -102,20 +114,29 @@
             </v-col>
           </v-row>
         </v-container>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="blue darken-1"
-            text
-            :loading="loading"
-            :disabled="loading"
-            @click="editPage(data.id)"
-          >
-            Update
-          </v-btn>
-        </v-card-actions>
+<!--        <v-card-actions>-->
+<!--          <v-spacer></v-spacer>-->
+<!--          <v-btn-->
+<!--            color="blue darken-1"-->
+<!--            text-->
+<!--            :loading="loading"-->
+<!--            :disabled="loading"-->
+<!--            @click="editPage(data.id)"-->
+<!--          >-->
+<!--            Update-->
+<!--          </v-btn>-->
+<!--        </v-card-actions>-->
+<!--        ->-->
       </v-card-text>
     </v-card>
+
+    <ModalView>
+      <template>
+        <v-card>
+          <v-img :src="imageUrl" alt="Image" width="auto" height="auto" dark> </v-img>
+        </v-card>
+      </template>
+    </ModalView>
   </v-container>
 </template>
 
@@ -162,9 +183,16 @@ export default {
           b: "px",
         },
       },
+      imageUrl:""
     };
   },
   methods: {
+    showImage(url){
+     if(url != null){
+       this.imageUrl = url;
+       this.$store.commit("modalView_State", true);
+     }
+    },
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
@@ -181,7 +209,7 @@ export default {
           this.$store.commit("Loading_State", false);
           this.fetchData();
           if (error.response.status == 422) {
-            var obj = error.response.data.errors;
+            let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
