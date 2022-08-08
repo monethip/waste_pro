@@ -198,32 +198,33 @@
 <!--                    ແກ້ໄຂບິນ-->
 <!--                  </v-list-item-title>-->
 <!--                </v-list-item>-->
-                <v-list-item link @click="paymentPage(item)">
-                  <v-list-item-title>
-                    <v-icon small class="mr-2">mdi-cash</v-icon>
-                    ຊຳລະ
-                  </v-list-item-title>
-                </v-list-item>
 
-                <div
-                    v-if="
-                          item.collect_status == 'approved' &&
-                          item.payment_status == 'to_confirm_payment'
-                        "
-                >
-                  <v-list-item link @click="paymentConfirmModal(item)">
-                    <v-list-item-title>
-                      <v-icon small> mdi-cash-remove</v-icon>
-                      ປະຕິເສດການຊຳລະ
-                    </v-list-item-title>
-                  </v-list-item>
-                </div>
-                <v-list-item link @click="paymentConfirmModal(item)">
-                  <v-list-item-title>
-                    <v-icon small class="mr-2">mdi-card</v-icon>
-                    ຢືນຢັນການຊຳລະ
-                  </v-list-item-title>
-                </v-list-item>
+<!--                <v-list-item link @click="paymentPage(item)">-->
+<!--                  <v-list-item-title>-->
+<!--                    <v-icon small class="mr-2">mdi-cash</v-icon>-->
+<!--                    ຊຳລະ-->
+<!--                  </v-list-item-title>-->
+<!--                </v-list-item>-->
+
+<!--                <div-->
+<!--                    v-if="-->
+<!--                          item.collect_status == 'approved' &&-->
+<!--                          item.payment_status == 'to_confirm_payment'-->
+<!--                        "-->
+<!--                >-->
+<!--                  <v-list-item link @click="paymentConfirmModal(item)">-->
+<!--                    <v-list-item-title>-->
+<!--                      <v-icon small> mdi-cash-remove</v-icon>-->
+<!--                      ປະຕິເສດການຊຳລະ-->
+<!--                    </v-list-item-title>-->
+<!--                  </v-list-item>-->
+<!--                </div>-->
+<!--                <v-list-item link @click="paymentConfirmModal(item)">-->
+<!--                  <v-list-item-title>-->
+<!--                    <v-icon small class="mr-2">mdi-card</v-icon>-->
+<!--                    ຢືນຢັນການຊຳລະ-->
+<!--                  </v-list-item-title>-->
+<!--                </v-list-item>-->
 
               </v-list>
             </v-menu>

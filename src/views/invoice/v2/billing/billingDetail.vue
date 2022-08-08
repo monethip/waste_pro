@@ -64,17 +64,21 @@
             <v-col>
               <h3>ຂໍ້ມູນລູກຄ້າ</h3>
               <div v-if="invoice.user">
-                <h3 v-if="invoice.user.customer.customer_type = 'company'">
-                  ລະຫັດລູກຄ້າ:  {{ invoice.user.customer.customer_id }}
-                </h3>
+                <div v-if="invoice.user.customer">
+                  <h3 v-if="invoice.user.customer.customer_type = 'company'">
+                    ລະຫັດລູກຄ້າ:  {{ invoice.user.customer.customer_id }}
+                  </h3>
+                </div>
               </div>
               <div v-if="invoice.user">
-                <h3 v-if="invoice.user.customer.customer_type = 'company'">
-                  ຊື່:  {{ invoice.user.customer.company_name }}   {{ invoice.user.name }}
-                </h3>
-                <h3 v-else-if="invoice.user.customer.customer_type = 'home'">
-                  ຊື່: {{ invoice.user.customer.name }} {{ invoice.user.customer.surname }}
-                </h3>
+                <div v-if="invoice.user.customer">
+                  <h3 v-if="invoice.user.customer.customer_type = 'company'">
+                    ຊື່:  {{ invoice.user.customer.company_name }}   {{ invoice.user.name }}
+                  </h3>
+                  <h3 v-else-if="invoice.user.customer.customer_type = 'home'">
+                    ຊື່: {{ invoice.user.customer.name }} {{ invoice.user.customer.surname }}
+                  </h3>
+                  </div>
               </div>
               <h3 v-if="invoice.user">
                 ເບີໂທ: {{ invoice.user.phone }}
@@ -100,9 +104,6 @@
                   ລາຍລະອຽດ
                 </th>
                 <th class="text-left">
-                  Content
-                </th>
-                <th class="text-left">
                   ຈຳນວນ
                 </th>
                 <th class="text-left">
@@ -111,6 +112,9 @@
                 <th class="text-left">
                   ລວມ
                 </th>
+                <th class="text-left">
+                  Active
+                </th>
                 <th class="text-left" v-if="invoice.status === 'created'">
                 </th>
               </tr>
@@ -118,12 +122,19 @@
               <tbody>
               <tr v-for="(data,index) in invoice.billing_details" :key="index">
                 <td>{{index +1}}</td>
-                <td>{{ data.item }}</td>
-                <td>{{ data.content }}</td>
                 <td>{{ data.item_la }}</td>
+                <td>{{ data.content }}</td>
                 <td>{{ Intl.NumberFormat().format(data.quantity) }}</td>
                 <td>{{ Intl.NumberFormat().format(data.price )}}</td>
                 <td>{{ Intl.NumberFormat().format(data.total) }}</td>
+                <td>
+                  <div v-if="data.is_active ===1">
+                    <v-chip color="success" label>True</v-chip>
+                  </div>
+                  <div v-if="data.is_active ===0">
+                    <v-chip label>False</v-chip>
+                  </div>
+                </td>
                 <td v-if="invoice.status === 'created'">
                   <v-icon
                       color="success"
@@ -236,6 +247,40 @@
                     </p>
                   </v-col>
                 </v-row>
+                <v-row v-if="formData.is_default === 1">
+                  <v-col cols>
+                    <v-text-field
+                        v-model="formData.item_la"
+                        label="Item (La)"
+                        outlined
+                        dense
+                    >
+                    </v-text-field>
+                    <p class="errors">
+                      {{ server_errors.item_la }}
+                    </p>
+                  </v-col>
+                  <v-col cols>
+                    <v-text-field
+                        v-model="formData.content"
+                        label="Content"
+                        outlined
+                        dense
+                    >
+                    </v-text-field>
+                    <p class="errors">
+                      {{ server_errors.content }}
+                    </p>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols >
+                    <v-switch
+                        v-model="is_active"
+                        :label="`Active : ${is_active}`"
+                    ></v-switch>
+                  </v-col>
+                </v-row>
               </v-form>
             </v-container>
             <v-card-actions>
@@ -273,6 +318,7 @@ export default {
       customerId: "",
       invoice: [],
       invoiceStatusColor: "",
+      is_active: null,
       status: [
         {
           id: 1,
@@ -357,6 +403,11 @@ export default {
     },
     EditInvoice(item) {
       this.formData = item;
+      if(this.formData.is_active ==1){
+        this.is_active = true;
+      } else {
+        this.is_active = false;
+      }
       this.$store.commit("modalAdd_State", true);
 
     },
@@ -367,6 +418,9 @@ export default {
             .put("billing-detail/"+ this.formData.id,{
               qty: this.formData.quantity,
               price:this.formData.price,
+              content:this.formData.content,
+              item_la:this.formData.item_la,
+              is_active:this.formData.is_active,
                 }
             )
             .then((res) => {
@@ -394,7 +448,16 @@ export default {
       }
     },
   },
-  watch: {},
+  watch: {
+    is_active: function (value){
+      if(value === true){
+        this.formData.is_active = 1;
+      } else {
+        this.formData.is_active = 0;
+      }
+    }
+
+  },
   created() {
     if(this.$route.params.id){
       this.fetchData();

@@ -114,52 +114,6 @@
       </v-card-title>
       <v-card-text>
 
-<!--                <v-row>-->
-<!--                  <v-col class="sum-total">-->
-<!--                    ຄຳຂໍຖືກອານຸມັດ: {{summaryData.collection_summary_report.approved_count}}-->
-<!--                  </v-col>-->
-<!--                  <v-col class="sum-total">-->
-<!--                    ຄຳຂໍຖືກຍົກເລີກ: {{summaryData.collection_summary_report.canceled_count}}-->
-<!--                  </v-col>-->
-<!--                  <v-col class="sum-total">-->
-<!--                    ລົງເກັບແລະລູກຄ້າຢືຢັນແລ້ວ: {{summaryData.collection_summary_report.collect_confirm_count}}-->
-<!--                  </v-col>-->
-<!--                  <v-col class="sum-total">-->
-<!--                    ລູກຄ້າປະຕິເສດການລົງເກັບ: {{summaryData.collection_summary_report.collect_reject_count}}-->
-<!--                  </v-col>-->
-<!--                  <v-col class="sum-total">-->
-<!--                    ລົງເກັບແລ້ວ(ລໍຖ້າຢືນຢັນ): {{summaryData.collection_summary_report.collected_count}}-->
-<!--                  </v-col>-->
-<!--                  <v-col class="sum-total">-->
-<!--                    ຕ້ອງລົງເກັບທັງໝົດ: {{summaryData.collection_summary_report.number_of_times_to_collect}}-->
-<!--                  </v-col>-->
-<!--                  <v-col class="sum-total">-->
-<!--                    ຄຳຂໍທີ່ປະຕິເສດແລ້ວ: {{summaryData.collection_summary_report.rejected_count}}-->
-<!--                  </v-col>-->
-<!--                  <v-col class="sum-total">-->
-<!--                    ຄຳຂໍລໍຖ້າຢືນຢັນ: {{summaryData.collection_summary_report.requested_count}}-->
-<!--                  </v-col>-->
-<!--                </v-row>-->
-
-<!--        <v-row>-->
-<!--          <v-col class="sum-total">-->
-<!--            ການຊຳລະຖືກອະນຸມັດ: {{summaryData.payment_summary_report.approved_total}}-->
-<!--          </v-col>-->
-<!--          <v-col class="sum-total">-->
-<!--            ຍອດທີ່ຍັງບໍ່ຈ່າຍ:  {{ Intl.NumberFormat().format(summaryData.payment_summary_report.pending_total) }}-->
-<!--          </v-col>-->
-<!--          <v-col class="sum-total">-->
-<!--            ຍອດທີ່ປະຕິເສດ: {{Intl.NumberFormat().format(summaryData.payment_summary_report.rejected_total)}}-->
-<!--          </v-col>-->
-<!--          <v-col class="sum-total">-->
-<!--            ຍອດທີ່ຈ່າຍແລ້ວ: {{Intl.NumberFormat().format(summaryData.payment_summary_report.success_total)}}-->
-<!--          </v-col>-->
-<!--          <v-col class="sum-total">-->
-<!--            ຍອດທີ່ຈ່າຍແລ້ວ(ລໍຖ້າການຢືນຢັນ): {{Intl.NumberFormat().format(summaryData.payment_summary_report.to_confirm_payment_total)}}-->
-<!--          </v-col>-->
-
-<!--        </v-row>-->
-
         <v-data-table
             :headers="headers"
             :items="invoices"
@@ -201,12 +155,12 @@
                     ລາຍລະອຽດ
                   </v-list-item-title>
                 </v-list-item>
-                <v-list-item link>
-                  <v-list-item-title @click="CancelBill(item)">
-                    <v-icon small class="mr-2"> mdi-pencil </v-icon>
-                    ຍົກເລີກ
-                  </v-list-item-title>
-                </v-list-item>
+<!--                <v-list-item link>-->
+<!--                  <v-list-item-title @click="CancelBill(item)">-->
+<!--                    <v-icon small class="mr-2"> mdi-pencil </v-icon>-->
+<!--                    ຍົກເລີກ-->
+<!--                  </v-list-item-title>-->
+<!--                </v-list-item>-->
                 <div
                     v-if=" item.payment_method !== null
                         "
@@ -242,140 +196,6 @@
         </template>
       </v-card-text>
     </v-card>
-
-    <!-- Modal Add-->
-    <ModalAdd>
-      <template @close="close">
-        <v-card class="py-8 px-14">
-          <v-card-title>
-            <p>ຊຳລະຄ່າຂີ້ເຫື້ຍອ {{ payment.content }}</p>
-          </v-card-title>
-          <v-card-text>
-            <v-container>
-              <v-form ref="form" lazy-validation>
-                <h3 class="my-4">ເລືອກປະເພດການຊຳລະ</h3>
-                <v-row>
-                  <v-col cols="12">
-                    <v-chip-group
-                        v-model="paymentType"
-                        column
-                        :rules="paymentTypeRule"
-                        required
-                    >
-                      <v-chip
-                          large
-                          class="mr-8"
-                          color="info"
-                          label
-                          filter
-                          outlined
-                      >
-                        ເງິນສົດ
-                        <v-icon left class="ml-1"> mdi-currency-usd</v-icon>
-                      </v-chip>
-                      <v-chip large color="error" label filter outlined>
-                        BCEL
-                        <v-icon class="ml-1" left>
-                          mdi-credit-card
-                        </v-icon
-                        >
-                      </v-chip
-                      >
-                    </v-chip-group>
-                    <p class="errors">
-                      {{ server_errors.payment_method }}
-                    </p>
-                  </v-col>
-                </v-row>
-                <div v-if="paymentType == 1">
-                  <h3 class="my-4">ຮູບສຳເລັດການໂອນ</h3>
-                  <v-row>
-                    <v-col>
-                      <label class="file-label">
-                        <input
-                            @change="onFileChange"
-                            class="file-input input-file-image"
-                            type="file"
-                            name="image"
-                            accept="image/*"
-                            ref="image"
-                        />
-                        <span class="file-cta">
-                          <span class="file-icon">
-                            <v-icon
-                                style="
-                                font-size: 60px !important;
-                                color: #719aff;
-                                cursor: pointer;
-                              "
-                                class="fas fa-cloud-upload"
-                            >mdi-file-image</v-icon
-                            >
-                          </span>
-                        </span>
-                      </label>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col v-if="imageUrl">
-                      <v-avatar class="avatar rounded" size="194px">
-                        <img :src="imageUrl" alt=""/>
-                      </v-avatar>
-                    </v-col>
-                    <p class="errors">
-                      {{ server_errors.image }}
-                    </p>
-                  </v-row>
-                  <!--                  <v-row>-->
-                  <!--                    <v-col cols="12">-->
-                  <!--                      <v-text-field-->
-                  <!--                        v-model="bcel_reference_number"-->
-                  <!--                        label="ເລກລະຫັດການຊຳລະ"-->
-                  <!--                        outlined-->
-                  <!--                        dense-->
-                  <!--                        type="number"-->
-                  <!--                        class="input-number"-->
-                  <!--                        :rules="[-->
-                  <!--                          () =>-->
-                  <!--                            !!bcel_reference_number ||-->
-                  <!--                            'BCEL Reference Number field is required',-->
-                  <!--                          () =>-->
-                  <!--                            (!!bcel_reference_number &&-->
-                  <!--                              bcel_reference_number.length == 15) ||-->
-                  <!--                            'BCEL Reference Number must be than 15 number',-->
-                  <!--                        ]"-->
-                  <!--                        counter="15"-->
-                  <!--                      >-->
-                  <!--                      </v-text-field>-->
-                  <!--                    </v-col>-->
-                  <!--                    <p class="errors">-->
-                  <!--                      {{ server_errors.bcel_reference_number }}-->
-                  <!--                    </p>-->
-                  <!--                  </v-row>-->
-
-                </div>
-              </v-form>
-            </v-container>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="error" class="elevation-0 btn mr-4 px-12" medium @click="closeAddModal()">
-                ປິດ
-              </v-btn>
-              <v-btn
-                  class="elevation-0 btn btn-primary px-12"
-                  medium
-                  :loading="loading"
-                  :disabled="loading"
-                  @click="Payment()"
-              >
-                ຊຳລະ
-              </v-btn>
-            </v-card-actions>
-          </v-card-text>
-        </v-card>
-      </template>
-    </ModalAdd>
-
     <!-- Confirm Payment-->
     <v-dialog v-model="paymentDialog" max-width="620px" persistent>
       <template>
@@ -454,34 +274,15 @@
                       </p>
                     </v-col>
                   </v-row>
-                  <!-- <v-row>
-                    <v-card-actions>
-                      <v-btn
-                        color="info"
-                        class="white--text px-12 c-btn"
-                        large
-                        :loading="loading"
-                        :disabled="loading"
-                        @click="confirmReject()"
-                      >
-                        ຢືນຢັນ
-                      </v-btn>
-                    </v-card-actions>
-                  </v-row> -->
                 </div>
               </v-form>
               <v-card-actions class="mt-4">
                 <v-spacer></v-spacer>
-                <v-btn
-                    color="blue darken-1"
-                    text
-                    @click="paymentDialog = false"
-                >
-                  Close
+                <v-btn color="error" class="elevation-0 btn mr-4 px-12" medium @click="paymentDialog = false">
+                  ປິດ
                 </v-btn>
                 <v-btn
-                    color="info"
-                    class="white--text px-12 c-btn elevation-0"
+                    class="elevation-0 btn btn-primary px-12"
                     medium
                     :loading="loading"
                     :disabled="loading"
@@ -495,27 +296,6 @@
         </v-card>
       </template>
     </v-dialog>
-
-    <!--Delete Modal-->
-    <!--
-    <ModalDelete>
-      <template>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            :loading="loading"
-            :disabled="loading"
-            @click="deleteItemConfirm"
-            >OK</v-btn
-          >
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </template>
-    </ModalDelete>
-    -->
   </v-container>
 </template>
 
@@ -785,21 +565,12 @@ export default {
         name: "CreateCollectionEventInvoice",
       });
     },
-    editPage(id) {
-      this.$router.push({
-        name: "EditCollectionEventInvoice",
-        params: {id},
-      });
-    },
+
     ViewInvoice(id) {
       let route = this.$router.resolve({name: 'billing-detail',params: {id}});
       window.open(route.href, '_blank');
     },
     paymentPage(item) {
-      this.payment = item;
-      this.$store.commit("modalAdd_State", true);
-    },
-    CancelBill(item) {
       this.payment = item;
       this.$store.commit("modalAdd_State", true);
     },
