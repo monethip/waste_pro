@@ -184,13 +184,13 @@
               </template>
               <v-list>
                 <v-list-item link>
-                  <v-list-item-title @click="ViewInvoice(item.id)">
+                  <v-list-item-title @click="ViewInvoice(item.id)" target="_blank">
                     <v-icon small class="mr-2"> mdi-eye </v-icon>
                     ລາຍລະອຽດ
                   </v-list-item-title>
                 </v-list-item>
                 <v-list-item link>
-                  <v-list-item-title @click="CancelBill(item)">
+                  <v-list-item-title @click="DownloadBill(item)">
                     <v-icon small class="mr-2"> mdi-download </v-icon>
                     Download
                   </v-list-item-title>
@@ -486,11 +486,14 @@ export default {
         params: {id},
       });
     },
+    DownloadBill(item){
+      window.open(item.download_pdf_link);
+    },
     ViewInvoice(id) {
       this.$router.push({
         name: "billing-detail",
         params: {id},
-      });
+      })
     },
     paymentPage(item) {
       this.payment = item;
