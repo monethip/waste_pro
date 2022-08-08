@@ -246,7 +246,7 @@ const routes = [
         path: '/create/company',
         name: 'CreateCompany',
         component: () => import('@/views/company/CreateCompany.vue'),
-        props:true,
+        props: true,
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
@@ -1063,7 +1063,7 @@ const routes = [
         path: '/v2/create/custom-bill',
         name: 'create-custom-bill',
         component: () => import('@/views/invoice/v2/custom/CreateCustomBill.vue'),
-        props:true,
+        props: true,
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
@@ -1373,6 +1373,24 @@ const routes = [
         }
     },
 
+    //Report by address
+    {
+        path: '/report/billing/type',
+        name: 'Report-Billing-Type',
+        component: () => import('@/views/report/ReportBillingType.vue'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'ລາຍງານເກັບຂີ້ເຫຍື້ອຕາມບ້ານ',
+                    disabled: true,
+                    href: '/report/address/collection'
+                },
+            ]
+        }
+    },
+
     {
         path: '/report/customer',
         name: 'Report-Customer',
@@ -1508,7 +1526,7 @@ function nextCheck(context, middleware, index) {
         context.next(...parameters);
         const nextMidd = nextCheck(context, middleware, index + 1);
 
-        nextMiddleware({...context, nextMidd});
+        nextMiddleware({ ...context, nextMidd });
     }
 }
 
@@ -1522,7 +1540,7 @@ router.beforeEach((to, from, next) => {
             to
         }
         const nextMiddleware = nextCheck(ctx, middleware, 1);
-        return middleware[0]({...ctx, nextMiddleware});
+        return middleware[0]({ ...ctx, nextMiddleware });
 
     }
     return next();
