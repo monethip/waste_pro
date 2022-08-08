@@ -725,10 +725,8 @@ export default {
       });
     },
     viewPage(id) {
-      this.$router.push({
-        name: "EventInvoiceDetail",
-        params: {id},
-      });
+      let route = this.$router.resolve({name: 'EventInvoiceDetail',params: {id}});
+      window.open(route.href, '_blank');
     },
     paymentPage(item) {
       this.payment = item;

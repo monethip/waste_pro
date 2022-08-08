@@ -792,10 +792,8 @@ export default {
       });
     },
     ViewInvoice(id) {
-      this.$router.push({
-        name: "billing-detail",
-        params: {id},
-      });
+      let route = this.$router.resolve({name: 'billing-detail',params: {id}});
+      window.open(route.href, '_blank');
     },
     paymentPage(item) {
       this.payment = item;

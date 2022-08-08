@@ -214,10 +214,8 @@ export default {
       });
     },
     ViewInvoice(id) {
-      this.$router.push({
-        name: "invoice-detail",
-        params: {id},
-      });
+      let route = this.$router.resolve({name: 'invoice-detail',params: {id}});
+      window.open(route.href, '_blank');
     },
   },
   watch: {
