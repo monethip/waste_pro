@@ -624,7 +624,6 @@ export default {
                     this.server_errors[key] = data[0];
                   }
                 }
-                this.fetchData();
               });
         }
       } else {

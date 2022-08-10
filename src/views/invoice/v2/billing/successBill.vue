@@ -156,6 +156,9 @@
             hide-default-footer
             fixed-header
         >
+          <template v-slot:item.content="{ item }">
+              <a @click="ViewInvoice(item.id)">{{item.content}}</a>
+          </template>
           <template v-slot:item.user="{ item }">
               <div>{{item.user.name}} {{item.user.surname}}</div>
           </template>
@@ -169,33 +172,35 @@
             <div>{{collectStatus(item.status)}}</div>
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-menu offset-y>
-              <template v-slot:activator="{ on, attrs }">
-                <v-icon
-                    color="primary"
-                    dark
-                    v-bind="attrs"
-                    v-on="on"
-                    medium
-                    class="mr-2"
-                >mdi-dots-vertical</v-icon
-                >
-              </template>
-              <v-list>
-                <v-list-item link @click="ViewInvoice(item.id)">
-                  <v-list-item-title target="_blank">
-                    <v-icon small class="mr-2"> mdi-eye </v-icon>
-                    ລາຍລະອຽດ
-                  </v-list-item-title>
-                </v-list-item>
-                <v-list-item link @click="DownloadBill(item)">
-                  <v-list-item-title>
-                    <v-icon small class="mr-2"> mdi-download </v-icon>
-                    Download
-                  </v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
+            <v-icon small @click="ViewInvoice(item.id)" class="mr-2" color="success"> mdi-eye </v-icon>
+            <v-icon small  @click="DownloadBill(item)" class="mr-0" color="primary"> mdi-download </v-icon>
+<!--            <v-menu offset-y>-->
+<!--              <template v-slot:activator="{ on, attrs }">-->
+<!--                <v-icon-->
+<!--                    color="primary"-->
+<!--                    dark-->
+<!--                    v-bind="attrs"-->
+<!--                    v-on="on"-->
+<!--                    medium-->
+<!--                    class="mr-2"-->
+<!--                >mdi-dots-vertical</v-icon-->
+<!--                >-->
+<!--              </template>-->
+<!--              <v-list>-->
+<!--                <v-list-item link @click="ViewInvoice(item.id)">-->
+<!--                  <v-list-item-title target="_blank">-->
+<!--                    <v-icon small class="mr-2"> mdi-eye </v-icon>-->
+<!--                    ລາຍລະອຽດ-->
+<!--                  </v-list-item-title>-->
+<!--                </v-list-item>-->
+<!--                <v-list-item link @click="DownloadBill(item)">-->
+<!--                  <v-list-item-title>-->
+<!--                    <v-icon small class="mr-2"> mdi-download </v-icon>-->
+<!--                    Download-->
+<!--                  </v-list-item-title>-->
+<!--                </v-list-item>-->
+<!--              </v-list>-->
+<!--            </v-menu>-->
           </template>
         </v-data-table>
         <br/>
@@ -308,7 +313,7 @@ export default {
           value: "created_at",
           width:"150px"
         },
-        {text: "", value: "actions", sortable: false},
+        {text: "", value: "actions",width:"120px", sortable: false},
       ],
     };
   },

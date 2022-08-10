@@ -1,9 +1,11 @@
 <template>
   <v-container>
-    <v-row class="mb-n6">
+    <v-row>
       <v-col>
         <p>ຈັດການຂໍ້ມູນບິນແບບກຳນົດເອງ</p>
       </v-col>
+    </v-row>
+    <v-row class="mb-n6">
       <!--
       <v-col>
         <v-menu
@@ -60,6 +62,10 @@
         </v-text-field>
       </v-col>
       <v-col class="align-end text-end">
+        <v-btn @click="openAddModal()" class="btn-primary mr-4">
+          <v-icon class="mr-2">mdi-upload</v-icon>
+          import ບິນ
+        </v-btn>
         <v-btn @click="choseUser()" class="btn-primary">
           <v-icon class="mr-2">mdi-plus</v-icon>
           ສ້າງບິນ
@@ -113,6 +119,55 @@
         </v-card-text>
       </v-card>
     </div>
+    <ModalAdd>
+      <template @close="close">
+        <v-card class="py-8 px-14">
+          <v-card-title>
+            <p>Import ບິນຂີ້ເຫື້ຍອ</p>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-form ref="form" lazy-validation>
+                <v-row>
+                  <v-col cols="12">
+                    <v-file-input
+                        show-size
+                        label="File "
+                        accept="xlsx,xls"
+                        v-model="file"
+                        outlined
+                        dense
+                    ></v-file-input>
+                    <p class="errors">
+                      {{ server_errors.file }}
+                    </p>
+                    <p class="errors" v-for="(error,index) in errors" :key="index">
+                      {{ error }}
+                    </p>
+                  </v-col>
+                </v-row>
+
+              </v-form>
+            </v-container>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="error" class="elevation-0 btn mr-4 px-12" medium @click="closeAddModal()">
+                ປິດ
+              </v-btn>
+              <v-btn
+                  class="elevation-0 btn btn-primary px-12"
+                  medium
+                  :loading="loading"
+                  :disabled="loading"
+                  @click="uploadFile"
+              >
+                Import
+              </v-btn>
+            </v-card-actions>
+          </v-card-text>
+        </v-card>
+      </template>
+    </ModalAdd>
   </v-container>
 </template>
 
@@ -141,6 +196,8 @@ export default {
       date: new Date().toISOString().substr(0, 7),
       start_menu: false,
       server_errors: {},
+      errors:[],
+      file:null,
       //Filter
       selectedPaymentStatus: "",
       paymentStatus: [
@@ -236,6 +293,50 @@ export default {
     Search() {
       GetOldValueOnInput(this);
     },
+    openAddModal() {
+      this.$store.commit("modalAdd_State", true);
+    },
+    closeAddModal() {
+      this.file = "";
+      this.$store.commit("modalAdd_State", false);
+    },
+    uploadFile() {
+        let formData = new FormData();
+        formData.append("file", this.file);
+        if (this.$refs.form.validate() == true) {
+          this.loading = true;
+          this.$axios
+              .post("import-old-payment", formData)
+              .then((res) => {
+                if (res.data.code == 200) {
+                  this.loading = false;
+                  this.closeAddModal();
+                  this.fetchData();
+                  this.$refs.form.reset();
+                  this.$store.commit("Toast_State", {
+                    value: true,
+                    color: "success",
+                    msg: res.data.message,
+                  });
+                }
+              })
+              .catch((error) => {
+                this.loading = false;
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "error",
+                  msg: error.response.data.message,
+                });
+                if (error.response.status == 422) {
+                  let obj = error.response.data.errors;
+                  this.errors = obj
+                  for (let [key, data] of Object.entries(obj)) {
+                    this.server_errors[key] = data[0];
+                  }
+                }
+              });
+        }
+      },
     choseUser() {
       this.$router.push({
         name: "chose-user",
@@ -267,6 +368,9 @@ export default {
       this.pagination.current_page ='';
       this.fetchData();
     },
+    file: function (){
+      this.errors = [];
+    }
 
   },
   created() {

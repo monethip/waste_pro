@@ -216,18 +216,22 @@
           <v-row>
             <v-col>
               <h3>
-                ຊຳລະບໍ່ໃຫ້ກາຍວັນທີ: {{ moment(invoice.end_month).format("DD-MM-YY") }}
+                ວັນທີຊຳລະ: {{ moment(invoice.end_month).format("DD-MM-YY") }}
               </h3>
               <h3>ປະເພດຊຳລະ: {{ invoice.payment_method }}</h3>
+              <h3 v-if="invoice.paided_by">ຊຳລະໂດຍ: {{ invoice.paided_by.name }}</h3>
             </v-col>
-            <v-col v-if="invoice.media">
-              <div v-for="(item, index) in invoice.media" :key="index">
-                <img
-                    aspect-ratio="1"
-                    class="grey"
-                    :src="item.url"
-                />
-              </div>
+          </v-row>
+
+          <v-row v-if="invoice.image_payments">
+            <v-col
+                cols="6"
+                sm="4"
+                v-for="(img, index) in invoice.image_payments" :key="index">
+              <v-img
+                  :src="img.url"
+                  @click="showImage(img.url)"
+              ></v-img>
             </v-col>
           </v-row>
 
@@ -528,7 +532,11 @@
         </v-card>
       </template>
     </ModalAdd>
-
+    <ModalView>
+        <v-card>
+          <v-img :src="showFullImage" alt="Image" width="auto" height="auto" dark> </v-img>
+        </v-card>
+    </ModalView>
   </v-container>
 </template>
 
@@ -549,6 +557,7 @@ export default {
 
       image: "",
       imageUrl: "",
+      showFullImage:"",
       // bcel_reference_number: "",
       payment_method: "",
       paymentType: "",
@@ -564,6 +573,12 @@ export default {
     };
   },
   methods: {
+    showImage(url){
+      if(url != null){
+        this.showFullImage = url;
+        this.$store.commit("modalView_State", true);
+      }
+    },
     Download(link) {
       if (link != null) {
         window.open(link.download_pdf_link)
