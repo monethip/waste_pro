@@ -182,14 +182,14 @@
                 >
               </template>
               <v-list>
-                <v-list-item link>
-                  <v-list-item-title @click="ViewInvoice(item.id)" target="_blank">
+                <v-list-item link @click="ViewInvoice(item.id)">
+                  <v-list-item-title target="_blank">
                     <v-icon small class="mr-2"> mdi-eye </v-icon>
                     ລາຍລະອຽດ
                   </v-list-item-title>
                 </v-list-item>
-                <v-list-item link>
-                  <v-list-item-title @click="DownloadBill(item)">
+                <v-list-item link @click="DownloadBill(item)">
+                  <v-list-item-title>
                     <v-icon small class="mr-2"> mdi-download </v-icon>
                     Download
                   </v-list-item-title>
@@ -254,79 +254,8 @@ export default {
       search: "",
       oldVal: "",
       server_errors: {},
-      selectedCollectionStatus: "",
       summaryData:{},
-      collectionStatus: [
-        {
-          id: 1,
-          name: "requested",
-          dis_play: "ຮ້ອງຂໍເກັບຂີ້ເຫື້ຍອ"
-        },
-        {
-          id: 2,
-          name: "rejected",
-          dis_play: "ປະຕິເສດເກັບຂີ້ເຫື້ຍອ"
-        },
-        {
-          id: 3,
-          name: "approved",
-          dis_play: "ອະນຸມັດເກັບຂີ້ເຫື້ຍອ"
 
-        },
-        {
-          id: 4,
-          name: "collected",
-          dis_play: "ເກັບຂີເຫື້ຍອສຳເລັດ"
-        },
-        {
-          id: 5,
-          name: "collect_confirm",
-          dis_play: "ລູກຄ້າຢືນຢັນການເກັບ"
-        },
-        {
-          id: 5,
-          name: "collect_reject",
-          dis_play: "ການເກັບຖືກປະຕິເສດ"
-        },
-        {
-          id: 6,
-          name: "to_confirm_payment",
-          dis_play: "ລໍຖ້າຢືນຢັນຊຳລະ"
-        },
-        {
-          id: 7,
-          name: "rejected",
-          dis_play: "ປະຕິເສດການຊຳລະ"
-        },
-        {
-          id: 8,
-          name: "success",
-          dis_play: "ຊຳລະສຳເລັດ"
-        },
-      ],
-      selectedPaymentStatus: "",
-      paymentStatus: [
-        {
-          id: 1,
-          name: "pending",
-          dis_play: "ລໍຖ້າເກັບເງິນ"
-        },
-        {
-          id: 2,
-          name: "to_confirm_payment",
-          dis_play: "ລໍຖ້າຢືນຢັນຊຳລະ"
-        },
-        {
-          id: 3,
-          name: "rejected",
-          dis_play: "ປະຕິເສດການຊຳລະ"
-        },
-        {
-          id: 4,
-          name: "success",
-          dis_play: "ຊຳລະສຳເລັດ"
-        },
-      ],
       billingable_types:[
     {
       id: 1,
@@ -367,15 +296,15 @@ export default {
       payment: {},
       confirm: {},
       headers: [
-        { text: "ບິນ", value: "content",width:"200px" },
+        { text: "ເລກບິນ", value: "content",width:"200px" },
         {text: "ລູກຄ້າ", value: "user",width:"150px"},
         {text: "ເບີໂທ", value: "user.phone", sortable: false},
         {text: "ສ່ວນຫຼຸດ", value: "discount",width: "150px"},
-        {text: "ລາຄາລວມ", value: "sub_total"},
+        {text: "ຄ່າບໍລິການ", value: "sub_total"},
         {text: "ລວມທັງໝົດ", value: "total", sortable: false},
         {text: "ປະເພດຊຳລະ", value: "payment_method", align: "center",width:"150px"},
         {
-          text: "Created",
+          text: "ວັນທີສ້າງ",
           value: "created_at",
           width:"150px"
         },

@@ -173,61 +173,28 @@
             <div>{{collectStatus(item.status)}}</div>
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-menu offset-y>
-              <template v-slot:activator="{ on, attrs }">
-                <v-icon
-                    color="primary"
-                    dark
-                    v-bind="attrs"
-                    v-on="on"
-                    medium
-                    class="mr-2"
-                >mdi-dots-vertical</v-icon
-                >
-              </template>
-              <v-list>
-                <v-list-item link>
-                  <v-list-item-title @click="ViewInvoice(item.id)">
-                    <v-icon small class="mr-2"> mdi-eye </v-icon>
-                    ລາຍລະອຽດ
-                  </v-list-item-title>
-                </v-list-item>
-<!--                <v-list-item link>-->
-<!--                  <v-list-item-title @click="viewPage(item)">-->
-<!--                    <v-icon small class="mr-2"> mdi-pencil </v-icon>-->
-<!--                    ແກ້ໄຂບິນ-->
-<!--                  </v-list-item-title>-->
-<!--                </v-list-item>-->
-
-<!--                <v-list-item link @click="paymentPage(item)">-->
-<!--                  <v-list-item-title>-->
-<!--                    <v-icon small class="mr-2">mdi-cash</v-icon>-->
-<!--                    ຊຳລະ-->
-<!--                  </v-list-item-title>-->
-<!--                </v-list-item>-->
-
-<!--                <div-->
-<!--                    v-if="-->
-<!--                          item.collect_status == 'approved' &&-->
-<!--                          item.payment_status == 'to_confirm_payment'-->
-<!--                        "-->
+            <v-icon small class="mr-2" @click="ViewInvoice(item.id)"> mdi-eye </v-icon>
+<!--            <v-menu offset-y>-->
+<!--              <template v-slot:activator="{ on, attrs }">-->
+<!--                <v-icon-->
+<!--                    color="primary"-->
+<!--                    dark-->
+<!--                    v-bind="attrs"-->
+<!--                    v-on="on"-->
+<!--                    medium-->
+<!--                    class="mr-2"-->
+<!--                >mdi-dots-vertical</v-icon-->
 <!--                >-->
-<!--                  <v-list-item link @click="paymentConfirmModal(item)">-->
-<!--                    <v-list-item-title>-->
-<!--                      <v-icon small> mdi-cash-remove</v-icon>-->
-<!--                      ປະຕິເສດການຊຳລະ-->
-<!--                    </v-list-item-title>-->
-<!--                  </v-list-item>-->
-<!--                </div>-->
-<!--                <v-list-item link @click="paymentConfirmModal(item)">-->
+<!--              </template>-->
+<!--              <v-list>-->
+<!--                <v-list-item link @click="ViewInvoice(item.id)">-->
 <!--                  <v-list-item-title>-->
-<!--                    <v-icon small class="mr-2">mdi-card</v-icon>-->
-<!--                    ຢືນຢັນການຊຳລະ-->
+<!--                    <v-icon small class="mr-2"> mdi-eye </v-icon>-->
+<!--                    ລາຍລະອຽດ-->
 <!--                  </v-list-item-title>-->
 <!--                </v-list-item>-->
-
-              </v-list>
-            </v-menu>
+<!--              </v-list>-->
+<!--            </v-menu>-->
           </template>
         </v-data-table>
         <br/>
@@ -673,13 +640,14 @@ export default {
       payment: {},
       confirm: {},
       headers: [
-        { text: "ບິນ", value: "content",width:"250px" },
-        {text: "ລູກຄ້າ", value: "user"},
+        { text: "ເລກບິນ", value: "content",width:"220px" },
+        {text: "ລູກຄ້າ", value: "user",width: "150px"},
         {text: "ເບີໂທ", value: "user.phone", sortable: false},
-        {text: "SubTotal", value: "sub_total"},
-        {text: "Total", value: "total", sortable: false},
+        // {text: "ສ່ວນຫຼຸດ", value: "discount",width: "150px"},
+        {text: "ຄ່າບໍລິການ", value: "sub_total",width: "150px"},
+        {text: "ລວມທັງໝົດ", value: "total", sortable: false,width: "150px"},
         {
-          text: "ສ້າງວັນທີ",
+          text: "ວັນທີສ້າງ",
           value: "created_at",
           width:"180px"
         },

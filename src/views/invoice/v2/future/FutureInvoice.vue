@@ -34,6 +34,18 @@
       </v-col>
       -->
       <v-col>
+        <v-select
+            outlined
+            dense
+            :items="paymentStatus"
+            v-model="selectedPaymentStatus"
+            item-text="dis_play"
+            item-value="name"
+            label="ສະຖານະບິນ"
+            clearable
+        ></v-select>
+      </v-col>
+      <v-col>
         <v-text-field
             outlined
             dense
@@ -71,6 +83,9 @@
             </template>
             <template v-slot:item.discount="{ item }">
               {{ Intl.NumberFormat().format(item.billing.discount) }}
+            </template>
+            <template v-slot:item.status="{ item }">
+              {{paymentStatusText(item.billing.status) }}
             </template>
             <template v-slot:item.actions="{ item }">
               <v-icon
@@ -124,21 +139,39 @@ export default {
       //Add Package
       date: new Date().toISOString().substr(0, 7),
       start_menu: false,
-      packages: [],
-      selectedPackage: "",
       server_errors: {},
       //Filter
-      districts: [],
-      selectedDistrict: "",
-      villages: [],
-      selectedVillage: [],
-      selectedStatus: [],
-      plan: {},
-      calendarEdit: {},
+      selectedPaymentStatus: "",
+      paymentStatus: [
+        {
+          id: 1,
+          name: "pending",
+          dis_play: "ລໍຖ້າເກັບເງິນ"
+        },
+        {
+          id: 2,
+          name: "to_confirm_payment",
+          dis_play: "ລໍຖ້າຢືນຢັນຊຳລະ"
+        },
+        {
+          id: 3,
+          name: "rejected",
+          dis_play: "ປະຕິເສດການຊຳລະ"
+        },
+        {
+          id: 4,
+          name: "success",
+          dis_play: "ຊຳລະສຳເລັດ"
+        },
+      ],
 
       headers: [
-        {text: "ເລກບິນ", value: "billing.billing_display_id"},
-        {text: "ລາຍລະອຽດ", value: "billing.content"},
+        {text: "ເລກບິນ", value: "billing.content"},
+        {
+          text: "ຊື່ລູກຄ້າ",
+          value: "billing.user.name",
+          sortable: false,
+        },
         { text: "ວັນທີ", value: "start_month" },
         { text: "ຫາວັນທີ", value: "end_month" },
         {
@@ -148,7 +181,7 @@ export default {
           sortable: false,
         },
         {
-          text: "ລວມເງິນ",
+          text: "ຄ່າບໍລິການ",
           value: "sub_total",
           align: "center",
           sortable: false,
@@ -160,16 +193,9 @@ export default {
           sortable: false,
         },
         {
-          text: "ຊື່ລູກຄ້າ",
-          value: "billing.user.name",
-          sortable: false,
-          align: "center",
-        },
-        {
           text: "ສະຖານະ",
-          value: "billing.status",
+          value: "status",
           sortable: false,
-          align: "center",
         },
         {text: "", value: "actions", sortable: false},
       ],
@@ -184,6 +210,7 @@ export default {
                   {page: this.pagination.current_page},
                   {per_page: this.per_page},
                   {filter: this.search},
+                  {status: this.selectedPaymentStatus},
                 ]),
               }
           )
@@ -205,6 +232,18 @@ export default {
             }
           });
     },
+
+    paymentStatusText(status){
+      if(status == 'created') return 'ສ້າງບິນສຳເລັດ';
+      else if(status == 'approved') return 'ອະນຸມັດສຳເລັດ';
+      else if(status == 'pending') return 'ລໍຖ້າເກັບເງິນ';
+      else if(status == 'to_confirm_payment') return 'ລໍຖ້າຢືນຢັນຊຳລະ';
+      else if (status == 'rejected') return 'ປະຕິເສດການຊຳລະ';
+      else if(status == 'success') return 'ຊຳລະສຳເລັດ';
+      else if(status == 'cancel') return 'ຍົກເລີກ';
+      else return  '';
+    },
+
     Search() {
       GetOldValueOnInput(this);
     },
@@ -214,7 +253,7 @@ export default {
       });
     },
     ViewInvoice(id) {
-      let route = this.$router.resolve({name: 'invoice-detail',params: {id}});
+      let route = this.$router.resolve({name: 'billing-detail',params: {id}});
       window.open(route.href, '_blank');
     },
   },
@@ -224,17 +263,9 @@ export default {
         this.fetchData();
       }
     },
-    "plan.name": function () {
-      this.server_errors.name = "";
-    },
-    start_date: function () {
-      this.server_errors.month = "";
-    },
-    "calendarEdit.name": function () {
-      this.server_errors.name = "";
-    },
-    "calendarEdit.month": function () {
-      this.server_errors.month = "";
+    selectedPaymentStatus:function () {
+      this.pagination.current_page ='';
+      this.fetchData();
     },
   },
   created() {

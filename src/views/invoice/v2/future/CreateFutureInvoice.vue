@@ -6,7 +6,7 @@
           <v-btn text class="text-primary" @click="backPrevios()">
             <v-icon>mdi-chevron-left</v-icon></v-btn
           >
-          ເລືອກລູກຄ້າ</v-breadcrumbs
+          ສ້າງບິນລ່ວງໜ້າ</v-breadcrumbs
         >
       </v-col>
     </v-row>
@@ -256,7 +256,7 @@ export default {
     },
     AddData() {
       let formData = new FormData();
-      formData.append("customer_id", this.customer.user_id);
+      formData.append("customer_id", this.customer.id);
       formData.append("start_month", this.start_date);
       formData.append("end_month", this.end_date);
       formData.append("total", this.data.total);

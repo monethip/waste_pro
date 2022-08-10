@@ -27,6 +27,18 @@
         :disable-pagination="true"
         hide-default-footer
       >
+        <template v-slot:item.created_at="{ item }">
+          <div
+          >
+            {{ moment(item.created_at).format("DD-MM-YY hh:mm ") }}
+          </div>
+        </template>
+        <template v-slot:item.date="{ item }">
+          <div
+          >
+            {{ moment(item.date).format("DD-MM-YY hh:mm:ss") }}
+          </div>
+        </template>
         <template v-slot:item.customer="{ item }">
           <div
             v-if="(item.route_plan_detail.customer.customer_type = 'company')"
@@ -208,6 +220,18 @@ export default {
         {
           text: "ສະຖານະ",
           value: "status",
+          align: "center",
+          sortable: false,
+        },
+        {
+          text: "ວັນທີສ້າງ",
+          value: "created_at",
+          align: "center",
+          sortable: false,
+        },
+        {
+          text: "ວັນທີອັບເດດ",
+          value: "date",
           align: "center",
           sortable: false,
         },

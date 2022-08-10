@@ -94,8 +94,8 @@
                 >
               </template>
               <v-list>
-                <v-list-item link>
-                  <v-list-item-title @click="ViewInvoice(item.id)">
+                <v-list-item link @click="ViewInvoice(item.id)">
+                  <v-list-item-title>
                     <v-icon small class="mr-2"> mdi-eye </v-icon>
                     ລາຍລະອຽດ
                   </v-list-item-title>
@@ -234,7 +234,7 @@ export default {
         {text: "ລູກຄ້າ", value: "user"},
         {text: "ເບີໂທ", value: "user.phone", sortable: false,width: "120px"},
         {text: "ສ່ວນຫຼຸດ", value: "discount",width: "150px"},
-        {text: "ລາຄາລວມ", value: "sub_total"},
+        {text: "ຄ່າບໍລິການ", value: "sub_total"},
         {text: "ລວມທັງໝົດ", value: "total", sortable: false},
         {text: "Created", value: "created_at", align: "center",width:"200px"},
         {text: "", value: "actions", sortable: false},

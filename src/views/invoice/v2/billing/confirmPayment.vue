@@ -148,8 +148,8 @@
                 >
               </template>
               <v-list>
-                <v-list-item link>
-                  <v-list-item-title @click="ViewInvoice(item.id)">
+                <v-list-item link @click="ViewInvoice(item.id)">
+                  <v-list-item-title>
                     <v-icon small class="mr-2"> mdi-eye </v-icon>
                     ລາຍລະອຽດ
                   </v-list-item-title>
@@ -196,7 +196,7 @@
       </v-card-text>
     </v-card>
     <!-- Confirm Payment-->
-    <v-dialog v-model="paymentDialog" max-width="620px" persistent>
+    <v-dialog v-model="confirmPaymentDialog" max-width="620px" persistent>
       <template>
         <v-card>
           <v-card-title>
@@ -277,7 +277,7 @@
               </v-form>
               <v-card-actions class="mt-4">
                 <v-spacer></v-spacer>
-                <v-btn color="error" class="elevation-0 btn mr-4 px-12" medium @click="paymentDialog = false">
+                <v-btn color="error" class="elevation-0 btn mr-4 px-12" medium @click="confirmPaymentDialog = false">
                   ປິດ
                 </v-btn>
                 <v-btn
@@ -340,79 +340,8 @@ export default {
       search: "",
       oldVal: "",
       server_errors: {},
-      selectedCollectionStatus: "",
       summaryData:{},
-      collectionStatus: [
-        {
-          id: 1,
-          name: "requested",
-          dis_play: "ຮ້ອງຂໍເກັບຂີ້ເຫື້ຍອ"
-        },
-        {
-          id: 2,
-          name: "rejected",
-          dis_play: "ປະຕິເສດເກັບຂີ້ເຫື້ຍອ"
-        },
-        {
-          id: 3,
-          name: "approved",
-          dis_play: "ອະນຸມັດເກັບຂີ້ເຫື້ຍອ"
 
-        },
-        {
-          id: 4,
-          name: "collected",
-          dis_play: "ເກັບຂີເຫື້ຍອສຳເລັດ"
-        },
-        {
-          id: 5,
-          name: "collect_confirm",
-          dis_play: "ລູກຄ້າຢືນຢັນການເກັບ"
-        },
-        {
-          id: 5,
-          name: "collect_reject",
-          dis_play: "ການເກັບຖືກປະຕິເສດ"
-        },
-        {
-          id: 6,
-          name: "to_confirm_payment",
-          dis_play: "ລໍຖ້າຢືນຢັນຊຳລະ"
-        },
-        {
-          id: 7,
-          name: "rejected",
-          dis_play: "ປະຕິເສດການຊຳລະ"
-        },
-        {
-          id: 8,
-          name: "success",
-          dis_play: "ຊຳລະສຳເລັດ"
-        },
-      ],
-      selectedPaymentStatus: "",
-      paymentStatus: [
-        {
-          id: 1,
-          name: "pending",
-          dis_play: "ລໍຖ້າເກັບເງິນ"
-        },
-        {
-          id: 2,
-          name: "to_confirm_payment",
-          dis_play: "ລໍຖ້າຢືນຢັນຊຳລະ"
-        },
-        {
-          id: 3,
-          name: "rejected",
-          dis_play: "ປະຕິເສດການຊຳລະ"
-        },
-        {
-          id: 4,
-          name: "success",
-          dis_play: "ຊຳລະສຳເລັດ"
-        },
-      ],
       billingable_types:[
     {
       id: 1,
@@ -445,7 +374,7 @@ export default {
       payment_method: "",
       paymentType: "",
       confirmType: "",
-      paymentDialog: false,
+      confirmPaymentDialog: false,
       rejects: [],
       reject_reason_id: "",
       description: "",
@@ -457,11 +386,12 @@ export default {
         {text: "ລູກຄ້າ", value: "user",width:"150px"},
         {text: "ເບີໂທ", value: "user.phone", sortable: false},
         {text: "ສ່ວນຫຼຸດ", value: "discount",width: "150px"},
-        {text: "ລາຄາລວມ", value: "sub_total"},
+        {text: "ຄ່າບໍລິການ", value: "sub_total"},
         {text: "ລວມທັງໝົດ", value: "total", sortable: false},
+        {text: "ຜູ້ຊຳລະ", value: "paided_by.name",width:"200px"},
         {text: "ປະເພດຊຳລະ", value: "payment_method", align: "center",width:"200px"},
         {
-          text: "Created",
+          text: "ວັນທີສ້າງ",
           value: "created_at",
           width:"250px"
         },
@@ -556,10 +486,7 @@ export default {
           });
     },
 
-    closeAddModal() {
-      this.paymentType = "";
-      this.$store.commit("modalAdd_State", false);
-    },
+
     createPage() {
       this.$router.push({
         name: "CreateCollectionEventInvoice",
@@ -570,11 +497,6 @@ export default {
       let route = this.$router.resolve({name: 'billing-detail',params: {id}});
       window.open(route.href, '_blank');
     },
-    paymentPage(item) {
-      this.payment = item;
-      this.$store.commit("modalAdd_State", true);
-    },
-
     Payment() {
       if (this.paymentType !== "") {
         let formData = new FormData();
@@ -589,7 +511,6 @@ export default {
                 if (res.data.code == 200) {
                     this.loading = false;
                     this.paymentConfirmModal(this.payment);
-                    this.closeAddModal();
                     this.fetchData();
                     this.$refs.form.reset();
                     this.$store.commit("Toast_State", {
@@ -774,10 +695,10 @@ export default {
     paymentConfirmModal(item) {
       this.fetchReject();
       this.confirm = item;
-      this.paymentDialog = true;
+      this.confirmPaymentDialog = true;
     },
     closeConfirmModal() {
-      this.paymentDialog = false;
+      this.confirmPaymentDialog = false;
       this.confirmType = "";
     },
 

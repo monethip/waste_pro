@@ -1,285 +1,185 @@
 <template>
   <v-container>
+
     <v-row class="mb-n6">
       <v-col>
-        <v-breadcrumbs large class="pa-0">
-          <v-btn text class="text-primary" @click="backPrevios()">
-            <v-icon>mdi-chevron-left</v-icon></v-btn
-          >
-          ເລືອກລູກຄ້າ</v-breadcrumbs
-        >
-      </v-col>
-      <v-col>
-        <v-autocomplete
-            outlined
-            dense
-            :items="districts"
-            v-model="selectedDistrict"
-            item-text="name"
-            item-value="id"
-            label="ເມືອງ"
-            clearable
-        ></v-autocomplete>
-      </v-col>
-      <v-col>
-        <v-autocomplete
-            v-model="selectedVillage"
-            :items="villages"
-            item-text="name"
-            item-value="id"
-            label="ເລືອກບ້ານ"
-            outlined
-            chips
-            multiple
-            dense
-            clearable
-        >
-          <template v-slot:selection="data">
-            <v-chip
-                v-bind="data.attrs"
-                :input-value="data.selected"
-                close
-                @click="data.select"
-                @click:close="remove(data.item)"
-            >
-              {{ data.item.name }}
-            </v-chip>
-          </template>
-        </v-autocomplete>
-      </v-col>
-      <v-col>
-        <v-select
-            outlined
-            dense
-            :items="costs"
-            v-model="selectedCost"
-            item-text="name"
-            item-value="value"
-            label="ປະເພດບໍລິການ"
-            multiple
-            clearable
-        ></v-select>
+        <div>
+          ສ້າງບິນລ່ວງໜ້າ
+        </div>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col cols>
-        <v-select
-            outlined
-            dense
-            :items="favorite_dates"
-            v-model="selectedFavoriteDate"
-            item-text="name"
-            item-value="name"
-            label="ມື້ບໍລິການ"
-            multiple
-        ></v-select>
-      </v-col>
+    <v-row justify="center">
       <v-col>
-        <v-autocomplete
-            outlined
-            dense
-            :items="customerStatus"
-            v-model="selectedCustomerStatus"
-            item-text="name"
-            item-value="value"
-            label="ສະຖານະລູກຄ້າ"
-            multiple
-            clearable
-        ></v-autocomplete>
-      </v-col>
-      <v-col>
-        <v-text-field
-            outlined
-            dense
-            clearable
-            prepend-inner-icon="mdi-magnify"
-            label="ຊື່ລູກຄ້າ"
-            type="text"
-            v-model="search"
-            @keyup.enter="Search()"
-        >
-        </v-text-field>
-      </v-col>
-    </v-row>
-
-    <div>
-      <v-card>
-        <v-card flat>
-          <v-card-text>
+        <v-card class="pa-2">
+          <v-card-title class="my-auto">
+            ຂໍ້ມູນ Users ({{ pagination.total }})
+            <v-divider class="mx-4" vertical></v-divider>
+            <v-spacer></v-spacer>
             <v-row>
               <v-col>
-                <p v-if="selectedRows.length">ລູກຄ້່ທີ່ເລືອກ {{selectedRows.length}}</p>
+                <v-text-field
+                    v-model="search"
+                    clearable
+                    prepend-inner-icon="mdi-magnify"
+                    label="Search"
+                    single-line
+                    hide-details
+                    @keyup.enter="Search()"
+                    outlined
+                    dense
+                ></v-text-field>
+              </v-col>
+
+              <v-col>
+                <v-text-field
+                    v-model="searchPhone"
+                    clearable
+                    prepend-inner-icon="mdi-magnify"
+                    label="Phone"
+                    type="number"
+                    class="input-number"
+                    single-line
+                    hide-details
+                    @keyup.enter="SearchPhone()"
+                    outlined
+                    dense
+                ></v-text-field>
               </v-col>
             </v-row>
-            <v-data-table
-                :headers="headers"
-                :items="customers"
-                :search="search"
-                :disable-pagination="true"
-                hide-default-footer
-            >
-              <template v-slot:item.address_detail="{ item }">
-                <div v-for="(data, index) in item.village_details" :key="index">
-                  <span>{{ data.name }}</span>
-                </div>
-              </template>
-              <template v-slot:item.cost_by="{ item }">
-                <div>{{ costBy(item.cost_by) }}</div>
-              </template>
-
-              <template v-slot:item.actions="{ item }">
-                <v-btn class="btn-primary mr-4 elevation-0" @click="createPage(item)"
-                >ສ້າງບິນລ່ວງໜ້າ
-                </v-btn>
-                <v-btn class="btn-primary mr-2 elevation-0" @click="createCustomBill(item)"
-                >ສ້າງບິນແບບກຳນົດເອງ
-                </v-btn>
-<!--                <v-icon small class="mr-2" @click="viewPage(item.id)">-->
-<!--                  mdi-eye-->
-<!--                </v-icon>-->
-              </template>
-            </v-data-table
-            >
-            <br/>
-            <template>
-              <Pagination
-                  v-if="pagination.total_pages > 1"
-                  :pagination="pagination"
-                  :offset="offset"
-                  @paginate="fetchData()"
-              ></Pagination>
+          </v-card-title>
+          <v-data-table
+              :headers="headers"
+              :items="users"
+              :search="search"
+              :disable-pagination="true"
+              hide-default-footer
+          >
+            <!--Role -->
+            <template v-slot:item.roles="{ item }">
+              <div>
+                <span v-for="(role, index) in item.roles" :key="index">
+                  <v-chip color="info" label class="mr-1 my-1">
+                    {{ role.name }}
+                  </v-chip>
+                </span>
+              </div>
             </template>
-          </v-card-text>
+            <!--Permission -->
+            <template v-slot:item.permissions="{ item }">
+              <div>
+                <span v-for="(ps, index) in item.permissions" :key="index">
+                  <v-chip color="success" label class="mr-1 my-1">{{
+                      ps.name
+                    }}</v-chip>
+                </span>
+              </div>
+            </template>
+            <template v-slot:item.status="{ item }">
+              <v-btn @click="createPage(item)" small class="btn-primary elevation-0"
+              ><v-icon>mdi-plus</v-icon> ສ້າງບິນລ່ວງໜ້າ
+              </v-btn>
+            </template>
+          </v-data-table>
+          <br />
+          <template>
+            <Pagination
+                v-if="pagination.total_pages > 1"
+                :pagination="pagination"
+                :offset="offset"
+                @paginate="fetchData()"
+            ></Pagination>
+          </template>
         </v-card>
-      </v-card>
-    </div>
+      </v-col>
+    </v-row>
+
+
   </v-container>
 </template>
 
 <script>
-import {GetOldValueOnInput} from "@/Helpers/GetValue";
+import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
-
 export default {
-  name: "Customer",
+  title() {
+    return `Vientiane Waste Co-Dev|User`;
+  },
+  name: "User",
   data() {
     return {
-      tab: null,
-      customers: [],
-      selectedAllCustomer: [],
+      stepValue: 1,
+      otp:"",
+      isStepTwo:false,
+      headers: [
+        { text: "User Name", value: "name",width:"150px" },
+        { text: "Phone", value: "phone", sortable: false },
+        { text: "Email", value: "email", sortable: false },
+        // { text: "Role", value: "roles", sortable: false,width:"150px" },
+        // { text: "Permission", value: "permissions", sortable: false,width:"150px" },
+        { text: "", value: "status", sortable: false, align: "center" },
+      ],
       loading: false,
-      customerId: "",
+      users: [],
+      user: {},
+      phone:"",
+      server_errors: {
+        email: "",
+        roleId: "",
+      },
+
+
+      selectedRole: "",
+      selectedRoles: [],
+      roles: [],
+
       //Pagination
       offset: 12,
       pagination: {},
-      per_page: 1500,
+      per_page: 12,
+
       search: "",
+      searchPhone:"",
       oldVal: "",
-      //Filter
-      districts: [],
-      selectedDistrict: "",
-      villages: [],
-      selectedVillage: [],
-      // selectedAllVillage: [],
-      selectedCustomerStatus: [],
-      customerStatus: [
+
+      statuses: [
         {
-          id: 1,
-          value: "calendar",
-          name: "ຍັງບໍມີຕາຕະລາງ",
+          name: "active",
         },
         {
-          id: 2,
-          value: "route_plan",
-          name: "ຍັງບໍມີແຜນ",
+          name: "inactive",
         },
       ],
-      selectedCost: [],
-      costs: [
-        {
-          id: 1,
-          value: "container",
-          name: "ຄອນເທັນເນີ"
-        },
-        {
-          id: 2,
-          value: "fix_cost",
-          name: "ທຸລະກິດເປັນຖ້ຽວ"
-        },
-        {
-          id: 3,
-          value: "chartered",
-          name: "ມອບເໝົາ"
-        },
-      ],
-      favorite_dates: [],
-      selectedFavoriteDate: [],
-      selectedRows: [],
-      selectedCustomer: {},
-      headers: [
-        {text: "ID", value: "customer_id"},
-        {text: "ບໍລິສັດ", value: "company_name"},
-        // { text: "ຜູ້ຮບຜິດຊອບ", value: "company_coordinators.name" },
-        {text: "ປະເພດບໍລິການ", value: "cost_by", sortable: true},
-        {text: "ບ້ານ", value: "village.name", sortable: true},
-        {text: "ເມືອງ", value: "district.name", sortable: true},
-        // { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
-        {text: "", value: "actions", sortable: false},
-      ],
-      //Map
-      latlng: {
-        lat: 18.1189434,
-        lng: 102.290218,
-      },
-      markers: [],
-      places: [],
-      currentPlace: null,
-      infoPosition: null,
-      infoContent: null,
-      infoOpened: false,
-      infoCurrentKey: null,
-      infoOptions: {
-        pixelOffset: {
-          width: 0,
-          height: -35,
-        },
-      },
+      status: "",
+      id_token:"",
+
+      //Validation
+
     };
   },
   methods: {
-    backPrevios() {
-      this.$router.go(-1);
-    },
+
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-          .get("company", {
+          .get("user-setting/user", {
             params: queryOption([
               {page: this.pagination.current_page},
               {per_page: this.per_page},
-              {without: this.selectedCustomerStatus},
-              {villages: this.selectedVillage},
-              {district_id: this.selectedDistrict},
               {filter: this.search},
-              {cost_by: this.selectedCost},
-              {favorite_dates: this.selectedFavoriteDate},
-            ]),
+              {phone: this.searchPhone},
+              {roles: ['pre_customer','customer']},])
           })
           .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.$store.commit("Loading_State", false);
-                this.customers = res.data.data.data;
-                this.selectedAllCustomer = res.data.data;
-                this.pagination = res.data.data.pagination;
-                // this.getCenter();
-              }, 100);
+            if (res.data.code === 200) {
+              this.loading = false;
+              this.$store.commit("Loading_State", false);
+              this.users = res.data.data.data;
+              this.pagination = res.data.data.pagination;
             }
           })
           .catch((error) => {
             this.$store.commit("Loading_State", false);
-            this.fetchData();
-            if (error.response.status == 422) {
+            if (error.response.status === 422) {
               let obj = error.response.data.errors;
               for (let [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
@@ -287,158 +187,97 @@ export default {
             }
           });
     },
-
-    fetchAddress() {
+    fetchRole() {
+      //Role
       this.$axios
-          .get("info/address", {params: {filter: "ນະຄອນຫລວງວຽງຈັນ"}})
+          .get("user-setting/role")
           .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.address = res.data.data;
-                this.address.map((item) => {
-                  this.districts = item.districts;
-                });
-              }, 300);
+            if (res.data.code === 200) {
+              this.loading = false;
+              this.roles = res.data.data;
             }
           })
           .catch(() => {
-          });
-    },
-
-    fetchVillage() {
-      this.$axios
-          .get("info/district/" + this.selectedDistrict + "/village")
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.villages = res.data.data;
-              }, 300);
-            }
-          })
-          .catch(() => {
+            this.loading = false;
           });
     },
 
     createPage(data) {
-      //  var a = [];
-      // if (this.selectedRows.length > 0) {
-        this.$router.push({
-          name: "create-future-customer",
-          params: {
-            items: data,
-            // items: this.customers,
-          },
-        });
-      // } else {
-      //   this.$store.commit("Toast_State", {
-      //     value: true,
-      //     color: "error",
-      //     msg: "ກາລຸນາເລືອກບ້ານ ແລະ ລູກຄ້າກ່ອນ",
-      //   });
-      // }
-    },
-    createCustomBill(data) {
-      //  var a = [];
-      // if (this.selectedRows.length > 0) {
-        this.$router.push({
-          name: "create-custom-bill",
-          params: {
-            items: data,
-            // items: this.customers,
-          },
-        });
-      // } else {
-      //   this.$store.commit("Toast_State", {
-      //     value: true,
-      //     color: "error",
-      //     msg: "ກາລຸນາເລືອກບ້ານ ແລະ ລູກຄ້າກ່ອນ",
-      //   });
-      // }
-    },
-
-    viewPage(id) {
       this.$router.push({
-        name: "ViewCustomer",
-        params: {id},
+        name: "create-future-customer",
+        params: {
+          items: data,
+          // items: this.customers,
+        },
       });
     },
-    remove(item) {
-      const index = this.selectedVillage.indexOf(item.id);
-      if (index >= 0) this.selectedVillage.splice(index, 1);
+
+    reset() {
+      this.$refs.form.reset();
     },
     Search() {
       GetOldValueOnInput(this);
     },
+    SearchPhone() {
+      GetOldValueOnInput(this);
+    },
 
-    costBy(value) {
-      if (value == "container") return "ຄອນເທັນເນີ";
-      else if (value == "fix_cost") return "ທຸລະກິດເປັນຖ້ຽວ";
-      else if (value == "chartered") return "ມອບເໝົາ";
-    },
-    fetchFavorite() {
-      this.$axios
-          .get("favorite-date")
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.favorite_dates = res.data.data;
-              }, 100);
-            }
-          })
-          .catch(() => {
-          });
-    },
   },
-  computed: {
-    selectedAllVillage() {
-      return this.selectedVillage.length === this.villages.length;
-    },
-    selectedSomeVillage() {
-      return this.selectedVillage.length > 0 && !this.selectedAllVillage;
-    },
-    icon() {
-      if (this.selectedAllVillage) return "mdi-close-box";
-      if (this.selectedSomeVillage) return "mdi-minus-box";
-      return "mdi-checkbox-blank-outline";
-    },
-  },
+
   watch: {
-    selectedFavoriteDate: function () {
-      this.pagination.current_page = '';
-      this.fetchData();
-    },
     search: function (value) {
-      this.pagination.current_page = '';
-      if (value == "") {
+      this.pagination.current_page ='';
+      if (value === "") {
         this.fetchData();
       }
     },
-    selectedVillage: function () {
-      this.pagination.current_page = '';
-      this.fetchData();
+
+    searchPhone: function (value) {
+      this.pagination.current_page ='';
+      if (value.length > 4) {
+        this.fetchData();
+      }
     },
-    selectedDistrict: function () {
-      this.pagination.current_page = '';
-      this.fetchVillage();
+    selectedRoles: function (){
+      this.pagination.current_page ='';
       this.fetchData();
-    },
-    selectedCustomerStatus: function () {
-      this.pagination.current_page = '';
-      this.fetchData();
-    },
-    selectedCost:function (){
-      this.pagination.current_page = '';
-      this.fetchData();
-    },
+    }
   },
   created() {
+    this.fetchRole();
     this.fetchData();
-    this.fetchAddress();
-    this.fetchFavorite();
   },
 };
 </script>
 
 <style lang="scss">
-@import "../../../../../public/scss/main.scss";
+@import "../../../../../public/scss/main";
+
+.otp-input {
+  width: 40px;
+  height: 40px;
+  padding: 5px;
+  margin: 0 10px;
+  font-size: 20px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  text-align: center;
+  &.error {
+    border: 1px solid red !important;
+  }
+}
+.otp-input::-webkit-inner-spin-button,
+.otp-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.v-stepper__content{
+  padding: 8px 8px;
+}
+.otp,.btnClear{
+  margin-bottom: 24px;
+  margin-top: 24px;
+}
+
 </style>

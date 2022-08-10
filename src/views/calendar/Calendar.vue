@@ -301,7 +301,7 @@ export default {
           align: "center",
         },
         {
-          text: "Created",
+          text: "ວັນທີສ້າງ",
           value: "created_at",
           align: "center",
           sortable: false,
