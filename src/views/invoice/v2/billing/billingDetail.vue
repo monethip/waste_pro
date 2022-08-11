@@ -61,7 +61,7 @@
               </h3>
               <h3>ປະເພດບິນ: {{ invoice.display_type }}</h3>
               <h3>
-                ວັນທີ:
+                ວັນທີສ້າງບິນ:
                 {{ moment(invoice.created_at).format("DD-MM-YY") }}
               </h3>
             </v-col>
@@ -213,9 +213,9 @@
           <v-row>
             <v-col>
               <h3>
-                ວັນທີຊຳລະ: {{ moment(invoice.end_month).format("DD-MM-YY") }}
+                ວັນທີຊຳລະ: <span class="error--text">{{ moment(invoice.end_month).format("DD-MM-YY") }}</span>
               </h3>
-              <h3>ປະເພດຊຳລະ: {{ getLaoStatusFunc(invoice.payment_method) }}</h3>
+              <h3 v-if="invoice.payment_method">ປະເພດຊຳລະ: {{ getLaoStatusFunc(invoice.payment_method) }}</h3>
               <h3 v-if="invoice.paided_by">ຊຳລະໂດຍ: {{ invoice.paided_by.name }}</h3>
             </v-col>
           </v-row>
@@ -240,7 +240,7 @@
               </v-col>
             </v-row>
 
-            <h3 class="v-title" v-if="invoice.image_fix_payments">ຮູບການຊຳລະໃໝ່</h3>
+            <h3 class="v-title" v-if="invoice.image_fix_payments.length">ຮູບການຊຳລະໃໝ່</h3>
             <v-row v-if="invoice.image_fix_payments">
               <v-col
                   cols="6"
@@ -380,7 +380,6 @@
       </template>
     </ModalEdit>
 
-
     <!-- Confirm Payment-->
     <v-dialog v-model="paymentDialog" max-width="620px" persistent>
       <template>
@@ -461,8 +460,6 @@
         </v-card>
       </template>
     </v-dialog>
-
-
 
     <ModalAdd>
       <template @close="close">

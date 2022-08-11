@@ -366,30 +366,7 @@ export default {
           })
           .catch(() => {});
     },
-    fetchSummaryData() {
-      let date = this.moment(this.month).format('YYYY-MM');
-      this.$axios
-          .get("collection-event-summary", {
-            params: queryOption([
-              {month: date},
-            ])
-          })
-          .then((res) => {
-            if (res.data.code == 200) {
-              this.summaryData = res.data.data;
-              // console.log(this.summaryData);
-            }
-          })
-          .catch((error) => {
-            this.$store.commit("Loading_State", false);
-            if (error.response.status == 422) {
-              let obj = error.response.data.errors;
-              for (let [key, message] of Object.entries(obj)) {
-                this.server_errors[key] = message[0];
-              }
-            }
-          });
-    },
+
 
     fetchReject() {
       this.$axios
@@ -671,7 +648,6 @@ export default {
     selectedCollectionStatus:function (){
       this.pagination.current_page ='';
       this.fetchData();
-      this.fetchSummaryData();
     },
     selectedBillingable_type:function (){
       this.pagination.current_page ='';
@@ -690,7 +666,6 @@ export default {
       if(value !== ''){
         this.pagination.current_page ='';
         this.fetchData();
-        this.fetchSummaryData();
       }
     },
     search: function (value) {
@@ -746,7 +721,6 @@ export default {
   created() {
     this.month = this.moment(this.curent_month).format('YYYY-MM');
     this.fetchData();
-    this.fetchSummaryData();
     this.fetchRoutePlan();
   },
 };

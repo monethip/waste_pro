@@ -39,7 +39,7 @@
             dense
             :items="paymentStatus"
             v-model="selectedPaymentStatus"
-            item-text="dis_play"
+            :item-text="filterStatusLao"
             item-value="name"
             label="ສະຖານະບິນ"
             clearable
@@ -102,7 +102,7 @@
                   color="success"
                   small
                   class="mr-2"
-                  @click="ViewInvoice(item.id)"
+                  @click="ViewInvoice(item.billing.id)"
               >
                 mdi-eye
               </v-icon
@@ -156,23 +156,22 @@ export default {
       paymentStatus: [
         {
           id: 1,
-          name: "pending",
-          dis_play: "ລໍຖ້າເກັບເງິນ"
-        },
-        {
+          name: "created",
+        },{
           id: 2,
-          name: "to_confirm_payment",
-          dis_play: "ລໍຖ້າຢືນຢັນຊຳລະ"
+          name: "approved",
         },
         {
           id: 3,
-          name: "rejected",
-          dis_play: "ປະຕິເສດການຊຳລະ"
+          name: "to_confirm_payment",
         },
         {
           id: 4,
+          name: "rejected",
+        },
+        {
+          id: 5,
           name: "success",
-          dis_play: "ຊຳລະສຳເລັດ"
         },
       ],
 
@@ -219,6 +218,9 @@ export default {
     getBgColorFunc(status){
       return getBgColor(status)
     },
+    filterStatusLao(status){
+      return  getLaoStatus(status.name)
+    },
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
@@ -227,7 +229,7 @@ export default {
                   {page: this.pagination.current_page},
                   {per_page: this.per_page},
                   {filter: this.search},
-                  {status: this.selectedPaymentStatus},
+                  {billing_status: this.selectedPaymentStatus},
                 ]),
               }
           )
@@ -235,7 +237,6 @@ export default {
             if (res.data.code == 200) {
               this.$store.commit("Loading_State", false);
               this.invoices = res.data.data.data;
-              console.log(this.invoices);
               this.pagination = res.data.data.pagination;
             }
           })
@@ -248,17 +249,6 @@ export default {
               }
             }
           });
-    },
-
-    paymentStatusText(status){
-      if(status == 'created') return 'ສ້າງບິນສຳເລັດ';
-      else if(status == 'approved') return 'ອະນຸມັດສຳເລັດ';
-      else if(status == 'pending') return 'ລໍຖ້າເກັບເງິນ';
-      else if(status == 'to_confirm_payment') return 'ລໍຖ້າຢືນຢັນຊຳລະ';
-      else if (status == 'rejected') return 'ປະຕິເສດການຊຳລະ';
-      else if(status == 'success') return 'ຊຳລະສຳເລັດ';
-      else if(status == 'cancel') return 'ຍົກເລີກ';
-      else return  '';
     },
 
     Search() {

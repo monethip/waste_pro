@@ -390,7 +390,6 @@ export default {
     selectedCollectionStatus:function (){
       this.pagination.current_page ='';
       this.fetchData();
-      this.fetchSummaryData();
     },
     selectedBillingable_type:function (){
       this.pagination.current_page ='';
@@ -409,7 +408,6 @@ export default {
       if(value !== ''){
         this.pagination.current_page ='';
         this.fetchData();
-        this.fetchSummaryData();
       }
     },
     search: function (value) {
@@ -447,7 +445,6 @@ export default {
   created() {
     this.month = this.moment(this.curent_month).format('YYYY-MM');
     this.fetchData();
-    this.fetchSummaryData();
     this.fetchRoutePlan();
   },
 };

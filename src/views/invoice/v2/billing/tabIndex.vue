@@ -11,13 +11,41 @@
     <v-card elevation="1">
       <v-card-text>
         <v-tabs v-model="tab">
-          <v-tab href="#tab-1">ອະນຸມັດບິນ</v-tab>
-          <v-tab href="#tab-2">ບິນທີ່ຕ້ອງຊຳລະ</v-tab>
-          <v-tab href="#tab-3"><span class="info--text">ຢືນຢັນການຊຳລະ</span></v-tab>
-          <v-tab href="#tab-4"><span class="success--text">ບິນທີ່ສຳເລັດ</span></v-tab>
-          <v-tab href="#tab-5"><span class="error--text">ບິນທີ່ປະຕິເສດ</span></v-tab>
+          <v-tab href="#tab-1">
+            <v-badge color="info" v-if="counts.length" :content="counts[0].count_status">
+              ອະນຸມັດບິນ
+            </v-badge>
+            </v-tab>
+          <v-tab href="#tab-2">
+            <v-badge color="orange" v-if="counts.length" :content="counts[1].count_status">
+              ບິນທີ່ຕ້ອງຊຳລະ
+            </v-badge>
+          </v-tab>
+          <v-tab href="#tab-3">
+            <v-badge color="info" v-if="counts.length" :content="counts[4].count_status">
+                     <span class="info--text">
+            ຢືນຢັນການຊຳລະ   </span>
+            </v-badge>
+
+            </v-tab>
+          <v-tab href="#tab-4">
+            <v-badge color="success" v-if="counts.length" :content="counts[5].count_status">
+            <span class="success--text">
+            ບິນທີ່ສຳເລັດ
+               </span>
+            </v-badge>
+             </v-tab>
+          <v-tab href="#tab-5">
+            <v-badge color="error" v-if="counts.length" :content="counts[3].count_status">
+            <span class="error--text">ບິນທີ່ປະຕິເສດ
+            </span>
+            </v-badge></v-tab>
           <v-spacer></v-spacer>
-          <v-tab href="#tab-6"> <span class="error--text">ບິນທີ່ຍົກເລີກ</span></v-tab>
+          <v-tab href="#tab-6">
+            <v-badge color="error" v-if="counts.length" :content="counts[2].count_status">
+            <span class="error--text">ບິນທີ່ຍົກເລີກ </span>
+            </v-badge>
+            </v-tab>
         </v-tabs>
         <!-- <hr /> -->
         <v-tabs-items v-model="tab" class="primary-color">
@@ -95,9 +123,15 @@ export default {
   data() {
     return {
       tab: null,
+      counts:[],
     };
   },
   methods: {
+    async countBilling() {
+      await this.$axios.get("count-billing").then((res) => {
+        this.counts = res.data.data;
+      })
+    },
   },
   created() {
     if (this.$route.query.tab == "billing-approved") {
@@ -113,18 +147,22 @@ export default {
     } else if (this.$route.query.tab == "billing-canceled") {
       this.tab = "tab-6";
     }
+    this.countBilling();
   },
   watch: {
     tab: function (value) {
       if (value == "tab-1") {
+        this.countBilling();
         this.$router
             .push({ name: "billing", query: { tab: "billing-approved" } })
             .catch(() => {});
       } else if (value == "tab-2") {
+        this.countBilling();
         this.$router
             .push({ name: "billing", query: { tab: "billing-paid" } })
             .catch(() => {});
       } else if (value == "tab-3") {
+        this.countBilling();
         this.$router
             .push({
               name: "billing",
@@ -132,15 +170,18 @@ export default {
             })
             .catch(() => {});
       } else if (value == "tab-4") {
+        this.countBilling();
         this.$router
             .push({ name: "billing", query: { tab: "billing-success" } })
             .catch(() => {});
       }else if (value == "tab-5") {
+        this.countBilling();
         this.$router
             .push({ name: "billing", query: { tab: "billing-reject" } })
             .catch(() => {});
       }
       else if (value == "tab-6") {
+        this.countBilling();
         this.$router
             .push({ name: "billing", query: { tab: "billing-canceled" } })
             .catch(() => {});

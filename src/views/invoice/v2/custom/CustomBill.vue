@@ -41,9 +41,9 @@
               dense
               :items="paymentStatus"
               v-model="selectedPaymentStatus"
-              item-text="dis_play"
               item-value="name"
               label="ສະຖານະບິນ"
+              :item-text="filterStatusLao"
               clearable
           ></v-select>
         </v-col>
@@ -205,23 +205,22 @@ export default {
       paymentStatus: [
         {
           id: 1,
-          name: "pending",
-          dis_play: "ລໍຖ້າເກັບເງິນ"
-        },
-        {
+          name: "created",
+        },{
           id: 2,
-          name: "to_confirm_payment",
-          dis_play: "ລໍຖ້າຢືນຢັນຊຳລະ"
+          name: "approved",
         },
         {
           id: 3,
-          name: "rejected",
-          dis_play: "ປະຕິເສດການຊຳລະ"
+          name: "to_confirm_payment",
         },
         {
           id: 4,
+          name: "rejected",
+        },
+        {
+          id: 5,
           name: "success",
-          dis_play: "ຊຳລະສຳເລັດ"
         },
       ],
 
@@ -268,6 +267,9 @@ export default {
     getBgColorFunc(status){
       return getBgColor(status)
     },
+    filterStatusLao(status){
+      return  getLaoStatus(status.name)
+    },
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
@@ -276,8 +278,7 @@ export default {
                   {page: this.pagination.current_page},
                   {per_page: this.per_page},
                   {filter: this.search},
-                  {status: this.selectedPaymentStatus},
-
+                  {billing_status: this.selectedPaymentStatus},
                 ]),
               }
           )

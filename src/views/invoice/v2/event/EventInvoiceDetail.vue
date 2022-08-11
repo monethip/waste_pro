@@ -71,87 +71,67 @@
             </tbody>
             <br/>
           </v-simple-table>
-          <v-row>
-            <v-list-item>
-              <v-list-item-icon>
-                <v-icon color="indigo">mdi-account</v-icon>
-              </v-list-item-icon>
 
-              <v-list-item-content>
-                <v-list-item-subtitle>ຊື່</v-list-item-subtitle>
-                <v-list-item-title
-                >{{ data.name }} {{ data.surname }}</v-list-item-title
-                >
-              </v-list-item-content>
+          <h3>ຂໍ້ມູນລູກຄ້າ</h3>
+          <br/>
+          <v-simple-table>
+            <tbody class="tb-result">
+            <tr>
+              <td :colspan="4" style="font-size:16px;font-weight: 600;">ລຸກຄ້າ:</td>
+              <td :colspan="4" style="font-size:16px;font-weight: 600;">
+                {{ data.name }} {{ data.surname }}
+              </td>
+            </tr>
+            <tr>
+              <td :colspan="4" style="font-size:16px;font-weight: 600;">ເບີໂທ:</td>
+              <td :colspan="4" style="font-size:16px;font-weight: 600;" v-if="data.billing">
+                {{ data.phone }}
+              </td>
+            </tr>
+            <tr style="font-size: 20px;">
+              <td :colspan="4" style="font-size:16px;font-weight: 600;">ວັນທີລົງເກັບ:</td>
+              <td :colspan="4" style="font-size:16px;font-weight: 600;">
+                {{ data.date }}
+              </td>
+            </tr>
+            <tr style="font-size: 20px;">
+              <td :colspan="4" style="font-size:16px;font-weight: 600;">ສະຖານທີ່:</td>
+              <td :colspan="4" style="font-size:16px;font-weight: 600;" v-if="data.village">
+           {{
+                      data.village.name
+                    }}
+              </td>
+            </tr>
+            <tr style="font-size: 20px;">
+              <td :colspan="4" style="font-size:16px;font-weight: 600;">ສະຖານະການເກັບ:</td>
+              <td :colspan="4" style="font-size:16px;font-weight: 600;" v-if="data.village">
+           {{
+                      data.collect_status
+                    }}
+              </td>
+            </tr>
+            <tr style="font-size: 20px;">
+              <td :colspan="4" style="font-size:16px;font-weight: 600;">ລາຍລະອຽດ:</td>
+              <td :colspan="4" style="font-size:16px;font-weight: 600;">
+                {{
+                  data.description
+                }}
+              </td>
+            </tr>
+            <tr style="font-size: 20px;">
+              <td :colspan="4" style="font-size:16px;font-weight: 600;">ພະນັກງານຂັບລົດ:</td>
+              <td :colspan="4" style="font-size:16px;font-weight: 600;" v-if="data.driver">
+                {{
+                  data.driver.name
+                }} {{
+                  data.driver.surname
+                }}
+              </td>
+            </tr>
+            </tbody>
+            <br/>
+          </v-simple-table>
 
-              <v-spacer></v-spacer>
-              <v-list-item-icon>
-                <v-icon color="indigo" class="mr-6"> mdi-phone </v-icon>
-              </v-list-item-icon>
-
-              <v-list-item-content>
-                <v-list-item-subtitle>ເບີໂທ</v-list-item-subtitle>
-                <v-list-item-title> {{ data.phone }}</v-list-item-title>
-              </v-list-item-content>
-
-              <v-spacer></v-spacer>
-              <v-list-item-icon>
-                <v-icon class="mr-6" color="indigo">mdi-calendar</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-subtitle>ວັນທີ</v-list-item-subtitle>
-                <v-list-item-title> {{ data.date }}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider inset></v-divider>
-          </v-row>
-
-          <v-row>
-            <v-list-item>
-              <v-list-item-icon>
-                <v-icon color="indigo"> mdi-calendar </v-icon>
-              </v-list-item-icon>
-
-              <v-list-item-content>
-                <v-list-item-subtitle>ສະຖານະ</v-list-item-subtitle>
-                <v-list-item-subtitle>
-                  <span>
-                    <v-chip
-                        label
-                        class="success"
-                        v-if="data.collect_status == 'active'"
-                    >{{ data.collect_status }}</v-chip
-                    >
-                    <v-chip
-                        label
-                        class="error"
-                        v-else-if="data.collect_status == 'inactive'"
-                    >{{ data.collect_status }}</v-chip
-                    >
-                    <v-chip label class="primary" v-else>{{
-                        data.collect_status
-                      }}</v-chip>
-                  </span>
-                </v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider inset></v-divider>
-            <v-list-item>
-              <v-list-item-icon>
-                <v-icon color="indigo">mdi-home</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-subtitle>ສະຖານທີ່</v-list-item-subtitle>
-                <v-list-item-title v-if="data.village">{{
-                    data.village.name
-                  }}</v-list-item-title>
-                <v-list-item-subtitle>{{
-                    data.description
-                  }}</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-
-          </v-row>
           <v-row>
             <v-col cols="12" class="mb-4">
               <GmapMap
