@@ -1,9 +1,21 @@
 <template>
   <v-container>
     <v-row>
-      <span class="text-h5">ລວມທັງໝົດ</span>
+      <span class="text-h5">ຄົວເຮືອນ</span>
     </v-row>
     <v-row>
+      <v-col>
+        <v-autocomplete
+          required
+          :items="packageList"
+          v-model="selectedPackage"
+          item-text="name"
+          item-value="id"
+          label="ປະເພດສັນຍາ *"
+          outlined
+          dense
+        ></v-autocomplete>
+      </v-col>
       <v-col>
         <v-autocomplete
           required
@@ -100,13 +112,13 @@
     <v-row>
       <v-col>
         <v-card outlined>
-          <v-card-title>ຕາມປະເພດບິນ</v-card-title>
+          <v-card-title>ຕາມປະເພດສັນຍາ</v-card-title>
           <v-card-text>
             <v-simple-table>
               <template v-slot:default>
                 <thead>
                   <tr>
-                    <th>ປະເພດບິນ</th>
+                    <th>ປະເພດສັນຍາ</th>
                     <th
                       class="text-left"
                       v-for="detailStatus in detailStatuses"
@@ -120,9 +132,9 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item in summaryDetails" :key="item.billing_type">
+                  <tr v-for="item in summaryDetails" :key="item.package_name">
                     <td>
-                      <span class="font-weight-medium">{{ item.billing_type }}</span>
+                      <span class="font-weight-medium">{{ item.package_name }}</span>
                       <span
                         class="font-weight-medium text-caption"
                       >{{ ` (${formatNumber(item.count_billing)} ບິນ)` }}</span>
@@ -177,10 +189,9 @@
               </template>
 
               <template v-slot:item.total="{ item }">{{ formatNumber(item.total) }}</template>
-
               <template
-                v-slot:item.display_type="{ item }"
-              >{{ getLaoBillingTypeFunc(item.display_type) }}</template>
+                v-slot:item.user.customer.package="{ item }"
+              >{{ `${item.user.customer.package.name}` }}</template>
 
               <template v-slot:item.user="{ item }">
                 <span
@@ -199,11 +210,8 @@
 
 <script>
 import RowSection from "../../components/card/RowSection.vue";
-import {
-  getBgColor,
-  getLaoStatus,
-  getLaoBillingType
-} from "../../Helpers/BillingStatus";
+import { getBgColor, getLaoStatus } from "../../Helpers/BillingStatus";
+import { getLaoCompanyCostBy } from "../../Helpers/Customer";
 import numberFormat from "../../Helpers/formatNumber";
 
 export default {
@@ -226,6 +234,8 @@ export default {
       selectedVillage: "",
       districts: [],
       selectedDistrict: null,
+      packageList: [],
+      selectedPackage: "",
       billings: {
         summary: {
           count_billing: 0,
@@ -241,7 +251,7 @@ export default {
           value: "content"
         },
         { text: "ສະຖານະ", value: "status" },
-        { text: "ປະເພດບິນ", value: "display_type" },
+        { text: "ປະເພດສັນຍາ", value: "user.customer.package" },
         { text: "ຈຳນວນ", value: "total" },
         { text: "ລູກຄ້າ", value: "user" }
       ]
@@ -265,12 +275,21 @@ export default {
         console.log(error);
       }
     },
+    async fetchPackage() {
+      try {
+        const result = await this.$axios.get("all-package");
+        this.packageList = result.data.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
     fetchData() {
       this.start_menu = false;
       this.end_menu = false;
       const queryOptions = {
         start_date: this.start_date,
-        end_date: this.end_date
+        end_date: this.end_date,
+        package_id: this.selectedPackage
       };
 
       if (this.selectedVillage) queryOptions.village_id = this.selectedVillage;
@@ -279,7 +298,7 @@ export default {
 
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("v2/report-billing-by-type", {
+        .get("v2/report-billing-home", {
           params: queryOptions
         })
         .then(res => {
@@ -312,11 +331,11 @@ export default {
     getBgColorFunc(status) {
       return getBgColor(status);
     },
-    getLaoBillingTypeFunc(status) {
-      return getLaoBillingType(status);
-    },
     getLaoStatusFunc(status) {
       return getLaoStatus(status);
+    },
+    getLaoCompanyCostByFunc(status) {
+      return getLaoCompanyCostBy(status);
     },
     formatNumber(number) {
       return numberFormat(number);
@@ -328,6 +347,9 @@ export default {
     },
     selectedVillage() {
       this.fetchData();
+    },
+    selectedPackage() {
+      this.fetchData();
     }
   },
   computed: {
@@ -338,7 +360,7 @@ export default {
       let data = [];
       for (const detail of this.billings.details) {
         let item = {
-          billing_type: detail.billingable_type_la,
+          package_name: detail.package_name,
           count_billing: detail.count_billing
         };
         for (const total of detail.total) {
@@ -354,6 +376,7 @@ export default {
     },
     detailStatuses() {
       let data = [];
+      console.log(6565, this.summaryDetails);
       if (this.summaryDetails.length > 0) {
         for (const [key, value] of Object.entries(this.summaryDetails[0])) {
           if (value.count_billing !== undefined) {
@@ -371,7 +394,7 @@ export default {
         {
           text: "ປະເພດບິນ",
           align: "start",
-          value: "billing_type"
+          value: "package_name"
         }
       ];
       if (this.detailStatuses.length > 0) {
@@ -419,6 +442,7 @@ export default {
   },
   created() {
     this.fetchDistrict();
+    this.fetchPackage();
     this.fetchData();
   }
 };

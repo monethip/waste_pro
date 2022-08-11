@@ -1,9 +1,21 @@
 <template>
   <v-container>
     <v-row>
-      <span class="text-h5">ລວມທັງໝົດ</span>
+      <span class="text-h5">ຫົວໜ່ວຍທຸລະກິດ</span>
     </v-row>
     <v-row>
+      <v-col>
+        <v-autocomplete
+          required
+          :items="costByList"
+          v-model="selectedCostBy"
+          item-text="la"
+          item-value="en"
+          label="ປະເພດບໍລິການ *"
+          outlined
+          dense
+        ></v-autocomplete>
+      </v-col>
       <v-col>
         <v-autocomplete
           required
@@ -120,9 +132,9 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item in summaryDetails" :key="item.billing_type">
+                  <tr v-for="item in summaryDetails" :key="item.cost_by">
                     <td>
-                      <span class="font-weight-medium">{{ item.billing_type }}</span>
+                      <span class="font-weight-medium">{{ item.cost_by }}</span>
                       <span
                         class="font-weight-medium text-caption"
                       >{{ ` (${formatNumber(item.count_billing)} ບິນ)` }}</span>
@@ -177,10 +189,9 @@
               </template>
 
               <template v-slot:item.total="{ item }">{{ formatNumber(item.total) }}</template>
-
               <template
-                v-slot:item.display_type="{ item }"
-              >{{ getLaoBillingTypeFunc(item.display_type) }}</template>
+                v-slot:item.user.customer.cost_by="{ item }"
+              >{{ getLaoCompanyCostByFunc(item.user.customer.cost_by) }}</template>
 
               <template v-slot:item.user="{ item }">
                 <span
@@ -199,11 +210,8 @@
 
 <script>
 import RowSection from "../../components/card/RowSection.vue";
-import {
-  getBgColor,
-  getLaoStatus,
-  getLaoBillingType
-} from "../../Helpers/BillingStatus";
+import { getBgColor, getLaoStatus } from "../../Helpers/BillingStatus";
+import { getLaoCompanyCostBy, getCompanyCostBy } from "../../Helpers/Customer";
 import numberFormat from "../../Helpers/formatNumber";
 
 export default {
@@ -226,6 +234,8 @@ export default {
       selectedVillage: "",
       districts: [],
       selectedDistrict: null,
+      costByList: getCompanyCostBy,
+      selectedCostBy: "",
       billings: {
         summary: {
           count_billing: 0,
@@ -241,7 +251,7 @@ export default {
           value: "content"
         },
         { text: "ສະຖານະ", value: "status" },
-        { text: "ປະເພດບິນ", value: "display_type" },
+        { text: "ປະເພດບໍລິການ", value: "user.customer.cost_by" },
         { text: "ຈຳນວນ", value: "total" },
         { text: "ລູກຄ້າ", value: "user" }
       ]
@@ -270,7 +280,8 @@ export default {
       this.end_menu = false;
       const queryOptions = {
         start_date: this.start_date,
-        end_date: this.end_date
+        end_date: this.end_date,
+        cost_by: this.selectedCostBy
       };
 
       if (this.selectedVillage) queryOptions.village_id = this.selectedVillage;
@@ -279,7 +290,7 @@ export default {
 
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("v2/report-billing-by-type", {
+        .get("v2/report-billing-company", {
           params: queryOptions
         })
         .then(res => {
@@ -312,11 +323,11 @@ export default {
     getBgColorFunc(status) {
       return getBgColor(status);
     },
-    getLaoBillingTypeFunc(status) {
-      return getLaoBillingType(status);
-    },
     getLaoStatusFunc(status) {
       return getLaoStatus(status);
+    },
+    getLaoCompanyCostByFunc(status) {
+      return getLaoCompanyCostBy(status);
     },
     formatNumber(number) {
       return numberFormat(number);
@@ -328,6 +339,9 @@ export default {
     },
     selectedVillage() {
       this.fetchData();
+    },
+    selectedCostBy() {
+      this.fetchData();
     }
   },
   computed: {
@@ -338,7 +352,7 @@ export default {
       let data = [];
       for (const detail of this.billings.details) {
         let item = {
-          billing_type: detail.billingable_type_la,
+          cost_by: detail.cost_by_la,
           count_billing: detail.count_billing
         };
         for (const total of detail.total) {
@@ -354,6 +368,7 @@ export default {
     },
     detailStatuses() {
       let data = [];
+      console.log(6565, this.summaryDetails);
       if (this.summaryDetails.length > 0) {
         for (const [key, value] of Object.entries(this.summaryDetails[0])) {
           if (value.count_billing !== undefined) {
@@ -371,7 +386,7 @@ export default {
         {
           text: "ປະເພດບິນ",
           align: "start",
-          value: "billing_type"
+          value: "cost_by"
         }
       ];
       if (this.detailStatuses.length > 0) {

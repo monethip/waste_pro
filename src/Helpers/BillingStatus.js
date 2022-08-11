@@ -41,3 +41,18 @@ export const getLaoStatus = function (status) {
             return "BCEL"
     }
 }
+
+export const getLaoBillingType = function (type) {
+    switch (type) {
+        case "CustomBill":
+            return "ບິນອື່ນໆ"
+        case "NewCollectionEvent":
+            return "ບີນບໍລີການຂີ້ເຫຍື້ອພິເສດ"
+        case "FutureInvoice":
+            return "ບິນບໍລິການລ່ວງໜ້າ"
+        case "NewInvoice":
+            return "ບິນບໍລິການປະຈຳເດືອນ"
+        default:
+            return type
+    }
+}

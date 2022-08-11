@@ -406,8 +406,8 @@ export default {
             },
             {
               icon: "mdi-cash",
-              title: "ລາຍງານຂໍ້ມູນບັນຊີແຕ່ລະປະເພດ",
-              to: "/report/billing/type",
+              title: "ລານງານບິນ",
+              to: "/report/billing/main",
               permissions: ["report"]
             },
             {
