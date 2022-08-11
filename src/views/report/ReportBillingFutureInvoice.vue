@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <span class="text-h5">ລວມທັງໝົດ</span>
+      <span class="text-h5">ຈ່າຍລ່ວງໜ້າ</span>
     </v-row>
     <v-row>
       <v-col>
@@ -96,54 +96,6 @@
       </v-col>
     </v-row>
 
-    <!-- Section Table Summary-->
-    <v-row>
-      <v-col>
-        <v-card outlined>
-          <v-card-title>ຕາມປະເພດບິນ</v-card-title>
-          <v-card-text>
-            <v-simple-table>
-              <template v-slot:default>
-                <thead>
-                  <tr>
-                    <th>ປະເພດບິນ</th>
-                    <th
-                      class="text-left"
-                      v-for="detailStatus in detailStatuses"
-                      :key="detailStatus.text"
-                    >
-                      <v-chip
-                        :color="getBgColorFunc(detailStatus.text)"
-                        dark
-                      >{{ detailStatus.text }}</v-chip>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="item in summaryDetails" :key="item.billing_type">
-                    <td>
-                      <span class="font-weight-medium">{{ item.billing_type }}</span>
-                      <span
-                        class="font-weight-medium text-caption"
-                      >{{ ` (${formatNumber(item.count_billing)} ບິນ)` }}</span>
-                    </td>
-                    <td v-for="detailStatus in detailStatuses" :key="detailStatus.text">
-                      <span
-                        class="font-weight-medium"
-                      >{{ formatNumber(item[detailStatus.text].total) }}</span>
-                      <span
-                        class="font-weight-medium text-caption"
-                      >{{ ` (${formatNumber(item[detailStatus.text].count_billing)} ບິນ)` }}</span>
-                    </td>
-                  </tr>
-                </tbody>
-              </template>
-            </v-simple-table>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-
     <!-- Section Table Detail-->
     <v-row>
       <v-col>
@@ -177,10 +129,17 @@
               </template>
 
               <template v-slot:item.total="{ item }">{{ formatNumber(item.total) }}</template>
-
               <template
-                v-slot:item.display_type="{ item }"
-              >{{ getLaoBillingTypeFunc(item.display_type) }}</template>
+                v-slot:item.user.customer.package="{ item }"
+              >{{ `${item.user.customer.package.name}` }}</template>
+
+              <template v-slot:item.billingable.start_month="{ item }">
+                <v-chip color="green" dark>{{ item.billingable.start_month }}</v-chip>
+              </template>
+
+              <template v-slot:item.billingable.end_month="{ item }">
+                <v-chip color="red" dark>{{ item.billingable.end_month }}</v-chip>
+              </template>
 
               <template v-slot:item.user="{ item }">
                 <span
@@ -214,11 +173,8 @@
 
 <script>
 import RowSection from "../../components/card/RowSection.vue";
-import {
-  getBgColor,
-  getLaoStatus,
-  getLaoBillingType
-} from "../../Helpers/BillingStatus";
+import { getBgColor, getLaoStatus } from "../../Helpers/BillingStatus";
+import { getLaoCompanyCostBy } from "../../Helpers/Customer";
 import numberFormat from "../../Helpers/formatNumber";
 
 export default {
@@ -242,11 +198,7 @@ export default {
       districts: [],
       selectedDistrict: null,
       billings: {
-        summary: {
-          count_billing: 0,
-          total: []
-        },
-        details: [],
+        summary: [],
         data: []
       },
       billingListHeader: [
@@ -256,7 +208,8 @@ export default {
           value: "content"
         },
         { text: "ສະຖານະ", value: "status" },
-        { text: "ປະເພດບິນ", value: "display_type" },
+        { text: "ຈາກເດືອນ", value: "billingable.start_month" },
+        { text: "ເຖິງເດືອນ", value: "billingable.end_month" },
         { text: "ຈຳນວນ", value: "total" },
         { text: "ລູກຄ້າ", value: "user" },
         { text: "ປະເພດລູກຄ້າ", value: "custom_type" },
@@ -296,7 +249,7 @@ export default {
 
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("v2/report-billing-by-type", {
+        .get("v2/report-billing-future-invoice", {
           params: queryOptions
         })
         .then(res => {
@@ -318,7 +271,8 @@ export default {
         });
     },
     getCard(statusItem) {
-      const data = this.billings.summary.total.find(
+      console.log(3232, this.billings.summary);
+      const data = this.billings.summary.find(
         status => status.status == statusItem
       );
       if (data) {
@@ -329,11 +283,11 @@ export default {
     getBgColorFunc(status) {
       return getBgColor(status);
     },
-    getLaoBillingTypeFunc(status) {
-      return getLaoBillingType(status);
-    },
     getLaoStatusFunc(status) {
       return getLaoStatus(status);
+    },
+    getLaoCompanyCostByFunc(status) {
+      return getLaoCompanyCostBy(status);
     },
     formatNumber(number) {
       return numberFormat(number);
@@ -355,7 +309,7 @@ export default {
       let data = [];
       for (const detail of this.billings.details) {
         let item = {
-          billing_type: detail.billingable_type_la,
+          package_name: detail.package_name,
           count_billing: detail.count_billing
         };
         for (const total of detail.total) {
@@ -371,6 +325,7 @@ export default {
     },
     detailStatuses() {
       let data = [];
+      console.log(6565, this.summaryDetails);
       if (this.summaryDetails.length > 0) {
         for (const [key, value] of Object.entries(this.summaryDetails[0])) {
           if (value.count_billing !== undefined) {
@@ -388,7 +343,7 @@ export default {
         {
           text: "ປະເພດບິນ",
           align: "start",
-          value: "billing_type"
+          value: "package_name"
         }
       ];
       if (this.detailStatuses.length > 0) {

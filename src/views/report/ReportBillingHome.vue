@@ -200,6 +200,15 @@
                 <span v-if="customerType(item) == 'company'">{{ item.user.customer.company_name }}</span>
                 <span v-if="!customerType(item)">{{ `${item.user.name} (${item.user.phone})` }}</span>
               </template>
+
+              <template v-slot:item.custom_address="{ item }">
+                <span
+                  v-if="item.display_type == 'NewCollectionEvent'"
+                >{{ `${item.billingable.village.name} / ${item.billingable.village.district.name}` }}</span>
+                <span
+                  v-else-if="customerType(item) == 'home' || customerType(item) == 'company'"
+                >{{ `${item.user.customer.village.name} / ${item.user.customer.village.district.name}` }}</span>
+              </template>
             </v-data-table>
           </v-card-text>
         </v-card>
@@ -253,7 +262,8 @@ export default {
         { text: "ສະຖານະ", value: "status" },
         { text: "ປະເພດສັນຍາ", value: "user.customer.package" },
         { text: "ຈຳນວນ", value: "total" },
-        { text: "ລູກຄ້າ", value: "user" }
+        { text: "ລູກຄ້າ", value: "user" },
+        { text: "ທີ່ຢູ່", value: "custom_address" }
       ]
     };
   },
