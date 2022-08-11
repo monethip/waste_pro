@@ -1,6 +1,8 @@
 <template>
   <v-container>
-    ຄົ້ນຫາ
+    <v-row>
+      <span class="text-h5">ຫົວໜ່ວຍທຸລະກິດ</span>
+    </v-row>
     <v-row>
       <v-col>
         <v-autocomplete
