@@ -1375,6 +1375,23 @@ const routes = [
 
     //Report by address
     {
+        path: '/report/billing/company',
+        name: 'Report-Billing-Company',
+        component: () => import('@/views/report/ReportBillingCompany.vue'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'ລານງານບິນຄ່າຂີ້ເຫຍື້ອທຸລະກິດ',
+                    disabled: true,
+                    href: '/report/address/collection'
+                },
+            ]
+        }
+    },
+
+    {
         path: '/report/billing/type',
         name: 'Report-Billing-Type',
         component: () => import('@/views/report/ReportBillingType.vue'),
@@ -1383,7 +1400,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'ລາຍງານເກັບຂີ້ເຫຍື້ອຕາມບ້ານ',
+                    text: 'ລານງານບິນຄ່າຂີ້ເຫຍື້ອ',
                     disabled: true,
                     href: '/report/address/collection'
                 },

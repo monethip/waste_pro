@@ -406,8 +406,14 @@ export default {
             },
             {
               icon: "mdi-cash",
-              title: "ລາຍງານຂໍ້ມູນບັນຊີແຕ່ລະປະເພດ",
+              title: "ລານງານບິນຄ່າຂີ້ເຫຍື້ອ",
               to: "/report/billing/type",
+              permissions: ["report"]
+            },
+            {
+              icon: "mdi-cash",
+              title: "ລານງານບິນຄ່າຂີ້ເຫຍື້ອທຸລະກິດ",
+              to: "/report/billing/company",
               permissions: ["report"]
             },
             {
