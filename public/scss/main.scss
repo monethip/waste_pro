@@ -72,3 +72,9 @@
 .logo{
   margin: auto;
 }
+.img-payment{
+  border: 2px solid $primary-color !important;
+}
+.img-payment-error{
+    border: 2px solid $red-color !important;
+}

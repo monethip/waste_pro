@@ -59,7 +59,7 @@
         </v-text-field>
       </v-col>
       <v-col class="align-end ">
-        <v-btn @click="choseCustomer()" class="btn-primary">
+        <v-btn @click="choseCustomer()" class="btn-primary elevation-0">
           <v-icon class="mr-2">mdi-plus</v-icon>
           ສ້າງບິນ
         </v-btn>
@@ -75,6 +75,16 @@
               :disable-pagination="true"
               hide-default-footer
           >
+            <template v-slot:item.start_month="{ item }">
+              <div class="success--text">
+                {{item.start_month}}
+              </div>
+            </template>
+            <template v-slot:item.end_month="{ item }">
+              <div class="error--text">
+                {{item.start_month}}
+              </div>
+            </template>
             <template v-slot:item.total="{ item }">
               {{ Intl.NumberFormat().format(item.billing.total) }}
             </template>
@@ -85,7 +95,7 @@
               {{ Intl.NumberFormat().format(item.billing.discount) }}
             </template>
             <template v-slot:item.status="{ item }">
-              {{paymentStatusText(item.billing.status) }}
+              <v-chip :color="getBgColorFunc(item.billing.status)" dark>{{getLaoStatusFunc(item.billing.status) }}</v-chip>
             </template>
             <template v-slot:item.actions="{ item }">
               <v-icon
@@ -118,6 +128,7 @@
 <script>
 import {GetOldValueOnInput} from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
+import {getBgColor, getLaoStatus} from "@/Helpers/BillingStatus";
 
 export default {
   name: "Invoice",
@@ -202,6 +213,12 @@ export default {
     };
   },
   methods: {
+    getLaoStatusFunc(status){
+      return  getLaoStatus(status)
+    },
+    getBgColorFunc(status){
+      return getBgColor(status)
+    },
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios

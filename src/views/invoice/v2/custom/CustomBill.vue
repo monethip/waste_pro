@@ -92,8 +92,9 @@
               {{ Intl.NumberFormat().format(item.billing.discount) }}
             </template>
             <template v-slot:item.status="{ item }">
-              {{paymentStatusText(item.billing.status) }}
+              <v-chip :color="getBgColorFunc(item.billing.status)" dark>{{getLaoStatusFunc(item.billing.status) }}</v-chip>
             </template>
+
             <template v-slot:item.actions="{ item }">
               <v-icon
                   color="success"
@@ -174,6 +175,7 @@
 <script>
 import {GetOldValueOnInput} from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
+import {getLaoStatus,getBgColor} from "@/Helpers/BillingStatus";
 
 export default {
   name: "Invoice",
@@ -260,6 +262,12 @@ export default {
     };
   },
   methods: {
+    getLaoStatusFunc(status){
+      return  getLaoStatus(status)
+    },
+    getBgColorFunc(status){
+      return getBgColor(status)
+    },
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios

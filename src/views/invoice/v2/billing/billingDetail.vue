@@ -33,16 +33,13 @@
           <v-row class="pb-4">
             <v-col>
               <h2 class="text-center">ໃບບິນເກັບເງິນຄ່າຂີ້ເຫື້ຍອ</h2>
-              <!-- <p v-if="invoice.plan_month">{{ invoice.plan_month.name }}</p> -->
             </v-col>
           </v-row>
            <v-row class="pb-4">
             <v-col>
               <h2>
                 ສະຖານະບິນ:
-                <span :class="invoiceStatusColor">{{
-                    invoiceStatus(invoice.status)
-                  }}</span>
+                  <v-chip :color="getBgColorFunc(invoice.status)" dark>{{getLaoStatusFunc(invoice.status) }}</v-chip>
               </h2>
             </v-col>
           </v-row>
@@ -98,9 +95,9 @@
               <v-btn class="btn btn-primary mr-4 elevation-0" v-if="invoice.status === 'created'"
                      @click="approveBill(invoice.id)">ອະນຸມັດບິນ
               </v-btn>
-              <v-btn class="btn btn-primary mr-4 elevation-0" v-if="invoice.status === 'created'"
-                     @click="editBill(invoice.id)">ແກ້ໄຂບິນ
-              </v-btn>
+<!--              <v-btn class="btn btn-primary mr-4 elevation-0" v-if="invoice.status === 'created'"-->
+<!--                     @click="editBill(invoice.id)">ແກ້ໄຂບິນ-->
+<!--              </v-btn>-->
               <v-btn class="btn btn-primary mr-4 elevation-0" v-if="invoice.status === 'approved'" @click="toPay(invoice.id)">ຊຳລະບິນ</v-btn>
               <v-btn class="btn btn-primary mr-4 elevation-0" v-if="invoice.status === 'to_confirm_payment'" @click="confirmPayment">
                 ຢືນຢັນການຊຳລະບິນ
@@ -218,22 +215,52 @@
               <h3>
                 ວັນທີຊຳລະ: {{ moment(invoice.end_month).format("DD-MM-YY") }}
               </h3>
-              <h3>ປະເພດຊຳລະ: {{ invoice.payment_method }}</h3>
+              <h3>ປະເພດຊຳລະ: {{ getLaoStatusFunc(invoice.payment_method) }}</h3>
               <h3 v-if="invoice.paided_by">ຊຳລະໂດຍ: {{ invoice.paided_by.name }}</h3>
             </v-col>
           </v-row>
+          <div v-if="invoice.payment_method =='bcel'">
+            <h3 class="v-title" v-if="invoice.image_payments">ຮູບການຊຳລະ</h3>
+            <v-row v-if="invoice.image_payments">
+              <v-col
+                  cols="6"
+                  v-for="(img, index) in invoice.image_payments" :key="index">
+                <v-card class="elevation-0">
+                  <v-img
+                      :src="img.url"
+                      max-height="300"
+                      max-width="400"
+                      min-height="300"
+                      min-width="400"
+                      aspect-ratio="1"
+                      class="pa-2 img-payment"
+                      @click="showImage(img.url)"
+                  ></v-img>
+                </v-card>
+              </v-col>
+            </v-row>
 
-          <v-row v-if="invoice.image_payments">
-            <v-col
-                cols="6"
-                sm="4"
-                v-for="(img, index) in invoice.image_payments" :key="index">
-              <v-img
-                  :src="img.url"
-                  @click="showImage(img.url)"
-              ></v-img>
-            </v-col>
-          </v-row>
+            <h3 class="v-title" v-if="invoice.image_fix_payments">ຮູບການຊຳລະໃໝ່</h3>
+            <v-row v-if="invoice.image_fix_payments">
+              <v-col
+                  cols="6"
+                  v-for="(img, index) in invoice.image_fix_payments" :key="index">
+                <v-card class="elevation-0">
+                  <v-img
+                      :src="img.url"
+                      max-height="300"
+                      max-width="400"
+                      min-height="300"
+                      min-width="400"
+                      aspect-ratio="1"
+                      class="pa-2 img-payment-error"
+                      @click="showImage(img.url)"
+                  ></v-img>
+                </v-card>
+              </v-col>
+            </v-row>
+          </div>
+
 
           <v-card-actions class="mt-6">
             <v-spacer></v-spacer>
@@ -541,6 +568,8 @@
 </template>
 
 <script>
+import {getBgColor, getLaoStatus} from "@/Helpers/BillingStatus";
+
 export default {
   name: "InvoiceDetail",
   title() {
@@ -715,29 +744,12 @@ export default {
           });
     },
 
-    invoiceStatus(data) {
-      if (data == "created") {
-        this.invoiceStatusColor = "primary--text";
-        return "ສ້າງບິນສຳເລັດ";
-      } else if (data == "approved") {
-        this.invoiceStatusColor = "info--text";
-        return "ອະນຸມັດສຳເລັດ";
-      } else if (data == "to_confirm_payment") {
-        this.invoiceStatusColor = "warning--text";
-        return "ລໍຖ້າຢືນຢັນການຊຳລະ";
-      } else if (data == "rejected") {
-        this.invoiceStatusColor = "error--text";
-        return "ຊຳລະບໍ່ສຳເລັດ";
-      } else if (data == "success") {
-        this.invoiceStatusColor = "success--text";
-        return "ສຳເລັດການຊຳລະ";
-      }
+    getLaoStatusFunc(status){
+      return  getLaoStatus(status)
     },
-    //     invoiceStatusColor(data) {
-    //   if (data == "success") {
-    //     return "success";
-    //   }
-    // },
+    getBgColorFunc(status){
+      return getBgColor(status)
+    },
     closeAddModal() {
       this.$store.commit("modalAdd_State", false);
     },

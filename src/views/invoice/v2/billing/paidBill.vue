@@ -478,7 +478,7 @@ export default {
       rejects: [],
       reject_reason_id: "",
       description: "",
-      paymentTypeRule: [(v) => !!v || "Name is required"],
+      paymentTypeRule: [(v) => !!v || "Payment is required"],
       payment: {},
       confirm: {},
       headers: [

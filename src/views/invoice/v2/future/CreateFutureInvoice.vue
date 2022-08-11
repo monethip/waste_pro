@@ -92,7 +92,7 @@
               <v-col>
                 <v-checkbox v-model="is_instantly" class="my-auto">
                   <template v-slot:label>
-                    <div>ເກັບເງິນທັນທີ</div>
+                    <div>ລູກຄ້າຈ່າຍແລ້ວ</div>
                   </template>
                 </v-checkbox>
                 <p class="errors">
@@ -100,20 +100,56 @@
                 </p>
               </v-col>
             </v-row>
-            <div v-if="is_instantly == true">
-              <v-row>
-                <v-col>
-                  <div class="field">
-                    <div class="file is-large is-boxed">
-                      <label class="file-label">
-                        <input
-                            @change="previewMultiImage"
-                            class="file-input input-file-image"
-                            type="file"
-                            accept="image/*"
-                            multiple
-                        />
-                        <span class="file-cta">
+            <h3 class="my-4" v-if="is_instantly == true">ເລືອກປະເພດການຊຳລະ</h3>
+            <v-row v-if="is_instantly == true">
+              <v-col cols>
+                <v-chip-group
+                    v-model="paymentType"
+                    column
+                    :rules="paymentTypeRule"
+                    required
+                >
+                  <v-chip
+                      large
+                      class="mr-8"
+                      color="info"
+                      label
+                      filter
+                      outlined
+                  >
+                    ເງິນສົດ
+                    <v-icon left class="ml-1"> mdi-currency-usd</v-icon>
+                  </v-chip>
+                  <v-chip large color="error" label filter outlined>
+                    BCEL
+                    <v-icon class="ml-1" left>
+                      mdi-credit-card
+                    </v-icon
+                    >
+                  </v-chip
+                  >
+                </v-chip-group>
+                <p class="errors">
+                  {{ server_errors.payment_method }}
+                </p>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <div v-if="paymentType == 1">
+                <v-row >
+                  <v-col>
+                    <div class="field">
+                      <div class="file is-large is-boxed">
+                        <label class="file-label">
+                          <input
+                              @change="previewMultiImage"
+                              class="file-input input-file-image"
+                              type="file"
+                              accept="image/*"
+                              multiple
+                          />
+                          <span class="file-cta">
                       <span class="file-icon">
                         <v-icon
                             style="
@@ -133,31 +169,32 @@
                           padding-top: 20px;
                         "
                       >
-                        Choose Image
+                        ເລືອກຮູບການຊຳລະ
                       </span>
                     </span>
-                      </label>
+                        </label>
+                      </div>
                     </div>
-                  </div>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col
-                    class="mt-5"
-                    v-for="(item, index) in preview_list"
-                    :key="index"
-                >
-                  <v-avatar class="avatar rounded mr-2" size="94px">
-                    <img :src="item" alt="Image"/>
-                  </v-avatar>
-                  <p class="mb-0">File name: {{ image_list[index].name }}</p>
-                  <span>size: {{ image_list[index].size / 1024 }}KB</span>
-                  <div @click="RemoveItem(item)">
-                    <v-icon style="cursor: pointer">mdi-delete</v-icon>
-                  </div>
-                </v-col>
-              </v-row>
-            </div>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col
+                      class="mt-5"
+                      v-for="(item, index) in preview_list"
+                      :key="index"
+                  >
+                    <v-avatar class="avatar rounded mr-2" size="94px">
+                      <img :src="item" alt="Image"/>
+                    </v-avatar>
+                    <p class="mb-0">File name: {{ image_list[index].name }}</p>
+                    <span>size: {{ image_list[index].size / 1024 }}KB</span>
+                    <div @click="RemoveItem(item)">
+                      <v-icon style="cursor: pointer">mdi-delete</v-icon>
+                    </div>
+                  </v-col>
+                </v-row>
+              </div>
+            </v-row>
           </v-form>
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -198,6 +235,8 @@ export default {
       invoices: [],
       loading: false,
       is_instantly:0,
+      payment_method: "",
+      paymentType: "",
       data: {
         email: '',
       },
@@ -221,6 +260,7 @@ export default {
       totalRules: [
         (v) => !!v || "Total is required",
       ],
+      paymentTypeRule: [(v) => !!v || "Payment is required"],
     };
   },
   methods: {
@@ -262,7 +302,7 @@ export default {
       formData.append("total", this.data.total);
       if(this.is_instantly == true) {
         formData.append("is_instantly", 1);
-        formData.append("payment_method", "cash");
+        formData.append("payment_method", this.payment_method);
         this.image_list.map((item) => {
           formData.append("image_payments[]", item);
         });
@@ -313,18 +353,22 @@ export default {
         this.fetchData();
       }
     },
-    "plan.name": function () {
-      this.server_errors.name = "";
+    paymentType: function () {
+      if (this.paymentType == 0) {
+        this.payment_method = "cash";
+        this.image = "";
+        this.imageUrl = "";
+        // this.bcel_reference_number = "";
+      } else if (this.paymentType == 1) {
+        this.payment_method = "bcel";
+      }
+      this.server_errors.payment_method = "";
     },
+
     start_date: function () {
       this.server_errors.month = "";
     },
-    "calendarEdit.name": function () {
-      this.server_errors.name = "";
-    },
-    "calendarEdit.month": function () {
-      this.server_errors.month = "";
-    },
+
   },
   created() {
     this.fetchData();
