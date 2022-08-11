@@ -1,119 +1,144 @@
 <template>
   <v-container>
-    <v-card class="pa-4 pb-10">
-      <v-card-title>ລວມທັງໝົດ</v-card-title>
-      <v-card-text>
-        <v-row class="mt-4">
-          <v-col class="col-2">
-            <span>ລວມ</span>
-          </v-col>
-          <v-col class="col-10">
-            <v-row>
-              <v-card
-                v-for="status in statuses"
-                :key="status.name"
-                color="#1D7874"
-                class="mr-2"
-                dark
-              >
-                <v-card-title class="text-h5">{{ status.value }}</v-card-title>
-                <v-card-subtitle>{{ status.name }}</v-card-subtitle>
-              </v-card>
-            </v-row>
-          </v-col>
-        </v-row>
-        <v-row v-for="statusesArray in statusesArray" :key="statusesArray.name" class="mt-5">
-          <v-row class="mt-4">
-            <v-col class="col-2">
-              <span>{{ statusesArray.name }}</span>
-            </v-col>
-            <v-col class="col-10">
-              <v-row>
-                <v-card
-                  v-for="statusItem in statusesArray.value"
-                  :key="statusItem.status"
-                  :color="statusItem.sugest_color"
-                  class="mr-2"
-                  dark
-                >
-                  <v-card-title class="text-h5">{{ statusItem.total }}</v-card-title>
-                  <v-card-subtitle>{{ statusItem.status_la }}</v-card-subtitle>
-                </v-card>
-              </v-row>
-            </v-col>
-          </v-row>
-        </v-row>
-      </v-card-text>
-      <v-card-action></v-card-action>
-    </v-card>
+    ຄົ້ນຫາ
+    <v-row>
+      <v-col>
+        <v-menu
+          v-model="start_menu"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="start_date"
+              label="ເລີ່ມວັນທີ"
+              readonly
+              outlined
+              v-bind="attrs"
+              v-on="on"
+              dense
+            ></v-text-field>
+          </template>
+          <v-date-picker v-model="start_date" @input="fetchData()"></v-date-picker>
+        </v-menu>
+      </v-col>
 
-    <v-card class="mt-4 pa-4 pb-10" v-for="detail in billings.details" :key="detail.type">
-      <v-card-title>{{ detail.type_la}}</v-card-title>
-      <v-card-text>
-        <v-row class="mt-4">
-          <v-col class="col-2">
-            <span>ສະຖານະທັງໝົດ</span>
-          </v-col>
-          <v-col class="col-10">
-            <v-row>
-              <v-card
-                v-for="statusItem in detail.ສະຖານະທັງໝົດ"
-                :key="statusItem.status"
-                class="mr-2"
-                :color="statusItem.sugest_color"
-                dark
-              >
-                <v-card-title class="text-h5">{{ statusItem.total }}</v-card-title>
-                <v-card-subtitle>{{ statusItem.status_la }}</v-card-subtitle>
-              </v-card>
-            </v-row>
-          </v-col>
-        </v-row>
-        <v-row class="mt-4">
-          <v-col class="col-2">
-            <span>ສະຖານະທີ່ຍັງກວດສອບຢູ່ທັງໝົດ</span>
-          </v-col>
-          <v-col class="col-10">
-            <v-row>
-              <v-card
-                v-for="statusItem in detail.ສະຖານະທີ່ຍັງກວດສອບຢູ່ທັງໝົດ"
-                :key="statusItem.status"
-                class="mr-2"
-                :color="statusItem.sugest_color"
-                dark
-              >
-                <v-card-title class="text-h5">{{ statusItem.total }}</v-card-title>
-                <v-card-subtitle>{{ statusItem.status_la }}</v-card-subtitle>
-              </v-card>
-            </v-row>
-          </v-col>
-        </v-row>
-      </v-card-text>
-      <v-card-action></v-card-action>
-    </v-card>
+      <v-col>
+        <v-menu
+          v-model="end_menu"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="end_date"
+              label="ຫາວັນທີ"
+              readonly
+              outlined
+              v-bind="attrs"
+              v-on="on"
+              dense
+            ></v-text-field>
+          </template>
+          <v-date-picker v-model="end_date" @input="fetchData()"></v-date-picker>
+        </v-menu>
+      </v-col>
+    </v-row>
+
+    <!-- Section Success -->
+    <span class="text-subtitle-1 mt-2">ທີ່ລູກຄ້າຈ່າຍແລ້ວ</span>
+    <RowSection :cards="sectionSuccess" />
+
+    <!-- Section Pending -->
+    <span class="text-subtitle-1 mt-2">ທີ່ລູກຄ້າຍັງບໍ່ທັນຈ່າຍ</span>
+    <RowSection :cards="sectionPending" />
+
+    <!-- Section Table -->
+    <v-row>
+      <v-col>
+        <v-simple-table>
+          <template v-slot:default>
+            <thead>
+              <tr>
+                <th>ປະເພດບິນ</th>
+                <th
+                  class="text-left"
+                  v-for="detailStatus in detailStatuses"
+                  :key="detailStatus.text"
+                >
+                  <v-chip :color="getBgColorFunc(detailStatus.text)" dark>{{ detailStatus.text }}</v-chip>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in summaryDetails" :key="item.billing_type">
+                <td>
+                  <span class="font-weight-medium">{{ item.billing_type }}</span>
+                  <span
+                    class="font-weight-medium text-caption"
+                  >{{ ` (${formatNumber(item.count_billing)} ບິນ)` }}</span>
+                </td>
+                <td v-for="detailStatus in detailStatuses" :key="detailStatus.text">
+                  <span class="font-weight-medium">{{ formatNumber(item[detailStatus.text].total) }}</span>
+                  <span
+                    class="font-weight-medium text-caption"
+                  >{{ ` (${formatNumber(item[detailStatus.text].count_billing)} ບິນ)` }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script>
+import RowSection from "../../components/card/RowSection.vue";
+import { getBgColor } from "../../Helpers/BillingStatus";
+import numberFormat from "../../Helpers/formatNumber";
+
 export default {
   name: "ReportBillingType",
   title() {
     return `Vientiane Waste Co-Dev|Report Invoice`;
   },
+  components: {
+    RowSection
+  },
   data() {
     return {
       loading: false,
+      start_date: "",
+      end_date: "",
+      start_menu: false,
+      end_menu: false,
       billings: {
-        summary: {}
+        summary: {
+          count_billing: 0,
+          total: []
+        },
+        details: []
       }
     };
   },
   methods: {
     fetchData() {
+      this.start_menu = false;
+      this.end_menu = false;
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("v2/report-billing-by-type", {
-          params: {}
+          params: {
+            start_date: this.start_date,
+            end_date: this.end_date
+          }
         })
         .then(res => {
           if (res.data.code == 200) {
@@ -132,45 +157,106 @@ export default {
             }
           }
         });
+    },
+    getCard(statusItem) {
+      const data = this.billings.summary.total.find(
+        status => status.status == statusItem
+      );
+      if (data) {
+        data.bg_color = getBgColor(data.status);
+      }
+      return data ? data : this.defaultStatus;
+    },
+    getBgColorFunc(status) {
+      return getBgColor(status);
+    },
+    formatNumber(number) {
+      return numberFormat(number);
     }
   },
   watch: {},
   computed: {
-    statuses() {
+    summaryDetails() {
       let data = [];
-      for (let [key, value] of Object.entries(this.billings.summary)) {
-        if (typeof value == "number")
-          data.push({
-            name: key,
-            value: value
-          });
+      for (const detail of this.billings.details) {
+        let item = {
+          billing_type: detail.billingable_type_la,
+          count_billing: detail.count_billing
+        };
+        for (const total of detail.total) {
+          item[total.status_la] = {
+            count_billing: total.count_billing,
+            total: total.total
+          };
+        }
+
+        data.push(item);
       }
-      console.log(data);
       return data;
     },
-    statusesArray() {
+    detailStatuses() {
       let data = [];
-      for (let [key, value] of Object.entries(this.billings.summary)) {
-        if (typeof value != "number")
-          data.push({
-            name: key,
-            value: value
-          });
+      if (this.summaryDetails.length > 0) {
+        for (const [key, value] of Object.entries(this.summaryDetails[0])) {
+          if (value.count_billing !== undefined) {
+            data.push({
+              text: key,
+              value: key + ".total"
+            });
+          }
+        }
       }
-      console.log(data);
       return data;
     },
-    statusesSuccess() {
-      let data = [];
-      for (let [key, value] of Object.entries(this.billings.summary)) {
-        if (typeof value == "number")
-          data.push({
-            name: key,
-            value: value
-          });
+    headers() {
+      let header = [
+        {
+          text: "ປະເພດບິນ",
+          align: "start",
+          value: "billing_type"
+        }
+      ];
+      if (this.detailStatuses.length > 0) {
+        header = [header, ...this.detailStatuses];
       }
-      console.log(data);
-      return data;
+      return header;
+    },
+    defaultStatus() {
+      return {
+        status: "",
+        status_la: "",
+        total: 0,
+        count_billing: 0,
+        bg_color: ""
+      };
+    },
+    sectionSuccess() {
+      return [
+        this.successStatus,
+        this.toConfirmPaymentStatus,
+        this.rejectedStatus
+      ];
+    },
+    sectionPending() {
+      return [this.approvedStatus, this.createdStatus];
+    },
+    successStatus() {
+      return this.getCard("success");
+    },
+    createdStatus() {
+      return this.getCard("created");
+    },
+    cancelStatus() {
+      return this.getCard("cancel");
+    },
+    rejectedStatus() {
+      return this.getCard("rejected");
+    },
+    toConfirmPaymentStatus() {
+      return this.getCard("to_confirm_payment");
+    },
+    approvedStatus() {
+      return this.getCard("approved");
     }
   },
   created() {
