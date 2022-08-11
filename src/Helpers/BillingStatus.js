@@ -20,3 +20,20 @@ export const getBgColor = function (status) {
             return "#02a38a";
     }
 }
+
+export const getLaoStatus = function (status) {
+    switch (status) {
+        case "created":
+            return "ລໍຖ້າອະນຸມັດ"
+        case "approved":
+            return "ອະນຸມັດແລ້ວ"
+        case "canceled":
+            return "ບິນຖືກຍົກເລີກ"
+        case "rejected":
+            return "ການຈ່າຍຖືກປະຕິເສດ"
+        case "to_confirm_payment":
+            return "ຈ່າຍແລ້ວ ລໍຖ້າກວດສອບ"
+        case "success":
+            return "ຈ່າຍແລ້ວ ກວດສອບສຳເລັດ"
+    }
+}
