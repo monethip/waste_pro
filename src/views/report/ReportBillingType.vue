@@ -76,6 +76,9 @@
           <v-date-picker v-model="end_date" @input="fetchData()"></v-date-picker>
         </v-menu>
       </v-col>
+      <v-col>
+        <v-btn color="green" dark @click="handleExport">Export</v-btn>
+      </v-col>
     </v-row>
 
     <!-- Section Total-->
@@ -233,6 +236,7 @@ export default {
     return {
       loading: false,
       billingListsearch: "",
+      exportMode: "",
       start_date: "",
       end_date: "",
       start_menu: false,
@@ -247,7 +251,8 @@ export default {
           total: []
         },
         details: [],
-        data: []
+        data: [],
+        download_link: ""
       },
       billingListHeader: [
         {
@@ -265,6 +270,9 @@ export default {
     };
   },
   methods: {
+    handleExport() {
+      this.exportMode = "excel";
+    },
     customerType(item) {
       if (!item.user.customer) return false;
 
@@ -287,7 +295,8 @@ export default {
       this.end_menu = false;
       const queryOptions = {
         start_date: this.start_date,
-        end_date: this.end_date
+        end_date: this.end_date,
+        download: this.exportMode
       };
 
       if (this.selectedVillage) queryOptions.village_id = this.selectedVillage;
@@ -304,6 +313,9 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.billings = res.data.data;
+              this.exportMode = "";
+              if (res.data.data.download_link)
+                window.open(res.data.data.download_link);
             }, 300);
           }
         })
@@ -344,6 +356,9 @@ export default {
       this.fetchData();
     },
     selectedVillage() {
+      this.fetchData();
+    },
+    exportMode() {
       this.fetchData();
     }
   },
