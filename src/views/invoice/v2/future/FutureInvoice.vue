@@ -250,6 +250,7 @@ export default {
     choseCustomer() {
       this.$router.push({
         name: "chose-customer",
+        query:{redirect:'create-future-customer'}
       });
     },
     ViewInvoice(id) {

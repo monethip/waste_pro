@@ -4,7 +4,7 @@
     <v-row class="mb-n6">
       <v-col>
         <div>
-          ສ້າງບິນລ່ວງໜ້າ
+          ເລືກລູກຄ້າເພື່ອສ້າງບິນ
         </div>
       </v-col>
     </v-row>
@@ -55,28 +55,27 @@
               hide-default-footer
           >
             <!--Role -->
-            <template v-slot:item.roles="{ item }">
-              <div>
-                <span v-for="(role, index) in item.roles" :key="index">
-                  <v-chip color="info" label class="mr-1 my-1">
-                    {{ role.name }}
-                  </v-chip>
-                </span>
+            <template v-slot:item.customer="{ item }">
+              <div v-if="item.customer">
+                {{item.customer.name}}
+              </div>
+              <div v-else class="error--text">
+               ຍັງບໍ່ທັນສະໝັກບໍລິການ
               </div>
             </template>
-            <!--Permission -->
-            <template v-slot:item.permissions="{ item }">
-              <div>
-                <span v-for="(ps, index) in item.permissions" :key="index">
-                  <v-chip color="success" label class="mr-1 my-1">{{
-                      ps.name
-                    }}</v-chip>
-                </span>
-              </div>
+            <template v-slot:item.customerType="{ item }">
+             <div v-if="item.customer">
+               <div v-if="item.customer.customer_type =='home'" class="success--text">
+                 ຄົວເຮືອນ
+               </div>
+               <div v-else-if="item.customer.customer_type =='company'" class="info--text">
+                 ຫົວໜ່ວຍທຸລະກິດ
+               </div>
+             </div>
             </template>
             <template v-slot:item.status="{ item }">
-              <v-btn @click="createPage(item)" small class="btn-primary elevation-0"
-              ><v-icon>mdi-plus</v-icon> ສ້າງບິນລ່ວງໜ້າ
+              <v-btn @click="createPage(item)" medium class="btn-primary elevation-0"
+              ><v-icon>mdi-plus</v-icon> ສ້າງບິນ
               </v-btn>
             </template>
           </v-data-table>
@@ -111,11 +110,10 @@ export default {
       otp:"",
       isStepTwo:false,
       headers: [
-        { text: "User Name", value: "name",width:"150px" },
-        { text: "Phone", value: "phone", sortable: false },
+        { text: "ລູກຄ້າ", value: "customer",width:"150px" },
+        { text: "ເບີໂທ", value: "phone", sortable: false },
+        { text: "ປະເພດລູກຄ້າ", value: "customerType", sortable: false,width:"150px" },
         { text: "Email", value: "email", sortable: false },
-        // { text: "Role", value: "roles", sortable: false,width:"150px" },
-        // { text: "Permission", value: "permissions", sortable: false,width:"150px" },
         { text: "", value: "status", sortable: false, align: "center" },
       ],
       loading: false,
@@ -167,7 +165,7 @@ export default {
               {per_page: this.per_page},
               {filter: this.search},
               {phone: this.searchPhone},
-              {roles: ['pre_customer','customer']},])
+              {roles: ['pre_customer']},])
           })
           .then((res) => {
             if (res.data.code === 200) {
@@ -187,27 +185,11 @@ export default {
             }
           });
     },
-    fetchRole() {
-      //Role
-      this.$axios
-          .get("user-setting/role")
-          .then((res) => {
-            if (res.data.code === 200) {
-              this.loading = false;
-              this.roles = res.data.data;
-            }
-          })
-          .catch(() => {
-            this.loading = false;
-          });
-    },
-
     createPage(data) {
       this.$router.push({
-        name: "create-future-customer",
+        name: this.$route.query.redirect,
         params: {
           items: data,
-          // items: this.customers,
         },
       });
     },
@@ -238,13 +220,9 @@ export default {
         this.fetchData();
       }
     },
-    selectedRoles: function (){
-      this.pagination.current_page ='';
-      this.fetchData();
-    }
   },
   created() {
-    this.fetchRole();
+    if(!this.$route.query.redirect) this.$router.push('/')
     this.fetchData();
   },
 };

@@ -339,8 +339,13 @@ export default {
       },
     choseUser() {
       this.$router.push({
-        name: "chose-user",
+        name: "chose-customer",
+        query:{redirect:'create-custom-bill'}
       });
+
+      // this.$router.push({
+      //   name: "chose-user",
+      // });
     },
     ViewInvoice(id) {
       let route = this.$router.resolve({name: 'billing-detail',params: {id}});
