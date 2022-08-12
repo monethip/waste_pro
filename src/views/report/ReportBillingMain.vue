@@ -27,12 +27,18 @@
 import ReportBillingType from "@/views/report/ReportBillingType.vue";
 import ReportBillingCompany from "@/views/report/ReportBillingCompany.vue";
 import ReportBillingHome from "@/views/report/ReportBillingHome.vue";
+import ReportBillingCollectionEvent from "@/views/report/ReportBillingCollectionEvent.vue";
+import ReportBillingFutureInvoice from "@/views/report/ReportBillingFutureInvoice.vue";
+import ReportBillingCustomBill from "@/views/report/ReportBillingCustomBill.vue";
 
 export default {
   components: {
     ReportBillingType,
     ReportBillingCompany,
-    ReportBillingHome
+    ReportBillingHome,
+    ReportBillingCollectionEvent,
+    ReportBillingFutureInvoice,
+    ReportBillingCustomBill
   },
   data() {
     return {
@@ -40,7 +46,10 @@ export default {
       items: [
         { tab: "ທັງໝົດ", content: "ReportBillingType" },
         { tab: "ຫົວໜ່ວຍທຸລະກິດ", content: "ReportBillingCompany" },
-        { tab: "ຄົວເຮືອນ", content: "ReportBillingHome" }
+        { tab: "ຄົວເຮືອນ", content: "ReportBillingHome" },
+        { tab: "ຖ້ຽວພິເສດ", content: "ReportBillingCollectionEvent" },
+        { tab: "ຈ່າຍລ່ວງໜ້າ", content: "ReportBillingFutureInvoice" },
+        { tab: "ບິນອື່ນໆ", content: "ReportBillingCustomBill" }
       ]
     };
   }

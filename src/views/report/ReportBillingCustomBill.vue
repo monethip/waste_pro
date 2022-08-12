@@ -1,21 +1,9 @@
 <template>
   <v-container>
     <v-row>
-      <span class="text-h5">ຄົວເຮືອນ</span>
+      <span class="text-h5">ບິນອື່ນໆ</span>
     </v-row>
     <v-row>
-      <v-col>
-        <v-autocomplete
-          required
-          :items="packageList"
-          v-model="selectedPackage"
-          item-text="name"
-          item-value="id"
-          label="ປະເພດສັນຍາ *"
-          outlined
-          dense
-        ></v-autocomplete>
-      </v-col>
       <v-col>
         <v-autocomplete
           required
@@ -111,54 +99,6 @@
       </v-col>
     </v-row>
 
-    <!-- Section Table Summary-->
-    <v-row>
-      <v-col>
-        <v-card outlined>
-          <v-card-title>ຕາມປະເພດສັນຍາ</v-card-title>
-          <v-card-text>
-            <v-simple-table>
-              <template v-slot:default>
-                <thead>
-                  <tr>
-                    <th>ປະເພດສັນຍາ</th>
-                    <th
-                      class="text-left"
-                      v-for="detailStatus in detailStatuses"
-                      :key="detailStatus.text"
-                    >
-                      <v-chip
-                        :color="getBgColorFunc(detailStatus.text)"
-                        dark
-                      >{{ detailStatus.text }}</v-chip>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="item in summaryDetails" :key="item.package_name">
-                    <td>
-                      <span class="font-weight-medium">{{ item.package_name }}</span>
-                      <span
-                        class="font-weight-medium text-caption"
-                      >{{ ` (${formatNumber(item.count_billing)} ບິນ)` }}</span>
-                    </td>
-                    <td v-for="detailStatus in detailStatuses" :key="detailStatus.text">
-                      <span
-                        class="font-weight-medium"
-                      >{{ formatNumber(item[detailStatus.text].total) }}</span>
-                      <span
-                        class="font-weight-medium text-caption"
-                      >{{ ` (${formatNumber(item[detailStatus.text].count_billing)} ບິນ)` }}</span>
-                    </td>
-                  </tr>
-                </tbody>
-              </template>
-            </v-simple-table>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-
     <!-- Section Table Detail-->
     <v-row>
       <v-col>
@@ -196,12 +136,26 @@
                 v-slot:item.user.customer.package="{ item }"
               >{{ `${item.user.customer.package.name}` }}</template>
 
+              <template v-slot:item.billingable.start_month="{ item }">
+                <v-chip color="green" dark>{{ item.billingable.start_month }}</v-chip>
+              </template>
+
+              <template v-slot:item.billingable.end_month="{ item }">
+                <v-chip color="red" dark>{{ item.billingable.end_month }}</v-chip>
+              </template>
+
               <template v-slot:item.user="{ item }">
                 <span
                   v-if="customerType(item) == 'home'"
                 >{{ `${item.user.customer.name} ${item.user.customer.surname}` }}</span>
                 <span v-if="customerType(item) == 'company'">{{ item.user.customer.company_name }}</span>
                 <span v-if="!customerType(item)">{{ `${item.user.name} (${item.user.phone})` }}</span>
+              </template>
+
+              <template v-slot:item.custom_type="{ item }">
+                <span v-if="customerType(item) == 'home'">ຄົວເຮືອນ</span>
+                <span v-if="customerType(item) == 'company'">ທຸລະກິດ</span>
+                <span v-if="!customerType(item)">ທົ່ວໄປ</span>
               </template>
 
               <template v-slot:item.custom_address="{ item }">
@@ -247,14 +201,8 @@ export default {
       selectedVillage: "",
       districts: [],
       selectedDistrict: null,
-      packageList: [],
-      selectedPackage: "",
       billings: {
-        summary: {
-          count_billing: 0,
-          total: []
-        },
-        details: [],
+        summary: [],
         data: []
       },
       billingListHeader: [
@@ -264,9 +212,11 @@ export default {
           value: "content"
         },
         { text: "ສະຖານະ", value: "status" },
-        { text: "ປະເພດສັນຍາ", value: "user.customer.package" },
+        { text: "ຫົວຂໍ້", value: "billingable.title" },
+        { text: "ລາຍລະອຽດ", value: "billingable.description" },
         { text: "ຈຳນວນ", value: "total" },
         { text: "ລູກຄ້າ", value: "user" },
+        { text: "ປະເພດລູກຄ້າ", value: "custom_type" },
         { text: "ທີ່ຢູ່", value: "custom_address" }
       ]
     };
@@ -292,22 +242,13 @@ export default {
         console.log(error);
       }
     },
-    async fetchPackage() {
-      try {
-        const result = await this.$axios.get("all-package");
-        this.packageList = result.data.data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
     fetchData() {
       this.start_menu = false;
       this.end_menu = false;
       const queryOptions = {
         start_date: this.start_date,
         end_date: this.end_date,
-        download: this.exportMode,
-        package_id: this.selectedPackage
+        download: this.exportMode
       };
 
       if (this.selectedVillage) queryOptions.village_id = this.selectedVillage;
@@ -316,7 +257,7 @@ export default {
 
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("v2/report-billing-home", {
+        .get("v2/report-billing-custom-bill", {
           params: queryOptions
         })
         .then(res => {
@@ -341,7 +282,8 @@ export default {
         });
     },
     getCard(statusItem) {
-      const data = this.billings.summary.total.find(
+      console.log(3232, this.billings.summary);
+      const data = this.billings.summary.find(
         status => status.status == statusItem
       );
       if (data) {
@@ -370,9 +312,6 @@ export default {
       this.fetchData();
     },
     exportMode() {
-      this.fetchData();
-    },
-    selectedPackage() {
       this.fetchData();
     }
   },
@@ -466,7 +405,6 @@ export default {
   },
   created() {
     this.fetchDistrict();
-    this.fetchPackage();
     this.fetchData();
   }
 };

@@ -88,6 +88,9 @@
           <v-date-picker v-model="end_date" @input="fetchData()"></v-date-picker>
         </v-menu>
       </v-col>
+      <v-col>
+        <v-btn color="green" dark @click="handleExport">Export</v-btn>
+      </v-col>
     </v-row>
 
     <!-- Section Total-->
@@ -200,6 +203,15 @@
                 <span v-if="customerType(item) == 'company'">{{ item.user.customer.company_name }}</span>
                 <span v-if="!customerType(item)">{{ `${item.user.name} (${item.user.phone})` }}</span>
               </template>
+
+              <template v-slot:item.custom_address="{ item }">
+                <span
+                  v-if="item.display_type == 'NewCollectionEvent'"
+                >{{ `${item.billingable.village.name} / ${item.billingable.village.district.name}` }}</span>
+                <span
+                  v-else-if="customerType(item) == 'home' || customerType(item) == 'company'"
+                >{{ `${item.user.customer.village.name} / ${item.user.customer.village.district.name}` }}</span>
+              </template>
             </v-data-table>
           </v-card-text>
         </v-card>
@@ -226,6 +238,7 @@ export default {
     return {
       loading: false,
       billingListsearch: "",
+      exportMode: "",
       start_date: "",
       end_date: "",
       start_menu: false,
@@ -253,11 +266,15 @@ export default {
         { text: "ສະຖານະ", value: "status" },
         { text: "ປະເພດບໍລິການ", value: "user.customer.cost_by" },
         { text: "ຈຳນວນ", value: "total" },
-        { text: "ລູກຄ້າ", value: "user" }
+        { text: "ລູກຄ້າ", value: "user" },
+        { text: "ທີ່ຢູ່", value: "custom_address" }
       ]
     };
   },
   methods: {
+    handleExport() {
+      this.exportMode = "excel";
+    },
     customerType(item) {
       if (!item.user.customer) return false;
 
@@ -281,6 +298,7 @@ export default {
       const queryOptions = {
         start_date: this.start_date,
         end_date: this.end_date,
+        download: this.exportMode,
         cost_by: this.selectedCostBy
       };
 
@@ -298,6 +316,9 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.billings = res.data.data;
+              this.exportMode = "";
+              if (res.data.data.download_link)
+                window.open(res.data.data.download_link);
             }, 300);
           }
         })
@@ -338,6 +359,9 @@ export default {
       this.fetchData();
     },
     selectedVillage() {
+      this.fetchData();
+    },
+    exportMode() {
       this.fetchData();
     },
     selectedCostBy() {
