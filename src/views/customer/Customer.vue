@@ -594,12 +594,12 @@ export default {
         {
           id: 1,
           value: "calendar",
-          name: "ຍັງບໍມີຕາຕະລາງເກັບ",
+          name: "ຍັງບໍ່ມີແຜນເດີນລົດເກັບ",
         },
         {
           id: 2,
           value: "route_plan",
-          name: "ຍັງບໍມີແຜນ",
+          name: "ຍັງບໍ່ມີເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ",
         },
       ],
       favorite_dates: [],

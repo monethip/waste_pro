@@ -475,12 +475,12 @@ export default {
         {
           id: 1,
           value: "calendar",
-          name: "ຍັງບໍມີຕາຕະລາງ",
+          name: "ຍັງບໍ່ມີແຜນເດີນລົດ",
         },
         {
           id: 2,
           value: "route_plan",
-          name: "ຍັງບໍມີແຜນ",
+          name: "ຍັງບໍ່ມີເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ",
         },
       ],
 
