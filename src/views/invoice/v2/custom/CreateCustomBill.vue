@@ -6,7 +6,7 @@
           <v-btn text class="text-primary" @click="backPrevios()">
             <v-icon>mdi-chevron-left</v-icon></v-btn
           >
-          ສ້າງບິນແບບກຳນົດເອງ </v-breadcrumbs
+          ສ້າງບິນຢ້ອນຫຼັງ </v-breadcrumbs
         >
       </v-col>
     </v-row>
@@ -75,7 +75,7 @@
             <v-row>
               <v-col>
                 <v-text-field
-                    label="Title *"
+                    label="ຫົວຂໍ້ບິນ *"
                     required
                     v-model="data.title"
                     :rules="totalRules"
@@ -90,7 +90,7 @@
             <v-row>
               <v-col>
                 <v-text-field
-                    label="Description *"
+                    label="ຄຳອະທິບາຍກ່ຽກັບບິນ *"
                     required
                     v-model="data.description"
                     :rules="totalRules"
@@ -105,7 +105,7 @@
             <v-row>
               <v-col>
                 <v-text-field
-                    label="Price *"
+                    label="ລາຄາ *"
                     required
                     v-model="data.quantity"
                     :rules="totalRules"
@@ -122,7 +122,7 @@
             <v-row>
               <v-col>
                 <v-text-field
-                    label="Quantity *"
+                    label="ຈຳນວນ *"
                     required
                     v-model="data.price"
                     :rules="totalRules"
@@ -139,12 +139,11 @@
           </v-form>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="backPrevios()">
-              Back
+            <v-btn class="elevation-0 btn-warning mr-4" @click="backPrevios()">
+              ຍ້ອນກັບ
             </v-btn>
             <v-btn
-                color="blue darken-1"
-                text
+                class="elevation-0 btn-primary"
                 :loading="loading"
                 :disabled="loading"
                 @click="AddData()"

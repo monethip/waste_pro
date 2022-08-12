@@ -1052,7 +1052,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'ບິນແບບກຳນົດເອງ',
+                    text: 'ບິນຢ້ອນຫຼັງ',
                     disabled: true,
                     href: '/invoice'
                 }
@@ -1087,7 +1087,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'ບິນແບບກຳນົດເອງ',
+                    text: 'ບິນຢ້ອນຫຼັງ',
                     disabled: false,
                     href: '/v2/custom-bill'
                 },

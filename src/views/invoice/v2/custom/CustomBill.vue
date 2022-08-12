@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <p>ຈັດການຂໍ້ມູນບິນແບບກຳນົດເອງ</p>
+        <p>ຈັດການຂໍ້ມູນບິນບິນຢ້ອນຫຼັງ</p>
       </v-col>
     </v-row>
     <v-row class="mb-n6">
@@ -246,7 +246,7 @@ export default {
       ],
 
       headers: [
-        {text: "ເລກບິນ", value: "billing.content"},
+        {text: "ເລກບິນ", value: "billing.content", width:"150",},
         {
           text: "ລູກຄ້າ",
           value: "user",
@@ -256,7 +256,7 @@ export default {
         {
           text: "ເບີໂທ",
           value: "billing.user.phone",
-          width:"150",
+          width:"100",
           sortable: false,
         },
         {
@@ -281,7 +281,7 @@ export default {
         {
           text: "ລວມທັງໝົດ",
           value: "total",
-          width:"100",
+          width:"120",
           align: "center",
           sortable: false,
         },
@@ -290,8 +290,8 @@ export default {
           value: "status",
           sortable: false,
         },
-        { text: "ວັນທີສ້າງ", value: "created_at",  width:"100", },
-        {text: "", value: "actions", sortable: false},
+        { text: "ວັນທີສ້າງ", value: "created_at",  width:"120", },
+        {text: "", value: "actions", sortable: false,width:"60",},
       ],
     };
   },

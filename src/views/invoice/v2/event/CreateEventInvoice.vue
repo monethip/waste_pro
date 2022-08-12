@@ -256,17 +256,16 @@
         </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="backPrevios()">
-            Back
+          <v-btn class="elevation-0 btn-warning mr-4" text @click="backPrevios()">
+            ຍ້ອນກັບ
           </v-btn>
           <v-btn
-              color="blue darken-1"
-              text
+              class="elevation-0 btn-primary mr-4"
               :loading="loading"
               :disabled="loading"
               @click="AddData()"
           >
-            Save
+            ບັນທຶກ
           </v-btn>
         </v-card-actions>
       </v-card-text>

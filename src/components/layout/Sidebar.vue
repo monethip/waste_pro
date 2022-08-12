@@ -362,7 +362,7 @@ export default {
             },
             {
               icon: "mdi-note-outline",
-              title: "ບິນ ແບບກຳນົດເອງ",
+              title: "ຈັດການບິນຢ້ອນຫຼັງ",
               to: "/v2/custom-bill",
               permissions: ["get_invoice"]
             },
