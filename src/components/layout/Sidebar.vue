@@ -117,6 +117,7 @@
 
         <div v-for="item in group_menu" :key="item.id" class="group-menu">
           <v-list-group
+              class="group-menu-icon"
             :prepend-icon="item.icon"
             no-action
             color="indigo darken-4"
@@ -127,7 +128,7 @@
                 <v-list-item-title>{{ item.title }}</v-list-item-title>
               </v-list-item-content>
             </template>
-            <div v-for="(i, index) in item.menu" :key="index" style="padding-left: 22px">
+            <div v-for="(i, index) in item.menu" :key="index" style="padding-left: 22px;">
               <v-list-item exact color="primary-color" :to="i.to" v-if="$can(i.permissions)">
                 <v-list-item-action>
                   <v-icon>{{ i.icon }}</v-icon>
@@ -516,6 +517,21 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../../public/scss/main.scss";
+
+.v-application--is-ltr .v-list-item__icon:last-of-type:not(:only-child) {
+  margin-left: 0px !important;
+}
+.group-menu[data-v-117f5fe7]{
+  margin-right: 0px !important;
+}
+.v-application--is-ltr .v-list-item__action[data-v-117f5fe7]:first-child, .v-application--is-ltr .v-list-item__icon[data-v-117f5fe7]:first-child {
+  margin-right: 12px !important;
+}
+
+.group-menu, .v-application--is-ltr .v-list-item__icon:first-child {
+  margin-right: 12px !important
+}
+
 .v-application--is-ltr
   .v-list-group--no-action
   > .v-list-group__items
@@ -535,13 +551,4 @@ export default {
 .v-main__wrap.v-content__wrap {
   background: #eee !important;
 }
-/**
-.v-application--is-ltr .v-list-item__action:first-child, .v-application--is-ltr .v-list-item__icon:first-child {
-  margin-right: 22px !important;
-}
-.group-menu .v-application--is-ltr .v-list-item__icon:first-child {
-  margin-right: 22px !important;
-}
-88
- */
 </style>
