@@ -35,6 +35,10 @@ export const getLaoStatus = function (status) {
             return "ຈ່າຍແລ້ວ ລໍຖ້າກວດສອບ"
         case "success":
             return "ຈ່າຍແລ້ວ ກວດສອບສຳເລັດ"
+        case "cash":
+            return "ຊຳລະເງິນສົດ"
+        case "bcel":
+            return "BCEL"
     }
 }
 

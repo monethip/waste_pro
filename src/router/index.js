@@ -1059,6 +1059,24 @@ const routes = [
             ]
         }
     },
+
+    {
+        path: '/chose/user',
+        name: 'chose-user',
+        component: () => import('@views/invoice/v2/custom/ShowUser'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'ເລືອກ User',
+                    disabled: true,
+                    href: '/invoice'
+                }
+            ]
+        }
+    },
+
     {
         path: '/v2/create/custom-bill',
         name: 'create-custom-bill',
@@ -1402,7 +1420,7 @@ const routes = [
                 {
                     text: 'ລາຍງານລູກຄ້າຄົວເຮືອນ',
                     disabled: true,
-                    href: '/report/customer'
+                    href: '/report/r'
                 },
             ]
         }

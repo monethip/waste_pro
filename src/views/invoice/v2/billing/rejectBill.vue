@@ -283,7 +283,7 @@ export default {
         {text: "ລູກຄ້າ", value: "user",width: "120px"},
         {text: "ເບີໂທ", value: "user.phone", sortable: false,width: "120px"},
         {text: "ສ່ວນຫຼຸດ", value: "discount",width: "150px"},
-        {text: "ລາຄາລວມ", value: "sub_total",width: "120px"},
+        {text: "ຄ່າບໍລິການ", value: "sub_total",width: "120px"},
         {text: "ລວມທັງໝົດ", value: "total", sortable: false,width: "120px"},
         {text: "ປະເພດຊຳລະ", value: "payment_method", align: "center",width:"200px"},
         {
@@ -390,7 +390,6 @@ export default {
     selectedCollectionStatus:function (){
       this.pagination.current_page ='';
       this.fetchData();
-      this.fetchSummaryData();
     },
     selectedBillingable_type:function (){
       this.pagination.current_page ='';
@@ -409,7 +408,6 @@ export default {
       if(value !== ''){
         this.pagination.current_page ='';
         this.fetchData();
-        this.fetchSummaryData();
       }
     },
     search: function (value) {
@@ -447,7 +445,6 @@ export default {
   created() {
     this.month = this.moment(this.curent_month).format('YYYY-MM');
     this.fetchData();
-    this.fetchSummaryData();
     this.fetchRoutePlan();
   },
 };

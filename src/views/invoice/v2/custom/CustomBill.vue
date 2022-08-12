@@ -1,9 +1,11 @@
 <template>
   <v-container>
-    <v-row class="mb-n6">
+    <v-row>
       <v-col>
         <p>ຈັດການຂໍ້ມູນບິນແບບກຳນົດເອງ</p>
       </v-col>
+    </v-row>
+    <v-row class="mb-n6">
       <!--
       <v-col>
         <v-menu
@@ -33,6 +35,19 @@
         </v-menu>
       </v-col>
       -->
+        <v-col>
+          <v-select
+              outlined
+              dense
+              :items="paymentStatus"
+              v-model="selectedPaymentStatus"
+              item-value="name"
+              label="ສະຖານະບິນ"
+              :item-text="filterStatusLao"
+              clearable
+          ></v-select>
+        </v-col>
+
       <v-col>
         <v-text-field
             outlined
@@ -46,8 +61,12 @@
         >
         </v-text-field>
       </v-col>
-      <v-col class="align-end ">
-        <v-btn @click="choseCustomer()" class="btn-primary">
+      <v-col class="align-end text-end">
+        <v-btn @click="openAddModal()" class="btn-primary mr-4">
+          <v-icon class="mr-2">mdi-upload</v-icon>
+          import ບິນ
+        </v-btn>
+        <v-btn @click="choseUser()" class="btn-primary">
           <v-icon class="mr-2">mdi-plus</v-icon>
           ສ້າງບິນ
         </v-btn>
@@ -72,6 +91,10 @@
             <template v-slot:item.discount="{ item }">
               {{ Intl.NumberFormat().format(item.billing.discount) }}
             </template>
+            <template v-slot:item.status="{ item }">
+              <v-chip :color="getBgColorFunc(item.billing.status)" dark>{{getLaoStatusFunc(item.billing.status) }}</v-chip>
+            </template>
+
             <template v-slot:item.actions="{ item }">
               <v-icon
                   color="success"
@@ -97,12 +120,62 @@
         </v-card-text>
       </v-card>
     </div>
+    <ModalAdd>
+      <template @close="close">
+        <v-card class="py-8 px-14">
+          <v-card-title>
+            <p>Import ບິນຂີ້ເຫື້ຍອ</p>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-form ref="form" lazy-validation>
+                <v-row>
+                  <v-col cols="12">
+                    <v-file-input
+                        show-size
+                        label="File "
+                        accept="xlsx,xls"
+                        v-model="file"
+                        outlined
+                        dense
+                    ></v-file-input>
+                    <p class="errors">
+                      {{ server_errors.file }}
+                    </p>
+                    <p class="errors" v-for="(error,index) in errors" :key="index">
+                      {{ error }}
+                    </p>
+                  </v-col>
+                </v-row>
+
+              </v-form>
+            </v-container>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="error" class="elevation-0 btn mr-4 px-12" medium @click="closeAddModal()">
+                ປິດ
+              </v-btn>
+              <v-btn
+                  class="elevation-0 btn btn-primary px-12"
+                  medium
+                  :loading="loading"
+                  :disabled="loading"
+                  @click="uploadFile"
+              >
+                Import
+              </v-btn>
+            </v-card-actions>
+          </v-card-text>
+        </v-card>
+      </template>
+    </ModalAdd>
   </v-container>
 </template>
 
 <script>
 import {GetOldValueOnInput} from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
+import {getLaoStatus,getBgColor} from "@/Helpers/BillingStatus";
 
 export default {
   name: "Invoice",
@@ -124,34 +197,40 @@ export default {
       //Add Package
       date: new Date().toISOString().substr(0, 7),
       start_menu: false,
-      packages: [],
-      selectedPackage: "",
       server_errors: {},
+      errors:[],
+      file:null,
       //Filter
-      districts: [],
-      selectedDistrict: "",
-      villages: [],
-      selectedVillage: [],
-      selectedStatus: [],
-      plan: {},
-      calendarEdit: {},
-
-      headers: [
-        {text: "ເລກບິນ", value: "billing.billing_display_id"},
-        {text: "ລາຍລະອຽດ", value: "billing.content"},
-        { text: "ວັນທີ", value: "start_month" },
-        { text: "ຫາວັນທີ", value: "end_month" },
+      selectedPaymentStatus: "",
+      paymentStatus: [
         {
-          text: "ລວມເງິນ",
-          value: "sub_total",
-          align: "center",
-          sortable: false,
+          id: 1,
+          name: "created",
+        },{
+          id: 2,
+          name: "approved",
         },
         {
-          text: "ລວມເງິນ",
-          value: "total",
-          align: "center",
+          id: 3,
+          name: "to_confirm_payment",
+        },
+        {
+          id: 4,
+          name: "rejected",
+        },
+        {
+          id: 5,
+          name: "success",
+        },
+      ],
+
+      headers: [
+        {text: "ເລກບິນ", value: "billing.content"},
+        {
+          text: "ຊື່ລູກຄ້າ",
+          value: "billing.user.name",
           sortable: false,
+          align: "center",
         },
         {
           text: "ສ່ວນຫຼຸດ",
@@ -160,22 +239,37 @@ export default {
           sortable: false,
         },
         {
-          text: "ຊື່ລູກຄ້າ",
-          value: "billing.user.name",
-          sortable: false,
+          text: "ຄ່າບໍລິການ",
+          value: "sub_total",
           align: "center",
+          sortable: false,
+        },
+        {
+          text: "ລວມທັງໝົດ",
+          value: "total",
+          align: "center",
+          sortable: false,
         },
         {
           text: "ສະຖານະ",
-          value: "billing.status",
+          value: "status",
           sortable: false,
-          align: "center",
         },
+        { text: "ວັນທີສ້າງ", value: "created_at" },
         {text: "", value: "actions", sortable: false},
       ],
     };
   },
   methods: {
+    getLaoStatusFunc(status){
+      return  getLaoStatus(status)
+    },
+    getBgColorFunc(status){
+      return getBgColor(status)
+    },
+    filterStatusLao(status){
+      return  getLaoStatus(status.name)
+    },
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
@@ -184,6 +278,7 @@ export default {
                   {page: this.pagination.current_page},
                   {per_page: this.per_page},
                   {filter: this.search},
+                  {billing_status: this.selectedPaymentStatus},
                 ]),
               }
           )
@@ -191,7 +286,6 @@ export default {
             if (res.data.code == 200) {
               this.$store.commit("Loading_State", false);
               this.invoices = res.data.data.data;
-              console.log(this.invoices);
               this.pagination = res.data.data.pagination;
             }
           })
@@ -208,34 +302,90 @@ export default {
     Search() {
       GetOldValueOnInput(this);
     },
-    choseCustomer() {
+    openAddModal() {
+      this.$store.commit("modalAdd_State", true);
+    },
+    closeAddModal() {
+      this.file = "";
+      this.$store.commit("modalAdd_State", false);
+    },
+    uploadFile() {
+        let formData = new FormData();
+        formData.append("file", this.file);
+        if (this.$refs.form.validate() == true) {
+          this.loading = true;
+          this.$axios
+              .post("import-old-payment", formData)
+              .then((res) => {
+                if (res.data.code == 200) {
+                  this.loading = false;
+                  this.closeAddModal();
+                  this.fetchData();
+                  this.$refs.form.reset();
+                  this.$store.commit("Toast_State", {
+                    value: true,
+                    color: "success",
+                    msg: res.data.message,
+                  });
+                }
+              })
+              .catch((error) => {
+                this.loading = false;
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "error",
+                  msg: error.response.data.message,
+                });
+                if (error.response.status == 422) {
+                  let obj = error.response.data.errors;
+                  this.errors = obj
+                  for (let [key, data] of Object.entries(obj)) {
+                    this.server_errors[key] = data[0];
+                  }
+                }
+              });
+        }
+      },
+    choseUser() {
       this.$router.push({
         name: "chose-customer",
+        query:{redirect:'create-custom-bill'}
       });
+
+      // this.$router.push({
+      //   name: "chose-user",
+      // });
     },
     ViewInvoice(id) {
-      let route = this.$router.resolve({name: 'invoice-detail',params: {id}});
+      let route = this.$router.resolve({name: 'billing-detail',params: {id}});
       window.open(route.href, '_blank');
     },
+    paymentStatusText(status){
+      if(status == 'created') return 'ສ້າງບິນສຳເລັດ';
+      else if(status == 'approved') return 'ອະນຸມັດສຳເລັດ';
+      else if(status == 'pending') return 'ລໍຖ້າເກັບເງິນ';
+      else if(status == 'to_confirm_payment') return 'ລໍຖ້າຢືນຢັນຊຳລະ';
+      else if (status == 'rejected') return 'ປະຕິເສດການຊຳລະ';
+      else if(status == 'success') return 'ຊຳລະສຳເລັດ';
+      else if(status == 'cancel') return 'ຍົກເລີກ';
+      else return  '';
+    }
   },
   watch: {
     search: function (value) {
+      this.pagination.current_page ='';
       if (value == "") {
         this.fetchData();
       }
     },
-    "plan.name": function () {
-      this.server_errors.name = "";
+    selectedPaymentStatus:function () {
+      this.pagination.current_page ='';
+      this.fetchData();
     },
-    start_date: function () {
-      this.server_errors.month = "";
-    },
-    "calendarEdit.name": function () {
-      this.server_errors.name = "";
-    },
-    "calendarEdit.month": function () {
-      this.server_errors.month = "";
-    },
+    file: function (){
+      this.errors = [];
+    }
+
   },
   created() {
     this.fetchData();

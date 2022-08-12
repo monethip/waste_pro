@@ -34,6 +34,18 @@
       </v-col>
       -->
       <v-col>
+        <v-select
+            outlined
+            dense
+            :items="paymentStatus"
+            v-model="selectedPaymentStatus"
+            :item-text="filterStatusLao"
+            item-value="name"
+            label="ສະຖານະບິນ"
+            clearable
+        ></v-select>
+      </v-col>
+      <v-col>
         <v-text-field
             outlined
             dense
@@ -47,7 +59,7 @@
         </v-text-field>
       </v-col>
       <v-col class="align-end ">
-        <v-btn @click="choseCustomer()" class="btn-primary">
+        <v-btn @click="choseCustomer()" class="btn-primary elevation-0">
           <v-icon class="mr-2">mdi-plus</v-icon>
           ສ້າງບິນ
         </v-btn>
@@ -63,6 +75,16 @@
               :disable-pagination="true"
               hide-default-footer
           >
+            <template v-slot:item.start_month="{ item }">
+              <div class="success--text">
+                {{item.start_month}}
+              </div>
+            </template>
+            <template v-slot:item.end_month="{ item }">
+              <div class="error--text">
+                {{item.start_month}}
+              </div>
+            </template>
             <template v-slot:item.total="{ item }">
               {{ Intl.NumberFormat().format(item.billing.total) }}
             </template>
@@ -72,12 +94,15 @@
             <template v-slot:item.discount="{ item }">
               {{ Intl.NumberFormat().format(item.billing.discount) }}
             </template>
+            <template v-slot:item.status="{ item }">
+              <v-chip :color="getBgColorFunc(item.billing.status)" dark>{{getLaoStatusFunc(item.billing.status) }}</v-chip>
+            </template>
             <template v-slot:item.actions="{ item }">
               <v-icon
                   color="success"
                   small
                   class="mr-2"
-                  @click="ViewInvoice(item.id)"
+                  @click="ViewInvoice(item.billing.id)"
               >
                 mdi-eye
               </v-icon
@@ -103,6 +128,7 @@
 <script>
 import {GetOldValueOnInput} from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
+import {getBgColor, getLaoStatus} from "@/Helpers/BillingStatus";
 
 export default {
   name: "Invoice",
@@ -124,21 +150,38 @@ export default {
       //Add Package
       date: new Date().toISOString().substr(0, 7),
       start_menu: false,
-      packages: [],
-      selectedPackage: "",
       server_errors: {},
       //Filter
-      districts: [],
-      selectedDistrict: "",
-      villages: [],
-      selectedVillage: [],
-      selectedStatus: [],
-      plan: {},
-      calendarEdit: {},
+      selectedPaymentStatus: "",
+      paymentStatus: [
+        {
+          id: 1,
+          name: "created",
+        },{
+          id: 2,
+          name: "approved",
+        },
+        {
+          id: 3,
+          name: "to_confirm_payment",
+        },
+        {
+          id: 4,
+          name: "rejected",
+        },
+        {
+          id: 5,
+          name: "success",
+        },
+      ],
 
       headers: [
-        {text: "ເລກບິນ", value: "billing.billing_display_id"},
-        {text: "ລາຍລະອຽດ", value: "billing.content"},
+        {text: "ເລກບິນ", value: "billing.content"},
+        {
+          text: "ຊື່ລູກຄ້າ",
+          value: "billing.user.name",
+          sortable: false,
+        },
         { text: "ວັນທີ", value: "start_month" },
         { text: "ຫາວັນທີ", value: "end_month" },
         {
@@ -148,7 +191,7 @@ export default {
           sortable: false,
         },
         {
-          text: "ລວມເງິນ",
+          text: "ຄ່າບໍລິການ",
           value: "sub_total",
           align: "center",
           sortable: false,
@@ -160,22 +203,24 @@ export default {
           sortable: false,
         },
         {
-          text: "ຊື່ລູກຄ້າ",
-          value: "billing.user.name",
-          sortable: false,
-          align: "center",
-        },
-        {
           text: "ສະຖານະ",
-          value: "billing.status",
+          value: "status",
           sortable: false,
-          align: "center",
         },
         {text: "", value: "actions", sortable: false},
       ],
     };
   },
   methods: {
+    getLaoStatusFunc(status){
+      return  getLaoStatus(status)
+    },
+    getBgColorFunc(status){
+      return getBgColor(status)
+    },
+    filterStatusLao(status){
+      return  getLaoStatus(status.name)
+    },
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
@@ -184,6 +229,7 @@ export default {
                   {page: this.pagination.current_page},
                   {per_page: this.per_page},
                   {filter: this.search},
+                  {billing_status: this.selectedPaymentStatus},
                 ]),
               }
           )
@@ -191,7 +237,6 @@ export default {
             if (res.data.code == 200) {
               this.$store.commit("Loading_State", false);
               this.invoices = res.data.data.data;
-              console.log(this.invoices);
               this.pagination = res.data.data.pagination;
             }
           })
@@ -205,16 +250,18 @@ export default {
             }
           });
     },
+
     Search() {
       GetOldValueOnInput(this);
     },
     choseCustomer() {
       this.$router.push({
         name: "chose-customer",
+        query:{redirect:'create-future-customer'}
       });
     },
     ViewInvoice(id) {
-      let route = this.$router.resolve({name: 'invoice-detail',params: {id}});
+      let route = this.$router.resolve({name: 'billing-detail',params: {id}});
       window.open(route.href, '_blank');
     },
   },
@@ -224,17 +271,9 @@ export default {
         this.fetchData();
       }
     },
-    "plan.name": function () {
-      this.server_errors.name = "";
-    },
-    start_date: function () {
-      this.server_errors.month = "";
-    },
-    "calendarEdit.name": function () {
-      this.server_errors.name = "";
-    },
-    "calendarEdit.month": function () {
-      this.server_errors.month = "";
+    selectedPaymentStatus:function () {
+      this.pagination.current_page ='';
+      this.fetchData();
     },
   },
   created() {

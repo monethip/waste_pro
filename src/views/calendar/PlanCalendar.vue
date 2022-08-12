@@ -567,13 +567,13 @@ export default {
           sortable: false,
         },
         {
-          text: "Success",
+          text: "ເກັບຂີເຫື້ຍອສຳເລັດ",
           value: "count_success",
           align: "center",
           sortable: false,
         },
         {
-          text: "Created",
+          text: "ວັນທີສ້າງ",
           value: "created_at",
           align: "center",
           sortable: false,

@@ -41,13 +41,13 @@
         <template v-slot:item.created_at="{ item }">
           <div
           >
-            {{ moment(item.created_at).format("hh:mm:ss DD-MM-YY") }}
+            {{ moment(item.created_at).format("DD-MM-YY hh:mm ") }}
           </div>
         </template>
-        <template v-slot:item.updated_at="{ item }">
+        <template v-slot:item.date="{ item }">
           <div
           >
-            {{ moment(item.updated_at).format("hh:mm:ss DD-MM-YY") }}
+            {{ moment(item.date).format("DD-MM-YY hh:mm:ss") }}
           </div>
         </template>
         <template v-slot:item.status="{ item }">
@@ -124,14 +124,14 @@ export default {
           sortable: false,
         },
         {
-          text: "Created",
+          text: "ວັນທີສ້າງ",
           value: "created_at",
           align: "center",
           sortable: false,
         },
         {
-          text: "Updated",
-          value: "updated_at",
+          text: "ວັນທີອັບເດດ",
+          value: "date",
           align: "center",
           sortable: false,
         },

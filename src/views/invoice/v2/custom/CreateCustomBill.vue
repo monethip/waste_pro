@@ -6,7 +6,7 @@
           <v-btn text class="text-primary" @click="backPrevios()">
             <v-icon>mdi-chevron-left</v-icon></v-btn
           >
-          ສ້າງບິນແບບກຳນົດເອງ</v-breadcrumbs
+          ສ້າງບິນແບບກຳນົດເອງ </v-breadcrumbs
         >
       </v-col>
     </v-row>
@@ -179,7 +179,7 @@ export default {
       data: {
         email: '',
       },
-      customer:{},
+      user:{},
       calendarId: "",
       //Pagination
       offset: 12,
@@ -203,7 +203,7 @@ export default {
   },
   methods: {
     fetchData() {
-      this.customer = this.items;
+      this.user = this.items;
     },
     Search() {
       GetOldValueOnInput(this);
@@ -215,7 +215,7 @@ export default {
     AddData() {
 
       const formData = {
-        user_id: this.customer.user_id,
+        user_id: this.user.id,
         title:this.data.title,
         description:this.data.description,
         price: this.data.price,

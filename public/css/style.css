@@ -21,3 +21,7 @@ table thead th{
 .warning-color {
     color: #00c1d2;
 }
+.v-title{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}

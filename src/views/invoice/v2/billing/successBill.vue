@@ -156,6 +156,9 @@
             hide-default-footer
             fixed-header
         >
+          <template v-slot:item.content="{ item }">
+              <a @click="ViewInvoice(item.id)">{{item.content}}</a>
+          </template>
           <template v-slot:item.user="{ item }">
               <div>{{item.user.name}} {{item.user.surname}}</div>
           </template>
@@ -169,33 +172,35 @@
             <div>{{collectStatus(item.status)}}</div>
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-menu offset-y>
-              <template v-slot:activator="{ on, attrs }">
-                <v-icon
-                    color="primary"
-                    dark
-                    v-bind="attrs"
-                    v-on="on"
-                    medium
-                    class="mr-2"
-                >mdi-dots-vertical</v-icon
-                >
-              </template>
-              <v-list>
-                <v-list-item link>
-                  <v-list-item-title @click="ViewInvoice(item.id)" target="_blank">
-                    <v-icon small class="mr-2"> mdi-eye </v-icon>
-                    ລາຍລະອຽດ
-                  </v-list-item-title>
-                </v-list-item>
-                <v-list-item link>
-                  <v-list-item-title @click="DownloadBill(item)">
-                    <v-icon small class="mr-2"> mdi-download </v-icon>
-                    Download
-                  </v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
+            <v-icon small @click="ViewInvoice(item.id)" class="mr-2" color="success"> mdi-eye </v-icon>
+            <v-icon small  @click="DownloadBill(item)" class="mr-0" color="primary"> mdi-download </v-icon>
+<!--            <v-menu offset-y>-->
+<!--              <template v-slot:activator="{ on, attrs }">-->
+<!--                <v-icon-->
+<!--                    color="primary"-->
+<!--                    dark-->
+<!--                    v-bind="attrs"-->
+<!--                    v-on="on"-->
+<!--                    medium-->
+<!--                    class="mr-2"-->
+<!--                >mdi-dots-vertical</v-icon-->
+<!--                >-->
+<!--              </template>-->
+<!--              <v-list>-->
+<!--                <v-list-item link @click="ViewInvoice(item.id)">-->
+<!--                  <v-list-item-title target="_blank">-->
+<!--                    <v-icon small class="mr-2"> mdi-eye </v-icon>-->
+<!--                    ລາຍລະອຽດ-->
+<!--                  </v-list-item-title>-->
+<!--                </v-list-item>-->
+<!--                <v-list-item link @click="DownloadBill(item)">-->
+<!--                  <v-list-item-title>-->
+<!--                    <v-icon small class="mr-2"> mdi-download </v-icon>-->
+<!--                    Download-->
+<!--                  </v-list-item-title>-->
+<!--                </v-list-item>-->
+<!--              </v-list>-->
+<!--            </v-menu>-->
           </template>
         </v-data-table>
         <br/>
@@ -254,79 +259,8 @@ export default {
       search: "",
       oldVal: "",
       server_errors: {},
-      selectedCollectionStatus: "",
       summaryData:{},
-      collectionStatus: [
-        {
-          id: 1,
-          name: "requested",
-          dis_play: "ຮ້ອງຂໍເກັບຂີ້ເຫື້ຍອ"
-        },
-        {
-          id: 2,
-          name: "rejected",
-          dis_play: "ປະຕິເສດເກັບຂີ້ເຫື້ຍອ"
-        },
-        {
-          id: 3,
-          name: "approved",
-          dis_play: "ອະນຸມັດເກັບຂີ້ເຫື້ຍອ"
 
-        },
-        {
-          id: 4,
-          name: "collected",
-          dis_play: "ເກັບຂີເຫື້ຍອສຳເລັດ"
-        },
-        {
-          id: 5,
-          name: "collect_confirm",
-          dis_play: "ລູກຄ້າຢືນຢັນການເກັບ"
-        },
-        {
-          id: 5,
-          name: "collect_reject",
-          dis_play: "ການເກັບຖືກປະຕິເສດ"
-        },
-        {
-          id: 6,
-          name: "to_confirm_payment",
-          dis_play: "ລໍຖ້າຢືນຢັນຊຳລະ"
-        },
-        {
-          id: 7,
-          name: "rejected",
-          dis_play: "ປະຕິເສດການຊຳລະ"
-        },
-        {
-          id: 8,
-          name: "success",
-          dis_play: "ຊຳລະສຳເລັດ"
-        },
-      ],
-      selectedPaymentStatus: "",
-      paymentStatus: [
-        {
-          id: 1,
-          name: "pending",
-          dis_play: "ລໍຖ້າເກັບເງິນ"
-        },
-        {
-          id: 2,
-          name: "to_confirm_payment",
-          dis_play: "ລໍຖ້າຢືນຢັນຊຳລະ"
-        },
-        {
-          id: 3,
-          name: "rejected",
-          dis_play: "ປະຕິເສດການຊຳລະ"
-        },
-        {
-          id: 4,
-          name: "success",
-          dis_play: "ຊຳລະສຳເລັດ"
-        },
-      ],
       billingable_types:[
     {
       id: 1,
@@ -367,19 +301,19 @@ export default {
       payment: {},
       confirm: {},
       headers: [
-        { text: "ບິນ", value: "content",width:"200px" },
+        { text: "ເລກບິນ", value: "content",width:"200px" },
         {text: "ລູກຄ້າ", value: "user",width:"150px"},
         {text: "ເບີໂທ", value: "user.phone", sortable: false},
         {text: "ສ່ວນຫຼຸດ", value: "discount",width: "150px"},
-        {text: "ລາຄາລວມ", value: "sub_total"},
+        {text: "ຄ່າບໍລິການ", value: "sub_total"},
         {text: "ລວມທັງໝົດ", value: "total", sortable: false},
         {text: "ປະເພດຊຳລະ", value: "payment_method", align: "center",width:"150px"},
         {
-          text: "Created",
+          text: "ວັນທີສ້າງ",
           value: "created_at",
           width:"150px"
         },
-        {text: "", value: "actions", sortable: false},
+        {text: "", value: "actions",width:"120px", sortable: false},
       ],
     };
   },
@@ -432,30 +366,7 @@ export default {
           })
           .catch(() => {});
     },
-    fetchSummaryData() {
-      let date = this.moment(this.month).format('YYYY-MM');
-      this.$axios
-          .get("collection-event-summary", {
-            params: queryOption([
-              {month: date},
-            ])
-          })
-          .then((res) => {
-            if (res.data.code == 200) {
-              this.summaryData = res.data.data;
-              // console.log(this.summaryData);
-            }
-          })
-          .catch((error) => {
-            this.$store.commit("Loading_State", false);
-            if (error.response.status == 422) {
-              let obj = error.response.data.errors;
-              for (let [key, message] of Object.entries(obj)) {
-                this.server_errors[key] = message[0];
-              }
-            }
-          });
-    },
+
 
     fetchReject() {
       this.$axios
@@ -737,7 +648,6 @@ export default {
     selectedCollectionStatus:function (){
       this.pagination.current_page ='';
       this.fetchData();
-      this.fetchSummaryData();
     },
     selectedBillingable_type:function (){
       this.pagination.current_page ='';
@@ -756,7 +666,6 @@ export default {
       if(value !== ''){
         this.pagination.current_page ='';
         this.fetchData();
-        this.fetchSummaryData();
       }
     },
     search: function (value) {
@@ -812,7 +721,6 @@ export default {
   created() {
     this.month = this.moment(this.curent_month).format('YYYY-MM');
     this.fetchData();
-    this.fetchSummaryData();
     this.fetchRoutePlan();
   },
 };

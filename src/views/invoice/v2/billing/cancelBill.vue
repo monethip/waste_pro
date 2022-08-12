@@ -94,8 +94,8 @@
                 >
               </template>
               <v-list>
-                <v-list-item link>
-                  <v-list-item-title @click="ViewInvoice(item.id)">
+                <v-list-item link @click="ViewInvoice(item.id)">
+                  <v-list-item-title>
                     <v-icon small class="mr-2"> mdi-eye </v-icon>
                     ລາຍລະອຽດ
                   </v-list-item-title>
@@ -234,7 +234,7 @@ export default {
         {text: "ລູກຄ້າ", value: "user"},
         {text: "ເບີໂທ", value: "user.phone", sortable: false,width: "120px"},
         {text: "ສ່ວນຫຼຸດ", value: "discount",width: "150px"},
-        {text: "ລາຄາລວມ", value: "sub_total"},
+        {text: "ຄ່າບໍລິການ", value: "sub_total"},
         {text: "ລວມທັງໝົດ", value: "total", sortable: false},
         {text: "Created", value: "created_at", align: "center",width:"200px"},
         {text: "", value: "actions", sortable: false},
@@ -290,30 +290,7 @@ export default {
           })
           .catch(() => {});
     },
-    fetchSummaryData() {
-      let date = this.moment(this.month).format('YYYY-MM');
-      this.$axios
-          .get("collection-event-summary", {
-            params: queryOption([
-              {month: date},
-            ])
-          })
-          .then((res) => {
-            if (res.data.code == 200) {
-              this.summaryData = res.data.data;
-              // console.log(this.summaryData);
-            }
-          })
-          .catch((error) => {
-            this.$store.commit("Loading_State", false);
-            if (error.response.status == 422) {
-              let obj = error.response.data.errors;
-              for (let [key, message] of Object.entries(obj)) {
-                this.server_errors[key] = message[0];
-              }
-            }
-          });
-    },
+
 
     fetchReject() {
       this.$axios
@@ -378,7 +355,6 @@ export default {
     selectedCollectionStatus:function (){
       this.pagination.current_page ='';
       this.fetchData();
-      this.fetchSummaryData();
     },
     selectedBillingable_type:function (){
       this.pagination.current_page ='';
@@ -397,7 +373,6 @@ export default {
       if(value !== ''){
         this.pagination.current_page ='';
         this.fetchData();
-        this.fetchSummaryData();
       }
     },
     search: function (value) {
@@ -436,7 +411,6 @@ export default {
   created() {
     this.month = this.moment(this.curent_month).format('YYYY-MM');
     this.fetchData();
-    this.fetchSummaryData();
     this.fetchRoutePlan();
   },
 };

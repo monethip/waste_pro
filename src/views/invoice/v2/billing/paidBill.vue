@@ -147,8 +147,8 @@
                 >
               </template>
               <v-list>
-                <v-list-item link>
-                  <v-list-item-title @click="ViewInvoice(item.id)">
+                <v-list-item link @click="ViewInvoice(item.id)">
+                  <v-list-item-title>
                     <v-icon small class="mr-2"> mdi-eye </v-icon>
                     ລາຍລະອຽດ
                   </v-list-item-title>
@@ -373,7 +373,7 @@
                 <v-spacer></v-spacer>
                 <v-btn
                     color="error"
-                    class="btn mr-4 px-12"
+                    class="btn mr-4 px-12 elevation-0"
                     medium
                     @click="paymentDialog = false"
                 >
@@ -478,7 +478,7 @@ export default {
       rejects: [],
       reject_reason_id: "",
       description: "",
-      paymentTypeRule: [(v) => !!v || "Name is required"],
+      paymentTypeRule: [(v) => !!v || "Payment is required"],
       payment: {},
       confirm: {},
       headers: [
@@ -486,10 +486,10 @@ export default {
         {text: "ລູກຄ້າ", value: "user",width:"150px"},
         {text: "ເບີໂທ", value: "user.phone", sortable: false},
         {text: "ສ່ວນຫຼຸດ", value: "discount",width: "150px"},
-        {text: "ລາຄາລວມ", value: "sub_total"},
+        {text: "ຄ່າບໍລິການ", value: "sub_total"},
         {text: "ລວມທັງໝົດ", value: "total", sortable: false},
         {
-          text: "Created",
+          text: "ວັນທີສ້າງ",
           value: "created_at",
           width:"250px"
         },
@@ -624,7 +624,6 @@ export default {
                     this.server_errors[key] = data[0];
                   }
                 }
-                this.fetchData();
               });
         }
       } else {
@@ -744,45 +743,6 @@ export default {
         });
       }
     },
-
-    // confirmReject() {
-    //   let data = new FormData();
-    //   data.append("reject_reason_id", this.reject_reason_id);
-    //   data.append("description", this.description);
-    //   data.append("_method", "PUT");
-    //   this.loading = true;
-    //   this.$axios
-    //     .post("reject-collection-event-payment/" + this.payment.id, data)
-    //     .then((res) => {
-    //       if (res.data.code == 200) {
-    //         setTimeout(() => {
-    //           this.loading = false;
-    //           this.$store.commit("Toast_State", {
-    //             value: true,
-    //             color: "success",
-    //             msg: res.data.message,
-    //           });
-    //           this.fetchData();
-    //           this.closeConfirmModal();
-    //         }, 300);
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       this.loading = false;
-    //       this.$store.commit("Toast_State", {
-    //         value: true,
-    //         color: "error",
-    //         msg: error.response.data.message,
-    //       });
-    //       if (error.response.status == 422) {
-    //         var obj = error.response.data.errors;
-    //         for (let [key, data] of Object.entries(obj)) {
-    //           this.server_errors[key] = data[0];
-    //         }
-    //       }
-    //     });
-    // },
-
     paymentConfirmModal(item) {
       this.fetchReject();
       this.confirm = item;
@@ -823,7 +783,6 @@ export default {
     selectedCollectionStatus:function (){
       this.pagination.current_page ='';
       this.fetchData();
-      this.fetchSummaryData();
     },
     selectedBillingable_type:function (){
       this.pagination.current_page ='';
@@ -842,7 +801,6 @@ export default {
       if(value !== ''){
         this.pagination.current_page ='';
         this.fetchData();
-        this.fetchSummaryData();
       }
     },
     search: function (value) {
@@ -898,7 +856,6 @@ export default {
   created() {
     this.month = this.moment(this.curent_month).format('YYYY-MM');
     this.fetchData();
-    this.fetchSummaryData();
     this.fetchRoutePlan();
   },
 };

@@ -135,8 +135,8 @@
               <th class="text-left">ບິນ</th>
               <th class="text-left">ລູກຄ້າ</th>
               <th class="text-left">ເບີໂທ</th>
-              <th class="text-left">Subtotal</th>
-              <th class="text-left">Total</th>
+              <th class="text-left">ຄ່າບໍລິການ</th>
+              <th class="text-left">ລວມທັງໝົດ</th>
               <th class="text-left">ສະຖານະບໍລິການ</th>
               <th class="text-left">ຜູ້ຮ້ອງຂໍ</th>
               <th class="text-left" style="width: 280px;">ລາຍລະອຽດ</th>
@@ -317,33 +317,6 @@
                       {{ server_errors.image }}
                     </p>
                   </v-row>
-                  <!--                  <v-row>-->
-                  <!--                    <v-col cols="12">-->
-                  <!--                      <v-text-field-->
-                  <!--                        v-model="bcel_reference_number"-->
-                  <!--                        label="ເລກລະຫັດການຊຳລະ"-->
-                  <!--                        outlined-->
-                  <!--                        dense-->
-                  <!--                        type="number"-->
-                  <!--                        class="input-number"-->
-                  <!--                        :rules="[-->
-                  <!--                          () =>-->
-                  <!--                            !!bcel_reference_number ||-->
-                  <!--                            'BCEL Reference Number field is required',-->
-                  <!--                          () =>-->
-                  <!--                            (!!bcel_reference_number &&-->
-                  <!--                              bcel_reference_number.length == 15) ||-->
-                  <!--                            'BCEL Reference Number must be than 15 number',-->
-                  <!--                        ]"-->
-                  <!--                        counter="15"-->
-                  <!--                      >-->
-                  <!--                      </v-text-field>-->
-                  <!--                    </v-col>-->
-                  <!--                    <p class="errors">-->
-                  <!--                      {{ server_errors.bcel_reference_number }}-->
-                  <!--                    </p>-->
-                  <!--                  </v-row>-->
-
                 </div>
               </v-form>
             </v-container>
@@ -617,18 +590,28 @@ export default {
 
       headers: [
         // { text: "#", value: "" },
-        {text: "ຊື່", value: "surname"},
-        {text: "Phone", value: "phone", sortable: false},
+        {text: "ລູກຄ້າ", value: "surname"},
+        {text: "ເບີໂທ", value: "phone", sortable: false},
         {text: "ບ້ານ", value: "village.name", sortable: false},
-        {text: "Discount", value: "discount", sortable: false},
-        {text: "Total", value: "total", sortable: false},
-        {text: "SubTotal", value: "sub_total"},
+        {text: "ສ່ວນຫຼຸດ", value: "discount", sortable: false},
         {
-          text: "Collect Status",
+          text: "ຄ່າບໍລິການ",
+          value: "sub_total",
+          align: "center",
+          sortable: false,
+        },
+        {
+          text: "ລວມທັງໝົດ",
+          value: "total",
+          align: "center",
+          sortable: false,
+        },
+        {
+          text: "ສະຖານະການບໍລິການ",
           value: "collect_status",
           align: "center",
         },
-        {text: "Payment Status", value: "payment_status", align: "center",width:"200px"},
+        {text: "ສະຖານະການຊຳລະ", value: "payment_status", align: "center",width:"200px"},
         {text: "Image", value: "media",width:"350px"},
         {text: "", value: "actions", sortable: false},
       ],
