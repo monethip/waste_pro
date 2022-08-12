@@ -156,8 +156,12 @@
             hide-default-footer
             fixed-header
         >
+
           <template v-slot:item.content="{ item }">
               <a @click="ViewInvoice(item.id)">{{item.content}}</a>
+          </template>
+          <template v-slot:item.payment_method="{ item }">
+              <div>{{ getLaoStatusFunc(item.payment_method) }}</div>
           </template>
           <template v-slot:item.user="{ item }">
               <div>{{item.user.name}} {{item.user.surname}}</div>
@@ -220,6 +224,7 @@
 <script>
 import {GetOldValueOnInput} from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
+import {getLaoStatus} from "@/Helpers/BillingStatus";
 
 export default {
   name: "Customer",
@@ -318,6 +323,9 @@ export default {
     };
   },
   methods: {
+    getLaoStatusFunc(status){
+      return  getLaoStatus(status)
+    },
     onFileChange(e) {
       let input = e.target;
       let file = e.target.files[0];

@@ -125,6 +125,9 @@
           <template v-slot:item.user="{ item }">
               <div>{{item.user.name}} {{item.user.surname}}</div>
           </template>
+          <template v-slot:item.payment_method="{ item }">
+            <div>{{ getLaoStatusFunc(item.payment_method) }}</div>
+          </template>
           <template v-slot:item.sub_total="{ item }">
               <td>{{Intl.NumberFormat().format( item.sub_total) }}</td>
           </template>
@@ -301,6 +304,7 @@
 <script>
 import {GetOldValueOnInput} from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
+import {getLaoStatus} from "@/Helpers/BillingStatus";
 
 export default {
   name: "Customer",
@@ -388,18 +392,21 @@ export default {
         {text: "ສ່ວນຫຼຸດ", value: "discount",width: "150px"},
         {text: "ຄ່າບໍລິການ", value: "sub_total"},
         {text: "ລວມທັງໝົດ", value: "total", sortable: false},
-        {text: "ຜູ້ຊຳລະ", value: "paided_by.name",width:"200px"},
+        {text: "ຜູ້ຊຳລະ", value: "paided_by.name",width:"100px"},
         {text: "ປະເພດຊຳລະ", value: "payment_method", align: "center",width:"200px"},
         {
           text: "ວັນທີສ້າງ",
           value: "created_at",
-          width:"250px"
+          width:"150px"
         },
         {text: "", value: "actions", sortable: false},
       ],
     };
   },
   methods: {
+    getLaoStatusFunc(status){
+      return  getLaoStatus(status)
+    },
     onFileChange(e) {
       let input = e.target;
       let file = e.target.files[0];
@@ -610,7 +617,7 @@ export default {
         data.append("_method", "PUT");
         this.loading = true;
         this.$axios
-            .post("reject-collection-event-payment/" + this.confirm.id, data)
+            .post("reject-billing/" + this.confirm.id, data)
             .then((res) => {
               if (res.data.code == 200) {
                 setTimeout(() => {

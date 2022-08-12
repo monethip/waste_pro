@@ -797,7 +797,7 @@ export default {
           data.append("_method", "PUT");
           this.loading = true;
           this.$axios
-              .post("reject-collection-event-payment/" + this.invoice.id, data)
+              .post("reject-billing/" + this.invoice.id, data)
               .then((res) => {
                 if (res.data.code == 200) {
                   setTimeout(() => {

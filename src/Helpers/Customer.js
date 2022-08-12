@@ -31,3 +31,12 @@ export const getCompanyCostBy = [
     },
 ]
 
+export const getLaoCustomerType = function (type) {
+    switch (type) {
+        case "company":
+            return "ຫົວໜ່ວຍທຸລະກິດ"
+        case "home":
+            return "ຄົວເຮືອນ"
+        default: return type
+    }
+}

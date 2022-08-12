@@ -98,7 +98,6 @@
         ຂໍ້ມູນບີນ ({{ pagination.total }})
         <v-divider class="mx-4" vertical></v-divider>
         <v-spacer></v-spacer>
-<!--        <v-btn v-if="selectedRows.length > 0" class="btn-primary" :loading="loading" :disabled="loading" @click="approveAny">ອະນຸມັດບິນ</v-btn>-->
 <!--          <v-text-field-->
 <!--            outlined-->
 <!--            dense-->
@@ -134,41 +133,47 @@
             <div>{{collectStatus(item.status)}}</div>
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-menu offset-y>
-              <template v-slot:activator="{ on, attrs }">
-                <v-icon
-                    color="primary"
-                    dark
-                    v-bind="attrs"
-                    v-on="on"
-                    medium
-                    class="mr-2"
-                >mdi-dots-vertical</v-icon
-                >
-              </template>
-              <v-list>
-                <v-list-item link @click="ViewInvoice(item.id)">
-                  <v-list-item-title>
-                    <v-icon small class="mr-2"> mdi-eye </v-icon>
-                    ລາຍລະອຽດ
-                  </v-list-item-title>
-                </v-list-item>
-<!--                <v-list-item link>-->
-<!--                  <v-list-item-title @click="CancelBill(item)">-->
-<!--                    <v-icon small class="mr-2"> mdi-pencil </v-icon>-->
-<!--                    ຍົກເລີກ-->
+            <v-btn class="btn btn-primary mr-2 elevation-0" small @click="paymentPage(item)">
+              <v-icon class="mr-1" small @click="paymentPage(item)">mdi-cash</v-icon>
+            </v-btn>
+            <v-btn class="btn elevation-0" color="info" small @click="ViewInvoice(item.id)">
+              <v-icon class="mr-1" small @click="ViewInvoice(item.id)"> mdi-eye </v-icon>
+            </v-btn>
+<!--            <v-menu offset-y>-->
+<!--              <template v-slot:activator="{ on, attrs }">-->
+<!--                <v-icon-->
+<!--                    color="primary"-->
+<!--                    dark-->
+<!--                    v-bind="attrs"-->
+<!--                    v-on="on"-->
+<!--                    medium-->
+<!--                    class="mr-2"-->
+<!--                >mdi-dots-vertical</v-icon-->
+<!--                >-->
+<!--              </template>-->
+<!--              <v-list>-->
+<!--                <v-list-item link @click="ViewInvoice(item.id)">-->
+<!--                  <v-list-item-title>-->
+<!--                    <v-icon small class="mr-2"> mdi-eye </v-icon>-->
+<!--                    ລາຍລະອຽດ-->
 <!--                  </v-list-item-title>-->
 <!--                </v-list-item>-->
-                <div>
-                  <v-list-item link @click="paymentPage(item)">
-                    <v-list-item-title>
-                      <v-icon small class="mr-2">mdi-cash</v-icon>
-                      ຊຳລະ
-                    </v-list-item-title>
-                  </v-list-item>
-                </div>
-              </v-list>
-            </v-menu>
+<!--&lt;!&ndash;                <v-list-item link>&ndash;&gt;-->
+<!--&lt;!&ndash;                  <v-list-item-title @click="CancelBill(item)">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <v-icon small class="mr-2"> mdi-pencil </v-icon>&ndash;&gt;-->
+<!--&lt;!&ndash;                    ຍົກເລີກ&ndash;&gt;-->
+<!--&lt;!&ndash;                  </v-list-item-title>&ndash;&gt;-->
+<!--&lt;!&ndash;                </v-list-item>&ndash;&gt;-->
+<!--                <div>-->
+<!--                  <v-list-item link @click="paymentPage(item)">-->
+<!--                    <v-list-item-title>-->
+<!--                      <v-icon small class="mr-2">mdi-cash</v-icon>-->
+<!--                      ຊຳລະ-->
+<!--                    </v-list-item-title>-->
+<!--                  </v-list-item>-->
+<!--                </div>-->
+<!--              </v-list>-->
+<!--            </v-menu>-->
           </template>
         </v-data-table>
         <br/>
@@ -491,9 +496,9 @@ export default {
         {
           text: "ວັນທີສ້າງ",
           value: "created_at",
-          width:"250px"
+          width:"150px"
         },
-        {text: "", value: "actions", sortable: false},
+        {text: "", value: "actions", sortable: false,  width:"150px"},
       ],
     };
   },
@@ -700,7 +705,7 @@ export default {
         data.append("_method", "PUT");
         this.loading = true;
         this.$axios
-            .post("reject-collection-event-payment/" + this.confirm.id, data)
+            .post("confirm-billing/" + this.confirm.id, data)
             .then((res) => {
               if (res.data.code == 200) {
                 setTimeout(() => {

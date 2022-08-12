@@ -75,6 +75,24 @@
               :disable-pagination="true"
               hide-default-footer
           >
+            <template v-slot:item.user="{ item }">
+              <div v-if="item.billing.user.customer">
+                <div v-if="item.billing.user.customer.customer_type = 'home'">
+                  {{item.billing.user.name}}
+                </div>
+                <div v-else-if="item.billing.user.customer.customer_type = 'company'">
+                  {{item.billing.user.customer.company_name}}
+                </div>
+              </div>
+              <div v-else class="error--text">
+                ຍັງບໍ່ທັນສະໝັກບໍລິການ
+              </div>
+            </template>
+            <template v-slot:item.customerType="{ item }">
+              <div v-if="item.billing.user.customer">
+                {{getLaoCustomerType(item.billing.user.customer.customer_type)}}
+              </div>
+            </template>
             <template v-slot:item.start_month="{ item }">
               <div class="success--text">
                 {{item.start_month}}
@@ -129,6 +147,7 @@
 import {GetOldValueOnInput} from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
 import {getBgColor, getLaoStatus} from "@/Helpers/BillingStatus";
+import {getLaoCustomerType} from "@/Helpers/Customer";
 
 export default {
   name: "Invoice",
@@ -176,20 +195,33 @@ export default {
       ],
 
       headers: [
-        {text: "ເລກບິນ", value: "billing.content"},
+        {text: "ເລກບິນ", value: "billing.content", width:"150",},
         {
-          text: "ຊື່ລູກຄ້າ",
-          value: "billing.user.name",
+          text: "ລູກຄ້າ",
+          value: "user",
+          width:"130",
           sortable: false,
         },
-        { text: "ວັນທີ", value: "start_month" },
-        { text: "ຫາວັນທີ", value: "end_month" },
         {
-          text: "ສ່ວນຫຼຸດ",
-          value: "discount",
-          align: "center",
+          text: "ເບີໂທ",
+          value: "billing.user.phone",
+          width:"130",
           sortable: false,
         },
+        {
+          text: "ປະເພດລູກຄ້າ",
+          value: "customerType",
+          width:"130",
+          sortable: false,
+        },
+        { text: "ວັນທີ", value: "start_month",   width:"120", },
+        { text: "ຫາວັນທີ", value: "end_month",   width:"120", },
+        // {
+        //   text: "ສ່ວນຫຼຸດ",
+        //   value: "discount",
+        //   align: "center",
+        //   sortable: false,
+        // },
         {
           text: "ຄ່າບໍລິການ",
           value: "sub_total",
@@ -220,6 +252,9 @@ export default {
     },
     filterStatusLao(status){
       return  getLaoStatus(status.name)
+    },
+    getLaoCustomerType(type){
+      return getLaoCustomerType(type)
     },
     fetchData() {
       this.$store.commit("Loading_State", true);

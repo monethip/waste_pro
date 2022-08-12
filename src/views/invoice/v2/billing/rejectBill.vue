@@ -71,6 +71,20 @@
           <template v-slot:item.user="{ item }">
               <div>{{item.user.name}} {{item.user.surname}}</div>
           </template>
+          <template v-slot:item.reject="{ item }">
+             <div>
+               {{item.reject_details[0].reject_reason.name}}
+             </div>
+          </template>
+          <template v-slot:item.description="{ item }">
+
+             <div>
+               {{item.reject_details[0].description}}
+             </div>
+          </template>
+          <template v-slot:item.payment_method="{ item }">
+            <div>{{ getLaoStatusFunc(item.payment_method) }}</div>
+          </template>
           <template v-slot:item.sub_total="{ item }">
               <td>{{Intl.NumberFormat().format( item.sub_total) }}</td>
           </template>
@@ -81,33 +95,7 @@
             <div>{{collectStatus(item.status)}}</div>
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-menu offset-y>
-              <template v-slot:activator="{ on, attrs }">
-                <v-icon
-                    color="primary"
-                    dark
-                    v-bind="attrs"
-                    v-on="on"
-                    medium
-                    class="mr-2"
-                >mdi-dots-vertical</v-icon
-                >
-              </template>
-              <v-list>
-                <v-list-item link>
-                  <v-list-item-title @click="ViewInvoice(item.id)">
-                    <v-icon small class="mr-2"> mdi-eye </v-icon>
-                    ລາຍລະອຽດ
-                  </v-list-item-title>
-                </v-list-item>
-<!--                <v-list-item link>-->
-<!--                  <v-list-item-title @click="CancelBill(item)">-->
-<!--                    <v-icon small class="mr-2"> mdi-download </v-icon>-->
-<!--                    Download-->
-<!--                  </v-list-item-title>-->
-<!--                </v-list-item>-->
-              </v-list>
-            </v-menu>
+            <v-icon small class="mr-2" @click="ViewInvoice(item.id)"> mdi-eye </v-icon>
           </template>
         </v-data-table>
         <br/>
@@ -127,6 +115,7 @@
 <script>
 import {GetOldValueOnInput} from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
+import {getLaoStatus} from "@/Helpers/BillingStatus";
 
 export default {
   name: "Customer",
@@ -279,13 +268,14 @@ export default {
       payment: {},
       confirm: {},
       headers: [
-        { text: "ບິນ", value: "Content",width:"150px" },
+        { text: "ເລກບິນ", value: "content",width:"200px" },
         {text: "ລູກຄ້າ", value: "user",width: "120px"},
         {text: "ເບີໂທ", value: "user.phone", sortable: false,width: "120px"},
-        {text: "ສ່ວນຫຼຸດ", value: "discount",width: "150px"},
+        {text: "ເຫດຜົນ", value: "reject",width: "150px"},
+        {text: "ລາຍລະອຽດ", value: "description",width: "150px"},
         {text: "ຄ່າບໍລິການ", value: "sub_total",width: "120px"},
         {text: "ລວມທັງໝົດ", value: "total", sortable: false,width: "120px"},
-        {text: "ປະເພດຊຳລະ", value: "payment_method", align: "center",width:"200px"},
+        {text: "ປະເພດຊຳລະ", value: "payment_method",width:"200px"},
         {
           text: "Created",
           value: "created_at",
@@ -296,6 +286,9 @@ export default {
     };
   },
   methods: {
+    getLaoStatusFunc(status){
+      return  getLaoStatus(status)
+    },
     fetchData() {
       // let date = this.moment(this.month).format('YYYY-MM');
       this.$store.commit("Loading_State", true);
