@@ -606,9 +606,9 @@ export default {
       selectedFavoriteDate: [],
 
       headers: [
-        {text: "ID", value: "customer_id"},
-        {text: "ຊື່", value: "name",width:"200px"},
-        {text: "ນາມສະກຸນ", value: "surname",width:"200px"},
+        {text: "ລະຫັດ", value: "customer_id",width:"90px"},
+        {text: "ຊື່", value: "name",width:"150px"},
+        {text: "ນາມສະກຸນ", value: "surname",width:"150px"},
         {text: "Phone", value: "user.phone",width:"200px", sortable: false},
         {text: "ບ້ານ", value: "village.name",width:"120px", sortable: false},
         {text: "ເມືອງ", value: "district.name",width:"120px", sortable: false},

@@ -256,7 +256,7 @@
         </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="elevation-0 btn-warning mr-4" text @click="backPrevios()">
+          <v-btn class="elevation-0 btn-warning mr-4" @click="backPrevios()">
             ຍ້ອນກັບ
           </v-btn>
           <v-btn

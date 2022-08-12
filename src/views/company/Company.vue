@@ -479,6 +479,7 @@ export default {
       favorite_dates: [],
       selectedFavoriteDate: [],
       headers: [
+        {text: "ລະຫັດ", value: "customer_id",width:"150px"},
         {text: "ບໍລິສັດ", value: "company_name",width:"150px"},
         {text: "ເບີໂທ", value: "user.phone",width:"100px"},
         {text: "ບ້ານ", value: "village.name", sortable: false,width: "150px"},

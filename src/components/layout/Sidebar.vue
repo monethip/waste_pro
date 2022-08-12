@@ -317,10 +317,16 @@ export default {
           menu: [
             {
               icon: "mdi-trash-can",
-              title: "ເກັບຂີ້ເຫື້ຍອພິເສດ",
+              title: "ເກັບຂີ້ເຫື້ຍອພິເສດເກົ່າ",
               to: "/collection-event",
               permissions: ["manage_event", "get_customer"]
-            }
+            },
+            {
+              icon: "mdi-note-outline",
+              title: "ເກັບຂີ້ເຫື້ຍອພິເສດໃໝ່",
+              to: "/v2/event-invoice",
+              permissions: ["get_invoice"]
+            },
           ]
         },
         // {
@@ -352,12 +358,6 @@ export default {
               icon: "mdi-note-outline",
               title: "ບິນທັງໝົດ",
               to: "/billing",
-              permissions: ["get_invoice"]
-            },
-            {
-              icon: "mdi-note-outline",
-              title: "ເກັບຂີ້ເຫື້ຍອພິເສດ",
-              to: "/v2/event-invoice",
               permissions: ["get_invoice"]
             },
             {
