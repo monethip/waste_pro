@@ -5,13 +5,16 @@
         <v-card-title>
           ຂໍ້ມູນປະເພດບໍລິການ
           <v-spacer></v-spacer>
-          <v-btn color="info" medium @click="OpenModalAdd()"
-            ><v-icon color>mdi-plus</v-icon>
-          </v-btn>
+          <v-btn color="info" medium @click="OpenModalAdd()"></v-btn>
+          <v-icon color>mdi-plus</v-icon>
         </v-card-title>
       </v-col>
     </v-row>
     <v-data-table :headers="header" :items="packages" hide-default-footer>
+      <template v-slot:[`item.is_public`]="{ item }">
+        <v-switch v-model="item.is_public" @change="switchPublic(item.id)"></v-switch>
+      </template>
+
       <template v-slot:[`item.created_at`]="{ item }">
         <div>{{ moment(item.created_at).format("DD-MM-YY hh:mm") }}</div>
       </template>
@@ -26,12 +29,8 @@
     </v-data-table>
 
     <template>
-      <Pagination
-        v-if="pagination.total_pages > 1"
-        :pagination="pagination"
-        :offset="offset"
-        @paginate="fetchData()"
-      ></Pagination>
+      <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset" @paginate="fetchData()">
+      </Pagination>
     </template>
 
 
@@ -48,11 +47,7 @@
               <v-form ref="form" lazy-validation>
                 <v-row>
                   <v-col>
-                    <v-text-field
-                      v-model="addpackage.name"
-                      label="ຊື່ບໍລິການ *"
-                      :rules="nameRules"
-                    ></v-text-field>
+                    <v-text-field v-model="addpackage.name" label="ຊື່ບໍລິການ *" :rules="nameRules"></v-text-field>
                     <p class="errors">
                       {{ server_errors.name }}
                     </p>
@@ -60,14 +55,8 @@
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-text-field
-                      v-model="addpackage.price"
-                      label="ລາຄາ *"
-                      type="number"
-                      class="input-number"
-                      required
-                      :rules="bagRules"
-                    ></v-text-field>
+                    <v-text-field v-model="addpackage.price" label="ລາຄາ *" type="number" class="input-number" required
+                      :rules="bagRules"></v-text-field>
                     <p class="errors">
                       {{ server_errors.price }}
                     </p>
@@ -75,15 +64,8 @@
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-autocomplete
-                      v-model="selectedPackageSize"
-                      :items="packageSize"
-                      item-text="size"
-                      item-value="id"
-                      label="ເລືອກຂະໜາດບໍລະການ"
-                      dense
-                      :rules="ruleSize"
-                    ></v-autocomplete>
+                    <v-autocomplete v-model="selectedPackageSize" :items="packageSize" item-text="size" item-value="id"
+                      label="ເລືອກຂະໜາດບໍລະການ" dense :rules="ruleSize"></v-autocomplete>
                     <p class="errors">
                       {{ server_errors.package_size_id }}
                     </p>
@@ -96,13 +78,7 @@
               <v-btn color="blue darken-1" text @click="closeAddModal()">
                 ຍົກເລີກ
               </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                :loading="loading"
-                :disabled="loading"
-                @click="AddItem()"
-              >
+              <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="AddItem()">
                 ບັນທຶກ
               </v-btn>
             </v-card-actions>
@@ -123,11 +99,7 @@
               <v-form ref="form" lazy-validation>
                 <v-row>
                   <v-col>
-                    <v-text-field
-                      v-model="editPackage.name"
-                      label="ຊື່ບໍລິການ *"
-                      :rules="nameRules"
-                    ></v-text-field>
+                    <v-text-field v-model="editPackage.name" label="ຊື່ບໍລິການ *" :rules="nameRules"></v-text-field>
                     <p class="errors">
                       {{ server_errors.name }}
                     </p>
@@ -135,14 +107,8 @@
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-text-field
-                      v-model="editPackage.price"
-                      label="ລາຄາ *"
-                      type="number"
-                      class="input-number"
-                      required
-                      :rules="bagRules"
-                    ></v-text-field>
+                    <v-text-field v-model="editPackage.price" label="ລາຄາ *" type="number" class="input-number" required
+                      :rules="bagRules"></v-text-field>
                     <p class="errors">
                       {{ server_errors.price }}
                     </p>
@@ -150,15 +116,8 @@
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-autocomplete
-                      v-model="editPackage.package_size_id"
-                      :items="packageSize"
-                      item-text="size"
-                      item-value="id"
-                      label="ເລືອກຂະໜາດປະເພດບໍລິການ"
-                      dense
-                      :rules="ruleSize"
-                    ></v-autocomplete>
+                    <v-autocomplete v-model="editPackage.package_size_id" :items="packageSize" item-text="size"
+                      item-value="id" label="ເລືອກຂະໜາດປະເພດບໍລິການ" dense :rules="ruleSize"></v-autocomplete>
                     <p class="errors">
                       {{ server_errors.package_size_id }}
                     </p>
@@ -171,13 +130,7 @@
               <v-btn color="blue darken-1" text @click="closeUpdate()">
                 ຍົກເລີກ
               </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                :loading="loading"
-                :disabled="loading"
-                @click="UpdateItem()"
-              >
+              <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="UpdateItem()">
                 ບັນທຶກ
               </v-btn>
             </v-card-actions>
@@ -191,14 +144,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            :loading="loading"
-            :disabled="loading"
-            @click="deleteItemConfirm"
-            >OK</v-btn
-          >
+          <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="deleteItemConfirm">OK</v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </template>
@@ -227,6 +173,7 @@ export default {
         { text: "ມູນຄ່າສັນຍາ", value: "price" },
         { text: "ຂະໜາດ", value: "package_size.size", align: "center" },
         { text: "ຈຳນວນຖົງ", value: "package_size.bag", align: "center" },
+        { text: "ສະແດງໃນແອັພ", value: "is_public" },
         { text: "Created", value: "created_at" },
         { text: "Actions", value: "action" },
       ],
@@ -289,6 +236,41 @@ export default {
             }
           });
       }
+    },
+    switchPublic(id) {
+      this.loading = true;
+      this.$axios
+        .post("package-status/" + id)
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.loading = false;
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
+              });
+              this.closeAddModal();
+              this.fetchData();
+              this.reset();
+            }, 300);
+          }
+        })
+        .catch((error) => {
+          this.loading = false;
+          this.fetchData();
+          if (error.response.status == 422) {
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
+            let obj = error.response.data.errors;
+            for (let [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
+            }
+          }
+        });
     },
 
     closeUpdate() {
@@ -390,9 +372,9 @@ export default {
         )
         .then((res) => {
           if (res.data.code == 200) {
-              this.$store.commit("Loading_State", false);
-              this.packages = res.data.data.data;
-              this.pagination = res.data.data.pagination;
+            this.$store.commit("Loading_State", false);
+            this.packages = res.data.data.data;
+            this.pagination = res.data.data.pagination;
           }
         })
         .catch((error) => {
@@ -416,7 +398,7 @@ export default {
             }, 100);
           }
         })
-        .catch(() => {});
+        .catch(() => { });
     },
   },
   watch: {
