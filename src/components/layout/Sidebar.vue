@@ -312,7 +312,7 @@ export default {
           ]
         },
         {
-          title: "ເກັບຂີ້ເຫື້ຍອພິເສດ",
+          title: "ເກັບຂີ້ເຫື້ຍອ",
           icon: "mdi-trash-can",
           group_permissions: ["manage_event", "get_customer"],
           menu: [
@@ -351,7 +351,7 @@ export default {
         // },
 
         {
-          title: "ຈັດການຂໍ້ມູນບິນ",
+          title: "ຈັດການບິນ",
           icon: "mdi-credit-card",
           group_permissions: ["get_invoice"],
           menu: [
@@ -517,14 +517,6 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../../public/scss/main.scss";
-/**
-.v-application--is-ltr .v-list-item__icon:last-of-type:not(:only-child) {
-  margin-left: 0px !important;
-}
-.group-menu[data-v-117f5fe7]{
-  margin-right: 0px !important;
-}
-**/
 .v-application--is-ltr .v-list-item__action:first-child, .v-application--is-ltr .v-list-item__icon:first-child {
   margin-right: 6px !important;
 }
