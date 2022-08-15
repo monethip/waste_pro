@@ -525,6 +525,9 @@ export default {
   margin-right: 0px !important;
 }
 **/
+.v-application--is-ltr .v-list-item__action:first-child, .v-application--is-ltr .v-list-item__icon:first-child {
+  margin-right: 12px !important;
+}
 .v-application--is-ltr .v-list-item__action[data-v-117f5fe7]:first-child, .v-application--is-ltr .v-list-item__icon[data-v-117f5fe7]:first-child {
   margin-right: 12px !important;
 }
