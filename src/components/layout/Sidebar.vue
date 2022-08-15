@@ -517,13 +517,14 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../../public/scss/main.scss";
-
+/**
 .v-application--is-ltr .v-list-item__icon:last-of-type:not(:only-child) {
   margin-left: 0px !important;
 }
 .group-menu[data-v-117f5fe7]{
   margin-right: 0px !important;
 }
+**/
 .v-application--is-ltr .v-list-item__action[data-v-117f5fe7]:first-child, .v-application--is-ltr .v-list-item__icon[data-v-117f5fe7]:first-child {
   margin-right: 12px !important;
 }
