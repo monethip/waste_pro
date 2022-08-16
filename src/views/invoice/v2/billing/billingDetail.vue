@@ -59,7 +59,7 @@
                     (invoice.content)
                   }}</span>
               </h3>
-              <h3>ປະເພດບິນ: {{ invoice.display_type }}</h3>
+              <h3>ປະເພດບິນ: {{ filterBillingType(invoice.display_type) }}</h3>
               <h3>
                 ວັນທີສ້າງບິນ:
                 {{ moment(invoice.created_at).format("DD-MM-YY") }}
@@ -565,7 +565,7 @@
 </template>
 
 <script>
-import {getBgColor, getLaoStatus} from "@/Helpers/BillingStatus";
+import {getBgColor, getLaoBillingType, getLaoStatus} from "@/Helpers/BillingStatus";
 
 export default {
   name: "InvoiceDetail",
@@ -747,6 +747,9 @@ export default {
     getBgColorFunc(status){
       return getBgColor(status)
     },
+    filterBillingType(status){
+      return  getLaoBillingType(status)
+    },
     closeAddModal() {
       this.$store.commit("modalAdd_State", false);
     },
@@ -787,9 +790,7 @@ export default {
       this.$store.commit("modalAdd_State", true);
 
     },
-    editBill(id){
-     console.log(id);
-    },
+
     async rejectPayment() {
           let data = new FormData();
           data.append("reject_reason_id", this.reject_reason_id);

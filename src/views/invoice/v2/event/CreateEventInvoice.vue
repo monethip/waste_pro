@@ -4,7 +4,7 @@
       <v-btn text class="text-primary" @click="backPrevios()"
       ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
       >
-      ເພີ່ມຂໍ້ມູນເກັບຂີ້ເຫື້ຍອພິເສດ</v-breadcrumbs
+      ເພີ່ມຂໍ້ມູນເກັບຂີ້ເຫື້ຍອພິເສດ <span v-if="user.phone" class="mr-2">({{user.phone}} / {{user.name}})</span></v-breadcrumbs
     >
     <v-card>
       <v-card-text class="px-12">
@@ -275,9 +275,11 @@
 
 <script>
 export default {
+  props: ["items"],
   data() {
     return {
       data: {},
+      user:{},
       loading: false,
       server_errors: {},
       provinces: [],
@@ -409,6 +411,9 @@ export default {
       formData.append("lat", this.latlng.lat);
       formData.append("lng", this.latlng.lng);
       formData.append("phone", this.data.phone);
+      if(this.user.id){
+        formData.append("user_id", this.user.id);
+      }
       formData.append("date", dateTime);
 
       if (this.$refs.form.validate() == true) {
@@ -581,6 +586,9 @@ export default {
     this.geolocate();
   },
   created() {
+    if(this.items){
+      this.user = this.items;
+    }
     this.fetchDriver();
     this.fetchAddress();
   },

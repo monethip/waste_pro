@@ -1,13 +1,17 @@
 <template>
   <v-container>
     <v-row class="mb-n6">
-      <v-col cols="1">
-        <v-btn class="btn-primary" @click="createPage()"
+      <v-col cols>
+        <v-btn class="btn-primary mr-2 elevation-0" @click="createPage"
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
+        <v-btn class="btn-primary elevation-0" @click="choseCustomer"
+        >
+          <v-icon>mdi-plus</v-icon> ເພີ່ມໃນແອັບລູກຄ້າ
+        </v-btn>
       </v-col>
-      <v-col cols="3">
+      <v-col cols>
         <v-menu
             v-model="start_menu"
             :close-on-content-click="true"
@@ -34,26 +38,26 @@
           ></v-date-picker>
         </v-menu>
       </v-col>
-      <v-col cols="4">
+      <v-col cols>
         <v-select
             outlined
             dense
             :items="collectionStatus"
             v-model="selectedCollectionStatus"
-            item-text="dis_play"
+            :item-text="getFilterCollectStatus"
             item-value="name"
             label="ສະຖານະບໍລິການ"
             multiple
             clearable
         ></v-select>
       </v-col>
-      <v-col cols="4">
+      <v-col cols>
         <v-select
             outlined
             dense
             :items="paymentStatus"
             v-model="selectedPaymentStatus"
-            item-text="dis_play"
+            :item-text="getBillingStatus"
             item-value="name"
             label="ສະຖານະການຊຳລະ"
             multiple
@@ -82,52 +86,6 @@
              -->
       </v-card-title>
       <v-card-text>
-<!--        <v-row>-->
-<!--          <v-col class="sum-total">-->
-<!--            ຄຳຂໍຖືກອານຸມັດ: {{summaryData.collection_summary_report.approved_count}}-->
-<!--          </v-col>-->
-<!--          <v-col class="sum-total">-->
-<!--            ຄຳຂໍຖືກຍົກເລີກ: {{summaryData.collection_summary_report.canceled_count}}-->
-<!--          </v-col>-->
-<!--          <v-col class="sum-total">-->
-<!--            ລົງເກັບແລະລູກຄ້າຢືຢັນແລ້ວ: {{summaryData.collection_summary_report.collect_confirm_count}}-->
-<!--          </v-col>-->
-<!--          <v-col class="sum-total">-->
-<!--            ລູກຄ້າປະຕິເສດການລົງເກັບ: {{summaryData.collection_summary_report.collect_reject_count}}-->
-<!--          </v-col>-->
-<!--          <v-col class="sum-total">-->
-<!--            ລົງເກັບແລ້ວ(ລໍຖ້າຢືນຢັນ): {{summaryData.collection_summary_report.collected_count}}-->
-<!--          </v-col>-->
-<!--          <v-col class="sum-total">-->
-<!--            ຕ້ອງລົງເກັບທັງໝົດ: {{summaryData.collection_summary_report.number_of_times_to_collect}}-->
-<!--          </v-col>-->
-<!--          <v-col class="sum-total">-->
-<!--            ຄຳຂໍທີ່ປະຕິເສດແລ້ວ: {{summaryData.collection_summary_report.rejected_count}}-->
-<!--          </v-col>-->
-<!--          <v-col class="sum-total">-->
-<!--            ຄຳຂໍລໍຖ້າຢືນຢັນ: {{summaryData.collection_summary_report.requested_count}}-->
-<!--          </v-col>-->
-<!--        </v-row>-->
-
-<!--        <v-row>-->
-<!--          <v-col class="sum-total">-->
-<!--            ການຊຳລະຖືກອະນຸມັດ: {{summaryData.payment_summary_report.approved_total}}-->
-<!--          </v-col>-->
-<!--          <v-col class="sum-total">-->
-<!--            ຍອດທີ່ຍັງບໍ່ຈ່າຍ:  {{ Intl.NumberFormat().format(summaryData.payment_summary_report.pending_total) }}-->
-<!--          </v-col>-->
-<!--          <v-col class="sum-total">-->
-<!--            ຍອດທີ່ປະຕິເສດ: {{Intl.NumberFormat().format(summaryData.payment_summary_report.rejected_total)}}-->
-<!--          </v-col>-->
-<!--          <v-col class="sum-total">-->
-<!--            ຍອດທີ່ຈ່າຍແລ້ວ: {{Intl.NumberFormat().format(summaryData.payment_summary_report.success_total)}}-->
-<!--          </v-col>-->
-<!--          <v-col class="sum-total">-->
-<!--            ຍອດທີ່ຈ່າຍແລ້ວ(ລໍຖ້າການຢືນຢັນ): {{Intl.NumberFormat().format(summaryData.payment_summary_report.to_confirm_payment_total)}}-->
-<!--          </v-col>-->
-
-<!--        </v-row>-->
-
         <v-simple-table>
           <template v-slot:default>
             <thead>
@@ -159,7 +117,7 @@
               <td>{{ Intl.NumberFormat().format(data.billing.total )}}</td>
               <td>
                 <div v-if="data.collect_status">
-                  <v-chip label color="primary">{{collectStatus(data.collect_status)}}</v-chip>
+                  <v-chip label color="primary">{{getCollectStatus(data.collect_status)}}</v-chip>
                 </div>
               </td>
               <td style="width: 380px;">
@@ -242,88 +200,14 @@
             <p>ຊຳລະຄ່າຂີ້ເຫື້ຍອ {{ payment.name }} {{ payment.surname }}</p>
           </v-card-title>
           <v-card-text>
-            <v-container>
-              <v-form ref="form" lazy-validation>
-                <h3 class="my-4">ເລືອກປະເພດການຊຳລະ</h3>
-                <v-row>
-                  <v-col cols="12">
-                    <v-chip-group
-                        v-model="paymentType"
-                        column
-                        :rules="paymentTypeRule"
-                        required
-                    >
-                      <v-chip
-                          large
-                          class="mr-6"
-                          color="info"
-                          label
-                          filter
-                          outlined
-                      >
-                        ເງິນສົດ
-                        <v-icon left class="ml-1"> mdi-currency-usd</v-icon>
-                      </v-chip>
-                      <v-chip large color="error" label filter outlined>
-                        BCEL
-                        <v-icon class="ml-1" left>
-                          mdi-credit-card
-                        </v-icon
-                        >
-                      </v-chip
-                      >
-                    </v-chip-group>
-                    <p class="errors">
-                      {{ server_errors.payment_method }}
-                    </p>
-                  </v-col>
-                </v-row>
-                <div v-if="paymentType == 1">
-                  <h3 class="my-4">ຫຼັກຖານການຊຳລະ</h3>
-                  <v-row>
-                    <v-col>
-                      <label class="file-label">
-                        <input
-                            @change="onFileChange"
-                            class="file-input input-file-image"
-                            type="file"
-                            name="image"
-                            accept="image/*"
-                            ref="image"
-                        />
-                        <span class="file-cta">
-                          <span class="file-icon">
-                            <v-icon
-                                style="
-                                font-size: 60px !important;
-                                color: #719aff;
-                                cursor: pointer;
-                              "
-                                class="fas fa-cloud-upload"
-                            >mdi-file-image</v-icon
-                            >
-                          </span>
-                        </span>
-                      </label>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col v-if="imageUrl">
-                      <v-avatar class="avatar rounded" size="194px">
-                        <img :src="imageUrl" alt=""/>
-                      </v-avatar>
-                    </v-col>
-                    <p class="errors">
-                      {{ server_errors.image }}
-                    </p>
-                  </v-row>
-                </div>
-              </v-form>
-            </v-container>
+
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="closeAddModal()">
                 Close
+              </v-btn>
+              <v-btn color="blue darken-1" text @click="createPage()">
+                ເພີ່ມທົ່ວໄປ
               </v-btn>
               <v-btn
                   color="blue darken-1"
@@ -340,152 +224,15 @@
       </template>
     </ModalAdd>
 
-    <!-- Confirm Payment-->
-    <v-dialog v-model="paymentDialog" max-width="620px" persistent>
-      <template>
-        <v-card>
-          <v-card-title>
-            <p>
-              <v-icon class="primary-color" large color="success"
-              >mdi-checkbox-marked-circle-outline
-              </v-icon
-              >
-              ຢືນຢັນຊຳລະຄ່າຂີ້ເຫຍື້ອ
-
-              <span class="primary-color"
-              >{{ confirm.name }} {{ confirm.surname }}</span
-              >
-            </p>
-          </v-card-title>
-          <v-card-text>
-            <v-container>
-              <v-form ref="form" lazy-validation>
-                <v-row>
-                  <v-col cols="12">
-                    <v-chip-group v-model="confirmType" column>
-                      <v-chip
-                          medium
-                          class="mr-6"
-                          color="success"
-                          label
-                          filter
-                          outlined
-                      >
-                        <v-icon left class="ml-1"> mdi-cash
-                        </v-icon
-                        >
-                        ຢືນຢັນການຊຳລະ
-                      </v-chip>
-                      <v-chip medium color="error" label filter outlined>
-                        <v-icon class="ml-1" left> mdi-cash-remove</v-icon>
-                        ປະຕິເສດການຊຳລະ
-                      </v-chip
-                      >
-                    </v-chip-group>
-                  </v-col>
-                </v-row>
-                <div v-if="confirmType == 1">
-                  <v-row>
-                    <v-col cols="12">
-                      <v-select
-                          v-model="reject_reason_id"
-                          label="ເຫດຜົນ"
-                          outlined
-                          dense
-                          :items="rejects"
-                          item-text="name"
-                          item-value="id"
-                      >
-                      </v-select>
-                      <p class="errors">
-                        {{ server_errors.reject_reason_id }}
-                      </p>
-                    </v-col>
-                  </v-row>
-
-                  <v-row>
-                    <v-col cols="12">
-                      <v-text-field
-                          v-model="description"
-                          label="Description"
-                          outlined
-                          dense
-                          type="text"
-                      >
-                      </v-text-field>
-                      <p class="errors">
-                        {{ server_errors.description }}
-                      </p>
-                    </v-col>
-                  </v-row>
-                  <!-- <v-row>
-                    <v-card-actions>
-                      <v-btn
-                        color="info"
-                        class="white--text px-12 c-btn"
-                        large
-                        :loading="loading"
-                        :disabled="loading"
-                        @click="confirmReject()"
-                      >
-                        ຢືນຢັນ
-                      </v-btn>
-                    </v-card-actions>
-                  </v-row> -->
-                </div>
-              </v-form>
-              <v-card-actions class="mt-4">
-                <v-spacer></v-spacer>
-                <v-btn
-                    color="blue darken-1"
-                    text
-                    @click="paymentDialog = false"
-                >
-                  Close
-                </v-btn>
-                <v-btn
-                    color="info"
-                    class="white--text px-12 c-btn"
-                    medium
-                    :loading="loading"
-                    :disabled="loading"
-                    @click="confirmPayment()"
-                >
-                  ຢືນຢັນ
-                </v-btn>
-              </v-card-actions>
-            </v-container>
-          </v-card-text>
-        </v-card>
-      </template>
-    </v-dialog>
-
     <!--Delete Modal-->
-    <!--
-    <ModalDelete>
-      <template>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            :loading="loading"
-            :disabled="loading"
-            @click="deleteItemConfirm"
-            >OK</v-btn
-          >
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </template>
-    </ModalDelete>
-    -->
+
   </v-container>
 </template>
 
 <script>
 import {GetOldValueOnInput} from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
+import {getLaoCollectStatus, getLaoStatus} from "@/Helpers/BillingStatus";
 
 export default {
   name: "Customer",
@@ -517,56 +264,50 @@ export default {
         {
           id: 1,
           name: "requested",
-          dis_play: "ຮ້ອງຂໍເກັບຂີ້ເຫື້ຍອ"
         },
         {
           id: 2,
           name: "rejected",
-          dis_play: "ປະຕິເສດເກັບຂີ້ເຫື້ຍອ"
         },
         {
           id: 3,
           name: "approved",
-          dis_play: "ອະນຸມັດເກັບຂີ້ເຫື້ຍອ"
 
         },
         {
           id: 4,
           name: "collected",
-          dis_play: "ເກັບຂີເຫື້ຍອສຳເລັດ"
         },
         {
           id: 5,
           name: "collect_confirm",
-          dis_play: "ລູກຄ້າຢືນຢັນການເກັບ"
         },
         {
           id: 5,
           name: "collect_reject",
-          dis_play: "ການເກັບຖືກປະຕິເສດ"
         },
       ],
       selectedPaymentStatus: [],
       paymentStatus: [
         {
           id: 1,
-          name: "pending",
-          dis_play: "ລໍຖ້າເກັບເງິນ"
+          name: "created",
         },
         {
           id: 2,
-          name: "to_confirm_payment",
-          dis_play: "ລໍຖ້າຢືນຢັນຊຳລະ"
+          name: "approved",
         },
         {
           id: 3,
-          name: "rejected",
-          dis_play: "ປະຕິເສດການຊຳລະ"
+          name: "to_confirm_payment",
         },
         {
           id: 4,
+          name: "rejected",
+        },
+        {
+          id: 5,
           name: "success",
-          dis_play: "ຊຳລະສຳເລັດ"
         },
       ],
 
@@ -618,6 +359,15 @@ export default {
     };
   },
   methods: {
+    getCollectStatus(status){
+      return  getLaoCollectStatus(status)
+    },
+    getFilterCollectStatus(status){
+      return  getLaoCollectStatus(status.name)
+    },
+    getBillingStatus(status){
+      return  getLaoStatus(status.name)
+    },
     onFileChange(e) {
       let input = e.target;
       let file = e.target.files[0];
@@ -655,30 +405,6 @@ export default {
           });
     },
 
-    fetchSummaryData() {
-      let date = this.moment(this.month).format('YYYY-MM');
-      this.$axios
-          .get("collection-event-summary", {
-            params: queryOption([
-              {month: date},
-            ])
-          })
-          .then((res) => {
-            if (res.data.code == 200) {
-              this.summaryData = res.data.data;
-              // console.log(this.summaryData);
-            }
-          })
-          .catch((error) => {
-            this.$store.commit("Loading_State", false);
-            if (error.response.status == 422) {
-              let obj = error.response.data.errors;
-              for (let [key, message] of Object.entries(obj)) {
-                this.server_errors[key] = message[0];
-              }
-            }
-          });
-    },
     fetchReject() {
       this.$axios
           .get("reject-reason")
@@ -701,6 +427,12 @@ export default {
         name: "CreateCollectionEventInvoice",
       });
     },
+    choseCustomer() {
+      this.$router.push({
+        name: "chose-customer",
+        query:{redirect:'CreateCollectionEventInvoice'}
+      });
+    },
     editPage(id) {
       this.$router.push({
         name: "EditCollectionEventInvoice",
@@ -711,174 +443,6 @@ export default {
       let route = this.$router.resolve({name: 'EventInvoiceDetail',params: {id}});
       window.open(route.href, '_blank');
     },
-    paymentPage(item) {
-      this.payment = item;
-      this.$store.commit("modalAdd_State", true);
-    },
-
-    Payment() {
-      if (this.paymentType !== "") {
-        let formData = new FormData();
-        formData.append("payment_method", this.payment_method);
-        formData.append("image", this.image);
-        // formData.append("bcel_reference_number", this.bcel_reference_number);
-        formData.append("_method", "PUT");
-        if (this.$refs.form.validate() == true) {
-          this.loading = true;
-          this.$axios
-              .post("pay-collection-event/" + this.payment.id, formData)
-              .then((res) => {
-                if (res.data.code == 200) {
-                  setTimeout(() => {
-                    this.loading = false;
-                    this.paymentConfirmModal(this.payment);
-                    this.closeAddModal();
-                    this.fetchData();
-                    this.$refs.form.reset();
-                    this.$store.commit("Toast_State", {
-                      value: true,
-                      color: "success",
-                      msg: res.data.message,
-                    });
-                  }, 300);
-                }
-              })
-              .catch((error) => {
-                this.loading = false;
-                this.$store.commit("Toast_State", {
-                  value: true,
-                  color: "error",
-                  msg: error.response.data.message,
-                });
-                if (error.response.status == 422) {
-                  let obj = error.response.data.errors;
-                  for (let [key, data] of Object.entries(obj)) {
-                    this.server_errors[key] = data[0];
-                  }
-                }
-                this.fetchData();
-              });
-        }
-      } else {
-        this.$store.commit("Toast_State", {
-          value: true,
-          color: "error",
-          msg: "ກາລຸນາເລືອກປະເພດການຊຳລະກ່ອນ",
-        });
-      }
-    },
-
-    confirmPayment() {
-      if (this.confirmType == "0") {
-        this.loading = true;
-        this.$axios
-            .put("confirm-collection-event-payment/" + this.confirm.id)
-            .then((res) => {
-              if (res.data.code == 200) {
-                setTimeout(() => {
-                  this.loading = false;
-                  this.fetchData();
-                  this.$store.commit("Toast_State", {
-                    value: true,
-                    color: "success",
-                    msg: res.data.message,
-                  });
-                  this.closeConfirmModal();
-                }, 300);
-              }
-            })
-            .catch(() => {
-              this.closeConfirmModal();
-              this.loading = false;
-            });
-      } else if (this.confirmType == "1") {
-        let data = new FormData();
-        data.append("reject_reason_id", this.reject_reason_id);
-        data.append("description", this.description);
-        data.append("_method", "PUT");
-        this.loading = true;
-        this.$axios
-            .post("reject-collection-event-payment/" + this.confirm.id, data)
-            .then((res) => {
-              if (res.data.code == 200) {
-                setTimeout(() => {
-                  this.loading = false;
-                  this.fetchData();
-                  this.$store.commit("Toast_State", {
-                    value: true,
-                    color: "success",
-                    msg: res.data.message,
-                  });
-                  this.closeConfirmModal();
-                }, 300);
-              }
-            })
-            .catch((error) => {
-              this.loading = false;
-              this.$store.commit("Toast_State", {
-                value: true,
-                color: "error",
-                msg: error.response.data.message,
-              });
-              if (error.response.status == 422) {
-                let obj = error.response.data.errors;
-                for (let [key, data] of Object.entries(obj)) {
-                  this.server_errors[key] = data[0];
-                }
-              }
-            });
-      } else if (this.confirmType == "") {
-        this.$store.commit("Toast_State", {
-          value: true,
-          color: "error",
-          msg: "ກາລຸນາເລືອກຂໍ້ມູນກ່ອນ",
-        });
-      } else {
-        this.$store.commit("Toast_State", {
-          value: true,
-          color: "error",
-          msg: "ກາລຸນາເລືອກຂໍ້ມູນກ່ອນ",
-        });
-      }
-    },
-
-    // confirmReject() {
-    //   let data = new FormData();
-    //   data.append("reject_reason_id", this.reject_reason_id);
-    //   data.append("description", this.description);
-    //   data.append("_method", "PUT");
-    //   this.loading = true;
-    //   this.$axios
-    //     .post("reject-collection-event-payment/" + this.payment.id, data)
-    //     .then((res) => {
-    //       if (res.data.code == 200) {
-    //         setTimeout(() => {
-    //           this.loading = false;
-    //           this.$store.commit("Toast_State", {
-    //             value: true,
-    //             color: "success",
-    //             msg: res.data.message,
-    //           });
-    //           this.fetchData();
-    //           this.closeConfirmModal();
-    //         }, 300);
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       this.loading = false;
-    //       this.$store.commit("Toast_State", {
-    //         value: true,
-    //         color: "error",
-    //         msg: error.response.data.message,
-    //       });
-    //       if (error.response.status == 422) {
-    //         var obj = error.response.data.errors;
-    //         for (let [key, data] of Object.entries(obj)) {
-    //           this.server_errors[key] = data[0];
-    //         }
-    //       }
-    //     });
-    // },
 
     paymentConfirmModal(item) {
       this.fetchReject();
@@ -899,28 +463,11 @@ export default {
       else return "";
     },
 
-    collectStatus(status){
-      if(status == 'requested') return 'ຮ້ອງຂໍເກັບຂີ້ເຫື້ຍອ';
-      else if(status == 'rejected') return 'ປະຕິເສດເກັບຂີ້ເຫື້ຍອ';
-      else if (status == 'approved') return 'ອະນຸມັດເກັບຂີ້ເຫື້ຍອ';
-      else if(status == 'collected') return 'ເກັບຂີເຫື້ຍອສຳເລັດ';
-      else if(status == 'collect_confirm') return 'ລູກຄ້າຢືນຢັນການເກັບ';
-      else if(status == 'collect_reject') return 'ການເກັບຖືກປະຕິເສດ';
-      else return  '';
-    },
-    paymentStatusText(status){
-      if(status == 'pending') return 'ລໍຖ້າເກັບເງິນ';
-      else if(status == 'to_confirm_payment') return 'ລໍຖ້າຢືນຢັນຊຳລະ';
-      else if (status == 'rejected') return 'ປະຕິເສດການຊຳລະ';
-      else if(status == 'success') return 'ຊຳລະສຳເລັດ';
-      else return  '';
-    }
   },
   watch: {
     selectedPaymentStatus:function (){
       this.pagination.current_page ='';
       this.fetchData();
-      this.fetchSummaryData();
     },
     selectedCollectionStatus:function (){
       this.pagination.current_page ='';
@@ -931,7 +478,6 @@ export default {
       if(value !== ''){
         this.pagination.current_page ='';
         this.fetchData();
-        this.fetchSummaryData();
       }
     },
     search: function (value) {
@@ -944,33 +490,11 @@ export default {
       this.pagination.current_page ='';
       this.fetchData();
     },
-    selectedPackage: function () {
-      this.server_errors.package_id = "";
-    },
+
     start_date: function () {
       this.server_errors.start_month = "";
     },
-    "user.name": function () {
-      this.server_errors.name = "";
-    },
-    "user.surname": function () {
-      this.server_errors.name = "";
-    },
-    "user.phone": function () {
-      this.server_errors.phone = "";
-    },
 
-    paymentType: function () {
-      if (this.paymentType == 0) {
-        this.payment_method = "cash";
-        this.image = "";
-        this.imageUrl = "";
-        // this.bcel_reference_number = "";
-      } else if (this.paymentType == 1) {
-        this.payment_method = "bcel";
-      }
-      this.server_errors.payment_method = "";
-    },
     // confirmType: function () {
     //   console.log(this.confirmType);
     //   if (this.confirmType == 0) {
@@ -987,7 +511,6 @@ export default {
   created() {
     this.month = this.moment(this.curent_month).format('YYYY-MM');
     this.fetchData();
-    this.fetchSummaryData()
   },
 };
 </script>

@@ -2,7 +2,7 @@
   <v-container>
     <v-breadcrumbs large>
       <v-btn text class="text-primary" @click="backPrevios()"></v-btn>
-      <v-icon>mdi-keyboard-backspace</v-icon>ແກ້ໄຂຂໍ້ມູນການເກັບຂີ້ເຫື້ຍອພິເສດ
+      <v-icon>mdi-keyboard-backspace</v-icon> ແກ້ໄຂຂໍ້ມູນການເກັບຂີ້ເຫື້ຍອພິເສດ
     </v-breadcrumbs>
     <v-card>
       <v-card-text class="px-12">
@@ -111,7 +111,7 @@
                 dense
                 :items="collectionStatus"
                 v-model="data.collect_status"
-                item-text="name"
+                :item-text="filterCollectStatus"
                 item-value="name"
                 label="ສະຖານະ"
                 :rules="statusRule"
@@ -303,6 +303,8 @@
 </template>
 
 <script>
+import {getLaoCollectStatus} from "@/Helpers/BillingStatus";
+
 export default {
   data() {
     return {
@@ -329,18 +331,6 @@ export default {
           id: 3,
           name: "approved"
         },
-        {
-          id: 4,
-          name: "collected"
-        },
-        {
-          id: 5,
-          name: "collect_confirm"
-        },
-        {
-          id: 6,
-          name: "collect_reject"
-        }
       ],
       start_menu: false,
       time: "",
@@ -383,6 +373,9 @@ export default {
     };
   },
   methods: {
+    filterCollectStatus(status){
+      return  getLaoCollectStatus(status.name)
+    },
     RemoveItem(item) {
       this.preview_list.splice(this.preview_list.indexOf(item), 1);
     },

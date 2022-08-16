@@ -1110,7 +1110,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Event Invoice',
+                    text: 'ເກັບຂີ້ເຫື້ຍອພິເສດ',
                     disabled: true,
                     href: '/invoice'
                 }
@@ -1121,17 +1121,18 @@ const routes = [
         path: '/v2/create/event-invoice',
         name: 'CreateCollectionEventInvoice',
         component: () => import('../views/invoice/v2/event/CreateEventInvoice.vue'),
+        props:true,
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Collection Invoice',
+                    text: 'ເກັບຂີ້ເຫື້ຍອພິເສດ',
                     disabled: false,
                     href: '/v2/event-invoice'
                 },
                 {
-                    text: 'Create',
+                    text: 'ເພີ່ມຂໍ້ມູນ',
                     disabled: true,
                 }
             ]
@@ -1146,12 +1147,12 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Event Invoice',
+                    text: 'ເກັບຂີ້ເຫື້ຍອພິເສດ',
                     disabled: false,
                     href: '/v2/event-invoice'
                 },
                 {
-                    text: 'Edit',
+                    text: 'ແກ້ໄຂຂໍ້ມູນ',
                     disabled: true,
                 }
             ]
@@ -1166,12 +1167,12 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'Event Invoice',
+                    text: 'ເກັບຂີ້ເຫື້ຍອພິເສດ',
                     disabled: false,
                     href: '/v2/event-invoice'
                 },
                 {
-                    text: 'View',
+                    text: 'ລາຍລະອຽດ',
                     disabled: true,
                 }
             ]

@@ -369,7 +369,6 @@ export default {
           name: "CreateRoutePlanCompany",
           params: {
             items: this.selectedRows,
-            // items: this.customers,
           },
         });
       } else {

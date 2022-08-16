@@ -256,6 +256,7 @@ export default {
     getLaoCustomerType(type){
       return getLaoCustomerType(type)
     },
+
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios

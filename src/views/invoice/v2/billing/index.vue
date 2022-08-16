@@ -72,8 +72,8 @@
             dense
             :items="billingable_types"
             v-model="selectedBillingable_type"
-            item-text="dis_play"
             item-value="name"
+            :item-text="filterBillingType"
             label="ປະເພດບິນ"
             clearable
         ></v-select>
@@ -163,6 +163,7 @@
 <script>
 import {GetOldValueOnInput} from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
+import {getLaoBillingType} from "@/Helpers/BillingStatus";
 
 export default {
   name: "Customer",
@@ -204,52 +205,23 @@ export default {
       server_errors: {},
       selectedCollectionStatus: "",
       summaryData:{},
-
-      selectedPaymentStatus: "",
-      paymentStatus: [
-        {
-          id: 1,
-          name: "pending",
-          dis_play: "ລໍຖ້າເກັບເງິນ"
-        },
-        {
-          id: 2,
-          name: "to_confirm_payment",
-          dis_play: "ລໍຖ້າຢືນຢັນຊຳລະ"
-        },
-        {
-          id: 3,
-          name: "rejected",
-          dis_play: "ປະຕິເສດການຊຳລະ"
-        },
-        {
-          id: 4,
-          name: "success",
-          dis_play: "ຊຳລະສຳເລັດ"
-        },
-      ],
       billingable_types:[
     {
       id: 1,
       name: "FutureInvoice",
-      dis_play: "Future Invoice"
     },
     {
       id: 2,
       name: "NewInvoice",
-      dis_play: "New Invoice"
     },{
       id: 3,
       name: "NewCollectionEvent",
-      dis_play: "New Collection Event Invoice"
     },{
       id: 4,
       name: "CustomBill",
-      dis_play: "Custom Bill"
     },
   ],
     selectedBillingable_type:"",
-
       user: {},
       item: {},
 
@@ -284,6 +256,9 @@ export default {
     };
   },
   methods: {
+    filterBillingType(status){
+      return  getLaoBillingType(status.name)
+    },
     fetchData() {
       // let date = this.moment(this.month).format('YYYY-MM');
       this.$store.commit("Loading_State", true);

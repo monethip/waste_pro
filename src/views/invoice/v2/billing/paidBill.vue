@@ -54,25 +54,14 @@
             clearable
         ></v-select>
       </v-col>
-<!--      <v-col cols>-->
-<!--        <v-select-->
-<!--            outlined-->
-<!--            dense-->
-<!--            :items="collectionStatus"-->
-<!--            v-model="selectedCollectionStatus"-->
-<!--            item-text="dis_play"-->
-<!--            item-value="name"-->
-<!--            label="ສະຖານະບໍລິການ"-->
-<!--            clearable-->
-<!--        ></v-select>-->
-<!--      </v-col>-->
+
       <v-col cols>
         <v-select
             outlined
             dense
             :items="billingable_types"
             v-model="selectedBillingable_type"
-            item-text="dis_play"
+            :item-text="filterBillingType"
             item-value="name"
             label="ປະເພດບິນ"
             clearable
@@ -98,18 +87,6 @@
         ຂໍ້ມູນບີນ ({{ pagination.total }})
         <v-divider class="mx-4" vertical></v-divider>
         <v-spacer></v-spacer>
-<!--          <v-text-field-->
-<!--            outlined-->
-<!--            dense-->
-<!--            clearable-->
-<!--            prepend-inner-icon="mdi-magnify"-->
-<!--            label="ຄົ້ນຫາ"-->
-<!--            type="text"-->
-<!--            v-model="search"-->
-<!--            @keyup.enter="Search()"-->
-<!--          >-->
-<!--          </v-text-field>-->
-
       </v-card-title>
       <v-card-text>
         <v-data-table
@@ -406,6 +383,7 @@
 <script>
 import {GetOldValueOnInput} from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
+import {getLaoBillingType} from "@/Helpers/BillingStatus";
 
 export default {
   name: "Customer",
@@ -451,20 +429,16 @@ export default {
     {
       id: 1,
       name: "FutureInvoice",
-      dis_play: "Future Invoice"
     },
     {
       id: 2,
       name: "NewInvoice",
-      dis_play: "New Invoice"
     },{
       id: 3,
       name: "NewCollectionEvent",
-      dis_play: "New Collection Event Invoice"
     },{
       id: 4,
       name: "CustomBill",
-      dis_play: "Custom Bill"
     },
   ],
     selectedBillingable_type:"",
@@ -503,6 +477,9 @@ export default {
     };
   },
   methods: {
+    filterBillingType(status){
+      return  getLaoBillingType(status.name)
+    },
     onFileChange(e) {
       let input = e.target;
       let file = e.target.files[0];
