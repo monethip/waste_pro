@@ -104,7 +104,7 @@
               <div>{{ getLaoStatusFunc(item.payment_method) }}</div>
           </template>
           <template v-slot:item.user="{ item }">
-              <div>{{item.user.name}} {{item.user.surname}}</div>
+            <div v-if="item.user.name">{{item.user.name}}</div>
           </template>
           <template v-slot:item.sub_total="{ item }">
               <td>{{Intl.NumberFormat().format( item.sub_total) }}</td>

@@ -56,7 +56,7 @@
             fixed-header
         >
           <template v-slot:item.user="{ item }">
-              <div>{{item.user.name}} {{item.user.surname}}</div>
+            <div v-if="item.user.name">{{item.user.name}}</div>
           </template>
           <template v-slot:item.reject="{ item }">
              <div>
