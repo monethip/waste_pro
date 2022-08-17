@@ -5,73 +5,30 @@
     </v-row>
     <v-row>
       <v-col>
-        <v-autocomplete
-          required
-          :items="districts"
-          v-model="selectedDistrict"
-          item-text="name"
-          item-value="id"
-          label="District *"
-          return-object
-          outlined
-          dense
-        ></v-autocomplete>
+        <v-autocomplete required :items="districts" v-model="selectedDistrict" item-text="name" item-value="id"
+          label="District *" return-object outlined dense></v-autocomplete>
       </v-col>
       <v-col>
-        <v-autocomplete
-          required
-          :items="villageList"
-          v-model="selectedVillage"
-          item-text="name"
-          item-value="id"
-          label="Village *"
-          outlined
-          dense
-        ></v-autocomplete>
+        <v-autocomplete required :items="villageList" v-model="selectedVillage" item-text="name" item-value="id"
+          label="Village *" outlined dense></v-autocomplete>
       </v-col>
       <v-col>
-        <v-menu
-          v-model="start_menu"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
+        <v-menu v-model="start_menu" :close-on-content-click="false" :nudge-right="40" transition="scale-transition"
+          offset-y min-width="auto">
           <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="start_date"
-              label="ເລີ່ມວັນທີ"
-              readonly
-              outlined
-              v-bind="attrs"
-              v-on="on"
-              dense
-            ></v-text-field>
+            <v-text-field v-model="start_date" label="ເລີ່ມວັນທີ" readonly outlined v-bind="attrs" v-on="on" dense>
+            </v-text-field>
           </template>
           <v-date-picker v-model="start_date" @input="fetchData()"></v-date-picker>
         </v-menu>
       </v-col>
 
       <v-col>
-        <v-menu
-          v-model="end_menu"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
+        <v-menu v-model="end_menu" :close-on-content-click="false" :nudge-right="40" transition="scale-transition"
+          offset-y min-width="auto">
           <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="end_date"
-              label="ຫາວັນທີ"
-              readonly
-              outlined
-              v-bind="attrs"
-              v-on="on"
-              dense
-            ></v-text-field>
+            <v-text-field v-model="end_date" label="ຫາວັນທີ" readonly outlined v-bind="attrs" v-on="on" dense>
+            </v-text-field>
           </template>
           <v-date-picker v-model="end_date" @input="fetchData()"></v-date-picker>
         </v-menu>
@@ -110,15 +67,8 @@
                 <thead>
                   <tr>
                     <th>ປະເພດບິນ</th>
-                    <th
-                      class="text-left"
-                      v-for="detailStatus in detailStatuses"
-                      :key="detailStatus.text"
-                    >
-                      <v-chip
-                        :color="getBgColorFunc(detailStatus.text)"
-                        dark
-                      >{{ detailStatus.text }}</v-chip>
+                    <th class="text-left" v-for="detailStatus in detailStatuses" :key="detailStatus.text">
+                      <v-chip :color="getBgColorFunc(detailStatus.text)" dark>{{ detailStatus.text }}</v-chip>
                     </th>
                   </tr>
                 </thead>
@@ -126,17 +76,14 @@
                   <tr v-for="item in summaryDetails" :key="item.billing_type">
                     <td>
                       <span class="font-weight-medium">{{ item.billing_type }}</span>
-                      <span
-                        class="font-weight-medium text-caption"
-                      >{{ ` (${formatNumber(item.count_billing)} ບິນ)` }}</span>
+                      <span class="font-weight-medium text-caption">{{ ` (${formatNumber(item.count_billing)} ບິນ)`
+                      }}</span>
                     </td>
                     <td v-for="detailStatus in detailStatuses" :key="detailStatus.text">
-                      <span
-                        class="font-weight-medium"
-                      >{{ formatNumber(item[detailStatus.text].total) }}</span>
-                      <span
-                        class="font-weight-medium text-caption"
-                      >{{ ` (${formatNumber(item[detailStatus.text].count_billing)} ບິນ)` }}</span>
+                      <span class="font-weight-medium">{{ formatNumber(item[detailStatus.text].total) }}</span>
+                      <span class="font-weight-medium text-caption">{{ `
+                                              (${formatNumber(item[detailStatus.text].count_billing)} ບິນ)`
+                      }}</span>
                     </td>
                   </tr>
                 </tbody>
@@ -155,42 +102,34 @@
             <v-row>
               <v-col>ລາຍການບິນທັງໝົດ</v-col>
               <v-col>
-                <v-text-field
-                  v-model="billingListsearch"
-                  append-icon="mdi-magnify"
-                  placeholder="ຊື່ຫົວບິນ, ລູກຄ້າ..."
-                  single-line
-                  hide-details
-                ></v-text-field>
+                <v-text-field v-model="billingListsearch" append-icon="mdi-magnify" placeholder="ຊື່ຫົວບິນ, ລູກຄ້າ..."
+                  single-line hide-details></v-text-field>
               </v-col>
             </v-row>
           </v-card-title>
           <v-card-text>
-            <v-data-table
-              :headers="billingListHeader"
-              :items="billings.data"
-              :items-per-page="100"
-              :search="billingListsearch"
-            >
+            <v-data-table :headers="billingListHeader" :items="billings.data" :items-per-page="100"
+              :search="billingListsearch">
               <template v-slot:item.status="{ item }">
-                <v-chip
-                  :color="getBgColorFunc(item.status)"
-                  dark
-                >{{ getLaoStatusFunc(item.status) }}</v-chip>
+                <v-chip :color="getBgColorFunc(item.status)" dark>{{ getLaoStatusFunc(item.status) }}</v-chip>
               </template>
 
               <template v-slot:item.total="{ item }">{{ formatNumber(item.total) }}</template>
 
-              <template
-                v-slot:item.display_type="{ item }"
-              >{{ getLaoBillingTypeFunc(item.display_type) }}</template>
+              <template v-slot:item.display_type="{ item }">{{ getLaoBillingTypeFunc(item.display_type) }}</template>
 
               <template v-slot:item.user="{ item }">
-                <span
-                  v-if="customerType(item) == 'home'"
-                >{{ `${item.user.customer.name} ${item.user.customer.surname}` }}</span>
-                <span v-if="customerType(item) == 'company'">{{ item.user.customer.company_name }}</span>
-                <span v-if="!customerType(item)">{{ `${item.user.name} (${item.user.phone})` }}</span>
+                <div v-if="item.display_type == 'NewCollectionEvent'">
+                  <span>{{ `${item.billingable.name} ${item.billingable.surname}`
+                  }}</span>
+                </div>
+                <div v-else>
+                  <span v-if="customerType(item) == 'home'">{{ `${item.user.customer.name}
+                                      ${item.user.customer.surname}`
+                  }}</span>
+                  <span v-if="customerType(item) == 'company'">{{ item.user.customer.company_name }}</span>
+                  <span v-if="!customerType(item)">{{ `${item.user.name} (${item.user.phone})` }}</span>
+                </div>
               </template>
 
               <template v-slot:item.custom_type="{ item }">
@@ -200,12 +139,12 @@
               </template>
 
               <template v-slot:item.custom_address="{ item }">
-                <span
-                  v-if="item.display_type == 'NewCollectionEvent'"
-                >{{ `${item.billingable.village.name} / ${item.billingable.village.district.name}` }}</span>
-                <span
-                  v-else-if="customerType(item) == 'home' || customerType(item) == 'company'"
-                >{{ `${item.user.customer.village.name} / ${item.user.customer.village.district.name}` }}</span>
+                <span v-if="item.display_type == 'NewCollectionEvent'">{{ `${item.billingable.village.name} /
+                                  ${item.billingable.village.district.name}`
+                }}</span>
+                <span v-else-if="customerType(item) == 'home' || customerType(item) == 'company'">{{
+                    `${item.user.customer.village.name} / ${item.user.customer.village.district.name}`
+                }}</span>
               </template>
             </v-data-table>
           </v-card-text>
