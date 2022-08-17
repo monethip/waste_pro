@@ -104,7 +104,7 @@
               <div>{{ getLaoStatusFunc(item.payment_method) }}</div>
           </template>
           <template v-slot:item.user="{ item }">
-            <div v-if="item.user.name">{{item.user.name}}</div>
+            <div>{{showUser(item)}}</div>
           </template>
           <template v-slot:item.sub_total="{ item }">
               <td>{{Intl.NumberFormat().format( item.sub_total) }}</td>
@@ -554,7 +554,18 @@ export default {
     //       }
     //     });
     // },
-
+    showUser(item) {
+      if(item.display_type === "NewCollectionEvent"){
+        if(item.billingable != null)
+          return item.billingable.name;
+      } else{
+        if(item.user.customer != null){
+          return item.user.customer.name
+        } else {
+          return item.user.name;
+        }
+      }
+    },
     paymentConfirmModal(item) {
       this.fetchReject();
       this.confirm = item;

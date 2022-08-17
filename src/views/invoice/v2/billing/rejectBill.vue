@@ -56,7 +56,7 @@
             fixed-header
         >
           <template v-slot:item.user="{ item }">
-            <div v-if="item.user.name">{{item.user.name}}</div>
+            <div>{{showUser(item)}}</div>
           </template>
           <template v-slot:item.reject="{ item }">
              <div>
@@ -276,23 +276,18 @@ export default {
       else if (value == "inactive") return "error";
       else return "";
     },
-
-    collectStatus(status){
-      if(status == 'requested') return 'ຮ້ອງຂໍເກັບຂີ້ເຫື້ຍອ';
-      else if(status == 'rejected') return 'ປະຕິເສດເກັບຂີ້ເຫື້ຍອ';
-      else if (status == 'approved') return 'ອະນຸມັດເກັບຂີ້ເຫື້ຍອ';
-      else if(status == 'collected') return 'ເກັບຂີເຫື້ຍອສຳເລັດ';
-      else if(status == 'collect_confirm') return 'ລູກຄ້າຢືນຢັນການເກັບ';
-      else if(status == 'collect_reject') return 'ການເກັບຖືກປະຕິເສດ';
-      else return  '';
+    showUser(item) {
+      if(item.display_type === "NewCollectionEvent"){
+        if(item.billingable != null)
+          return item.billingable.name;
+      } else{
+        if(item.user.customer != null){
+          return item.user.customer.name
+        } else {
+          return item.user.name;
+        }
+      }
     },
-    paymentStatusText(status){
-      if(status == 'pending') return 'ລໍຖ້າເກັບເງິນ';
-      else if(status == 'to_confirm_payment') return 'ລໍຖ້າຢືນຢັນຊຳລະ';
-      else if (status == 'rejected') return 'ປະຕິເສດການຊຳລະ';
-      else if(status == 'success') return 'ຊຳລະສຳເລັດ';
-      else return  '';
-    }
   },
   watch: {
     selectedCollectionStatus:function (){
