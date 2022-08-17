@@ -81,7 +81,6 @@
         </v-text-field>
       </v-col>
     </v-row>
-
     <v-card>
       <v-card-title>
         ຂໍ້ມູນບີນ ({{ pagination.total }})
@@ -443,9 +442,6 @@ export default {
   ],
     selectedBillingable_type:"",
 
-      user: {},
-      item: {},
-
       //Payment
       image: "",
       imageUrl: "",
@@ -801,15 +797,6 @@ export default {
     start_date: function () {
       this.server_errors.start_month = "";
     },
-    "user.name": function () {
-      this.server_errors.name = "";
-    },
-    "user.surname": function () {
-      this.server_errors.name = "";
-    },
-    "user.phone": function () {
-      this.server_errors.phone = "";
-    },
 
     paymentType: function () {
       if (this.paymentType == 0) {
@@ -822,15 +809,6 @@ export default {
       }
       this.server_errors.payment_method = "";
     },
-    // confirmType: function () {
-    //   console.log(this.confirmType);
-    //   if (this.confirmType == 0) {
-    //     // this.confirmPayment();
-    //   }
-    // },
-    // bcel_reference_number: function () {
-    //   this.server_errors.bcel_reference_number = "";
-    // },
     image: function () {
       this.server_errors.image = "";
     },
