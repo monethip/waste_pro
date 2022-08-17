@@ -954,6 +954,7 @@ export default {
         this.showFixed = true;
       }
     },
+
     // "data.can_collect": function () {
     //   console.log(this.data.can_collect);
     //   if (this.data.can_collect == true) {

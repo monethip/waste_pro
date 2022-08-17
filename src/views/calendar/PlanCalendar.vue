@@ -151,26 +151,26 @@
                   >
                 </template>
                 <v-list>
-                  <v-list-item link>
-                    <v-list-item-title @click="gotoPlanCalendar(item)">
+                  <v-list-item link @click="gotoPlanCalendar(item)">
+                    <v-list-item-title>
                       <v-icon small class="mr-2"> mdi-eye</v-icon>
                       ລາຍລະອຽດ
                     </v-list-item-title>
                   </v-list-item>
-                  <v-list-item link>
-                    <v-list-item-title @click="editModal(item)">
+                  <v-list-item link @click="editModal(item)">
+                    <v-list-item-title>
                       <v-icon small class="mr-2"> mdi-pencil</v-icon>
                       ແກ້ໄຂຂໍ້ມູນ
                     </v-list-item-title>
                   </v-list-item>
-                  <v-list-item link>
-                    <v-list-item-title @click="deleteItem(item.id)">
+                  <v-list-item link @click="deleteItem(item.id)">
+                    <v-list-item-title>
                       <v-icon small class="mr-2"> mdi-delete</v-icon>
                       ລຶບຂໍ່ມູນ
                     </v-list-item-title>
                   </v-list-item>
-                  <v-list-item link>
-                    <v-list-item-title @click="confirmCancel(item.id)">
+                  <v-list-item link @click="confirmCancel(item.id)">
+                    <v-list-item-title>
                       <v-icon small class="mr-2"> mdi-close</v-icon>
                       ຍົກເລີກ
                     </v-list-item-title>
@@ -437,20 +437,35 @@
     <!--Delete Modal-->
     <ModalDelete>
       <template>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-          <v-btn
-              color="blue darken-1"
-              text
-              :loading="loading"
-              :disabled="loading"
-              @click="deleteItemConfirm"
-          >OK
-          </v-btn
-          >
-          <v-spacer></v-spacer>
-        </v-card-actions>
+        <v-card class="elevation-0">
+          <v-card-text class="pa-4">
+            <v-row>
+              <v-col cols="12">
+                <v-textarea
+                    label="ຄຳອະທິບາຍ"
+                    required
+                    v-model="delete_description"
+                    outlined
+                    dense
+                ></v-textarea>
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn class="elevation-0 btn-warning"  @click="closeDelete">Cancel</v-btn>
+            <v-btn
+                v-if="delete_description.length > 4"
+                class="btn-primary elevation-0"
+                :loading="loading"
+                :disabled="loading"
+                @click="deleteItemConfirm"
+            >OK
+            </v-btn
+            >
+            <v-spacer></v-spacer>
+          </v-card-actions>
+        </v-card>
       </template>
     </ModalDelete>
 
@@ -533,6 +548,7 @@ export default {
       date: "",
       date_menu: false,
       hasRound: false,
+      delete_description:"",
 
       selectedCustomerType: "",
       customer_types: [
@@ -673,6 +689,7 @@ export default {
       this.$store.commit("modalAdd_State", true);
     },
     closeDelete() {
+      this.delete_description = "";
       this.$store.commit("modalDelete_State", false);
     },
     deleteItem(id) {
@@ -687,12 +704,17 @@ export default {
               "plan-month/" +
               this.$route.params.id +
               "/plan-calendar/" +
-              this.calendarId
+              this.calendarId,
+              {
+                params: queryOption([
+                  { delete_description:this.delete_description}
+                ]),
+              }
           )
           .then((res) => {
             if (res.data.code == 200) {
-              setTimeout(() => {
                 this.loading = false;
+                this.delete_description = "";
                 this.$store.commit("Toast_State", {
                   value: true,
                   color: "success",
@@ -700,7 +722,6 @@ export default {
                 });
                 this.$store.commit("modalDelete_State", false);
                 this.fetchData();
-              }, 100);
             }
           })
           .catch((error) => {

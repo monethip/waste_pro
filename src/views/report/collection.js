@@ -63,15 +63,18 @@ export default {
 
             headers: [
                 {text: "ວັນທີ", value: "date", sortable: false},
+                {text: "Id", value: "customer_id", sortable: false},
                 {text: "ລູກຄ້າ", value: "full_name"},
                 {text: "ຈຳນວນຖົງ", value: "bag", sortable: false, align: "center"},
                 {text: "ສະຖານທີ່", value: "name", sortable: false},
                 {text: "ສະຖານະ", value: "status", sortable: false},
+                { text: "ຄຳອະທິບາຍການລຶບ", value: "deleted_description", sortable: false },
                 {text: "Deleted", value: "date_deleted_at", sortable: false},
                 // { text: "", value: "actions", sortable: false },
             ],
             company: [
                 {text: "ວັນທີ", value: "date", sortable: false},
+                {text: "Id", value: "customer_id", sortable: false},
                 {text: "ບໍລິສັດ", value: "company_name"},
                 {text: "ປະເພດບໍລິການ", value: "collection_type"},
                 // {
@@ -82,6 +85,7 @@ export default {
                 // },
                 {text: "ສະຖານທີ່", value: "name", sortable: false},
                 {text: "ສະຖານະ", value: "status", sortable: false},
+                { text: "ຄຳອະທິບາຍການລຶບ", value: "deleted_description", sortable: false },
                 {text: "Deleted", value: "date_deleted_at", sortable: false},
                 // { text: "", value: "actions", sortable: false },
             ],
@@ -144,7 +148,6 @@ export default {
                             this.collections = res.data.data.details.data;
                             this.summary = res.data.data.summary;
                             this.summaryMerge = res.data.data.summary;
-                            console.log(this.summaryMerge)
                             this.pagination = res.data.data.details.pagination;
                         }, 300);
                     }
@@ -315,6 +318,7 @@ export default {
             if (value == "tab-1") {
                 this.collectionType = "home";
                 this.pagination.current_page = '';
+                this.pagination = [];
                 this.fetchData();
                 this.$router
                     .push({name: "Report-Trash", query: {tab: "home"}})
@@ -323,6 +327,7 @@ export default {
             } else if (value == "tab-2") {
                 this.collectionType = "company";
                 this.pagination.current_page = '';
+                this.pagination = [];
                 this.fetchData();
                 this.$router
                     .push({
