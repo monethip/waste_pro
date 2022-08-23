@@ -4,84 +4,78 @@
       <v-col>
         <v-breadcrumbs large class="pa-0">
           <v-btn text class="text-primary" @click="backPrevios()">
-            <v-icon>mdi-chevron-left</v-icon></v-btn
-          >
-          ສ້າງບິນຢ້ອນຫຼັງ </v-breadcrumbs
-        >
+            <v-icon>mdi-chevron-left</v-icon>
+          </v-btn>
+          ສ້າງບິນຢ້ອນຫຼັງ
+        </v-breadcrumbs>
       </v-col>
     </v-row>
     <div>
       <v-card>
         <v-card-text class="pa-8">
           <v-form ref="form" lazy-validation>
-<!--            <v-row>-->
-<!--              <v-col>-->
-<!--                <v-menu-->
-<!--                    v-model="start_menu"-->
-<!--                    :close-on-content-click="false"-->
-<!--                    :nudge-right="40"-->
-<!--                    transition="scale-transition"-->
-<!--                    offset-y-->
-<!--                    min-width="auto"-->
-<!--                >-->
-<!--                  <template v-slot:activator="{ on, attrs }">-->
-<!--                    <v-text-field-->
-<!--                        v-model="start_date"-->
-<!--                        label="ເລີ່ມວັນທີ"-->
-<!--                        readonly-->
-<!--                        outlined-->
-<!--                        v-bind="attrs"-->
-<!--                        v-on="on"-->
-<!--                        dense-->
-<!--                    ></v-text-field>-->
-<!--                  </template>-->
-<!--                  <v-date-picker-->
-<!--                      v-model="start_date"-->
-<!--                  ></v-date-picker>-->
-<!--                </v-menu>-->
-<!--                <p class="errors">-->
-<!--                  {{ server_errors.start_month }}-->
-<!--                </p>-->
-<!--              </v-col>-->
-<!--              <v-col>-->
-<!--                <v-menu-->
-<!--                    v-model="end_menu"-->
-<!--                    :close-on-content-click="true"-->
-<!--                    :nudge-right="40"-->
-<!--                    transition="scale-transition"-->
-<!--                    offset-y-->
-<!--                    min-width="auto"-->
-<!--                >-->
-<!--                  <template v-slot:activator="{ on, attrs }">-->
-<!--                    <v-text-field-->
-<!--                        v-model="end_date"-->
-<!--                        label="ຫາວັນທີ"-->
-<!--                        readonly-->
-<!--                        outlined-->
-<!--                        v-bind="attrs"-->
-<!--                        v-on="on"-->
-<!--                        dense-->
-<!--                    ></v-text-field>-->
-<!--                  </template>-->
-<!--                  <v-date-picker-->
-<!--                      v-model="end_date"-->
-<!--                  ></v-date-picker>-->
-<!--                </v-menu>-->
-<!--                <p class="errors">-->
-<!--                  {{ server_errors.end_month }}-->
-<!--                </p>-->
-<!--              </v-col>-->
-<!--            </v-row>-->
+            <!--            <v-row>-->
+            <!--              <v-col>-->
+            <!--                <v-menu-->
+            <!--                    v-model="start_menu"-->
+            <!--                    :close-on-content-click="false"-->
+            <!--                    :nudge-right="40"-->
+            <!--                    transition="scale-transition"-->
+            <!--                    offset-y-->
+            <!--                    min-width="auto"-->
+            <!--                >-->
+            <!--                  <template v-slot:activator="{ on, attrs }">-->
+            <!--                    <v-text-field-->
+            <!--                        v-model="start_date"-->
+            <!--                        label="ເລີ່ມວັນທີ"-->
+            <!--                        readonly-->
+            <!--                        outlined-->
+            <!--                        v-bind="attrs"-->
+            <!--                        v-on="on"-->
+            <!--                        dense-->
+            <!--                    ></v-text-field>-->
+            <!--                  </template>-->
+            <!--                  <v-date-picker-->
+            <!--                      v-model="start_date"-->
+            <!--                  ></v-date-picker>-->
+            <!--                </v-menu>-->
+            <!--                <p class="errors">-->
+            <!--                  {{ server_errors.start_month }}-->
+            <!--                </p>-->
+            <!--              </v-col>-->
+            <!--              <v-col>-->
+            <!--                <v-menu-->
+            <!--                    v-model="end_menu"-->
+            <!--                    :close-on-content-click="true"-->
+            <!--                    :nudge-right="40"-->
+            <!--                    transition="scale-transition"-->
+            <!--                    offset-y-->
+            <!--                    min-width="auto"-->
+            <!--                >-->
+            <!--                  <template v-slot:activator="{ on, attrs }">-->
+            <!--                    <v-text-field-->
+            <!--                        v-model="end_date"-->
+            <!--                        label="ຫາວັນທີ"-->
+            <!--                        readonly-->
+            <!--                        outlined-->
+            <!--                        v-bind="attrs"-->
+            <!--                        v-on="on"-->
+            <!--                        dense-->
+            <!--                    ></v-text-field>-->
+            <!--                  </template>-->
+            <!--                  <v-date-picker-->
+            <!--                      v-model="end_date"-->
+            <!--                  ></v-date-picker>-->
+            <!--                </v-menu>-->
+            <!--                <p class="errors">-->
+            <!--                  {{ server_errors.end_month }}-->
+            <!--                </p>-->
+            <!--              </v-col>-->
+            <!--            </v-row>-->
             <v-row>
               <v-col>
-                <v-text-field
-                    label="ຫົວຂໍ້ບິນ *"
-                    required
-                    v-model="data.title"
-                    :rules="totalRules"
-                    outlined
-                    dense
-                ></v-text-field>
+                <v-text-field label="ຫົວຂໍ້ບິນ *" required v-model="data.title" :rules="totalRules" outlined dense>
+                </v-text-field>
                 <p class="errors">
                   {{ server_errors.title }}
                 </p>
@@ -89,14 +83,8 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-text-field
-                    label="ຄຳອະທິບາຍກ່ຽກັບບິນ *"
-                    required
-                    v-model="data.description"
-                    :rules="totalRules"
-                    outlined
-                    dense
-                ></v-text-field>
+                <v-text-field label="ຄຳອະທິບາຍກ່ຽກັບບິນ *" required v-model="data.description" :rules="totalRules"
+                  outlined dense></v-text-field>
                 <p class="errors">
                   {{ server_errors.description }}
                 </p>
@@ -104,35 +92,19 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-text-field
-                    label="ລາຄາ *"
-                    required
-                    v-model="data.quantity"
-                    :rules="totalRules"
-                    type="number"
-                    class="input-number"
-                    outlined
-                    dense
-                ></v-text-field>
+                <v-text-field label="ລາຄາ *" required v-model="data.price" :rules="totalRules" type="number"
+                  class="input-number" outlined dense></v-text-field>
                 <p class="errors">
-                  {{ server_errors.quantity }}
+                  {{ server_errors.price }}
                 </p>
               </v-col>
             </v-row>
             <v-row>
               <v-col>
-                <v-text-field
-                    label="ຈຳນວນ *"
-                    required
-                    v-model="data.price"
-                    :rules="totalRules"
-                    type="number"
-                    class="input-number"
-                    outlined
-                    dense
-                ></v-text-field>
+                <v-text-field label="ຈຳນວນ *" required v-model="data.quantity" :rules="totalRules" type="number"
+                  class="input-number" outlined dense></v-text-field>
                 <p class="errors">
-                  {{ server_errors.price }}
+                  {{ server_errors.quantity }}
                 </p>
               </v-col>
             </v-row>
@@ -142,12 +114,7 @@
             <v-btn class="elevation-0 btn-warning mr-4" @click="backPrevios()">
               ຍ້ອນກັບ
             </v-btn>
-            <v-btn
-                class="elevation-0 btn-primary"
-                :loading="loading"
-                :disabled="loading"
-                @click="AddData()"
-            >
+            <v-btn class="elevation-0 btn-primary" :loading="loading" :disabled="loading" @click="AddData()">
               ສ້າງບິນ
             </v-btn>
           </v-card-actions>
@@ -157,7 +124,7 @@
   </v-container>
 </template>
 <script>
-import {GetOldValueOnInput} from "@/Helpers/GetValue";
+import { GetOldValueOnInput } from "@/Helpers/GetValue";
 
 export default {
   name: "Invoice",
@@ -174,11 +141,11 @@ export default {
       end_menu: false,
       invoices: [],
       loading: false,
-      is_instantly:0,
+      is_instantly: 0,
       data: {
         email: '',
       },
-      user:{},
+      user: {},
       calendarId: "",
       //Pagination
       offset: 12,
@@ -215,47 +182,47 @@ export default {
 
       const formData = {
         user_id: this.user.id,
-        title:this.data.title,
-        description:this.data.description,
+        title: this.data.title,
+        description: this.data.description,
         price: this.data.price,
-        quantity:this.data.quantity,
+        quantity: this.data.quantity,
       }
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-            .post("custom-bill", formData)
-            .then((res) => {
-              if (res.data.code == 200) {
-                  this.loading = false;
-                  this.$store.commit("Toast_State", {
-                    value: true,
-                    color: "success",
-                    msg: res.data.message,
-                  });
-                  this.$router.push({
-                    name: "custom-bill",
-                  });
-              }
-            })
-            .catch((error) => {
+          .post("custom-bill", formData)
+          .then((res) => {
+            if (res.data.code == 200) {
+              this.loading = false;
               this.$store.commit("Toast_State", {
                 value: true,
-                color: "error",
-                msg: error.response.data.message,
+                color: "success",
+                msg: res.data.message,
               });
-              if (error.response.status == 422) {
-                let obj = error.response.data.errors;
-                for (let [key, customer] of Object.entries(obj)) {
-                  this.server_errors[key] = customer[0];
-                }
-              }
-              this.loading = false;
+              this.$router.push({
+                name: "custom-bill",
+              });
+            }
+          })
+          .catch((error) => {
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
             });
+            if (error.response.status == 422) {
+              let obj = error.response.data.errors;
+              for (let [key, customer] of Object.entries(obj)) {
+                this.server_errors[key] = customer[0];
+              }
+            }
+            this.loading = false;
+          });
       }
     },
   },
   watch: {
-    is_instantly:function(value) {
+    is_instantly: function (value) {
       console.log(value);
     },
     search: function (value) {
