@@ -4,10 +4,10 @@
       <v-col>
         <v-breadcrumbs large class="pa-0">
           <v-btn text class="text-primary" @click="backPrevios()">
-            <v-icon>mdi-chevron-left</v-icon></v-btn
-          >
-          ສ້າງບິນລ່ວງໜ້າ</v-breadcrumbs
-        >
+            <v-icon>mdi-chevron-left</v-icon>
+          </v-btn>
+          ສ້າງບິນລ່ວງໜ້າ
+        </v-breadcrumbs>
       </v-col>
     </v-row>
     <div>
@@ -16,28 +16,13 @@
           <v-form ref="form" lazy-validation>
             <v-row>
               <v-col>
-                <v-menu
-                    v-model="start_menu"
-                    :close-on-content-click="false"
-                    :nudge-right="40"
-                    transition="scale-transition"
-                    offset-y
-                    min-width="auto"
-                >
+                <v-menu v-model="start_menu" :close-on-content-click="false" :nudge-right="40"
+                  transition="scale-transition" offset-y min-width="auto">
                   <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
-                        v-model="start_date"
-                        label="ເລີ່ມວັນທີ"
-                        readonly
-                        outlined
-                        v-bind="attrs"
-                        v-on="on"
-                        dense
-                    ></v-text-field>
+                    <v-text-field v-model="start_date" label="ເລີ່ມວັນທີ" readonly outlined v-bind="attrs" v-on="on"
+                      dense></v-text-field>
                   </template>
-                  <v-date-picker
-                      v-model="start_date"
-                  ></v-date-picker>
+                  <v-date-picker v-model="start_date"></v-date-picker>
                 </v-menu>
                 <p class="errors">
                   {{ server_errors.start_month }}
@@ -45,28 +30,13 @@
               </v-col>
 
               <v-col>
-                <v-menu
-                    v-model="end_menu"
-                    :close-on-content-click="true"
-                    :nudge-right="40"
-                    transition="scale-transition"
-                    offset-y
-                    min-width="auto"
-                >
+                <v-menu v-model="end_menu" :close-on-content-click="true" :nudge-right="40"
+                  transition="scale-transition" offset-y min-width="auto">
                   <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
-                        v-model="end_date"
-                        label="ຫາວັນທີ"
-                        readonly
-                        outlined
-                        v-bind="attrs"
-                        v-on="on"
-                        dense
-                    ></v-text-field>
+                    <v-text-field v-model="end_date" label="ຫາວັນທີ" readonly outlined v-bind="attrs" v-on="on" dense>
+                    </v-text-field>
                   </template>
-                  <v-date-picker
-                      v-model="end_date"
-                  ></v-date-picker>
+                  <v-date-picker v-model="end_date"></v-date-picker>
                 </v-menu>
                 <p class="errors">
                   {{ server_errors.end_month }}
@@ -75,16 +45,8 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-text-field
-                    label="Total *"
-                    required
-                    v-model="data.total"
-                    :rules="totalRules"
-                    type="number"
-                    class="input-number"
-                    outlined
-                    dense
-                ></v-text-field>
+                <v-text-field label="Total *" required v-model="data.total" :rules="totalRules" type="number"
+                  class="input-number" outlined dense></v-text-field>
                 <p class="errors">
                   {{ server_errors.total }}
                 </p>
@@ -103,20 +65,8 @@
             <h3 class="my-4" v-if="is_instantly == true">ເລືອກປະເພດການຊຳລະ</h3>
             <v-row v-if="is_instantly == true">
               <v-col cols>
-                <v-chip-group
-                    v-model="paymentType"
-                    column
-                    :rules="paymentTypeRule"
-                    required
-                >
-                  <v-chip
-                      large
-                      class="mr-8"
-                      color="info"
-                      label
-                      filter
-                      outlined
-                  >
+                <v-chip-group v-model="paymentType" column :rules="paymentTypeRule" required>
+                  <v-chip large class="mr-8" color="info" label filter outlined>
                     ເງິນສົດ
                     <v-icon left class="ml-1"> mdi-currency-usd</v-icon>
                   </v-chip>
@@ -124,10 +74,8 @@
                     BCEL
                     <v-icon class="ml-1" left>
                       mdi-credit-card
-                    </v-icon
-                    >
-                  </v-chip
-                  >
+                    </v-icon>
+                  </v-chip>
                 </v-chip-group>
                 <p class="errors">
                   {{ server_errors.payment_method }}
@@ -137,54 +85,38 @@
 
             <v-row>
               <div v-if="paymentType == 1">
-                <v-row >
+                <v-row>
                   <v-col>
                     <div class="field">
                       <div class="file is-large is-boxed">
                         <label class="file-label">
-                          <input
-                              @change="previewMultiImage"
-                              class="file-input input-file-image"
-                              type="file"
-                              accept="image/*"
-                              multiple
-                          />
+                          <input @change="previewMultiImage" class="file-input input-file-image" type="file"
+                            accept="image/*" multiple />
                           <span class="file-cta">
-                      <span class="file-icon">
-                        <v-icon
-                            style="
+                            <span class="file-icon">
+                              <v-icon style="
                             font-size: 60px !important;
                             color: #719aff;
                             cursor: pointer;
-                          "
-                            class="fas fa-cloud-upload"
-                        >mdi-cloud-upload</v-icon
-                        >
-                      </span>
-                      <span
-                          class="file-label"
-                          style="
+                          " class="fas fa-cloud-upload">mdi-cloud-upload</v-icon>
+                            </span>
+                            <span class="file-label" style="
                           margin-top: 10px;
                           text-transform: uppercase;
                           padding-top: 20px;
-                        "
-                      >
-                        ເລືອກຮູບການຊຳລະ
-                      </span>
-                    </span>
+                        ">
+                              ເລືອກຮູບການຊຳລະ
+                            </span>
+                          </span>
                         </label>
                       </div>
                     </div>
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col
-                      class="mt-5"
-                      v-for="(item, index) in preview_list"
-                      :key="index"
-                  >
+                  <v-col class="mt-5" v-for="(item, index) in preview_list" :key="index">
                     <v-avatar class="avatar rounded mr-2" size="94px">
-                      <img :src="item" alt="Image"/>
+                      <img :src="item" alt="Image" />
                     </v-avatar>
                     <p class="mb-0">File name: {{ image_list[index].name }}</p>
                     <span>size: {{ image_list[index].size / 1024 }}KB</span>
@@ -201,12 +133,7 @@
             <v-btn class="elevation-0 btn-warning mr-4" text @click="backPrevios()">
               ຍ້ອນກັບ
             </v-btn>
-            <v-btn
-                class="elevation-0 btn-primary"
-                :loading="loading"
-                :disabled="loading"
-                @click="AddData()"
-            >
+            <v-btn class="elevation-0 btn-primary" :loading="loading" :disabled="loading" @click="AddData()">
               ສ້າງບິນ
             </v-btn>
           </v-card-actions>
@@ -216,7 +143,7 @@
   </v-container>
 </template>
 <script>
-import {GetOldValueOnInput} from "@/Helpers/GetValue";
+import { GetOldValueOnInput } from "@/Helpers/GetValue";
 
 export default {
   name: "Invoice",
@@ -233,13 +160,13 @@ export default {
       end_menu: false,
       invoices: [],
       loading: false,
-      is_instantly:0,
+      is_instantly: 0,
       payment_method: "",
       paymentType: "",
       data: {
         email: '',
       },
-      customer:{},
+      customer: {},
       calendarId: "",
       //Pagination
       offset: 12,
@@ -284,6 +211,7 @@ export default {
       }
     },
     fetchData() {
+      console.log(this.items);
       this.customer = this.items;
     },
     Search() {
@@ -295,11 +223,11 @@ export default {
     },
     AddData() {
       let formData = new FormData();
-      formData.append("customer_id", this.customer.id);
+      formData.append("customer_id", this.customer.customer.id);
       formData.append("start_month", this.start_date);
       formData.append("end_month", this.end_date);
       formData.append("total", this.data.total);
-      if(this.is_instantly == true) {
+      if (this.is_instantly == true) {
         formData.append("is_instantly", 1);
         formData.append("payment_method", this.payment_method);
         this.image_list.map((item) => {
@@ -310,41 +238,41 @@ export default {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-            .post("future-invoice", formData, {
-              headers: {"Content-Type": "multipart/form-data"},
-            })
-            .then((res) => {
-              if (res.data.code == 200) {
-                  this.loading = false;
-                  this.$store.commit("Toast_State", {
-                    value: true,
-                    color: "success",
-                    msg: res.data.message,
-                  });
-                  this.$router.push({
-                    name: "future-invoice",
-                  });
-              }
-            })
-            .catch((error) => {
+          .post("future-invoice", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          })
+          .then((res) => {
+            if (res.data.code == 200) {
+              this.loading = false;
               this.$store.commit("Toast_State", {
                 value: true,
-                color: "error",
-                msg: error.response.data.message,
+                color: "success",
+                msg: res.data.message,
               });
-              if (error.response.status == 422) {
-                let obj = error.response.data.errors;
-                for (let [key, customer] of Object.entries(obj)) {
-                  this.server_errors[key] = customer[0];
-                }
-              }
-              this.loading = false;
+              this.$router.push({
+                name: "future-invoice",
+              });
+            }
+          })
+          .catch((error) => {
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
             });
+            if (error.response.status == 422) {
+              let obj = error.response.data.errors;
+              for (let [key, customer] of Object.entries(obj)) {
+                this.server_errors[key] = customer[0];
+              }
+            }
+            this.loading = false;
+          });
       }
     },
   },
   watch: {
-    is_instantly:function(value) {
+    is_instantly: function (value) {
       console.log(value);
     },
     search: function (value) {
