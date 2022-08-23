@@ -35,30 +35,14 @@
         </v-menu>
       </v-col>
       -->
-        <v-col>
-          <v-select
-              outlined
-              dense
-              :items="paymentStatus"
-              v-model="selectedPaymentStatus"
-              item-value="name"
-              label="ສະຖານະບິນ"
-              :item-text="filterStatusLao"
-              clearable
-          ></v-select>
-        </v-col>
+      <v-col>
+        <v-select outlined dense :items="paymentStatus" v-model="selectedPaymentStatus" item-value="name"
+          label="ສະຖານະບິນ" :item-text="filterStatusLao" clearable></v-select>
+      </v-col>
 
       <v-col>
-        <v-text-field
-            outlined
-            dense
-            clearable
-            prepend-inner-icon="mdi-magnify"
-            label="ຊື່"
-            type="text"
-            v-model="search"
-            @keyup.enter="Search()"
-        >
+        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ຊື່" type="text" v-model="search"
+          @keyup.enter="Search()">
         </v-text-field>
       </v-col>
       <v-col class="align-end text-end">
@@ -75,21 +59,16 @@
     <div>
       <v-card>
         <v-card-text>
-          <v-data-table
-              :headers="headers"
-              :items="invoices"
-              :search="search"
-              :disable-pagination="true"
-              hide-default-footer
-          >
+          <v-data-table :headers="headers" :items="invoices" :search="search" :disable-pagination="true"
+            hide-default-footer>
 
             <template v-slot:item.user="{ item }">
               <div v-if="item.billing.user.customer">
                 <div v-if="item.billing.user.customer.customer_type = 'home'">
-                  {{item.billing.user.name}}
+                  {{ item.billing.user.name }}
                 </div>
                 <div v-else-if="item.billing.user.customer.customer_type = 'company'">
-                  {{item.billing.user.customer.company_name}}
+                  {{ item.billing.user.customer.company_name }}
                 </div>
               </div>
               <div v-else class="error--text">
@@ -97,8 +76,8 @@
               </div>
             </template>
             <template v-slot:item.customerType="{ item }">
-               <div v-if="item.billing.user.customer">
-                 {{getLaoCustomerType(item.billing.user.customer.customer_type)}}
+              <div v-if="item.billing.user.customer">
+                {{ getLaoCustomerType(item.billing.user.customer.customer_type) }}
               </div>
             </template>
             <template v-slot:item.total="{ item }">
@@ -111,31 +90,20 @@
               {{ Intl.NumberFormat().format(item.billing.discount) }}
             </template>
             <template v-slot:item.status="{ item }">
-              <v-chip :color="getBgColorFunc(item.billing.status)" dark>{{getLaoStatusFunc(item.billing.status) }}</v-chip>
+              <v-chip :color="getBgColorFunc(item.billing.status)" dark>{{ getLaoStatusFunc(item.billing.status) }}
+              </v-chip>
             </template>
-
 
             <template v-slot:item.actions="{ item }">
-              <v-icon
-                  color="success"
-                  small
-                  class="mr-2"
-                  @click="ViewInvoice(item.id)"
-              >
+              <v-icon color="success" small class="mr-2" @click="ViewInvoice(item.billing.id)">
                 mdi-eye
-              </v-icon
-              >
+              </v-icon>
             </template>
-          </v-data-table
-          >
-          <br/>
+          </v-data-table>
+          <br />
           <template>
-            <Pagination
-                v-if="pagination.total_pages > 1"
-                :pagination="pagination"
-                :offset="offset"
-                @paginate="fetchData()"
-            ></Pagination>
+            <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
+              @paginate="fetchData()"></Pagination>
           </template>
         </v-card-text>
       </v-card>
@@ -151,18 +119,12 @@
               <v-form ref="form" lazy-validation>
                 <v-row>
                   <v-col cols="12">
-                    <v-file-input
-                        show-size
-                        label="File "
-                        accept="xlsx,xls"
-                        v-model="file"
-                        outlined
-                        dense
-                    ></v-file-input>
+                    <v-file-input show-size label="File " accept="xlsx,xls" v-model="file" outlined dense>
+                    </v-file-input>
                     <p class="errors">
                       {{ server_errors.file }}
                     </p>
-                    <p class="errors" v-for="(error,index) in errors" :key="index">
+                    <p class="errors" v-for="(error, index) in errors" :key="index">
                       {{ error }}
                     </p>
                   </v-col>
@@ -175,13 +137,8 @@
               <v-btn color="error" class="elevation-0 btn mr-4 px-12" medium @click="closeAddModal()">
                 ປິດ
               </v-btn>
-              <v-btn
-                  class="elevation-0 btn btn-primary px-12"
-                  medium
-                  :loading="loading"
-                  :disabled="loading"
-                  @click="uploadFile"
-              >
+              <v-btn class="elevation-0 btn btn-primary px-12" medium :loading="loading" :disabled="loading"
+                @click="uploadFile">
                 Import
               </v-btn>
             </v-card-actions>
@@ -193,10 +150,10 @@
 </template>
 
 <script>
-import {GetOldValueOnInput} from "@/Helpers/GetValue";
+import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
-import {getLaoStatus,getBgColor} from "@/Helpers/BillingStatus";
-import {getLaoCustomerType} from "@/Helpers/Customer";
+import { getLaoStatus, getBgColor } from "@/Helpers/BillingStatus";
+import { getLaoCustomerType } from "@/Helpers/Customer";
 
 export default {
   name: "Invoice",
@@ -219,15 +176,15 @@ export default {
       date: new Date().toISOString().substr(0, 7),
       start_menu: false,
       server_errors: {},
-      errors:[],
-      file:null,
+      errors: [],
+      file: null,
       //Filter
       selectedPaymentStatus: "",
       paymentStatus: [
         {
           id: 1,
           name: "created",
-        },{
+        }, {
           id: 2,
           name: "approved",
         },
@@ -246,42 +203,42 @@ export default {
       ],
 
       headers: [
-        {text: "ເລກບິນ", value: "billing.content", width:"150",},
+        { text: "ເລກບິນ", value: "billing.content", width: "150", },
         {
           text: "ລູກຄ້າ",
           value: "user",
-          width:"150",
+          width: "150",
           sortable: false,
         },
         {
           text: "ເບີໂທ",
           value: "billing.user.phone",
-          width:"100",
+          width: "100",
           sortable: false,
         },
         {
           text: "ປະເພດລູກຄ້າ",
           value: "customerType",
-          width:"150",
+          width: "150",
           sortable: false,
         },
         {
           text: "ສ່ວນຫຼຸດ",
           value: "discount",
-          width:"100",
+          width: "100",
           sortable: false,
         },
         {
           text: "ຄ່າບໍລິການ",
           value: "sub_total",
           align: "center",
-          width:"100",
+          width: "100",
           sortable: false,
         },
         {
           text: "ລວມທັງໝົດ",
           value: "total",
-          width:"120",
+          width: "120",
           align: "center",
           sortable: false,
         },
@@ -290,52 +247,52 @@ export default {
           value: "status",
           sortable: false,
         },
-        { text: "ວັນທີສ້າງ", value: "created_at",  width:"120", },
-        {text: "", value: "actions", sortable: false,width:"60",},
+        { text: "ວັນທີສ້າງ", value: "created_at", width: "120", },
+        { text: "", value: "actions", sortable: false, width: "60", },
       ],
     };
   },
   methods: {
-    getLaoStatusFunc(status){
-      return  getLaoStatus(status)
+    getLaoStatusFunc(status) {
+      return getLaoStatus(status)
     },
-    getBgColorFunc(status){
+    getBgColorFunc(status) {
       return getBgColor(status)
     },
-    filterStatusLao(status){
-      return  getLaoStatus(status.name)
+    filterStatusLao(status) {
+      return getLaoStatus(status.name)
     },
-    getLaoCustomerType(type){
+    getLaoCustomerType(type) {
       return getLaoCustomerType(type)
     },
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-          .get("custom-bill", {
-                params: queryOption([
-                  {page: this.pagination.current_page},
-                  {per_page: this.per_page},
-                  {filter: this.search},
-                  {billing_status: this.selectedPaymentStatus},
-                ]),
-              }
-          )
-          .then((res) => {
-            if (res.data.code == 200) {
-              this.$store.commit("Loading_State", false);
-              this.invoices = res.data.data.data;
-              this.pagination = res.data.data.pagination;
-            }
-          })
-          .catch((error) => {
+        .get("custom-bill", {
+          params: queryOption([
+            { page: this.pagination.current_page },
+            { per_page: this.per_page },
+            { filter: this.search },
+            { billing_status: this.selectedPaymentStatus },
+          ]),
+        }
+        )
+        .then((res) => {
+          if (res.data.code == 200) {
             this.$store.commit("Loading_State", false);
-            if (error.response.status == 422) {
-              let obj = error.response.data.errors;
-              for (let [key, message] of Object.entries(obj)) {
-                this.server_errors[key] = message[0];
-              }
+            this.invoices = res.data.data.data;
+            this.pagination = res.data.data.pagination;
+          }
+        })
+        .catch((error) => {
+          this.$store.commit("Loading_State", false);
+          if (error.response.status == 422) {
+            let obj = error.response.data.errors;
+            for (let [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
             }
-          });
+          }
+        });
     },
     Search() {
       GetOldValueOnInput(this);
@@ -348,46 +305,46 @@ export default {
       this.$store.commit("modalAdd_State", false);
     },
     uploadFile() {
-        let formData = new FormData();
-        formData.append("file", this.file);
-        if (this.$refs.form.validate() == true) {
-          this.loading = true;
-          this.$axios
-              .post("import-old-payment", formData)
-              .then((res) => {
-                if (res.data.code == 200) {
-                  this.loading = false;
-                  this.closeAddModal();
-                  this.fetchData();
-                  this.$refs.form.reset();
-                  this.$store.commit("Toast_State", {
-                    value: true,
-                    color: "success",
-                    msg: res.data.message,
-                  });
-                }
-              })
-              .catch((error) => {
-                this.loading = false;
-                this.$store.commit("Toast_State", {
-                  value: true,
-                  color: "error",
-                  msg: error.response.data.message,
-                });
-                if (error.response.status == 422) {
-                  let obj = error.response.data.errors;
-                  this.errors = obj
-                  for (let [key, data] of Object.entries(obj)) {
-                    this.server_errors[key] = data[0];
-                  }
-                }
+      let formData = new FormData();
+      formData.append("file", this.file);
+      if (this.$refs.form.validate() == true) {
+        this.loading = true;
+        this.$axios
+          .post("import-old-payment", formData)
+          .then((res) => {
+            if (res.data.code == 200) {
+              this.loading = false;
+              this.closeAddModal();
+              this.fetchData();
+              this.$refs.form.reset();
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
               });
-        }
-      },
+            }
+          })
+          .catch((error) => {
+            this.loading = false;
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
+            if (error.response.status == 422) {
+              let obj = error.response.data.errors;
+              this.errors = obj
+              for (let [key, data] of Object.entries(obj)) {
+                this.server_errors[key] = data[0];
+              }
+            }
+          });
+      }
+    },
     choseUser() {
       this.$router.push({
         name: "chose-customer",
-        query:{redirect:'create-custom-bill'}
+        query: { redirect: 'create-custom-bill' }
       });
 
       // this.$router.push({
@@ -395,32 +352,32 @@ export default {
       // });
     },
     ViewInvoice(id) {
-      let route = this.$router.resolve({name: 'billing-detail',params: {id}});
+      let route = this.$router.resolve({ name: 'billing-detail', params: { id } });
       window.open(route.href, '_blank');
     },
-    paymentStatusText(status){
-      if(status == 'created') return 'ສ້າງບິນສຳເລັດ';
-      else if(status == 'approved') return 'ອະນຸມັດສຳເລັດ';
-      else if(status == 'pending') return 'ລໍຖ້າເກັບເງິນ';
-      else if(status == 'to_confirm_payment') return 'ລໍຖ້າຢືນຢັນຊຳລະ';
+    paymentStatusText(status) {
+      if (status == 'created') return 'ສ້າງບິນສຳເລັດ';
+      else if (status == 'approved') return 'ອະນຸມັດສຳເລັດ';
+      else if (status == 'pending') return 'ລໍຖ້າເກັບເງິນ';
+      else if (status == 'to_confirm_payment') return 'ລໍຖ້າຢືນຢັນຊຳລະ';
       else if (status == 'rejected') return 'ປະຕິເສດການຊຳລະ';
-      else if(status == 'success') return 'ຊຳລະສຳເລັດ';
-      else if(status == 'cancel') return 'ຍົກເລີກ';
-      else return  '';
+      else if (status == 'success') return 'ຊຳລະສຳເລັດ';
+      else if (status == 'cancel') return 'ຍົກເລີກ';
+      else return '';
     }
   },
   watch: {
     search: function (value) {
-      this.pagination.current_page ='';
+      this.pagination.current_page = '';
       if (value == "") {
         this.fetchData();
       }
     },
-    selectedPaymentStatus:function () {
-      this.pagination.current_page ='';
+    selectedPaymentStatus: function () {
+      this.pagination.current_page = '';
       this.fetchData();
     },
-    file: function (){
+    file: function () {
       this.errors = [];
     }
 
