@@ -19,7 +19,7 @@
             dense
             :items="billingable_types"
             v-model="selectedBillingable_type"
-            item-text="dis_play"
+            :item-text="filterBillingType"
             item-value="name"
             label="ປະເພດບິນ"
             clearable
@@ -45,19 +45,6 @@
         ຂໍ້ມູນບີນ ({{ pagination.total }})
         <v-divider class="mx-4" vertical></v-divider>
         <v-spacer></v-spacer>
-<!--        <v-btn v-if="selectedRows.length > 0" class="btn-primary" :loading="loading" :disabled="loading" @click="approveAny">ອະນຸມັດບິນ</v-btn>-->
-<!--          <v-text-field-->
-<!--            outlined-->
-<!--            dense-->
-<!--            clearable-->
-<!--            prepend-inner-icon="mdi-magnify"-->
-<!--            label="ຄົ້ນຫາ"-->
-<!--            type="text"-->
-<!--            v-model="search"-->
-<!--            @keyup.enter="Search()"-->
-<!--          >-->
-<!--          </v-text-field>-->
-
       </v-card-title>
       <v-card-text>
         <v-data-table
@@ -69,7 +56,7 @@
             fixed-header
         >
           <template v-slot:item.user="{ item }">
-              <div>{{item.user.name}} {{item.user.surname}}</div>
+            <div>{{showUser(item)}}</div>
           </template>
           <template v-slot:item.reject="{ item }">
              <div>
@@ -115,7 +102,7 @@
 <script>
 import {GetOldValueOnInput} from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
-import {getLaoStatus} from "@/Helpers/BillingStatus";
+import {getLaoBillingType, getLaoStatus} from "@/Helpers/BillingStatus";
 
 export default {
   name: "Customer",
@@ -157,95 +144,20 @@ export default {
       server_errors: {},
       selectedCollectionStatus: "",
       summaryData:{},
-      collectionStatus: [
-        {
-          id: 1,
-          name: "requested",
-          dis_play: "ຮ້ອງຂໍເກັບຂີ້ເຫື້ຍອ"
-        },
-        {
-          id: 2,
-          name: "rejected",
-          dis_play: "ປະຕິເສດເກັບຂີ້ເຫື້ຍອ"
-        },
-        {
-          id: 3,
-          name: "approved",
-          dis_play: "ອະນຸມັດເກັບຂີ້ເຫື້ຍອ"
-
-        },
-        {
-          id: 4,
-          name: "collected",
-          dis_play: "ເກັບຂີເຫື້ຍອສຳເລັດ"
-        },
-        {
-          id: 5,
-          name: "collect_confirm",
-          dis_play: "ລູກຄ້າຢືນຢັນການເກັບ"
-        },
-        {
-          id: 5,
-          name: "collect_reject",
-          dis_play: "ການເກັບຖືກປະຕິເສດ"
-        },
-        {
-          id: 6,
-          name: "to_confirm_payment",
-          dis_play: "ລໍຖ້າຢືນຢັນຊຳລະ"
-        },
-        {
-          id: 7,
-          name: "rejected",
-          dis_play: "ປະຕິເສດການຊຳລະ"
-        },
-        {
-          id: 8,
-          name: "success",
-          dis_play: "ຊຳລະສຳເລັດ"
-        },
-      ],
-      selectedPaymentStatus: "",
-      paymentStatus: [
-        {
-          id: 1,
-          name: "pending",
-          dis_play: "ລໍຖ້າເກັບເງິນ"
-        },
-        {
-          id: 2,
-          name: "to_confirm_payment",
-          dis_play: "ລໍຖ້າຢືນຢັນຊຳລະ"
-        },
-        {
-          id: 3,
-          name: "rejected",
-          dis_play: "ປະຕິເສດການຊຳລະ"
-        },
-        {
-          id: 4,
-          name: "success",
-          dis_play: "ຊຳລະສຳເລັດ"
-        },
-      ],
       billingable_types:[
     {
       id: 1,
       name: "FutureInvoice",
-      dis_play: "Future Invoice"
     },
     {
       id: 2,
       name: "NewInvoice",
-      dis_play: "New Invoice"
     },{
       id: 3,
       name: "NewCollectionEvent",
-      dis_play: "New Collection Event Invoice"
     },{
       id: 4,
       name: "CustomBill",
-      dis_play: "Custom Bill"
     },
   ],
     selectedBillingable_type:"",
@@ -288,6 +200,9 @@ export default {
   methods: {
     getLaoStatusFunc(status){
       return  getLaoStatus(status)
+    },
+    filterBillingType(status){
+      return  getLaoBillingType(status.name)
     },
     fetchData() {
       // let date = this.moment(this.month).format('YYYY-MM');
@@ -361,23 +276,18 @@ export default {
       else if (value == "inactive") return "error";
       else return "";
     },
-
-    collectStatus(status){
-      if(status == 'requested') return 'ຮ້ອງຂໍເກັບຂີ້ເຫື້ຍອ';
-      else if(status == 'rejected') return 'ປະຕິເສດເກັບຂີ້ເຫື້ຍອ';
-      else if (status == 'approved') return 'ອະນຸມັດເກັບຂີ້ເຫື້ຍອ';
-      else if(status == 'collected') return 'ເກັບຂີເຫື້ຍອສຳເລັດ';
-      else if(status == 'collect_confirm') return 'ລູກຄ້າຢືນຢັນການເກັບ';
-      else if(status == 'collect_reject') return 'ການເກັບຖືກປະຕິເສດ';
-      else return  '';
+    showUser(item) {
+      if(item.display_type === "NewCollectionEvent"){
+        if(item.billingable != null)
+          return item.billingable.name;
+      } else{
+        if(item.user.customer != null){
+          return item.user.customer.name
+        } else {
+          return item.user.name;
+        }
+      }
     },
-    paymentStatusText(status){
-      if(status == 'pending') return 'ລໍຖ້າເກັບເງິນ';
-      else if(status == 'to_confirm_payment') return 'ລໍຖ້າຢືນຢັນຊຳລະ';
-      else if (status == 'rejected') return 'ປະຕິເສດການຊຳລະ';
-      else if(status == 'success') return 'ຊຳລະສຳເລັດ';
-      else return  '';
-    }
   },
   watch: {
     selectedCollectionStatus:function (){

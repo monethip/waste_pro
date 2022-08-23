@@ -39,6 +39,8 @@ export const getLaoStatus = function (status) {
             return "ຊຳລະເງິນສົດ"
         case "bcel":
             return "BCEL"
+        default:
+            return status;
     }
 }
 
@@ -54,5 +56,24 @@ export const getLaoBillingType = function (type) {
             return "ບິນບໍລິການປະຈຳເດືອນ"
         default:
             return type
+    }
+}
+
+export const getLaoCollectStatus = function (status) {
+    switch (status) {
+        case "requested":
+            return "ຮ້ອງຂໍເກັບຂີ້ເຫື້ຍອ"
+        case "rejected":
+            return "ປະຕິເສດເກັບຂີ້ເຫື້ຍອ"
+        case "approved":
+            return "ອະນຸມັດເກັບຂີ້ເຫື້ຍອ"
+        case "collected":
+            return "ເກັບຂີເຫື້ຍອສຳເລັດ"
+        case "collect_confirm":
+            return "ລູກຄ້າຢືນຢັນການເກັບ"
+        case "collect_reject":
+            return "ການເກັບຖືກປະຕິເສດ"
+        default:
+            return status;
     }
 }

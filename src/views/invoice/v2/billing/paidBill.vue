@@ -54,25 +54,14 @@
             clearable
         ></v-select>
       </v-col>
-<!--      <v-col cols>-->
-<!--        <v-select-->
-<!--            outlined-->
-<!--            dense-->
-<!--            :items="collectionStatus"-->
-<!--            v-model="selectedCollectionStatus"-->
-<!--            item-text="dis_play"-->
-<!--            item-value="name"-->
-<!--            label="ສະຖານະບໍລິການ"-->
-<!--            clearable-->
-<!--        ></v-select>-->
-<!--      </v-col>-->
+
       <v-col cols>
         <v-select
             outlined
             dense
             :items="billingable_types"
             v-model="selectedBillingable_type"
-            item-text="dis_play"
+            :item-text="filterBillingType"
             item-value="name"
             label="ປະເພດບິນ"
             clearable
@@ -92,24 +81,11 @@
         </v-text-field>
       </v-col>
     </v-row>
-
     <v-card>
       <v-card-title>
         ຂໍ້ມູນບີນ ({{ pagination.total }})
         <v-divider class="mx-4" vertical></v-divider>
         <v-spacer></v-spacer>
-<!--          <v-text-field-->
-<!--            outlined-->
-<!--            dense-->
-<!--            clearable-->
-<!--            prepend-inner-icon="mdi-magnify"-->
-<!--            label="ຄົ້ນຫາ"-->
-<!--            type="text"-->
-<!--            v-model="search"-->
-<!--            @keyup.enter="Search()"-->
-<!--          >-->
-<!--          </v-text-field>-->
-
       </v-card-title>
       <v-card-text>
         <v-data-table
@@ -121,7 +97,7 @@
             fixed-header
         >
           <template v-slot:item.user="{ item }">
-              <div>{{item.user.name}} {{item.user.surname}}</div>
+            <div>{{showUser(item)}}</div>
           </template>
           <template v-slot:item.sub_total="{ item }">
               <td>{{Intl.NumberFormat().format( item.sub_total) }}</td>
@@ -406,6 +382,7 @@
 <script>
 import {GetOldValueOnInput} from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
+import {getLaoBillingType} from "@/Helpers/BillingStatus";
 
 export default {
   name: "Customer",
@@ -451,26 +428,19 @@ export default {
     {
       id: 1,
       name: "FutureInvoice",
-      dis_play: "Future Invoice"
     },
     {
       id: 2,
       name: "NewInvoice",
-      dis_play: "New Invoice"
     },{
       id: 3,
       name: "NewCollectionEvent",
-      dis_play: "New Collection Event Invoice"
     },{
       id: 4,
       name: "CustomBill",
-      dis_play: "Custom Bill"
     },
   ],
     selectedBillingable_type:"",
-
-      user: {},
-      item: {},
 
       //Payment
       image: "",
@@ -503,6 +473,9 @@ export default {
     };
   },
   methods: {
+    filterBillingType(status){
+      return  getLaoBillingType(status.name)
+    },
     onFileChange(e) {
       let input = e.target;
       let file = e.target.files[0];
@@ -782,7 +755,20 @@ export default {
       else if (status == 'rejected') return 'ປະຕິເສດການຊຳລະ';
       else if(status == 'success') return 'ຊຳລະສຳເລັດ';
       else return  '';
-    }
+    },
+
+    showUser(item) {
+      if(item.display_type === "NewCollectionEvent"){
+        if(item.billingable != null)
+          return item.billingable.name;
+      } else{
+        if(item.user.customer != null){
+          return item.user.customer.name
+        } else {
+          return item.user.name;
+        }
+      }
+    },
   },
   watch: {
     selectedCollectionStatus:function (){
@@ -824,15 +810,6 @@ export default {
     start_date: function () {
       this.server_errors.start_month = "";
     },
-    "user.name": function () {
-      this.server_errors.name = "";
-    },
-    "user.surname": function () {
-      this.server_errors.name = "";
-    },
-    "user.phone": function () {
-      this.server_errors.phone = "";
-    },
 
     paymentType: function () {
       if (this.paymentType == 0) {
@@ -845,15 +822,6 @@ export default {
       }
       this.server_errors.payment_method = "";
     },
-    // confirmType: function () {
-    //   console.log(this.confirmType);
-    //   if (this.confirmType == 0) {
-    //     // this.confirmPayment();
-    //   }
-    // },
-    // bcel_reference_number: function () {
-    //   this.server_errors.bcel_reference_number = "";
-    // },
     image: function () {
       this.server_errors.image = "";
     },

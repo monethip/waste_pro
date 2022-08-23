@@ -8828,7 +8828,7 @@ vue2-datepicker@^3.10.4:
 
 vue2-google-maps@^0.10.7:
   version "0.10.7"
-  resolved "https://registry.npmjs.org/vue2-google-maps/-/vue2-google-maps-0.10.7.tgz"
+  resolved "https://registry.yarnpkg.com/vue2-google-maps/-/vue2-google-maps-0.10.7.tgz#2e4c1239386001bd47777d8c6a0475e5320cc3a8"
   integrity sha512-y5aBJTAsfGvpsbfgPaeWU7o7QbOeINZKsP6SB9qrBe8U8EYBFO/bTWo3rcMq/NOtgT/XssV3Nwg/2u3no6jWbw==
   dependencies:
     babel-runtime "^6.26.0"
@@ -8841,7 +8841,7 @@ vue@^2.5.22, vue@^2.6.11:
 
 vuedraggable@^2.24.3:
   version "2.24.3"
-  resolved "https://registry.npmjs.org/vuedraggable/-/vuedraggable-2.24.3.tgz"
+  resolved "https://registry.yarnpkg.com/vuedraggable/-/vuedraggable-2.24.3.tgz#43c93849b746a24ce503e123d5b259c701ba0d19"
   integrity sha512-6/HDXi92GzB+Hcs9fC6PAAozK1RLt1ewPTLjK0anTYguXLAeySDmcnqE8IC0xa7shvSzRjQXq3/+dsZ7ETGF3g==
   dependencies:
     sortablejs "1.10.2"

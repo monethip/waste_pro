@@ -40,3 +40,16 @@ export const getLaoCustomerType = function (type) {
         default: return type
     }
 }
+export const getLaoInvoiceTypes = function (type) {
+    switch (type) {
+        case "FutureInvoice":
+            return "ຫົວໜ່ວຍທຸລະກິດ"
+        case "NewInvoice":
+            return "ຄົວເຮືອນ"
+        case "NewCollectionEvent":
+            return "ຄົວເຮືອນ"
+        case "CustomBill":
+            return "ຄົວເຮືອນ"
+        default: return type
+    }
+}

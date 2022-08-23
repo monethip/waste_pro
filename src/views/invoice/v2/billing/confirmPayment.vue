@@ -54,25 +54,13 @@
             clearable
         ></v-select>
       </v-col>
-<!--      <v-col cols>-->
-<!--        <v-select-->
-<!--            outlined-->
-<!--            dense-->
-<!--            :items="collectionStatus"-->
-<!--            v-model="selectedCollectionStatus"-->
-<!--            item-text="dis_play"-->
-<!--            item-value="name"-->
-<!--            label="ສະຖານະບໍລິການ"-->
-<!--            clearable-->
-<!--        ></v-select>-->
-<!--      </v-col>-->
       <v-col cols>
         <v-select
             outlined
             dense
             :items="billingable_types"
             v-model="selectedBillingable_type"
-            item-text="dis_play"
+            :item-text="filterBillingType"
             item-value="name"
             label="ປະເພດບິນ"
             clearable
@@ -123,7 +111,7 @@
             fixed-header
         >
           <template v-slot:item.user="{ item }">
-              <div>{{item.user.name}} {{item.user.surname}}</div>
+            <div>{{showUser(item)}}</div>
           </template>
           <template v-slot:item.payment_method="{ item }">
             <div>{{ getLaoStatusFunc(item.payment_method) }}</div>
@@ -304,7 +292,7 @@
 <script>
 import {GetOldValueOnInput} from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
-import {getLaoStatus} from "@/Helpers/BillingStatus";
+import {getLaoBillingType, getLaoStatus} from "@/Helpers/BillingStatus";
 
 export default {
   name: "Customer",
@@ -350,20 +338,16 @@ export default {
     {
       id: 1,
       name: "FutureInvoice",
-      dis_play: "Future Invoice"
     },
     {
       id: 2,
       name: "NewInvoice",
-      dis_play: "New Invoice"
     },{
       id: 3,
       name: "NewCollectionEvent",
-      dis_play: "New Collection Event Invoice"
     },{
       id: 4,
       name: "CustomBill",
-      dis_play: "Custom Bill"
     },
   ],
     selectedBillingable_type:"",
@@ -406,6 +390,9 @@ export default {
   methods: {
     getLaoStatusFunc(status){
       return  getLaoStatus(status)
+    },
+    filterBillingType(status){
+      return  getLaoBillingType(status.name)
     },
     onFileChange(e) {
       let input = e.target;
@@ -727,13 +714,19 @@ export default {
       else if(status == 'collect_reject') return 'ການເກັບຖືກປະຕິເສດ';
       else return  '';
     },
-    paymentStatusText(status){
-      if(status == 'pending') return 'ລໍຖ້າເກັບເງິນ';
-      else if(status == 'to_confirm_payment') return 'ລໍຖ້າຢືນຢັນຊຳລະ';
-      else if (status == 'rejected') return 'ປະຕິເສດການຊຳລະ';
-      else if(status == 'success') return 'ຊຳລະສຳເລັດ';
-      else return  '';
-    }
+
+    showUser(item) {
+      if(item.display_type === "NewCollectionEvent"){
+        if(item.billingable != null)
+          return item.billingable.name;
+      } else{
+        if(item.user.customer != null){
+          return item.user.customer.name
+        } else {
+          return item.user.name;
+        }
+      }
+    },
   },
   watch: {
     selectedCollectionStatus:function (){

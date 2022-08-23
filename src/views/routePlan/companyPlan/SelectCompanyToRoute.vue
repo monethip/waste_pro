@@ -253,6 +253,11 @@ export default {
           value: "chartered",
           name: "ມອບເໝົາ"
         },
+        {
+          id: 4,
+          value: "bag",
+          name: "ບໍລິມາດ"
+        },
       ],
       favorite_dates: [],
       selectedFavoriteDate: [],
@@ -369,7 +374,6 @@ export default {
           name: "CreateRoutePlanCompany",
           params: {
             items: this.selectedRows,
-            // items: this.customers,
           },
         });
       } else {

@@ -19,7 +19,7 @@
             dense
             :items="billingable_types"
             v-model="selectedBillingable_type"
-            item-text="dis_play"
+            :item-text="filterBillingType"
             item-value="name"
             label="ປະເພດບິນ"
             clearable
@@ -45,18 +45,6 @@
         ຂໍ້ມູນບີນ ({{ pagination.total }})
         <v-divider class="mx-4" vertical></v-divider>
         <v-spacer></v-spacer>
-<!--        <v-btn v-if="selectedRows.length > 0" class="btn-primary" :loading="loading" :disabled="loading" @click="approveAny">ອະນຸມັດບິນ</v-btn>-->
-<!--          <v-text-field-->
-<!--            outlined-->
-<!--            dense-->
-<!--            clearable-->
-<!--            prepend-inner-icon="mdi-magnify"-->
-<!--            label="ຄົ້ນຫາ"-->
-<!--            type="text"-->
-<!--            v-model="search"-->
-<!--            @keyup.enter="Search()"-->
-<!--          >-->
-<!--          </v-text-field>-->
 
       </v-card-title>
       <v-card-text>
@@ -69,16 +57,13 @@
             fixed-header
         >
           <template v-slot:item.user="{ item }">
-              <div>{{item.user.name}} {{item.user.surname}}</div>
+            <div>{{showUser(item)}}</div>
           </template>
           <template v-slot:item.sub_total="{ item }">
               <td>{{Intl.NumberFormat().format( item.sub_total) }}</td>
           </template>
           <template v-slot:item.total="{ item }">
               <td>{{Intl.NumberFormat().format( item.total) }}</td>
-          </template>
-          <template v-slot:item.status="{ item }">
-            <div>{{collectStatus(item.status)}}</div>
           </template>
           <template v-slot:item.actions="{ item }">
             <v-menu offset-y>
@@ -127,6 +112,7 @@
 <script>
 import {GetOldValueOnInput} from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
+import {getLaoBillingType} from "@/Helpers/BillingStatus";
 
 export default {
   name: "Customer",
@@ -194,20 +180,16 @@ export default {
     {
       id: 1,
       name: "FutureInvoice",
-      dis_play: "Future Invoice"
     },
     {
       id: 2,
       name: "NewInvoice",
-      dis_play: "New Invoice"
     },{
       id: 3,
       name: "NewCollectionEvent",
-      dis_play: "New Collection Event Invoice"
     },{
       id: 4,
       name: "CustomBill",
-      dis_play: "Custom Bill"
     },
   ],
     selectedBillingable_type:"",
@@ -230,9 +212,9 @@ export default {
       payment: {},
       confirm: {},
       headers: [
-        { text: "ບິນ", value: "content",width:"150px" },
-        {text: "ລູກຄ້າ", value: "user"},
-        {text: "ເບີໂທ", value: "user.phone", sortable: false,width: "120px"},
+        { text: "ເລກບິນ", value: "content",width:"200px" },
+        {text: "ລູກຄ້າ", value: "user",width:"150px"},
+        {text: "ເບີໂທ", value: "user.phone", sortable: false},
         {text: "ສ່ວນຫຼຸດ", value: "discount",width: "150px"},
         {text: "ຄ່າບໍລິການ", value: "sub_total"},
         {text: "ລວມທັງໝົດ", value: "total", sortable: false},
@@ -242,6 +224,9 @@ export default {
     };
   },
   methods: {
+    filterBillingType(status){
+      return  getLaoBillingType(status.name)
+    },
     onFileChange(e) {
       let input = e.target;
       let file = e.target.files[0];
@@ -343,13 +328,19 @@ export default {
       else if(status == 'collect_reject') return 'ການເກັບຖືກປະຕິເສດ';
       else return  '';
     },
-    paymentStatusText(status){
-      if(status == 'pending') return 'ລໍຖ້າເກັບເງິນ';
-      else if(status == 'to_confirm_payment') return 'ລໍຖ້າຢືນຢັນຊຳລະ';
-      else if (status == 'rejected') return 'ປະຕິເສດການຊຳລະ';
-      else if(status == 'success') return 'ຊຳລະສຳເລັດ';
-      else return  '';
-    }
+
+    showUser(item) {
+      if(item.display_type === "NewCollectionEvent"){
+        if(item.billingable != null)
+          return item.billingable.name;
+      } else{
+        if(item.user.customer != null){
+          return item.user.customer.name
+        } else {
+          return item.user.name;
+        }
+      }
+    },
   },
   watch: {
     selectedCollectionStatus:function (){

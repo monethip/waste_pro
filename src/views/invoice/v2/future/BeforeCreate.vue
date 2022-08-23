@@ -1,13 +1,13 @@
 <template>
   <v-container>
-
-    <v-row class="mb-n6">
-      <v-col>
-        <div>
-          ເລືກລູກຄ້າເພື່ອສ້າງບິນ
-        </div>
-      </v-col>
-    </v-row>
+    <v-breadcrumbs large>
+      <v-btn text class="text-primary" @click="backPrevios()"
+      ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
+      >
+      <div>
+        ເລືອກ User
+      </div>
+    </v-breadcrumbs>
     <v-row justify="center">
       <v-col>
         <v-card class="pa-2">
@@ -75,7 +75,7 @@
             </template>
             <template v-slot:item.status="{ item }">
               <v-btn @click="createPage(item)" medium class="btn-primary elevation-0"
-              ><v-icon>mdi-plus</v-icon> ສ້າງບິນ
+              ><v-icon>mdi-plus</v-icon> ເພີ່ມ
               </v-btn>
             </template>
           </v-data-table>
@@ -193,7 +193,9 @@ export default {
         },
       });
     },
-
+    backPrevios() {
+      this.$router.go(-1);
+    },
     reset() {
       this.$refs.form.reset();
     },

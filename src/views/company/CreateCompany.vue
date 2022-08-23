@@ -341,7 +341,7 @@
           <v-row>
             <v-col cols="6">
               <v-text-field
-                  label="ລາຍລະອຽດບັນຈຸພັນ "
+                  label="ໝາຍເຫດ "
                   type="text"
                   v-model="data.collect_description"
                   outlined
@@ -1014,18 +1014,21 @@ export default {
     "data.password_confirmation": function () {
       this.server_errors.password = "";
     },
-    "selectedCost": function () {
-      if (this.selectedCost == 'container') {
+    "selectedCost": function (value) {
+      if (value === 'container') {
         this.fix_cost = '';
         this.showFixed = true;
-      } else if(this.selectedCost == 'bag'){
+      } else if(value === 'bag'){
+        this.fix_cost = '';
         this.showFixed = false;
-        this.fix_cost = '';
       }
-      else if (this.selectedCost == 'fixed_cost'){
+      else if (value === 'fix_cost'){
+        console.log('fixed_cost: ' + value);
+        this.fix_cost = '';
         this.showFixed = true;
       }
-      else if(this.selectedCost == 'chartered'){
+      else if(value === 'chartered'){
+        this.fix_cost = '';
         this.showFixed = true;
       }
     },

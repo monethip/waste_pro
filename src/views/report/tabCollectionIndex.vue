@@ -188,7 +188,7 @@
                </div>
              </div>
 
-              <v-simple-table
+              <v-data-table
                   v-if="homeCollection"
                   :headers="headers"
                   :items="homeCollection"
@@ -213,16 +213,18 @@
                     }}
                   </v-chip>
                 </template>
-              </v-simple-table
+              </v-data-table
               >
               <br/>
               <template>
-                <Pagination
-                    v-if="pagination.total_pages > 1"
-                    :pagination="pagination"
-                    :offset="offset"
-                    @paginate="fetchData()"
-                ></Pagination>
+                <div v-if="homeCollection.length">
+                  <Pagination
+                      v-if="pagination.total_pages > 1"
+                      :pagination="pagination"
+                      :offset="offset"
+                      @paginate="fetchData()"
+                  ></Pagination>
+                </div>
               </template>
             </div>
           </v-tab-item>
@@ -370,10 +372,6 @@
           </v-tab-item>
         </v-tabs-items>
 
-        <!--        <div v-if="">-->
-
-        <!--        </div>-->
-
       </v-card-text>
     </v-card>
   </v-container>
@@ -393,11 +391,6 @@ export default {
   //   HomeCollection,
   //   CompanyCollection,
   // },
-  data() {
-    return {
-      data: {},
-    };
-  },
   methods: {
     backPrevios() {
       this.$router.go(-1);

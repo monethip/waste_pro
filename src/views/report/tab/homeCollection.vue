@@ -118,12 +118,13 @@ export default {
   watch: {
     tab: function () {
       if (this.tab == "tab-1") {
+        this.pagination = [];
         this.fetchData();
       }
     },
   },
   created() {
-    // console.log(this.data);
+    console.log(this.pagination);
     // console.log(this.homeCollection)
     // console.log(this.execute())
     this.fetchData();

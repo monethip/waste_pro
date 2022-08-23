@@ -489,7 +489,7 @@ export default {
         {text: "ມູນຄ່າສັນຍາ", value: "price",width: "150px"},
         {text: "ສະຖານະເກັບ", value: "can_collect", align: "center",width: "100px"},
         {text: "ມື້ບໍລິການ", value: "favorite_dates",width: "120px"},
-        {text: "ລາຍລະອຽດບັນຈຸພັນ", value: "collect_description", sortable: false,width: "200px"},
+        {text: "ໝາຍເຫດ", value: "collect_description", sortable: false,width: "200px"},
         {text: "", value: "media"},
         {text: "", value: "actions", sortable: false},
       ],

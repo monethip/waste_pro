@@ -365,7 +365,7 @@
             <v-row>
               <v-col cols="6">
                 <v-text-field
-                    label="ລາຍລະອຽດບັນຈຸພັນ "
+                    label="ໝາຍເຫດ "
                     type="text"
                     v-model="data.collect_description"
                     outlined
@@ -954,6 +954,7 @@ export default {
         this.showFixed = true;
       }
     },
+
     // "data.can_collect": function () {
     //   console.log(this.data.can_collect);
     //   if (this.data.can_collect == true) {
