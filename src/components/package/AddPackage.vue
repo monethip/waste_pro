@@ -10,7 +10,7 @@
         </v-card-title>
       </v-col>
     </v-row>
-    <v-data-table :headers="header" :items="packages" hide-default-footer>
+    <v-data-table :headers="header" :items="packages" :items-per-page="per_page" hide-default-footer>
       <template v-slot:[`item.is_public`]="{ item }">
         <v-switch v-model="item.is_public" @change="switchPublic(item.id)"></v-switch>
       </template>
