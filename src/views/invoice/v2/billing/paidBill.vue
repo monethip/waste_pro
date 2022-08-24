@@ -360,7 +360,7 @@ export default {
       payment: {},
       confirm: {},
       headers: [
-        { text: "ໄອດີ", value: "billing_display_id" },
+        { text: "ເລກບິນ", value: "billing_display_id" },
         { text: "ຫົວບິນ", value: "content", width: "150px" },
         { text: "ລູກຄ້າ", value: "user", width: "150px" },
         { text: "ເບີໂທ", value: "user.phone", sortable: false },
