@@ -1,83 +1,59 @@
 <template>
   <v-container>
     <v-row class="mb-n6">
-<!--      <v-col cols="3">-->
-<!--        <v-menu-->
-<!--            v-model="start_menu"-->
-<!--            :close-on-content-click="true"-->
-<!--            :nudge-right="40"-->
-<!--            transition="scale-transition"-->
-<!--            offset-y-->
-<!--            min-width="auto"-->
-<!--        >-->
-<!--          <template v-slot:activator="{ on, attrs }">-->
-<!--            <v-text-field-->
-<!--                v-model="month"-->
-<!--                label="ເດືອນ"-->
-<!--                readonly-->
-<!--                outlined-->
-<!--                v-bind="attrs"-->
-<!--                v-on="on"-->
-<!--                dense-->
-<!--                clearable-->
-<!--            ></v-text-field>-->
-<!--          </template>-->
-<!--          <v-date-picker-->
-<!--              v-model="month"-->
-<!--              type="month"-->
-<!--          ></v-date-picker>-->
-<!--        </v-menu>-->
-<!--      </v-col>-->
+      <!--      <v-col cols="3">-->
+      <!--        <v-menu-->
+      <!--            v-model="start_menu"-->
+      <!--            :close-on-content-click="true"-->
+      <!--            :nudge-right="40"-->
+      <!--            transition="scale-transition"-->
+      <!--            offset-y-->
+      <!--            min-width="auto"-->
+      <!--        >-->
+      <!--          <template v-slot:activator="{ on, attrs }">-->
+      <!--            <v-text-field-->
+      <!--                v-model="month"-->
+      <!--                label="ເດືອນ"-->
+      <!--                readonly-->
+      <!--                outlined-->
+      <!--                v-bind="attrs"-->
+      <!--                v-on="on"-->
+      <!--                dense-->
+      <!--                clearable-->
+      <!--            ></v-text-field>-->
+      <!--          </template>-->
+      <!--          <v-date-picker-->
+      <!--              v-model="month"-->
+      <!--              type="month"-->
+      <!--          ></v-date-picker>-->
+      <!--        </v-menu>-->
+      <!--      </v-col>-->
 
-<!--      <v-col cols>-->
-<!--        <v-select-->
-<!--            outlined-->
-<!--            dense-->
-<!--            :items="customerTypes"-->
-<!--            v-model="selectedCustomerType"-->
-<!--            item-text="text"-->
-<!--            item-value="value"-->
-<!--            label="ປະເພດລູກຄ້າ"-->
-<!--            clearable-->
-<!--        ></v-select>-->
-<!--      </v-col>-->
+      <!--      <v-col cols>-->
+      <!--        <v-select-->
+      <!--            outlined-->
+      <!--            dense-->
+      <!--            :items="customerTypes"-->
+      <!--            v-model="selectedCustomerType"-->
+      <!--            item-text="text"-->
+      <!--            item-value="value"-->
+      <!--            label="ປະເພດລູກຄ້າ"-->
+      <!--            clearable-->
+      <!--        ></v-select>-->
+      <!--      </v-col>-->
 
       <v-col cols>
-        <v-select
-            outlined
-            dense
-            :items="plans"
-            v-model="selectedRoutePlan"
-            item-text="name"
-            item-value="id"
-            label="ເລືອກແຜນ"
-            clearable
-        ></v-select>
+        <v-select outlined dense :items="plans" v-model="selectedRoutePlan" item-text="name" item-value="id"
+          label="ເລືອກແຜນ" clearable></v-select>
       </v-col>
 
       <v-col cols>
-        <v-select
-            outlined
-            dense
-            :items="billingable_types"
-            v-model="selectedBillingable_type"
-            :item-text="filterBillingType"
-            item-value="name"
-            label="ປະເພດບິນ"
-            clearable
-        ></v-select>
+        <v-select outlined dense :items="billingable_types" v-model="selectedBillingable_type"
+          :item-text="filterBillingType" item-value="name" label="ປະເພດບິນ" clearable></v-select>
       </v-col>
       <v-col>
-        <v-text-field
-            outlined
-            dense
-            clearable
-            prepend-inner-icon="mdi-magnify"
-            label="ຄົ້ນຫາ"
-            type="text"
-            v-model="search"
-            @keyup.enter="Search()"
-        >
+        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ຄົ້ນຫາ" type="text"
+          v-model="search" @keyup.enter="Search()">
         </v-text-field>
       </v-col>
     </v-row>
@@ -88,78 +64,71 @@
         <v-spacer></v-spacer>
       </v-card-title>
       <v-card-text>
-        <v-data-table
-            :headers="headers"
-            :items="invoices"
-            :search="search"
-            :disable-pagination="true"
-            hide-default-footer
-            fixed-header
-        >
+        <v-data-table :headers="headers" :items="invoices" :search="search" :disable-pagination="true"
+          hide-default-footer fixed-header>
           <template v-slot:item.user="{ item }">
-            <div>{{showUser(item)}}</div>
+            <div>{{ showUser(item) }}</div>
           </template>
           <template v-slot:item.sub_total="{ item }">
-              <td>{{Intl.NumberFormat().format( item.sub_total) }}</td>
+            <td>{{ Intl.NumberFormat().format(item.sub_total) }}</td>
           </template>
           <template v-slot:item.total="{ item }">
-              <td>{{Intl.NumberFormat().format( item.total) }}</td>
+            <td>{{ Intl.NumberFormat().format(item.total) }}</td>
           </template>
           <template v-slot:item.status="{ item }">
-            <div>{{collectStatus(item.status)}}</div>
+            <div>{{ collectStatus(item.status) }}</div>
           </template>
           <template v-slot:item.actions="{ item }">
             <v-btn class="btn btn-primary mr-2 elevation-0" small @click="paymentPage(item)">
-              <v-icon class="mr-1" small @click="paymentPage(item)">mdi-cash</v-icon>
+              <v-icon class="mr-1" small>mdi-cash</v-icon>
             </v-btn>
             <v-btn class="btn elevation-0" color="info" small @click="ViewInvoice(item.id)">
-              <v-icon class="mr-1" small @click="ViewInvoice(item.id)"> mdi-eye </v-icon>
+              <v-icon class="mr-1" small> mdi-eye </v-icon>
             </v-btn>
-<!--            <v-menu offset-y>-->
-<!--              <template v-slot:activator="{ on, attrs }">-->
-<!--                <v-icon-->
-<!--                    color="primary"-->
-<!--                    dark-->
-<!--                    v-bind="attrs"-->
-<!--                    v-on="on"-->
-<!--                    medium-->
-<!--                    class="mr-2"-->
-<!--                >mdi-dots-vertical</v-icon-->
-<!--                >-->
-<!--              </template>-->
-<!--              <v-list>-->
-<!--                <v-list-item link @click="ViewInvoice(item.id)">-->
-<!--                  <v-list-item-title>-->
-<!--                    <v-icon small class="mr-2"> mdi-eye </v-icon>-->
-<!--                    ລາຍລະອຽດ-->
-<!--                  </v-list-item-title>-->
-<!--                </v-list-item>-->
-<!--&lt;!&ndash;                <v-list-item link>&ndash;&gt;-->
-<!--&lt;!&ndash;                  <v-list-item-title @click="CancelBill(item)">&ndash;&gt;-->
-<!--&lt;!&ndash;                    <v-icon small class="mr-2"> mdi-pencil </v-icon>&ndash;&gt;-->
-<!--&lt;!&ndash;                    ຍົກເລີກ&ndash;&gt;-->
-<!--&lt;!&ndash;                  </v-list-item-title>&ndash;&gt;-->
-<!--&lt;!&ndash;                </v-list-item>&ndash;&gt;-->
-<!--                <div>-->
-<!--                  <v-list-item link @click="paymentPage(item)">-->
-<!--                    <v-list-item-title>-->
-<!--                      <v-icon small class="mr-2">mdi-cash</v-icon>-->
-<!--                      ຊຳລະ-->
-<!--                    </v-list-item-title>-->
-<!--                  </v-list-item>-->
-<!--                </div>-->
-<!--              </v-list>-->
-<!--            </v-menu>-->
+            <v-btn class="btn btn-primary mr-2 elevation-0" color="info" small @click="DownloadBill(item)">
+              <v-icon class="mr-1" small> mdi-download </v-icon>
+            </v-btn>
+            <!--            <v-menu offset-y>-->
+            <!--              <template v-slot:activator="{ on, attrs }">-->
+            <!--                <v-icon-->
+            <!--                    color="primary"-->
+            <!--                    dark-->
+            <!--                    v-bind="attrs"-->
+            <!--                    v-on="on"-->
+            <!--                    medium-->
+            <!--                    class="mr-2"-->
+            <!--                >mdi-dots-vertical</v-icon-->
+            <!--                >-->
+            <!--              </template>-->
+            <!--              <v-list>-->
+            <!--                <v-list-item link @click="ViewInvoice(item.id)">-->
+            <!--                  <v-list-item-title>-->
+            <!--                    <v-icon small class="mr-2"> mdi-eye </v-icon>-->
+            <!--                    ລາຍລະອຽດ-->
+            <!--                  </v-list-item-title>-->
+            <!--                </v-list-item>-->
+            <!--&lt;!&ndash;                <v-list-item link>&ndash;&gt;-->
+            <!--&lt;!&ndash;                  <v-list-item-title @click="CancelBill(item)">&ndash;&gt;-->
+            <!--&lt;!&ndash;                    <v-icon small class="mr-2"> mdi-pencil </v-icon>&ndash;&gt;-->
+            <!--&lt;!&ndash;                    ຍົກເລີກ&ndash;&gt;-->
+            <!--&lt;!&ndash;                  </v-list-item-title>&ndash;&gt;-->
+            <!--&lt;!&ndash;                </v-list-item>&ndash;&gt;-->
+            <!--                <div>-->
+            <!--                  <v-list-item link @click="paymentPage(item)">-->
+            <!--                    <v-list-item-title>-->
+            <!--                      <v-icon small class="mr-2">mdi-cash</v-icon>-->
+            <!--                      ຊຳລະ-->
+            <!--                    </v-list-item-title>-->
+            <!--                  </v-list-item>-->
+            <!--                </div>-->
+            <!--              </v-list>-->
+            <!--            </v-menu>-->
           </template>
         </v-data-table>
-        <br/>
+        <br />
         <template>
-          <Pagination
-              v-if="pagination.total_pages > 1"
-              :pagination="pagination"
-              :offset="offset"
-              @paginate="fetchData()"
-          ></Pagination>
+          <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
+            @paginate="fetchData()"></Pagination>
         </template>
       </v-card-text>
     </v-card>
@@ -177,20 +146,8 @@
                 <h3 class="my-4">ເລືອກປະເພດການຊຳລະ</h3>
                 <v-row>
                   <v-col cols="12">
-                    <v-chip-group
-                        v-model="paymentType"
-                        column
-                        :rules="paymentTypeRule"
-                        required
-                    >
-                      <v-chip
-                          large
-                          class="mr-8"
-                          color="info"
-                          label
-                          filter
-                          outlined
-                      >
+                    <v-chip-group v-model="paymentType" column :rules="paymentTypeRule" required>
+                      <v-chip large class="mr-8" color="info" label filter outlined>
                         ເງິນສົດ
                         <v-icon left class="ml-1"> mdi-currency-usd</v-icon>
                       </v-chip>
@@ -198,10 +155,8 @@
                         BCEL
                         <v-icon class="ml-1" left>
                           mdi-credit-card
-                        </v-icon
-                        >
-                      </v-chip
-                      >
+                        </v-icon>
+                      </v-chip>
                     </v-chip-group>
                     <p class="errors">
                       {{ server_errors.payment_method }}
@@ -213,25 +168,15 @@
                   <v-row>
                     <v-col>
                       <label class="file-label">
-                        <input
-                            @change="onFileChange"
-                            class="file-input input-file-image"
-                            type="file"
-                            name="image"
-                            accept="image/*"
-                            ref="image"
-                        />
+                        <input @change="onFileChange" class="file-input input-file-image" type="file" name="image"
+                          accept="image/*" ref="image" />
                         <span class="file-cta">
                           <span class="file-icon">
-                            <v-icon
-                                style="
+                            <v-icon style="
                                 font-size: 60px !important;
                                 color: #719aff;
                                 cursor: pointer;
-                              "
-                                class="fas fa-cloud-upload"
-                            >mdi-file-image</v-icon
-                            >
+                              " class="fas fa-cloud-upload">mdi-file-image</v-icon>
                           </span>
                         </span>
                       </label>
@@ -240,7 +185,7 @@
                   <v-row>
                     <v-col v-if="imageUrl">
                       <v-avatar class="avatar rounded" size="194px">
-                        <img :src="imageUrl" alt=""/>
+                        <img :src="imageUrl" alt="" />
                       </v-avatar>
                     </v-col>
                     <p class="errors">
@@ -255,13 +200,8 @@
               <v-btn color="error" class="elevation-0 btn mr-4 px-12" medium @click="closeAddModal()">
                 ປິດ
               </v-btn>
-              <v-btn
-                  class="elevation-0 btn btn-primary px-12"
-                  medium
-                  :loading="loading"
-                  :disabled="loading"
-                  @click="Payment()"
-              >
+              <v-btn class="elevation-0 btn btn-primary px-12" medium :loading="loading" :disabled="loading"
+                @click="Payment()">
                 ຊຳລະ
               </v-btn>
             </v-card-actions>
@@ -276,15 +216,11 @@
         <v-card>
           <v-card-title>
             <p>
-              <v-icon class="primary-color" large color="success"
-              >mdi-checkbox-marked-circle-outline
-              </v-icon
-              >
+              <v-icon class="primary-color" large color="success">mdi-checkbox-marked-circle-outline
+              </v-icon>
               ຢືນຢັນຊຳລະຄ່າຂີ້ເຫຍື້ອ
 
-              <span class="primary-color"
-              >{{ confirm.name }} {{ confirm.content }}</span
-              >
+              <span class="primary-color">{{ confirm.name }} {{ confirm.content }}</span>
             </p>
           </v-card-title>
           <v-card-text>
@@ -293,39 +229,23 @@
                 <v-row>
                   <v-col cols="12">
                     <v-chip-group v-model="confirmType" column>
-                      <v-chip
-                          medium
-                          class="mr-6 elevation-0"
-                          color="success"
-                          label
-                          filter
-                          outlined
-                      >
+                      <v-chip medium class="mr-6 elevation-0" color="success" label filter outlined>
                         <v-icon left class="ml-1"> mdi-cash
-                        </v-icon
-                        >
+                        </v-icon>
                         ຢືນຢັນການຊຳລະ
                       </v-chip>
                       <v-chip medium color="error" label filter outlined>
                         <v-icon class="ml-1" left> mdi-cash-remove</v-icon>
                         ປະຕິເສດການຊຳລະ
-                      </v-chip
-                      >
+                      </v-chip>
                     </v-chip-group>
                   </v-col>
                 </v-row>
                 <div v-if="confirmType == 1">
                   <v-row>
                     <v-col cols="12">
-                      <v-select
-                          v-model="reject_reason_id"
-                          label="ເຫດຜົນ"
-                          outlined
-                          dense
-                          :items="rejects"
-                          item-text="name"
-                          item-value="id"
-                      >
+                      <v-select v-model="reject_reason_id" label="ເຫດຜົນ" outlined dense :items="rejects"
+                        item-text="name" item-value="id">
                       </v-select>
                       <p class="errors">
                         {{ server_errors.reject_reason_id }}
@@ -335,13 +255,7 @@
 
                   <v-row>
                     <v-col cols="12">
-                      <v-text-field
-                          v-model="description"
-                          label="Description"
-                          outlined
-                          dense
-                          type="text"
-                      >
+                      <v-text-field v-model="description" label="Description" outlined dense type="text">
                       </v-text-field>
                       <p class="errors">
                         {{ server_errors.description }}
@@ -352,22 +266,11 @@
               </v-form>
               <v-card-actions class="mt-4">
                 <v-spacer></v-spacer>
-                <v-btn
-                    color="error"
-                    class="btn mr-4 px-12 elevation-0"
-                    medium
-                    @click="paymentDialog = false"
-                >
+                <v-btn color="error" class="btn mr-4 px-12 elevation-0" medium @click="paymentDialog = false">
                   ປິດ
                 </v-btn>
-                <v-btn
-                    color="info"
-                    class="white--text px-12 btn-primary elevation-0"
-                    medium
-                    :loading="loading"
-                    :disabled="loading"
-                    @click="confirmPayment()"
-                >
+                <v-btn color="info" class="white--text px-12 btn-primary elevation-0" medium :loading="loading"
+                  :disabled="loading" @click="confirmPayment()">
                   ຢືນຢັນ
                 </v-btn>
               </v-card-actions>
@@ -380,9 +283,9 @@
 </template>
 
 <script>
-import {GetOldValueOnInput} from "@/Helpers/GetValue";
+import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
-import {getLaoBillingType} from "@/Helpers/BillingStatus";
+import { getLaoBillingType } from "@/Helpers/BillingStatus";
 
 export default {
   name: "Customer",
@@ -394,8 +297,8 @@ export default {
       title: "Collection",
       month: "",
       curent_month: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-          .toISOString()
-          .substr(0, 10),
+        .toISOString()
+        .substr(0, 10),
       start_menu: false,
 
       invoices: [],
@@ -403,16 +306,16 @@ export default {
       customerId: "",
       selectedRows: [],
 
-      plans:[],
+      plans: [],
       selectedRoutePlan: "",
-      selectedCustomerType:"",
-      customerTypes:[
+      selectedCustomerType: "",
+      customerTypes: [
         {
-          text:"ຄົວເຮືອນ",
-          value:"home"
+          text: "ຄົວເຮືອນ",
+          value: "home"
         }, {
-          text:"ຫົວໜ່ວຍທຸລະກິດ",
-          value:"company"
+          text: "ຫົວໜ່ວຍທຸລະກິດ",
+          value: "company"
         }
       ],
       //Pagination
@@ -423,24 +326,24 @@ export default {
       oldVal: "",
       server_errors: {},
 
-      summaryData:{},
-      billingable_types:[
-    {
-      id: 1,
-      name: "FutureInvoice",
-    },
-    {
-      id: 2,
-      name: "NewInvoice",
-    },{
-      id: 3,
-      name: "NewCollectionEvent",
-    },{
-      id: 4,
-      name: "CustomBill",
-    },
-  ],
-    selectedBillingable_type:"",
+      summaryData: {},
+      billingable_types: [
+        {
+          id: 1,
+          name: "FutureInvoice",
+        },
+        {
+          id: 2,
+          name: "NewInvoice",
+        }, {
+          id: 3,
+          name: "NewCollectionEvent",
+        }, {
+          id: 4,
+          name: "CustomBill",
+        },
+      ],
+      selectedBillingable_type: "",
 
       //Payment
       image: "",
@@ -457,24 +360,24 @@ export default {
       payment: {},
       confirm: {},
       headers: [
-        { text: "ເລກບິນ", value: "content",width:"150px" },
-        {text: "ລູກຄ້າ", value: "user",width:"150px"},
-        {text: "ເບີໂທ", value: "user.phone", sortable: false},
-        {text: "ສ່ວນຫຼຸດ", value: "discount",width: "150px"},
-        {text: "ຄ່າບໍລິການ", value: "sub_total"},
-        {text: "ລວມທັງໝົດ", value: "total", sortable: false},
+        { text: "ເລກບິນ", value: "content", width: "150px" },
+        { text: "ລູກຄ້າ", value: "user", width: "150px" },
+        { text: "ເບີໂທ", value: "user.phone", sortable: false },
+        { text: "ສ່ວນຫຼຸດ", value: "discount", width: "150px" },
+        { text: "ຄ່າບໍລິການ", value: "sub_total" },
+        { text: "ລວມທັງໝົດ", value: "total", sortable: false },
         {
           text: "ວັນທີສ້າງ",
           value: "created_at",
-          width:"150px"
+          width: "150px"
         },
-        {text: "", value: "actions", sortable: false,  width:"150px"},
+        { text: "", value: "actions", sortable: false, width: "150px" },
       ],
     };
   },
   methods: {
-    filterBillingType(status){
-      return  getLaoBillingType(status.name)
+    filterBillingType(status) {
+      return getLaoBillingType(status.name)
     },
     onFileChange(e) {
       let input = e.target;
@@ -486,55 +389,55 @@ export default {
       // let date = this.moment(this.month).format('YYYY-MM');
       this.$store.commit("Loading_State", true);
       this.$axios
-          .get("billing", {
-            params: queryOption([
-              {page: this.pagination.current_page},
-              {per_page: this.per_page},
-              {billingable_type:this.selectedBillingable_type},
-              {status: 'approved'},
-              {route_plans: this.selectedRoutePlan},
-              {customer_type: this.selectedCustomerType},
-              {filter: this.search},
-            ])
-          })
-          .then((res) => {
-            if (res.data.code == 200) {
-              this.$store.commit("Loading_State", false);
-              this.invoices = res.data.data.data;
-              this.pagination = res.data.data.pagination;
-            }
-          })
-          .catch((error) => {
+        .get("billing", {
+          params: queryOption([
+            { page: this.pagination.current_page },
+            { per_page: this.per_page },
+            { billingable_type: this.selectedBillingable_type },
+            { status: 'approved' },
+            { route_plans: this.selectedRoutePlan },
+            { customer_type: this.selectedCustomerType },
+            { filter: this.search },
+          ])
+        })
+        .then((res) => {
+          if (res.data.code == 200) {
             this.$store.commit("Loading_State", false);
-            if (error.response.status == 422) {
-              let obj = error.response.data.errors;
-              for (let [key, message] of Object.entries(obj)) {
-                this.server_errors[key] = message[0];
-              }
+            this.invoices = res.data.data.data;
+            this.pagination = res.data.data.pagination;
+          }
+        })
+        .catch((error) => {
+          this.$store.commit("Loading_State", false);
+          if (error.response.status == 422) {
+            let obj = error.response.data.errors;
+            for (let [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
             }
-          });
+          }
+        });
     },
     fetchRoutePlan() {
       this.$axios
-          .get("route-plan")
-          .then((res) => {
-            if (res.data.code == 200) {
-              this.plans = res.data.data;
-            }
-          })
-          .catch(() => {});
+        .get("route-plan")
+        .then((res) => {
+          if (res.data.code == 200) {
+            this.plans = res.data.data;
+          }
+        })
+        .catch(() => { });
     },
     fetchReject() {
       this.$axios
-          .get("reject-reason")
-          .then((res) => {
-            if (res.data.code == 200) {
-              this.$store.commit("Loading_State", false);
-              this.rejects = res.data.data;
-            }
-          })
-          .catch(() => {
-          });
+        .get("reject-reason")
+        .then((res) => {
+          if (res.data.code == 200) {
+            this.$store.commit("Loading_State", false);
+            this.rejects = res.data.data;
+          }
+        })
+        .catch(() => {
+        });
     },
 
     closeAddModal() {
@@ -549,12 +452,15 @@ export default {
     editPage(id) {
       this.$router.push({
         name: "EditCollectionEventInvoice",
-        params: {id},
+        params: { id },
       });
     },
     ViewInvoice(id) {
-      let route = this.$router.resolve({name: 'billing-detail',params: {id}});
+      let route = this.$router.resolve({ name: 'billing-detail', params: { id } });
       window.open(route.href, '_blank');
+    },
+    DownloadBill(item) {
+      window.open(item.download_pdf_link);
     },
     paymentPage(item) {
       this.payment = item;
@@ -574,123 +480,19 @@ export default {
         if (this.$refs.form.validate() == true) {
           this.loading = true;
           this.$axios
-              .post("pay-billing/" + this.payment.id, formData)
-              .then((res) => {
-                if (res.data.code == 200) {
-                    this.loading = false;
-                    this.paymentConfirmModal(this.payment);
-                    this.closeAddModal();
-                    this.fetchData();
-                    this.$refs.form.reset();
-                    this.$store.commit("Toast_State", {
-                      value: true,
-                      color: "success",
-                      msg: res.data.message,
-                    });
-                }
-              })
-              .catch((error) => {
-                this.loading = false;
-                this.$store.commit("Toast_State", {
-                  value: true,
-                  color: "error",
-                  msg: error.response.data.message,
-                });
-                if (error.response.status == 422) {
-                  let obj = error.response.data.errors;
-                  for (let [key, data] of Object.entries(obj)) {
-                    this.server_errors[key] = data[0];
-                  }
-                }
-              });
-        }
-      } else {
-        this.$store.commit("Toast_State", {
-          value: true,
-          color: "error",
-          msg: "ກາລຸນາເລືອກປະເພດການຊຳລະກ່ອນ",
-        });
-      }
-    },
-  async  approveAny() {
-      if (this.selectedRows.length > 0) {
-        const id = this.selectedRows.map(row =>row.id);
-          this.loading = true;
-       await this.$axios
-              .post("approve-billings", {billing_ids: id})
-              .then((res) => {
-                if (res.data.code == 200) {
-                    this.loading = false;
-                    this.fetchData();
-                    this.selectedRows = [];
-                    this.$store.commit("Toast_State", {
-                      value: true,
-                      color: "success",
-                      msg: res.data.message,
-                    });
-                }
-              })
-              .catch((error) => {
-                this.loading = false;
-                this.$store.commit("Toast_State", {
-                  value: true,
-                  color: "error",
-                  msg: error.response.data.message,
-                });
-              });
-
-      } else {
-        this.$store.commit("Toast_State", {
-          value: true,
-          color: "error",
-          msg: "ກາລຸນາເລືອກບິນກ່ອນ",
-        });
-      }
-    },
-
-   async confirmPayment() {
-      if (this.confirmType == "0") {
-        this.loading = true;
-      await this.$axios
-            .put("confirm-billing/" + this.confirm.id)
+            .post("pay-billing/" + this.payment.id, formData)
             .then((res) => {
               if (res.data.code == 200) {
-                setTimeout(() => {
-                  this.loading = false;
-                  this.fetchData();
-                  this.$store.commit("Toast_State", {
-                    value: true,
-                    color: "success",
-                    msg: res.data.message,
-                  });
-                  this.closeConfirmModal();
-                }, 300);
-              }
-            })
-            .catch(() => {
-              this.loading = false;
-              this.closeConfirmModal();
-            });
-      } else if (this.confirmType == "1") {
-        let data = new FormData();
-        data.append("reject_reason_id", this.reject_reason_id);
-        data.append("description", this.description);
-        data.append("_method", "PUT");
-        this.loading = true;
-        this.$axios
-            .post("confirm-billing/" + this.confirm.id, data)
-            .then((res) => {
-              if (res.data.code == 200) {
-                setTimeout(() => {
-                  this.loading = false;
-                  this.fetchData();
-                  this.$store.commit("Toast_State", {
-                    value: true,
-                    color: "success",
-                    msg: res.data.message,
-                  });
-                  this.closeConfirmModal();
-                }, 300);
+                this.loading = false;
+                this.paymentConfirmModal(this.payment);
+                this.closeAddModal();
+                this.fetchData();
+                this.$refs.form.reset();
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
               }
             })
             .catch((error) => {
@@ -707,6 +509,110 @@ export default {
                 }
               }
             });
+        }
+      } else {
+        this.$store.commit("Toast_State", {
+          value: true,
+          color: "error",
+          msg: "ກາລຸນາເລືອກປະເພດການຊຳລະກ່ອນ",
+        });
+      }
+    },
+    async approveAny() {
+      if (this.selectedRows.length > 0) {
+        const id = this.selectedRows.map(row => row.id);
+        this.loading = true;
+        await this.$axios
+          .post("approve-billings", { billing_ids: id })
+          .then((res) => {
+            if (res.data.code == 200) {
+              this.loading = false;
+              this.fetchData();
+              this.selectedRows = [];
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
+              });
+            }
+          })
+          .catch((error) => {
+            this.loading = false;
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
+          });
+
+      } else {
+        this.$store.commit("Toast_State", {
+          value: true,
+          color: "error",
+          msg: "ກາລຸນາເລືອກບິນກ່ອນ",
+        });
+      }
+    },
+
+    async confirmPayment() {
+      if (this.confirmType == "0") {
+        this.loading = true;
+        await this.$axios
+          .put("confirm-billing/" + this.confirm.id)
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.loading = false;
+                this.fetchData();
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
+                this.closeConfirmModal();
+              }, 300);
+            }
+          })
+          .catch(() => {
+            this.loading = false;
+            this.closeConfirmModal();
+          });
+      } else if (this.confirmType == "1") {
+        let data = new FormData();
+        data.append("reject_reason_id", this.reject_reason_id);
+        data.append("description", this.description);
+        data.append("_method", "PUT");
+        this.loading = true;
+        this.$axios
+          .post("confirm-billing/" + this.confirm.id, data)
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.loading = false;
+                this.fetchData();
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
+                this.closeConfirmModal();
+              }, 300);
+            }
+          })
+          .catch((error) => {
+            this.loading = false;
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
+            if (error.response.status == 422) {
+              let obj = error.response.data.errors;
+              for (let [key, data] of Object.entries(obj)) {
+                this.server_errors[key] = data[0];
+              }
+            }
+          });
       } else if (this.confirmType == "") {
         this.$store.commit("Toast_State", {
           value: true,
@@ -740,29 +646,29 @@ export default {
       else return "";
     },
 
-    collectStatus(status){
-      if(status == 'requested') return 'ຮ້ອງຂໍເກັບຂີ້ເຫື້ຍອ';
-      else if(status == 'rejected') return 'ປະຕິເສດເກັບຂີ້ເຫື້ຍອ';
+    collectStatus(status) {
+      if (status == 'requested') return 'ຮ້ອງຂໍເກັບຂີ້ເຫື້ຍອ';
+      else if (status == 'rejected') return 'ປະຕິເສດເກັບຂີ້ເຫື້ຍອ';
       else if (status == 'approved') return 'ອະນຸມັດເກັບຂີ້ເຫື້ຍອ';
-      else if(status == 'collected') return 'ເກັບຂີເຫື້ຍອສຳເລັດ';
-      else if(status == 'collect_confirm') return 'ລູກຄ້າຢືນຢັນການເກັບ';
-      else if(status == 'collect_reject') return 'ການເກັບຖືກປະຕິເສດ';
-      else return  '';
+      else if (status == 'collected') return 'ເກັບຂີເຫື້ຍອສຳເລັດ';
+      else if (status == 'collect_confirm') return 'ລູກຄ້າຢືນຢັນການເກັບ';
+      else if (status == 'collect_reject') return 'ການເກັບຖືກປະຕິເສດ';
+      else return '';
     },
-    paymentStatusText(status){
-      if(status == 'pending') return 'ລໍຖ້າເກັບເງິນ';
-      else if(status == 'to_confirm_payment') return 'ລໍຖ້າຢືນຢັນຊຳລະ';
+    paymentStatusText(status) {
+      if (status == 'pending') return 'ລໍຖ້າເກັບເງິນ';
+      else if (status == 'to_confirm_payment') return 'ລໍຖ້າຢືນຢັນຊຳລະ';
       else if (status == 'rejected') return 'ປະຕິເສດການຊຳລະ';
-      else if(status == 'success') return 'ຊຳລະສຳເລັດ';
-      else return  '';
+      else if (status == 'success') return 'ຊຳລະສຳເລັດ';
+      else return '';
     },
 
     showUser(item) {
-      if(item.display_type === "NewCollectionEvent"){
-        if(item.billingable != null)
+      if (item.display_type === "NewCollectionEvent") {
+        if (item.billingable != null)
           return item.billingable.name;
-      } else{
-        if(item.user.customer != null){
+      } else {
+        if (item.user.customer != null) {
           return item.user.customer.name
         } else {
           return item.user.name;
@@ -771,37 +677,37 @@ export default {
     },
   },
   watch: {
-    selectedCollectionStatus:function (){
-      this.pagination.current_page ='';
+    selectedCollectionStatus: function () {
+      this.pagination.current_page = '';
       this.fetchData();
     },
-    selectedBillingable_type:function (){
-      this.pagination.current_page ='';
+    selectedBillingable_type: function () {
+      this.pagination.current_page = '';
       this.fetchData();
     },
-    selectedRoutePlan:function (){
-      this.pagination.current_page ='';
+    selectedRoutePlan: function () {
+      this.pagination.current_page = '';
       this.fetchData();
     },
-    selectedCustomerType:function (){
-      this.pagination.current_page ='';
+    selectedCustomerType: function () {
+      this.pagination.current_page = '';
       this.fetchData();
     },
 
-    month: function (value){
-      if(value !== ''){
-        this.pagination.current_page ='';
+    month: function (value) {
+      if (value !== '') {
+        this.pagination.current_page = '';
         this.fetchData();
       }
     },
     search: function (value) {
-      this.pagination.current_page ='';
+      this.pagination.current_page = '';
       if (value == "") {
         this.fetchData();
       }
     },
     selectedStatus: function () {
-      this.pagination.current_page ='';
+      this.pagination.current_page = '';
       this.fetchData();
     },
     selectedPackage: function () {
@@ -837,9 +743,11 @@ export default {
 <style lang="scss" scoped>
 @import "../../../../../public/scss/main.scss";
 
-.v-data-table > .v-data-table__wrapper > table > thead > tr > th, td {
+.v-data-table>.v-data-table__wrapper>table>thead>tr>th,
+td {
   min-width: 130px !important;
 }
+
 .page--table {
   .page {
     &__table {
@@ -851,6 +759,7 @@ export default {
     }
   }
 }
+
 .sum-total {
   color: #000000;
 }
