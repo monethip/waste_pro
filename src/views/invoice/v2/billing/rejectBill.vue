@@ -148,7 +148,8 @@ export default {
       payment: {},
       confirm: {},
       headers: [
-        { text: "ເລກບິນ", value: "content", width: "200px" },
+        { text: "ໄອດີ", value: "billing_display_id" },
+        { text: "ຫົວບິນ", value: "content", width: "200px" },
         { text: "ລູກຄ້າ", value: "user", width: "120px" },
         { text: "ເບີໂທ", value: "user.phone", sortable: false, width: "120px" },
         { text: "ເຫດຜົນ", value: "reject", width: "150px" },
