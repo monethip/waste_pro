@@ -456,7 +456,7 @@ export default {
     return {
       loading: false,
       customerId: "",
-      invoice: [],
+      invoice: {},
       invoiceStatusColor: "",
       is_active: null,
       paymentDialog: false,
@@ -480,7 +480,7 @@ export default {
   },
   computed: {
     customerDisplayId() {
-      if (!this.invoice) return ''
+      if (!this.invoice.user) return ''
 
       if (this.invoice.user.customer) return this.invoice.user.customer.billing_display_id
 
