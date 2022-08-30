@@ -72,40 +72,49 @@
             <!--                </p>-->
             <!--              </v-col>-->
             <!--            </v-row>-->
+
             <v-row>
-              <v-col>
-                <v-text-field label="ຫົວຂໍ້ບິນ *" required v-model="data.title" :rules="totalRules" outlined dense>
-                </v-text-field>
-                <p class="errors">
-                  {{ server_errors.title }}
-                </p>
+              <v-col cols="4">
+                <p>ວັນທີບິນ</p>
+                <v-date-picker v-model="billDate"></v-date-picker>
               </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <v-text-field label="ຄຳອະທິບາຍກ່ຽກັບບິນ *" required v-model="data.description" :rules="totalRules"
-                  outlined dense></v-text-field>
-                <p class="errors">
-                  {{ server_errors.description }}
-                </p>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <v-text-field label="ລາຄາ *" required v-model="data.price" :rules="totalRules" type="number"
-                  class="input-number" outlined dense></v-text-field>
-                <p class="errors">
-                  {{ server_errors.price }}
-                </p>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <v-text-field label="ຈຳນວນ *" required v-model="data.quantity" :rules="totalRules" type="number"
-                  class="input-number" outlined dense></v-text-field>
-                <p class="errors">
-                  {{ server_errors.quantity }}
-                </p>
+              <v-col cols="8">
+                <v-row>
+                  <v-col>
+                    <v-text-field label="ຫົວຂໍ້ບິນ *" required v-model="data.title" :rules="totalRules" outlined dense>
+                    </v-text-field>
+                    <p class="errors">
+                      {{  server_errors.title  }}
+                    </p>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field label="ຄຳອະທິບາຍກ່ຽກັບບິນ *" required v-model="data.description" :rules="totalRules"
+                      outlined dense></v-text-field>
+                    <p class="errors">
+                      {{  server_errors.description  }}
+                    </p>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field label="ລາຄາ *" required v-model="data.price" :rules="totalRules" type="number"
+                      class="input-number" outlined dense></v-text-field>
+                    <p class="errors">
+                      {{  server_errors.price  }}
+                    </p>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field label="ຈຳນວນ *" required v-model="data.quantity" :rules="totalRules" type="number"
+                      class="input-number" outlined dense></v-text-field>
+                    <p class="errors">
+                      {{  server_errors.quantity  }}
+                    </p>
+                  </v-col>
+                </v-row>
               </v-col>
             </v-row>
           </v-form>
@@ -136,6 +145,7 @@ export default {
     return {
       tab: null,
       start_date: new Date().toISOString().substr(0, 7),
+      billDate: new Date().toISOString().substr(0, 7),
       end_date: "",
       start_menu: false,
       end_menu: false,
@@ -185,6 +195,7 @@ export default {
         title: this.data.title,
         description: this.data.description,
         price: this.data.price,
+        date: this.billDate,
         quantity: this.data.quantity,
       }
       if (this.$refs.form.validate() == true) {
@@ -245,6 +256,8 @@ export default {
   },
   created() {
     this.fetchData();
+    console.log('2222', this.items)
+    if (!this.items) this.$router.push('/')
   },
 };
 </script>

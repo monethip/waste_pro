@@ -65,10 +65,10 @@
             <template v-slot:item.user="{ item }">
               <div v-if="item.billing.user.customer">
                 <div v-if="item.billing.user.customer.customer_type = 'home'">
-                  {{ item.billing.user.name }}
+                  {{  item.billing.user.name  }}
                 </div>
                 <div v-else-if="item.billing.user.customer.customer_type = 'company'">
-                  {{ item.billing.user.customer.company_name }}
+                  {{  item.billing.user.customer.company_name  }}
                 </div>
               </div>
               <div v-else class="error--text">
@@ -77,20 +77,20 @@
             </template>
             <template v-slot:item.customerType="{ item }">
               <div v-if="item.billing.user.customer">
-                {{ getLaoCustomerType(item.billing.user.customer.customer_type) }}
+                {{  getLaoCustomerType(item.billing.user.customer.customer_type)  }}
               </div>
             </template>
             <template v-slot:item.total="{ item }">
-              {{ Intl.NumberFormat().format(item.billing.total) }}
+              {{  Intl.NumberFormat().format(item.billing.total)  }}
             </template>
             <template v-slot:item.sub_total="{ item }">
-              {{ Intl.NumberFormat().format(item.billing.sub_total) }}
+              {{  Intl.NumberFormat().format(item.billing.sub_total)  }}
             </template>
             <template v-slot:item.discount="{ item }">
-              {{ Intl.NumberFormat().format(item.billing.discount) }}
+              {{  Intl.NumberFormat().format(item.billing.discount)  }}
             </template>
             <template v-slot:item.status="{ item }">
-              <v-chip :color="getBgColorFunc(item.billing.status)" dark>{{ getLaoStatusFunc(item.billing.status) }}
+              <v-chip :color="getBgColorFunc(item.billing.status)" dark>{{  getLaoStatusFunc(item.billing.status)  }}
               </v-chip>
             </template>
 
@@ -122,10 +122,10 @@
                     <v-file-input show-size label="File " accept="xlsx,xls" v-model="file" outlined dense>
                     </v-file-input>
                     <p class="errors">
-                      {{ server_errors.file }}
+                      {{  server_errors.file  }}
                     </p>
                     <p class="errors" v-for="(error, index) in errors" :key="index">
-                      {{ error }}
+                      {{  error  }}
                     </p>
                   </v-col>
                 </v-row>
@@ -247,6 +247,7 @@ export default {
           value: "status",
           sortable: false,
         },
+        { text: "ວັນທີບິນ", value: "billing.date", width: "120", },
         { text: "ວັນທີສ້າງ", value: "created_at", width: "120", },
         { text: "", value: "actions", sortable: false, width: "60", },
       ],
@@ -274,6 +275,7 @@ export default {
             { per_page: this.per_page },
             { filter: this.search },
             { billing_status: this.selectedPaymentStatus },
+            { order_by: 'newest' }
           ]),
         }
         )
