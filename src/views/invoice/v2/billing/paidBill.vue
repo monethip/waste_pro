@@ -59,7 +59,7 @@
     </v-row>
     <v-card>
       <v-card-title>
-        ຂໍ້ມູນບີນ ({{ pagination.total }})
+        ຂໍ້ມູນບີນ ({{  pagination.total  }})
         <v-divider class="mx-4" vertical></v-divider>
         <v-spacer></v-spacer>
       </v-card-title>
@@ -67,16 +67,16 @@
         <v-data-table :headers="headers" :items="invoices" :search="search" :disable-pagination="true"
           hide-default-footer fixed-header>
           <template v-slot:item.user="{ item }">
-            <div>{{ showUser(item) }}</div>
+            <div>{{  showUser(item)  }}</div>
           </template>
           <template v-slot:item.sub_total="{ item }">
-            <td>{{ Intl.NumberFormat().format(item.sub_total) }}</td>
+            <td>{{  Intl.NumberFormat().format(item.sub_total)  }}</td>
           </template>
           <template v-slot:item.total="{ item }">
-            <td>{{ Intl.NumberFormat().format(item.total) }}</td>
+            <td>{{  Intl.NumberFormat().format(item.total)  }}</td>
           </template>
           <template v-slot:item.status="{ item }">
-            <div>{{ collectStatus(item.status) }}</div>
+            <div>{{  collectStatus(item.status)  }}</div>
           </template>
           <template v-slot:item.actions="{ item }">
             <v-btn class="btn btn-primary mr-2 elevation-0" small @click="paymentPage(item)">
@@ -138,7 +138,7 @@
       <template @close="close">
         <v-card class="py-8 px-14">
           <v-card-title>
-            <p>ຊຳລະຄ່າຂີ້ເຫື້ຍອ {{ payment.content }}</p>
+            <p>ຊຳລະຄ່າຂີ້ເຫື້ຍອ {{  payment.content  }}</p>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -159,7 +159,7 @@
                       </v-chip>
                     </v-chip-group>
                     <p class="errors">
-                      {{ server_errors.payment_method }}
+                      {{  server_errors.payment_method  }}
                     </p>
                   </v-col>
                 </v-row>
@@ -189,7 +189,7 @@
                       </v-avatar>
                     </v-col>
                     <p class="errors">
-                      {{ server_errors.image }}
+                      {{  server_errors.image  }}
                     </p>
                   </v-row>
                 </div>
@@ -220,27 +220,27 @@
               </v-icon>
               ຢືນຢັນຊຳລະຄ່າຂີ້ເຫຍື້ອ
 
-              <span class="primary-color">{{ confirm.name }} {{ confirm.content }}</span>
+              <span class="primary-color">{{  confirm.name  }} {{  confirm.content  }}</span>
             </p>
           </v-card-title>
           <v-card-text>
             <v-container>
               <v-form ref="form" lazy-validation>
-                <v-row>
+                <!-- <v-row>
                   <v-col cols="12">
                     <v-chip-group v-model="confirmType" column>
-                      <v-chip medium class="mr-6 elevation-0" color="success" label filter outlined>
+                      <v-chip value="1" medium class="mr-6 elevation-0" color="success" label filter outlined>
                         <v-icon left class="ml-1"> mdi-cash
                         </v-icon>
                         ຢືນຢັນການຊຳລະ
                       </v-chip>
-                      <v-chip medium color="error" label filter outlined>
+                      <v-chip value="0" medium color="error" label filter outlined>
                         <v-icon class="ml-1" left> mdi-cash-remove</v-icon>
                         ປະຕິເສດການຊຳລະ
                       </v-chip>
                     </v-chip-group>
                   </v-col>
-                </v-row>
+                </v-row> -->
                 <div v-if="confirmType == 1">
                   <v-row>
                     <v-col cols="12">
@@ -248,7 +248,7 @@
                         item-text="name" item-value="id">
                       </v-select>
                       <p class="errors">
-                        {{ server_errors.reject_reason_id }}
+                        {{  server_errors.reject_reason_id  }}
                       </p>
                     </v-col>
                   </v-row>
@@ -258,7 +258,7 @@
                       <v-text-field v-model="description" label="Description" outlined dense type="text">
                       </v-text-field>
                       <p class="errors">
-                        {{ server_errors.description }}
+                        {{  server_errors.description  }}
                       </p>
                     </v-col>
                   </v-row>
