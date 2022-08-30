@@ -66,6 +66,9 @@
             <v-col>
               <h3>ຂໍ້ມູນລູກຄ້າ</h3>
               <h3>
+                ໄອດີ: {{  customerDisplayId  }}
+              </h3>
+              <h3>
                 ຊື່: {{  invoice.display_customer_name  }}
               </h3>
               <h3>
@@ -474,6 +477,15 @@ export default {
       formData: {},
       paymentTypeRule: [(v) => !!v || "Name is required"],
     };
+  },
+  computed: {
+    customerDisplayId() {
+      if (!this.invoice) return ''
+
+      if (this.invoice.user.customer) return this.invoice.user.customer.billing_display_id
+
+      return ''
+    },
   },
   methods: {
     showImage(url) {
