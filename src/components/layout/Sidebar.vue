@@ -10,7 +10,7 @@
         <template v-slot:activator="{ on }">
           <v-btn text fab dark small class="mr-8" v-on="on">
             <v-badge overlap color="orange">
-              <template v-slot:badge>{{ notifications.length }}</template>
+              <template v-slot:badge>{{  notifications.length  }}</template>
               <v-icon large color="grey darken-1">notifications</v-icon>
             </v-badge>
           </v-btn>
@@ -33,7 +33,7 @@
                       <v-list-item-action-text>
                         <span class="primary-color">
                           {{
-                          moment(item.created_at).format("DD-MM-YY")
+                           moment(item.created_at).format("DD-MM-YY") 
                           }}
                         </span>
                       </v-list-item-action-text>
@@ -58,7 +58,7 @@
         <template v-slot:activator="{ on }">
           <v-btn icon x-large v-on="on">
             <v-avatar color="grey" size="46px">
-              <span class="white--text text-h5 text-break">{{ name }}</span>
+              <span class="white--text text-h5 text-break">{{  name  }}</span>
             </v-avatar>
           </v-btn>
         </template>
@@ -66,11 +66,11 @@
           <v-list-item-content class="justify-center">
             <div class="mx-auto text-center">
               <v-avatar color="grey" size="46px">
-                <span class="white--text text-h5 text-break">{{ name }}</span>
+                <span class="white--text text-h5 text-break">{{  name  }}</span>
               </v-avatar>
-              <h4>{{ userProfile.name }}</h4>
+              <h4>{{  userProfile.name  }}</h4>
               <p class="text-caption mt-1">
-                {{ userProfile.email }}
+                {{  userProfile.email  }}
                 <br />
               </p>
               <v-divider class="my-3"></v-divider>
@@ -83,15 +83,8 @@
     <v-navigation-drawer v-model="drawer" fixed app floating class="app-navigation-menu">
       <div class="vertical-nav-header d-flex items-center ps-6 pe-5 pt-5 pb-2">
         <router-link to="/" class="d-flex align-center text-decoration-none">
-          <v-img
-            :src="require('../../assets/logo-finalized.png')"
-            max-height="60px"
-            max-width="60px"
-            alt="logo"
-            contain
-            eager
-            class="app-logo me-3"
-          ></v-img>
+          <v-img :src="require('../../assets/logo-finalized.png')" max-height="60px" max-width="60px" alt="logo" contain
+            eager class="app-logo me-3"></v-img>
           <v-slide-x-transition>
             <h3 class="app-title text--primary">Vientiane Waste</h3>
           </v-slide-x-transition>
@@ -99,16 +92,9 @@
       </div>
 
       <v-list expand shaped>
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          exact
-          color="indigo darken-4"
-        >
+        <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact color="indigo darken-4">
           <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
+            <v-icon>{{  item.icon  }}</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title v-text="item.title" />
@@ -116,22 +102,17 @@
         </v-list-item>
 
         <div v-for="item in group_menu" :key="item.id" class="group-menu">
-          <v-list-group
-              class="group-menu-icon"
-            :prepend-icon="item.icon"
-            no-action
-            color="indigo darken-4"
-            v-if="$can(item.group_permissions)"
-          >
+          <v-list-group class="group-menu-icon" :prepend-icon="item.icon" no-action color="indigo darken-4"
+            v-if="$can(item.group_permissions)">
             <template v-slot:activator>
               <v-list-item-content>
-                <v-list-item-title>{{ item.title }}</v-list-item-title>
+                <v-list-item-title>{{  item.title  }}</v-list-item-title>
               </v-list-item-content>
             </template>
             <div v-for="(i, index) in item.menu" :key="index" style="padding-left: 22px;">
               <v-list-item exact color="primary-color" :to="i.to" v-if="$can(i.permissions)">
                 <v-list-item-action>
-                  <v-icon>{{ i.icon }}</v-icon>
+                  <v-icon>{{  i.icon  }}</v-icon>
                 </v-list-item-action>
                 <v-list-item-content>
                   <v-list-item-title v-text="i.title" />
@@ -517,34 +498,40 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../../public/scss/main.scss";
-.v-application--is-ltr .v-list-item__action:first-child, .v-application--is-ltr .v-list-item__icon:first-child {
-  margin-right: 6px !important;
-}
-.v-application--is-ltr .v-list-item__action[data-v-117f5fe7]:first-child, .v-application--is-ltr .v-list-item__icon[data-v-117f5fe7]:first-child {
+
+.v-application--is-ltr .v-list-item__action:first-child,
+.v-application--is-ltr .v-list-item__icon:first-child {
   margin-right: 6px !important;
 }
 
-.group-menu, .v-application--is-ltr .v-list-item__icon:first-child {
+.v-application--is-ltr .v-list-item__action[data-v-117f5fe7]:first-child,
+.v-application--is-ltr .v-list-item__icon[data-v-117f5fe7]:first-child {
+  margin-right: 6px !important;
+}
+
+.group-menu,
+.v-application--is-ltr .v-list-item__icon:first-child {
   margin-right: 6px !important
 }
 
-.v-application--is-ltr
-  .v-list-group--no-action
-  > .v-list-group__items
-  > .v-list-item {
+.v-application--is-ltr .v-list-group--no-action>.v-list-group__items>.v-list-item {
   padding-left: 18px !important;
 }
+
 .nav {
   border-bottom: 1px solid #eee;
   background: #fff !important;
 }
+
 .theme--light.v-navigation-drawer {
   border-right: 1px solid #eee !important;
 }
-.v-main__wrap.v-content__wrap {
+
+.v-main__wrap.v-main__wrap {
   background: #eee !important;
 }
-.v-main__wrap.v-content__wrap {
+
+.v-main__wrap.v-main__wrap {
   background: #eee !important;
 }
 </style>

@@ -46,6 +46,7 @@
         </v-text-field>
       </v-col>
       <v-col class="align-end text-end">
+
         <v-btn @click="openAddModal()" class="btn-primary mr-4">
           <v-icon class="mr-2">mdi-upload</v-icon>
           import ບິນ
@@ -56,58 +57,70 @@
         </v-btn>
       </v-col>
     </v-row>
-    <div>
-      <v-card>
-        <v-card-text>
-          <v-data-table :headers="headers" :items="invoices" :search="search" :disable-pagination="true"
-            hide-default-footer>
+    <v-row>
+      <v-col>
+        <v-btn @click="downloadExample()" class="btn-primary mr-4" color="green">
+          <v-icon class="mr-2">mdi-download</v-icon>
+          ຕົວຢ່າງ import
+        </v-btn>
+      </v-col>
 
-            <template v-slot:item.user="{ item }">
-              <div v-if="item.billing.user.customer">
-                <div v-if="item.billing.user.customer.customer_type = 'home'">
-                  {{  item.billing.user.name  }}
-                </div>
-                <div v-else-if="item.billing.user.customer.customer_type = 'company'">
-                  {{  item.billing.user.customer.company_name  }}
-                </div>
-              </div>
-              <div v-else class="error--text">
-                ຍັງບໍ່ທັນສະໝັກບໍລິການ
-              </div>
-            </template>
-            <template v-slot:item.customerType="{ item }">
-              <div v-if="item.billing.user.customer">
-                {{  getLaoCustomerType(item.billing.user.customer.customer_type)  }}
-              </div>
-            </template>
-            <template v-slot:item.total="{ item }">
-              {{  Intl.NumberFormat().format(item.billing.total)  }}
-            </template>
-            <template v-slot:item.sub_total="{ item }">
-              {{  Intl.NumberFormat().format(item.billing.sub_total)  }}
-            </template>
-            <template v-slot:item.discount="{ item }">
-              {{  Intl.NumberFormat().format(item.billing.discount)  }}
-            </template>
-            <template v-slot:item.status="{ item }">
-              <v-chip :color="getBgColorFunc(item.billing.status)" dark>{{  getLaoStatusFunc(item.billing.status)  }}
-              </v-chip>
-            </template>
+    </v-row>
+    <v-row>
+      <div>
+        <v-card>
+          <v-card-text>
+            <v-data-table :headers="headers" :items="invoices" :search="search" :disable-pagination="true"
+              hide-default-footer>
 
-            <template v-slot:item.actions="{ item }">
-              <v-icon color="success" small class="mr-2" @click="ViewInvoice(item.billing.id)">
-                mdi-eye
-              </v-icon>
+              <template v-slot:item.user="{ item }">
+                <div v-if="item.billing.user.customer">
+                  <div v-if="item.billing.user.customer.customer_type = 'home'">
+                    {{  item.billing.user.name  }}
+                  </div>
+                  <div v-else-if="item.billing.user.customer.customer_type = 'company'">
+                    {{  item.billing.user.customer.company_name  }}
+                  </div>
+                </div>
+                <div v-else class="error--text">
+                  ຍັງບໍ່ທັນສະໝັກບໍລິການ
+                </div>
+              </template>
+              <template v-slot:item.customerType="{ item }">
+                <div v-if="item.billing.user.customer">
+                  {{  getLaoCustomerType(item.billing.user.customer.customer_type)  }}
+                </div>
+              </template>
+              <template v-slot:item.total="{ item }">
+                {{  Intl.NumberFormat().format(item.billing.total)  }}
+              </template>
+              <template v-slot:item.sub_total="{ item }">
+                {{  Intl.NumberFormat().format(item.billing.sub_total)  }}
+              </template>
+              <template v-slot:item.discount="{ item }">
+                {{  Intl.NumberFormat().format(item.billing.discount)  }}
+              </template>
+              <template v-slot:item.status="{ item }">
+                <v-chip :color="getBgColorFunc(item.billing.status)" dark>{{  getLaoStatusFunc(item.billing.status)  }}
+                </v-chip>
+              </template>
+
+              <template v-slot:item.actions="{ item }">
+                <v-icon color="success" small class="mr-2" @click="ViewInvoice(item.billing.id)">
+                  mdi-eye
+                </v-icon>
+              </template>
+            </v-data-table>
+            <br />
+            <template>
+              <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
+                @paginate="fetchData()"></Pagination>
             </template>
-          </v-data-table>
-          <br />
-          <template>
-            <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
-              @paginate="fetchData()"></Pagination>
-          </template>
-        </v-card-text>
-      </v-card>
-    </div>
+          </v-card-text>
+        </v-card>
+      </div>
+    </v-row>
+
     <ModalAdd>
       <template @close="close">
         <v-card class="py-8 px-14">
@@ -298,6 +311,10 @@ export default {
     },
     Search() {
       GetOldValueOnInput(this);
+    },
+    async downloadExample() {
+      const res = await this.$axios.get('import-old-payment-example')
+      window.open(res.data.data.download_link)
     },
     openAddModal() {
       this.$store.commit("modalAdd_State", true);

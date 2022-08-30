@@ -35,7 +35,12 @@ const routes = [
                     text: 'Home Customer',
                     disabled: true,
                     href: '/customer'
-                }
+                },
+                {
+                    text: 'Home Customer',
+                    disabled: false,
+                    href: '/customer'
+                },
             ]
         }
     },
@@ -447,22 +452,22 @@ const routes = [
             ]
         }
     },
-    {
-        path: '/customer',
-        name: 'Customer',
-        component: () => import('../views/customer/Customer.vue'),
-        meta: {
-            layout: "admin",
-            middleware: [Middlewares.auth],
-            breadcrumb: [
-                {
-                    text: 'Home Customer',
-                    disabled: false,
-                    href: '/customer'
-                },
-            ]
-        }
-    },
+    // {
+    //     path: '/customer',
+    //     name: 'Customer',
+    //     component: () => import('../views/customer/Customer.vue'),
+    //     meta: {
+    //         layout: "admin",
+    //         middleware: [Middlewares.auth],
+    //         breadcrumb: [
+    //             {
+    //                 text: 'Home Customer',
+    //                 disabled: false,
+    //                 href: '/customer'
+    //             },
+    //         ]
+    //     }
+    // },
     {
         path: '/create/customer',
         name: 'CreateCustomer',
@@ -1121,7 +1126,7 @@ const routes = [
         path: '/v2/create/event-invoice',
         name: 'CreateCollectionEventInvoice',
         component: () => import('../views/invoice/v2/event/CreateEventInvoice.vue'),
-        props:true,
+        props: true,
         meta: {
             layout: "admin",
             middleware: [Middlewares.auth],

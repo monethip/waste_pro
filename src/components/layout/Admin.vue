@@ -1,12 +1,12 @@
 <template>
   <div>
     <Sidebar />
-    <v-content>
+    <v-main>
       <router-view />
       <Snackbar />
-      <CheckToken/>
+      <CheckToken />
       <Loading />
-    </v-content>
+    </v-main>
   </div>
 </template>
 <script>
@@ -19,7 +19,7 @@ export default {
     Sidebar,
     Snackbar,
     Loading,
-  CheckToken
+    CheckToken
   },
 };
 </script>
