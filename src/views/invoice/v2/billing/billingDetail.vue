@@ -38,6 +38,10 @@
               <h2>
                 ສະຖານະບິນ:
                 <v-chip :color="getBgColorFunc(invoice.status)" dark>{{  getLaoStatusFunc(invoice.status)  }}</v-chip>
+                <div v-if="invoice.status == 'rejected'">
+                  <v-chip dark v-for="detail in invoice.reject_details" :key="detail.id">{{  detail.reject_reason.name  }}
+                  </v-chip>
+                </div>
               </h2>
             </v-col>
           </v-row>
@@ -200,7 +204,8 @@
           <v-row>
             <v-col>
               <h3>
-                ວັນທີຊຳລະ: <span class="error--text">{{  moment(invoice.end_month).format("DD-MM-YY")  }}</span>
+                ວັນທີຊຳລະ: <span v-if="invoice.paided_by" class="error--text">{{
+                   moment(invoice.paided_by.created_at).format("DD-MM-YY")  }}</span>
               </h3>
               <h3 v-if="invoice.payment_method">ປະເພດຊຳລະ: {{  getLaoStatusFunc(invoice.payment_method)  }}</h3>
               <h3 v-if="invoice.paided_by">ຊຳລະໂດຍ: {{  invoice.paided_by.name  }}</h3>
@@ -506,6 +511,7 @@ export default {
       this.imageUrl = URL.createObjectURL(file);
     },
     backPrevios() {
+      console.log(909090);
       this.$router.go(-1);
     },
     fetchData() {
