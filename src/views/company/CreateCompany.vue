@@ -1,14 +1,11 @@
 <template>
   <v-container>
     <v-breadcrumbs large>
-      <v-btn text class="text-primary" @click="backPrevios()"
-      >
+      <v-btn text class="text-primary" @click="backPrevios()">
         <v-icon>mdi-keyboard-backspace</v-icon>
-      </v-btn
-      >
+      </v-btn>
       ເພີ່ມຂໍ້ມູນຫົວໜ່ວຍທຸລະກິດ
-    </v-breadcrumbs
-    >
+    </v-breadcrumbs>
     <v-card>
       <v-card-text class="px-12">
         <v-form ref="form" lazy-validation>
@@ -17,34 +14,22 @@
               <div class="field">
                 <div class="file is-large is-boxed">
                   <label class="file-label">
-                    <input
-                        @change="previewMultiImage"
-                        class="file-input input-file-image"
-                        type="file"
-                        accept="image/*"
-                        multiple
-                    />
+                    <input @change="previewMultiImage" class="file-input input-file-image" type="file" accept="image/*"
+                      multiple />
 
                     <span class="file-cta">
                       <span class="file-icon">
-                        <v-icon
-                            style="
+                        <v-icon style="
                             font-size: 60px !important;
                             color: #719aff;
                             cursor: pointer;
-                          "
-                            class="fas fa-cloud-upload"
-                        >mdi-cloud-upload</v-icon
-                        >
+                          " class="fas fa-cloud-upload">mdi-cloud-upload</v-icon>
                       </span>
-                      <span
-                          class="file-label"
-                          style="
+                      <span class="file-label" style="
                           margin-top: 10px;
                           text-transform: uppercase;
                           padding-top: 20px;
-                        "
-                      >
+                        ">
                         Choose Image
                       </span>
                     </span>
@@ -55,218 +40,138 @@
           </v-row>
           <v-row>
             <div v-if="image_list.length > 0" style="display: inline-flex">
-              <v-col
-                  v-for="(item, index) in preview_list"
-                  :key="index"
-                  class="mt-5 text-center"
-              >
+              <v-col v-for="(item, index) in preview_list" :key="index" class="mt-5 text-center">
                 <div>
                   <v-avatar class="avatar rounded mr-6" size="94px">
-                    <img :src="item" alt="Image"/>
+                    <img :src="item" alt="Image" />
                   </v-avatar>
                   <p class="mb-0 body-2">
-                    Name: {{ image_list[index].name }}
+                    Name: {{  image_list[index].name  }}
                   </p>
-                  <span class="body-2"
-                  >size: {{ image_list[index].size / 1024 }}KB</span
-                  >
+                  <span class="body-2">size: {{  image_list[index].size / 1024  }}KB</span>
                   <div @click="RemoveItem(item)" class="mt-2">
                     <v-icon style="cursor: pointer">mdi-delete</v-icon>
                   </div>
                 </div>
               </v-col>
             </div>
-<!--            <div v-else>-->
-<!--              <v-col class="mt-5 text-center">-->
-<!--                <div v-for="(item, index) in data.media"-->
-<!--                     :key="index">-->
-<!--                  <input type="hidden" name="image-url" :value="item.url">-->
-<!--                <v-avatar-->
-<!--                    class="avatar rounded mr-6"-->
-<!--                    size="94px"-->
-<!--                >-->
-<!--                  <img :src="item.url" alt="Image"/>-->
-<!--                </v-avatar>-->
-<!--                </div>-->
-<!--              </v-col>-->
-<!--            </div>-->
+            <!--            <div v-else>-->
+            <!--              <v-col class="mt-5 text-center">-->
+            <!--                <div v-for="(item, index) in data.media"-->
+            <!--                     :key="index">-->
+            <!--                  <input type="hidden" name="image-url" :value="item.url">-->
+            <!--                <v-avatar-->
+            <!--                    class="avatar rounded mr-6"-->
+            <!--                    size="94px"-->
+            <!--                >-->
+            <!--                  <img :src="item.url" alt="Image"/>-->
+            <!--                </v-avatar>-->
+            <!--                </div>-->
+            <!--              </v-col>-->
+            <!--            </div>-->
           </v-row>
 
-<!--          <v-row>-->
-<!--            <v-col-->
-<!--                class="mt-5"-->
-<!--                v-for="(item, index) in preview_list"-->
-<!--                :key="index"-->
-<!--            >-->
-<!--              <v-avatar class="avatar rounded mr-2" size="94px">-->
-<!--                <img :src="item" alt="Image"/>-->
-<!--              </v-avatar>-->
-<!--              <p class="mb-0">File name: {{ image_list[index].name }}</p>-->
-<!--              <span>size: {{ image_list[index].size / 1024 }}KB</span>-->
-<!--              <div @click="RemoveItem(item)">-->
-<!--                <v-icon style="cursor: pointer">mdi-delete</v-icon>-->
-<!--              </div>-->
-<!--            </v-col>-->
-<!--          </v-row>-->
+          <!--          <v-row>-->
+          <!--            <v-col-->
+          <!--                class="mt-5"-->
+          <!--                v-for="(item, index) in preview_list"-->
+          <!--                :key="index"-->
+          <!--            >-->
+          <!--              <v-avatar class="avatar rounded mr-2" size="94px">-->
+          <!--                <img :src="item" alt="Image"/>-->
+          <!--              </v-avatar>-->
+          <!--              <p class="mb-0">File name: {{ image_list[index].name }}</p>-->
+          <!--              <span>size: {{ image_list[index].size / 1024 }}KB</span>-->
+          <!--              <div @click="RemoveItem(item)">-->
+          <!--                <v-icon style="cursor: pointer">mdi-delete</v-icon>-->
+          <!--              </div>-->
+          <!--            </v-col>-->
+          <!--          </v-row>-->
           <v-row>
             <v-col cols="4">
-              <v-text-field
-                  label="ຊື່ບໍລິສັດ *"
-                  required
-                  v-model="data.name"
-                  :rules="nameRules"
-                  outlined
-                  dense
-              ></v-text-field>
+              <v-text-field label="ຊື່ບໍລິສັດ *" required v-model="data.name" :rules="nameRules" outlined dense>
+              </v-text-field>
               <p class="errors">
-                {{ server_errors.company_name }}
+                {{  server_errors.company_name  }}
               </p>
             </v-col>
             <v-col cols="4">
-              <v-text-field
-                  label="ເບີໂທບໍລິສັດ *"
-                  required
-                  v-model="data.phone"
-                  type="number"
-                  class="input-number"
-                  outlined
-                  dense
-              ></v-text-field>
+              <v-text-field label="ເບີໂທບໍລິສັດ *" required v-model="data.phone" type="number" class="input-number"
+                outlined dense></v-text-field>
 
               <p class="errors">
-                {{ server_errors.phone }}
+                {{  server_errors.phone  }}
               </p>
             </v-col>
             <v-col cols="4">
-              <v-text-field
-                  label="Email ບໍລິສັດ"
-                  v-model="data.email"
-                  outlined
-                  dense
-              ></v-text-field>
+              <v-text-field label="Email ບໍລິສັດ" v-model="data.email" outlined dense></v-text-field>
               <p class="errors">
-                {{ server_errors.email }}
+                {{  server_errors.email  }}
               </p>
             </v-col>
           </v-row>
           <v-row>
             <v-col>
-              <v-text-field
-                  label="ຊື່ຜູ້ປະສານງານ *"
-                  required
-                  v-model="data.coordinator_name"
-                  :rules="corNameRules"
-                  outlined
-                  dense
-              ></v-text-field>
+              <v-text-field label="ຊື່ຜູ້ປະສານງານ *" required v-model="data.coordinator_name" :rules="corNameRules"
+                outlined dense></v-text-field>
               <p class="errors">
-                {{ server_errors.coordinator_name }}
+                {{  server_errors.coordinator_name  }}
               </p>
             </v-col>
             <v-col>
-              <v-text-field
-                  label="ນາມສະກຸນຜູ້ປະສານງານ *"
-                  required
-                  v-model="data.coordinator_surname"
-                  :rules="corSurameRules"
-                  outlined
-                  dense
-              ></v-text-field>
+              <v-text-field label="ນາມສະກຸນຜູ້ປະສານງານ *" required v-model="data.coordinator_surname"
+                :rules="corSurameRules" outlined dense></v-text-field>
               <p class="errors">
-                {{ server_errors.coordinator_surname }}
+                {{  server_errors.coordinator_surname  }}
               </p>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="6">
-              <v-text-field
-                  label="ເບີໂທຜູ້ປະສານງານ *"
-                  required
-                  v-model="data.coordinator_phone"
-                  type="number"
-                  class="input-number"
-                  outlined
-                  dense
-              ></v-text-field>
+              <v-text-field label="ເບີໂທຜູ້ປະສານງານ *" required v-model="data.coordinator_phone" type="number"
+                class="input-number" outlined dense></v-text-field>
               <p class="errors">
-                {{ server_errors.coordinator_phone }}
+                {{  server_errors.coordinator_phone  }}
               </p>
             </v-col>
             <v-col cols="6">
-              <v-text-field
-                  label="Email ຜູ້ປະສານງານ"
-                  v-model="data.coordinator_email"
-                  outlined
-                  dense
-              ></v-text-field>
+              <v-text-field label="Email ຜູ້ປະສານງານ" v-model="data.coordinator_email" outlined dense></v-text-field>
               <p class="errors">
-                {{ server_errors.coordinator_email }}
+                {{  server_errors.coordinator_email  }}
               </p>
             </v-col>
           </v-row>
 
           <v-row>
             <v-col cols="6">
-              <v-autocomplete
-                  required
-                  :items="districts"
-                  v-model="selectedDistrict"
-                  item-text="name"
-                  item-value="id"
-                  label="District *"
-                  :rulesDistrict="rulesDistrict"
-                  outlined
-                  dense
-              ></v-autocomplete>
+              <v-autocomplete required :items="districts" v-model="selectedDistrict" item-text="name" item-value="id"
+                label="District *" :rulesDistrict="rulesDistrict" outlined dense></v-autocomplete>
               <p class="errors">
-                {{ server_errors.district_id }}
+                {{  server_errors.district_id  }}
               </p>
             </v-col>
             <v-col cols="6">
-              <v-autocomplete
-                  required
-                  :items="villages"
-                  v-model="selectedVillage"
-                  item-text="name"
-                  item-value="id"
-                  label="Village *"
-                  :rules="ruleVillage"
-                  outlined
-                  dense
-              ></v-autocomplete>
+              <v-autocomplete required :items="villages" v-model="selectedVillage" item-text="name" item-value="id"
+                label="Village *" :rules="ruleVillage" outlined dense></v-autocomplete>
               <p class="errors">
-                {{ server_errors.village_id }}
+                {{  server_errors.village_id  }}
               </p>
             </v-col>
           </v-row>
 
           <v-row>
-            <v-col cols="6" v-for="(data,index) in village_details" :key="index">
-              <v-select
-                  v-model="selectedVillageDetail"
-                  :items="data.village_details"
-                  item-text="name"
-                  item-value="id"
-                  :label="data.name"
-                  chips
-                  deletable-chips
-                  multiple
-              >
+            <v-col cols="6" v-for="(data, index) in village_details" :key="index">
+              <v-select v-model="selectedVillageDetail" :items="data.village_details" item-text="name" item-value="id"
+                :label="data.name" chips deletable-chips multiple>
 
                 <template v-slot:append-outer>
-                  <v-slide-x-reverse-transition
-                      mode="out-in"
-                  >
-                    <v-icon
-                        :color="'info'"
-                        @click="addItem(data)"
-                        v-text="'mdi-plus-circle-outline'"
-                    ></v-icon>
+                  <v-slide-x-reverse-transition mode="out-in">
+                    <v-icon :color="'info'" @click="addItem(data)" v-text="'mdi-plus-circle-outline'"></v-icon>
                   </v-slide-x-reverse-transition>
                 </template>
               </v-select>
               <p class="errors">
-                {{ server_errors.village_details }}
+                {{  server_errors.village_details  }}
               </p>
             </v-col>
           </v-row>
@@ -274,56 +179,39 @@
 
           <v-row>
             <v-col cols="6">
-              <v-select
-                  outlined
-                  dense
-                  :items="costs"
-                  v-model="selectedCost"
-                  item-text="name"
-                  item-value="value"
-                  label="ປະເພດບໍລິການ"
-              ></v-select>
+              <v-select outlined dense :items="costs" v-model="selectedCost" item-text="name" item-value="value"
+                label="ປະເພດບໍລິການ"></v-select>
             </v-col>
             <v-col v-if="showFixed">
-              <v-text-field
-                  label="ມູນຄ່າສັນຍາ *"
-                  type="number"
-                  v-model="fix_cost"
-                  required
-                  outlined
-                  dense
-              ></v-text-field>
+              <v-text-field label="ມູນຄ່າສັນຍາ *" type="number" v-model="fix_cost" required outlined dense>
+              </v-text-field>
               <p class="errors">
-                {{ server_errors.cost_by }}
+                {{  server_errors.cost_by  }}
+              </p>
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col cols="4">
+              <v-text-field :label="expectTrashLabel" v-model="data.expect_trash" outlined dense></v-text-field>
+              <p class="errors">
+                {{  server_errors.expect_trash  }}
               </p>
             </v-col>
           </v-row>
 
           <v-row>
             <v-col>
-              <v-menu
-                  v-model="start_menu"
-                  :close-on-content-click="true"
-                  :nudge-right="40"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="auto"
-              >
+              <v-menu v-model="start_menu" :close-on-content-click="true" :nudge-right="40"
+                transition="scale-transition" offset-y min-width="auto">
                 <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                      v-model="start_date"
-                      label="ເລີ່ມວັນທີ"
-                      readonly
-                      outlined
-                      v-bind="attrs"
-                      v-on="on"
-                      dense
-                  ></v-text-field>
+                  <v-text-field v-model="start_date" label="ເລີ່ມວັນທີ" readonly outlined v-bind="attrs" v-on="on"
+                    dense></v-text-field>
                 </template>
                 <v-date-picker v-model="start_date"></v-date-picker>
               </v-menu>
               <p class="errors">
-                {{ server_errors.start_month }}
+                {{  server_errors.start_month  }}
               </p>
             </v-col>
             <v-col>
@@ -333,62 +221,35 @@
                 </template>
               </v-checkbox>
               <p class="errors">
-                {{ server_errors.can_collect }}
+                {{  server_errors.can_collect  }}
               </p>
             </v-col>
           </v-row>
 
           <v-row>
             <v-col cols="6">
-              <v-text-field
-                  label="ໝາຍເຫດ "
-                  type="text"
-                  v-model="data.collect_description"
-                  outlined
-                  dense
-              ></v-text-field>
+              <v-text-field label="ໝາຍເຫດ " type="text" v-model="data.collect_description" outlined dense>
+              </v-text-field>
             </v-col>
             <v-col cols="6">
-              <v-select
-                  outlined
-                  dense
-                  :items="favorite_dates"
-                  v-model="selectedFavoriteDate"
-                  item-text="name"
-                  item-value="name"
-                  label="ມື້ບໍລິການ"
-                  multiple
-              ></v-select>
+              <v-select outlined dense :items="favorite_dates" v-model="selectedFavoriteDate" item-text="name"
+                item-value="name" label="ມື້ບໍລິການ" multiple></v-select>
             </v-col>
           </v-row>
 
           <v-row>
             <v-col cols="6">
-              <v-text-field
-                  label="Password *"
-                  type="password"
-                  v-model="data.password"
-                  :rules="passwordRules"
-                  required
-                  outlined
-                  dense
-              ></v-text-field>
+              <v-text-field label="Password *" type="password" v-model="data.password" :rules="passwordRules" required
+                outlined dense></v-text-field>
               <p class="errors">
-                {{ server_errors.password }}
+                {{  server_errors.password  }}
               </p>
             </v-col>
             <v-col cols="6">
-              <v-text-field
-                  label="Password Confirm *"
-                  type="password"
-                  outlined
-                  dense
-                  v-model="data.password_confirmation"
-                  :rules="passwordConfirmRules"
-                  required
-              ></v-text-field>
+              <v-text-field label="Password Confirm *" type="password" outlined dense
+                v-model="data.password_confirmation" :rules="passwordConfirmRules" required></v-text-field>
               <p class="errors">
-                {{ server_errors.password_confirmation }}
+                {{  server_errors.password_confirmation  }}
               </p>
             </v-col>
           </v-row>
@@ -396,60 +257,28 @@
           <!-- Google map-->
           <v-row>
             <v-col cols="6">
-              <v-text-field
-                  label="Latitude"
-                  v-model="latlng.lat"
-                  class="input-number"
-                  type="number"
-                  outlined
-                  dense
-              ></v-text-field>
+              <v-text-field label="Latitude" v-model="latlng.lat" class="input-number" type="number" outlined dense>
+              </v-text-field>
             </v-col>
             <v-col cols="6">
-              <v-text-field
-                  label="Longitude"
-                  v-model="latlng.lng"
-                  type="number"
-                  class="input-number"
-                  outlined
-                  dense
-              ></v-text-field>
+              <v-text-field label="Longitude" v-model="latlng.lng" type="number" class="input-number" outlined dense>
+              </v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="12">
-              <gmap-autocomplete
-                  ref="searchInput"
-                  class="input text-field"
-                  placeholder="ຄົ້ນຫາເເຜນທີ່..."
-                  label="Prepend inner"
-                  prepend-inner-icon="mdi-map-marker"
-                  @place_changed="setPlace"
-                  :options="{
+              <gmap-autocomplete ref="searchInput" class="input text-field" placeholder="ຄົ້ນຫາເເຜນທີ່..."
+                label="Prepend inner" prepend-inner-icon="mdi-map-marker" @place_changed="setPlace" :options="{
                   fields: ['geometry', 'formatted_address', 'name'],
-                }"
-              >
+                }">
               </gmap-autocomplete>
               <span class="horizontal-divider"></span>
             </v-col>
             <v-col cols="12" class="mb-4">
-              <GmapMap
-                  :center="latlng"
-                  :zoom="17"
-                  style="width: 100%; height: 450px"
-                  :disableDefaultUI="true"
-                  @change="changeLat"
-              >
-                <GmapMarker
-                    :position="latlng"
-                    @click="latlng = latlng"
-                    :draggable="true"
-                    @dragend="onLocation"
-                    @change="changeLat"
-                    :icon="markerOptions"
-                    :animation="2"
-                    ref="markers"
-                />
+              <GmapMap :center="latlng" :zoom="17" style="width: 100%; height: 450px" :disableDefaultUI="true"
+                @change="changeLat">
+                <GmapMarker :position="latlng" @click="latlng = latlng" :draggable="true" @dragend="onLocation"
+                  @change="changeLat" :icon="markerOptions" :animation="2" ref="markers" />
               </GmapMap>
             </v-col>
           </v-row>
@@ -459,13 +288,7 @@
           <v-btn color="blue darken-1" text @click="backPrevios()">
             Back
           </v-btn>
-          <v-btn
-              color="blue darken-1"
-              text
-              :loading="loading"
-              :disabled="loading"
-              @click="AddData()"
-          >
+          <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="AddData()">
             Save
           </v-btn>
         </v-card-actions>
@@ -477,24 +300,15 @@
     <v-dialog v-model="addItemDetail" max-width="720px" persistent>
       <v-card>
         <v-card-title>
-          <span class="headline"
-          >Add Item
-            <span
-            ><a>{{ villageDetail.name }}</a></span
-            ></span
-          >
+          <span class="headline">Add Item
+            <span><a>{{  villageDetail.name  }}</a></span></span>
         </v-card-title>
         <v-card-text>
           <v-container>
             <v-form ref="form" lazy-validation>
               <v-row>
                 <v-col cols="12">
-                  <v-text-field
-                      label="Name *"
-                      type="text"
-                      v-model="itemDetailValue"
-                      required
-                  ></v-text-field>
+                  <v-text-field label="Name *" type="text" v-model="itemDetailValue" required></v-text-field>
                 </v-col>
               </v-row>
             </v-form>
@@ -504,13 +318,7 @@
             <v-btn color="blue darken-1" text @click="addItemDetail = false">
               Close
             </v-btn>
-            <v-btn
-                color="blue darken-1"
-                text
-                :loading="loading"
-                :disabled="loading"
-                @click="addMoreVillageDetail"
-            >
+            <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="addMoreVillageDetail">
               Add
             </v-btn>
           </v-card-actions>
@@ -522,6 +330,8 @@
 </template>
 
 <script>
+import { getCustomerUnit } from '@/Helpers/Customer';
+
 export default {
   props: ["items"],
   data() {
@@ -618,12 +428,12 @@ export default {
       passwordRules: [
         (v) => !!v || "Password is required",
         (v) =>
-            (v && v.length >= 8) || "Password must be more than 8 characters",
+          (v && v.length >= 8) || "Password must be more than 8 characters",
       ],
       passwordConfirmRules: [
         (v) => !!v || "Password Confirm is required",
         (v) =>
-            (v && v.length >= 8) || "Password must be more than 8 characters",
+          (v && v.length >= 8) || "Password must be more than 8 characters",
       ],
       nameRules: [
         (v) => !!v || "Name is required",
@@ -639,13 +449,20 @@ export default {
       phoneRules: [
         (v) => !!v || "Phone is required",
         (v) =>
-            (v && v.length >= 4 && v.length <= 11) ||
-            "Phone number must be  4 - 11 numbers",
+          (v && v.length >= 4 && v.length <= 11) ||
+          "Phone number must be  4 - 11 numbers",
       ],
       ruleVillage: [(v) => !!v || "Village is required"],
       ruleVariation: [(v) => !!v || "Variation is required"],
       rulesDistrict: [(v) => !!v || "District is required"],
     };
+  },
+  computed: {
+    expectTrashLabel() {
+      const text = "ຂີ້ເຫຍື້ອຄາດໝາຍ"
+      if (!this.data.cost_by) return text;
+      return `${text} (${getCustomerUnit(this.data.cost_by)})`
+    }
   },
   methods: {
     RemoveItem(item) {
@@ -671,64 +488,64 @@ export default {
 
     fetchAddress() {
       this.$axios
-          .get("info/address", {params: {filter: "ນະຄອນຫລວງວຽງຈັນ"}})
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.address = res.data.data;
-                this.address.map((item) => {
-                  this.districts = item.districts;
-                  this.selectedDistrict = this.districts[0].id;
-                });
-                this.fetchVillage();
-              }, 100);
-            }
-          })
-          .catch(() => {
-          });
+        .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.address = res.data.data;
+              this.address.map((item) => {
+                this.districts = item.districts;
+                this.selectedDistrict = this.districts[0].id;
+              });
+              this.fetchVillage();
+            }, 100);
+          }
+        })
+        .catch(() => {
+        });
     },
     fetchVillage() {
       this.$axios
-          .get("info/district/" + this.selectedDistrict + "/village")
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.villages = res.data.data;
-                this.selectedVillage = this.villages[0].id;
-                this.fetchVillageDetail();
-                // this.fetchVillageVariation();
-              }, 300);
-            }
-          })
-          .catch(() => {
-          });
+        .get("info/district/" + this.selectedDistrict + "/village")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.villages = res.data.data;
+              this.selectedVillage = this.villages[0].id;
+              this.fetchVillageDetail();
+              // this.fetchVillageVariation();
+            }, 300);
+          }
+        })
+        .catch(() => {
+        });
     },
     fetchVillageDetail() {
       this.$axios
-          .get("info/village/" + this.selectedVillage + "/village-detail")
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.village_details = res.data.data;
-              }, 100);
-            }
-          })
-          .catch(() => {
-          });
+        .get("info/village/" + this.selectedVillage + "/village-detail")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.village_details = res.data.data;
+            }, 100);
+          }
+        })
+        .catch(() => {
+        });
     },
 
     fetchFavorite() {
       this.$axios
-          .get("favorite-date")
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.favorite_dates = res.data.data;
-              }, 100);
-            }
-          })
-          .catch(() => {
-          });
+        .get("favorite-date")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.favorite_dates = res.data.data;
+            }, 100);
+          }
+        })
+        .catch(() => {
+        });
     },
 
     backPrevios() {
@@ -758,7 +575,8 @@ export default {
       formData.append("coordinator_phone", this.data.coordinator_phone);
       formData.append("coordinator_email", this.data.coordinator_email);
       formData.append("cost_by", this.selectedCost);
-      if(this.selectedCost !== 'bag'){
+      if (this.data.expect_trash) formData.append("expect_trash", this.data.expect_trash);
+      if (this.selectedCost !== 'bag') {
         formData.append("fix_cost", this.fix_cost);
       }
       formData.append("start_date", this.start_date);
@@ -767,38 +585,38 @@ export default {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-            .post("company", formData, {
-              headers: {"Content-Type": "multipart/form-data"},
-            })
-            .then((res) => {
-              if (res.data.code == 200) {
-                setTimeout(() => {
-                  this.loading = false;
-                  this.$store.commit("Toast_State", {
-                    value: true,
-                    color: "success",
-                    msg: res.data.message,
-                  });
-                  this.$router.push({
-                    name: "Company",
-                  });
-                }, 300);
-              }
-            })
-            .catch((error) => {
-              this.$store.commit("Toast_State", {
-                value: true,
-                color: "error",
-                msg: error.response.data.message,
-              });
-              if (error.response.status == 422) {
-                let obj = error.response.data.errors;
-                for (let [key, data] of Object.entries(obj)) {
-                  this.server_errors[key] = data[0];
-                }
-              }
-              this.loading = false;
+          .post("company", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          })
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.loading = false;
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
+                this.$router.push({
+                  name: "Company",
+                });
+              }, 300);
+            }
+          })
+          .catch((error) => {
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
             });
+            if (error.response.status == 422) {
+              let obj = error.response.data.errors;
+              for (let [key, data] of Object.entries(obj)) {
+                this.server_errors[key] = data[0];
+              }
+            }
+            this.loading = false;
+          });
       }
     },
 
@@ -806,8 +624,8 @@ export default {
     createNewAddressName() {
       const CUSTOMIZE = "#CUSTOM ADDRESS:";
       return this.isCreate
-          ? this.currentAddress
-          : `${CUSTOMIZE} ${this.latlng.lat}, ${this.latlng.lng}`;
+        ? this.currentAddress
+        : `${CUSTOMIZE} ${this.latlng.lat}, ${this.latlng.lng}`;
     },
     onLocation(evt) {
       this.latlng.lat = evt.latLng.lat();
@@ -824,12 +642,12 @@ export default {
     placeMarker() {
       this.markers = [];
       this.places = [];
-      if(this.data.lat){
+      if (this.data.lat) {
         const marker = {
           lat: parseFloat(this.data.lat),
           lng: parseFloat(this.data.lng),
         };
-        this.markers.push({position: marker});
+        this.markers.push({ position: marker });
         this.latlng = marker;
       } else {
         if (this.currentPlace) {
@@ -837,7 +655,7 @@ export default {
             lat: this.currentPlace.geometry.location.lat(),
             lng: this.currentPlace.geometry.location.lng(),
           };
-          this.markers.push({position: marker});
+          this.markers.push({ position: marker });
           this.latlng = marker;
           this.animateMarker();
         } else {
@@ -845,7 +663,7 @@ export default {
             lat: parseFloat(this.latlng.lat),
             lng: parseFloat(this.latlng.lng),
           };
-          this.markers.push({position: marker});
+          this.markers.push({ position: marker });
           this.animateMarker();
         }
         // set address
@@ -912,43 +730,43 @@ export default {
         this.itemDetailValues.push(this.itemDetailValue);
         this.loading = true;
         this.$axios
-            .post(
-                "address/village/" + this.selectedVillage + "/village-detail",
-                {
-                  name: this.itemDetailValue,
-                  village_variation_id: this.villageDetail.id,
-                }
-            )
-            .then((res) => {
-              if (res.data.code == 200) {
-                setTimeout(() => {
-                  this.loading = false;
-                  this.addItemDetail = false;
-                  this.selectedDetail = "";
-                  this.fetchVillageDetail();
-                  (this.address = {}),
-                      this.$store.commit("Toast_State", {
-                        value: true,
-                        color: "success",
-                        msg: res.data.message,
-                      });
-                }, 300);
+          .post(
+            "address/village/" + this.selectedVillage + "/village-detail",
+            {
+              name: this.itemDetailValue,
+              village_variation_id: this.villageDetail.id,
+            }
+          )
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.loading = false;
+                this.addItemDetail = false;
+                this.selectedDetail = "";
+                this.fetchVillageDetail();
+                (this.address = {}),
+                  this.$store.commit("Toast_State", {
+                    value: true,
+                    color: "success",
+                    msg: res.data.message,
+                  });
+              }, 300);
+            }
+          })
+          .catch((error) => {
+            this.loading = false;
+            if (error.response.status == 422) {
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response.data.message,
+              });
+              let obj = error.response.data.errors;
+              for (let [key, message] of Object.entries(obj)) {
+                this.server_errors[key] = message[0];
               }
-            })
-            .catch((error) => {
-              this.loading = false;
-              if (error.response.status == 422) {
-                this.$store.commit("Toast_State", {
-                  value: true,
-                  color: "error",
-                  msg: error.response.data.message,
-                });
-                let obj = error.response.data.errors;
-                for (let [key, message] of Object.entries(obj)) {
-                  this.server_errors[key] = message[0];
-                }
-              }
-            });
+            }
+          });
       }
       this.itemDetailValue = '';
       this.addItemDetail = false;
@@ -960,7 +778,7 @@ export default {
     //   this.placeMarker();
     // },
 
-    changeLat(){
+    changeLat() {
       this.placeMarker();
       // this.onDataChange();
       // this.onSave();
@@ -973,8 +791,8 @@ export default {
       // this.markers.push({position: marker});
 
     },
-    getRequest(){
-      if(this.items){
+    getRequest() {
+      if (this.items) {
         this.data = this.items;
       }
     }
@@ -1018,16 +836,16 @@ export default {
       if (value === 'container') {
         this.fix_cost = '';
         this.showFixed = true;
-      } else if(value === 'bag'){
+      } else if (value === 'bag') {
         this.fix_cost = '';
         this.showFixed = false;
       }
-      else if (value === 'fix_cost'){
+      else if (value === 'fix_cost') {
         console.log('fixed_cost: ' + value);
         this.fix_cost = '';
         this.showFixed = true;
       }
-      else if(value === 'chartered'){
+      else if (value === 'chartered') {
         this.fix_cost = '';
         this.showFixed = true;
       }

@@ -53,3 +53,16 @@ export const getLaoInvoiceTypes = function (type) {
         default: return type
     }
 }
+
+export const getCustomerUnit = function (costBy) {
+    switch (costBy) {
+        case "bag":
+        case "chartered":
+            return "ຖົງ"
+        case "container":
+            return "ຄອນເທນເນີ"
+        case "fix_cost":
+            return "ຖ້ຽວ"
+        default: return costBy
+    }
+}
