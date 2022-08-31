@@ -462,6 +462,7 @@ export default {
       return getCustomerUnit(costBy)
     },
     getTrash(costBy, info) {
+      if (!info) return 0;
       switch (costBy) {
         case "bag":
         case "chartered":
