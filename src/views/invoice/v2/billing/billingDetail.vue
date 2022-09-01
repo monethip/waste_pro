@@ -44,6 +44,10 @@
                 </div>
               </h2>
             </v-col>
+            <v-co>
+              ວັນທີສ້າງບິນ:
+              {{ moment(invoice.created_at).format("DD-MM-YY") }}
+            </v-co>
           </v-row>
 
           <v-row>
@@ -63,8 +67,8 @@
               </h3>
               <h3>ປະເພດບິນ: {{ filterBillingType(invoice.display_type) }}</h3>
               <h3>
-                ວັນທີສ້າງບິນ:
-                {{ moment(invoice.created_at).format("DD-MM-YY") }}
+                ເດືອນ:
+                {{ invoice.bill_month }}
               </h3>
             </v-col>
             <v-col>
