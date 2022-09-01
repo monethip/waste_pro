@@ -87,6 +87,9 @@
           <template v-slot:item.sub_total="{ item }">
             <td>{{ Intl.NumberFormat().format(item.sub_total) }}</td>
           </template>
+          <template v-slot:item.date_month="{ item }">
+            <td>{{ getMonth(item.date) }}</td>
+          </template>
           <template v-slot:item.total="{ item }">
             <td>{{ Intl.NumberFormat().format(item.total) }}</td>
           </template>
@@ -145,6 +148,7 @@
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
 import { getLaoBillingType } from "@/Helpers/BillingStatus";
+import moment from "moment";
 
 export default {
   name: "Customer",
@@ -223,11 +227,23 @@ export default {
       headers: [
         { text: "ເລກບິນ", value: "billing_display_id" },
         { text: "ຫົວບິນ", value: "content", width: "220px" },
+        {
+          text: "ເດືອນ",
+          value: "bill_month",
+          width: "180px"
+        },
         { text: "ລູກຄ້າ", value: "display_customer_name", width: "150px" },
+
         { text: "ເບີໂທ", value: "user.phone", sortable: false },
+
         // {text: "ສ່ວນຫຼຸດ", value: "discount",width: "150px"},
         { text: "ຄ່າບໍລິການ", value: "sub_total", width: "150px" },
         { text: "ລວມທັງໝົດ", value: "total", sortable: false, width: "150px" },
+        {
+          text: "ວັນທີບິນ",
+          value: "date",
+          width: "180px"
+        },
         {
           text: "ວັນທີສ້າງ",
           value: "created_at",
@@ -238,6 +254,11 @@ export default {
     };
   },
   methods: {
+    getMonth(date) {
+      const d = new Date(date);
+
+      return moment(d).format('MMMM , YYYY');
+    },
     closeDelete() {
       this.$store.commit("modalDelete_State", false);
     },

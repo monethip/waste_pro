@@ -150,6 +150,11 @@ export default {
       headers: [
         { text: "ເລກບິນ", value: "billing_display_id" },
         { text: "ຫົວບິນ", value: "content", width: "200px" },
+        {
+          text: "ເດືອນ",
+          value: "bill_month",
+          width: "180px"
+        },
         { text: "ລູກຄ້າ", value: "user", width: "120px" },
         { text: "ເບີໂທ", value: "user.phone", sortable: false, width: "120px" },
         { text: "ເຫດຜົນ", value: "reject", width: "150px" },
