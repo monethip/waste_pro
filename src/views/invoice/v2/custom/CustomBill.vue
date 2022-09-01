@@ -67,58 +67,60 @@
 
     </v-row>
     <v-row>
-      <div>
-        <v-card>
-          <v-card-text>
-            <v-data-table :headers="headers" :items="invoices" :search="search" :disable-pagination="true"
-              hide-default-footer>
+      <v-card>
+        <v-card-text>
+          <v-data-table :headers="headers" :items="invoices" :search="search" :disable-pagination="true"
+            hide-default-footer>
 
-              <template v-slot:item.user="{ item }">
-                <div v-if="item.billing.user.customer">
-                  <div v-if="item.billing.user.customer.customer_type = 'home'">
-                    {{  item.billing.user.name  }}
-                  </div>
-                  <div v-else-if="item.billing.user.customer.customer_type = 'company'">
-                    {{  item.billing.user.customer.company_name  }}
-                  </div>
+            <template v-slot:item.user="{ item }">
+              <div v-if="item.billing.user.customer">
+                <div v-if="item.billing.user.customer.customer_type = 'home'">
+                  {{ item.billing.user.name }}
                 </div>
-                <div v-else class="error--text">
-                  ຍັງບໍ່ທັນສະໝັກບໍລິການ
+                <div v-else-if="item.billing.user.customer.customer_type = 'company'">
+                  {{ item.billing.user.customer.company_name }}
                 </div>
-              </template>
-              <template v-slot:item.customerType="{ item }">
-                <div v-if="item.billing.user.customer">
-                  {{  getLaoCustomerType(item.billing.user.customer.customer_type)  }}
-                </div>
-              </template>
-              <template v-slot:item.total="{ item }">
-                {{  Intl.NumberFormat().format(item.billing.total)  }}
-              </template>
-              <template v-slot:item.sub_total="{ item }">
-                {{  Intl.NumberFormat().format(item.billing.sub_total)  }}
-              </template>
-              <template v-slot:item.discount="{ item }">
-                {{  Intl.NumberFormat().format(item.billing.discount)  }}
-              </template>
-              <template v-slot:item.status="{ item }">
-                <v-chip :color="getBgColorFunc(item.billing.status)" dark>{{  getLaoStatusFunc(item.billing.status)  }}
-                </v-chip>
-              </template>
-
-              <template v-slot:item.actions="{ item }">
-                <v-icon color="success" small class="mr-2" @click="ViewInvoice(item.billing.id)">
-                  mdi-eye
-                </v-icon>
-              </template>
-            </v-data-table>
-            <br />
-            <template>
-              <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
-                @paginate="fetchData()"></Pagination>
+              </div>
+              <div v-else class="error--text">
+                ຍັງບໍ່ທັນສະໝັກບໍລິການ
+              </div>
             </template>
-          </v-card-text>
-        </v-card>
-      </div>
+            <template v-slot:item.customerType="{ item }">
+              <div v-if="item.billing.user.customer">
+                {{ getLaoCustomerType(item.billing.user.customer.customer_type) }}
+              </div>
+            </template>
+            <template v-slot:item.total="{ item }">
+              {{ Intl.NumberFormat().format(item.billing.total) }}
+            </template>
+            <template v-slot:item.sub_total="{ item }">
+              {{ Intl.NumberFormat().format(item.billing.sub_total) }}
+            </template>
+            <template v-slot:item.discount="{ item }">
+              {{ Intl.NumberFormat().format(item.billing.discount) }}
+            </template>
+            <template v-slot:item.status="{ item }">
+              <v-chip :color="getBgColorFunc(item.billing.status)" dark>{{ getLaoStatusFunc(item.billing.status) }}
+              </v-chip>
+            </template>
+
+            <template v-slot:item.actions="{ item }">
+              <v-icon color="success" small class="mr-2" @click="ViewInvoice(item.billing.id)">
+                mdi-eye
+              </v-icon>
+              <v-icon v-if="item.billing.status == 'created'" color="red" small class="mr-2"
+                @click="deleteItem(item.billing.id)">
+                mdi-delete
+              </v-icon>
+            </template>
+          </v-data-table>
+          <br />
+          <template>
+            <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
+              @paginate="fetchData()"></Pagination>
+          </template>
+        </v-card-text>
+      </v-card>
     </v-row>
 
     <ModalAdd>
@@ -135,10 +137,10 @@
                     <v-file-input show-size label="File " accept="xlsx,xls" v-model="file" outlined dense>
                     </v-file-input>
                     <p class="errors">
-                      {{  server_errors.file  }}
+                      {{ server_errors.file }}
                     </p>
                     <p class="errors" v-for="(error, index) in errors" :key="index">
-                      {{  error  }}
+                      {{ error }}
                     </p>
                   </v-col>
                 </v-row>
@@ -159,6 +161,19 @@
         </v-card>
       </template>
     </ModalAdd>
+
+    <!--Delete Modal-->
+    <ModalDelete>
+      <template>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+          <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="deleteInvoice">OK
+          </v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </template>
+    </ModalDelete>
   </v-container>
 </template>
 
@@ -177,6 +192,7 @@ export default {
     return {
       tab: null,
       invoices: [],
+      billingId: "",
       loading: false,
       calendarId: "",
       //Pagination
@@ -369,6 +385,43 @@ export default {
       // this.$router.push({
       //   name: "chose-user",
       // });
+    },
+    closeDelete() {
+      this.$store.commit("modalDelete_State", false);
+    },
+    deleteItem(id) {
+      this.billingId = id;
+      this.$store.commit("modalDelete_State", true);
+    },
+
+    deleteInvoice() {
+      this.loading = true;
+      this.$axios
+        .delete("billing/" + this.billingId)
+
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.loading = false;
+              this.$store.commit("modalDelete_State", false);
+              this.fetchData();
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
+              });
+            }, 300);
+          }
+        })
+        .catch((error) => {
+          this.loading = false;
+          this.$store.commit("Toast_State", {
+            value: true,
+            color: "error",
+            msg: error.response.data.message,
+          });
+          this.$store.commit("modalDelete_State", false);
+        });
     },
     ViewInvoice(id) {
       let route = this.$router.resolve({ name: 'billing-detail', params: { id } });

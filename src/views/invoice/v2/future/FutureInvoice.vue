@@ -34,28 +34,12 @@
       </v-col>
       -->
       <v-col>
-        <v-select
-            outlined
-            dense
-            :items="paymentStatus"
-            v-model="selectedPaymentStatus"
-            :item-text="filterStatusLao"
-            item-value="name"
-            label="ສະຖານະບິນ"
-            clearable
-        ></v-select>
+        <v-select outlined dense :items="paymentStatus" v-model="selectedPaymentStatus" :item-text="filterStatusLao"
+          item-value="name" label="ສະຖານະບິນ" clearable></v-select>
       </v-col>
       <v-col>
-        <v-text-field
-            outlined
-            dense
-            clearable
-            prepend-inner-icon="mdi-magnify"
-            label="ຊື່"
-            type="text"
-            v-model="search"
-            @keyup.enter="Search()"
-        >
+        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ຊື່" type="text" v-model="search"
+          @keyup.enter="Search()">
         </v-text-field>
       </v-col>
       <v-col class="align-end ">
@@ -68,20 +52,15 @@
     <div>
       <v-card>
         <v-card-text>
-          <v-data-table
-              :headers="headers"
-              :items="invoices"
-              :search="search"
-              :disable-pagination="true"
-              hide-default-footer
-          >
+          <v-data-table :headers="headers" :items="invoices" :search="search" :disable-pagination="true"
+            hide-default-footer>
             <template v-slot:item.user="{ item }">
               <div v-if="item.billing.user.customer">
                 <div v-if="item.billing.user.customer.customer_type = 'home'">
-                  {{item.billing.user.name}}
+                  {{ item.billing.user.name }}
                 </div>
                 <div v-else-if="item.billing.user.customer.customer_type = 'company'">
-                  {{item.billing.user.customer.company_name}}
+                  {{ item.billing.user.customer.company_name }}
                 </div>
               </div>
               <div v-else class="error--text">
@@ -90,17 +69,17 @@
             </template>
             <template v-slot:item.customerType="{ item }">
               <div v-if="item.billing.user.customer">
-                {{getLaoCustomerType(item.billing.user.customer.customer_type)}}
+                {{ getLaoCustomerType(item.billing.user.customer.customer_type) }}
               </div>
             </template>
             <template v-slot:item.start_month="{ item }">
               <div class="success--text">
-                {{item.start_month}}
+                {{ item.start_month }}
               </div>
             </template>
             <template v-slot:item.end_month="{ item }">
               <div class="error--text">
-                {{item.start_month}}
+                {{ item.start_month }}
               </div>
             </template>
             <template v-slot:item.total="{ item }">
@@ -113,41 +92,48 @@
               {{ Intl.NumberFormat().format(item.billing.discount) }}
             </template>
             <template v-slot:item.status="{ item }">
-              <v-chip :color="getBgColorFunc(item.billing.status)" dark>{{getLaoStatusFunc(item.billing.status) }}</v-chip>
+              <v-chip :color="getBgColorFunc(item.billing.status)" dark>{{ getLaoStatusFunc(item.billing.status) }}
+              </v-chip>
             </template>
             <template v-slot:item.actions="{ item }">
-              <v-icon
-                  color="success"
-                  small
-                  class="mr-2"
-                  @click="ViewInvoice(item.billing.id)"
-              >
+              <v-icon color="success" small class="mr-2" @click="ViewInvoice(item.billing.id)">
                 mdi-eye
-              </v-icon
-              >
+              </v-icon>
+              <v-icon v-if="item.billing.status == 'created'" color="red" small class="mr-2"
+                @click="deleteItem(item.billing.id)">
+                mdi-delete
+              </v-icon>
             </template>
-          </v-data-table
-          >
-          <br/>
+          </v-data-table>
+          <br />
           <template>
-            <Pagination
-                v-if="pagination.total_pages > 1"
-                :pagination="pagination"
-                :offset="offset"
-                @paginate="fetchData()"
-            ></Pagination>
+            <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
+              @paginate="fetchData()"></Pagination>
           </template>
         </v-card-text>
       </v-card>
     </div>
+
+    <!--Delete Modal-->
+    <ModalDelete>
+      <template>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+          <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="deleteInvoice">OK
+          </v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </template>
+    </ModalDelete>
   </v-container>
 </template>
 
 <script>
-import {GetOldValueOnInput} from "@/Helpers/GetValue";
+import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
-import {getBgColor, getLaoStatus} from "@/Helpers/BillingStatus";
-import {getLaoCustomerType} from "@/Helpers/Customer";
+import { getBgColor, getLaoStatus } from "@/Helpers/BillingStatus";
+import { getLaoCustomerType } from "@/Helpers/Customer";
 
 export default {
   name: "Invoice",
@@ -156,6 +142,7 @@ export default {
   },
   data() {
     return {
+      billingId: "",
       tab: null,
       invoices: [],
       loading: false,
@@ -176,7 +163,7 @@ export default {
         {
           id: 1,
           name: "created",
-        },{
+        }, {
           id: 2,
           name: "approved",
         },
@@ -195,27 +182,27 @@ export default {
       ],
 
       headers: [
-        {text: "ເລກບິນ", value: "billing.content", width:"150",},
+        { text: "ເລກບິນ", value: "billing.content", width: "150", },
         {
           text: "ລູກຄ້າ",
           value: "user",
-          width:"130",
+          width: "130",
           sortable: false,
         },
         {
           text: "ເບີໂທ",
           value: "billing.user.phone",
-          width:"130",
+          width: "130",
           sortable: false,
         },
         {
           text: "ປະເພດລູກຄ້າ",
           value: "customerType",
-          width:"130",
+          width: "130",
           sortable: false,
         },
-        { text: "ວັນທີ", value: "start_month",   width:"120", },
-        { text: "ຫາວັນທີ", value: "end_month",   width:"120", },
+        { text: "ວັນທີ", value: "start_month", width: "120", },
+        { text: "ຫາວັນທີ", value: "end_month", width: "120", },
         // {
         //   text: "ສ່ວນຫຼຸດ",
         //   value: "discount",
@@ -239,52 +226,90 @@ export default {
           value: "status",
           sortable: false,
         },
-        {text: "", value: "actions", sortable: false},
+        { text: "", value: "actions", sortable: false },
       ],
     };
   },
   methods: {
-    getLaoStatusFunc(status){
-      return  getLaoStatus(status)
+    closeDelete() {
+      this.$store.commit("modalDelete_State", false);
     },
-    getBgColorFunc(status){
+    deleteItem(id) {
+      this.billingId = id;
+      this.$store.commit("modalDelete_State", true);
+    },
+
+    deleteInvoice() {
+      this.loading = true;
+      this.$axios
+        .delete("billing/" + this.billingId)
+
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.loading = false;
+              this.$store.commit("modalDelete_State", false);
+              this.fetchData();
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
+              });
+            }, 300);
+          }
+        })
+        .catch((error) => {
+          this.loading = false;
+          this.$store.commit("Toast_State", {
+            value: true,
+            color: "error",
+            msg: error.response.data.message,
+          });
+          this.$store.commit("modalDelete_State", false);
+        });
+    },
+    getLaoStatusFunc(status) {
+      return getLaoStatus(status)
+    },
+    getBgColorFunc(status) {
       return getBgColor(status)
     },
-    filterStatusLao(status){
-      return  getLaoStatus(status.name)
+    filterStatusLao(status) {
+      return getLaoStatus(status.name)
     },
-    getLaoCustomerType(type){
+    getLaoCustomerType(type) {
       return getLaoCustomerType(type)
     },
 
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-          .get("future-invoice", {
-                params: queryOption([
-                  {page: this.pagination.current_page},
-                  {per_page: this.per_page},
-                  {filter: this.search},
-                  {billing_status: this.selectedPaymentStatus},
-                ]),
-              }
-          )
-          .then((res) => {
-            if (res.data.code == 200) {
-              this.$store.commit("Loading_State", false);
-              this.invoices = res.data.data.data;
-              this.pagination = res.data.data.pagination;
-            }
-          })
-          .catch((error) => {
+        .get("future-invoice", {
+          params: queryOption([
+            { page: this.pagination.current_page },
+            { per_page: this.per_page },
+            { filter: this.search },
+            { billing_status: this.selectedPaymentStatus },
+            { order_by: "newest" }
+          ]),
+        }
+        )
+        .then((res) => {
+          if (res.data.code == 200) {
             this.$store.commit("Loading_State", false);
-            if (error.response.status == 422) {
-              let obj = error.response.data.errors;
-              for (let [key, message] of Object.entries(obj)) {
-                this.server_errors[key] = message[0];
-              }
+            this.invoices = res.data.data.data;
+            this.pagination = res.data.data.pagination;
+          }
+        })
+        .catch((error) => {
+          this.$store.commit("Loading_State", false);
+          if (error.response.status == 422) {
+            let obj = error.response.data.errors;
+            for (let [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
             }
-          });
+          }
+        });
     },
 
     Search() {
@@ -293,11 +318,11 @@ export default {
     choseCustomer() {
       this.$router.push({
         name: "chose-customer",
-        query:{redirect:'create-future-customer'}
+        query: { redirect: 'create-future-customer' }
       });
     },
     ViewInvoice(id) {
-      let route = this.$router.resolve({name: 'billing-detail',params: {id}});
+      let route = this.$router.resolve({ name: 'billing-detail', params: { id } });
       window.open(route.href, '_blank');
     },
   },
@@ -307,8 +332,8 @@ export default {
         this.fetchData();
       }
     },
-    selectedPaymentStatus:function () {
-      this.pagination.current_page ='';
+    selectedPaymentStatus: function () {
+      this.pagination.current_page = '';
       this.fetchData();
     },
   },

@@ -92,6 +92,10 @@
           </template>
           <template v-slot:item.actions="{ item }">
             <v-icon small class="mr-2" @click="ViewInvoice(item.id)"> mdi-eye </v-icon>
+            <v-icon v-if="item.display_type == 'CustomBill' || item.display_type == 'FutureInvoice'" color="red" small
+              class="mr-2" @click="deleteItem(item.id)">
+              mdi-delete
+            </v-icon>
             <!--            <v-menu offset-y>-->
             <!--              <template v-slot:activator="{ on, attrs }">-->
             <!--                <v-icon-->
@@ -122,6 +126,18 @@
         </template>
       </v-card-text>
     </v-card>
+    <!--Delete Modal-->
+    <ModalDelete>
+      <template>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+          <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="deleteInvoice">OK
+          </v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </template>
+    </ModalDelete>
   </v-container>
 </template>
 
@@ -143,7 +159,7 @@ export default {
         .toISOString()
         .substr(0, 10),
       start_menu: false,
-
+      billingId: "",
       invoices: [],
       loading: false,
       customerId: "",
@@ -222,6 +238,43 @@ export default {
     };
   },
   methods: {
+    closeDelete() {
+      this.$store.commit("modalDelete_State", false);
+    },
+    deleteItem(id) {
+      this.billingId = id;
+      this.$store.commit("modalDelete_State", true);
+    },
+
+    deleteInvoice() {
+      this.loading = true;
+      this.$axios
+        .delete("billing/" + this.billingId)
+
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.loading = false;
+              this.$store.commit("modalDelete_State", false);
+              this.fetchData();
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
+              });
+            }, 300);
+          }
+        })
+        .catch((error) => {
+          this.loading = false;
+          this.$store.commit("Toast_State", {
+            value: true,
+            color: "error",
+            msg: error.response.data.message,
+          });
+          this.$store.commit("modalDelete_State", false);
+        });
+    },
     filterBillingType(status) {
       return getLaoBillingType(status.name)
     },

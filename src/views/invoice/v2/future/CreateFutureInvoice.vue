@@ -299,6 +299,7 @@ export default {
   },
   created() {
     this.fetchData();
+    if (!this.customer.customer) this.$router.push('/')
   },
 };
 </script>
