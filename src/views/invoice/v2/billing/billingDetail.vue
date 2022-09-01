@@ -37,9 +37,9 @@
             <v-col>
               <h2>
                 ສະຖານະບິນ:
-                <v-chip :color="getBgColorFunc(invoice.status)" dark>{{  getLaoStatusFunc(invoice.status)  }}</v-chip>
+                <v-chip :color="getBgColorFunc(invoice.status)" dark>{{ getLaoStatusFunc(invoice.status) }}</v-chip>
                 <div v-if="invoice.status == 'rejected'">
-                  <v-chip dark v-for="detail in invoice.reject_details" :key="detail.id">{{  detail.reject_reason.name  }}
+                  <v-chip dark v-for="detail in invoice.reject_details" :key="detail.id">{{ detail.reject_reason.name }}
                   </v-chip>
                 </div>
               </h2>
@@ -52,34 +52,34 @@
               <h3>
                 ເລກບິນ:
                 <span>{{
-                   (invoice.billing_display_id) 
-                  }}</span>
+                    (invoice.billing_display_id)
+                }}</span>
               </h3>
               <h3>
                 ລາຍລະອຽດ:
                 <span>{{
-                   (invoice.content) 
-                  }}</span>
+                    (invoice.content)
+                }}</span>
               </h3>
-              <h3>ປະເພດບິນ: {{  filterBillingType(invoice.display_type)  }}</h3>
+              <h3>ປະເພດບິນ: {{ filterBillingType(invoice.display_type) }}</h3>
               <h3>
                 ວັນທີສ້າງບິນ:
-                {{  moment(invoice.created_at).format("DD-MM-YY")  }}
+                {{ moment(invoice.created_at).format("DD-MM-YY") }}
               </h3>
             </v-col>
             <v-col>
               <h3>ຂໍ້ມູນລູກຄ້າ</h3>
               <h3>
-                ໄອດີ: {{  customerDisplayId  }}
+                ໄອດີ: {{ customerDisplayId }}
               </h3>
               <h3>
-                ຊື່: {{  invoice.display_customer_name  }}
+                ຊື່: {{ invoice.display_customer_name }}
               </h3>
               <h3>
-                ທີ່ຢູ່: {{  invoice.display_customer_address  }}
+                ທີ່ຢູ່: {{ invoice.display_customer_address }}
               </h3>
               <h3>
-                ເບີໂທ: {{  invoice.display_customer_phone  }}
+                ເບີໂທ: {{ invoice.display_customer_phone }}
               </h3>
             </v-col>
           </v-row>
@@ -141,12 +141,12 @@
               </thead>
               <tbody>
                 <tr v-for="(data, index) in invoice.billing_details" :key="index">
-                  <td>{{  index + 1  }}</td>
-                  <td>{{  data.item_la  }}</td>
-                  <td>{{  data.content  }}</td>
-                  <td>{{  Intl.NumberFormat().format(data.quantity)  }}</td>
-                  <td>{{  Intl.NumberFormat().format(data.price)  }}</td>
-                  <td>{{  Intl.NumberFormat().format(data.total)  }}</td>
+                  <td>{{ index + 1 }}</td>
+                  <td>{{ data.item_la }}</td>
+                  <td>{{ data.content }}</td>
+                  <td>{{ Intl.NumberFormat().format(data.quantity) }}</td>
+                  <td>{{ Intl.NumberFormat().format(data.price) }}</td>
+                  <td>{{ Intl.NumberFormat().format(data.total) }}</td>
                   <td>
                     <div v-if="data.is_active === 1">
                       <v-chip color="success" label>True</v-chip>
@@ -175,22 +175,22 @@
               <tr>
                 <td :colspan="4" style="font-size:16px;font-weight: 600;">ລວມເງິນ:</td>
                 <td :colspan="4" style="font-size:16px;font-weight: 600;">{{
-                   Intl.NumberFormat().format(invoice.sub_total) 
-                  }}
+                    Intl.NumberFormat().format(invoice.sub_total)
+                }}
                 </td>
               </tr>
               <tr>
                 <td :colspan="4" style="font-size:16px;font-weight: 600;">ສ່ວນຫຼຸດ:</td>
                 <td :colspan="4" style="font-size:16px;font-weight: 600;">{{
-                   Intl.NumberFormat().format(invoice.discount) 
-                  }}
+                    Intl.NumberFormat().format(invoice.discount)
+                }}
                 </td>
               </tr>
               <tr style="font-size: 20px;">
                 <td :colspan="4" style="font-size:16px;font-weight: 600;">ລວມທັງໝົດ:</td>
                 <td :colspan="4" style="font-size:16px;font-weight: 600;">{{
-                   Intl.NumberFormat().format(invoice.total) 
-                  }}
+                    Intl.NumberFormat().format(invoice.total)
+                }}
                 </td>
               </tr>
             </tbody>
@@ -205,10 +205,11 @@
             <v-col>
               <h3>
                 ວັນທີຊຳລະ: <span v-if="invoice.paided_by" class="error--text">{{
-                   moment(invoice.paided_by.created_at).format("DD-MM-YY")  }}</span>
+                    moment(invoice.paided_by.created_at).format("DD-MM-YY")
+                }}</span>
               </h3>
-              <h3 v-if="invoice.payment_method">ປະເພດຊຳລະ: {{  getLaoStatusFunc(invoice.payment_method)  }}</h3>
-              <h3 v-if="invoice.paided_by">ຊຳລະໂດຍ: {{  invoice.paided_by.name  }}</h3>
+              <h3 v-if="invoice.payment_method">ປະເພດຊຳລະ: {{ getLaoStatusFunc(invoice.payment_method) }}</h3>
+              <h3 v-if="invoice.paided_by">ຊຳລະໂດຍ: {{ invoice.paided_by.name }}</h3>
             </v-col>
           </v-row>
           <div v-if="invoice.payment_method == 'bcel'">
@@ -251,7 +252,7 @@
       <template @close="close">
         <v-card class="py-8 px-14">
           <v-card-title>
-            <p>ຊຳລະຄ່າຂີ້ເຫື້ຍອ {{  invoice.content  }}</p>
+            <p>ຊຳລະຄ່າຂີ້ເຫື້ຍອ {{ invoice.content }}</p>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -272,7 +273,7 @@
                       </v-chip>
                     </v-chip-group>
                     <p class="errors">
-                      {{  server_errors.payment_method  }}
+                      {{ server_errors.payment_method }}
                     </p>
                   </v-col>
                 </v-row>
@@ -302,7 +303,7 @@
                       </v-avatar>
                     </v-col>
                     <p class="errors">
-                      {{  server_errors.image  }}
+                      {{ server_errors.image }}
                     </p>
                   </v-row>
                 </div>
@@ -333,7 +334,7 @@
               </v-icon>
               ປະຕິເສດການຊຳລະຄ່າຂີ້ເຫຍື້ອ
 
-              <span class="primary-color">{{  invoice.name  }} {{  invoice.content  }}</span>
+              <span class="primary-color">{{ invoice.name }} {{ invoice.content }}</span>
             </p>
           </v-card-title>
           <v-card-text>
@@ -345,7 +346,7 @@
                       item-value="id">
                     </v-select>
                     <p class="errors">
-                      {{  server_errors.reject_reason_id  }}
+                      {{ server_errors.reject_reason_id }}
                     </p>
                   </v-col>
                 </v-row>
@@ -355,7 +356,7 @@
                     <v-text-field v-model="description" label="Description" outlined dense type="text">
                     </v-text-field>
                     <p class="errors">
-                      {{  server_errors.description  }}
+                      {{ server_errors.description }}
                     </p>
                   </v-col>
                 </v-row>
@@ -380,7 +381,7 @@
       <template @close="close">
         <v-card class="py-8 px-14">
           <v-card-title>
-            <p>ແກ້ໄຂຂໍ້ມູນ {{  formData.content  }}</p>
+            <p>ແກ້ໄຂຂໍ້ມູນ {{ formData.content }}</p>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -392,7 +393,7 @@
                       class="input-number">
                     </v-text-field>
                     <p class="errors">
-                      {{  server_errors.qty  }}
+                      {{ server_errors.qty }}
                     </p>
                   </v-col>
                   <v-col cols>
@@ -400,7 +401,7 @@
                       class="input-number">
                     </v-text-field>
                     <p class="errors">
-                      {{  server_errors.price  }}
+                      {{ server_errors.price }}
                     </p>
                   </v-col>
                 </v-row>
@@ -409,14 +410,14 @@
                     <v-text-field v-model="formData.item_la" label="Item (La)" outlined dense>
                     </v-text-field>
                     <p class="errors">
-                      {{  server_errors.item_la  }}
+                      {{ server_errors.item_la }}
                     </p>
                   </v-col>
                   <v-col cols>
                     <v-text-field v-model="formData.content" label="Content" outlined dense>
                     </v-text-field>
                     <p class="errors">
-                      {{  server_errors.content  }}
+                      {{ server_errors.content }}
                     </p>
                   </v-col>
                 </v-row>
@@ -487,7 +488,7 @@ export default {
     customerDisplayId() {
       if (!this.invoice.user) return ''
 
-      if (this.invoice.user.customer) return this.invoice.user.customer.billing_display_id
+      if (this.invoice.user.customer) return this.invoice.user.customer.customer_id
 
       return ''
     },
