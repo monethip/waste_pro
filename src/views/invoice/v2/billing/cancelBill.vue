@@ -181,7 +181,7 @@ export default {
       headers: [
         { text: "ເລກບິນ", value: "billing_display_id" },
         { text: "ຫົວບິນ", value: "content", width: "200px" },
-        { text: "ລູກຄ້າ", value: "user", width: "150px" },
+        { text: "ລູກຄ້າ", value: "display_customer_name", width: "150px" },
         { text: "ເບີໂທ", value: "user.phone", sortable: false },
         { text: "ສ່ວນຫຼຸດ", value: "discount", width: "150px" },
         { text: "ຄ່າບໍລິການ", value: "sub_total" },
