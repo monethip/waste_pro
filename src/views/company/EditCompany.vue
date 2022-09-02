@@ -47,9 +47,9 @@
                       <img :src="item" alt="Image" />
                     </v-avatar>
                     <p class="mb-0 body-2">
-                      Name: {{  image_list[index].name  }}
+                      Name: {{ image_list[index].name }}
                     </p>
-                    <span class="body-2">size: {{  image_list[index].size / 1024  }}KB</span>
+                    <span class="body-2">size: {{ image_list[index].size / 1024 }}KB</span>
                     <div @click="RemoveItem(item)" class="mt-2">
                       <v-icon style="cursor: pointer">mdi-delete</v-icon>
                     </div>
@@ -70,7 +70,7 @@
                 <v-text-field label="ຊື່ບໍລິສັດ *" required v-model="data.company_name" :rules="nameRules" outlined
                   dense></v-text-field>
                 <p class="errors">
-                  {{  server_errors.company_name  }}
+                  {{ server_errors.company_name }}
                 </p>
               </v-col>
               <v-col cols="4">
@@ -78,14 +78,14 @@
                   class="input-number" outlined dense v-if="data.user"></v-text-field>
 
                 <p class="errors">
-                  {{  server_errors.phone  }}
+                  {{ server_errors.phone }}
                 </p>
               </v-col>
               <v-col cols="4">
                 <v-text-field label="Email ບໍລິສັດ *" required v-model="data.user.email" outlined dense
                   v-if="data.user"></v-text-field>
                 <p class="errors">
-                  {{  server_errors.email  }}
+                  {{ server_errors.email }}
                 </p>
               </v-col>
             </v-row>
@@ -95,7 +95,7 @@
                 <v-autocomplete required :items="districts" v-model="selectedDistrict" item-text="name" item-value="id"
                   label="District *" outlined dense :rulesDistrict="rulesDistrict"></v-autocomplete>
                 <p class="errors">
-                  {{  errormsg  }}
+                  {{ errormsg }}
                 </p>
               </v-col>
 
@@ -103,7 +103,7 @@
                 <v-autocomplete required :items="villages" v-model="selectedVillage" item-text="name" item-value="id"
                   label="Village *" :rules="ruleVillage" outlined dense></v-autocomplete>
                 <p class="errors">
-                  {{  errormsg  }}
+                  {{ errormsg }}
                 </p>
               </v-col>
             </v-row>
@@ -168,7 +168,7 @@
                   </template>
                 </v-select>
                 <p class="errors">
-                  {{  server_errors.village_details  }}
+                  {{ server_errors.village_details }}
                 </p>
               </v-col>
             </v-row>
@@ -178,7 +178,7 @@
               <v-card>
                 <v-card-title>
                   <span class="headline">Add Item
-                    <span><a>{{  villageDetail.name  }}</a></span></span>
+                    <span><a>{{ villageDetail.name }}</a></span></span>
                 </v-card-title>
                 <v-card-text>
                   <v-container>
@@ -215,7 +215,7 @@
                 <v-text-field label="ມູນຄ່າສັນຍາ *" type="number" v-model="data.fix_cost" required outlined dense>
                 </v-text-field>
                 <p class="errors">
-                  {{  server_errors.fix_cost  }}
+                  {{ server_errors.fix_cost }}
                 </p>
               </v-col>
             </v-row>
@@ -224,7 +224,7 @@
               <v-col cols="4">
                 <v-text-field :label="expectTrashLabel" v-model="data.expect_trash" outlined dense></v-text-field>
                 <p class="errors">
-                  {{  server_errors.expect_trash  }}
+                  {{ server_errors.expect_trash }}
                 </p>
               </v-col>
             </v-row>
@@ -240,7 +240,7 @@
                   <v-date-picker v-model="data.start_month"></v-date-picker>
                 </v-menu>
                 <p class="errors">
-                  {{  server_errors.start_month  }}
+                  {{ server_errors.start_month }}
                 </p>
               </v-col>
               <v-col>
@@ -250,7 +250,7 @@
                   </template>
                 </v-checkbox>
                 <p class="errors">
-                  {{  server_errors.can_collect  }}
+                  {{ server_errors.can_collect }}
                 </p>
               </v-col>
             </v-row>
@@ -432,6 +432,9 @@ export default {
               this.selectedDistrict = res.data.data.district.id;
               this.selectedVillage = res.data.data.village.id;
               this.selectedVillage = res.data.data.village_id;
+              for (const favItem of res.data.data.favorite_dates) {
+                this.selectedFavoriteDate.push(favItem.name);
+              }
               this.selectedFavoriteDate = res.data.data.favorite_dates;
               res.data.data.village_details.map((item) => {
                 this.village_variation_id.push(item.village_variation_id);
@@ -533,7 +536,7 @@ export default {
         formData.append("village_details[]", item);
       });
       this.selectedFavoriteDate.map((item) => {
-        formData.append("favorite_dates[]", item);
+        formData.append("favorite_dates[]", item.name);
       });
       formData.append("company_name", this.data.company_name);
       formData.append("village_id", this.selectedVillage);

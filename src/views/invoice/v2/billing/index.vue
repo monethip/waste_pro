@@ -69,6 +69,17 @@
       </v-col>
     </v-row>
 
+    <v-row v-if="selectedBillingable_type == 'NewInvoice'">
+      <v-col>
+        <v-select outlined dense :items="customerTypes" v-model="selectedCustomerType" item-text="name_la"
+          item-value="name" label="ເລືອກປະເພດລູກຄ້າ" clearable></v-select>
+      </v-col>
+      <v-col v-if="selectedCustomerType == 'company'">
+        <v-select outlined dense :items="comapnyTypes" v-model="selectedComapnyType" item-text="name_la"
+          item-value="name" label="ເລືອກປະເພດບໍລິການ" clearable></v-select>
+      </v-col>
+    </v-row>
+
     <v-card>
       <v-card-title>
         ຂໍ້ມູນບີນ ({{ pagination.total }})
@@ -148,6 +159,7 @@
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
 import { getLaoBillingType } from "@/Helpers/BillingStatus";
+import { getCompanyCostBy } from "@/Helpers/Customer";
 import moment from "moment";
 
 export default {
@@ -168,17 +180,21 @@ export default {
       loading: false,
       customerId: "",
       selectedRows: [],
-
       plans: [],
       selectedRoutePlan: "",
       selectedCustomerType: "",
+      comapnyTypes: getCompanyCostBy,
       customerTypes: [
         {
-          text: "ຄົວເຮືອນ",
-          value: "home"
+          name: "",
+          name_la: "ທັງໝົດ"
+        },
+        {
+          name_la: "ຄົວເຮືອນ",
+          name: "home"
         }, {
-          text: "ຫົວໜ່ວຍທຸລະກິດ",
-          value: "company"
+          name_la: "ຫົວໜ່ວຍທຸລະກິດ",
+          name: "company"
         }
       ],
       //Pagination
