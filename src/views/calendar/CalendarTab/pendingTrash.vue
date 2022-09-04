@@ -4,45 +4,35 @@
       <v-col>
         <v-breadcrumbs large class="pa-0"> ຂີ້ເຫື້ຍອທີ່ລໍຖ້າເກັບ</v-breadcrumbs>
       </v-col>
-<!--      <v-col>-->
-<!--        <v-text-field-->
-<!--          outlined-->
-<!--          dense-->
-<!--          clearable-->
-<!--          prepend-inner-icon="mdi-magnify"-->
-<!--          label="Search"-->
-<!--          type="text"-->
-<!--          v-model="search"-->
-<!--          @keyup.enter="Search()"-->
-<!--        >-->
-<!--        </v-text-field>-->
-<!--      </v-col>-->
+      <!--      <v-col>-->
+      <!--        <v-text-field-->
+      <!--          outlined-->
+      <!--          dense-->
+      <!--          clearable-->
+      <!--          prepend-inner-icon="mdi-magnify"-->
+      <!--          label="Search"-->
+      <!--          type="text"-->
+      <!--          v-model="search"-->
+      <!--          @keyup.enter="Search()"-->
+      <!--        >-->
+      <!--        </v-text-field>-->
+      <!--      </v-col>-->
     </v-row>
     <div>
-      <v-data-table
-        v-if="pending"
-        :headers="headers"
-        :items="pending"
-        :search="search"
-        :disable-pagination="true"
-        hide-default-footer
-      >
+      <v-data-table v-if="pending" :headers="headers" :items="pending" :search="search" :disable-pagination="true"
+        hide-default-footer>
         <template v-slot:item.created_at="{ item }">
-          <div
-          >
+          <div>
             {{ moment(item.created_at).format("DD-MM-YY hh:mm ") }}
           </div>
         </template>
         <template v-slot:item.date="{ item }">
-          <div
-          >
+          <div>
             {{ moment(item.date).format("DD-MM-YY hh:mm:ss") }}
           </div>
         </template>
         <template v-slot:item.customer="{ item }">
-          <div
-            v-if="(item.route_plan_detail.customer.customer_type = 'company')"
-          >
+          <div v-if="(item.route_plan_detail.customer.customer_type = 'company')">
             {{ item.route_plan_detail.customer.company_name }}
           </div>
           <div>
@@ -73,22 +63,14 @@
         </template>
 
         <template v-slot:item.actions="{ item }">
-          <v-icon
-            small
-            class="mr-2"
-            @click="viewPage(item.plan_calendar_id, item.id)"
-          >
+          <v-icon small class="mr-2" @click="viewPage(item.plan_calendar_id, item.id)">
             mdi-eye
           </v-icon>
-        </template> </v-data-table
-      ><br />
+        </template>
+      </v-data-table><br />
       <template>
-        <Pagination
-          v-if="pagination.total_pages > 1"
-          :pagination="pagination"
-          :offset="offset"
-          @paginate="fetchData()"
-        ></Pagination>
+        <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset" @paginate="fetchData()">
+        </Pagination>
       </template>
     </div>
   </v-container>
@@ -135,8 +117,8 @@ export default {
           sortable: false,
         },
         {
-          text: "ວັນທີອັບເດດ",
-          value: "date",
+          text: "ວັນທີເກັບ",
+          value: "collected_at",
           align: "center",
           sortable: false,
         },
@@ -183,7 +165,7 @@ export default {
     },
     getUnit(value) {
       if (value == "bag") return "ຖົງ";
-      else if(value == 'chartered') return "ຖົງ";
+      else if (value == 'chartered') return "ຖົງ";
       else if (value == "fix_cost") return "ມອບເໝົາ"
       else if (value == "container") return "ຄອນເທັນເນີ"
       else return '';
