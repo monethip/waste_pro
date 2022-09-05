@@ -2,115 +2,44 @@
   <v-container>
     <v-row class="mb-n6">
       <v-col>
-        <v-btn
-          class="btn-primary"
-          :loading="loading"
-          :disabled="loading"
-          @click="exportData"
-          >Export
+        <v-btn class="btn-primary" :loading="loading" :disabled="loading" @click="exportData">Export
         </v-btn>
       </v-col>
       <v-col>
-        <v-menu
-          v-model="start_menu"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
+        <v-menu v-model="start_menu" :close-on-content-click="false" :nudge-right="40" transition="scale-transition"
+          offset-y min-width="auto">
           <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="start_date"
-              label="ເລີ່ມວັນທີ"
-              readonly
-              outlined
-              v-bind="attrs"
-              v-on="on"
-              dense
-              clearable
-            ></v-text-field>
+            <v-text-field v-model="start_date" label="ເລີ່ມວັນທີ" readonly outlined v-bind="attrs" v-on="on" dense
+              clearable></v-text-field>
           </template>
-          <v-date-picker
-            v-model="start_date"
-          ></v-date-picker>
+          <v-date-picker v-model="start_date"></v-date-picker>
         </v-menu>
       </v-col>
       <v-col>
-        <v-menu
-          v-model="end_menu"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
+        <v-menu v-model="end_menu" :close-on-content-click="false" :nudge-right="40" transition="scale-transition"
+          offset-y min-width="auto">
           <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="end_date"
-              label="ຫາວັນທີ"
-              readonly
-              outlined
-              v-bind="attrs"
-              v-on="on"
-              dense
-              clearable
-            ></v-text-field>
+            <v-text-field v-model="end_date" label="ຫາວັນທີ" readonly outlined v-bind="attrs" v-on="on" dense clearable>
+            </v-text-field>
           </template>
-          <v-date-picker
-            v-model="end_date"
-          ></v-date-picker>
+          <v-date-picker v-model="end_date"></v-date-picker>
         </v-menu>
       </v-col>
       <v-col>
-        <v-autocomplete
-          outlined
-          dense
-          :items="districts"
-          v-model="selectedDistrict"
-          item-text="name"
-          item-value="id"
-          label="ເມືອງ"
-          clearable
-        ></v-autocomplete>
+        <v-autocomplete outlined dense :items="districts" v-model="selectedDistrict" item-text="name" item-value="id"
+          label="ເມືອງ" clearable></v-autocomplete>
       </v-col>
       <v-col>
-        <v-autocomplete
-          outlined
-          dense
-          :items="villages"
-          v-model="selectedVillage"
-          item-text="name"
-          item-value="id"
-          label="ບ້ານ"
-          multiple
-          clearable
-        ></v-autocomplete>
+        <v-autocomplete outlined dense :items="villages" v-model="selectedVillage" item-text="name" item-value="id"
+          label="ບ້ານ" multiple clearable></v-autocomplete>
       </v-col>
       <v-col>
-        <v-select
-          outlined
-          dense
-          :items="status"
-          v-model="selectedStatus"
-          item-text="name"
-          item-value="name"
-          label="ສະຖານະ"
-          multiple
-          clearable
-        ></v-select>
+        <v-select outlined dense :items="status" v-model="selectedStatus" item-text="name" item-value="name"
+          label="ສະຖານະ" multiple clearable></v-select>
       </v-col>
       <v-col>
-        <v-text-field
-          outlined
-          dense
-          clearable
-          prepend-inner-icon="mdi-magnify"
-          label="Search"
-          type="text"
-          v-model="search"
-          @keyup.enter="Search()"
-        >
+        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="Search" type="text"
+          v-model="search" @keyup.enter="Search()">
         </v-text-field>
       </v-col>
     </v-row>
@@ -119,61 +48,26 @@
         <p class="text">ລວມຫົວໜ່ວຍທຸລະກິດ {{ pagination.total }} </p>
       </v-col>
       <v-col>
-        <v-select
-            outlined
-            dense
-            :items="can_collects"
-            v-model="selectedCanCollect"
-            item-text="name"
-            item-value="value"
-            label="ເກັບເລີຍໄດ້ບໍ່"
-            clearable
-        ></v-select>
+        <v-select outlined dense :items="can_collects" v-model="selectedCanCollect" item-text="name" item-value="value"
+          label="ເກັບເລີຍໄດ້ບໍ່" clearable></v-select>
       </v-col>
       <v-col>
-        <v-select
-            outlined
-            dense
-            :items="customerStatus"
-            v-model="selectedCustomerStatus"
-            item-text="name"
-            item-value="value"
-            label="ສະຖານະແຜນ"
-            multiple
-            clearable
-        ></v-select>
+        <v-select outlined dense :items="customerStatus" v-model="selectedCustomerStatus" item-text="name"
+          item-value="value" label="ສະຖານະແຜນ" multiple clearable></v-select>
       </v-col>
-   <v-col>
-     <v-select
-         outlined
-         dense
-         :items="costs"
-         v-model="selectedCost"
-         item-text="name"
-         item-value="value"
-         label="ປະເພດບໍລິການ"
-         multiple
-         clearable
-     ></v-select>
-   </v-col>
+      <v-col>
+        <v-select outlined dense :items="costs" v-model="selectedCost" item-text="name" item-value="value"
+          label="ປະເພດບໍລິການ" multiple clearable></v-select>
+      </v-col>
     </v-row>
     <div>
       <v-card>
         <v-card flat>
           <v-card-text>
-            <v-data-table
-              :headers="headers"
-              :items="customers"
-              :search="search"
-              :disable-pagination="true"
-              hide-default-footer
-            >
+            <v-data-table :headers="headers" :items="customers" :search="search" :disable-pagination="true"
+              hide-default-footer>
               <template v-slot:item.media="{ item }">
-                <v-avatar
-                  size="36px"
-                  v-for="(img, index) in item.media"
-                  :key="index"
-                >
+                <v-avatar size="36px" v-for="(img, index) in item.media" :key="index">
                   <img v-if="img.thumb" :src="img.thumb" />
                 </v-avatar>
               </template>
@@ -182,19 +76,16 @@
                   {{ moment(item.created_at).format("DD-MM-YY") }}
                 </div>
               </template>
-<!--              <template v-slot:item.status="{ item }">-->
-<!--                <v-chip label :color="statusColor(item.status)">{{-->
-<!--                  item.status-->
-<!--                }}</v-chip>-->
-<!--              </template>-->
+              <!--              <template v-slot:item.status="{ item }">-->
+              <!--                <v-chip label :color="statusColor(item.status)">{{-->
+              <!--                  item.status-->
+              <!--                }}</v-chip>-->
+              <!--              </template>-->
               <template v-slot:item.cost_by="{ item }">
                 <div>{{ costBy(item.cost_by) }}</div>
               </template>
               <template v-slot:item.status="{ item }">
-                <v-chip label
-                        :color="statusColor(item.user.status)"
-                >{{ item.user.status }}</v-chip
-                >
+                <v-chip label :color="statusColor(item.user.status)">{{ item.user.status }}</v-chip>
               </template>
               <!--Role -->
               <template v-slot:item.roles="{ item }">
@@ -217,15 +108,11 @@
                 <v-icon small class="mr-2" @click="viewPage(item.id)">
                   mdi-eye
                 </v-icon>
-              </template> </v-data-table
-            ><br />
+              </template>
+            </v-data-table><br />
             <template>
-              <Pagination
-                v-if="pagination.total_pages > 1"
-                :pagination="pagination"
-                :offset="offset"
-                @paginate="fetchData()"
-              ></Pagination>
+              <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
+                @paginate="fetchData()"></Pagination>
             </template>
           </v-card-text>
         </v-card>
@@ -355,17 +242,17 @@ export default {
       this.$axios
         .get("company", {
           params: queryOption([
-            {page: this.pagination.current_page},
-            {per_page: this.per_page},
-            {filter: this.search},
-            {date_from: this.start_date},
-            {date_end: this.end_date},
-            {villages: this.selectedVillage},
-            {statuses: this.selectedStatus},
-            {can_collect: this.selectedCanCollect},
-            {cost_by: this.selectedCost},
-            {without: this.selectedCustomerStatus},
-            {district_id: this.selectedDistrict}
+            { page: this.pagination.current_page },
+            { per_page: this.per_page },
+            { filter: this.search },
+            { date_from: this.start_date },
+            { date_end: this.end_date },
+            { villages: this.selectedVillage },
+            { statuses: this.selectedStatus },
+            { can_collect: this.selectedCanCollect },
+            { cost_by: this.selectedCost },
+            { without: this.selectedCustomerStatus },
+            { district_id: this.selectedDistrict }
           ]),
         })
         .then((res) => {
@@ -406,7 +293,7 @@ export default {
             }, 300);
           }
         })
-        .catch(() => {});
+        .catch(() => { });
     },
 
     fetchVillage() {
@@ -419,7 +306,7 @@ export default {
             }, 300);
           }
         })
-        .catch(() => {});
+        .catch(() => { });
     },
 
     viewPage(id) {
@@ -441,24 +328,24 @@ export default {
       this.loading = true;
       this.$axios
         .post(
-          "export-customer/",
+          "export-company/",
           {
             params: queryOption([
-              {date_from: this.start_date},
-              {date_end: this.end_date},
-              {villages: this.selectedVillage},
-              {statuses: this.selectedStatus},
-              {can_collect: this.selectedCanCollect},
-              {cost_by: this.selectedCost},
-              {without: this.selectedCustomerStatus},
-              {district_id: this.selectedDistrict}
+              { date_from: this.start_date },
+              { date_end: this.end_date },
+              { villages: this.selectedVillage },
+              { statuses: this.selectedStatus },
+              { can_collect: this.selectedCanCollect },
+              { cost_by: this.selectedCost },
+              { without: this.selectedCustomerStatus },
+              { district_id: this.selectedDistrict }
             ]),
           },
           // { responseType: "blob" }
         )
         .then((res) => {
           if (res.status == 200) {
-            if(res.data.data.download_link != null){
+            if (res.data.data.download_link != null) {
               window.open(res.data.data.download_link)
             }
             this.loading = false;
@@ -489,53 +376,53 @@ export default {
   },
   watch: {
     start_date: function () {
-      this.pagination.current_page ='';
-      if(this.end_date !== '' && this.start_date !== ''){
-        if(this.start_date > this.end_date){
+      this.pagination.current_page = '';
+      if (this.end_date !== '' && this.start_date !== '') {
+        if (this.start_date > this.end_date) {
           this.start_date = '';
         }
       }
       this.fetchData();
     },
     end_date: function () {
-      this.pagination.current_page ='';
-      if(this.end_date !== '' && this.start_date !== ''){
-        if(this.end_date < this.start_date){
+      this.pagination.current_page = '';
+      if (this.end_date !== '' && this.start_date !== '') {
+        if (this.end_date < this.start_date) {
           this.end_date = '';
         }
       }
       this.fetchData();
     },
     search: function (value) {
-      this.pagination.current_page ='';
+      this.pagination.current_page = '';
       if (value == "") {
         this.fetchData();
       }
     },
 
     selectedVillage: function () {
-      this.pagination.current_page ='';
+      this.pagination.current_page = '';
       this.fetchData();
     },
     selectedDistrict: function () {
-      this.pagination.current_page ='';
+      this.pagination.current_page = '';
       this.fetchVillage();
       this.fetchData();
     },
     selectedStatus: function () {
-      this.pagination.current_page ='';
+      this.pagination.current_page = '';
       this.fetchData();
     },
     selectedCanCollect: function () {
-      this.pagination.current_page ='';
+      this.pagination.current_page = '';
       this.fetchData();
     },
     selectedCustomerStatus: function () {
-      this.pagination.current_page ='';
+      this.pagination.current_page = '';
       this.fetchData();
     },
-    selectedCost:function (){
-      this.pagination.current_page ='';
+    selectedCost: function () {
+      this.pagination.current_page = '';
       this.fetchData();
     },
   },
