@@ -569,7 +569,7 @@ export default {
     viewEventNoti() {
       this.$router.push({
         name: "NotificationTab",
-        query: { type: 'EVENT' }
+        query: { "types": ["EVENT", "CUSTOMER_EVENT"] }
       });
     },
     viewPage(id) {

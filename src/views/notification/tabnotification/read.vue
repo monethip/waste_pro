@@ -45,7 +45,7 @@ export default {
       pagination: {},
       per_page: 20,
       notifications: [],
-      notiType: this.$route.query.type,
+      notiType: this.$route.query.types,
       server_errors: {},
       selectedStatus: "read",
 
@@ -81,7 +81,7 @@ export default {
         status: this.selectedStatus,
       }
 
-      if (this.notiType) option.type = this.notiType
+      if (this.notiType) option.types = this.notiType
       this.$axios
         .get("notification/", {
           params: option,

@@ -81,7 +81,7 @@ export default {
         status: this.selectedStatus,
       }
 
-      if (this.notiType) option.type = this.notiType
+      if (this.notiType) option.types = this.notiType
 
       this.$axios
         .get("notification", {
@@ -116,7 +116,7 @@ export default {
     },
   },
   computed: {
-    notiType() { return this.$route.query.type },
+    notiType() { return this.$route.query.types },
 
   },
   created() {

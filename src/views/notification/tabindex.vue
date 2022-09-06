@@ -64,7 +64,7 @@ export default {
             name: "NotificationTab",
             query: {
               tab: "notification-all",
-              type: this.$route.query.type ? this.$route.query.type : null
+              type: this.$route.query.types ? this.$route.query.types : null
             }
           })
           .catch(() => { });
@@ -74,7 +74,7 @@ export default {
             name: "NotificationTab",
             query: {
               tab: "notification-read",
-              type: this.$route.query.type ? this.$route.query.type : null
+              type: this.$route.query.types ? this.$route.query.types : null
             },
           })
           .catch(() => { });
