@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <span class="text-h5">ບິນອື່ນໆ</span>
+      <span class="text-h5">ບິນຍ້ອນຫຼັງ</span>
     </v-row>
     <v-row>
       <v-col>

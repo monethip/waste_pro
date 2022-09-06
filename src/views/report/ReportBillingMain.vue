@@ -1,14 +1,11 @@
 <template>
   <div>
-    <v-tabs
-      v-model="tab"
-      style="
+    <v-tabs v-model="tab" style="
     position: -webkit-sticky;
     position: sticky;
     top: 4rem;
     z-index: 2;
-"
-    >
+">
       <v-tab v-for="item in items" :key="item.tab">{{ item.tab }}</v-tab>
     </v-tabs>
     <v-tabs-items v-model="tab">
@@ -49,7 +46,7 @@ export default {
         { tab: "ຄົວເຮືອນ", content: "ReportBillingHome" },
         { tab: "ຖ້ຽວພິເສດ", content: "ReportBillingCollectionEvent" },
         { tab: "ຈ່າຍລ່ວງໜ້າ", content: "ReportBillingFutureInvoice" },
-        { tab: "ບິນອື່ນໆ", content: "ReportBillingCustomBill" }
+        { tab: "ບິນຍ້ອນຫຼັງ", content: "ReportBillingCustomBill" }
       ]
     };
   }

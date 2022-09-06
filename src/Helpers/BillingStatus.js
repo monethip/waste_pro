@@ -47,7 +47,7 @@ export const getLaoStatus = function (status) {
 export const getLaoBillingType = function (type) {
     switch (type) {
         case "CustomBill":
-            return "ບິນອື່ນໆ"
+            return "ບິນຍ້ອນຫຼັງ"
         case "NewCollectionEvent":
             return "ບີນບໍລີການຂີ້ເຫຍື້ອພິເສດ"
         case "FutureInvoice":
