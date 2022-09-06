@@ -122,18 +122,10 @@
               <template v-slot:item.user.customer.package="{ item }">{{ `${item.user.customer.package.name}`
               }}</template>
 
-              <template v-slot:item.user="{ item }">
-                <div v-if="item.display_type == 'NewCollectionEvent'">
-                  <span>{{ `${item.billingable.name} ${item.billingable.surname}`
-                  }}</span>
-                </div>
-                <div v-else>
-                  <span v-if="customerType(item) == 'home'">{{ `${item.user.customer.name}
-                                      ${item.user.customer.surname}`
-                  }}</span>
-                  <span v-if="customerType(item) == 'company'">{{ item.user.customer.company_name }}</span>
-                  <span v-if="!customerType(item)">{{ `${item.user.name} (${item.user.phone})` }}</span>
-                </div>
+              <template v-slot:item.custom_type="{ item }">
+                <span v-if="customerType(item) == 'home'">ຄົວເຮືອນ</span>
+                <span v-if="customerType(item) == 'company'">ທຸລະກິດ</span>
+                <span v-if="!customerType(item)">ທົ່ວໄປ</span>
               </template>
 
 
@@ -201,7 +193,7 @@ export default {
       this.exportMode = "excel";
     },
     customerType(item) {
-      if (!item.user.customer) return false;
+      if (!item.user || !item.user.customer) return false;
 
       return item.user.customer.customer_type
         ? item.user.customer.customer_type
@@ -325,7 +317,7 @@ export default {
     },
     detailStatuses() {
       let data = [];
-      console.log(6565, this.summaryDetails);
+
       if (this.summaryDetails.length > 0) {
         for (const [key, value] of Object.entries(this.summaryDetails[0])) {
           if (value.count_billing !== undefined) {

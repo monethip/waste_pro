@@ -118,19 +118,15 @@
 
               <template v-slot:item.display_type="{ item }">{{ getLaoBillingTypeFunc(item.display_type) }}</template>
 
-              <template v-slot:item.user="{ item }">
-                <div v-if="item.display_type == 'NewCollectionEvent'">
-                  <span>{{ `${item.billingable.name} ${item.billingable.surname}`
-                  }}</span>
-                </div>
-                <div v-else>
-                  <span v-if="customerType(item) == 'home'">{{ `${item.user.customer.name}
-                                      ${item.user.customer.surname}`
-                  }}</span>
-                  <span v-if="customerType(item) == 'company'">{{ item.user.customer.company_name }}</span>
-                  <span v-if="!customerType(item)">{{ `${item.user.name} (${item.user.phone})` }}</span>
-                </div>
+
+
+              <template v-slot:item.custom_type="{ item }">
+                <span v-if="customerType(item) == 'home'">ຄົວເຮືອນ</span>
+                <span v-if="customerType(item) == 'company'">ທຸລະກິດ</span>
+                <span v-if="!customerType(item)">ທົ່ວໄປ</span>
               </template>
+
+
             </v-data-table>
           </v-card-text>
         </v-card>
@@ -198,7 +194,7 @@ export default {
       this.exportMode = "excel";
     },
     customerType(item) {
-      if (!item.user.customer) return false;
+      if (!item.user || !item.user.customer) return false;
 
       return item.user.customer.customer_type
         ? item.user.customer.customer_type
