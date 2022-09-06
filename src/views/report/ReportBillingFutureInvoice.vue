@@ -101,21 +101,6 @@
                   <span v-if="!customerType(item)">{{ `${item.user.name} (${item.user.phone})` }}</span>
                 </div>
               </template>
-
-              <template v-slot:item.custom_type="{ item }">
-                <span v-if="customerType(item) == 'home'">ຄົວເຮືອນ</span>
-                <span v-if="customerType(item) == 'company'">ທຸລະກິດ</span>
-                <span v-if="!customerType(item)">ທົ່ວໄປ</span>
-              </template>
-
-              <template v-slot:item.custom_address="{ item }">
-                <span v-if="item.display_type == 'NewCollectionEvent'">{{ `${item.billingable.village.name} /
-                                  ${item.billingable.village.district.name}`
-                }}</span>
-                <span v-else-if="customerType(item) == 'home' || customerType(item) == 'company'">{{
-                    `${item.user.customer.village.name} / ${item.user.customer.village.district.name}`
-                }}</span>
-              </template>
             </v-data-table>
           </v-card-text>
         </v-card>
@@ -165,9 +150,9 @@ export default {
         { text: "ຈາກເດືອນ", value: "billingable.start_month" },
         { text: "ເຖິງເດືອນ", value: "billingable.end_month" },
         { text: "ຈຳນວນ", value: "total" },
-        { text: "ລູກຄ້າ", value: "user" },
+        { text: "ລູກຄ້າ", value: "display_customer_name" },
         { text: "ປະເພດລູກຄ້າ", value: "custom_type" },
-        { text: "ທີ່ຢູ່", value: "custom_address" }
+        { text: "ທີ່ຢູ່", value: "display_customer_address" }
       ]
     };
   },
