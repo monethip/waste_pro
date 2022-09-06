@@ -60,15 +60,24 @@ export default {
     tab: function (value) {
       if (value == "tab-1") {
         this.$router
-          .push({ name: "NotificationTab", query: { tab: "notification-all" } })
-          .catch(() => {});
+          .push({
+            name: "NotificationTab",
+            query: {
+              tab: "notification-all",
+              type: this.$route.query.type ? this.$route.query.type : null
+            }
+          })
+          .catch(() => { });
       } else if (value == "tab-2") {
         this.$router
           .push({
             name: "NotificationTab",
-            query: { tab: "notification-read" },
+            query: {
+              tab: "notification-read",
+              type: this.$route.query.type ? this.$route.query.type : null
+            },
           })
-          .catch(() => {});
+          .catch(() => { });
       }
     },
   },

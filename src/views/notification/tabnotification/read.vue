@@ -11,32 +11,22 @@
     <div>
       <v-card elevation="0">
         <v-card-text>
-          <v-data-table
-            :headers="headers"
-            :items="notifications"
-            :disable-pagination="true"
-            hide-default-footer
-            fixed-header
-            height="100vh"
-          >
+          <v-data-table :headers="headers" :items="notifications" :disable-pagination="true" hide-default-footer
+            fixed-header height="100vh">
             <template v-slot:item.read_at="{ item }">
               <v-chip color="success">{{
-                moment(item.read_at).format("mm:hh / DD-MM-YY")
+                  moment(item.read_at).format("mm:hh / DD-MM-YY")
               }}</v-chip>
             </template>
             <template v-slot:item.actions="{ item }">
               <v-icon small class="mr-2" @click="viewPage(item.id)">
                 mdi-eye
               </v-icon>
-            </template> </v-data-table
-          ><br />
+            </template>
+          </v-data-table><br />
           <template>
-            <Pagination
-              v-if="pagination.total_pages > 1"
-              :pagination="pagination"
-              :offset="offset"
-              @paginate="fetchData()"
-            ></Pagination>
+            <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
+              @paginate="fetchData()"></Pagination>
           </template>
         </v-card-text>
       </v-card>
@@ -55,6 +45,7 @@ export default {
       pagination: {},
       per_page: 20,
       notifications: [],
+      notiType: this.$route.query.type,
       server_errors: {},
       selectedStatus: "read",
 
@@ -84,13 +75,16 @@ export default {
 
     fetchData() {
       this.$store.commit("Loading_State", true);
+      const option = {
+        page: this.pagination.current_page,
+        per_page: this.per_page,
+        status: this.selectedStatus,
+      }
+
+      if (this.notiType) option.type = this.notiType
       this.$axios
         .get("notification/", {
-          params: {
-            page: this.pagination.current_page,
-            per_page: this.per_page,
-            status: this.selectedStatus,
-          },
+          params: option,
         })
         .then((res) => {
           if (res.data.code == 200) {
@@ -127,6 +121,11 @@ export default {
         this.invoiceStatusColor = "info--text";
         return "ອະນຸມັດແລ້ວ";
       }
+    },
+  },
+  watch: {
+    notiType: function () {
+      this.fetchData();
     },
   },
 

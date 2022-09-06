@@ -1,13 +1,6 @@
 <template>
   <div>
-    <v-app-bar
-      flat
-      absolute
-      :clipped-left="clipped"
-      fixed
-      app
-      color="transparent"
-    >
+    <v-app-bar flat absolute :clipped-left="clipped" fixed app color="transparent">
       <!-- mdi-order-bool-descending -->
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-btn icon @click.stop="miniVariant = !miniVariant">
@@ -15,21 +8,12 @@
       </v-btn>
       <v-toolbar-title v-text="title" />
       <div>
-        <v-text-field
-          rounded
-          dense
-          outlined
-          :prepend-inner-icon="mdi - magnify"
-          class="app-bar-search flex-grow-0"
-          hide-details
-        ></v-text-field>
+        <v-text-field rounded dense outlined :prepend-inner-icon="mdi - magnify" class="app-bar-search flex-grow-0"
+          hide-details></v-text-field>
 
         <v-spacer />
         <v-fade-transition mode="out-in">
-          <v-icon
-            :key="$vuetify.theme.dark"
-            @click="$vuetify.theme.dark = !$vuetify.theme.dark"
-          >
+          <v-icon :key="$vuetify.theme.dark" @click="$vuetify.theme.dark = !$vuetify.theme.dark">
             {{ $vuetify.theme.dark ? mdi - github : mdi - bell - outline }}
           </v-icon>
         </v-fade-transition>

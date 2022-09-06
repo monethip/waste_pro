@@ -10,7 +10,55 @@
         <template v-slot:activator="{ on }">
           <v-btn text fab dark small class="mr-8" v-on="on">
             <v-badge overlap color="orange">
-              <template v-slot:badge>{{  notifications.length  }}</template>
+              <template v-slot:badge>{{ eventNotifications.length }}</template>
+              <v-icon large color="grey ">mdi-trash-can</v-icon>
+            </v-badge>
+          </v-btn>
+        </template>
+        <v-card>
+          <v-card-text class="px-0">
+            <v-list-item-content class="justify-center">
+              <v-list two-line style="max-height: 650px" class="overflow-y-auto">
+                <v-list-item-group active-class="pink--text" multiple>
+                  <template v-for="(item, index) in eventNotifications">
+                    <v-list-item :key="item.id" @click="viewPage(item.id)">
+                      <v-list-item-content>
+                        <v-list-item-title v-text="item.data.name"></v-list-item-title>
+
+                        <v-list-item-subtitle class="text--primary" v-text="item.data.text"></v-list-item-subtitle>
+
+                        <v-list-item-subtitle v-text="item.data.thanks"></v-list-item-subtitle>
+                      </v-list-item-content>
+
+                      <v-list-item-action-text>
+                        <span class="primary-color">
+                          {{
+                              moment(item.created_at).format("DD-MM-YY")
+                          }}
+                        </span>
+                      </v-list-item-action-text>
+                    </v-list-item>
+
+                    <v-divider v-if="index < eventNotifications.length - 1" :key="index"></v-divider>
+                  </template>
+                </v-list-item-group>
+              </v-list>
+              <v-divider></v-divider>
+              <v-list-item @click="viewEventNoti">
+                <div class="mx-auto text-center">
+                  <span class="primary-color">ອ່ານທັງໝົດ</span>
+                </div>
+              </v-list-item>
+            </v-list-item-content>
+          </v-card-text>
+        </v-card>
+      </v-menu>
+
+      <v-menu bottom min-width="200px" rounded offset-y>
+        <template v-slot:activator="{ on }">
+          <v-btn text fab dark small class="mr-8" v-on="on">
+            <v-badge overlap color="orange">
+              <template v-slot:badge>{{ notifications.length }}</template>
               <v-icon large color="grey darken-1">notifications</v-icon>
             </v-badge>
           </v-btn>
@@ -33,7 +81,7 @@
                       <v-list-item-action-text>
                         <span class="primary-color">
                           {{
-                           moment(item.created_at).format("DD-MM-YY") 
+                              moment(item.created_at).format("DD-MM-YY")
                           }}
                         </span>
                       </v-list-item-action-text>
@@ -58,7 +106,7 @@
         <template v-slot:activator="{ on }">
           <v-btn icon x-large v-on="on">
             <v-avatar color="grey" size="46px">
-              <span class="white--text text-h5 text-break">{{  name  }}</span>
+              <span class="white--text text-h5 text-break">{{ name }}</span>
             </v-avatar>
           </v-btn>
         </template>
@@ -66,11 +114,11 @@
           <v-list-item-content class="justify-center">
             <div class="mx-auto text-center">
               <v-avatar color="grey" size="46px">
-                <span class="white--text text-h5 text-break">{{  name  }}</span>
+                <span class="white--text text-h5 text-break">{{ name }}</span>
               </v-avatar>
-              <h4>{{  userProfile.name  }}</h4>
+              <h4>{{ userProfile.name }}</h4>
               <p class="text-caption mt-1">
-                {{  userProfile.email  }}
+                {{ userProfile.email }}
                 <br />
               </p>
               <v-divider class="my-3"></v-divider>
@@ -94,7 +142,7 @@
       <v-list expand shaped>
         <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact color="indigo darken-4">
           <v-list-item-action>
-            <v-icon>{{  item.icon  }}</v-icon>
+            <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title v-text="item.title" />
@@ -106,13 +154,13 @@
             v-if="$can(item.group_permissions)">
             <template v-slot:activator>
               <v-list-item-content>
-                <v-list-item-title>{{  item.title  }}</v-list-item-title>
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
               </v-list-item-content>
             </template>
             <div v-for="(i, index) in item.menu" :key="index" style="padding-left: 22px;">
               <v-list-item exact color="primary-color" :to="i.to" v-if="$can(i.permissions)">
                 <v-list-item-action>
-                  <v-icon>{{  i.icon  }}</v-icon>
+                  <v-icon>{{ i.icon }}</v-icon>
                 </v-list-item-action>
                 <v-list-item-content>
                   <v-list-item-title v-text="i.title" />
@@ -139,6 +187,7 @@ export default {
       pagination: {},
       per_page: 20,
       notifications: [],
+      eventNotifications: [],
       selectedStatus: "unread",
       items: [
         {
@@ -481,9 +530,46 @@ export default {
           }
         });
     },
+    fetchEventData() {
+      this.$store.commit("Loading_State", true);
+      this.$axios
+        .get("notification", {
+          params: {
+            page: this.pagination.current_page,
+            per_page: this.per_page,
+            status: this.selectedStatus,
+            type: "EVENT"
+          }
+        })
+        .then(res => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.$store.commit("Loading_State", false);
+              this.eventNotifications = res.data.data.data;
+              this.pagination = res.data.data.pagination;
+            }, 300);
+          }
+        })
+        .catch(error => {
+          this.$store.commit("Loading_State", false);
+          if (error.response.status == 422) {
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message
+            });
+          }
+        });
+    },
     viewAllNoti() {
       this.$router.push({
-        name: "NotificationTab"
+        name: "NotificationTab",
+      });
+    },
+    viewEventNoti() {
+      this.$router.push({
+        name: "NotificationTab",
+        query: { type: 'EVENT' }
       });
     },
     viewPage(id) {
