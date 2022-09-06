@@ -492,6 +492,7 @@ export default {
     this.userProfile = JSON.parse(window.localStorage.getItem("user"));
     this.name = this.userProfile.name.slice(0, 1);
     this.fetchData();
+    this.fetchEventData();
   },
   methods: {
     ...mapActions({
