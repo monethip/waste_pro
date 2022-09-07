@@ -1,5 +1,7 @@
-import {GetOldValueOnInput} from "@/Helpers/GetValue";
+import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import moment from "moment";
+import { getCustomerUnit } from "@/Helpers/Customer";
+
 
 export default {
     title() {
@@ -30,7 +32,7 @@ export default {
             summary: {},
             selectedDuration: "year",
             search: "",
-            summaryMerge:{},
+            summaryMerge: {},
             duration: [
                 {
                     name: "ປີ",
@@ -62,36 +64,65 @@ export default {
             ],
 
             headers: [
-                {text: "ວັນທີ", value: "date", sortable: false},
-                {text: "Id", value: "customer_id", sortable: false},
-                {text: "ລູກຄ້າ", value: "full_name"},
-                {text: "ຈຳນວນຖົງ", value: "bag", sortable: false, align: "center"},
-                {text: "ສະຖານທີ່", value: "name", sortable: false},
-                {text: "ສະຖານະ", value: "status", sortable: false},
+                { text: "ວັນທີ", value: "date", sortable: false },
+                { text: "Id", value: "customer_id", sortable: false },
+                { text: "ລູກຄ້າ", value: "full_name" },
+                { text: "ຈຳນວນຖົງ", value: "bag", sortable: false, align: "center" },
+                { text: "ສະຖານທີ່", value: "name", sortable: false },
+                { text: "ສະຖານະ", value: "status", sortable: false },
+                { text: "ຂີ້ເຫຍື້ອຄາດໝາຍ", value: "expect_trash", width: "200px" },
+                { text: "ຂີ້ເຫຍື້ອປັດຈຸບັນ", value: "current_month_info", width: "200px" },
+                { text: "ຂີ້ເຫຍື້ອເດືອນກ່ອນ", value: "last_month_info", width: "200px" },
                 { text: "ຄຳອະທິບາຍການລຶບ", value: "deleted_description", sortable: false },
-                {text: "Deleted", value: "date_deleted_at", sortable: false},
+                { text: "Deleted", value: "date_deleted_at", sortable: false },
                 // { text: "", value: "actions", sortable: false },
             ],
             company: [
-                {text: "ວັນທີ", value: "date", sortable: false},
-                {text: "Id", value: "customer_id", sortable: false},
-                {text: "ບໍລິສັດ", value: "company_name"},
-                {text: "ປະເພດບໍລິການ", value: "collection_type"},
+                { text: "ວັນທີ", value: "date", sortable: false },
+                { text: "Id", value: "customer_id", sortable: false },
+                { text: "ບໍລິສັດ", value: "company_name" },
+                { text: "ປະເພດບໍລິການ", value: "collection_type" },
                 // {
                 //     text: "Container",
                 //     value: "container",
                 //     sortable: false,
                 //     align: "center",
                 // },
-                {text: "ສະຖານທີ່", value: "name", sortable: false},
-                {text: "ສະຖານະ", value: "status", sortable: false},
+                { text: "ສະຖານທີ່", value: "name", sortable: false },
+                { text: "ສະຖານະ", value: "status", sortable: false },
+                { text: "ຂີ້ເຫຍື້ອຄາດໝາຍ", value: "expect_trash", width: "200px" },
+                { text: "ຂີ້ເຫຍື້ອປັດຈຸບັນ", value: "current_month_info", width: "200px" },
+                { text: "ຂີ້ເຫຍື້ອເດືອນກ່ອນ", value: "last_month_info", width: "200px" },
                 { text: "ຄຳອະທິບາຍການລຶບ", value: "deleted_description", sortable: false },
-                {text: "Deleted", value: "date_deleted_at", sortable: false},
+                { text: "Deleted", value: "date_deleted_at", sortable: false },
                 // { text: "", value: "actions", sortable: false },
             ],
         };
     },
     methods: {
+        getTrash(costBy, info) {
+            if (!info) return 0;
+            switch (costBy) {
+                case "bag":
+                case "chartered":
+                    return info.bag_sum
+                case "container":
+                    return info.container_sum
+                case "fix_cost":
+                    return info.count_time
+                default: return costBy
+            }
+        },
+        getTrashColor(item, amount) {
+            if (!item.expect_trash || item.expect_trash > amount) return "blue"
+
+            if (item.expect_trash == amount) return "green"
+
+            return "red"
+        },
+        getCustomerUnitFunc(costBy) {
+            return getCustomerUnit(costBy)
+        },
         fetchData() {
             const data = new FormData();
             data.set("page", this.pagination.current_page);
@@ -203,7 +234,7 @@ export default {
         viewPage(id) {
             this.$router.push({
                 name: "InvoiceDetail",
-                params: {id},
+                params: { id },
             });
         },
         homeStatus(value) {
@@ -216,9 +247,9 @@ export default {
             else if (value == "pending") return "primary";
             else return "info";
         },
-        statusText(status){
-            if(status == 'pending') return 'ລໍຖ້າ';
-            else if(status == 'success') return 'ສຳເລັດ';
+        statusText(status) {
+            if (status == 'pending') return 'ລໍຖ້າ';
+            else if (status == 'success') return 'ສຳເລັດ';
             else return status;
         },
         costBy(value) {
@@ -235,18 +266,18 @@ export default {
         //     this.fetchData();
         // },
         collectionType: function () {
-            this.pagination.current_page ='';
+            this.pagination.current_page = '';
             this.fetchData();
         },
         selectedDuration: function () {
-            this.pagination.current_page ='';
+            this.pagination.current_page = '';
             this.year_from = '';
             this.year_to = '';
 
             this.fetchData();
         },
         search: function (value) {
-            this.pagination.current_page ='';
+            this.pagination.current_page = '';
             if (value == "") {
                 this.fetchData();
             }
@@ -254,9 +285,9 @@ export default {
         year_from: function (value) {
             let year_from = moment(value).format("YYYY")
             let year_to = moment(this.year_to).format("YYYY")
-            this.pagination.current_page ='';
-            if(year_from !== '' && year_to !== ''){
-                if(year_from > year_to){
+            this.pagination.current_page = '';
+            if (year_from !== '' && year_to !== '') {
+                if (year_from > year_to) {
                     this.year_from = '';
                 }
             }
@@ -265,53 +296,53 @@ export default {
         year_to: function (value) {
             let year_to = moment(value).format("YYYY")
             let year_from = moment(this.year_from).format("YYYY")
-            this.pagination.current_page ='';
-            if(year_to !== '' && year_from !== ''){
-                if(year_to < year_from){
+            this.pagination.current_page = '';
+            if (year_to !== '' && year_from !== '') {
+                if (year_to < year_from) {
                     this.year_to = '';
                 }
             }
             this.fetchData();
         },
-        month_from: function (value){
+        month_from: function (value) {
             let month_from = moment(value).format("YYYY-MM")
             let month_to = moment(this.month_to).format("YYYY-MM")
-            if(month_from !== '' && month_to !== ''){
-                if(month_from > month_to){
+            if (month_from !== '' && month_to !== '') {
+                if (month_from > month_to) {
                     this.month_from = '';
                 }
             }
-            this.pagination.current_page ='';
+            this.pagination.current_page = '';
             this.fetchData();
         },
-        month_to: function (value){
+        month_to: function (value) {
             let month_from = moment(this.month_from).format("YYYY-MM")
             let month_to = moment(value).format("YYYY-MM")
-            this.pagination.current_page ='';
-            if(month_from !== '' && month_to !== ''){
-                if(month_to < month_from){
+            this.pagination.current_page = '';
+            if (month_from !== '' && month_to !== '') {
+                if (month_to < month_from) {
                     this.month_to = '';
                 }
             }
-            this.pagination.current_page ='';
+            this.pagination.current_page = '';
             this.fetchData();
         },
-        date_from: function (){
-            if(this.date_from !== '' && this.date_to !== ''){
-                if(this.date_from > this.date_to){
+        date_from: function () {
+            if (this.date_from !== '' && this.date_to !== '') {
+                if (this.date_from > this.date_to) {
                     this.date_from = '';
                 }
             }
-            this.pagination.current_page ='';
+            this.pagination.current_page = '';
             this.fetchData();
         },
-        date_to: function (){
-            if(this.date_from !== '' && this.date_to !== ''){
-                if(this.date_to < this.date_from){
+        date_to: function () {
+            if (this.date_from !== '' && this.date_to !== '') {
+                if (this.date_to < this.date_from) {
                     this.date_to = '';
                 }
             }
-            this.pagination.current_page ='';
+            this.pagination.current_page = '';
             this.fetchData();
         },
         tab: function (value) {
@@ -321,7 +352,7 @@ export default {
                 this.pagination = [];
                 this.fetchData();
                 this.$router
-                    .push({name: "Report-Trash", query: {tab: "home"}})
+                    .push({ name: "Report-Trash", query: { tab: "home" } })
                     .catch(() => {
                     });
             } else if (value == "tab-2") {
@@ -332,7 +363,7 @@ export default {
                 this.$router
                     .push({
                         name: "Report-Trash",
-                        query: {tab: "company"},
+                        query: { tab: "company" },
                     })
                     .catch(() => {
                     });

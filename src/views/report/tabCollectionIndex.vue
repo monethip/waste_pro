@@ -1,89 +1,46 @@
 <template>
   <v-container>
-    <v-breadcrumbs large class="pt-0"
-    >ລາຍງານຂໍ້ມູນການເກັບຂີ້ເຫື້ຍອ
-    </v-breadcrumbs
-    >
+    <v-breadcrumbs large class="pt-0">ລາຍງານຂໍ້ມູນການເກັບຂີ້ເຫື້ຍອ
+    </v-breadcrumbs>
     <v-row class="mb-n6">
       <v-col>
-        <v-btn
-            depressed
-            color="primary"
-            :loading="loading"
-            :disabled="loading"
-            @click="exportData()"
-        >Export
+        <v-btn depressed color="primary" :loading="loading" :disabled="loading" @click="exportData()">Export
         </v-btn>
       </v-col>
       <v-col>
-        <v-select
-            outlined
-            dense
-            :items="duration"
-            v-model="selectedDuration"
-            item-text="name"
-            item-value="duration"
-            label="ຊ່ວງເວລາ"
-        ></v-select>
+        <v-select outlined dense :items="duration" v-model="selectedDuration" item-text="name" item-value="duration"
+          label="ຊ່ວງເວລາ"></v-select>
       </v-col>
       <v-col v-if="selectedDuration == 'year'">
         <section>
-          <date-picker
-              style="height: 40px"
-              v-model="year_from"
-              type="year"
-              format="YYYY"
-              placeholder="ເລີ່ມປີ"
-          ></date-picker>
+          <date-picker style="height: 40px" v-model="year_from" type="year" format="YYYY" placeholder="ເລີ່ມປີ">
+          </date-picker>
         </section>
       </v-col>
       <v-col v-if="selectedDuration == 'year'">
         <section>
-          <date-picker
-              v-model="year_to"
-              type="year"
-              format="YYYY"
-              placeholder="ຫາປີ"
-          ></date-picker>
+          <date-picker v-model="year_to" type="year" format="YYYY" placeholder="ຫາປີ"></date-picker>
         </section>
       </v-col>
       <v-col v-if="selectedDuration == 'month'">
         <section>
-          <date-picker
-              v-model="month_from"
-              type="month"
-              placeholder="ເລີ່ມເດືອນ"
-          ></date-picker>
+          <date-picker v-model="month_from" type="month" placeholder="ເລີ່ມເດືອນ"></date-picker>
         </section>
       </v-col>
       <v-col v-if="selectedDuration == 'month'">
         <section>
-          <date-picker
-              v-model="month_to"
-              type="month"
-              placeholder="ຫາເດືອນ"
-          ></date-picker>
+          <date-picker v-model="month_to" type="month" placeholder="ຫາເດືອນ"></date-picker>
         </section>
       </v-col>
 
       <v-col v-if="selectedDuration == 'merge' || selectedDuration == 'date'">
         <section>
-          <date-picker
-              style="height: 40px"
-              v-model="date_from"
-              type="date"
-              placeholder="ເລີ່ມວັນທີ"
-          ></date-picker>
+          <date-picker style="height: 40px" v-model="date_from" type="date" placeholder="ເລີ່ມວັນທີ"></date-picker>
         </section>
       </v-col>
       <v-col v-if="selectedDuration == 'merge' || selectedDuration == 'date'">
         <section>
-          <date-picker
-              style="height: 40px"
-              v-model="date_to"
-              type="date"
-              placeholder="ຫາວັນທີ"
-          ></date-picker>
+          <date-picker style="height: 40px" v-model="date_to" type="date" placeholder="ຫາວັນທີ"></date-picker>
         </section>
       </v-col>
 
@@ -99,17 +56,8 @@
       <!--        ></v-select>-->
       <!--      </v-col>-->
       <v-col>
-        <v-text-field
-            v-model="search"
-            clearable
-            outlined
-            dense
-            prepend-inner-icon="mdi-magnify"
-            label="Search"
-            single-line
-            hide-details
-            @keyup.enter="Search()"
-        ></v-text-field>
+        <v-text-field v-model="search" clearable outlined dense prepend-inner-icon="mdi-magnify" label="Search"
+          single-line hide-details @keyup.enter="Search()"></v-text-field>
       </v-col>
 
     </v-row>
@@ -127,7 +75,7 @@
             <!--            <HomeCollection :tab="tab"/>-->
 
             <div v-if="collectionType == 'home'">
-              <div v-if="selectedDuration =='merge'">
+              <div v-if="selectedDuration == 'merge'">
                 <div v-if="summaryMerge.home">
                   <v-row>
                     <v-col class="sum-total">
@@ -146,56 +94,50 @@
                 </div>
               </div>
 
-             <div v-else>
-               <div v-if="summary">
-                 <v-row v-for="(sum, index) in summary" :key="index.id" class="mb-n6 mt-0">
-                   <v-col class="sum-title">
-                     <p v-if="selectedDuration =='year'">ປີ: {{ sum.year }}</p>
-                     <p v-if="selectedDuration =='month'">ເດືອນ: {{ sum.month }}</p>
-                     <p v-if="selectedDuration =='date'">ວັນທີ: {{ moment(sum.date).format("DD-MM-YY") }}</p>
-                   </v-col>
-                   <v-col>
-                     <p v-if="sum.home" class="sum-title">
-                       ຈຳນວນຖົງຂີ້ເຫື້ຍອ
-                       <span class="success--text">{{ sum.home.total_bag_amount }}</span>
-                     </p>
-                   </v-col>
-                   <v-col>
-                     <p v-if="sum.home" class="sum-title">
-                       ຕ້ອງລົງເກັບທັງໝົດ
-                       <span class="success--text">{{
-                           sum.home.total_number_of_times_to_collect
-                         }}</span>
-                     </p>
-                   </v-col>
-                   <v-col>
-                     <p v-if="sum.home" class="sum-title">
-                       ຈຳນວນເກັບສຳເລັດ
-                       <span class="success--text">{{
-                           sum.home.total_success_count
-                         }}</span>
-                     </p>
-                   </v-col>
-                   <v-col>
-                     <p v-if="sum.home" class="sum-title">
-                       ຈຳນວນລໍຖ້າເກັບ
-                       <span class="success--text">{{
-                           sum.home.total_pending_count
-                         }}</span>
-                     </p>
-                   </v-col>
-                 </v-row>
-               </div>
-             </div>
+              <div v-else>
+                <div v-if="summary">
+                  <v-row v-for="(sum, index) in summary" :key="index.id" class="mb-n6 mt-0">
+                    <v-col class="sum-title">
+                      <p v-if="selectedDuration == 'year'">ປີ: {{ sum.year }}</p>
+                      <p v-if="selectedDuration == 'month'">ເດືອນ: {{ sum.month }}</p>
+                      <p v-if="selectedDuration == 'date'">ວັນທີ: {{ moment(sum.date).format("DD-MM-YY") }}</p>
+                    </v-col>
+                    <v-col>
+                      <p v-if="sum.home" class="sum-title">
+                        ຈຳນວນຖົງຂີ້ເຫື້ຍອ
+                        <span class="success--text">{{ sum.home.total_bag_amount }}</span>
+                      </p>
+                    </v-col>
+                    <v-col>
+                      <p v-if="sum.home" class="sum-title">
+                        ຕ້ອງລົງເກັບທັງໝົດ
+                        <span class="success--text">{{
+                            sum.home.total_number_of_times_to_collect
+                        }}</span>
+                      </p>
+                    </v-col>
+                    <v-col>
+                      <p v-if="sum.home" class="sum-title">
+                        ຈຳນວນເກັບສຳເລັດ
+                        <span class="success--text">{{
+                            sum.home.total_success_count
+                        }}</span>
+                      </p>
+                    </v-col>
+                    <v-col>
+                      <p v-if="sum.home" class="sum-title">
+                        ຈຳນວນລໍຖ້າເກັບ
+                        <span class="success--text">{{
+                            sum.home.total_pending_count
+                        }}</span>
+                      </p>
+                    </v-col>
+                  </v-row>
+                </div>
+              </div>
 
-              <v-data-table
-                  v-if="homeCollection"
-                  :headers="headers"
-                  :items="homeCollection"
-                  :search="search"
-                  :disable-pagination="true"
-                  hide-default-footer
-              >
+              <v-data-table v-if="homeCollection" :headers="headers" :items="homeCollection" :search="search"
+                :disable-pagination="true" hide-default-footer>
                 <!--        <template v-slot:item.status="{ item }">-->
                 <!--          <div>-->
                 <!--            <span class="success&#45;&#45;text">{{ item.status }}</span>-->
@@ -204,28 +146,52 @@
                 <template v-slot:item.status="{ item }">
                   <v-chip label :color="homeStatus(item.status)">{{
                       statusText(item.status)
-                    }}
+                  }}
                   </v-chip>
                 </template>
                 <template v-slot:item.date_deleted_at="{ item }">
-                  <v-chip  v-if="item.date_deleted_at"  label color="error">{{
+                  <v-chip v-if="item.date_deleted_at" label color="error">{{
                       item.date_deleted_at
-                    }}
+                  }}
                   </v-chip>
                 </template>
-              </v-data-table
-              >
-              <br/>
+                <template v-slot:item.expect_trash="{ item }">
+                  <v-chip outlined color="green" v-if="item.expect_trash">
+                    {{ Intl.NumberFormat().format(item.expect_trash) }}
+                    {{ getCustomerUnitFunc(item.cost_by) }}
+                  </v-chip>
+                  <div v-else>-</div>
+                </template>
+
+                <template v-slot:item.current_month_info="{ item }">
+                  <v-chip outlined v-if="item.current_month_info"
+                    :color="getTrashColor(item, getTrash(item.cost_by, item.last_month_info))">{{
+                        Intl.NumberFormat().format(getTrash(item.cost_by, item.current_month_info))
+                    }}
+                    {{ getCustomerUnitFunc(item.cost_by) }}
+                  </v-chip>
+                  <div v-else>-</div>
+                </template>
+
+                <template v-slot:item.last_month_info="{ item }">
+                  <v-chip dark v-if="item.last_month_info"
+                    :color="getTrashColor(item, getTrash(item.cost_by, item.last_month_info))">{{
+                        Intl.NumberFormat().format(getTrash(item.cost_by, item.last_month_info))
+                    }}
+                    {{ getCustomerUnitFunc(item.cost_by) }}
+                  </v-chip>
+                  <div v-else>-</div>
+                </template>
+              </v-data-table>
+              <br />
               <template>
                 <div v-if="homeCollection.length">
-                  <Pagination
-                      v-if="pagination.total_pages > 1"
-                      :pagination="pagination"
-                      :offset="offset"
-                      @paginate="fetchData()"
-                  ></Pagination>
+                  <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
+                    @paginate="fetchData()"></Pagination>
                 </div>
               </template>
+
+
             </div>
           </v-tab-item>
         </v-tabs-items>
@@ -237,7 +203,7 @@
                 <!--                <CompanyCollection :tab="tab"/>-->
 
                 <div v-if="collectionType == 'company'">
-                  <div v-if="selectedDuration =='merge'">
+                  <div v-if="selectedDuration == 'merge'">
                     <div v-if="summaryMerge.company">
                       <v-row>
                         <v-col class="sum-total">
@@ -256,115 +222,134 @@
                     </div>
                   </div>
 
-                 <div v-else>
-                   <v-row v-for="(sum, index) in summary" :key="index" class="mb-n6 mt-n6">
-                     <v-col class="sum-title">
-                       <p v-if="selectedDuration =='year'">ວັນທີ: {{ sum.year }}</p>
-                       <p v-if="selectedDuration =='month'">ເດືອນ: {{ sum.month }}</p>
-                       <p v-if="selectedDuration =='date'">ວັນທີ: {{ moment(sum.date).format("DD-MM-YY") }}</p>
-                     </v-col>
-                     <v-col>
-                       <p class="sum-title">
-                         Canceled
-                         <span v-if="sum.company" class="success--text">{{
-                             sum.company.canceled_count
-                           }}</span>
-                       </p>
-                     </v-col>
-                     <v-col>
-                       <p class="sum-title">
-                         Deleted
-                         <span v-if="sum.company" class="success--text">{{
-                             sum.company.deleted_count
-                           }}</span>
-                       </p>
-                     </v-col>
-                     <v-col>
-                       <p class="sum-title">
-                         ຈຳນວນ Container
-                         <span v-if="sum.company" class="success--text">{{
-                             sum.company.container_amount
-                           }}</span>
-                       </p>
-                     </v-col>
-                     <v-col>
-                       <p class="sum-title">
-                         Container(ຄັ້ງ)
-                         <span v-if="sum.company" class="success--text">{{
-                             sum.company.number_of_times_to_collect_by_container
-                           }}</span>
-                       </p>
-                     </v-col>
-                     <v-col>
-                       <p class="sum-title">
-                         ເກັບເປັນຖ້ຽວ
-                         <span v-if="sum.company" class="success--text">{{
-                             sum.company.number_of_times_to_collect_by_fix_cost
-                           }}</span>
-                       </p>
-                     </v-col>
-                     <v-col>
-                       <p class="sum-title">
-                         ປະຕິເສດ
-                         <span v-if="sum.company" class="success--text">{{ sum.company.reject_count }}</span>
-                       </p>
-                     </v-col>
-                     <v-col>
-                       <p class="sum-title">
-                         ລໍຖ້າເກັບ
-                         <span v-if="sum.company" class="success--text">{{ sum.company.pending_count }}</span>
-                       </p>
-                     </v-col>
-                     <v-col>
-                       <p class="sum-title">
-                         ລໍຖ້າຢືນຢັນ
-                         <span v-if="sum.company" class="success--text">{{
-                             sum.company.wait_to_confirm_count
-                           }}</span>
-                       </p>
-                     </v-col>
-                     <v-col>
-                       <p class="sum-title">
-                         ສຳເລັດ
-                         <span v-if="sum.company" class="success--text">{{ sum.company.success_count }}</span>
-                       </p>
-                     </v-col>
-                   </v-row>
-                 </div>
+                  <div v-else>
+                    <v-row v-for="(sum, index) in summary" :key="index" class="mb-n6 mt-n6">
+                      <v-col class="sum-title">
+                        <p v-if="selectedDuration == 'year'">ວັນທີ: {{ sum.year }}</p>
+                        <p v-if="selectedDuration == 'month'">ເດືອນ: {{ sum.month }}</p>
+                        <p v-if="selectedDuration == 'date'">ວັນທີ: {{ moment(sum.date).format("DD-MM-YY") }}</p>
+                      </v-col>
+                      <v-col>
+                        <p class="sum-title">
+                          Canceled
+                          <span v-if="sum.company" class="success--text">{{
+                              sum.company.canceled_count
+                          }}</span>
+                        </p>
+                      </v-col>
+                      <v-col>
+                        <p class="sum-title">
+                          Deleted
+                          <span v-if="sum.company" class="success--text">{{
+                              sum.company.deleted_count
+                          }}</span>
+                        </p>
+                      </v-col>
+                      <v-col>
+                        <p class="sum-title">
+                          ຈຳນວນ Container
+                          <span v-if="sum.company" class="success--text">{{
+                              sum.company.container_amount
+                          }}</span>
+                        </p>
+                      </v-col>
+                      <v-col>
+                        <p class="sum-title">
+                          Container(ຄັ້ງ)
+                          <span v-if="sum.company" class="success--text">{{
+                              sum.company.number_of_times_to_collect_by_container
+                          }}</span>
+                        </p>
+                      </v-col>
+                      <v-col>
+                        <p class="sum-title">
+                          ເກັບເປັນຖ້ຽວ
+                          <span v-if="sum.company" class="success--text">{{
+                              sum.company.number_of_times_to_collect_by_fix_cost
+                          }}</span>
+                        </p>
+                      </v-col>
+                      <v-col>
+                        <p class="sum-title">
+                          ປະຕິເສດ
+                          <span v-if="sum.company" class="success--text">{{ sum.company.reject_count }}</span>
+                        </p>
+                      </v-col>
+                      <v-col>
+                        <p class="sum-title">
+                          ລໍຖ້າເກັບ
+                          <span v-if="sum.company" class="success--text">{{ sum.company.pending_count }}</span>
+                        </p>
+                      </v-col>
+                      <v-col>
+                        <p class="sum-title">
+                          ລໍຖ້າຢືນຢັນ
+                          <span v-if="sum.company" class="success--text">{{
+                              sum.company.wait_to_confirm_count
+                          }}</span>
+                        </p>
+                      </v-col>
+                      <v-col>
+                        <p class="sum-title">
+                          ສຳເລັດ
+                          <span v-if="sum.company" class="success--text">{{ sum.company.success_count }}</span>
+                        </p>
+                      </v-col>
+                    </v-row>
+                  </div>
 
-                  <v-data-table
-                      :headers="company"
-                      :items="collections"
-                      :search="search"
-                      :disable-pagination="true"
-                      hide-default-footer
-                  >
+                  <v-data-table :headers="company" :items="collections" :search="search" :disable-pagination="true"
+                    hide-default-footer>
+
                     <template v-slot:item.status="{ item }">
                       <v-chip label :color="companyStatus(item.status)">{{
-                           statusText(item.status)
-                        }}
+                          statusText(item.status)
+                      }}
                       </v-chip>
                     </template>
                     <template v-slot:item.date_deleted_at="{ item }">
-                      <v-chip label  v-if="item.date_deleted_at" color="error">{{
+                      <v-chip label v-if="item.date_deleted_at" color="error">{{
                           item.date_deleted_at
-                        }}
+                      }}
                       </v-chip>
                     </template>
                     <template v-slot:item.collection_type="{ item }">
                       <div>{{ costBy(item.collection_type) }}</div>
                     </template>
 
-                    <!--Role --> </v-data-table
-                  >
-                  <br/>
+                    <template v-slot:item.expect_trash="{ item }">
+                      <v-chip outlined color="green" v-if="item.expect_trash">
+                        {{ Intl.NumberFormat().format(item.expect_trash) }}
+                        {{ getCustomerUnitFunc(item.cost_by) }}
+                      </v-chip>
+                      <div v-else>-</div>
+                    </template>
+                    <template v-slot:item.current_month_info="{ item }">
+                      <v-chip outlined v-if="item.current_month_info"
+                        :color="getTrashColor(item, getTrash(item.cost_by, item.last_month_info))">{{
+                            Intl.NumberFormat().format(getTrash(item.cost_by, item.current_month_info))
+                        }}
+                        {{ getCustomerUnitFunc(item.cost_by) }}
+                      </v-chip>
+                      <div v-else>-</div>
+                    </template>
+
+                    <template v-slot:item.last_month_info="{ item }">
+                      <v-chip dark v-if="item.last_month_info"
+                        :color="getTrashColor(item, getTrash(item.cost_by, item.last_month_info))">{{
+                            Intl.NumberFormat().format(getTrash(item.cost_by, item.last_month_info))
+                        }}
+                        {{ getCustomerUnitFunc(item.cost_by) }}
+                      </v-chip>
+                      <div v-else>-</div>
+                    </template>
+
+                    <!--Role -->
+                  </v-data-table>
+                  <br />
                   <template>
-                    <Pagination
-                        v-if="pagination.total_pages > 1"
-                        :pagination="pagination"
-                        :offset="offset"
-                        @paginate="fetchData()"
-                    ></Pagination>
+                    <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
+                      @paginate="fetchData()"></Pagination>
                   </template>
                 </div>
               </v-card-text>
@@ -403,9 +388,11 @@ export default {
 .mx-input {
   height: 40px !important;
 }
-.sum-title{
+
+.sum-title {
   font-size: 14px !important;
 }
+
 .sum-total {
   font-size: 14px !important;
 }
