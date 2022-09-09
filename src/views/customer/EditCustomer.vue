@@ -42,8 +42,8 @@
                     <v-avatar class="avatar rounded mr-6" size="94px">
                       <img :src="item" alt="Image" />
                     </v-avatar>
-                    <p class="mb-0 body-2">Name: {{  image_list[index].name  }}</p>
-                    <span class="body-2">size: {{  image_list[index].size / 1024  }}KB</span>
+                    <p class="mb-0 body-2">Name: {{ image_list[index].name }}</p>
+                    <span class="body-2">size: {{ image_list[index].size / 1024 }}KB</span>
                     <div @click="RemoveItem(item)" class="mt-2">
                       <v-icon style="cursor: pointer">mdi-delete</v-icon>
                     </div>
@@ -62,17 +62,17 @@
               <v-col cols>
                 <v-text-field label="Name *" required v-model="data.name" :rules="nameRules" outlined dense>
                 </v-text-field>
-                <p class="errors">{{  server_errors.name  }}</p>
+                <p class="errors">{{ server_errors.name }}</p>
               </v-col>
               <v-col cols>
                 <v-text-field label="Surname *" required v-model="data.surname" :rules="nameRules" outlined dense>
                 </v-text-field>
-                <p class="errors">{{  server_errors.surname  }}</p>
+                <p class="errors">{{ server_errors.surname }}</p>
               </v-col>
               <v-col cols>
                 <v-text-field label="ເຮືອນເລກທີ *" required v-model="data.house_number" :rules="houseNumberRules"
                   type="number" class="input-number" outlined dense></v-text-field>
-                <p class="errors">{{  server_errors.house_number  }}</p>
+                <p class="errors">{{ server_errors.house_number }}</p>
               </v-col>
             </v-row>
 
@@ -80,12 +80,12 @@
               <v-col cols>
                 <v-text-field v-if="data.user" label="ເບີໂທ *" required v-model="data.user.phone" :rules="phoneRules"
                   type="number" class="input-number" outlined dense></v-text-field>
-                <p class="errors">{{  server_errors.phone  }}</p>
+                <p class="errors">{{ server_errors.phone }}</p>
               </v-col>
 
               <v-col cols>
                 <v-text-field v-if="data.user" label="Email" v-model="data.user.email" outlined dense></v-text-field>
-                <p class="errors">{{  server_errors.email  }}</p>
+                <p class="errors">{{ server_errors.email }}</p>
               </v-col>
               <v-col cols>
                 <v-select outlined dense :items="favorite_dates" v-model="selectedFavoriteDate" item-text="name"
@@ -100,18 +100,18 @@
                     <div>ສາມາດເກັບຂີ້ເຫື້ຍອເລີຍໄດ້ບໍ່ ?</div>
                   </template>
                 </v-checkbox>
-                <p class="errors">{{  server_errors.can_collect  }}</p>
+                <p class="errors">{{ server_errors.can_collect }}</p>
               </v-col>
               <v-col cols>
                 <v-autocomplete required :items="districts" v-model="selectedDistrict" item-text="name" item-value="id"
                   label="District *" :rulesDistrict="rulesDistrict" outlined dense></v-autocomplete>
-                <p class="errors">{{  errormsg  }}</p>
+                <p class="errors">{{ errormsg }}</p>
               </v-col>
 
               <v-col cols>
                 <v-autocomplete required :items="villages" v-model="selectedVillage" item-text="name" item-value="id"
                   label="Village *" :rules="ruleVillage" outlined dense></v-autocomplete>
-                <p class="errors">{{  errormsg  }}</p>
+                <p class="errors">{{ errormsg }}</p>
               </v-col>
             </v-row>
 
@@ -166,7 +166,7 @@
                     </v-slide-x-reverse-transition>
                   </template>
                 </v-select>
-                <p class="errors">{{  server_errors.village_details  }}</p>
+                <p class="errors">{{ server_errors.village_details }}</p>
               </v-col>
             </v-row>
 
@@ -174,7 +174,7 @@
               <v-col cols="4">
                 <v-text-field :label="expectTrashLabel" v-model="data.expect_trash" outlined dense></v-text-field>
                 <p class="errors">
-                  {{  server_errors.expect_trash  }}
+                  {{ server_errors.expect_trash }}
                 </p>
               </v-col>
             </v-row>
@@ -223,7 +223,7 @@
           <span class="headline">
             Add Item
             <span>
-              <a>{{  villageDetail.name  }}</a>
+              <a>{{ villageDetail.name }}</a>
             </span>
           </span>
         </v-card-title>
@@ -450,7 +450,7 @@ export default {
         formData.append("village_details[]", item);
       });
       this.selectedFavoriteDate.map(item => {
-        formData.append("favorite_dates[]", item);
+        formData.append("favorite_dates[]", item.name ? item.name : item);
       });
       formData.append("name", this.data.name);
       formData.append("surname", this.data.surname);
