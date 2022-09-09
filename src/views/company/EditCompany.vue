@@ -547,9 +547,7 @@ export default {
       formData.append("email", this.data.user.email);
       formData.append("cost_by", this.data.cost_by);
       if (this.data.expect_trash) formData.append("expect_trash", this.data.expect_trash);
-      if (this.selectedCost !== 'bag') {
-        formData.append("fix_cost", this.data.fix_cost);
-      }
+      formData.append("fix_cost", this.data.fix_cost);
       formData.append("start_date", this.data.start_month);
       if (this.data.can_collect == true) {
         formData.append("can_collect", 1);
