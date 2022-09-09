@@ -429,6 +429,7 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data;
+              this.data.fix_cost = res.data.data.fix_cost ? res.data.data.fix_cost : "0";
               this.selectedDistrict = res.data.data.district.id;
               this.selectedVillage = res.data.data.village.id;
               this.selectedVillage = res.data.data.village_id;
@@ -524,6 +525,7 @@ export default {
     },
 
     UpdateData() {
+      console.log(this.data, 99);
       // console.log(this.selectedFavoriteDate)
       let formData = new FormData();
       if (this.data.user.email == null) {
@@ -547,7 +549,9 @@ export default {
       formData.append("email", this.data.user.email);
       formData.append("cost_by", this.data.cost_by);
       if (this.data.expect_trash) formData.append("expect_trash", this.data.expect_trash);
-      formData.append("fix_cost", this.data.fix_cost);
+      if (this.selectedCost !== 'bag') {
+        formData.append("fix_cost", this.data.fix_cost);
+      }
       formData.append("start_date", this.data.start_month);
       if (this.data.can_collect == true) {
         formData.append("can_collect", 1);
