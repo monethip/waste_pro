@@ -535,8 +535,9 @@ export default {
       this.selectedVillageDetail.map((item) => {
         formData.append("village_details[]", item);
       });
+      console.log(222, this.selectedFavoriteDate);
       this.selectedFavoriteDate.map((item) => {
-        formData.append("favorite_dates[]", item.name);
+        formData.append("favorite_dates[]", item.name ? item.name : item);
       });
       formData.append("company_name", this.data.company_name);
       formData.append("village_id", this.selectedVillage);
