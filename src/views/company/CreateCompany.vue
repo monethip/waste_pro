@@ -46,9 +46,9 @@
                     <img :src="item" alt="Image" />
                   </v-avatar>
                   <p class="mb-0 body-2">
-                    Name: {{  image_list[index].name  }}
+                    Name: {{ image_list[index].name }}
                   </p>
-                  <span class="body-2">size: {{  image_list[index].size / 1024  }}KB</span>
+                  <span class="body-2">size: {{ image_list[index].size / 1024 }}KB</span>
                   <div @click="RemoveItem(item)" class="mt-2">
                     <v-icon style="cursor: pointer">mdi-delete</v-icon>
                   </div>
@@ -92,7 +92,7 @@
               <v-text-field label="ຊື່ບໍລິສັດ *" required v-model="data.name" :rules="nameRules" outlined dense>
               </v-text-field>
               <p class="errors">
-                {{  server_errors.company_name  }}
+                {{ server_errors.company_name }}
               </p>
             </v-col>
             <v-col cols="4">
@@ -100,13 +100,13 @@
                 outlined dense></v-text-field>
 
               <p class="errors">
-                {{  server_errors.phone  }}
+                {{ server_errors.phone }}
               </p>
             </v-col>
             <v-col cols="4">
               <v-text-field label="Email ບໍລິສັດ" v-model="data.email" outlined dense></v-text-field>
               <p class="errors">
-                {{  server_errors.email  }}
+                {{ server_errors.email }}
               </p>
             </v-col>
           </v-row>
@@ -115,14 +115,14 @@
               <v-text-field label="ຊື່ຜູ້ປະສານງານ *" required v-model="data.coordinator_name" :rules="corNameRules"
                 outlined dense></v-text-field>
               <p class="errors">
-                {{  server_errors.coordinator_name  }}
+                {{ server_errors.coordinator_name }}
               </p>
             </v-col>
             <v-col>
               <v-text-field label="ນາມສະກຸນຜູ້ປະສານງານ *" required v-model="data.coordinator_surname"
                 :rules="corSurameRules" outlined dense></v-text-field>
               <p class="errors">
-                {{  server_errors.coordinator_surname  }}
+                {{ server_errors.coordinator_surname }}
               </p>
             </v-col>
           </v-row>
@@ -131,13 +131,13 @@
               <v-text-field label="ເບີໂທຜູ້ປະສານງານ *" required v-model="data.coordinator_phone" type="number"
                 class="input-number" outlined dense></v-text-field>
               <p class="errors">
-                {{  server_errors.coordinator_phone  }}
+                {{ server_errors.coordinator_phone }}
               </p>
             </v-col>
             <v-col cols="6">
               <v-text-field label="Email ຜູ້ປະສານງານ" v-model="data.coordinator_email" outlined dense></v-text-field>
               <p class="errors">
-                {{  server_errors.coordinator_email  }}
+                {{ server_errors.coordinator_email }}
               </p>
             </v-col>
           </v-row>
@@ -147,14 +147,14 @@
               <v-autocomplete required :items="districts" v-model="selectedDistrict" item-text="name" item-value="id"
                 label="District *" :rulesDistrict="rulesDistrict" outlined dense></v-autocomplete>
               <p class="errors">
-                {{  server_errors.district_id  }}
+                {{ server_errors.district_id }}
               </p>
             </v-col>
             <v-col cols="6">
               <v-autocomplete required :items="villages" v-model="selectedVillage" item-text="name" item-value="id"
                 label="Village *" :rules="ruleVillage" outlined dense></v-autocomplete>
               <p class="errors">
-                {{  server_errors.village_id  }}
+                {{ server_errors.village_id }}
               </p>
             </v-col>
           </v-row>
@@ -171,7 +171,7 @@
                 </template>
               </v-select>
               <p class="errors">
-                {{  server_errors.village_details  }}
+                {{ server_errors.village_details }}
               </p>
             </v-col>
           </v-row>
@@ -186,8 +186,24 @@
               <v-text-field label="ມູນຄ່າສັນຍາ *" type="number" v-model="fix_cost" required outlined dense>
               </v-text-field>
               <p class="errors">
-                {{  server_errors.cost_by  }}
+                {{ server_errors.cost_by }}
               </p>
+            </v-col>
+          </v-row>
+
+          <v-row v-if="selectedCost == 'fix_cost'">
+            <v-col>
+              <v-row v-for="countCar in carCounts" :key="countCar">
+                <v-col>
+                  <v-select label="ປະເພດລົດ" :items="vehicleTypeCut(countCar-1)" item-text="name" item-value="id"
+                    v-model="selectedCar[countCar-1]">
+                  </v-select>
+                </v-col>
+                <v-col>
+                  <v-text-field type="number" v-model="selectedCarPrice[countCar-1]" label="ລາຄາ"></v-text-field>
+                </v-col>
+              </v-row>
+              <v-btn @click="addMoreCar" color="blue" dark width="100%" style="">ເພີ່ມລາຄາຕາມລົດ</v-btn>
             </v-col>
           </v-row>
 
@@ -195,7 +211,7 @@
             <v-col cols="4">
               <v-text-field :label="expectTrashLabel" v-model="data.expect_trash" outlined dense></v-text-field>
               <p class="errors">
-                {{  server_errors.expect_trash  }}
+                {{ server_errors.expect_trash }}
               </p>
             </v-col>
           </v-row>
@@ -211,7 +227,7 @@
                 <v-date-picker v-model="start_date"></v-date-picker>
               </v-menu>
               <p class="errors">
-                {{  server_errors.start_month  }}
+                {{ server_errors.start_month }}
               </p>
             </v-col>
             <v-col>
@@ -221,7 +237,7 @@
                 </template>
               </v-checkbox>
               <p class="errors">
-                {{  server_errors.can_collect  }}
+                {{ server_errors.can_collect }}
               </p>
             </v-col>
           </v-row>
@@ -242,14 +258,14 @@
               <v-text-field label="Password *" type="password" v-model="data.password" :rules="passwordRules" required
                 outlined dense></v-text-field>
               <p class="errors">
-                {{  server_errors.password  }}
+                {{ server_errors.password }}
               </p>
             </v-col>
             <v-col cols="6">
               <v-text-field label="Password Confirm *" type="password" outlined dense
                 v-model="data.password_confirmation" :rules="passwordConfirmRules" required></v-text-field>
               <p class="errors">
-                {{  server_errors.password_confirmation  }}
+                {{ server_errors.password_confirmation }}
               </p>
             </v-col>
           </v-row>
@@ -301,7 +317,7 @@
       <v-card>
         <v-card-title>
           <span class="headline">Add Item
-            <span><a>{{  villageDetail.name  }}</a></span></span>
+            <span><a>{{ villageDetail.name }}</a></span></span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -340,6 +356,12 @@ export default {
         email: '',
         coordinator_email: ''
       },
+      addCar: false,
+      cars: [],
+      selectedCar: [],
+      selectedCarPrice: [],
+      vehicleTypes: [],
+      carCounts: 0,
       loading: false,
       server_errors: {},
       provinces: [],
@@ -468,7 +490,31 @@ export default {
     RemoveItem(item) {
       this.preview_list.splice(this.preview_list.indexOf(item), 1);
     },
+    vehicleTypeCut(count) {
+      const slicedArray = this.selectedCar.slice(0, count);
+      return this.vehicleTypes.filter(item => !slicedArray.includes(item.id))
+    },
+    addMoreCar() {
+      this.carCounts++
+    },
+    fetchVehicleType() {
+      this.selectedVillageDetail = [];
+      this.$store.commit("Loading_State", true);
+      this.$axios
+        .get("vehicle_type/")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.$store.commit("Loading_State", false);
+              this.vehicleTypes = res.data.data;
 
+            }, 300);
+          }
+        })
+        .catch(() => {
+          this.$store.commit("Loading_State", false);
+        });
+    },
     previewMultiImage: function (event) {
       let input = event.target;
       let count = input.files.length;
@@ -582,6 +628,12 @@ export default {
       formData.append("start_date", this.start_date);
       formData.append("can_collect", this.start_collect);
       formData.append("collect_description", this.data.collect_description);
+      for (const [index, value] of Object.entries(this.selectedCar)) {
+        if (this.selectedCarPrice[index]) {
+          formData.append(`vehicle_types[${index}][id]`, value)
+          formData.append(`vehicle_types[${index}][price]`, this.selectedCarPrice[index])
+        }
+      }
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
@@ -858,6 +910,7 @@ export default {
     this.fetchAddress();
     this.fetchFavorite();
     this.getRequest();
+    this.fetchVehicleType();
   },
 };
 </script>

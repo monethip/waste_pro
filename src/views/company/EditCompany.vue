@@ -220,6 +220,22 @@
               </v-col>
             </v-row>
 
+            <v-row v-if="data.cost_by == 'fix_cost'">
+              <v-col>
+                <v-row v-for="countCar in carCounts" :key="countCar">
+                  <v-col>
+                    <v-select label="ປະເພດລົດ" :items="vehicleTypeCut(countCar-1)" item-text="name" item-value="id"
+                      v-model="selectedCar[countCar-1]">
+                    </v-select>
+                  </v-col>
+                  <v-col>
+                    <v-text-field type="number" v-model="selectedCarPrice[countCar-1]" label="ລາຄາ"></v-text-field>
+                  </v-col>
+                </v-row>
+                <v-btn @click="addMoreCar" color="blue" dark width="100%" style="">ເພີ່ມລາຄາຕາມລົດ</v-btn>
+              </v-col>
+            </v-row>
+
             <v-row>
               <v-col cols="4">
                 <v-text-field :label="expectTrashLabel" v-model="data.expect_trash" outlined dense></v-text-field>
@@ -317,6 +333,12 @@ export default {
   data() {
     return {
       data: {},
+      addCar: false,
+      cars: [],
+      selectedCar: [],
+      selectedCarPrice: [],
+      vehicleTypes: [],
+      carCounts: 0,
       loading: false,
       server_errors: {},
       provinces: [],
@@ -416,9 +438,16 @@ export default {
       const text = "ຂີ້ເຫຍື້ອຄາດໝາຍ"
       if (!this.data.cost_by) return text;
       return `${text} (${getCustomerUnit(this.data.cost_by)})`
-    }
+    },
   },
   methods: {
+    vehicleTypeCut(count) {
+      const slicedArray = this.selectedCar.slice(0, count);
+      return this.vehicleTypes.filter(item => !slicedArray.includes(item.id))
+    },
+    addMoreCar() {
+      this.carCounts++
+    },
     fetchData() {
       this.selectedVillageDetail = [];
       this.$store.commit("Loading_State", true);
@@ -430,6 +459,11 @@ export default {
               this.$store.commit("Loading_State", false);
               this.data = res.data.data;
               this.data.fix_cost = res.data.data.fix_cost ? res.data.data.fix_cost : "0";
+              this.carCounts = res.data.data.vehicle_types.length
+              for (const [index, value] of Object.entries(res.data.data.vehicle_types)) {
+                this.selectedCar[index] = value.id;
+                this.selectedCarPrice[index] = value.pivot.price;
+              }
               this.selectedDistrict = res.data.data.district.id;
               this.selectedVillage = res.data.data.village.id;
               this.selectedVillage = res.data.data.village_id;
@@ -441,6 +475,24 @@ export default {
                 this.village_variation_id.push(item.village_variation_id);
                 this.selectedVillageDetail.push(item.id);
               });
+            }, 300);
+          }
+        })
+        .catch(() => {
+          this.$store.commit("Loading_State", false);
+        });
+    },
+    fetchVehicleType() {
+      this.selectedVillageDetail = [];
+      this.$store.commit("Loading_State", true);
+      this.$axios
+        .get("vehicle_type/")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.$store.commit("Loading_State", false);
+              this.vehicleTypes = res.data.data;
+
             }, 300);
           }
         })
@@ -560,6 +612,13 @@ export default {
         formData.append("can_collect", 0);
       }
       formData.append("collect_description", this.data.collect_description);
+
+      for (const [index, value] of Object.entries(this.selectedCar)) {
+        if (this.selectedCarPrice[index]) {
+          formData.append(`vehicle_types[${index}][id]`, value)
+          formData.append(`vehicle_types[${index}][price]`, this.selectedCarPrice[index])
+        }
+      }
       formData.append("_method", "PUT");
       if (this.$refs.form.validate() == true) {
         this.loading = true;
@@ -577,9 +636,12 @@ export default {
                   color: "success",
                   msg: res.data.message,
                 });
-                this.$router.push({
-                  name: "Company",
-                });
+                // this.$router.push({
+                //   name: "Company",
+                // });
+
+                this.fetchData();
+
                 // this.reset();
               }, 300);
             }
@@ -844,6 +906,7 @@ export default {
     this.fetchAddress();
     this.fetchData();
     this.fetchFavorite();
+    this.fetchVehicleType();
   },
 };
 </script>
