@@ -138,6 +138,7 @@ export default {
             page: this.pagination.current_page,
             per_page: this.per_page,
             statuses: this.statuses,
+            order_by: 'piority',
           },
         })
         .then((res) => {
