@@ -128,6 +128,12 @@
                           ບິນ
                         </v-list-item-title>
                       </v-list-item>
+                      <v-list-item link v-if="canDelete(data)" @click="deleteEvent(data.id)">
+                        <v-list-item-title>
+                          <v-icon small class="mr-2"> mdi-delete</v-icon>
+                          ລົບ
+                        </v-list-item-title>
+                      </v-list-item>
                     </v-list>
                   </v-menu>
                 </td>
@@ -304,6 +310,39 @@ export default {
     };
   },
   methods: {
+    deleteEvent(id) {
+      this.$store.commit("Loading_State", true);
+      this.$axios
+        .delete("v2/collection-event/" + id)
+        .then((res) => {
+          if (res.data.code == 200) {
+            this.$store.commit("Loading_State", false);
+            this.fetchData();
+          }
+        })
+        .catch((error) => {
+          this.$store.commit("Loading_State", false);
+          if (error.response.status == 422) {
+            let obj = error.response.data.errors;
+            for (let [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
+            }
+          }
+        });
+    },
+    canDelete(data) {
+
+      let isSuperAdmin = false;
+      for (const role of JSON.parse(this.$store.getters['auth/roles'])) {
+        if (role.name == 'super_admin') {
+          isSuperAdmin = true;
+          break;
+        }
+      }
+
+      const array = ['created', 'approved']
+      return isSuperAdmin && data.collect_status == 'requested' && array.indexOf(data.billing.status) != -1;
+    },
     getCollectStatus(status) {
       return getLaoCollectStatus(status)
     },
@@ -330,6 +369,7 @@ export default {
             { collect_status: this.selectedCollectionStatus },
             { payment_status: this.selectedPaymentStatus },
             { month: date },
+            { order_by: 'newest' },
           ])
         })
         .then((res) => {
