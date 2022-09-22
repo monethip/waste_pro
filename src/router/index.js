@@ -1364,6 +1364,23 @@ const routes = [
     },
     //Report by driver
     {
+        path: '/report/driver/collection/v2',
+        name: 'Report-Driver-Collection-V2',
+        component: () => import('@/views/report/v2/ReportCollection.vue'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'ລາຍງານເກັບຂີ້ເຫຍື້ອຕາມລົດ',
+                    disabled: true,
+                    href: '/report/driver/collection/v2'
+                },
+            ]
+        }
+    },
+    //Report by driver
+    {
         path: '/report/driver/collection',
         name: 'Report-Driver-Collection',
         component: () => import('@/views/report/ReportCollection.vue'),

@@ -33,7 +33,7 @@
                       <v-list-item-action-text>
                         <span class="primary-color">
                           {{
-                              moment(item.created_at).format("DD-MM-YY")
+                          moment(item.created_at).format("DD-MM-YY")
                           }}
                         </span>
                       </v-list-item-action-text>
@@ -81,7 +81,7 @@
                       <v-list-item-action-text>
                         <span class="primary-color">
                           {{
-                              moment(item.created_at).format("DD-MM-YY")
+                          moment(item.created_at).format("DD-MM-YY")
                           }}
                         </span>
                       </v-list-item-action-text>
@@ -413,10 +413,16 @@ export default {
           menu: [
             {
               icon: "mdi-chart-bubble",
-              title: "ເກັບຂີ້ເຫຍື້ອຕາມລົດ",
-              to: "/report/driver/collection",
+              title: "ເກັບຂີ້ເຫຍື້ອຕາມລົດໃໝ່",
+              to: "/report/driver/collection/v2",
               permissions: ["report"]
             },
+            // {
+            //   icon: "mdi-chart-bubble",
+            //   title: "ເກັບຂີ້ເຫຍື້ອຕາມລົດ",
+            //   to: "/report/driver/collection",
+            //   permissions: ["report"]
+            // },
             {
               icon: "mdi-chart-bubble",
               title: "ເກັບຂີ້ເຫຍື້ອຕາມບ້ານ",
