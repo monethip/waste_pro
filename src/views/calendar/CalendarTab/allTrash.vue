@@ -4,6 +4,20 @@
       <v-col>
         <v-breadcrumbs large class="pa-0"> ຂີ້ເຫື້ຍອທັງໝົດ</v-breadcrumbs>
       </v-col>
+      <v-col v-if="!dragEnabled" class="text-right">
+        <v-btn @click="showDrag" color="yellow">ແກ້ໄຂລຳດັບ</v-btn>
+      </v-col>
+      <v-col v-if="dragEnabled" class="text-right">
+        <v-row>
+          <v-col>
+            <v-btn width="100%" color="primary" @click="updatePriority">ບັນທຶກ</v-btn>
+          </v-col>
+          <v-col>
+            <v-btn width="100%" @click="closeDrag">ປິດ</v-btn>
+          </v-col>
+        </v-row>
+      </v-col>
+
       <!--      <v-col>-->
       <!--        <v-text-field-->
       <!--          outlined-->
@@ -19,12 +33,38 @@
       <!--      </v-col>-->
     </v-row>
     <div>
+
+      <v-simple-table v-if="dragEnabled">
+        <draggable :list="allCalendars" tag="tbody">
+          <!-- eslint-disable -->
+          <tr v-if="!calendar.is_pause" v-for="(calendar,index) in allCalendars" :key="index">
+            <td>
+              <v-icon small>
+                mdi-arrow-all
+              </v-icon>
+            </td>
+            <td>
+              {{ calendar.priority }}
+            </td>
+            <td>
+              {{ calendar.route_plan_detail.customer.customer_type = 'company' ?
+              calendar.route_plan_detail.customer.company_name : calendar.route_plan_detail.customer.name }}
+            </td>
+          </tr>
+          <!-- eslint-enable -->
+
+        </draggable>
+      </v-simple-table>
+    </div>
+    <div v-if="!dragEnabled">
       <v-dialog v-model="dialog" scrollable max-width="300px">
 
         <template v-slot:activator="{ on, attrs }">
           <v-data-table v-if="calendars" :headers="headers" :items="calendars" :search="search"
             :disable-pagination="true" hide-default-footer>
             <template v-slot:item.customer="{ item }">
+              <pre v-if="!item">{{ item }}</pre>
+              <div v-if="item.route_plan_detail"></div>
               <div v-if="(item.route_plan_detail.customer.customer_type = 'company')">
                 {{ item.route_plan_detail.customer.company_name }}
               </div>
@@ -58,6 +98,12 @@
                 <v-chip color="success">{{ item.container }}</v-chip>
                 <span> {{ getUnit(item.collection_type) }}</span>
               </div>
+            </template>
+
+            <template v-slot:item.is_pause="{ item }">
+              <v-chip @click="switchPause(item.id)" label :color="item.is_pause?'orange':'green'" dark>{{
+              item.is_pause?'ຢຸດກ່ອນ':'ໃຫ້ເກັບ' }}
+              </v-chip>
             </template>
 
             <template v-slot:item.actions="{ item }">
@@ -100,9 +146,13 @@
 <script>
 // import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import trashMixin from "@/views/calendar/trashMixin";
+import draggable from "vuedraggable";
 export default {
   mixins: [trashMixin],
   name: "Trash",
+  components: {
+    draggable
+  },
   data() {
     return {
       //   loading: false,
@@ -116,12 +166,20 @@ export default {
       //   oldVal: "",
       //   summary: {},
       //   statuses: ["pending"],
+      enabled: true,
+      list: [
+        { name: "John", id: 0 },
+        { name: "Joao", id: 1 },
+        { name: "Jean", id: 2 }
+      ],
+      dragging: false,
+      dragEnabled: false,
       dialog: false,
       round: 0,
       server_errors: {},
 
       headers: [
-        { text: "ລຳດັບ", value: "route_plan_detail.priority" },
+        { text: "ລຳດັບ", value: "priority" },
         { text: "ລູກຄ້າ", value: "customer" },
         {
           text: "ຈຳນວນຂີ້ເຫື້ຍອ",
@@ -147,6 +205,12 @@ export default {
           align: "center",
           sortable: false,
         },
+        {
+          text: "ເປີດ/ຢຸດ",
+          value: "is_pause",
+          align: "center",
+          sortable: false,
+        },
         { text: "", value: "actions", sortable: false },
         { text: "", value: "add_round", sortable: false },
       ],
@@ -155,6 +219,81 @@ export default {
     };
   },
   methods: {
+    switchPause(id) {
+      this.$store.commit("Loading_State", true);
+      this.$axios
+        .post("plan-calendar-pause/" + id)
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.$store.commit("Loading_State", false);
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
+              });
+            }, 100);
+
+            this.fetchData();
+          }
+        })
+        .catch((error) => {
+          this.$store.commit("Loading_State", false);
+          if (error.response.status == 422) {
+            this.toast.msg = error.message;
+          }
+        });
+    },
+    checkMove: function (e) {
+      window.console.log("Future index: " + e.draggedContext.futureIndex);
+    },
+    showDrag() {
+      this.dragEnabled = true
+      this.fetchAllData()
+    },
+    closeDrag() {
+      this.dragEnabled = false
+      this.fetchData()
+    },
+    updatePriority() {
+      this.$store.commit("Loading_State", true);
+      let body = []
+      for (const planCalendarDetail of this.allCalendars) {
+        if (planCalendarDetail.is_pause && body.length >= planCalendarDetail.priority) {
+          body.splice(planCalendarDetail.priority - 1, 0, planCalendarDetail.id)
+        } else {
+          body.push(planCalendarDetail.id);
+        }
+      }
+      this.$axios
+        .post("plan-calendar-priority/" + this.$route.params.id,
+          {
+            plan_calendar_details: body
+          })
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.$store.commit("Loading_State", false);
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
+              });
+            }, 100);
+
+            this.fetchAllData();
+          }
+        })
+        .catch((error) => {
+          this.$store.commit("Loading_State", false);
+          this.$store.commit("Toast_State", {
+            value: true,
+            color: "error",
+            msg: error.response.data.message,
+          });
+        });
+
+    },
     backPrevios() {
       this.$router.go(-1);
     },
@@ -206,54 +345,7 @@ export default {
 
     },
 
-    // fetchData() {
-    //   this.$store.commit("Loading_State", true);
-    //   this.$axios
-    //     .get("plan-calendar/" + this.$route.params.id + "/detail", {
-    //       params: {
-    //         page: this.pagination.current_page,
-    //         per_page: this.per_page,
-    //         statuses: this.statuses,
-    //       },
-    //     })
-    //     .then((res) => {
-    //       if (res.data.code == 200) {
-    //         setTimeout(() => {
-    //           this.$store.commit("Loading_State", false);
-    //           this.calendars = res.data.data.data;
-    //           this.summary = res.data.data.summary;
-    //           this.pagination = res.data.data.pagination;
-    //         }, 100);
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       this.$store.commit("Loading_State", false);
-    //       this.fetchData();
-    //       if (error.response.status == 422) {
-    //         this.toast.msg = error.message;
-    //       }
-    //     });
-    // },
-    // statusColor(value) {
-    //   if (value == "pending") return "info";
-    //   else if (value == "success") return "success";
-    //   else return "error";
-    // },
-    // getUnit(value) {
-    //   console.log(value);
-    //   if (value == "bag") return "ຖົງ";
-    //   else return "Container";
-    // },
-    // Search() {
-    //   GetOldValueOnInput(this);
-    // },
-    // viewPage(plan_calendar, id) {
-    //   console.log(plan_calendar, id);
-    //   this.$router.push({
-    //     name: "TrashDetail",
-    //     params: { plan_calendar, id },
-    //   });
-    // },
+
   },
   watch: {
     // search: function (value) {
