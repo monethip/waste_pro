@@ -20,7 +20,7 @@ export default {
             statuses: [],
             plan_monthId: this.$route.params.id,
             headers: [
-                { text: "ລຳດັບ", value: "priority" },
+                { text: "ລຳດັບຄວາມສຳຄັນ", value: "priority" },
                 { text: "ຊື່ລູກຄ້າ", value: "customer" },
                 { text: "ເລີ່ມວັນທີ", value: "route_plan_detail.customer.start_month" },
 
@@ -39,7 +39,7 @@ export default {
                 { text: "", value: "actions", sortable: false },
             ],
             allCalendarHeaders: [
-                { text: "ລຳດັບ", value: "priority" },
+                { text: "ລຳດັບຄວາມສຳຄັນ", value: "priority" },
                 { text: "ຊື່ລູກຄ້າ", value: "customer" }
             ],
         };

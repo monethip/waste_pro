@@ -123,7 +123,7 @@ export default {
       plan: {},
 
       headers: [
-        { text: "ລຳດັບ", value: "priority", sortable: false, align: "center" },
+        { text: "ລຳດັບຄວາມສຳຄັນ", value: "priority", sortable: false, align: "center" },
         { text: "ລູກຄ້າ", value: "customer" },
         { text: "ສະຖານະ", value: "status", sortable: false },
         { text: "ປະເພດບໍລິການ", value: "cost_by", sortable: false },

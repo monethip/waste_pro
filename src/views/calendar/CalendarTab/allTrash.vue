@@ -179,7 +179,7 @@ export default {
       server_errors: {},
 
       headers: [
-        { text: "ລຳດັບ", value: "priority" },
+        { text: "ລຳດັບຄວາມສຳຄັນ", value: "priority" },
         { text: "ລູກຄ້າ", value: "customer" },
         {
           text: "ຈຳນວນຂີ້ເຫື້ຍອ",
