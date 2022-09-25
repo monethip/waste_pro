@@ -32,6 +32,13 @@
         <v-autocomplete outlined dense :items="customer_types" v-model="selectedCustomerType" item-text="display"
           item-value="name" label="ປະເພດການເກັບ"></v-autocomplete>
       </v-col>
+      <v-col v-if="selectedCustomerType=='company'">
+        <v-autocomplete outlined dense :items="company_types" v-model="selectedCompanyType" item-text="la"
+          item-value="en" label="ເລືອກປະເພດບໍລິການ"></v-autocomplete>
+      </v-col>
+
+    </v-row>
+    <v-row>
       <v-col>
         <v-autocomplete outlined dense :items="drivers" v-model="selectedDriver" item-text="name" item-value="id"
           label="ເລືອກຄົນຂັບ"></v-autocomplete>
@@ -209,6 +216,7 @@
 <script>
 import queryOption from "@/Helpers/queryOption";
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import { getCompanyCostBy } from "@/Helpers/Customer";
 
 export default {
   name: "Customer",
@@ -239,6 +247,7 @@ export default {
       car_id: "",
       //Filter
       selectedCustomerType: "home",
+      selectedCompanyType: null,
       selectedDriver: "",
       customer_types: [
         {
@@ -254,6 +263,7 @@ export default {
           display: "ຖ້ຽວພິເສດ",
         },
       ],
+      company_types: getCompanyCostBy,
     };
   },
   computed: {
@@ -282,6 +292,7 @@ export default {
             // { filter: this.search },
             // { car_id: this.car_id },
             { type: this.selectedCustomerType },
+            { company_type: this.selectedCompanyType },
             { download: this.export }
           ]),
         })
@@ -340,6 +351,9 @@ export default {
     selectedCustomerType: function () {
       this.fetchData();
     },
+    selectedCompanyType: function () {
+      this.fetchData();
+    }
   },
   created() {
     this.fetchData();
