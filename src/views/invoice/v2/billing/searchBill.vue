@@ -15,6 +15,11 @@
           v-model="search" @keyup.enter="Search()">
         </v-text-field>
       </v-col>
+      <v-col>
+        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ເບີໂທ" type="text"
+          v-model="phone" @keyup.enter="Search()">
+        </v-text-field>
+      </v-col>
     </v-row>
     <v-card>
       <v-card-title>
@@ -240,7 +245,7 @@
 </template>
 
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
+// import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
 import { getLaoBillingType, getBgColor } from "@/Helpers/BillingStatus";
 export default {
@@ -279,6 +284,7 @@ export default {
       pagination: {},
       per_page: 15,
       search: "",
+      phone: "",
       oldVal: "",
       server_errors: {},
 
@@ -363,6 +369,7 @@ export default {
             { route_plans: this.selectedRoutePlan },
             { customer_type: this.selectedCustomerType },
             { filter: this.search },
+            { phone: this.phone },
           ])
         })
         .then((res) => {
@@ -603,7 +610,8 @@ export default {
     },
 
     Search() {
-      GetOldValueOnInput(this);
+      // GetOldValueOnInput(this);
+      this.fetchData()
     },
     statusColor(value) {
       if (value == "active") return "success";
