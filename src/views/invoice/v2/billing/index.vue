@@ -67,6 +67,11 @@
           v-model="search" @keyup.enter="Search()">
         </v-text-field>
       </v-col>
+      <v-col>
+        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ເບີໂທ" type="text"
+          v-model="phone" @keyup.enter="Search()">
+        </v-text-field>
+      </v-col>
     </v-row>
 
     <v-row v-if="selectedBillingable_type == 'NewInvoice'">
@@ -156,7 +161,7 @@
 </template>
 
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
+// import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
 import { getLaoBillingType } from "@/Helpers/BillingStatus";
 import { getCompanyCostBy } from "@/Helpers/Customer";
@@ -202,6 +207,7 @@ export default {
       pagination: {},
       per_page: 15,
       search: "",
+      phone: "",
       oldVal: "",
       server_errors: {},
       selectedCollectionStatus: "",
@@ -328,6 +334,7 @@ export default {
             { route_plans: this.selectedRoutePlan },
             { customer_type: this.selectedCustomerType },
             { filter: this.search },
+            { phone: this.phone },
           ])
         })
         .then((res) => {
@@ -415,7 +422,8 @@ export default {
 
 
     Search() {
-      GetOldValueOnInput(this);
+      // GetOldValueOnInput(this);
+      this.fetchData();
     },
     showUser(item) {
       if (item.display_type === "NewCollectionEvent") {

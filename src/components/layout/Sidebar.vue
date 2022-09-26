@@ -386,11 +386,18 @@ export default {
           group_permissions: ["get_invoice"],
           menu: [
             {
+              icon: "mdi-note-search",
+              title: "ຄົ້ນຫາບິນ",
+              to: "/search-billing",
+              permissions: ["get_invoice"]
+            },
+            {
               icon: "mdi-note-outline",
               title: "ບິນທັງໝົດ",
               to: "/billing",
               permissions: ["get_invoice"]
             },
+
             {
               icon: "mdi-note-outline",
               title: "ຈັດການບິນຢ້ອນຫຼັງ",

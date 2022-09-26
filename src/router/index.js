@@ -998,6 +998,22 @@ const routes = [
     },
     //v2 Invoice
     {
+        path: '/search-billing',
+        name: 'searchbilling',
+        component: () => import('@/views/invoice/v2/billing/searchBill'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'ຄົ້ນຫາບິນ',
+                    disabled: true,
+                    href: '/invoice'
+                }
+            ]
+        }
+    },
+    {
         path: '/billing',
         name: 'billing',
         component: () => import('@/views/invoice/v2/billing/tabIndex'),

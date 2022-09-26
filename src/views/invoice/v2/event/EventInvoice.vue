@@ -128,10 +128,20 @@
                           ບິນ
                         </v-list-item-title>
                       </v-list-item>
-                      <v-list-item link v-if="canDelete(data)" @click="deleteEvent(data.id)">
+                    </v-list>
+                  </v-menu>
+                </td>
+                <td v-if="canDelete(data)">
+                  <v-menu offset-y>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-icon color="red" dark v-bind="attrs" v-on="on" medium class="mr-2">mdi-delete
+                      </v-icon>
+                    </template>
+                    <v-list>
+                      <v-list-item link @click="deleteEvent(data.id)">
                         <v-list-item-title>
                           <v-icon small class="mr-2"> mdi-delete</v-icon>
-                          ລົບ
+                          ຢືນຢັນການລືບ
                         </v-list-item-title>
                       </v-list-item>
                     </v-list>
@@ -306,6 +316,7 @@ export default {
         { text: "ສະຖານະການຊຳລະ", value: "payment_status", align: "center", width: "200px" },
         { text: "Image", value: "media", width: "350px" },
         { text: "", value: "actions", sortable: false },
+        { text: "", value: "delete", sortable: false },
       ],
     };
   },
@@ -317,6 +328,14 @@ export default {
         .then((res) => {
           if (res.data.code == 200) {
             this.$store.commit("Loading_State", false);
+            setTimeout(() => {
+              this.loading = false;
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message,
+              });
+            }, 300);
             this.fetchData();
           }
         })
@@ -340,8 +359,11 @@ export default {
         }
       }
 
-      const array = ['created', 'approved']
-      return isSuperAdmin && data.collect_status == 'requested' && array.indexOf(data.billing.status) != -1;
+      const billingArray = ['created', 'approved']
+      const collectedArray = ['requested', 'approved']
+      return isSuperAdmin
+        && collectedArray.indexOf(data.collect_status) != -1
+        && billingArray.indexOf(data.billing.status) != -1;
     },
     getCollectStatus(status) {
       return getLaoCollectStatus(status)
