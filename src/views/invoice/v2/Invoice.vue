@@ -34,53 +34,29 @@
       </v-col>
       -->
       <v-col>
-        <v-text-field
-            outlined
-            dense
-            clearable
-            prepend-inner-icon="mdi-magnify"
-            label="ຊື່"
-            type="text"
-            v-model="search"
-            @keyup.enter="Search()"
-        >
+        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ຊື່" type="text" v-model="search"
+          @keyup.enter="Search()">
         </v-text-field>
       </v-col>
     </v-row>
     <div>
       <v-card>
         <v-card-text>
-          <v-data-table
-              :headers="headers"
-              :items="calendars"
-              :search="search"
-              :disable-pagination="true"
-              hide-default-footer
-          >
+          <v-data-table :headers="headers" :items="calendars" :search="search" :disable-pagination="true"
+            hide-default-footer>
             <template v-slot:item.total="{ item }">
               {{ Intl.NumberFormat().format(item.total) }}
             </template>
             <template v-slot:item.plan="{ item }">
-              <v-icon
-                  color="success"
-                  small
-                  class="mr-2"
-                  @click="createInvoice(item.plan_month.id)"
-              >
+              <v-icon color="success" small class="mr-2" @click="createInvoice(item.plan_month.id)">
                 mdi-eye
-              </v-icon
-              >
+              </v-icon>
             </template>
-          </v-data-table
-          >
-          <br/>
+          </v-data-table>
+          <br />
           <template>
-            <Pagination
-                v-if="pagination.total_pages > 1"
-                :pagination="pagination"
-                :offset="offset"
-                @paginate="fetchData()"
-            ></Pagination>
+            <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
+              @paginate="fetchData()"></Pagination>
           </template>
         </v-card-text>
       </v-card>
@@ -89,7 +65,7 @@
 </template>
 
 <script>
-import {GetOldValueOnInput} from "@/Helpers/GetValue";
+import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
 
 export default {
@@ -125,7 +101,7 @@ export default {
       calendarEdit: {},
 
       headers: [
-        {text: "ຊື່", value: "plan_month.name"},
+        { text: "ຊື່", value: "plan_month.name" },
         // { text: "ວັນທີ", value: "plan_month.month" },
         {
           text: "ລວມເງິນ",
@@ -145,7 +121,7 @@ export default {
           sortable: false,
           align: "center",
         },
-        {text: "", value: "actions", sortable: false},
+        { text: "", value: "actions", sortable: false },
       ],
     };
   },
@@ -153,30 +129,30 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-          .get("invoice-summary", {
-                params: queryOption([
-                  {page: this.pagination.current_page},
-                  {per_page: this.per_page},
-                  {filter: this.search},
-                ]),
-              }
-          )
-          .then((res) => {
-            if (res.data.code == 200) {
-              this.$store.commit("Loading_State", false);
-              this.calendars = res.data.data.data;
-              this.pagination = res.data.data.pagination;
-            }
-          })
-          .catch((error) => {
+        .get("invoice-summary", {
+          params: queryOption([
+            { page: this.pagination.current_page },
+            { per_page: this.per_page },
+            { filter: this.search },
+          ]),
+        }
+        )
+        .then((res) => {
+          if (res.data.code == 200) {
             this.$store.commit("Loading_State", false);
-            if (error.response.status == 422) {
-              let obj = error.response.data.errors;
-              for (let [key, message] of Object.entries(obj)) {
-                this.server_errors[key] = message[0];
-              }
+            this.calendars = res.data.data.data;
+            this.pagination = res.data.data.pagination;
+          }
+        })
+        .catch((error) => {
+          this.$store.commit("Loading_State", false);
+          if (error.response.status == 422) {
+            let obj = error.response.data.errors;
+            for (let [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
             }
-          });
+          }
+        });
     },
     Search() {
       GetOldValueOnInput(this);
@@ -184,7 +160,7 @@ export default {
     createInvoice(id) {
       this.$router.push({
         name: "InvoiceTab",
-        params: {id},
+        params: { id },
       });
     },
   },

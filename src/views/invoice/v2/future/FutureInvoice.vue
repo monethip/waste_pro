@@ -99,7 +99,7 @@
               <v-icon color="success" small class="mr-2" @click="ViewInvoice(item.billing.id)">
                 mdi-eye
               </v-icon>
-              <v-icon v-if="item.billing.status == 'created'" color="red" small class="mr-2"
+              <v-icon v-if="canDelete(item.billing.status)" color="red" small class="mr-2"
                 @click="deleteItem(item.billing.id)">
                 mdi-delete
               </v-icon>
@@ -231,6 +231,10 @@ export default {
     };
   },
   methods: {
+    canDelete(status) {
+      const billingArray = ['created', 'approved']
+      return billingArray.indexOf(status) != -1;
+    },
     closeDelete() {
       this.$store.commit("modalDelete_State", false);
     },
