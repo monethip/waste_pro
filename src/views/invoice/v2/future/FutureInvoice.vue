@@ -99,8 +99,7 @@
               <v-icon color="success" small class="mr-2" @click="ViewInvoice(item.billing.id)">
                 mdi-eye
               </v-icon>
-              <v-icon v-if="canDelete(item.billing.status)" color="red" small class="mr-2"
-                @click="deleteItem(item.billing.id)">
+              <v-icon v-if="canDelete(item.billing.status)" color="red" small class="mr-2" @click="deleteItem(item.id)">
                 mdi-delete
               </v-icon>
             </template>
@@ -246,7 +245,7 @@ export default {
     deleteInvoice() {
       this.loading = true;
       this.$axios
-        .delete("billing/" + this.billingId)
+        .delete("future-invoice/" + this.billingId)
 
         .then((res) => {
           if (res.data.code == 200) {
