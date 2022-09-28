@@ -129,6 +129,7 @@ export default {
   methods: {
 
     fetchData() {
+      const roles = this.$route.query.redirect == 'create-future-customer' ? ['customer', 'company'] : ['pre_customer']
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("user-setting/user", {
@@ -137,7 +138,7 @@ export default {
             { per_page: this.per_page },
             { filter: this.search },
             { phone: this.searchPhone },
-            { roles: ['pre_customer'] },])
+            { roles: roles },])
         })
         .then((res) => {
           if (res.data.code === 200) {
