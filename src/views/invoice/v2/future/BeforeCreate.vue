@@ -46,6 +46,8 @@
                   ຫົວໜ່ວຍທຸລະກິດ
                 </div>
               </div>
+              <div v-else class="error--text">ຍັງບໍ່ທັນສະໝັກບໍລິການ</div>
+
             </template>
             <template v-slot:item.status="{ item }">
               <v-btn @click="createPage(item)" medium class="btn-primary elevation-0">
