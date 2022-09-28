@@ -11,8 +11,13 @@
           :item-text="filterBillingType" item-value="name" label="ປະເພດບິນ" clearable></v-select>
       </v-col>
       <v-col>
-        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ຄົ້ນຫາ" type="text"
+        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ຊື່ລູກຄ້າ" type="text"
           v-model="search" @keyup.enter="Search()">
+        </v-text-field>
+      </v-col>
+      <v-col>
+        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ເລກບິນ" type="text"
+          v-model="billId" @keyup.enter="Search()">
         </v-text-field>
       </v-col>
       <v-col>
@@ -245,7 +250,8 @@
 </template>
 
 <script>
-// import { GetOldValueOnInput } from "@/Helpers/GetValue";
+// //import { GetOldValueOnInput } from "@/Helpers/GetValue";
+
 import queryOption from "@/Helpers/queryOption";
 import { getLaoBillingType, getBgColor } from "@/Helpers/BillingStatus";
 export default {
@@ -290,6 +296,7 @@ export default {
       server_errors: {},
 
       summaryData: {},
+      billId: "",
       billingable_types: [
         {
           id: 1,
@@ -373,9 +380,10 @@ export default {
             { per_page: this.per_page },
             { billingable_type: this.selectedBillingable_type },
             { route_plans: this.selectedRoutePlan },
+            { bill_id: this.billId },
+            { phone: this.phone },
             { customer_type: this.selectedCustomerType },
             { filter: this.search },
-            { phone: this.phone },
           ])
         })
         .then((res) => {

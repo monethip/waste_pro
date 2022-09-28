@@ -51,8 +51,18 @@
           :item-text="filterBillingType" item-value="name" label="ປະເພດບິນ" clearable></v-select>
       </v-col>
       <v-col>
-        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ຄົ້ນຫາ" type="text"
+        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ຊື່ລູກຄ້າ" type="text"
           v-model="search" @keyup.enter="Search()">
+        </v-text-field>
+      </v-col>
+      <v-col>
+        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ເລກບິນ" type="text"
+          v-model="billId" @keyup.enter="Search()">
+        </v-text-field>
+      </v-col>
+      <v-col>
+        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ເບີໂທ" type="text"
+          v-model="phone" @keyup.enter="Search()">
         </v-text-field>
       </v-col>
     </v-row>
@@ -128,7 +138,8 @@
 </template>
 
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
+//import { GetOldValueOnInput } from "@/Helpers/GetValue";
+
 import queryOption from "@/Helpers/queryOption";
 import { getLaoBillingType, getLaoStatus } from "@/Helpers/BillingStatus";
 
@@ -172,7 +183,8 @@ export default {
       oldVal: "",
       server_errors: {},
       summaryData: {},
-
+      billId: "",
+      phone: "",
       billingable_types: [
         {
           id: 1,
@@ -259,8 +271,11 @@ export default {
             { per_page: this.per_page },
             { billingable_type: this.selectedBillingable_type },
             { created_month: this.lastMonthCreated },
+            { order_by: 'newest' },
             { status: 'success' },
             { route_plans: this.selectedRoutePlan },
+            { bill_id: this.billId },
+            { phone: this.phone },
             { customer_type: this.selectedCustomerType },
             { filter: this.search },
           ])
@@ -556,7 +571,7 @@ export default {
     },
 
     Search() {
-      GetOldValueOnInput(this);
+      this.fetchData();
     },
   },
   watch: {

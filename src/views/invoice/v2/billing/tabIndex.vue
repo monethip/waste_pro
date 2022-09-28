@@ -154,7 +154,6 @@ export default {
       if (this.lastMonthCreated) option.created_month = this.lastMonthCreated
       await this.$axios.get("count-billing", { params: option }).then((res) => {
         this.counts = res.data.data;
-        console.log(this.counts);
       })
     },
   },
