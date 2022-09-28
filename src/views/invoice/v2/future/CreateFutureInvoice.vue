@@ -160,6 +160,7 @@ export default {
       formData.append("start_month", this.billDate);
       formData.append("date", this.billDate);
       formData.append("total", this.data.total);
+      formData.append("quantity", this.data.quantity);
       if (this.is_instantly == true) {
         formData.append("is_instantly", 1);
         formData.append("payment_method", this.payment_method);
