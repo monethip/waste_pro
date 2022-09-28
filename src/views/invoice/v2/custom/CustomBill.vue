@@ -339,15 +339,24 @@ export default {
           .post("import-old-payment", formData)
           .then((res) => {
             if (res.data.code == 200) {
-              this.loading = false;
-              this.closeAddModal();
-              this.fetchData();
-              this.$refs.form.reset();
-              this.$store.commit("Toast_State", {
-                value: true,
-                color: "success",
-                msg: res.data.message,
-              });
+              if (res.data.data.errors || this.data.data.exception) {
+                this.loading = false;
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "error",
+                  msg: res.data.data.errors || this.data.data.exception,
+                });
+              } else {
+                this.loading = false;
+                this.closeAddModal();
+                this.fetchData();
+                this.$refs.form.reset();
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
+              }
             }
           })
           .catch((error) => {

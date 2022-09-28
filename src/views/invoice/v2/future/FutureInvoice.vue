@@ -42,12 +42,27 @@
           @keyup.enter="Search()">
         </v-text-field>
       </v-col>
+      <v-col>
+        <v-btn @click="openAddModal()" class="btn-primary mr-4">
+          <v-icon class="mr-2">mdi-upload</v-icon>
+          import ບິນ
+        </v-btn>
+      </v-col>
       <v-col class="align-end ">
         <v-btn @click="choseCustomer()" class="btn-primary elevation-0">
           <v-icon class="mr-2">mdi-plus</v-icon>
           ສ້າງບິນ
         </v-btn>
       </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-btn @click="downloadExample()" class="btn-primary mr-4" color="green">
+          <v-icon class="mr-2">mdi-download</v-icon>
+          ຕົວຢ່າງ import
+        </v-btn>
+      </v-col>
+
     </v-row>
     <div>
       <v-card>
@@ -113,6 +128,45 @@
       </v-card>
     </div>
 
+    <ModalAdd>
+      <template @close="close">
+        <v-card class="py-8 px-14">
+          <v-card-title>
+            <p>Import ບິນຂີ້ເຫື້ຍອ</p>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-form ref="form" lazy-validation>
+                <v-row>
+                  <v-col cols="12">
+                    <v-file-input show-size label="File " accept="xlsx,xls" v-model="file" outlined dense>
+                    </v-file-input>
+                    <p class="errors">
+                      {{ server_errors.file }}
+                    </p>
+                    <p class="errors" v-for="(error, index) in errors" :key="index">
+                      {{ error }}
+                    </p>
+                  </v-col>
+                </v-row>
+
+              </v-form>
+            </v-container>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="error" class="elevation-0 btn mr-4 px-12" medium @click="closeAddModal()">
+                ປິດ
+              </v-btn>
+              <v-btn class="elevation-0 btn btn-primary px-12" medium :loading="loading" :disabled="loading"
+                @click="uploadFile">
+                Import
+              </v-btn>
+            </v-card-actions>
+          </v-card-text>
+        </v-card>
+      </template>
+    </ModalAdd>
+
     <!--Delete Modal-->
     <ModalDelete>
       <template>
@@ -125,6 +179,8 @@
         </v-card-actions>
       </template>
     </ModalDelete>
+
+
   </v-container>
 </template>
 
@@ -143,6 +199,7 @@ export default {
     return {
       billingId: "",
       tab: null,
+      file: null,
       invoices: [],
       loading: false,
       calendarId: "",
@@ -179,6 +236,7 @@ export default {
           name: "success",
         },
       ],
+      errors: [],
 
       headers: [
         { text: "ເລກບິນ", value: "billing.billing_display_id", width: "150" },
@@ -219,6 +277,64 @@ export default {
     };
   },
   methods: {
+    openAddModal() {
+      this.$store.commit("modalAdd_State", true);
+    },
+    closeAddModal() {
+      this.file = "";
+      this.$store.commit("modalAdd_State", false);
+    },
+    uploadFile() {
+      let formData = new FormData();
+      formData.append("file", this.file);
+      if (this.$refs.form.validate() == true) {
+        this.loading = true;
+        this.$axios
+          .post("import-future-invoice", formData)
+          .then((res) => {
+            if (res.data.code == 200) {
+              if (res.data.data.errors || this.data.data.exception) {
+                this.loading = false;
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "error",
+                  msg: res.data.data.errors || this.data.data.exception,
+                });
+              } else {
+                this.loading = false;
+                this.closeAddModal();
+                this.fetchData();
+                this.$refs.form.reset();
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
+              }
+
+            }
+          })
+          .catch((error) => {
+            this.loading = false;
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
+            if (error.response.status == 422) {
+              let obj = error.response.data.errors;
+              this.errors = obj
+              for (let [key, data] of Object.entries(obj)) {
+                this.server_errors[key] = data[0];
+              }
+            }
+          });
+      }
+    },
+    async downloadExample() {
+      const res = await this.$axios.get('import-future-invoice')
+      window.open(res.data.data.download_link)
+    },
     canDelete(status) {
       const billingArray = ['created', 'approved']
       return billingArray.indexOf(status) != -1;
@@ -319,6 +435,9 @@ export default {
     },
   },
   watch: {
+    file: function () {
+      this.errors = [];
+    },
     search: function (value) {
       if (value == "") {
         this.fetchData();
