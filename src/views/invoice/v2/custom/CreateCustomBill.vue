@@ -14,65 +14,6 @@
       <v-card>
         <v-card-text class="pa-8">
           <v-form ref="form" lazy-validation>
-            <!--            <v-row>-->
-            <!--              <v-col>-->
-            <!--                <v-menu-->
-            <!--                    v-model="start_menu"-->
-            <!--                    :close-on-content-click="false"-->
-            <!--                    :nudge-right="40"-->
-            <!--                    transition="scale-transition"-->
-            <!--                    offset-y-->
-            <!--                    min-width="auto"-->
-            <!--                >-->
-            <!--                  <template v-slot:activator="{ on, attrs }">-->
-            <!--                    <v-text-field-->
-            <!--                        v-model="start_date"-->
-            <!--                        label="ເລີ່ມວັນທີ"-->
-            <!--                        readonly-->
-            <!--                        outlined-->
-            <!--                        v-bind="attrs"-->
-            <!--                        v-on="on"-->
-            <!--                        dense-->
-            <!--                    ></v-text-field>-->
-            <!--                  </template>-->
-            <!--                  <v-date-picker-->
-            <!--                      v-model="start_date"-->
-            <!--                  ></v-date-picker>-->
-            <!--                </v-menu>-->
-            <!--                <p class="errors">-->
-            <!--                  {{ server_errors.start_month }}-->
-            <!--                </p>-->
-            <!--              </v-col>-->
-            <!--              <v-col>-->
-            <!--                <v-menu-->
-            <!--                    v-model="end_menu"-->
-            <!--                    :close-on-content-click="true"-->
-            <!--                    :nudge-right="40"-->
-            <!--                    transition="scale-transition"-->
-            <!--                    offset-y-->
-            <!--                    min-width="auto"-->
-            <!--                >-->
-            <!--                  <template v-slot:activator="{ on, attrs }">-->
-            <!--                    <v-text-field-->
-            <!--                        v-model="end_date"-->
-            <!--                        label="ຫາວັນທີ"-->
-            <!--                        readonly-->
-            <!--                        outlined-->
-            <!--                        v-bind="attrs"-->
-            <!--                        v-on="on"-->
-            <!--                        dense-->
-            <!--                    ></v-text-field>-->
-            <!--                  </template>-->
-            <!--                  <v-date-picker-->
-            <!--                      v-model="end_date"-->
-            <!--                  ></v-date-picker>-->
-            <!--                </v-menu>-->
-            <!--                <p class="errors">-->
-            <!--                  {{ server_errors.end_month }}-->
-            <!--                </p>-->
-            <!--              </v-col>-->
-            <!--            </v-row>-->
-
             <v-row>
               <v-col cols="4">
                 <p>ວັນທີບິນ</p>

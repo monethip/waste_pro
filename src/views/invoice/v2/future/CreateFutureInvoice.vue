@@ -15,122 +15,53 @@
         <v-card-text class="pa-8">
           <v-form ref="form" lazy-validation>
             <v-row>
-              <v-col>
-                <v-menu v-model="start_menu" :close-on-content-click="false" :nudge-right="40"
-                  transition="scale-transition" offset-y min-width="auto">
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-text-field v-model="start_date" label="ເລີ່ມວັນທີ" readonly outlined v-bind="attrs" v-on="on"
-                      dense></v-text-field>
-                  </template>
-                  <v-date-picker v-model="start_date" type="month" :min="now"></v-date-picker>
-                </v-menu>
-                <p class="errors">
-                  {{ server_errors.start_month }}
-                </p>
+              <v-col cols="4">
+                <p>ວັນທີບິນ</p>
+                <v-date-picker v-model="billDate" type="month" :min="now"></v-date-picker>
               </v-col>
-
-              <v-col>
-                <v-menu v-model="end_menu" :close-on-content-click="true" :nudge-right="40"
-                  transition="scale-transition" offset-y min-width="auto">
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-text-field v-model="end_date" label="ຫາວັນທີ" readonly outlined v-bind="attrs" v-on="on" dense>
-                    </v-text-field>
-                  </template>
-                  <v-date-picker v-model="end_date" type="month" :min="start_date"></v-date-picker>
-                </v-menu>
-                <p class="errors">
-                  {{ server_errors.end_month }}
-                </p>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <v-text-field label="Total *" required v-model="data.total" :rules="totalRules" type="number"
-                  class="input-number" outlined dense></v-text-field>
-                <p class="errors">
-                  {{ server_errors.total }}
-                </p>
-              </v-col>
-              <v-col>
-                <v-checkbox v-model="is_instantly" class="my-auto">
-                  <template v-slot:label>
-                    <div>ລູກຄ້າຈ່າຍແລ້ວ</div>
-                  </template>
-                </v-checkbox>
-                <p class="errors">
-                  {{ server_errors.is_instantly }}
-                </p>
-              </v-col>
-            </v-row>
-            <h3 class="my-4" v-if="is_instantly == true">ເລືອກປະເພດການຊຳລະ</h3>
-            <v-row v-if="is_instantly == true">
-              <v-col cols>
-                <v-chip-group v-model="paymentType" column :rules="paymentTypeRule" required>
-                  <v-chip large class="mr-8" color="info" label filter outlined>
-                    ເງິນສົດ
-                    <v-icon left class="ml-1"> mdi-currency-usd</v-icon>
-                  </v-chip>
-                  <v-chip large color="error" label filter outlined>
-                    BCEL
-                    <v-icon class="ml-1" left>
-                      mdi-credit-card
-                    </v-icon>
-                  </v-chip>
-                </v-chip-group>
-                <p class="errors">
-                  {{ server_errors.payment_method }}
-                </p>
-              </v-col>
-            </v-row>
-
-            <v-row>
-              <div v-if="paymentType == 1">
+              <v-col cols="8">
                 <v-row>
                   <v-col>
-                    <div class="field">
-                      <div class="file is-large is-boxed">
-                        <label class="file-label">
-                          <input @change="previewMultiImage" class="file-input input-file-image" type="file"
-                            accept="image/*" multiple />
-                          <span class="file-cta">
-                            <span class="file-icon">
-                              <v-icon style="
-                            font-size: 60px !important;
-                            color: #719aff;
-                            cursor: pointer;
-                          " class="fas fa-cloud-upload">mdi-cloud-upload</v-icon>
-                            </span>
-                            <span class="file-label" style="
-                          margin-top: 10px;
-                          text-transform: uppercase;
-                          padding-top: 20px;
-                        ">
-                              ເລືອກຮູບການຊຳລະ
-                            </span>
-                          </span>
-                        </label>
-                      </div>
-                    </div>
+                    <v-text-field label="ຊື່ລາຍການ *" required v-model="data.title" :rules="totalRules" outlined dense>
+                    </v-text-field>
+                    <p class="errors">
+                      {{ server_errors.title }}
+                    </p>
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col class="mt-5" v-for="(item, index) in preview_list" :key="index">
-                    <v-avatar class="avatar rounded mr-2" size="94px">
-                      <img :src="item" alt="Image" />
-                    </v-avatar>
-                    <p class="mb-0">File name: {{ image_list[index].name }}</p>
-                    <span>size: {{ image_list[index].size / 1024 }}KB</span>
-                    <div @click="RemoveItem(item)">
-                      <v-icon style="cursor: pointer">mdi-delete</v-icon>
-                    </div>
+                  <v-col>
+                    <v-text-field label="ຄຳອະທິບາຍ *" required v-model="data.description" :rules="totalRules" outlined
+                      dense></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.description }}
+                    </p>
                   </v-col>
                 </v-row>
-              </div>
+                <v-row>
+                  <v-col>
+                    <v-text-field label="ລາຄາ *" required v-model="data.total" :rules="totalRules" type="number"
+                      class="input-number" outlined dense></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.total }}
+                    </p>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field label="ຈຳນວນ *" required v-model="data.quantity" :rules="totalRules" type="number"
+                      class="input-number" outlined dense></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.quantity }}
+                    </p>
+                  </v-col>
+                </v-row>
+              </v-col>
             </v-row>
           </v-form>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn class="elevation-0 btn-warning mr-4" text @click="backPrevios()">
+            <v-btn class="elevation-0 btn-warning mr-4" @click="backPrevios()">
               ຍ້ອນກັບ
             </v-btn>
             <v-btn class="elevation-0 btn-primary" :loading="loading" :disabled="loading" @click="AddData()">
@@ -155,8 +86,7 @@ export default {
     return {
       tab: null,
       now: new Date().toISOString().substr(0, 7),
-      start_date: new Date().toISOString().substr(0, 7),
-      end_date: "",
+      billDate: new Date().toISOString().substr(0, 7),
       start_menu: false,
       end_menu: false,
       invoices: [],
@@ -225,8 +155,10 @@ export default {
     AddData() {
       let formData = new FormData();
       formData.append("customer_id", this.customer.customer.id);
-      formData.append("start_month", this.start_date);
-      formData.append("end_month", this.end_date);
+      formData.append("title", this.data.title);
+      formData.append("description", this.data.description);
+      formData.append("start_month", this.billDate);
+      formData.append("date", this.billDate);
       formData.append("total", this.data.total);
       if (this.is_instantly == true) {
         formData.append("is_instantly", 1);
@@ -293,7 +225,7 @@ export default {
       this.server_errors.payment_method = "";
     },
 
-    start_date: function () {
+    billDate: function () {
       this.server_errors.month = "";
     },
 

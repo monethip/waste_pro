@@ -72,9 +72,9 @@
                 {{ getLaoCustomerType(item.billing.user.customer.customer_type) }}
               </div>
             </template>
-            <template v-slot:item.start_month="{ item }">
+            <template v-slot:item.billing.date="{ item }">
               <div class="success--text">
-                {{ item.start_month }}
+                {{ item.billing.date }}
               </div>
             </template>
             <template v-slot:item.end_month="{ item }">
@@ -200,20 +200,8 @@ export default {
           width: "130",
           sortable: false,
         },
-        { text: "ວັນທີ", value: "start_month", width: "120", },
-        { text: "ຫາວັນທີ", value: "end_month", width: "120", },
-        // {
-        //   text: "ສ່ວນຫຼຸດ",
-        //   value: "discount",
-        //   align: "center",
-        //   sortable: false,
-        // },
-        // {
-        //   text: "ຄ່າບໍລິການ",
-        //   value: "sub_total",
-        //   align: "center",
-        //   sortable: false,
-        // },
+        { text: "ເດືອນ", value: "billing.bill_month", width: "120", },
+        { text: "ວັນທີສ້າງ", value: "created_at", width: "120", },
         {
           text: "ລວມທັງໝົດ",
           value: "total",

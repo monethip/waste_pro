@@ -275,7 +275,7 @@ export default {
           value: "status",
           sortable: false,
         },
-        { text: "ວັນທີບິນ", value: "billing.date", width: "120", },
+        { text: "ເດືອນ", value: "billing.bill_month", width: "120", },
         { text: "ວັນທີສ້າງ", value: "created_at", width: "120", },
         { text: "", value: "actions", sortable: false, width: "60", },
       ],
