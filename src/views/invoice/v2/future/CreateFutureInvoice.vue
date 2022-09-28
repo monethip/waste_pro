@@ -22,7 +22,7 @@
                     <v-text-field v-model="start_date" label="ເລີ່ມວັນທີ" readonly outlined v-bind="attrs" v-on="on"
                       dense></v-text-field>
                   </template>
-                  <v-date-picker v-model="start_date"></v-date-picker>
+                  <v-date-picker v-model="start_date" type="month" :min="now"></v-date-picker>
                 </v-menu>
                 <p class="errors">
                   {{ server_errors.start_month }}
@@ -36,7 +36,7 @@
                     <v-text-field v-model="end_date" label="ຫາວັນທີ" readonly outlined v-bind="attrs" v-on="on" dense>
                     </v-text-field>
                   </template>
-                  <v-date-picker v-model="end_date"></v-date-picker>
+                  <v-date-picker v-model="end_date" type="month" :min="start_date"></v-date-picker>
                 </v-menu>
                 <p class="errors">
                   {{ server_errors.end_month }}
@@ -154,6 +154,7 @@ export default {
   data() {
     return {
       tab: null,
+      now: new Date().toISOString().substr(0, 7),
       start_date: new Date().toISOString().substr(0, 7),
       end_date: "",
       start_menu: false,

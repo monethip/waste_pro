@@ -76,24 +76,24 @@
             <v-row>
               <v-col cols="4">
                 <p>ວັນທີບິນ</p>
-                <v-date-picker v-model="billDate"></v-date-picker>
+                <v-date-picker v-model="billDate" type="month" :max="now"></v-date-picker>
               </v-col>
               <v-col cols="8">
                 <v-row>
                   <v-col>
-                    <v-text-field label="ຫົວຂໍ້ບິນ *" required v-model="data.title" :rules="totalRules" outlined dense>
+                    <v-text-field label="ຊື່ລາຍການ *" required v-model="data.title" :rules="totalRules" outlined dense>
                     </v-text-field>
                     <p class="errors">
-                      {{  server_errors.title  }}
+                      {{ server_errors.title }}
                     </p>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-text-field label="ຄຳອະທິບາຍກ່ຽກັບບິນ *" required v-model="data.description" :rules="totalRules"
-                      outlined dense></v-text-field>
+                    <v-text-field label="ຄຳອະທິບາຍ *" required v-model="data.description" :rules="totalRules" outlined
+                      dense></v-text-field>
                     <p class="errors">
-                      {{  server_errors.description  }}
+                      {{ server_errors.description }}
                     </p>
                   </v-col>
                 </v-row>
@@ -102,7 +102,7 @@
                     <v-text-field label="ລາຄາ *" required v-model="data.price" :rules="totalRules" type="number"
                       class="input-number" outlined dense></v-text-field>
                     <p class="errors">
-                      {{  server_errors.price  }}
+                      {{ server_errors.price }}
                     </p>
                   </v-col>
                 </v-row>
@@ -111,7 +111,7 @@
                     <v-text-field label="ຈຳນວນ *" required v-model="data.quantity" :rules="totalRules" type="number"
                       class="input-number" outlined dense></v-text-field>
                     <p class="errors">
-                      {{  server_errors.quantity  }}
+                      {{ server_errors.quantity }}
                     </p>
                   </v-col>
                 </v-row>
@@ -144,6 +144,7 @@ export default {
   data() {
     return {
       tab: null,
+      now: new Date().toISOString().substr(0, 7),
       start_date: new Date().toISOString().substr(0, 7),
       billDate: new Date().toISOString().substr(0, 7),
       end_date: "",

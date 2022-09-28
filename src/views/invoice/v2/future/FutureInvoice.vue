@@ -79,15 +79,15 @@
             </template>
             <template v-slot:item.end_month="{ item }">
               <div class="error--text">
-                {{ item.start_month }}
+                {{ item.end_month }}
               </div>
             </template>
             <template v-slot:item.total="{ item }">
               {{ Intl.NumberFormat().format(item.billing.total) }}
             </template>
-            <template v-slot:item.sub_total="{ item }">
+            <!-- <template v-slot:item.sub_total="{ item }">
               {{ Intl.NumberFormat().format(item.billing.sub_total) }}
-            </template>
+            </template> -->
             <template v-slot:item.discount="{ item }">
               {{ Intl.NumberFormat().format(item.billing.discount) }}
             </template>
@@ -208,12 +208,12 @@ export default {
         //   align: "center",
         //   sortable: false,
         // },
-        {
-          text: "ຄ່າບໍລິການ",
-          value: "sub_total",
-          align: "center",
-          sortable: false,
-        },
+        // {
+        //   text: "ຄ່າບໍລິການ",
+        //   value: "sub_total",
+        //   align: "center",
+        //   sortable: false,
+        // },
         {
           text: "ລວມທັງໝົດ",
           value: "total",
