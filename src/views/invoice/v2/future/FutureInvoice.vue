@@ -181,8 +181,15 @@ export default {
       ],
 
       headers: [
-        { text: "ເລກບິນ", value: "billing.content", width: "150", },
+        { text: "ເລກບິນ", value: "billing.billing_display_id", width: "150" },
+        { text: "ຫົວບິນ", value: "billing.content", width: "150" },
+        { text: "ເດືອນ", value: "billing.bill_month", width: "120", },
         {
+          text: "ລວມທັງໝົດ",
+          value: "total",
+          align: "center",
+          sortable: false,
+        }, {
           text: "ລູກຄ້າ",
           value: "user",
           width: "130",
@@ -200,14 +207,8 @@ export default {
           width: "130",
           sortable: false,
         },
-        { text: "ເດືອນ", value: "billing.bill_month", width: "120", },
         { text: "ວັນທີສ້າງ", value: "created_at", width: "120", },
-        {
-          text: "ລວມທັງໝົດ",
-          value: "total",
-          align: "center",
-          sortable: false,
-        },
+
         {
           text: "ສະຖານະ",
           value: "status",

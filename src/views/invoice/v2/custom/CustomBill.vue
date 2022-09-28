@@ -231,53 +231,41 @@ export default {
       ],
 
       headers: [
-        { text: "ເລກບິນ", value: "billing.content", width: "150", },
+        { text: "ເລກບິນ", value: "billing.billing_display_id", width: "150" },
+        { text: "ຫົວບິນ", value: "billing.content", width: "150" },
+        { text: "ເດືອນ", value: "billing.bill_month", width: "120", },
         {
+          text: "ລວມທັງໝົດ",
+          value: "total",
+          align: "center",
+          sortable: false,
+        }, {
           text: "ລູກຄ້າ",
           value: "user",
-          width: "150",
+          width: "130",
           sortable: false,
         },
+
         {
           text: "ເບີໂທ",
           value: "billing.user.phone",
-          width: "100",
+          width: "130",
           sortable: false,
         },
         {
           text: "ປະເພດລູກຄ້າ",
           value: "customerType",
-          width: "150",
+          width: "130",
           sortable: false,
         },
-        {
-          text: "ສ່ວນຫຼຸດ",
-          value: "discount",
-          width: "100",
-          sortable: false,
-        },
-        {
-          text: "ຄ່າບໍລິການ",
-          value: "sub_total",
-          align: "center",
-          width: "100",
-          sortable: false,
-        },
-        {
-          text: "ລວມທັງໝົດ",
-          value: "total",
-          width: "120",
-          align: "center",
-          sortable: false,
-        },
+        { text: "ວັນທີສ້າງ", value: "created_at", width: "120", },
+
         {
           text: "ສະຖານະ",
           value: "status",
           sortable: false,
         },
-        { text: "ເດືອນ", value: "billing.bill_month", width: "120", },
-        { text: "ວັນທີສ້າງ", value: "created_at", width: "120", },
-        { text: "", value: "actions", sortable: false, width: "60", },
+        { text: "", value: "actions", sortable: false },
       ],
     };
   },
