@@ -93,6 +93,7 @@ export default {
 
       plans: [],
       selectedRoutePlan: "",
+      lastMonthBill: localStorage.getItem("lastMonthBill"),
       selectedCustomerType: "",
       customerTypes: [
         {
@@ -171,6 +172,11 @@ export default {
       ],
     };
   },
+  computed: {
+    lastMonthCreated() {
+      return this.$store.getters['auth/getLastMonthBill']
+    }
+  },
   methods: {
     getLaoStatusFunc(status) {
       return getLaoStatus(status)
@@ -187,6 +193,7 @@ export default {
             { page: this.pagination.current_page },
             { per_page: this.per_page },
             { billingable_type: this.selectedBillingable_type },
+            { created_month: this.lastMonthCreated },
             { status: 'rejected' },
             { route_plans: this.selectedRoutePlan },
             { customer_type: this.selectedCustomerType },
@@ -270,6 +277,12 @@ export default {
     selectedCollectionStatus: function () {
       this.pagination.current_page = '';
       this.fetchData();
+    },
+    lastMonthBill: function (value) {
+      this.$store.dispatch('auth/saveLastMonthBill', value);
+    },
+    lastMonthCreated: function () {
+      this.fetchData()
     },
     selectedBillingable_type: function () {
       this.pagination.current_page = '';

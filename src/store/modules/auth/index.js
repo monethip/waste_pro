@@ -21,8 +21,9 @@ export default function create() {
             color: '',
             isLoading: false,
             myToken: '',
-            user:{},
-            roles:[]
+            user: {},
+            roles: [],
+            lastMonthBill: null,
 
         },
         getters: {
@@ -42,6 +43,11 @@ export default function create() {
                 return state.credential.myToken
                     ? state.credential.myToken
                     : localStorage.getItem('access_token')
+            },
+            getLastMonthBill(state) {
+                return state.lastMonthBill
+                    ? state.lastMonthBill
+                    : localStorage.getItem('lastMonthBill')
             },
             user(state) {
                 return state.credential.user
@@ -68,7 +74,7 @@ export default function create() {
                 state.credential = {}
             },
             setCredential(state, payload) {
-                const {authUser} = payload;
+                const { authUser } = payload;
                 const credential = new Credential();
                 const user = new User();
                 localStorage.setItem('phone', payload.data.phone);
@@ -82,7 +88,7 @@ export default function create() {
                 })
                 credential.fromJSON(
                     {
-                        ...payload, ...{user}
+                        ...payload, ...{ user }
                     }
                 );
                 state.credential = credential;
@@ -90,16 +96,16 @@ export default function create() {
                 localStorage.setItem(ID_TOKEN, state.credential.access_token);
                 // localStorage.setItem(ACCESS_TOKEN_KEY, state.credential.access_token);
             },
-            setMyToken (state,payload) {
-                localStorage.setItem('access_token',payload)
+            setMyToken(state, payload) {
+                localStorage.setItem('access_token', payload)
                 state.credential.myToken = payload
             },
-            setUser (state,payload) {
-                localStorage.setItem('user',payload)
+            setUser(state, payload) {
+                localStorage.setItem('user', payload)
                 state.credential.user = payload
             },
-            setRoles (state,payload) {
-                localStorage.setItem('roles',payload)
+            setRoles(state, payload) {
+                localStorage.setItem('roles', payload)
                 state.credential.roles = payload
             },
             setUserProfile(state, payload) {
@@ -108,6 +114,10 @@ export default function create() {
             },
             Commit_ErrorLogin(state, payload) {
                 state.msgErrors = payload;
+            },
+            changeLastMonthBill(state, payload) {
+                localStorage.setItem('lastMonthBill', payload)
+                state.lastMonthBill = payload;
             },
             Toast_State(state, result) {
                 state.notificationToastState = result.value;
@@ -126,11 +136,11 @@ export default function create() {
                         }
                     ).then(
                         (response) => {
-                            const {data} = response;
+                            const { data } = response;
                             localStorage.setItem('confirmAccount', JSON.stringify(user));
                             // this.userConfirm = user;
                             /// Commit credential to data
-                            router.push({name: 'CheckPhone'}).then();
+                            router.push({ name: 'CheckPhone' }).then();
                             context.commit('setCredential', data);
                             /// Make then get called
                             resolve(data);
@@ -151,6 +161,9 @@ export default function create() {
                         }
                     })
                 }));
+            },
+            saveLastMonthBill(context, month) {
+                context.commit('changeLastMonthBill', month);
             },
 
             async confirmLogin(context, data) {
@@ -174,36 +187,36 @@ export default function create() {
                     const user_role = window.localStorage.getItem('roles');
                     const roleUsers = JSON.parse(user_role);
                     roleUsers.filter(item => {
-                        if(item.name.includes('customer')){
+                        if (item.name.includes('customer')) {
                             localStorage.removeItem('phone');
                             localStorage.removeItem('id_token');
                             localStorage.removeItem('confirmAccount');
                             localStorage.removeItem('access_token');
-                            router.push({name:'Login'}).then(() =>{
+                            router.push({ name: 'Login' }).then(() => {
                                 window.location.reload();
                             });
-                        } else if(item.name.includes('company')){
+                        } else if (item.name.includes('company')) {
                             localStorage.removeItem('phone');
                             localStorage.removeItem('id_token');
                             localStorage.removeItem('confirmAccount');
                             localStorage.removeItem('access_token');
-                            router.push({name:'Login'}).then(() =>{
+                            router.push({ name: 'Login' }).then(() => {
                                 window.location.reload();
                             });
-                        } else if(item.name.includes('pre_customer')){
+                        } else if (item.name.includes('pre_customer')) {
                             localStorage.removeItem('phone');
                             localStorage.removeItem('id_token');
                             localStorage.removeItem('confirmAccount');
                             localStorage.removeItem('access_token');
-                            router.push({name:'Login'}).then(() =>{
+                            router.push({ name: 'Login' }).then(() => {
                                 window.location.reload();
                             });
-                        } else if(item.name.includes('driver')){
+                        } else if (item.name.includes('driver')) {
                             localStorage.removeItem('phone');
                             localStorage.removeItem('id_token');
                             localStorage.removeItem('confirmAccount');
                             localStorage.removeItem('access_token');
-                            router.push({name:'Login'}).then(() =>{
+                            router.push({ name: 'Login' }).then(() => {
                                 window.location.reload();
                             });
                         }

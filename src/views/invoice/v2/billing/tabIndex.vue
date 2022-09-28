@@ -6,6 +6,17 @@
           ຈັດການຂໍ້ມູນບິນ
         </v-breadcrumbs>
       </v-col>
+      <v-col>
+        <v-menu v-model="start_menu" :close-on-content-click="true" :nudge-right="40" transition="scale-transition"
+          offset-y min-width="auto">
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field v-model="lastMonthBill" label="ເດືອນທີ່ສ້າງບິນ" readonly outlined v-bind="attrs" v-on="on"
+              dense>
+            </v-text-field>
+          </template>
+          <v-date-picker v-model="lastMonthBill" type="month"></v-date-picker>
+        </v-menu>
+      </v-col>
     </v-row>
     <v-card elevation="1">
       <v-card-text>
@@ -132,14 +143,25 @@ export default {
     return {
       tab: null,
       counts: [],
+      lastMonthBill: localStorage.getItem("lastMonthBill"),
+      start_menu: false,
+
     };
   },
   methods: {
     async countBilling() {
-      await this.$axios.get("count-billing").then((res) => {
+      const option = {}
+      if (this.lastMonthCreated) option.created_month = this.lastMonthCreated
+      await this.$axios.get("count-billing", { params: option }).then((res) => {
         this.counts = res.data.data;
+        console.log(this.counts);
       })
     },
+  },
+  computed: {
+    lastMonthCreated() {
+      return this.$store.getters['auth/getLastMonthBill']
+    }
   },
   created() {
     if (this.$route.query.tab == "billing-approved") {
@@ -158,6 +180,12 @@ export default {
     this.countBilling();
   },
   watch: {
+    lastMonthBill: function (value) {
+      this.$store.dispatch('auth/saveLastMonthBill', value);
+    },
+    lastMonthCreated: function () {
+      this.countBilling()
+    },
     tab: function (value) {
       if (value == "tab-1") {
         this.countBilling();
@@ -200,4 +228,5 @@ export default {
 </script>
 
 <style>
+
 </style>

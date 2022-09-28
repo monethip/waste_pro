@@ -269,6 +269,7 @@ export default {
 
       plans: [],
       selectedRoutePlan: "",
+      lastMonthBill: localStorage.getItem("lastMonthBill"),
       selectedCustomerType: "",
       customerTypes: [
         {
@@ -343,6 +344,11 @@ export default {
         { text: "", value: "actions", sortable: false, width: "150px" },
       ],
     };
+  },
+  computed: {
+    lastMonthCreated() {
+      return this.$store.getters['auth/getLastMonthBill']
+    }
   },
   methods: {
     filterBillingType(status) {
@@ -653,6 +659,12 @@ export default {
     selectedCollectionStatus: function () {
       this.pagination.current_page = '';
       this.fetchData();
+    },
+    lastMonthBill: function (value) {
+      this.$store.dispatch('auth/saveLastMonthBill', value);
+    },
+    lastMonthCreated: function () {
+      this.fetchData()
     },
     selectedBillingable_type: function () {
       this.pagination.current_page = '';
