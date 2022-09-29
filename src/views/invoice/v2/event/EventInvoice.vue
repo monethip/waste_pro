@@ -20,21 +20,28 @@
         </v-menu>
       </v-col>
       <v-col cols>
-        <v-select outlined dense :items="collectionStatus" v-model="selectedCollectionStatus"
-          :item-text="getFilterCollectStatus" item-value="name" label="ສະຖານະບໍລິການ" multiple clearable></v-select>
-      </v-col>
-      <v-col cols>
         <v-select outlined dense :items="paymentStatus" v-model="selectedPaymentStatus" :item-text="getBillingStatus"
           item-value="name" label="ສະຖານະການຊຳລະ" multiple clearable></v-select>
       </v-col>
     </v-row>
 
-    <v-card>
-      <v-card-title>
-        ເກັບຂີເຫື້ຍອພິເສດ ({{ pagination.total }})
-        <v-divider class="mx-4" vertical></v-divider>
-        <v-spacer></v-spacer>
-        <!--
+    <v-row>
+      <v-tabs>
+        <v-tab color="red" v-for="collectStatus in collectStatuses" :key="collectStatus.en"
+          @click="selectedStatus = collectStatus.en">
+          <v-badge color="green" :content="getCountByStatus(collectStatus.en)">
+            {{ collectStatus.la }}
+          </v-badge>
+        </v-tab>
+      </v-tabs>
+    </v-row>
+    <v-row>
+      <v-card>
+        <v-card-title>
+          ເກັບຂີເຫື້ຍອພິເສດ ({{ pagination.total }})
+          <v-divider class="mx-4" vertical></v-divider>
+          <v-spacer></v-spacer>
+          <!--
           <v-text-field
             outlined
             dense
@@ -47,117 +54,118 @@
           >
           </v-text-field>
              -->
-      </v-card-title>
-      <v-card-text>
-        <v-simple-table>
-          <template v-slot:default>
-            <thead>
-              <tr>
-                <th class="text-left">ບິນ</th>
-                <th class="text-left">ລູກຄ້າ</th>
-                <th class="text-left">ເບີໂທ</th>
-                <th class="text-left">ຄ່າບໍລິການ</th>
-                <th class="text-left">ລວມທັງໝົດ</th>
-                <th class="text-left">ສະຖານະບໍລິການ</th>
-                <th class="text-left">ຜູ້ຮ້ອງຂໍ</th>
-                <th class="text-left" style="width: 280px;">ລາຍລະອຽດ</th>
-                <th class="text-left">ຮູບສະຖານທີ່</th>
-                <th class="text-left">ຮູບຂີ້ເຫື້ຍອ</th>
-                <th class="text-left"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(data, index) in collections" :key="index">
-                <!--              <td>{{ index + 1 }}</td>-->
-                <td>
-                  <div v-if="data.billing">
-                    {{ data.billing.content }}
-                  </div>
-                </td>
-                <td>{{ data.name }} {{ data.surname }}</td>
-                <td>{{ data.phone }}</td>
-                <!--              <td>{{ user.village.name }}</td>-->
-                <!--              <td>{{ Intl.NumberFormat().format(data.billing.discount )}}</td>-->
-                <td>{{Intl.NumberFormat().format( data.billing.sub_total) }}</td>
-                <td>{{ Intl.NumberFormat().format(data.billing.total )}}</td>
-                <td>
-                  <div v-if="data.collect_status">
-                    <v-chip label color="primary">{{getCollectStatus(data.collect_status)}}</v-chip>
-                  </div>
-                </td>
-                <td style="width: 380px;">
-                  <div v-if="data.requested_by">
-                    {{ data.requested_by.name }}
-                  </div>
-                </td>
-                <td style="width: 380px;">{{ data.description }}</td>
-                <td style="width: 380px;">
-                  <v-avatar size="36px" v-for="(img, index) in data.image_collect_locations" :key="index">
-                    <img v-if="img.url" :src="img.url" />
-                  </v-avatar>
-                </td>
-                <td style="width: 380px;">
-                  <v-avatar size="36px" v-for="(img, index) in data.image_collecteds" :key="index">
-                    <img v-if="img.url" :src="img.url" />
-                  </v-avatar>
-                </td>
+        </v-card-title>
+        <v-card-text>
+          <v-simple-table>
+            <template v-slot:default>
+              <thead>
+                <tr>
+                  <th class="text-left">ບິນ</th>
+                  <th class="text-left">ລູກຄ້າ</th>
+                  <th class="text-left">ເບີໂທ</th>
+                  <th class="text-left">ຄ່າບໍລິການ</th>
+                  <th class="text-left">ລວມທັງໝົດ</th>
+                  <th class="text-left">ສະຖານະບໍລິການ</th>
+                  <th class="text-left">ຜູ້ຮ້ອງຂໍ</th>
+                  <th class="text-left" style="width: 280px;">ລາຍລະອຽດ</th>
+                  <th class="text-left">ຮູບສະຖານທີ່</th>
+                  <th class="text-left">ຮູບຂີ້ເຫື້ຍອ</th>
+                  <th class="text-left"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(data, index) in collections" :key="index">
+                  <!--              <td>{{ index + 1 }}</td>-->
+                  <td>
+                    <div v-if="data.billing">
+                      {{ data.billing.content }}
+                    </div>
+                  </td>
+                  <td>{{ data.name }} {{ data.surname }}</td>
+                  <td>{{ data.phone }}</td>
+                  <!--              <td>{{ user.village.name }}</td>-->
+                  <!--              <td>{{ Intl.NumberFormat().format(data.billing.discount )}}</td>-->
+                  <td>{{Intl.NumberFormat().format( data.billing.sub_total) }}</td>
+                  <td>{{ Intl.NumberFormat().format(data.billing.total )}}</td>
+                  <td>
+                    <div v-if="data.collect_status">
+                      <v-chip label color="primary">{{getCollectStatus(data.collect_status)}}</v-chip>
+                    </div>
+                  </td>
+                  <td style="width: 380px;">
+                    <div v-if="data.requested_by">
+                      {{ data.requested_by.name }}
+                    </div>
+                  </td>
+                  <td style="width: 380px;">{{ data.description }}</td>
+                  <td style="width: 380px;">
+                    <v-avatar size="36px" v-for="(img, index) in data.image_collect_locations" :key="index">
+                      <img v-if="img.url" :src="img.url" />
+                    </v-avatar>
+                  </td>
+                  <td style="width: 380px;">
+                    <v-avatar size="36px" v-for="(img, index) in data.image_collecteds" :key="index">
+                      <img v-if="img.url" :src="img.url" />
+                    </v-avatar>
+                  </td>
 
-                <!-- <td>{{ user.reject_description }}</td> -->
-                <td>
-                  <v-menu offset-y>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-icon color="primary" dark v-bind="attrs" v-on="on" medium class="mr-2">mdi-dots-vertical
-                      </v-icon>
-                    </template>
-                    <v-list>
-                      <v-list-item link @click="viewPage(data.id)">
-                        <v-list-item-title>
-                          <v-icon small class="mr-2"> mdi-eye</v-icon>
-                          ລາຍລະອຽດ
-                        </v-list-item-title>
-                      </v-list-item>
-                      <v-list-item link @click="editPage(data.id)">
-                        <v-list-item-title>
-                          <v-icon small class="mr-2"> mdi-pencil</v-icon>
-                          ແກ້ໄຂ
-                        </v-list-item-title>
-                      </v-list-item>
-                      <v-list-item link @click="viewBill(data.billing.id)">
-                        <v-list-item-title>
-                          <v-icon small class="mr-2"> mdi-cash</v-icon>
-                          ບິນ
-                        </v-list-item-title>
-                      </v-list-item>
-                    </v-list>
-                  </v-menu>
-                </td>
-                <td v-if="canDelete(data)">
-                  <v-menu offset-y>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-icon color="red" dark v-bind="attrs" v-on="on" medium class="mr-2">mdi-delete
-                      </v-icon>
-                    </template>
-                    <v-list>
-                      <v-list-item link @click="deleteEvent(data.id)">
-                        <v-list-item-title>
-                          <v-icon small class="mr-2"> mdi-delete</v-icon>
-                          ຢືນຢັນການລືບ
-                        </v-list-item-title>
-                      </v-list-item>
-                    </v-list>
-                  </v-menu>
-                </td>
-              </tr>
-            </tbody>
+                  <!-- <td>{{ user.reject_description }}</td> -->
+                  <td>
+                    <v-menu offset-y>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-icon color="primary" dark v-bind="attrs" v-on="on" medium class="mr-2">mdi-dots-vertical
+                        </v-icon>
+                      </template>
+                      <v-list>
+                        <v-list-item link @click="viewPage(data.id)">
+                          <v-list-item-title>
+                            <v-icon small class="mr-2"> mdi-eye</v-icon>
+                            ລາຍລະອຽດ
+                          </v-list-item-title>
+                        </v-list-item>
+                        <v-list-item link @click="editPage(data.id)">
+                          <v-list-item-title>
+                            <v-icon small class="mr-2"> mdi-pencil</v-icon>
+                            ແກ້ໄຂ
+                          </v-list-item-title>
+                        </v-list-item>
+                        <v-list-item link @click="viewBill(data.billing.id)">
+                          <v-list-item-title>
+                            <v-icon small class="mr-2"> mdi-cash</v-icon>
+                            ບິນ
+                          </v-list-item-title>
+                        </v-list-item>
+                      </v-list>
+                    </v-menu>
+                  </td>
+                  <td v-if="canDelete(data)">
+                    <v-menu offset-y>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-icon color="red" dark v-bind="attrs" v-on="on" medium class="mr-2">mdi-delete
+                        </v-icon>
+                      </template>
+                      <v-list>
+                        <v-list-item link @click="deleteEvent(data.id)">
+                          <v-list-item-title>
+                            <v-icon small class="mr-2"> mdi-delete</v-icon>
+                            ຢືນຢັນການລືບ
+                          </v-list-item-title>
+                        </v-list-item>
+                      </v-list>
+                    </v-menu>
+                  </td>
+                </tr>
+              </tbody>
+            </template>
+          </v-simple-table>
+          <br />
+          <template>
+            <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
+              @paginate="fetchData()"></Pagination>
           </template>
-        </v-simple-table>
-        <br />
-        <template>
-          <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
-            @paginate="fetchData()"></Pagination>
-        </template>
-      </v-card-text>
-    </v-card>
+        </v-card-text>
+      </v-card>
+    </v-row>
 
     <!-- Modal Add-->
     <ModalAdd>
@@ -194,6 +202,7 @@
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
 import { getLaoCollectStatus, getLaoStatus } from "@/Helpers/BillingStatus";
+import { getEventStatus } from "@/Helpers/Customer";
 
 export default {
   name: "Customer",
@@ -208,7 +217,34 @@ export default {
         .toISOString()
         .substr(0, 10),
       start_menu: false,
-
+      collectStatuses: getEventStatus,
+      selectedStatus: 'requested',
+      countStatus: [
+        {
+          "collect_status": "requested",
+          "count_status": 0
+        },
+        {
+          "collect_status": "approved",
+          "count_status": 0
+        },
+        {
+          "collect_status": "rejected",
+          "count_status": 0
+        },
+        {
+          "collect_status": "collected",
+          "count_status": 0
+        },
+        {
+          "collect_status": "collect_confirm",
+          "count_status": 0
+        },
+        {
+          "collect_status": "collect_reject",
+          "count_status": 0
+        }
+      ],
       collections: [],
       loading: false,
       customerId: "",
@@ -320,6 +356,7 @@ export default {
       ],
     };
   },
+
   methods: {
     deleteEvent(id) {
       this.$store.commit("Loading_State", true);
@@ -337,6 +374,7 @@ export default {
               });
             }, 300);
             this.fetchData();
+            this.fetchCountData();
           }
         })
         .catch((error) => {
@@ -348,6 +386,11 @@ export default {
             }
           }
         });
+    },
+    getCountByStatus(status) {
+      const exists = this.countStatus.find(item => item.collect_status == status);
+
+      return exists ? exists.count_status : 0
     },
     canDelete(data) {
 
@@ -388,7 +431,7 @@ export default {
           params: queryOption([
             { page: this.pagination.current_page },
             { per_page: this.per_page },
-            { collect_status: this.selectedCollectionStatus },
+            { collect_status: this.selectedStatus },
             { payment_status: this.selectedPaymentStatus },
             { month: date },
             { order_by: 'newest' },
@@ -399,6 +442,32 @@ export default {
             this.$store.commit("Loading_State", false);
             this.collections = res.data.data.data;
             this.pagination = res.data.data.pagination;
+          }
+        })
+        .catch((error) => {
+          this.$store.commit("Loading_State", false);
+          if (error.response.status == 422) {
+            let obj = error.response.data.errors;
+            for (let [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
+            }
+          }
+        });
+    },
+    fetchCountData() {
+      let date = this.moment(this.month).format('YYYY-MM');
+      this.$store.commit("Loading_State", true);
+      this.$axios
+        .get("v2/collection-event-count", {
+          params: queryOption([
+            { payment_status: this.selectedPaymentStatus },
+            { month: date },
+          ])
+        })
+        .then((res) => {
+          if (res.data.code == 200) {
+            this.$store.commit("Loading_State", false);
+            this.countStatus = res.data.data;
           }
         })
         .catch((error) => {
@@ -479,27 +548,32 @@ export default {
     selectedPaymentStatus: function () {
       this.pagination.current_page = '';
       this.fetchData();
+      this.fetchCountData();
     },
     selectedCollectionStatus: function () {
       this.pagination.current_page = '';
       this.fetchData();
+      this.fetchCountData();
     },
 
     month: function (value) {
       if (value !== '') {
         this.pagination.current_page = '';
         this.fetchData();
+        this.fetchCountData();
       }
     },
     search: function (value) {
       this.pagination.current_page = '';
       if (value == "") {
         this.fetchData();
+        this.fetchCountData();
       }
     },
     selectedStatus: function () {
       this.pagination.current_page = '';
       this.fetchData();
+      this.fetchCountData();
     },
 
     start_date: function () {
@@ -522,6 +596,7 @@ export default {
   created() {
     this.month = this.moment(this.curent_month).format('YYYY-MM');
     this.fetchData();
+    this.fetchCountData();
   },
 };
 </script>

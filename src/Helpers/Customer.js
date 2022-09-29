@@ -66,3 +66,30 @@ export const getCustomerUnit = function (costBy) {
         default: return costBy
     }
 }
+
+export const getEventStatus = [
+    {
+        en: "requested",
+        la: "ລູກຄ້າຮ້ອງຂໍເຂົ້າມາ"
+    },
+    {
+        en: "rejected",
+        la: "ປະຕິເສດລູກຄ້າແລ້ວ"
+    },
+    {
+        en: "approved",
+        la: "ອະນຸມັດແລ້ວ ລໍຖ້າລົງເກັບ"
+    },
+    {
+        en: "collected",
+        la: "ເກັບແລ້ວ ລໍຖ້າຢືນຢັນ"
+    },
+    {
+        en: "collect_confirm",
+        la: "ລູກຄ້າຢືນຢັນການເກັບແລ້ວ"
+    },
+    {
+        en: "collect_reject",
+        la: "ລູກຄ້າປະຕິເສດການເກັບ"
+    },
+]
