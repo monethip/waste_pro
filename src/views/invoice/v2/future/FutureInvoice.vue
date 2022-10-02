@@ -135,7 +135,7 @@
             <p>Import ບິນຂີ້ເຫື້ຍອ</p>
           </v-card-title>
           <v-card-text>
-            <v-container>
+            <v-container v-if="!imported">
               <v-form ref="form" lazy-validation>
                 <v-row>
                   <v-col cols="12">
@@ -152,13 +152,25 @@
 
               </v-form>
             </v-container>
+            <v-container v-else>
+              <v-row>
+                <v-col>
+                  <v-icon color="green">mdi-check-circle</v-icon> ສຳເລັດແລ້ວ {{ importSuccess }} ລາບການ
+                </v-col>
+              </v-row>
+              <v-row v-if="importErrors">
+                <v-col>
+                  <v-icon color="red">mdi-alert-circle</v-icon> ຜິດພາດ {{ importErrors }} ລາບການ
+                </v-col>
+              </v-row>
+            </v-container>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="error" class="elevation-0 btn mr-4 px-12" medium @click="closeAddModal()">
                 ປິດ
               </v-btn>
-              <v-btn class="elevation-0 btn btn-primary px-12" medium :loading="loading" :disabled="loading"
-                @click="uploadFile">
+              <v-btn v-if="!imported" class="elevation-0 btn btn-primary px-12" medium :loading="loading"
+                :disabled="loading" @click="uploadFile">
                 Import
               </v-btn>
             </v-card-actions>
@@ -202,6 +214,9 @@ export default {
       file: null,
       invoices: [],
       loading: false,
+      importSuccess: 0,
+      importErrors: null,
+      imported: false,
       calendarId: "",
       //Pagination
       offset: 12,
@@ -282,6 +297,10 @@ export default {
     },
     closeAddModal() {
       this.file = "";
+      this.importSuccess = 0
+      this.imported = false;
+      this.importErrors = null;
+
       this.$store.commit("modalAdd_State", false);
     },
     uploadFile() {
@@ -292,41 +311,58 @@ export default {
         this.$axios
           .post("import-future-invoice", formData)
           .then((res) => {
+            this.imported = true;
+            this.loading = false;
             if (res.data.code == 200) {
-              if (res.data.data.errors || this.data.data.exception) {
-                this.loading = false;
+              if (res.data.data.errors || res.data.data.exception) {
+                this.importErrors = res.data.data.errors || res.data.data.exception
                 this.$store.commit("Toast_State", {
                   value: true,
                   color: "error",
-                  msg: res.data.data.errors || this.data.data.exception,
+                  msg: this.importErrors,
                 });
-              } else {
-                this.loading = false;
-                this.closeAddModal();
+              } else if (res.data.data.data) {
                 this.fetchData();
                 this.$refs.form.reset();
+                this.importSuccess = res.data.data.data.length
                 this.$store.commit("Toast_State", {
                   value: true,
                   color: "success",
                   msg: res.data.message,
+                });
+              } else {
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "error",
+                  msg: 'ຂໍ້ມູນບໍ່ສາມາດ import ໄດ້ເລີຍ ກະລຸນາກວດໄຟລຄືນໃໝ່',
                 });
               }
 
             }
           })
           .catch((error) => {
+            this.imported = true;
             this.loading = false;
-            this.$store.commit("Toast_State", {
-              value: true,
-              color: "error",
-              msg: error.response.data.message,
-            });
-            if (error.response.status == 422) {
-              let obj = error.response.data.errors;
-              this.errors = obj
-              for (let [key, data] of Object.entries(obj)) {
-                this.server_errors[key] = data[0];
+            if (error.response) {
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response.data.message,
+              });
+              if (error.response.status == 422) {
+                let obj = error.response.data.errors;
+                this.errors = obj
+                for (let [key, data] of Object.entries(obj)) {
+                  this.server_errors[key] = data[0];
+                }
               }
+            }
+            else {
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: 'ຂໍ້ຜິດພາດທາງລະບົບ ກະລຸນາຕິດຕໍ່ນັກພັດທະນາ ' + error,
+              });
             }
           });
       }

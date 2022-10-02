@@ -56,13 +56,13 @@
               <h3>
                 ເລກບິນ:
                 <span>{{
-                    (invoice.billing_display_id)
+                (invoice.billing_display_id)
                 }}</span>
               </h3>
               <h3>
                 ລາຍລະອຽດ:
                 <span>{{
-                    (invoice.content)
+                (invoice.content)
                 }}</span>
               </h3>
               <h3>ປະເພດບິນ: {{ filterBillingType(invoice.display_type) }}</h3>
@@ -179,21 +179,21 @@
               <tr>
                 <td :colspan="4" style="font-size:16px;font-weight: 600;">ລວມເງິນ:</td>
                 <td :colspan="4" style="font-size:16px;font-weight: 600;">{{
-                    Intl.NumberFormat().format(invoice.sub_total)
+                Intl.NumberFormat().format(invoice.sub_total)
                 }}
                 </td>
               </tr>
               <tr>
                 <td :colspan="4" style="font-size:16px;font-weight: 600;">ສ່ວນຫຼຸດ:</td>
                 <td :colspan="4" style="font-size:16px;font-weight: 600;">{{
-                    Intl.NumberFormat().format(invoice.discount)
+                Intl.NumberFormat().format(invoice.discount)
                 }}
                 </td>
               </tr>
               <tr style="font-size: 20px;">
                 <td :colspan="4" style="font-size:16px;font-weight: 600;">ລວມທັງໝົດ:</td>
                 <td :colspan="4" style="font-size:16px;font-weight: 600;">{{
-                    Intl.NumberFormat().format(invoice.total)
+                Intl.NumberFormat().format(invoice.total)
                 }}
                 </td>
               </tr>
@@ -209,7 +209,7 @@
             <v-col>
               <h3>
                 ວັນທີຊຳລະ: <span v-if="invoice.paided_by" class="error--text">{{
-                    moment(invoice.paided_by.created_at).format("DD-MM-YY")
+                moment(invoice.paided_by.created_at).format("DD-MM-YY")
                 }}</span>
               </h3>
               <h3 v-if="invoice.payment_method">ປະເພດຊຳລະ: {{ getLaoStatusFunc(invoice.payment_method) }}</h3>
@@ -530,8 +530,9 @@ export default {
           }
         })
         .catch((error) => {
+
           this.$store.commit("Loading_State", false);
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
@@ -581,13 +582,14 @@ export default {
               }
             })
             .catch((error) => {
+
               this.loading = false;
               this.$store.commit("Toast_State", {
                 value: true,
                 color: "error",
-                msg: error.response.data.message,
+                msg: error.response ? error.response.data.message : error,
               });
-              if (error.response.status == 422) {
+              if (error.response && error.response.status == 422) {
                 let obj = error.response.data.errors;
                 for (let [key, data] of Object.entries(obj)) {
                   this.server_errors[key] = data[0];
@@ -671,11 +673,12 @@ export default {
             }
           })
           .catch((error) => {
+
             this.loading = false;
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response.data.message,
+              msg: error.response ? error.response.data.message : error,
             });
           });
       }
@@ -713,13 +716,14 @@ export default {
           }
         })
         .catch((error) => {
+
           this.loading = false;
           this.$store.commit("Toast_State", {
             value: true,
             color: "error",
-            msg: error.response.data.message,
+            msg: error.response ? error.response.data.message : error,
           });
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             let obj = error.response.data.errors;
             for (let [key, data] of Object.entries(obj)) {
               this.server_errors[key] = data[0];
@@ -754,11 +758,12 @@ export default {
             }
           })
           .catch((error) => {
+
             this.loading = false;
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response.data.message,
+              msg: error.response ? error.response.data.message : error,
             });
           });
 
