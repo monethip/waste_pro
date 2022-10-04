@@ -1180,6 +1180,26 @@ const routes = [
         }
     },
     {
+        path: '/v2/edit/event-driver/:id',
+        name: 'EditCollectionEventDriver',
+        component: () => import('../views/invoice/v2/event/EditEventDriver.vue'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'ເກັບຂີ້ເຫື້ຍອພິເສດ',
+                    disabled: false,
+                    href: '/v2/event-driver'
+                },
+                {
+                    text: 'ແກ້ໄຂຂໍ້ມູນ',
+                    disabled: true,
+                }
+            ]
+        }
+    },
+    {
         path: '/v2/event-invoice/:id',
         name: 'EventInvoiceDetail',
         component: () => import('../views/invoice/v2/event/EventInvoiceDetail.vue'),

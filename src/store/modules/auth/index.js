@@ -24,6 +24,7 @@ export default function create() {
             user: {},
             roles: [],
             lastMonthBill: null,
+            lastMonthEvent: null,
 
         },
         getters: {
@@ -48,6 +49,11 @@ export default function create() {
                 return state.lastMonthBill
                     ? state.lastMonthBill
                     : localStorage.getItem('lastMonthBill')
+            },
+            getLastMonthEvent(state) {
+                return state.lastMonthEvent
+                    ? state.lastMonthEvent
+                    : localStorage.getItem('lastMonthEvent')
             },
             user(state) {
                 return state.credential.user
@@ -119,6 +125,10 @@ export default function create() {
                 localStorage.setItem('lastMonthBill', payload)
                 state.lastMonthBill = payload;
             },
+            changeLastMonthEvent(state, payload) {
+                localStorage.setItem('lastMonthEvent', payload)
+                state.lastMonthEvent = payload;
+            },
             Toast_State(state, result) {
                 state.notificationToastState = result.value;
                 state.message = result.msg;
@@ -164,6 +174,9 @@ export default function create() {
             },
             saveLastMonthBill(context, month) {
                 context.commit('changeLastMonthBill', month);
+            },
+            saveLastMonthEvent(context, month) {
+                context.commit('changeLastMonthEvent', month);
             },
 
             async confirmLogin(context, data) {

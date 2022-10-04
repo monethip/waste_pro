@@ -32,6 +32,9 @@
                 </div>
               </div>
             </v-col>
+            <v-col>
+              {{ }}
+            </v-col>
           </v-row>
 
           <v-row>
@@ -76,12 +79,7 @@
 
               <p class="errors">{{ server_errors.phone }}</p>
             </v-col>
-            <v-col>
-              <v-select outlined dense :items="collectionStatus" v-model="data.collect_status"
-                :item-text="filterCollectStatus" item-value="name" label="ສະຖານະ" :rules="statusRule" required>
-              </v-select>
-              <p class="errors">{{ server_errors.collect_status }}</p>
-            </v-col>
+
           </v-row>
           <v-row>
             <v-col cols="6">
@@ -337,7 +335,7 @@ export default {
       formData.append("date", dateTime);
       // formData.append("date", this.moment(dateTime).format("y-m-d hh:mm:ss"));
       formData.append("total", this.data.billing.total);
-      formData.append("driver_id", this.data.driver_id);
+      if (this.data.driver_id) formData.append("driver_id", this.data.driver_id);
       formData.append("collect_status", this.data.collect_status);
       formData.append("_method", "PUT");
 

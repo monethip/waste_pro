@@ -70,26 +70,32 @@ export const getCustomerUnit = function (costBy) {
 export const getEventStatus = [
     {
         en: "requested",
-        la: "ລູກຄ້າຮ້ອງຂໍເຂົ້າມາ"
+        la: "ລູກຄ້າຮ້ອງຂໍເຂົ້າມາ",
+        color: "#34495e"
     },
     {
         en: "rejected",
-        la: "ປະຕິເສດລູກຄ້າແລ້ວ"
+        la: "ປະຕິເສດລູກຄ້າແລ້ວ",
+        color: "#eff3f5"
     },
     {
         en: "approved",
-        la: "ອະນຸມັດແລ້ວ ລໍຖ້າລົງເກັບ"
+        la: "ອະນຸມັດແລ້ວ ລໍຖ້າລົງເກັບ",
+        color: "#54a0ff"
     },
     {
         en: "collected",
-        la: "ເກັບແລ້ວ ລໍຖ້າຢືນຢັນ"
+        la: "ເກັບແລ້ວ ລໍຖ້າຢືນຢັນ",
+        color: "#c1c40f"
     },
     {
         en: "collect_confirm",
-        la: "ລູກຄ້າຢືນຢັນການເກັບແລ້ວ"
+        la: "ລູກຄ້າຢືນຢັນການເກັບແລ້ວ",
+        color: "#30cb83"
     },
     {
         en: "collect_reject",
-        la: "ລູກຄ້າປະຕິເສດການເກັບ"
+        la: "ລູກຄ້າປະຕິເສດການເກັບ",
+        color: "#e74c3c"
     },
 ]

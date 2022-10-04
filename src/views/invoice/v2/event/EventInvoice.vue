@@ -29,7 +29,7 @@
       <v-tabs>
         <v-tab color="red" v-for="collectStatus in collectStatuses" :key="collectStatus.en"
           @click="selectedStatus = collectStatus.en">
-          <v-badge color="green" :content="getCountByStatus(collectStatus.en)">
+          <v-badge :color="getStatusColor(collectStatus.en)" :content="getCountByStatus(collectStatus.en)">
             {{ collectStatus.la }}
           </v-badge>
         </v-tab>
@@ -60,11 +60,13 @@
             <template v-slot:default>
               <thead>
                 <tr>
+                  <th v-if="selectedStatus=='requested'" class="text-left">ອະນຸມັດ</th>
                   <th class="text-left">ບິນ</th>
                   <th class="text-left">ລູກຄ້າ</th>
                   <th class="text-left">ເບີໂທ</th>
                   <th class="text-left">ຄ່າບໍລິການ</th>
                   <th class="text-left">ລວມທັງໝົດ</th>
+                  <th class="text-left">ຄົນຂັບ</th>
                   <th class="text-left">ສະຖານະບໍລິການ</th>
                   <th class="text-left">ຜູ້ຮ້ອງຂໍ</th>
                   <th class="text-left" style="width: 280px;">ລາຍລະອຽດ</th>
@@ -76,6 +78,20 @@
               <tbody>
                 <tr v-for="(data, index) in collections" :key="index">
                   <!--              <td>{{ index + 1 }}</td>-->
+                  <td v-if="selectedStatus=='requested'">
+                    <v-menu offset-y>
+                      <template v-slot:activator="{ on, attrs }">
+
+                        <v-btn v-bind="attrs" v-on="on" v-if="canApproved(data)" color="green" dark>ອະນຸມັດ</v-btn>
+
+                      </template>
+                      <v-list>
+                        <v-list-item>
+                          <v-list-item-title @click="approve(data)">ຢືນຢັນການອະນຸມັດ</v-list-item-title>
+                        </v-list-item>
+                      </v-list>
+                    </v-menu>
+                  </td>
                   <td>
                     <div v-if="data.billing">
                       {{ data.billing.content }}
@@ -88,8 +104,20 @@
                   <td>{{Intl.NumberFormat().format( data.billing.sub_total) }}</td>
                   <td>{{ Intl.NumberFormat().format(data.billing.total )}}</td>
                   <td>
+                    <v-btn v-if="!data.driver" color="blue" dark @click="editDriver(data.id)">ເລືອກຄົນຂັບ</v-btn>
+                    <v-row v-else>
+                      <v-col>
+                        <div>{{ data.driver.name+' '+data.driver.surname+' '+data.driver.vehicle.car_id }}</div>
+                      </v-col>
+                      <v-col>
+                        <v-icon @click="editDriver(data.id)">mdi-pencil</v-icon>
+                      </v-col>
+                    </v-row>
+                  </td>
+                  <td>
                     <div v-if="data.collect_status">
-                      <v-chip label color="primary">{{getCollectStatus(data.collect_status)}}</v-chip>
+                      <v-chip label :color="getStatusColor(data.collect_status)" dark>
+                        {{getCollectStatus(data.collect_status)}}</v-chip>
                     </div>
                   </td>
                   <td style="width: 380px;">
@@ -212,13 +240,10 @@ export default {
   data() {
     return {
       title: "Collection",
-      month: "",
-      curent_month: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-        .toISOString()
-        .substr(0, 10),
       start_menu: false,
       collectStatuses: getEventStatus,
       selectedStatus: 'requested',
+      month: this.$store.getters['auth/getLastMonthEvent'],
       countStatus: [
         {
           "collect_status": "requested",
@@ -325,6 +350,7 @@ export default {
       paymentTypeRule: [(v) => !!v || "Name is required"],
       payment: {},
       confirm: {},
+      drivers: [],
 
       headers: [
         // { text: "#", value: "" },
@@ -345,6 +371,12 @@ export default {
           sortable: false,
         },
         {
+          text: "ຄົນຂັບ",
+          value: "driver",
+          align: "center",
+          sortable: false,
+        },
+        {
           text: "ສະຖານະການບໍລິການ",
           value: "collect_status",
           align: "center",
@@ -356,8 +388,65 @@ export default {
       ],
     };
   },
-
+  computed: {
+    lastMonthEvent() {
+      return this.$store.getters['auth/getLastMonthEvent']
+    }
+  },
   methods: {
+    approve(data) {
+      let formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("surname", data.surname);
+      formData.append("village_id", data.village_id);
+      formData.append("lat", data.lat);
+      formData.append("lng", data.lng);
+      formData.append("phone", data.phone);
+      formData.append("date", data.date);
+      // formData.append("date", this.moment(dateTime).format("y-m-d hh:mm:ss"));
+      formData.append("total", data.billing.total);
+      if (data.driver_id) formData.append("driver_id", data.driver_id);
+      formData.append("collect_status", 'approved');
+      formData.append("_method", "PUT");
+
+      this.loading = true;
+      this.$axios
+        .post("v2/collection-event/" + data.id, formData, {
+          headers: { "Content-Type": "multipart/form-data" }
+        })
+        .then(res => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.loading = false;
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message
+              });
+              this.fetchData();
+              this.fetchCountData();
+            }, 300);
+          }
+        })
+        .catch(error => {
+          this.$store.commit("Toast_State", {
+            value: true,
+            color: "error",
+            msg: error.response.data.message
+          });
+          if (error.response.status == 422) {
+            let obj = error.response.data.errors;
+            for (let [key, data] of Object.entries(obj)) {
+              this.server_errors[key] = data[0];
+            }
+          }
+          this.loading = false;
+          this.fetchData();
+        });
+    },
+    canApproved(data) {
+      return data.billing.total > 0 && data.collect_status == 'requested' && data.driver
+    },
     deleteEvent(id) {
       this.$store.commit("Loading_State", true);
       this.$axios
@@ -392,6 +481,10 @@ export default {
 
       return exists ? exists.count_status : 0
     },
+    getStatusColor(status) {
+      const existsStatus = this.collectStatuses.find(item => item.en == status)
+      return existsStatus ? existsStatus.color : "";
+    },
     canDelete(data) {
 
       let isSuperAdmin = false;
@@ -424,7 +517,7 @@ export default {
       this.imageUrl = URL.createObjectURL(file);
     },
     fetchData() {
-      let date = this.moment(this.month).format('YYYY-MM');
+      let date = this.lastMonthEvent ? this.moment(this.lastMonthEvent).format('YYYY-MM') : null;
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("v2/collection-event", {
@@ -455,7 +548,7 @@ export default {
         });
     },
     fetchCountData() {
-      let date = this.moment(this.month).format('YYYY-MM');
+      let date = this.lastMonthEvent ? this.moment(this.lastMonthEvent).format('YYYY-MM') : null;
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("v2/collection-event-count", {
@@ -493,6 +586,19 @@ export default {
         .catch(() => {
         });
     },
+    fetchDriver() {
+      this.$axios
+        .get("driver")
+        .then((res) => {
+          if (res.data.code == 200) {
+            this.$store.commit("Loading_State", false);
+            this.drivers = res.data.data;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
 
     closeAddModal() {
       this.paymentType = "";
@@ -512,6 +618,12 @@ export default {
     editPage(id) {
       this.$router.push({
         name: "EditCollectionEventInvoice",
+        params: { id },
+      });
+    },
+    editDriver(id) {
+      this.$router.push({
+        name: "EditCollectionEventDriver",
         params: { id },
       });
     },
@@ -545,6 +657,13 @@ export default {
 
   },
   watch: {
+    month(value) {
+      this.$store.dispatch('auth/saveLastMonthEvent', value);
+    },
+    lastMonthEvent: function () {
+      this.fetchData();
+      this.fetchCountData();
+    },
     selectedPaymentStatus: function () {
       this.pagination.current_page = '';
       this.fetchData();
@@ -556,13 +675,13 @@ export default {
       this.fetchCountData();
     },
 
-    month: function (value) {
-      if (value !== '') {
-        this.pagination.current_page = '';
-        this.fetchData();
-        this.fetchCountData();
-      }
-    },
+    // month: function (value) {
+    //   if (value !== '') {
+    //     this.pagination.current_page = '';
+    //     this.fetchData();
+    //     this.fetchCountData();
+    //   }
+    // },
     search: function (value) {
       this.pagination.current_page = '';
       if (value == "") {
@@ -594,9 +713,10 @@ export default {
     },
   },
   created() {
-    this.month = this.moment(this.curent_month).format('YYYY-MM');
+    // this.month = this.moment(this.current_month).format('YYYY-MM');
     this.fetchData();
     this.fetchCountData();
+    this.fetchDriver();
   },
 };
 </script>
