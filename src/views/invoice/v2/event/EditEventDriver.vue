@@ -13,7 +13,10 @@
     </v-row>
     <v-row>
       <v-col>
-        <v-btn @click="UpdateData()">ບັນທຶກ</v-btn>
+        <v-btn style="width:100%" @click="UpdateData()" color="blue" dark>ບັນທຶກ</v-btn>
+      </v-col>
+      <v-col>
+        <v-btn style="width:100%" @click="backPrevios()">ປິດ</v-btn>
       </v-col>
     </v-row>
   </v-container>
