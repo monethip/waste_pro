@@ -173,10 +173,10 @@ export default function create() {
                 }));
             },
             saveLastMonthBill(context, month) {
-                context.commit('changeLastMonthBill', month);
+                context.commit('changeLastMonthBill', month ? month : "");
             },
             saveLastMonthEvent(context, month) {
-                context.commit('changeLastMonthEvent', month);
+                context.commit('changeLastMonthEvent', month ? month : "");
             },
 
             async confirmLogin(context, data) {
