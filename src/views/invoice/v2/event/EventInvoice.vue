@@ -64,11 +64,12 @@
                   <th class="text-left">ບິນ</th>
                   <th class="text-left">ລູກຄ້າ</th>
                   <th class="text-left">ເບີໂທ</th>
-                  <th class="text-left">ຄ່າບໍລິການ</th>
-                  <th class="text-left">ລວມທັງໝົດ</th>
+                  <th class="text-left">ເລລາລົງເກັບ</th>
                   <th class="text-left">ຄົນຂັບ</th>
                   <th class="text-left">ສະຖານະບໍລິການ</th>
                   <th class="text-left">ຜູ້ຮ້ອງຂໍ</th>
+                  <th class="text-left">ຄ່າບໍລິການ</th>
+                  <th class="text-left">ລວມທັງໝົດ</th>
                   <th class="text-left" style="width: 280px;">ລາຍລະອຽດ</th>
                   <th class="text-left">ຮູບສະຖານທີ່</th>
                   <th class="text-left">ຮູບຂີ້ເຫື້ຍອ</th>
@@ -101,8 +102,9 @@
                   <td>{{ data.phone }}</td>
                   <!--              <td>{{ user.village.name }}</td>-->
                   <!--              <td>{{ Intl.NumberFormat().format(data.billing.discount )}}</td>-->
-                  <td>{{Intl.NumberFormat().format( data.billing.sub_total) }}</td>
-                  <td>{{ Intl.NumberFormat().format(data.billing.total )}}</td>
+                  <td>
+                    {{ data.date }}
+                  </td>
                   <td>
                     <v-btn v-if="!data.driver" color="blue" dark @click="editDriver(data.id)">ເລືອກຄົນຂັບ</v-btn>
                     <v-row v-else>
@@ -125,6 +127,8 @@
                       {{ data.requested_by.name }}
                     </div>
                   </td>
+                  <td>{{Intl.NumberFormat().format( data.billing.sub_total) }}</td>
+                  <td>{{ Intl.NumberFormat().format(data.billing.total )}}</td>
                   <td style="width: 380px;">{{ data.description }}</td>
                   <td style="width: 380px;">
                     <v-avatar size="36px" v-for="(img, index) in data.image_collect_locations" :key="index">
@@ -403,7 +407,7 @@ export default {
       formData.append("lng", data.lng);
       formData.append("phone", data.phone);
       formData.append("date", data.date);
-      // formData.append("date", this.moment(dateTime).format("y-m-d hh:mm:ss"));
+      // formData.append("date", this.moment(dateTime).format("y-MM-D hh:mm:ss"));
       formData.append("total", data.billing.total);
       if (data.driver_id) formData.append("driver_id", data.driver_id);
       formData.append("collect_status", 'approved');

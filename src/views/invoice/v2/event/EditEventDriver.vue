@@ -13,6 +13,29 @@
     </v-row>
     <v-row>
       <v-col>
+        <v-menu v-model="start_menu" :close-on-content-click="true" :nudge-right="40" transition="scale-transition"
+          offset-y min-width="auto">
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field v-model="date" label="ເລີ່ມວັນທີ" readonly outlined v-bind="attrs" v-on="on" dense>
+            </v-text-field>
+          </template>
+          <v-date-picker v-model="date"></v-date-picker>
+        </v-menu>
+        <p class="errors">{{ server_errors.date }}</p>
+      </v-col>
+      <v-col>
+        <v-menu v-model="time_menu" :close-on-content-click="true" :nudge-right="40" transition="scale-transition"
+          offset-y min-width="auto">
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field v-model="time" label="ເວລາ" readonly outlined v-bind="attrs" v-on="on" dense>
+            </v-text-field>
+          </template>
+          <v-time-picker v-model="time" type="time"></v-time-picker>
+        </v-menu>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
         <v-btn style="width:100%" @click="UpdateData()" color="blue" dark>ບັນທຶກ</v-btn>
       </v-col>
       <v-col>
@@ -182,6 +205,7 @@ export default {
       this.$router.go(-1);
     },
     UpdateData() {
+      const dateTime = `${this.date} ${this.time + `:00`}`;
       let formData = new FormData();
       this.image_list.map(item => {
         formData.append("collect_location[]", item);
@@ -192,8 +216,7 @@ export default {
       formData.append("lat", this.data.lat);
       formData.append("lng", this.data.lng);
       formData.append("phone", this.data.phone);
-      formData.append("date", this.data.date);
-      // formData.append("date", this.moment(dateTime).format("y-m-d hh:mm:ss"));
+      formData.append("date", this.moment(dateTime).format("y-MM-D hh:mm:ss"));
       formData.append("total", this.data.billing.total);
       if (this.data.driver_id) formData.append("driver_id", this.data.driver_id);
       formData.append("collect_status", this.data.collect_status);

@@ -333,7 +333,7 @@ export default {
       formData.append("lng", this.data.lng);
       formData.append("phone", this.data.phone);
       formData.append("date", dateTime);
-      // formData.append("date", this.moment(dateTime).format("y-m-d hh:mm:ss"));
+      // formData.append("date", this.moment(dateTime).format("y-MM-D hh:mm:ss"));
       formData.append("total", this.data.billing.total);
       if (this.data.driver_id) formData.append("driver_id", this.data.driver_id);
       formData.append("collect_status", this.data.collect_status);
