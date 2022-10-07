@@ -2,72 +2,33 @@
   <v-container>
     <v-row class="mb-n6">
       <v-col>
-        <v-btn @click="openAddModal()" class="btn-primary"
-          ><v-icon>mdi-plus</v-icon>
+        <v-btn @click="openAddModal()" class="btn-primary">
+          <v-icon>mdi-plus</v-icon>
         </v-btn>
       </v-col>
       <v-col>
-        <v-menu
-            v-model="start_menu"
-            :close-on-content-click="true"
-            :nudge-right="40"
-            transition="scale-transition"
-            offset-y
-            min-width="auto"
-        >
+        <v-menu v-model="start_menu" :close-on-content-click="true" :nudge-right="40" transition="scale-transition"
+          offset-y min-width="auto">
           <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-                v-model="start_date"
-                label="ເລີ່ມວັນທີ"
-                readonly
-                outlined
-                v-bind="attrs"
-                v-on="on"
-                dense
-            ></v-text-field>
+            <v-text-field v-model="start_date" label="ເລີ່ມວັນທີ" readonly outlined v-bind="attrs" v-on="on" dense>
+            </v-text-field>
           </template>
-          <v-date-picker
-              v-model="start_date"
-              @input="fetchData()"
-          ></v-date-picker>
+          <v-date-picker v-model="start_date" @input="fetchData()"></v-date-picker>
         </v-menu>
       </v-col>
       <v-col>
-        <v-menu
-            v-model="end_menu"
-            :close-on-content-click="true"
-            :nudge-right="40"
-            transition="scale-transition"
-            offset-y
-            min-width="auto"
-        >
+        <v-menu v-model="end_menu" :close-on-content-click="true" :nudge-right="40" transition="scale-transition"
+          offset-y min-width="auto">
           <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-                v-model="end_date"
-                label="ຫາວັນທີ"
-                readonly
-                outlined
-                v-bind="attrs"
-                v-on="on"
-                dense
-            ></v-text-field>
+            <v-text-field v-model="end_date" label="ຫາວັນທີ" readonly outlined v-bind="attrs" v-on="on" dense>
+            </v-text-field>
           </template>
-          <v-date-picker
-              v-model="end_date"
-              @input="fetchData()"
-          ></v-date-picker>
+          <v-date-picker v-model="end_date" @input="fetchData()"></v-date-picker>
         </v-menu>
       </v-col>
       <v-col>
-        <v-select
-            outlined
-            dense
-            :items="statuses"
-            v-model="selectedStatus"
-            item-text="name"
-            item-value="name"
-            label="ສະຖານະ"
-        ></v-select>
+        <v-select outlined dense :items="statuses" v-model="selectedStatus" item-text="name" item-value="name"
+          label="ສະຖານະ"></v-select>
       </v-col>
 
     </v-row>
@@ -90,44 +51,23 @@
             ></v-select>
             <v-spacer></v-spacer>
                         -->
-            <v-text-field
-              v-model="search"
-              clearable
-              prepend-inner-icon="mdi-magnify"
-              label="Search"
-              single-line
-              hide-details
-              @keyup.enter="Search()"
-            ></v-text-field>
+            <v-text-field v-model="search" clearable prepend-inner-icon="mdi-magnify" label="Search" single-line
+              hide-details @keyup.enter="Search()"></v-text-field>
           </v-card-title>
-          <v-data-table
-            :headers="headers"
-            :items="data"
-            :search="search"
-            :disable-pagination="true"
-            hide-default-footer
-          >
+          <v-data-table :headers="headers" :items="data" :search="search" :disable-pagination="true"
+            hide-default-footer>
             <template v-slot:item.media="{ item }">
-              <v-avatar
-                size="36px"
-                v-for="(img, index) in item.media"
-                :key="index"
-              >
+              <v-avatar size="36px" v-for="(img, index) in item.media" :key="index">
                 <img v-if="img.url" :src="img.url" />
               </v-avatar>
             </template>
             <template v-slot:item.vehicle="{ item }">
-            <div v-if="item.vehicle">
-              {{item.vehicle.car_id}} ({{item.vehicle.car_number}})
-            </div>
+              <div v-if="item.vehicle">
+                {{item.vehicle.car_id}} ({{item.vehicle.car_number}})
+              </div>
             </template>
             <template v-slot:item.status="{ item }">
-              <v-chip
-                  label
-                :color="statusColor(item.status)"
-                @click="switchStatus(item.id)"
-                >{{ item.status }}</v-chip
-              >
+              <v-chip label :color="statusColor(item.status)" @click="switchStatus(item.id)">{{ item.status }}</v-chip>
             </template>
 
             <template v-slot:item.actions="{ item }">
@@ -140,12 +80,8 @@
           </v-data-table>
           <br />
           <template>
-            <Pagination
-              v-if="pagination.total_pages > 1"
-              :pagination="pagination"
-              :offset="offset"
-              @paginate="fetchData()"
-            ></Pagination>
+            <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
+              @paginate="fetchData()"></Pagination>
           </template>
         </v-card>
       </v-col>
@@ -166,34 +102,21 @@
                     <div class="field">
                       <div class="file is-large is-boxed">
                         <label class="file-label">
-                          <input
-                            @change="onFileChange"
-                            class="file-input input-file-image"
-                            type="file"
-                            name="image"
-                            accept="image/*"
-                            ref="image"
-                          />
+                          <input @change="onFileChange" class="file-input input-file-image" type="file" name="image"
+                            accept="image/*" ref="image" />
                           <span class="file-cta">
                             <span class="file-icon">
-                              <v-icon
-                                style="
+                              <v-icon style="
                                   font-size: 60px !important;
                                   color: #719aff;
                                   cursor: pointer;
-                                "
-                                class="fas fa-cloud-upload"
-                                >mdi-cloud-upload</v-icon
-                              >
+                                " class="fas fa-cloud-upload">mdi-cloud-upload</v-icon>
                             </span>
-                            <span
-                              class="file-label"
-                              style="
+                            <span class="file-label" style="
                                 margin-top: 10px;
                                 text-transform: uppercase;
                                 padding-top: 20px;
-                              "
-                            >
+                              ">
                               Choose Profile
                             </span>
                           </span>
@@ -211,12 +134,7 @@
                 </v-row>
                 <v-row>
                   <v-col cols="12">
-                    <v-text-field
-                        label="ID *"
-                        required
-                        v-model="user.card_id"
-                        :rules="idRules"
-                    ></v-text-field>
+                    <v-text-field label="ID *" required v-model="user.card_id" :rules="idRules"></v-text-field>
                     <p class="errors">
                       {{ server_errors.card_id }}
                     </p>
@@ -224,87 +142,49 @@
                 </v-row>
                 <v-row>
                   <v-col cols="6">
-                    <v-text-field
-                      label="Name *"
-                      required
-                      v-model="user.name"
-                      :rules="nameRules"
-                    ></v-text-field>
+                    <v-text-field label="Name *" required v-model="user.name" :rules="nameRules"></v-text-field>
                     <p class="errors">
                       {{ server_errors.name }}
                     </p>
                   </v-col>
                   <v-col cols="6">
-                    <v-text-field
-                      label="Surname *"
-                      required
-                      v-model="user.surname"
-                      :rules="nameRules"
-                    ></v-text-field>
+                    <v-text-field label="Surname *" required v-model="user.surname" :rules="nameRules"></v-text-field>
                     <p class="errors">
                       {{ server_errors.surname }}
                     </p>
                   </v-col>
                   <v-col cols="6">
-                    <v-text-field
-                      label="ເບີໂທ *"
-                      required
-                      v-model="user.phone"
-                      :rules="phoneRules"
-                      type="number"
-                      class="input-number"
-                    ></v-text-field>
+                    <v-text-field label="ເບີໂທ *" required v-model="user.phone" :rules="phoneRules" type="number"
+                      class="input-number"></v-text-field>
                     <p class="errors">
                       {{ server_errors.phone }}
                     </p>
                   </v-col>
                   <v-col cols="6">
-                    <v-text-field
-                      label="Email"
-                      required
-                      v-model="user.email"
-                    ></v-text-field>
+                    <v-text-field label="Email" v-model="user.email"></v-text-field>
                     <p class="errors">
                       {{ server_errors.email }}
                     </p>
                   </v-col>
 
                   <v-col cols="12">
-                    <v-autocomplete
-                      v-model="selectedVehicle"
-                      :items="vehicles"
-                      :item-text="getVehicle"
-                      item-value="id"
-                      label="ເລືອກລົດ"
-                      dense
-                      :rules="vehicleRules"
-                    ></v-autocomplete>
+                    <v-autocomplete v-model="selectedVehicle" :items="vehicles" :item-text="getVehicle" item-value="id"
+                      label="ເລືອກລົດ" dense :rules="vehicleRules"></v-autocomplete>
                     <p class="errors">
                       {{ server_errors.vehicle_id }}
                     </p>
                   </v-col>
 
                   <v-col cols="6">
-                    <v-text-field
-                      label="Password *"
-                      type="password"
-                      v-model="user.password"
-                      :rules="passwordRules"
-                      required
-                    ></v-text-field>
+                    <v-text-field label="Password *" type="password" v-model="user.password" :rules="passwordRules"
+                      required></v-text-field>
                     <p class="errors">
                       {{ server_errors.password }}
                     </p>
                   </v-col>
                   <v-col cols="6">
-                    <v-text-field
-                      label="Password Confirm *"
-                      type="password"
-                      v-model="user.password_confirmation"
-                      :rules="passwordConfirmRules"
-                      required
-                      @keyup.enter="AddItem"
-                    ></v-text-field>
+                    <v-text-field label="Password Confirm *" type="password" v-model="user.password_confirmation"
+                      :rules="passwordConfirmRules" required @keyup.enter="AddItem"></v-text-field>
                     <p class="errors">
                       {{ server_errors.password_confirmation }}
                     </p>
@@ -317,13 +197,7 @@
               <v-btn color="blue darken-1" text @click="closeAddModal()">
                 ຍົກເລີກ
               </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                :loading="loading"
-                :disabled="loading"
-                @click="AddItem()"
-              >
+              <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="AddItem()">
                 ບັນທຶກ
               </v-btn>
             </v-card-actions>
@@ -347,32 +221,21 @@
                     <div class="field">
                       <div class="file is-large is-boxed">
                         <label class="file-label">
-                          <input
-                            @change="onFileChange"
-                            class="file-input input-file-image"
-                            type="file"
-                            accept="image/*"
-                          />
+                          <input @change="onFileChange" class="file-input input-file-image" type="file"
+                            accept="image/*" />
                           <span class="file-cta">
                             <span class="file-icon">
-                              <v-icon
-                                style="
+                              <v-icon style="
                                   font-size: 60px !important;
                                   color: #719aff;
                                   cursor: pointer;
-                                "
-                                class="fas fa-cloud-upload"
-                                >mdi-cloud-upload</v-icon
-                              >
+                                " class="fas fa-cloud-upload">mdi-cloud-upload</v-icon>
                             </span>
-                            <span
-                              class="file-label"
-                              style="
+                            <span class="file-label" style="
                                 margin-top: 10px;
                                 text-transform: uppercase;
                                 padding-top: 20px;
-                              "
-                            >
+                              ">
                               Choose Profile
                             </span>
                           </span>
@@ -388,24 +251,15 @@
                     </v-avatar>
                   </v-col>
                   <v-col class="mt-5" v-else>
-                    <v-avatar
-                      v-for="(item, index) in edit_driver.media"
-                      :key="index"
-                      class="avatar rounded mr-6"
-                      size="94px"
-                    >
+                    <v-avatar v-for="(item, index) in edit_driver.media" :key="index" class="avatar rounded mr-6"
+                      size="94px">
                       <img :src="item.url" />
                     </v-avatar>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col cols="12">
-                    <v-text-field
-                        label="ID *"
-                        required
-                        v-model="edit_driver.card_id"
-                        :rules="idRules"
-                    ></v-text-field>
+                    <v-text-field label="ID *" required v-model="edit_driver.card_id" :rules="idRules"></v-text-field>
                     <p class="errors">
                       {{ server_errors.card_id }}
                     </p>
@@ -413,62 +267,35 @@
                 </v-row>
                 <v-row>
                   <v-col cols="6">
-                    <v-text-field
-                      label="Name *"
-                      required
-                      v-model="edit_driver.name"
-                      :rules="nameRules"
-                    ></v-text-field>
+                    <v-text-field label="Name *" required v-model="edit_driver.name" :rules="nameRules"></v-text-field>
                     <p class="errors">
                       {{ server_errors.name }}
                     </p>
                   </v-col>
                   <v-col cols="6">
-                    <v-text-field
-                      label="Surname *"
-                      required
-                      v-model="edit_driver.surname"
-                      :rules="nameRules"
-                    ></v-text-field>
+                    <v-text-field label="Surname *" required v-model="edit_driver.surname" :rules="nameRules">
+                    </v-text-field>
                     <p class="errors">
                       {{ server_errors.surname }}
                     </p>
                   </v-col>
                   <v-col cols="6">
-                    <v-text-field
-                      v-if="edit_driver.user"
-                      label="ເບີໂທ *"
-                      required
-                      v-model="edit_driver.user.phone"
-                      :rules="phoneRules"
-                      type="number"
-                      class="input-number"
-                    ></v-text-field>
+                    <v-text-field v-if="edit_driver.user" label="ເບີໂທ *" required v-model="edit_driver.user.phone"
+                      :rules="phoneRules" type="number" class="input-number"></v-text-field>
                     <p class="errors">
                       {{ server_errors.phone }}
                     </p>
                   </v-col>
                   <v-col cols="6">
-                    <v-text-field
-                      v-if="edit_driver.user"
-                      label="Email *"
-                      required
-                      v-model="edit_driver.user.email"
-                    ></v-text-field>
+                    <v-text-field v-if="edit_driver.user" label="Email *" v-model="edit_driver.user.email">
+                    </v-text-field>
                     <p class="errors">
                       {{ server_errors.email }}
                     </p>
                   </v-col>
                   <v-col cols="12">
-                    <v-autocomplete
-                      v-model="edit_driver.vehicle_id"
-                      :items="vehicle"
-                      :item-text="getVehicle"
-                      item-value="id"
-                      label="ເລືອກລົດ"
-                      dense
-                      :rules="vehicleRules"
-                    ></v-autocomplete>
+                    <v-autocomplete v-model="edit_driver.vehicle_id" :items="vehicle" :item-text="getVehicle"
+                      item-value="id" label="ເລືອກລົດ" dense :rules="vehicleRules"></v-autocomplete>
                     <p class="errors">
                       {{ server_errors.vehicle_id }}
                     </p>
@@ -481,13 +308,7 @@
               <v-btn color="blue darken-1" text @click="closeUpdateModal()">
                 Close
               </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                :loading="loading"
-                :disabled="loading"
-                @click="updateItem()"
-              >
+              <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="updateItem()">
                 Update
               </v-btn>
             </v-card-actions>
@@ -502,14 +323,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            :loading="loading"
-            :disabled="loading"
-            @click="deleteItemConfirm"
-            >OK</v-btn
-          >
+          <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="deleteItemConfirm">OK</v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </template>
@@ -548,7 +362,7 @@ export default {
       status: false,
       data: [],
       user: {
-        email:''
+        email: ''
       },
       edit_driver: {},
       userID: "",
@@ -621,8 +435,8 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.vehicle = res.data.data;
-              this.vehicle.filter(item =>{
-                if(item.driver == null || item.driver == ''){
+              this.vehicle.filter(item => {
+                if (item.driver == null || item.driver == '') {
                   this.vehicles.push(item);
                 }
               });
@@ -647,7 +461,7 @@ export default {
       formData.append("name", this.user.name);
       formData.append("surname", this.user.surname);
       formData.append("phone", this.user.phone);
-      formData.append("email", this.user.email);
+      if (this.user.email) formData.append("email", this.user.email);
       formData.append("vehicle_id", this.selectedVehicle);
       formData.append("image", this.image);
       formData.append("password", this.user.password);
@@ -697,27 +511,27 @@ export default {
       this.$axios
         .get("driver", {
           params: queryOption([
-            {page: this.pagination.current_page},
-            {per_page: this.per_page},
-            {filter: this.search},
-            {date_from: this.start_date},
-            {date_end: this.end_date},
-            {status: this.selectedStatus},
-            ]),
+            { page: this.pagination.current_page },
+            { per_page: this.per_page },
+            { filter: this.search },
+            { date_from: this.start_date },
+            { date_end: this.end_date },
+            { status: this.selectedStatus },
+          ]),
         })
         .then((res) => {
           if (res.data.code == 200) {
-              this.loading = false;
-              this.$store.commit("Loading_State", false);
-              this.data = res.data.data.data;
-              this.pagination = res.data.data.pagination;
-              this.data.map((item) => {
-                if (item.status == "active") {
-                  this.status = true;
-                } else {
-                  this.status = false;
-                }
-              });
+            this.loading = false;
+            this.$store.commit("Loading_State", false);
+            this.data = res.data.data.data;
+            this.pagination = res.data.data.pagination;
+            this.data.map((item) => {
+              if (item.status == "active") {
+                this.status = true;
+              } else {
+                this.status = false;
+              }
+            });
           }
         })
         .catch((error) => {
@@ -740,7 +554,7 @@ export default {
       this.$store.commit("modalEdit_State", true);
     },
     updateItem() {
-      if(this.edit_driver.user.email == null){
+      if (this.edit_driver.user.email == null) {
         this.edit_driver.user.email = '';
       }
       let formData = new FormData();
@@ -864,15 +678,15 @@ export default {
       if (value == "active") {
         return "primary";
       } else if (value == "inactive") return "error";
-      else return  "info"
+      else return "info"
     },
 
     reset() {
       this.$refs.form.reset();
     },
-    getVehicle(value){
-      if(value !== null){
-        return value.car_id +' '+'('+value.car_number+')';
+    getVehicle(value) {
+      if (value !== null) {
+        return value.car_id + ' ' + '(' + value.car_number + ')';
       } else {
         return '(ຍັງບໍທັນມີລົດ)'
       }
@@ -887,13 +701,13 @@ export default {
     },
     selectedVehicle: function (value) {
       this.server_errors.vehicle_id = "";
-      if(value){
+      if (value) {
         this.getVehicle(value);
       }
     },
-    "edit_driver.vehicle_id":function (value){
+    "edit_driver.vehicle_id": function (value) {
       this.server_errors.vehicle_id = "";
-      if(value){
+      if (value) {
         this.getVehicle(value);
       }
     },
