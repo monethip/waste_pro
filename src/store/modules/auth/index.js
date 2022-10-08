@@ -24,6 +24,7 @@ export default function create() {
             user: {},
             roles: [],
             lastMonthBill: null,
+            lastMonthBillPaid: null,
             lastMonthEvent: null,
 
         },
@@ -49,6 +50,11 @@ export default function create() {
                 return state.lastMonthBill
                     ? state.lastMonthBill
                     : localStorage.getItem('lastMonthBill')
+            },
+            getLastMonthBillPaid(state) {
+                return state.lastMonthBillPaid
+                    ? state.lastMonthBillPaid
+                    : localStorage.getItem('lastMonthBillPaid')
             },
             getLastMonthEvent(state) {
                 return state.lastMonthEvent
@@ -125,6 +131,10 @@ export default function create() {
                 localStorage.setItem('lastMonthBill', payload)
                 state.lastMonthBill = payload;
             },
+            changeLastMonthBillPaid(state, payload) {
+                localStorage.setItem('lastMonthBillPaid', payload)
+                state.lastMonthBillPaid = payload;
+            },
             changeLastMonthEvent(state, payload) {
                 localStorage.setItem('lastMonthEvent', payload)
                 state.lastMonthEvent = payload;
@@ -174,6 +184,9 @@ export default function create() {
             },
             saveLastMonthBill(context, month) {
                 context.commit('changeLastMonthBill', month ? month : "");
+            },
+            saveLastMonthBillPaid(context, month) {
+                context.commit('changeLastMonthBillPaid', month ? month : "");
             },
             saveLastMonthEvent(context, month) {
                 context.commit('changeLastMonthEvent', month ? month : "");

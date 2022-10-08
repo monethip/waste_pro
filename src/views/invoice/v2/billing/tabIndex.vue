@@ -7,11 +7,22 @@
         </v-breadcrumbs>
       </v-col>
       <v-col>
+        <v-menu v-model="start_menu_created" :close-on-content-click="true" :nudge-right="40"
+          transition="scale-transition" offset-y min-width="auto">
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field v-model="lastMonthBillPaid" label="ເດືອນທີ່ຕ້ອງຊຳລະ" readonly outlined v-bind="attrs"
+              v-on="on" dense clearable>
+            </v-text-field>
+          </template>
+          <v-date-picker v-model="lastMonthBillPaid" type="month"></v-date-picker>
+        </v-menu>
+      </v-col>
+      <v-col>
         <v-menu v-model="start_menu" :close-on-content-click="true" :nudge-right="40" transition="scale-transition"
           offset-y min-width="auto">
           <template v-slot:activator="{ on, attrs }">
             <v-text-field v-model="lastMonthBill" label="ເດືອນທີ່ສ້າງບິນ" readonly outlined v-bind="attrs" v-on="on"
-              dense>
+              dense clearable>
             </v-text-field>
           </template>
           <v-date-picker v-model="lastMonthBill" type="month"></v-date-picker>
@@ -144,7 +155,9 @@ export default {
       tab: null,
       counts: [],
       lastMonthBill: localStorage.getItem("lastMonthBill"),
+      lastMonthBillPaid: localStorage.getItem("lastMonthBillPaid"),
       start_menu: false,
+      start_menu_created: false,
 
     };
   },
@@ -152,6 +165,7 @@ export default {
     async countBilling() {
       const option = {}
       if (this.lastMonthCreated) option.created_month = this.lastMonthCreated
+      if (this.lastMonthBillPaid) option.bill_month = this.lastMonthBillPaid
       await this.$axios.get("count-billing", { params: option }).then((res) => {
         this.counts = res.data.data;
       })
@@ -160,7 +174,8 @@ export default {
   computed: {
     lastMonthCreated() {
       return this.$store.getters['auth/getLastMonthBill']
-    }
+    },
+    lastMonthBillPaidCreated() { return this.$store.getters['auth/getLastMonthBillPaid'] },
   },
   created() {
     if (this.$route.query.tab == "billing-approved") {
@@ -182,8 +197,16 @@ export default {
     lastMonthBill: function (value) {
       this.$store.dispatch('auth/saveLastMonthBill', value);
     },
+    lastMonthBillPaid: function (value) {
+      this.$store.dispatch('auth/saveLastMonthBillPaid', value);
+    },
+
     lastMonthCreated: function () {
       this.countBilling()
+    },
+    lastMonthBillPaidCreated: function () {
+      this.countBilling()
+
     },
     tab: function (value) {
       if (value == "tab-1") {

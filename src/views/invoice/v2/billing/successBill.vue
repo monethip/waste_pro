@@ -164,6 +164,7 @@ export default {
 
       plans: [],
       selectedRoutePlan: "",
+      lastMonthBillPaid: localStorage.getItem("lastMonthBillPaid"),
       lastMonthBill: localStorage.getItem("lastMonthBill"),
       selectedCustomerType: "",
       customerTypes: [
@@ -246,6 +247,9 @@ export default {
   computed: {
     lastMonthCreated() {
       return this.$store.getters['auth/getLastMonthBill']
+    },
+    lastMonthBillCreated() {
+      return this.$store.getters['auth/getLastMonthBillPaid']
     }
   },
   methods: {
@@ -271,6 +275,7 @@ export default {
             { per_page: this.per_page },
             { billingable_type: this.selectedBillingable_type },
             { created_month: this.lastMonthCreated },
+            { bill_month: this.lastMonthBillCreated },
             { order_by: 'newest' },
             { status: 'success' },
             { route_plans: this.selectedRoutePlan },
@@ -592,7 +597,14 @@ export default {
     lastMonthBill: function (value) {
       this.$store.dispatch('auth/saveLastMonthBill', value);
     },
+    lastMonthBillPaid: function (value) {
+      this.$store.dispatch('auth/saveLastMonthBillPaid', value);
+    },
+
     lastMonthCreated: function () {
+      this.fetchData()
+    },
+    lastMonthBillCreated: function () {
       this.fetchData()
     },
     selectedBillingable_type: function () {
