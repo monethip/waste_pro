@@ -516,7 +516,7 @@ export default {
 
 .check {
   height: 20px;
-  width: 20px;
+  width: 100%;
   background-color: cornflowerblue;
   color: white;
   text-align: center;
