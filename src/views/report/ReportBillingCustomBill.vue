@@ -120,7 +120,7 @@ export default {
       loading: false,
       billingListsearch: "",
       exportMode: "",
-      start_date: "",
+      start_date: new Date().toISOString().substr(0, 7),
       end_date: "",
       start_menu: false,
       end_menu: false,

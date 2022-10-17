@@ -82,7 +82,7 @@
                     <td v-for="detailStatus in detailStatuses" :key="detailStatus.text">
                       <span class="font-weight-medium">{{ formatNumber(item[detailStatus.text].total) }}</span>
                       <span class="font-weight-medium text-caption">{{ `
-                                              (${formatNumber(item[detailStatus.text].count_billing)} ບິນ)`
+                      (${formatNumber(item[detailStatus.text].count_billing)} ບິນ)`
                       }}</span>
                     </td>
                   </tr>
@@ -157,7 +157,7 @@ export default {
       loading: false,
       billingListsearch: "",
       exportMode: "",
-      start_date: "",
+      start_date: new Date().toISOString().substr(0, 7),
       end_date: "",
       start_menu: false,
       end_menu: false,
