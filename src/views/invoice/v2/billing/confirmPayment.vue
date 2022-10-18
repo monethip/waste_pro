@@ -319,7 +319,7 @@ export default {
           width: "180px"
         },
         { text: "ລູກຄ້າ", value: "display_customer_name", width: "150px" },
-        { text: "ເບີໂທ", value: "user.phone", sortable: false },
+        { text: "ເບີໂທ", value: "display_customer_phone", sortable: false },
         { text: "ສ່ວນຫຼຸດ", value: "discount", width: "150px" },
         { text: "ຄ່າບໍລິການ", value: "sub_total" },
         { text: "ລວມທັງໝົດ", value: "total", sortable: false },
