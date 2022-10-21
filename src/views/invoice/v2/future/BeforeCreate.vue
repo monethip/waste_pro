@@ -18,6 +18,9 @@
             <v-spacer></v-spacer>
             <v-row>
               <v-col>
+                <v-btn dark color="primary" @click="OpenModalAdd">ເພີ່ມລູກຄ້າ Pre Customer</v-btn>
+              </v-col>
+              <v-col>
                 <v-text-field v-model="search" clearable prepend-inner-icon="mdi-magnify" label="Search" single-line
                   hide-details @keyup.enter="Search()" outlined dense></v-text-field>
               </v-col>
@@ -64,6 +67,71 @@
       </v-col>
     </v-row>
 
+    <!-- Modal Add-->
+    <ModalAdd>
+      <template @close="close">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Add user</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-form ref="form" lazy-validation>
+                <v-row>
+                  <v-col cols="12">
+                    <v-text-field label="Name " v-model="user.name">
+                    </v-text-field>
+                    <p class="errors">
+                      {{ server_errors.name }}
+                    </p>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field label="ເບີໂທ *" required v-model="user.phone" :rules="phoneRules" type="number"
+                      class="input-number">
+                    </v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field label="Email" required v-model="user.email">
+                    </v-text-field>
+                    <p class="errors">
+                      {{ server_errors.email }}
+                    </p>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field label="Password Confirm" type="password" required v-model="user.password"
+                      :rules="passwordRules" autocomplete="">
+                    </v-text-field>
+                    <p class="errors">
+                      {{ server_errors.password }}
+                    </p>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field label="Password" type="password" required v-model="user.password_confirmation"
+                      :rules="passwordRules" autocomplete="">
+                    </v-text-field>
+                    <p class="errors">
+                      {{ server_errors.password_confirmation }}
+                    </p>
+                  </v-col>
+                </v-row>
+              </v-form>
+            </v-container>
+
+          </v-card-text>
+          <v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeAddModal()">
+                Close
+              </v-btn>
+              <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="AddItem()">
+                Save
+              </v-btn>
+            </v-card-actions>
+          </v-card-text>
+        </v-card>
+      </template>
+    </ModalAdd>
 
   </v-container>
 </template>
@@ -122,12 +190,69 @@ export default {
       status: "",
       id_token: "",
 
-      //Validation
+      //Validation //Validation
+      passwordRules: [
+        (v) => !!v || "Password is required",
+        (v) =>
+          (v && v.length >= 8) || "Password must be more than 8 characters",
+      ],
+      passwordConfirmRules: [
+        (v) => !!v || "Password Confirm is required",
+        (v) =>
+          (v && v.length >= 8) || "Password must be more than 8 characters",
+      ],
+      phoneRules: [
+        (v) => !!v || "Phone is required",
+        (v) =>
+          (v && v.length >= 8 && v.length <= 11) ||
+          "Phone number must be  8 - 11 numbers",
+      ],
 
     };
   },
   methods: {
-
+    OpenModalAdd() {
+      this.$store.commit("modalAdd_State", true);
+    },
+    closeAddModal() {
+      this.$store.commit("modalAdd_State", false);
+    },
+    AddItem() {
+      if (this.$refs.form.validate() === true) {
+        this.loading = true;
+        this.$axios
+          .post("auth/register-pre-customer", this.user)
+          .then((res) => {
+            if (res.data.code === 200) {
+              setTimeout(() => {
+                this.loading = false;
+                this.closeAddModal();
+                this.reset();
+                this.createPage(res.data.data)
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
+              }, 300);
+            }
+          })
+          .catch((error) => {
+            this.loading = false;
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
+            });
+            if (error.response.status === 422) {
+              let obj = error.response.data.errors;
+              for (let [key, customer] of Object.entries(obj)) {
+                this.server_errors[key] = customer[0];
+              }
+            }
+          });
+      }
+    },
     fetchData() {
       const roles = this.$route.query.redirect == 'create-future-customer' ? ['customer', 'company'] : ['pre_customer']
       this.$store.commit("Loading_State", true);

@@ -218,7 +218,7 @@ export default {
         { text: "ຊື່", value: "company_name" },
         { text: "Phone", value: "user.phone", sortable: false },
         { text: "ທີ່ຢູ່", value: "district.name", sortable: false },
-        { text: "ປະເພດບໍລິການ", value: "cost_by" },
+        { text: "ປະເພດບໍລິການ", value: "cost_by_la" },
         { text: "ເລີ່ມບໍລິການ", value: "start_month", sortable: false },
         { text: "Created", value: "created_at", sortable: false },
         { text: "ສະຖານະ", value: "status", sortable: false },

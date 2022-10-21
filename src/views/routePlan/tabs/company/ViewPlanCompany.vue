@@ -126,7 +126,7 @@ export default {
         { text: "ລຳດັບຄວາມສຳຄັນ", value: "priority", sortable: false, align: "center" },
         { text: "ລູກຄ້າ", value: "customer" },
         { text: "ສະຖານະ", value: "status", sortable: false },
-        { text: "ປະເພດບໍລິການ", value: "cost_by", sortable: false },
+        { text: "ປະເພດບໍລິການ", value: "cost_by_la", sortable: false },
         { text: "ມື້ບໍລິການ", value: "favorite_dates", width: "120px" },
         { text: "ຈຳນວນຮອບເລີ່ມຕົ້ນ", value: "default_round", width: "120px" },
         { text: "ລາຍລະອຽດ", value: "customer.collect_description", sortable: false },

@@ -328,7 +328,7 @@ export default {
         {
           text: "ປະເພດບິນ",
           align: "start",
-          value: "cost_by"
+          value: "cost_by_la"
         }
       ];
       if (this.detailStatuses.length > 0) {

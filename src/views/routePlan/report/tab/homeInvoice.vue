@@ -9,7 +9,7 @@
           <p>
             ສ້າງບິນ
             <span class="success--text">{{
-              Intl.NumberFormat().format(sum.home.total_created)
+            Intl.NumberFormat().format(sum.home.total_created)
             }}</span>
           </p>
         </v-col>
@@ -17,7 +17,7 @@
           <p>
             ອະນຸມັດ
             <span class="success--text">{{
-              Intl.NumberFormat().format(sum.home.total_approved)
+            Intl.NumberFormat().format(sum.home.total_approved)
             }}</span>
           </p>
         </v-col>
@@ -25,7 +25,7 @@
           <p>
             ຍົກເລີກ
             <span class="success--text">{{
-              Intl.NumberFormat().format(sum.home.total_rejected)
+            Intl.NumberFormat().format(sum.home.total_rejected)
             }}</span>
           </p>
         </v-col>
@@ -33,7 +33,7 @@
           <p>
             ຊຳລະສຳເລັດ
             <span class="success--text">{{
-              Intl.NumberFormat().format(sum.home.total_to_confirm_payment)
+            Intl.NumberFormat().format(sum.home.total_to_confirm_payment)
             }}</span>
           </p>
         </v-col>
@@ -41,26 +41,20 @@
           <p>
             ສຳເລັດທັງໝົດ
             <span class="success--text">{{
-              Intl.NumberFormat().format(sum.home.total_success)
+            Intl.NumberFormat().format(sum.home.total_success)
             }}</span>
           </p>
         </v-col>
         <v-col>
           <p>
             ລວມ
-            <span class="success--text"
-              >{{ Intl.NumberFormat().format(sum.home.sum_total) }}
+            <span class="success--text">{{ Intl.NumberFormat().format(sum.home.sum_total) }}
             </span>
           </p>
         </v-col>
       </v-row>
-      <v-data-table
-        :headers="headers"
-        :items="invoices"
-        :search="search"
-        :disable-pagination="true"
-        hide-default-footer
-      >
+      <v-data-table :headers="headers" :items="invoices" :search="search" :disable-pagination="true"
+        hide-default-footer>
         <!--Role -->
         <template v-slot:item.sub_total="{ item }">
           <div>
@@ -81,15 +75,11 @@
           <div>
             <span>{{ moment(item.created_at).format("DD-MM-YY") }}</span>
           </div>
-        </template> </v-data-table
-      ><br />
+        </template>
+      </v-data-table><br />
       <template>
-        <Pagination
-          v-if="pagination.total_pages > 1"
-          :pagination="pagination"
-          :offset="offset"
-          @paginate="fetchData()"
-        ></Pagination>
+        <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset" @paginate="fetchData()">
+        </Pagination>
       </template>
     </div>
   </v-container>

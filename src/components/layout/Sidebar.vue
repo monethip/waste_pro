@@ -265,8 +265,8 @@ export default {
           ],
           menu: [
             {
-              icon: "mdi-account",
-              title: "Users",
+              icon: "mdi-account-group-outline",
+              title: "ຜູ້ໃຊ້ທັງໝົດ",
               to: "/user",
               permissions: ["get_user"]
             },
@@ -302,6 +302,12 @@ export default {
             "create_address"
           ],
           menu: [
+            {
+              icon: "mdi-account-alert-outline",
+              title: "ລູກຄ້າທີ່ຍັງບໍ່ເຂົ້າບໍລິການ",
+              to: "/pre-customer",
+              permissions: ["get_customer"]
+            },
             {
               icon: "mdi-account-group",
               title: "ລູກຄ້າຄົວເຮືອນ",

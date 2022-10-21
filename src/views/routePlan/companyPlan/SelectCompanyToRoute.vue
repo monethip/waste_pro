@@ -186,7 +186,7 @@ export default {
         { text: "ID", value: "customer_id" },
         { text: "ບໍລິສັດ", value: "company_name" },
         // { text: "ຜູ້ຮບຜິດຊອບ", value: "company_coordinators.name" },
-        { text: "ປະເພດບໍລິການ", value: "cost_by", sortable: true },
+        { text: "ປະເພດບໍລິການ", value: "cost_by_la", sortable: true },
         { text: "ບ້ານ", value: "village.name", sortable: true },
         { text: "ເມືອງ", value: "district.name", sortable: true },
         // {text: "ລາຍລະອຽດທີ່ຢູ່", value: "address_detail"},

@@ -69,7 +69,7 @@
     <div>
       <v-card>
         <v-card-title>
-          ຂໍ້ມູນຫົວໜ່ວຍທຸລະກິດ ({{  pagination.total  }})
+          ຂໍ້ມູນຫົວໜ່ວຍທຸລະກິດ ({{ pagination.total }})
           <v-divider class="mx-4" vertical></v-divider>
           <v-spacer></v-spacer>
         </v-card-title>
@@ -83,29 +83,29 @@
             </template>
             <template v-slot:item.village_detail="{ item }">
               <div v-for="(data, index) in item.village_details" :key="index">
-                <div>{{  data.name  }}</div>
+                <div>{{ data.name }}</div>
               </div>
             </template>
             <template v-slot:item.favorite_dates="{ item }">
               <div v-for="(data, index) in item.favorite_dates" :key="index">
-                <div>{{  data.name  }}</div>
+                <div>{{ data.name }}</div>
               </div>
             </template>
 
             <template v-slot:item.cost_by="{ item }">
-              <div>{{  costBy(item.cost_by)  }}</div>
+              <div>{{ costBy(item.cost_by) }}</div>
             </template>
             <template v-slot:item.price="{ item }">
-              <div v-if="item.cost_by !== 'bag'">{{  Intl.NumberFormat().format(item.fix_cost)  }}</div>
+              <div v-if="item.cost_by !== 'bag'">{{ Intl.NumberFormat().format(item.fix_cost) }}</div>
               <div v-if="item.cost_by == 'bag'">
-                <div v-if="item.current_bag_price">{{  Intl.NumberFormat().format(item.current_bag_price.price)  }}</div>
+                <div v-if="item.current_bag_price">{{ Intl.NumberFormat().format(item.current_bag_price.price) }}</div>
               </div>
             </template>
 
             <template v-slot:item.expect_trash="{ item }">
               <v-chip outlined color="green" v-if="item.expect_trash">
-                {{  Intl.NumberFormat().format(item.expect_trash)  }}
-                {{  getCustomerUnitFunc(item.cost_by)  }}
+                {{ Intl.NumberFormat().format(item.expect_trash) }}
+                {{ getCustomerUnitFunc(item.cost_by) }}
               </v-chip>
               <div v-else>-</div>
             </template>
@@ -113,8 +113,8 @@
             <template v-slot:item.current_month_info="{ item }">
               <v-chip outlined v-if="item.current_month_info"
                 :color="getTrashColor(item, getTrash(item.cost_by, item.last_month_info))">{{
-                 Intl.NumberFormat().format(getTrash(item.cost_by, item.current_month_info))  }}
-                {{  getCustomerUnitFunc(item.cost_by)  }}
+                Intl.NumberFormat().format(getTrash(item.cost_by, item.current_month_info)) }}
+                {{ getCustomerUnitFunc(item.cost_by) }}
               </v-chip>
               <div v-else>-</div>
             </template>
@@ -122,14 +122,14 @@
             <template v-slot:item.last_month_info="{ item }">
               <v-chip dark v-if="item.last_month_info"
                 :color="getTrashColor(item, getTrash(item.cost_by, item.last_month_info))">{{
-                 Intl.NumberFormat().format(getTrash(item.cost_by, item.last_month_info))  }}
-                {{  getCustomerUnitFunc(item.cost_by)  }}
+                Intl.NumberFormat().format(getTrash(item.cost_by, item.last_month_info)) }}
+                {{ getCustomerUnitFunc(item.cost_by) }}
               </v-chip>
               <div v-else>-</div>
             </template>
 
             <template v-slot:item.can_collect="{ item }">
-              <v-chip :color="statusColor(item.can_collect)">{{  CanCollect(item.can_collect)  }}
+              <v-chip :color="statusColor(item.can_collect)">{{ CanCollect(item.can_collect) }}
               </v-chip>
             </template>
 
@@ -191,20 +191,20 @@
                   <v-col cols="12">
                     <v-text-field label="Name *" required v-model="user.name"></v-text-field>
                     <p class="errors">
-                      {{  server_errors.name  }}
+                      {{ server_errors.name }}
                     </p>
                   </v-col>
                   <v-col cols="12">
                     <v-text-field label="Surname *" required v-model="user.surname"></v-text-field>
                     <p class="errors">
-                      {{  server_errors.surname  }}
+                      {{ server_errors.surname }}
                     </p>
                   </v-col>
                   <v-col cols="12">
                     <v-text-field label="ເບີໂທ *" required v-model="user.phone" type="number" class="input-number">
                     </v-text-field>
                     <p class="errors">
-                      {{  server_errors.phone  }}
+                      {{ server_errors.phone }}
                     </p>
                   </v-col>
                 </v-row>
@@ -354,7 +354,7 @@ export default {
         { text: "ບ້ານ", value: "village.name", sortable: false, width: "150px" },
         { text: "ເມືອງ", value: "district.name", sortable: false, width: "100px" },
         { text: "ລາຍລະອຽດທີ່ຢູ່", value: "village_detail", sortable: false, width: "200px" },
-        { text: "ປະເພດບໍລິການ", value: "cost_by", width: "200px" },
+        { text: "ປະເພດບໍລິການ", value: "cost_by_la", width: "200px" },
         { text: "ມູນຄ່າສັນຍາ", value: "price", width: "150px" },
         { text: "ຂີ້ເຫຍື້ອຄາດໝາຍ", value: "expect_trash", width: "200px" },
         { text: "ຂີ້ເຫຍື້ອປັດຈຸບັນ", value: "current_month_info", width: "200px" },

@@ -44,6 +44,27 @@ const routes = [
             ]
         }
     },
+    {
+        path: '/pre-customer',
+        name: 'PreCustomer',
+        component: () => import('@/views/customer/PreCustomer.vue'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'PreCustomer',
+                    disabled: true,
+                    href: '/customer'
+                },
+                {
+                    text: 'PreCustomer',
+                    disabled: false,
+                    href: '/pre-customer'
+                },
+            ]
+        }
+    },
     //auth
     {
         path: '/login',
