@@ -184,10 +184,12 @@
               <v-col cols="6">
                 <v-text-field label="Latitude" v-model="data.lat" type="number" class="input-number" outlined dense>
                 </v-text-field>
+                <p class="errors">{{ server_errors.lat }}</p>
               </v-col>
               <v-col cols="6">
                 <v-text-field label="Longitude" v-model="data.lng" type="number" class="input-number" outlined dense>
                 </v-text-field>
+                <p class="errors">{{ server_errors.lng }}</p>
               </v-col>
             </v-row>
 
