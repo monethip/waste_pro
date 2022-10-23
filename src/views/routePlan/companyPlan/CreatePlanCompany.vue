@@ -1,58 +1,34 @@
 <template>
   <v-container>
     <v-breadcrumbs large class="mt-n4">
-      <v-btn text class="text-primary" @click="backPrevios()"
-        ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
-      >
+      <v-btn text class="text-primary" @click="backPrevios()">
+        <v-icon>mdi-keyboard-backspace </v-icon>
+      </v-btn>
       ເພີ່ມແຜນເສັ້ນທາງ
       <v-spacer></v-spacer>
-      <span class="mr-4"
-      ><v-icon color="red">mdi-map-marker</v-icon>ຍັງບໍທັນຢູ່ໃນແຜນ</span
-      >
-      <span
-      ><v-icon style="color: #49a3da">mdi-map-marker</v-icon
-      >ຢູ່ໃນແຜນແລ້ວ</span
-      >
+      <span class="mr-4">
+        <v-icon color="red">mdi-map-marker</v-icon>ຍັງບໍທັນຢູ່ໃນແຜນ
+      </span>
+      <span>
+        <v-icon style="color: #49a3da">mdi-map-marker</v-icon>ຢູ່ໃນແຜນແລ້ວ
+      </span>
     </v-breadcrumbs>
 
     <v-row>
       <v-col cols="12" class="mb-4">
-        <GmapMap
-          v-if="customers"
-          :center="getCenter()"
-          :zoom="16"
-          style="width: 100%; height: 400px"
-          :disableDefaultUI="true"
-        >
-          <gmap-info-window
-            :options="infoOptions"
-            :position="infoPosition"
-            :opened="infoOpened"
-            :conent="infoContent"
-            @closeclick="infoOpened = false"
-            >{{ infoContent }}
+        <GmapMap v-if="customers" :center="getCenter()" :zoom="16" style="width: 100%; height: 400px"
+          :disableDefaultUI="true">
+          <gmap-info-window :options="infoOptions" :position="infoPosition" :opened="infoOpened" :conent="infoContent"
+            @closeclick="infoOpened = false">{{ infoContent }}
           </gmap-info-window>
-          <GmapMarker
-            :key="index"
-            v-for="(m, index) in customers"
-            :position="getMarkers(m)"
-            @click="toggleInfo(m, index)"
-            :draggable="false"
-            :icon="getSiteIcon(m)"
-            :animation="2"
-            :clickable="true"
-          />
+          <GmapMarker :key="index" v-for="(m, index) in customers" :position="getMarkers(m)"
+            @click="toggleInfo(m, index)" :draggable="false" :icon="getSiteIcon(m)" :animation="2" :clickable="true" />
         </GmapMap>
       </v-col>
     </v-row>
     <v-row class="mb-n6">
       <v-col>
-        <v-btn
-          class="btn-primary"
-          @click="createRoutePlan()"
-          :loading="loading"
-          :disabled="loading"
-        >
+        <v-btn class="btn-primary" @click="createRoutePlan()" :loading="loading" :disabled="loading">
           ບັນທຶກ<v-icon>mdi-content-save</v-icon>
         </v-btn>
       </v-col>
@@ -62,16 +38,8 @@
         </h4>
       </v-col>
       <v-col>
-        <v-text-field
-          outlined
-          dense
-          clearable
-          prepend-inner-icon="mdi-magnify"
-          label="ຊື່ລູກຄ້າ"
-          type="text"
-          v-model="search"
-          @keyup.enter="Search()"
-        >
+        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ຊື່ລູກຄ້າ" type="text"
+          v-model="search" @keyup.enter="Search()">
         </v-text-field>
       </v-col>
     </v-row>
@@ -86,16 +54,8 @@
             </div>
 -->
           <main class="page page--table">
-            <v-data-table
-              :headers="headers"
-              :items="customers"
-              :search="search"
-              :disable-pagination="true"
-              hide-default-footer
-              v-model="selectedRows"
-              item-key="id"
-              class="page__table"
-            >
+            <v-data-table :headers="headers" :items="customers" :search="search" :disable-pagination="true"
+              hide-default-footer v-model="selectedRows" item-key="id" class="page__table">
               <template v-slot:body="props">
                 <draggable :list="props.items" tag="tbody" @change="afterAdd">
                   <tr v-for="(user, index) in props.items" :key="index">
@@ -108,10 +68,15 @@
                     <td>{{ user.id }}</td>
                     <td>{{ user.company_name }}</td>
                     <td>{{ user.user.phone }}</td>
+                    <td>{{ user.expect_trash ? Intl.NumberFormat().format(user.expect_trash) +
+                    getCustomerUnitFunc(user.cost_by) : '-'}}</td>
+                    <td>{{ user.created_at }}</td>
                     <td>{{ user.village.name }}</td>
                     <td>{{ user.district.name }}</td>
                     <td>{{ user.collect_description }}</td>
-<!--                    {text: "ລາຍລະອຽດການບໍລິການ", value: "collect_description"},-->
+
+
+                    <!--                    {text: "ລາຍລະອຽດການບໍລິການ", value: "collect_description"},-->
 
                     <td>
                       <!--
@@ -144,11 +109,7 @@
               <v-form ref="form" lazy-validation>
                 <v-row>
                   <v-col cols="12">
-                    <v-text-field
-                      label="Name *"
-                      required
-                      v-model="name"
-                    ></v-text-field>
+                    <v-text-field label="Name *" required v-model="name"></v-text-field>
                     <p class="errors">
                       {{ server_errors.name }}
                     </p>
@@ -161,13 +122,7 @@
               <v-btn color="blue darken-1" text @click="closeAddModal()">
                 Close
               </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                :loading="loading"
-                :disabled="loading"
-                @click="saveRoutePlan()"
-              >
+              <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="saveRoutePlan()">
                 Save
               </v-btn>
             </v-card-actions>
@@ -182,14 +137,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            :loading="loading"
-            :disabled="loading"
-            @click="deleteItemConfirm"
-            >OK</v-btn
-          >
+          <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="deleteItemConfirm">OK</v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </template>
@@ -200,6 +148,7 @@
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import draggable from "vuedraggable";
+import { getCustomerUnit } from "@/Helpers/Customer"
 export default {
   name: "Customer",
   props: ["selectedData", "villages", "items"],
@@ -230,6 +179,8 @@ export default {
         { text: "Id", value: "id" },
         { text: "ບໍລິສັດ", value: "company_name" },
         { text: "Phone", value: "user.phone", sortable: false },
+        { text: "ຂີ້ເຫຍື້ອຄາດໝາຍ", value: "expect_trash" },
+        { text: "ວັນທີ່ເພີ່ມເຂົ້າ", value: "created_at" },
         { text: "ບ້ານ", value: "village.name", sortable: true },
         { text: "ເມືອງ", value: "district.name", sortable: true },
         { text: "ລາຍລະອຽດການບໍລິການ", value: "collect_description", sortable: true },
@@ -254,6 +205,9 @@ export default {
     };
   },
   methods: {
+    getCustomerUnitFunc(costBy) {
+      return getCustomerUnit(costBy)
+    },
     afterAdd(evt) {
       // console.log(evt);
       // const element = evt.moved.element;
@@ -378,11 +332,11 @@ export default {
           console.log(this.latlng)
           return this.latlng;
         } else {
-            const latlng = {
-              lat: parseFloat(this.customers[0].lat),
-              lng: parseFloat(this.customers[0].lng),
-            };
-            return latlng;
+          const latlng = {
+            lat: parseFloat(this.customers[0].lat),
+            lng: parseFloat(this.customers[0].lng),
+          };
+          return latlng;
         }
       }
       return this.latlng;
@@ -493,11 +447,13 @@ export default {
 
 <style lang="scss">
 @import "../../../../public/scss/main.scss";
+
 .page--table {
   .page {
     &__table {
       margin-top: 20px;
     }
+
     &__grab-icon {
       cursor: move;
     }

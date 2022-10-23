@@ -1,60 +1,34 @@
 <template>
   <v-container>
     <v-breadcrumbs large class="mt-n4">
-      <v-btn text class="text-primary" @click="backPrevios()"
-      >
+      <v-btn text class="text-primary" @click="backPrevios()">
         <v-icon>mdi-keyboard-backspace</v-icon>
-      </v-btn
-      >
+      </v-btn>
       ແກ້ໄຂແຜນເສັ້ນທາງ
       <v-spacer></v-spacer>
-      <span class="mr-4"
-      ><v-icon color="red">mdi-map-marker</v-icon>ຍັງບໍທັນຢູ່ໃນແຜນ</span
-      >
-      <span
-      ><v-icon style="color: #49a3da">mdi-map-marker</v-icon
-      >ຢູ່ໃນແຜນແລ້ວ</span
-      >
+      <span class="mr-4">
+        <v-icon color="red">mdi-map-marker</v-icon>ຍັງບໍທັນຢູ່ໃນແຜນ
+      </span>
+      <span>
+        <v-icon style="color: #49a3da">mdi-map-marker</v-icon>ຢູ່ໃນແຜນແລ້ວ
+      </span>
     </v-breadcrumbs>
 
     <v-row>
       <v-col cols="12" class="mb-4">
-        <GmapMap
-            v-if="customers"
-            :center="getCenter()"
-            :zoom="14"
-            style="width: 100%; height: 400px"
-            :disableDefaultUI="true"
-        >
-          <gmap-info-window
-              :options="infoOptions"
-              :position="infoPosition"
-              :opened="infoOpened"
-              :conent="infoContent"
-              @closeclick="infoOpened = false"
-          >{{ infoContent }}
+        <GmapMap v-if="customers" :center="getCenter()" :zoom="14" style="width: 100%; height: 400px"
+          :disableDefaultUI="true">
+          <gmap-info-window :options="infoOptions" :position="infoPosition" :opened="infoOpened" :conent="infoContent"
+            @closeclick="infoOpened = false">{{ infoContent }}
           </gmap-info-window>
-          <GmapMarker
-              :key="index"
-              v-for="(m, index) in customers"
-              :position="getMarkers(m)"
-              @click="toggleInfo(m, index)"
-              :draggable="false"
-              :icon="getSiteIcon(m)"
-              :animation="2"
-              :clickable="true"
-          />
+          <GmapMarker :key="index" v-for="(m, index) in customers" :position="getMarkers(m)"
+            @click="toggleInfo(m, index)" :draggable="false" :icon="getSiteIcon(m)" :animation="2" :clickable="true" />
         </GmapMap>
       </v-col>
     </v-row>
     <v-row class="mb-n6">
       <v-col cols="2">
-        <v-btn
-            class="btn-primary"
-            @click="updateRoutePlan()"
-            :loading="loading"
-            :disabled="loading"
-        >
+        <v-btn class="btn-primary" @click="updateRoutePlan()" :loading="loading" :disabled="loading">
           ແກ້ໄຂ
         </v-btn>
       </v-col>
@@ -62,29 +36,15 @@
         <h4 v-if="customers">ລວມ {{ customers.length }}</h4>
       </v-col>
       <v-col cols="6">
-        <v-text-field
-            label="Name"
-            required
-            v-model="plan.name"
-            outlined
-            dense
-        ></v-text-field>
+        <v-text-field label="Name" required v-model="plan.name" outlined dense></v-text-field>
         <p class="errors">
           {{ server_errors.name }}
         </p>
       </v-col>
 
       <v-col cols="2">
-        <v-text-field
-            outlined
-            dense
-            clearable
-            prepend-inner-icon="mdi-magnify"
-            label="ຄົ້ນຫາ"
-            type="text"
-            v-model="search"
-            @keyup.enter="Search()"
-        >
+        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ຄົ້ນຫາ" type="text"
+          v-model="search" @keyup.enter="Search()">
         </v-text-field>
       </v-col>
     </v-row>
@@ -100,16 +60,8 @@
             <v-col>
               <h4>ລູກຄ້າທີ່ມີຢູ່</h4>
               <main class="page page--table">
-                <v-data-table
-                    :headers="headers"
-                    :items="customers"
-                    :search="search"
-                    :disable-pagination="true"
-                    hide-default-footer
-                    v-model="selectedRows"
-                    item-key="id"
-                    class="page__table"
-                >
+                <v-data-table :headers="headers" :items="customers" :search="search" :disable-pagination="true"
+                  hide-default-footer v-model="selectedRows" item-key="id" class="page__table">
                   <template v-slot:body="props">
                     <draggable :list="props.items" tag="tbody" @change="afterAdd">
                       <tr v-for="(user, index) in props.items" :key="index">
@@ -148,18 +100,14 @@
                 </v-data-table>
               </main>
             </v-col>
-            <v-divider
-                vertical
-            ></v-divider>
+            <v-divider vertical></v-divider>
             <v-col>
               <v-row class="mb-n8">
                 <v-col>
                   <div class="mb-2">
-                    <v-btn text color="primary" @click="addCustomer"
-                    >
+                    <v-btn text color="primary" @click="addCustomer">
                       <v-icon medium> mdi-plus</v-icon>
-                    </v-btn
-                    >
+                    </v-btn>
                   </div>
                 </v-col>
                 <v-spacer></v-spacer>
@@ -168,16 +116,8 @@
                 </v-col>
               </v-row>
               <main class="page page--table">
-                <v-data-table
-                    :headers="newHeaders"
-                    :items="newCustomer"
-                    :search="search"
-                    :disable-pagination="true"
-                    hide-default-footer
-                    v-model="selectedRows"
-                    item-key="id"
-                    class="page__table"
-                >
+                <v-data-table :headers="newHeaders" :items="newCustomer" :search="search" :disable-pagination="true"
+                  hide-default-footer v-model="selectedRows" item-key="id" class="page__table">
                   <template v-slot:body="props">
                     <draggable :list="props.items" tag="tbody" @change="orderCustomer">
                       <tr v-for="(user, index) in props.items" :key="index">
@@ -226,63 +166,25 @@
             <v-container>
               <v-row class="mb-n6">
                 <v-col cols>
-                  <v-select
-                      outlined
-                      dense
-                      :items="favorite_dates"
-                      v-model="selectedFavoriteDate"
-                      item-text="name"
-                      item-value="name"
-                      label="ມື້ບໍລິການ"
-                      multiple
-                  ></v-select>
+                  <v-select outlined dense :items="favorite_dates" v-model="selectedFavoriteDate" item-text="name"
+                    item-value="name" label="ມື້ບໍລິການ" multiple></v-select>
                 </v-col>
                 <v-col>
-                  <v-autocomplete
-                      outlined
-                      dense
-                      :items="customerStatus"
-                      v-model="selectedCustomerStatus"
-                      item-text="name"
-                      item-value="value"
-                      label="ສະຖານະລູກຄ້າ"
-                      multiple
-                      clearable
-                  ></v-autocomplete>
+                  <v-autocomplete outlined dense :items="customerStatus" v-model="selectedCustomerStatus"
+                    item-text="name" item-value="value" label="ສະຖານະລູກຄ້າ" multiple clearable></v-autocomplete>
                 </v-col>
                 <v-col>
-                  <v-autocomplete
-                      outlined
-                      dense
-                      :items="districts"
-                      v-model="selectedDistrict"
-                      item-text="name"
-                      item-value="id"
-                      label="ເມືອງ"
-                  ></v-autocomplete>
+                  <v-autocomplete outlined dense :items="districts" v-model="selectedDistrict" item-text="name"
+                    item-value="id" label="ເມືອງ"></v-autocomplete>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col cols="12">
-                  <v-autocomplete
-                      v-model="selectedVillage"
-                      :items="villages"
-                      item-text="name"
-                      item-value="id"
-                      label="ເລືອກບ້ານ"
-                      filled
-                      chips
-                      color="blue-grey lighten-2"
-                      multiple
-                  >
+                  <v-autocomplete v-model="selectedVillage" :items="villages" item-text="name" item-value="id"
+                    label="ເລືອກບ້ານ" filled chips color="blue-grey lighten-2" multiple>
                     <template v-slot:selection="data">
-                      <v-chip
-                          v-bind="data.attrs"
-                          :input-value="data.selected"
-                          close
-                          @click="data.select"
-                          @click:close="remove(data.item)"
-                      >
+                      <v-chip v-bind="data.attrs" :input-value="data.selected" close @click="data.select"
+                        @click:close="remove(data.item)">
                         {{ data.item.name }}
                       </v-chip>
                     </template>
@@ -290,16 +192,8 @@
                 </v-col>
               </v-row>
 
-              <v-data-table
-                  :headers="addheaders"
-                  :items="addCustomers"
-                  :search="search"
-                  :disable-pagination="true"
-                  hide-default-footer
-                  v-model="selectedRows"
-                  item-key="id"
-                  class="page__table"
-              >
+              <v-data-table :headers="addheaders" :items="addCustomers" :search="search" :disable-pagination="true"
+                hide-default-footer v-model="selectedRows" item-key="id" class="page__table">
                 <template v-slot:body="props">
                   <draggable :list="props.items" tag="tbody" @change="afterAdd">
                     <tr v-for="(user, index) in props.items" :key="index">
@@ -356,15 +250,8 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-          <v-btn
-              color="blue darken-1"
-              text
-              :loading="loading"
-              :disabled="loading"
-              @click="deleteNewCustomerConfirm"
-          >OK
-          </v-btn
-          >
+          <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="deleteNewCustomerConfirm">OK
+          </v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </template>
@@ -373,7 +260,7 @@
 </template>
 
 <script>
-import {GetOldValueOnInput} from "@/Helpers/GetValue";
+import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import draggable from "vuedraggable";
 import queryOption from "@/Helpers/queryOption";
 
@@ -416,33 +303,36 @@ export default {
       favorite_dates: [],
       selectedFavoriteDate: [],
       headers: [
-        {text: "", value: ""},
-        {text: "ລຳດັບ", value: ""},
-        {text: "Id", value: "id"},
-        {text: "ລູກຄ້າ", value: ""},
+        { text: "", value: "" },
+        { text: "ລຳດັບ", value: "" },
+        { text: "Id", value: "id" },
+        { text: "ລູກຄ້າ", value: "" },
         // { text: "Phone", value: "user.phone", sortable: false },
         // { text: "ລາຍລະອຽດທີ່ຢູ່", value: "address_detail" },
         // { text: "ບ້ານ", value: "village.name", sortable: true },
         // { text: "ເມືອງ", value: "district.name", sortable: true },
-        {text: "", value: "actions", sortable: false},
+        { text: "", value: "actions", sortable: false },
       ],
       newHeaders: [
-        {text: "", value: ""},
-        {text: "Id", value: "id"},
-        {text: "ລູກຄ້າ", value: ""},
-        {text: "ທີ່ຢູ່", value: "address_detail"},
-        {text: "", value: "actions", sortable: false},
+        { text: "", value: "" },
+        { text: "Id", value: "id" },
+        { text: "ລູກຄ້າ", value: "" },
+        { text: "ທີ່ຢູ່", value: "address_detail" },
+        { text: "", value: "actions", sortable: false },
       ],
 
       addheaders: [
-        {text: "#", value: ""},
-        {text: "Id", value: "id"},
-        {text: "ລູກຄ້າ", value: ""},
-        {text: "Phone", value: "user.phone", sortable: false},
-        {text: "ທີ່ຢູ່", value: "address_detail"},
+        { text: "#", value: "" },
+        { text: "Id", value: "id" },
+        { text: "ລູກຄ້າ", value: "" },
+        { text: "Phone", value: "user.phone", sortable: false },
+        { text: "ຂີ້ເຫຍື້ອຄາດໝາຍ", value: "expect_trash" },
+        { text: "ວັນທີ່ສະດວກເກັບ", value: "favorite_dates" },
+        { text: "ວັນທີ່ເພີ່ມເຂົ້າ", value: "created_at" },
+        { text: "ທີ່ຢູ່", value: "address_detail" },
         // { text: "ບ້ານ", value: "village.name", sortable: true },
         // { text: "ເມືອງ", value: "district.name", sortable: true },
-        {text: "", value: "actions", sortable: false},
+        { text: "", value: "actions", sortable: false },
       ],
       //Map
       selectedCustomerStatus: [],
@@ -501,49 +391,49 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-          .get("route-plan/" + this.$route.params.id + "/route-plan-detail", {
-            params: {
-              // page: this.pagination.current_page,
-              // per_page: this.per_page,
-              // // filter: this.search,
-              // villages: this.selectedVillage,
-            },
-          })
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.$store.commit("Loading_State", false);
-                this.customers = res.data.data;
-                console.log(this.customers);
-                // this.pagination = res.data.data.pagination;
-                this.getCenter();
-              }, 100);
+        .get("route-plan/" + this.$route.params.id + "/route-plan-detail", {
+          params: {
+            // page: this.pagination.current_page,
+            // per_page: this.per_page,
+            // // filter: this.search,
+            // villages: this.selectedVillage,
+          },
+        })
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.$store.commit("Loading_State", false);
+              this.customers = res.data.data;
+              console.log(this.customers);
+              // this.pagination = res.data.data.pagination;
+              this.getCenter();
+            }, 100);
+          }
+        })
+        .catch((error) => {
+          this.$store.commit("Loading_State", false);
+          if (error.response.status == 422) {
+            var obj = error.response.data.errors;
+            for (let [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
             }
-          })
-          .catch((error) => {
-            this.$store.commit("Loading_State", false);
-            if (error.response.status == 422) {
-              var obj = error.response.data.errors;
-              for (let [key, message] of Object.entries(obj)) {
-                this.server_errors[key] = message[0];
-              }
-            }
-          });
+          }
+        });
     },
 
     fetchDetail() {
       this.$axios
-          .get("route-plan/" + this.$route.params.id)
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.plan = res.data.data;
-                console.log(this.plan);
-              }, 100);
-            }
-          })
-          .catch(() => {
-          });
+        .get("route-plan/" + this.$route.params.id)
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.plan = res.data.data;
+              console.log(this.plan);
+            }, 100);
+          }
+        })
+        .catch(() => {
+        });
     },
 
     closeDelete() {
@@ -613,12 +503,12 @@ export default {
     },
     updateRoutePlan() {
       const oldId = this.customers.map((item) => {
-            return item.customer_id;
-          }
+        return item.customer_id;
+      }
       );
       const newId = this.newCustomer.map((item) => {
-            return item.id;
-          }
+        return item.id;
+      }
       );
       const allId = oldId.concat(newId);
       let formData = new FormData();
@@ -631,31 +521,31 @@ export default {
       if (this.customers.length > 0) {
         this.loading = true;
         this.$axios
-            .post(
-                "update-route-plan/" + this.$route.params.id,
-                formData,
-                {
-                  headers: {"Content-Type": "multipart/form-data"},
-                }
-            )
-            .then((res) => {
-              if (res.status == 200) {
-                setTimeout(() => {
-                  this.loading = false;
-                }, 300);
-                this.$router.push({
-                  name: "Plan",
-                });
-              }
-            })
-            .catch((error) => {
-              this.$store.commit("Toast_State", {
-                value: true,
-                color: "error",
-                msg: error.response.data.message,
+          .post(
+            "update-route-plan/" + this.$route.params.id,
+            formData,
+            {
+              headers: { "Content-Type": "multipart/form-data" },
+            }
+          )
+          .then((res) => {
+            if (res.status == 200) {
+              setTimeout(() => {
+                this.loading = false;
+              }, 300);
+              this.$router.push({
+                name: "Plan",
               });
-              this.loading = false;
+            }
+          })
+          .catch((error) => {
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response.data.message,
             });
+            this.loading = false;
+          });
       } else {
         this.$store.commit("Toast_State", {
           value: true,
@@ -668,7 +558,7 @@ export default {
     viewPage(id) {
       this.$router.push({
         name: "ViewCustomer",
-        params: {id},
+        params: { id },
       });
       // window.open(route.href, "_blank");
     },
@@ -676,67 +566,67 @@ export default {
     fetchAddCustomer() {
       this.$store.commit("Loading_State", true);
       this.$axios
-          .get("customer", {
-            params: queryOption([
-              {page: this.pagination.current_page},
-              {per_page: this.per_page},
-              {without: this.selectedCustomerStatus},
-              {villages: this.selectedVillage},
-              {district_id: this.selectedDistrict},
-              {favorite_dates: this.selectedFavoriteDate},
-              {without: this.selectedCustomerStatus},
-            ]),
-          })
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.$store.commit("Loading_State", false);
-                this.addCustomers = res.data.data.data;
-                // this.selectedAllCustomer = res.data.data;
-                this.pagination = res.data.data.pagination;
-                // this.getCenter();
-              }, 100);
+        .get("customer", {
+          params: queryOption([
+            { page: this.pagination.current_page },
+            { per_page: this.per_page },
+            { without: this.selectedCustomerStatus },
+            { villages: this.selectedVillage },
+            { district_id: this.selectedDistrict },
+            { favorite_dates: this.selectedFavoriteDate },
+            { without: this.selectedCustomerStatus },
+          ]),
+        })
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.$store.commit("Loading_State", false);
+              this.addCustomers = res.data.data.data;
+              // this.selectedAllCustomer = res.data.data;
+              this.pagination = res.data.data.pagination;
+              // this.getCenter();
+            }, 100);
+          }
+        })
+        .catch((error) => {
+          this.$store.commit("Loading_State", false);
+          if (error.response.status == 422) {
+            var obj = error.response.data.errors;
+            for (let [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
             }
-          })
-          .catch((error) => {
-            this.$store.commit("Loading_State", false);
-            if (error.response.status == 422) {
-              var obj = error.response.data.errors;
-              for (let [key, message] of Object.entries(obj)) {
-                this.server_errors[key] = message[0];
-              }
-            }
-          });
+          }
+        });
     },
     fetchAddress() {
       this.$axios
-          .get("info/address", {params: {filter: "ນະຄອນຫລວງວຽງຈັນ"}})
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.address = res.data.data;
-                this.address.map((item) => {
-                  this.districts = item.districts;
-                });
-              }, 300);
-            }
-          })
-          .catch(() => {
-          });
+        .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.address = res.data.data;
+              this.address.map((item) => {
+                this.districts = item.districts;
+              });
+            }, 300);
+          }
+        })
+        .catch(() => {
+        });
     },
 
     fetchVillage() {
       this.$axios
-          .get("info/district/" + this.selectedDistrict + "/village")
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.villages = res.data.data;
-              }, 300);
-            }
-          })
-          .catch(() => {
-          });
+        .get("info/district/" + this.selectedDistrict + "/village")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.villages = res.data.data;
+            }, 300);
+          }
+        })
+        .catch(() => {
+        });
     },
 
     Search() {
@@ -836,16 +726,16 @@ export default {
     },
     fetchFavorite() {
       this.$axios
-          .get("favorite-date")
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.favorite_dates = res.data.data;
-              }, 100);
-            }
-          })
-          .catch(() => {
-          });
+        .get("favorite-date")
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.favorite_dates = res.data.data;
+            }, 100);
+          }
+        })
+        .catch(() => {
+        });
     },
 
   },

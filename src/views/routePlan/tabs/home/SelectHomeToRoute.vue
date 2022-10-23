@@ -129,6 +129,14 @@
                 </div>
 
               </template>
+
+              <template v-slot:item.expect_trash="{ item }">
+                <v-chip outlined color="green" v-if="item.expect_trash">
+                  {{ Intl.NumberFormat().format(item.expect_trash) }}
+                  {{ getCustomerUnitFunc(item.cost_by) }}
+                </v-chip>
+                <div v-else>-</div>
+              </template>
             </v-data-table>
             <br />
             <template>
@@ -145,6 +153,7 @@
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
+import { getCustomerUnit } from "@/Helpers/Customer";
 
 export default {
   name: "Customer",
@@ -191,6 +200,9 @@ export default {
         { text: "ນາມສະກຸນ", value: "surname" },
         // { text: "ຜູ້ຮບຜິດຊອບ", value: "company_coordinators.name" },
         { text: "Phone", value: "user.phone", sortable: false },
+        { text: "ຂີ້ເຫຍື້ອຄາດໝາຍ", value: "expect_trash" },
+        { text: "ວັນທີ່ສະດວກເກັບ", value: "favorite_dates" },
+        { text: "ວັນທີ່ເພີ່ມເຂົ້າ", value: "created_at" },
         // {text: "ລາຍລະອຽດທີ່ຢູ່", value: "address_detail"},
         { text: "ບ້ານ", value: "village.name", sortable: true },
         { text: "ເມືອງ", value: "district.name", sortable: true },
@@ -240,6 +252,9 @@ export default {
         this.customers.splice(index, 1, this.customers[index])
       }
 
+    },
+    getCustomerUnitFunc(costBy) {
+      return getCustomerUnit(costBy)
     },
     backPrevios() {
       this.$router.go(-1);

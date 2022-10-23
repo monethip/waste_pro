@@ -1,8 +1,9 @@
 <template>
   <v-container>
     <v-breadcrumbs large>
-      <v-btn text class="text-primary" @click="backPrevios()"></v-btn>
-      <v-icon>mdi-keyboard-backspace</v-icon> ເລືອກຄົນຂັບ
+      <v-btn text class="text-primary" @click="backPrevios()">
+        <v-icon>mdi-keyboard-backspace</v-icon> ເລືອກຄົນຂັບ
+      </v-btn>
     </v-breadcrumbs>
     <v-row>
       <v-col>

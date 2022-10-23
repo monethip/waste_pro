@@ -2,58 +2,35 @@
   <div @="onLoad">
     <v-container>
       <v-breadcrumbs large class="mt-n4">
-        <v-btn text class="text-primary" @click="backPrevios()"
-        ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
-        >
+        <v-btn text class="text-primary" @click="backPrevios()">
+          <v-icon>mdi-keyboard-backspace </v-icon>
+        </v-btn>
         ເພີ່ມແຜນເສັ້ນທາງ
         <v-spacer></v-spacer>
-        <span class="mr-4"
-        ><v-icon color="red">mdi-map-marker</v-icon>ຍັງບໍທັນຢູ່ໃນແຜນ</span
-        >
-        <span
-        ><v-icon style="color: #49a3da">mdi-map-marker</v-icon
-        >ຢູ່ໃນແຜນແລ້ວ</span
-        >
+        <span class="mr-4">
+          <v-icon color="red">mdi-map-marker</v-icon>ຍັງບໍທັນຢູ່ໃນແຜນ
+        </span>
+        <span>
+          <v-icon style="color: #49a3da">mdi-map-marker</v-icon>ຢູ່ໃນແຜນແລ້ວ
+        </span>
       </v-breadcrumbs>
 
       <v-row>
         <v-col cols="12" class="mb-4">
-          <GmapMap
-              v-if="customers"
-              :center="getCenter()"
-              :zoom="14"
-              style="width: 100%; height: 400px"
-              :disableDefaultUI="true"
-          >
-            <gmap-info-window
-                :options="infoOptions"
-                :position="infoPosition"
-                :opened="infoOpened"
-                :conent="infoContent"
-                @closeclick="infoOpened = false"
-            >{{ infoContent }}
+          <GmapMap v-if="customers" :center="getCenter()" :zoom="14" style="width: 100%; height: 400px"
+            :disableDefaultUI="true">
+            <gmap-info-window :options="infoOptions" :position="infoPosition" :opened="infoOpened" :conent="infoContent"
+              @closeclick="infoOpened = false">{{ infoContent }}
             </gmap-info-window>
-            <GmapMarker
-                :key="index"
-                v-for="(m, index) in customers"
-                :position="getMarkers(m)"
-                @click="toggleInfo(m, index)"
-                :draggable="false"
-                :icon="getSiteIcon(m)"
-                :animation="2"
-                :clickable="true"
-            />
+            <GmapMarker :key="index" v-for="(m, index) in customers" :position="getMarkers(m)"
+              @click="toggleInfo(m, index)" :draggable="false" :icon="getSiteIcon(m)" :animation="2"
+              :clickable="true" />
           </GmapMap>
         </v-col>
       </v-row>
       <v-row class="mb-n6">
         <v-col>
-          <v-btn
-              class="btn-primary"
-              @click="createRoutePlan()"
-              :loading="loading"
-              :disabled="loading"
-          >
+          <v-btn class="btn-primary" @click="createRoutePlan()" :loading="loading" :disabled="loading">
             ບັນທຶກ<v-icon>mdi-content-save</v-icon>
           </v-btn>
         </v-col>
@@ -63,16 +40,8 @@
           </h4>
         </v-col>
         <v-col>
-          <v-text-field
-              outlined
-              dense
-              clearable
-              prepend-inner-icon="mdi-magnify"
-              label="ຊື່ລູກຄ້າ"
-              type="text"
-              v-model="search"
-              @keyup.enter="Search()"
-          >
+          <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ຊື່ລູກຄ້າ" type="text"
+            v-model="search" @keyup.enter="Search()">
           </v-text-field>
         </v-col>
       </v-row>
@@ -87,16 +56,8 @@
               </div>
   -->
             <main class="page page--table">
-              <v-data-table
-                  :headers="headers"
-                  :items="customers"
-                  :search="search"
-                  :disable-pagination="true"
-                  hide-default-footer
-                  v-model="selectedRows"
-                  item-key="id"
-                  class="page__table"
-              >
+              <v-data-table :headers="headers" :items="customers" :search="search" :disable-pagination="true"
+                hide-default-footer v-model="selectedRows" item-key="id" class="page__table">
                 <template v-slot:body="props">
                   <draggable :list="props.items" tag="tbody" @change="afterAdd">
                     <tr v-for="(user, index) in props.items" :key="index">
@@ -110,9 +71,14 @@
                       <td>{{ user.name }}</td>
                       <td>{{ user.surname }}</td>
                       <td>{{ user.user.phone }}</td>
+                      <td>{{ user.expect_trash ? Intl.NumberFormat().format(user.expect_trash) +
+                      getCustomerUnitFunc(user.cost_by) : '-'
+                      }}</td>
+                      <td>{{ user.created_at }}</td>
                       <td>{{ user.address_detail }}</td>
                       <td>{{ user.village.name }}</td>
                       <td>{{ user.district.name }}</td>
+
                       <td>
                         <!--
                           <v-icon small class="mr-2" @click="viewPage(user.id)">
@@ -144,11 +110,7 @@
                 <v-form ref="form" lazy-validation>
                   <v-row>
                     <v-col cols="12">
-                      <v-text-field
-                          label="Name *"
-                          required
-                          v-model="name"
-                      ></v-text-field>
+                      <v-text-field label="Name *" required v-model="name"></v-text-field>
                       <p class="errors">
                         {{ server_errors.name }}
                       </p>
@@ -161,13 +123,7 @@
                 <v-btn color="blue darken-1" text @click="closeAddModal()">
                   Close
                 </v-btn>
-                <v-btn
-                    color="blue darken-1"
-                    text
-                    :loading="loading"
-                    :disabled="loading"
-                    @click="saveRoutePlan()"
-                >
+                <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="saveRoutePlan()">
                   Save
                 </v-btn>
               </v-card-actions>
@@ -182,14 +138,8 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-            <v-btn
-                color="blue darken-1"
-                text
-                :loading="loading"
-                :disabled="loading"
-                @click="deleteItemConfirm"
-            >OK</v-btn
-            >
+            <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="deleteItemConfirm">OK
+            </v-btn>
             <v-spacer></v-spacer>
           </v-card-actions>
         </template>
@@ -201,6 +151,8 @@
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import draggable from "vuedraggable";
+import { getCustomerUnit } from "@/Helpers/Customer"
+
 export default {
   name: "Customer",
   props: ["selectedData", "villages", "items"],
@@ -232,6 +184,8 @@ export default {
         { text: "ຊື່", value: "name" },
         { text: "ນາມສະກຸນ", value: "surname" },
         { text: "Phone", value: "user.phone", sortable: false },
+        { text: "ຂີ້ເຫຍື້ອຄາດໝາຍ", value: "expect_trash" },
+        { text: "ວັນທີ່ເພີ່ມເຂົ້າ", value: "created_at" },
         { text: "ລາຍລະອຽດທີ່ຢູ່", value: "address_detail" },
         { text: "ບ້ານ", value: "village.name", sortable: true },
         { text: "ເມືອງ", value: "district.name", sortable: true },
@@ -315,6 +269,9 @@ export default {
     },
     createRoutePlan() {
       this.$store.commit("modalAdd_State", true);
+    },
+    getCustomerUnitFunc(costBy) {
+      return getCustomerUnit(costBy)
     },
     closeAddModal() {
       this.$store.commit("modalAdd_State", false);
@@ -478,14 +435,14 @@ export default {
         this.selectedRows.push(keyID);
       }
     },
-    onLoad(){
-      const currpage    = window.location.href;
-      const lasturl     = sessionStorage.getItem("last_url");
+    onLoad() {
+      const currpage = window.location.href;
+      const lasturl = sessionStorage.getItem("last_url");
 
-      if(lasturl == null || lasturl.length === 0 || currpage !== lasturl ){
+      if (lasturl == null || lasturl.length === 0 || currpage !== lasturl) {
         sessionStorage.setItem("last_url", currpage);
         alert("New page loaded");
-      }else{
+      } else {
         alert("Refreshed Page");
       }
     }
@@ -510,11 +467,13 @@ export default {
 
 <style lang="scss">
 @import "../../../../../public/scss/main.scss";
+
 .page--table {
   .page {
     &__table {
       margin-top: 20px;
     }
+
     &__grab-icon {
       cursor: move;
     }
