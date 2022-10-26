@@ -182,6 +182,22 @@ const routes = [
         }
     },
     {
+        path: '/user-sale',
+        name: 'UserSale',
+        component: () => import('@/views/users/SaleUser.vue'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'SaleUser',
+                    disabled: true,
+                    href: '/user-sale'
+                }
+            ]
+        }
+    },
+    {
         path: '/driver',
         name: 'Driver',
         component: () => import('@/views/driver/Driver.vue'),

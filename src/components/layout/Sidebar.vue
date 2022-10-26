@@ -1,9 +1,14 @@
 <template>
   <div>
     <v-app-bar flat fixed app class="nav">
-      <v-icon style="padding: 4px" @click="drawer = !drawer">mdi-order-bool-descending</v-icon>
+      <v-icon style="padding: 4px" @click="drawer = !drawer"
+        >mdi-order-bool-descending</v-icon
+      >
 
-      <v-breadcrumbs divider=">" :items="$route.meta.breadcrumb"></v-breadcrumbs>
+      <v-breadcrumbs
+        divider=">"
+        :items="$route.meta.breadcrumb"
+      ></v-breadcrumbs>
 
       <v-spacer></v-spacer>
       <v-menu bottom min-width="200px" rounded offset-y>
@@ -18,28 +23,40 @@
         <v-card>
           <v-card-text class="px-0">
             <v-list-item-content class="justify-center">
-              <v-list two-line style="max-height: 650px" class="overflow-y-auto">
+              <v-list
+                two-line
+                style="max-height: 650px"
+                class="overflow-y-auto"
+              >
                 <v-list-item-group active-class="pink--text" multiple>
                   <template v-for="(item, index) in eventNotifications">
                     <v-list-item :key="item.id" @click="viewPage(item.id)">
                       <v-list-item-content>
-                        <v-list-item-title v-text="item.data.name"></v-list-item-title>
+                        <v-list-item-title
+                          v-text="item.data.name"
+                        ></v-list-item-title>
 
-                        <v-list-item-subtitle class="text--primary" v-text="item.data.text"></v-list-item-subtitle>
+                        <v-list-item-subtitle
+                          class="text--primary"
+                          v-text="item.data.text"
+                        ></v-list-item-subtitle>
 
-                        <v-list-item-subtitle v-text="item.data.thanks"></v-list-item-subtitle>
+                        <v-list-item-subtitle
+                          v-text="item.data.thanks"
+                        ></v-list-item-subtitle>
                       </v-list-item-content>
 
                       <v-list-item-action-text>
                         <span class="primary-color">
-                          {{
-                          moment(item.created_at).format("DD-MM-YY")
-                          }}
+                          {{ moment(item.created_at).format("DD-MM-YY") }}
                         </span>
                       </v-list-item-action-text>
                     </v-list-item>
 
-                    <v-divider v-if="index < eventNotifications.length - 1" :key="index"></v-divider>
+                    <v-divider
+                      v-if="index < eventNotifications.length - 1"
+                      :key="index"
+                    ></v-divider>
                   </template>
                 </v-list-item-group>
               </v-list>
@@ -66,28 +83,40 @@
         <v-card>
           <v-card-text class="px-0">
             <v-list-item-content class="justify-center">
-              <v-list two-line style="max-height: 650px" class="overflow-y-auto">
+              <v-list
+                two-line
+                style="max-height: 650px"
+                class="overflow-y-auto"
+              >
                 <v-list-item-group active-class="pink--text" multiple>
                   <template v-for="(item, index) in notifications">
                     <v-list-item :key="item.id" @click="viewPage(item.id)">
                       <v-list-item-content>
-                        <v-list-item-title v-text="item.data.name"></v-list-item-title>
+                        <v-list-item-title
+                          v-text="item.data.name"
+                        ></v-list-item-title>
 
-                        <v-list-item-subtitle class="text--primary" v-text="item.data.text"></v-list-item-subtitle>
+                        <v-list-item-subtitle
+                          class="text--primary"
+                          v-text="item.data.text"
+                        ></v-list-item-subtitle>
 
-                        <v-list-item-subtitle v-text="item.data.thanks"></v-list-item-subtitle>
+                        <v-list-item-subtitle
+                          v-text="item.data.thanks"
+                        ></v-list-item-subtitle>
                       </v-list-item-content>
 
                       <v-list-item-action-text>
                         <span class="primary-color">
-                          {{
-                          moment(item.created_at).format("DD-MM-YY")
-                          }}
+                          {{ moment(item.created_at).format("DD-MM-YY") }}
                         </span>
                       </v-list-item-action-text>
                     </v-list-item>
 
-                    <v-divider v-if="index < notifications.length - 1" :key="index"></v-divider>
+                    <v-divider
+                      v-if="index < notifications.length - 1"
+                      :key="index"
+                    ></v-divider>
                   </template>
                 </v-list-item-group>
               </v-list>
@@ -128,11 +157,24 @@
         </v-card>
       </v-menu>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer" fixed app floating class="app-navigation-menu">
+    <v-navigation-drawer
+      v-model="drawer"
+      fixed
+      app
+      floating
+      class="app-navigation-menu"
+    >
       <div class="vertical-nav-header d-flex items-center ps-6 pe-5 pt-5 pb-2">
         <router-link to="/" class="d-flex align-center text-decoration-none">
-          <v-img :src="require('../../assets/logo-finalized.png')" max-height="60px" max-width="60px" alt="logo" contain
-            eager class="app-logo me-3"></v-img>
+          <v-img
+            :src="require('../../assets/logo-finalized.png')"
+            max-height="60px"
+            max-width="60px"
+            alt="logo"
+            contain
+            eager
+            class="app-logo me-3"
+          ></v-img>
           <v-slide-x-transition>
             <h3 class="app-title text--primary">Vientiane Waste</h3>
           </v-slide-x-transition>
@@ -140,7 +182,14 @@
       </div>
 
       <v-list expand shaped>
-        <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact color="indigo darken-4">
+        <v-list-item
+          v-for="(item, i) in items"
+          :key="i"
+          :to="item.to"
+          router
+          exact
+          color="indigo darken-4"
+        >
           <v-list-item-action>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-action>
@@ -150,15 +199,29 @@
         </v-list-item>
 
         <div v-for="item in group_menu" :key="item.id" class="group-menu">
-          <v-list-group class="group-menu-icon" :prepend-icon="item.icon" no-action color="indigo darken-4"
-            v-if="$can(item.group_permissions)">
+          <v-list-group
+            class="group-menu-icon"
+            :prepend-icon="item.icon"
+            no-action
+            color="indigo darken-4"
+            v-if="$can(item.group_permissions)"
+          >
             <template v-slot:activator>
               <v-list-item-content>
                 <v-list-item-title>{{ item.title }}</v-list-item-title>
               </v-list-item-content>
             </template>
-            <div v-for="(i, index) in item.menu" :key="index" style="padding-left: 22px;">
-              <v-list-item exact color="primary-color" :to="i.to" v-if="$can(i.permissions)">
+            <div
+              v-for="(i, index) in item.menu"
+              :key="index"
+              style="padding-left: 22px"
+            >
+              <v-list-item
+                exact
+                color="primary-color"
+                :to="i.to"
+                v-if="$can(i.permissions)"
+              >
                 <v-list-item-action>
                   <v-icon>{{ i.icon }}</v-icon>
                 </v-list-item-action>
@@ -194,14 +257,14 @@ export default {
           icon: "mdi-home",
           title: "ໜ້າຫຼັກ",
           to: "/",
-          permissions: ["create_user"]
+          permissions: ["create_user"],
         },
         {
           icon: "mdi-apps",
           title: "Activity Log",
           to: "/activity-log",
-          permissions: ["create_user"]
-        }
+          permissions: ["create_user"],
+        },
       ],
       group_menu: [
         {
@@ -212,46 +275,46 @@ export default {
             "get_user",
             "get_customer",
             "get_driver",
-            "create_address"
+            "create_address",
           ],
           menu: [
             {
               icon: "mdi-file-import",
               title: "Import User",
               to: "/import-file",
-              permissions: ["create_driver"]
+              permissions: ["create_driver"],
             },
             {
               icon: "mdi-account-key",
               title: "Roles",
               to: "/role",
-              permissions: ["get_role", "create_role"]
+              permissions: ["get_role", "create_role"],
             },
             {
               icon: "mdi-package",
               title: "ຈັດການຂໍ້ມູນບໍລິການ",
               to: "package",
-              permissions: ["get_package", "get_customer"]
+              permissions: ["get_package", "get_customer"],
             },
             {
               icon: "mdi-home-account",
               title: "ຈັດການທີ່ຢູ່",
               to: "/village",
-              permissions: ["create_address", "get_driver"]
+              permissions: ["create_address", "get_driver"],
             },
             {
               icon: "mdi-home-account",
               title: "ຈັດການລາຍລະອຽດທີ່ຢູ່",
               to: "/village-variation",
-              permissions: ["create_address", "get_driver"]
+              permissions: ["create_address", "get_driver"],
             },
             {
               icon: "mdi-car-multiple",
               title: "ຈັດການພາຫະນະ",
               to: "/vehicle",
-              permissions: ["get_vehicle"]
-            }
-          ]
+              permissions: ["get_vehicle"],
+            },
+          ],
         },
         {
           title: "ຂໍ້ມູນຜູ້ໃຊ້",
@@ -261,34 +324,40 @@ export default {
             "get_user",
             "get_customer",
             "get_driver",
-            "create_address"
+            "create_address",
           ],
           menu: [
             {
               icon: "mdi-account-group-outline",
               title: "ຜູ້ໃຊ້ທັງໝົດ",
               to: "/user",
-              permissions: ["get_user"]
+              permissions: ["get_user"],
+            },
+            {
+              icon: "mdi-briefcase-account-outline",
+              title: "Sale Users",
+              to: "/user-sale",
+              permissions: ["get_user"],
             },
             {
               icon: "mdi-dump-truck",
               title: "Drivers",
               to: "/driver",
-              permissions: ["get_driver"]
+              permissions: ["get_driver"],
             },
             {
               icon: "mdi-badge-account",
               title: "ພະນັກງານ",
               to: "/employee",
-              permissions: ["get_employee"]
+              permissions: ["get_employee"],
             },
             {
               icon: "mdi-account-group",
               title: "Team",
               to: "/team",
-              permissions: ["get_team"]
-            }
-          ]
+              permissions: ["get_team"],
+            },
+          ],
         },
 
         {
@@ -299,34 +368,34 @@ export default {
             "get_user",
             "get_customer",
             "get_driver",
-            "create_address"
+            "create_address",
           ],
           menu: [
             {
               icon: "mdi-account-alert-outline",
               title: "ລູກຄ້າທີ່ຍັງບໍ່ເຂົ້າບໍລິການ",
               to: "/pre-customer",
-              permissions: ["get_customer"]
+              permissions: ["get_customer"],
             },
             {
               icon: "mdi-account-group",
               title: "ລູກຄ້າຄົວເຮືອນ",
               to: "/customer",
-              permissions: ["get_customer"]
+              permissions: ["get_customer"],
             },
             {
               icon: "mdi-office-building",
               title: "ລູກຄ້າຫົວໜ່ວຍທຸລະກິດ",
               to: "/company",
-              permissions: ["get_customer"]
+              permissions: ["get_customer"],
             },
             {
               icon: "mdi-account-group",
               title: "ລູກຄ້າສົງຄຳຮ້ອງຂໍເຂົ້າມາ",
               to: "/company-request",
-              permissions: ["get_customer"]
-            }
-          ]
+              permissions: ["get_customer"],
+            },
+          ],
         },
         {
           title: "ແຜນເສັ້ນທາງ",
@@ -337,15 +406,15 @@ export default {
               icon: "mdi-sitemap",
               title: "ເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ",
               to: "/plan",
-              permissions: ["get_route_plan"]
+              permissions: ["get_route_plan"],
             },
             {
               icon: "mdi-calendar-month",
               title: "ຈັດແຜນເດີນລົດ",
               to: "/calendar",
-              permissions: ["update_plan_calendar"]
-            }
-          ]
+              permissions: ["update_plan_calendar"],
+            },
+          ],
         },
         {
           title: "ເກັບຂີ້ເຫື້ຍອ",
@@ -356,15 +425,15 @@ export default {
               icon: "mdi-trash-can",
               title: "ເກັບຂີ້ເຫື້ຍອພິເສດເກົ່າ",
               to: "/collection-event",
-              permissions: ["manage_event", "get_customer"]
+              permissions: ["manage_event", "get_customer"],
             },
             {
               icon: "mdi-note-outline",
               title: "ເກັບຂີ້ເຫື້ຍອພິເສດໃໝ່",
               to: "/v2/event-invoice",
-              permissions: ["get_invoice"]
+              permissions: ["get_invoice"],
             },
-          ]
+          ],
         },
         // {
         //   title: "ບິນແບບເກົ່າ",
@@ -395,28 +464,28 @@ export default {
               icon: "mdi-note-search",
               title: "ຄົ້ນຫາບິນ",
               to: "/search-billing",
-              permissions: ["get_invoice"]
+              permissions: ["get_invoice"],
             },
             {
               icon: "mdi-note-outline",
               title: "ບິນທັງໝົດ",
               to: "/billing",
-              permissions: ["get_invoice"]
+              permissions: ["get_invoice"],
             },
 
             {
               icon: "mdi-note-outline",
               title: "ຈັດການບິນຢ້ອນຫຼັງ",
               to: "/v2/custom-bill",
-              permissions: ["get_invoice"]
+              permissions: ["get_invoice"],
             },
             {
               icon: "mdi-note-outline",
               title: "ຈັດການບິນລ່ວງໜ້າ",
               to: "/future-invoice",
-              permissions: ["get_invoice"]
-            }
-          ]
+              permissions: ["get_invoice"],
+            },
+          ],
         },
 
         {
@@ -428,7 +497,7 @@ export default {
               icon: "mdi-chart-bubble",
               title: "ເກັບຂີ້ເຫຍື້ອຕາມລົດໃໝ່",
               to: "/report/driver/collection/v2",
-              permissions: ["report"]
+              permissions: ["report"],
             },
             // {
             //   icon: "mdi-chart-bubble",
@@ -440,59 +509,59 @@ export default {
               icon: "mdi-chart-bubble",
               title: "ເກັບຂີ້ເຫຍື້ອຕາມບ້ານ",
               to: "/report/address/collection",
-              permissions: ["report"]
+              permissions: ["report"],
             },
             {
               icon: "mdi-chart-bubble",
               title: "ລາຍງານການເກັບຂີ້ເຫຍື້ອ",
               to: "/report/trash",
-              permissions: ["report"]
+              permissions: ["report"],
             },
             {
               icon: "mdi-chart-bubble",
               title: "ລາຍງານເກັບຂີ້ເຫຍື້ອພິເສດ",
               to: "/report/event/trash",
-              permissions: ["report"]
+              permissions: ["report"],
             },
             {
               icon: "mdi-cash",
               title: "ລານງານບິນ",
               to: "/report/billing/main",
-              permissions: ["report"]
+              permissions: ["report"],
             },
             {
               icon: "mdi-cash",
               title: "ລາຍງານຂໍ້ມູນບັນຊີ",
               to: "/report/invoice",
-              permissions: ["report"]
+              permissions: ["report"],
             },
             {
               icon: "mdi-cash",
               title: "ຂໍ້ມູນບັນຊີເກັບພິເສດ",
               to: "/report/event/invoice",
-              permissions: ["report"]
+              permissions: ["report"],
             },
             {
               icon: "mdi-chart-areaspline",
               title: "ລາຍງານຂໍ້ມູນຄົນຂັບລົດ",
               to: "/report/driver",
-              permissions: ["report"]
+              permissions: ["report"],
             },
             {
               icon: "mdi-chart-bar",
               title: "ລາຍງານຂໍ້ມູນລູກຄ້າ",
               to: "/report/customer",
-              permissions: ["report"]
+              permissions: ["report"],
             },
             {
               icon: "mdi-chart-bar",
               title: "ລາຍງານຫົວໜ່ວຍທຸລະກິດ",
               to: "/report/company",
-              permissions: ["report"]
-            }
-          ]
-        }
-      ]
+              permissions: ["report"],
+            },
+          ],
+        },
+      ],
     };
   },
 
@@ -504,8 +573,8 @@ export default {
       return this.$store.getters["User/getUserProfile"];
     },
     ...mapGetters({
-      userRole: "User/getUserRole"
-    })
+      userRole: "User/getUserRole",
+    }),
   },
   created() {
     this.userProfile = JSON.parse(window.localStorage.getItem("user"));
@@ -515,7 +584,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      Logout: "User/destroyToken"
+      Logout: "User/destroyToken",
     }),
     userLogout() {
       this.$store.dispatch("auth/destroyToken");
@@ -527,10 +596,10 @@ export default {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
-            status: this.selectedStatus
-          }
+            status: this.selectedStatus,
+          },
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
@@ -539,13 +608,13 @@ export default {
             }, 300);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$store.commit("Loading_State", false);
           if (error.response.status == 422) {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response.data.message
+              msg: error.response.data.message,
             });
           }
         });
@@ -558,10 +627,10 @@ export default {
             page: this.pagination.current_page,
             per_page: this.per_page,
             status: this.selectedStatus,
-            type: "EVENT"
-          }
+            type: "EVENT",
+          },
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
@@ -570,13 +639,13 @@ export default {
             }, 300);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$store.commit("Loading_State", false);
           if (error.response.status == 422) {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response.data.message
+              msg: error.response.data.message,
             });
           }
         });
@@ -589,16 +658,16 @@ export default {
     viewEventNoti() {
       this.$router.push({
         name: "NotificationTab",
-        query: { "types": ["EVENT", "CUSTOMER_EVENT"] }
+        query: { types: ["EVENT", "CUSTOMER_EVENT"] },
       });
     },
     viewPage(id) {
       this.$router.push({
         name: "NotificationView",
-        params: { id }
+        params: { id },
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -617,10 +686,13 @@ export default {
 
 .group-menu,
 .v-application--is-ltr .v-list-item__icon:first-child {
-  margin-right: 6px !important
+  margin-right: 6px !important;
 }
 
-.v-application--is-ltr .v-list-group--no-action>.v-list-group__items>.v-list-item {
+.v-application--is-ltr
+  .v-list-group--no-action
+  > .v-list-group__items
+  > .v-list-item {
   padding-left: 18px !important;
 }
 
