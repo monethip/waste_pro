@@ -20,7 +20,9 @@
             @closeclick="infoOpened = false">{{ infoContent }}
           </gmap-info-window>
           <GmapMarker :key="index" v-for="(m, index) in customers" :position="getMarkers(m)"
-            @click="toggleInfo(m, index)" :draggable="false" :icon="getSiteIcon(m)" :animation="2" :clickable="true" />
+            @click="toggleInfo(m, index)" :draggable="false" :icon="getSiteIcon(m)" :animation="2" :clickable="true"
+            :label="m.check_number ? m.check_number.toString() : null" />
+
         </GmapMap>
       </v-col>
     </v-row>
@@ -31,7 +33,12 @@
         </v-btn>
       </v-col>
       <v-col>
-        <h4>ເລືອກລູກຄ້າເພື່ອສ້າງແຜນເສັ້ນທາງ {{ pagination.total }} ຄົນ</h4>
+        <h4>ລູກຄ້າທັງໝົດ {{ pagination.total }} ຄົນ</h4>
+        <h4>ຂີ້ເຫຍື້ອຄາດໝາຍ:</h4>
+        <h5 v-for="item in countExpectTrash" :key="item.cost_by">{{ getLaoCompanyCostByFunc(item.cost_by) + ': ' +
+        Intl.NumberFormat().format(item.expect_trash) + ' ' +
+        getCustomerUnitFunc(item.cost_by)
+        }} </h5>
       </v-col>
       <v-col>
         <v-autocomplete outlined dense :items="districts" v-model="selectedDistrict" item-text="name" item-value="id"
@@ -73,9 +80,15 @@
       <v-card>
         <v-card flat>
           <v-card-text>
-            <v-row>
+            <v-row v-if="selectedRows.length">
               <v-col>
-                <p v-if="selectedRows.length">ລູກຄ້່ທີ່ເລືອກ {{selectedRows.length}}</p>
+                <p>ລູກຄ້າທີ່ເລືອກ {{ selectedRows.length }}</p>
+              </v-col>
+              <v-col v-for="trash in selectedTrash" :key="trash.cost_by">
+                <p>{{ getLaoCompanyCostByFunc(trash.cost_by) + ': ' +
+                Intl.NumberFormat().format(trash.count) + ' ' +
+                getCustomerUnitFunc(trash.cost_by)
+                }}</p>
               </v-col>
             </v-row>
             <v-data-table :headers="headers" :items="customers" :search="search" :disable-pagination="true"
@@ -94,7 +107,7 @@
                   mdi-eye
                 </v-icon>
               </template>
-              <template v-slot:item.custom_pick="{item}">
+              <template v-slot:item.custom_pick="{ item }">
                 <div class="main-check" @click="checkHandler(item)">
                   <div v-if="item.check_number" class="check">
                     {{ item.check_number }}
@@ -110,6 +123,12 @@
                   {{ getCustomerUnitFunc(item.cost_by) }}
                 </v-chip>
                 <div v-else>-</div>
+              </template>
+
+              <template v-slot:item.favorite_dates="{ item }">
+                <v-chip dark color="green" v-for="date in item.favorite_dates" :key="date.name">
+                  {{ date.name }}
+                </v-chip>
               </template>
 
             </v-data-table>
@@ -128,7 +147,7 @@
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
-import { getCustomerUnit } from "@/Helpers/Customer"
+import { getCustomerUnit, getLaoCompanyCostBy, getCompanyCostBy } from "@/Helpers/Customer"
 export default {
   name: "Customer",
   data() {
@@ -136,12 +155,13 @@ export default {
       tab: null,
       customers: [],
       selectedAllCustomer: [],
+      countExpectTrash: [],
       loading: false,
       customerId: "",
       //Pagination
       offset: 12,
       pagination: {},
-      per_page: 20,
+      per_page: 100,
       search: "",
       oldVal: "",
       //Filter
@@ -234,6 +254,10 @@ export default {
     getCustomerUnitFunc(costBy) {
       return getCustomerUnit(costBy)
     },
+    getLaoCompanyCostByFunc(costBy) {
+      return getLaoCompanyCostBy(costBy)
+    },
+
     checkHandler(value) {
       const index = this.customers.findIndex(item => item.id == value.id)
       if (index != -1) {
@@ -254,28 +278,37 @@ export default {
     chooseStyle() {
       return 'check'
     },
-    fetchData() {
+    fetchData(countexpect = false) {
       this.$store.commit("Loading_State", true);
+      let options = [
+        { page: this.pagination.current_page },
+        { per_page: this.per_page },
+        { without: this.selectedCustomerStatus },
+        { villages: this.selectedVillage },
+        { district_id: this.selectedDistrict },
+        { filter: this.search },
+        { cost_by: this.selectedCost },
+        { favorite_dates: this.selectedFavoriteDate },
+      ]
+
+      if (countexpect) options.push({ count_expact_trash: '1' })
+
       this.$axios
         .get("company", {
-          params: queryOption([
-            { page: this.pagination.current_page },
-            { per_page: this.per_page },
-            { without: this.selectedCustomerStatus },
-            { villages: this.selectedVillage },
-            { district_id: this.selectedDistrict },
-            { filter: this.search },
-            { cost_by: this.selectedCost },
-            { favorite_dates: this.selectedFavoriteDate },
-          ]),
+          params: queryOption(options),
         })
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
-              this.customers = res.data.data.data;
-              this.selectedAllCustomer = res.data.data;
-              this.pagination = res.data.data.pagination;
+              if (countexpect) {
+                this.countExpectTrash = res.data.data
+              } else {
+                this.customers = res.data.data.data;
+                this.selectedAllCustomer = res.data.data;
+                this.pagination = res.data.data.pagination;
+              }
+
               // this.getCenter();
             }, 100);
           }
@@ -443,6 +476,8 @@ export default {
         this.infoOpened = true;
         this.infoCurrentKey = key;
       }
+
+      this.checkHandler(m)
     },
 
     toggle() {
@@ -476,6 +511,25 @@ export default {
     },
   },
   computed: {
+    selectedTrash() {
+      let array = []
+
+      for (const item of getCompanyCostBy) {
+        array.push({
+          cost_by: item.en,
+          count: 0
+        })
+      }
+
+      for (const selected of this.selectedRows) {
+        const index = array.findIndex(item => item.cost_by == selected.cost_by)
+        if (index > -1) {
+          array[index].count += selected.expect_trash > 0 ? selected.expect_trash : 0
+        }
+      }
+
+      return array
+    },
     selectedAllVillage() {
       return this.selectedVillage.length === this.villages.length;
     },
@@ -492,33 +546,40 @@ export default {
     selectedFavoriteDate: function () {
       this.pagination.current_page = '';
       this.fetchData();
+      this.fetchData(true)
     },
     search: function (value) {
       this.pagination.current_page = '';
       if (value == "") {
         this.fetchData();
+        this.fetchData(true)
       }
     },
     selectedVillage: function () {
       this.pagination.current_page = '';
       this.fetchData();
+      this.fetchData(true)
     },
     selectedDistrict: function () {
       this.pagination.current_page = '';
       this.fetchVillage();
       this.fetchData();
+      this.fetchData(true)
     },
     selectedCustomerStatus: function () {
       this.pagination.current_page = '';
       this.fetchData();
+      this.fetchData(true)
     },
     selectedCost: function () {
       this.pagination.current_page = '';
       this.fetchData();
+      this.fetchData(true)
     },
   },
   created() {
     this.fetchData();
+    this.fetchData(true)
     this.fetchAddress();
     this.fetchFavorite();
   },

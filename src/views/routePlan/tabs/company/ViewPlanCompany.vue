@@ -16,7 +16,8 @@
             @closeclick="infoOpened = false">{{ infoContent }}
           </gmap-info-window>
           <GmapMarker :key="index" v-for="(m, index) in customers" :position="getMarkers(m)"
-            @click="toggleInfo(m, index)" :draggable="false" :icon="markerOptions" :animation="2" :clickable="true" />
+            @click="toggleInfo(m, index)" :draggable="false" :icon="markerOptions" :animation="2"
+            :label="(index + 1).toString()" :clickable="true" />
         </GmapMap>
       </v-col>
 
@@ -75,6 +76,11 @@
               </template>
               <template v-slot:item.status="{ item }">
                 <v-chip v-if="item.customer" :color="statusColor(item.customer.status)">{{ item.customer.status }}
+                </v-chip>
+              </template>
+              <template v-slot:item.favorite_dates="{ item }">
+                <v-chip dark color="green" v-for="date in item.favorite_dates" :key="date.name">
+                  {{ date.name }}
                 </v-chip>
               </template>
 

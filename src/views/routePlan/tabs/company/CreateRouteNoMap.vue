@@ -23,8 +23,8 @@
               @closeclick="infoOpened = false">{{ infoContent }}
             </gmap-info-window>
             <GmapMarker :key="index" v-for="(m, index) in customers" :position="getMarkers(m)"
-              @click="toggleInfo(m, index)" :draggable="false" :icon="getSiteIcon(m)" :animation="2"
-              :clickable="true" />
+              @click="toggleInfo(m, index)" :draggable="false" :icon="getSiteIcon(m)" :animation="2" :clickable="true"
+              :label="(index + 1).toString()" />
           </GmapMap>
         </v-col>
       </v-row>
@@ -72,7 +72,7 @@
                       <td>{{ user.surname }}</td>
                       <td>{{ user.user.phone }}</td>
                       <td>{{ user.expect_trash ? Intl.NumberFormat().format(user.expect_trash) +
-                      getCustomerUnitFunc(user.cost_by) : '-'
+                          getCustomerUnitFunc(user.cost_by) : '-'
                       }}</td>
                       <td>{{ user.created_at }}</td>
                       <td>{{ user.address_detail }}</td>

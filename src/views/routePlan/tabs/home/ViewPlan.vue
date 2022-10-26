@@ -15,7 +15,8 @@
             @closeclick="infoOpened = false">{{ infoContent }}
           </gmap-info-window>
           <GmapMarker :key="index" v-for="(m, index) in customers" :position="getMarkers(m)"
-            @click="toggleInfo(m, index)" :draggable="false" :icon="markerOptions" :animation="2" :clickable="true" />
+            @click="toggleInfo(m, index)" :draggable="false" :icon="markerOptions" :animation="2" :clickable="true"
+            :label="(index + 1).toString()" />
         </GmapMap>
       </v-col>
 

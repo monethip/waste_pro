@@ -1,73 +1,43 @@
 <template>
   <v-container>
     <v-breadcrumbs large class="mt-n4">
-      <v-btn text class="text-primary" @click="backPrevios()"
-        ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
-      >
+      <v-btn text class="text-primary" @click="backPrevios()">
+        <v-icon>mdi-keyboard-backspace </v-icon>
+      </v-btn>
       Export ຂໍ້ມູນລູກຄ້າບໍລິສັດໃນແຜນເສັ້ນທາງ
       <v-spacer></v-spacer>
-      <span class="mr-4"
-        ><v-icon color="red">mdi-map-marker</v-icon>ຢູ່ໃນແຜນແລ້ວ</span
-      >
-      <span
-        ><v-icon style="color: #49a3da">mdi-map-marker</v-icon
-        >ຍັງບໍທັນຢູ່ໃນແຜນ</span
-      >
+      <span class="mr-4">
+        <v-icon color="red">mdi-map-marker</v-icon>ຢູ່ໃນແຜນແລ້ວ
+      </span>
+      <span>
+        <v-icon style="color: #49a3da">mdi-map-marker</v-icon>ຍັງບໍທັນຢູ່ໃນແຜນ
+      </span>
     </v-breadcrumbs>
     <v-row>
       <v-col cols="12" class="mb-4">
-        <GmapMap
-          v-if="customers"
-          :center="getCenter()"
-          :zoom="14"
-          style="width: 100%; height: 450px"
-          :disableDefaultUI="true"
-        >
-          <gmap-info-window
-            :options="infoOptions"
-            :position="infoPosition"
-            :opened="infoOpened"
-            :conent="infoContent"
-            @closeclick="infoOpened = false"
-            >{{ infoContent }}
+        <GmapMap v-if="customers" :center="getCenter()" :zoom="14" style="width: 100%; height: 450px"
+          :disableDefaultUI="true">
+          <gmap-info-window :options="infoOptions" :position="infoPosition" :opened="infoOpened" :conent="infoContent"
+            @closeclick="infoOpened = false">{{ infoContent }}
           </gmap-info-window>
-          <GmapMarker
-            :key="index"
-            v-for="(m, index) in customers"
-            :position="getMarkers(m)"
-            @click="toggleInfo(m, index)"
-            :draggable="false"
-            :icon="getSiteIcon(m)"
-            :animation="2"
-            :clickable="true"
-          />
+          <GmapMarker :key="index" v-for="(m, index) in customers" :position="getMarkers(m)"
+            @click="toggleInfo(m, index)" :draggable="false" :icon="getSiteIcon(m)" :animation="2" :clickable="true"
+            :label="(index + 1).toString()" />
         </GmapMap>
       </v-col>
     </v-row>
     <v-row class="mb-n6">
       <v-col>
-        <v-btn
-          class="btn-primary"
-          @click="exportRoutePlan()"
-          :loading="loading"
-          :disabled="loading"
-          ><v-icon>mdi-arrow-right-bold-circle-outline</v-icon>
+        <v-btn class="btn-primary" @click="exportRoutePlan()" :loading="loading" :disabled="loading">
+          <v-icon>mdi-arrow-right-bold-circle-outline</v-icon>
         </v-btn>
       </v-col>
       <v-col>
         <h4 v-if="customers">ລວມລູກຄ້າ {{ customers.length }} ຄົນ</h4>
       </v-col>
       <v-col>
-        <v-text-field
-          outlined
-          dense
-          clearable
-          prepend-inner-icon="mdi-magnify"
-          label="Search"
-          type="text"
-          v-model="search"
-          @keyup.enter="Search()"
-        >
+        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="Search" type="text"
+          v-model="search" @keyup.enter="Search()">
         </v-text-field>
       </v-col>
     </v-row>
@@ -76,19 +46,12 @@
         <v-card flat>
           <v-card-text>
             <div>
-              <v-btn text color="error" @click="deleteItem"
-                ><v-icon medium> mdi-delete </v-icon></v-btn
-              >
+              <v-btn text color="error" @click="deleteItem">
+                <v-icon medium> mdi-delete </v-icon>
+              </v-btn>
             </div>
-            <v-data-table
-              :headers="headers"
-              :items="customers"
-              :search="search"
-              :disable-pagination="true"
-              hide-default-footer
-              v-model="selectedRows"
-              show-select
-            >
+            <v-data-table :headers="headers" :items="customers" :search="search" :disable-pagination="true"
+              hide-default-footer v-model="selectedRows" show-select>
               <!--
               <template v-slot:item.media="{ item }">
                 <v-avatar
@@ -154,14 +117,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            :loading="loading"
-            :disabled="loading"
-            @click="deleteItemConfirm"
-            >OK</v-btn
-          >
+          <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="deleteItemConfirm">OK</v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </template>
