@@ -208,11 +208,19 @@
           <!--            </v-col>-->
           <!--          </v-row>-->
           <v-row>
+            <c-vo>
+              <h3>
+                ເຄື່ອນໄຫວລ່າສຸດ:
+                {{ moment(invoice.updated_at).format("DD-MM-YY HH:mm:ss") }}
+              </h3>
+            </c-vo>
+          </v-row>
+          <v-row>
             <v-col>
               <h3>
                 ວັນທີຊຳລະ:
                 <span v-if="invoice.paided_by" class="error--text">{{
-                  moment(invoice.paided_by.created_at).format("DD-MM-YY")
+                  invoice.paided_at
                 }}</span>
               </h3>
               <h3 v-if="invoice.payment_method">
@@ -226,9 +234,7 @@
               <h3>
                 ວັນທີຢືນຢັນຊຳລະ:
                 <span v-if="invoice.confirmed_payment_by" class="error--text">{{
-                  moment(invoice.confirmed_payment_by.created_at).format(
-                    "DD-MM-YY"
-                  )
+                  invoice.confirmed_payment_at
                 }}</span>
               </h3>
               <h3 v-if="invoice.confirmed_payment_by">
