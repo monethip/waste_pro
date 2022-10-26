@@ -105,6 +105,13 @@
               item.is_pause?'ຢຸດກ່ອນ':'ໃຫ້ເກັບ' }}
               </v-chip>
             </template>
+            
+            <template v-slot:item.route_plan_detail.customer.can_collect="{ item }">
+              <v-chip :color="item.route_plan_detail.customer.can_collect ? 'success' : 'error'">{{
+                  item.route_plan_detail.customer.can_collect ? 'ເກັບໄດ້' : 'ເກັບບໍ່ໄດ້'
+              }}
+              </v-chip>
+            </template>
 
             <template v-slot:item.actions="{ item }">
               <v-icon small class="mr-2" @click="viewPage(item.plan_calendar_id, item.id)">
@@ -181,6 +188,7 @@ export default {
       headers: [
         { text: "ລຳດັບຄວາມສຳຄັນ", value: "priority" },
         { text: "ລູກຄ້າ", value: "customer" },
+        { text: "ສະຖານະເກັບ", value: "item.route_plan_detail.customer.can_collect" },
         {
           text: "ຈຳນວນຂີ້ເຫື້ຍອ",
           value: "amount",
