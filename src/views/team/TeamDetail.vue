@@ -158,7 +158,7 @@ export default {
       //Pagination
       offset: 12,
       pagination: {},
-      per_page: 12,
+      per_page: 100,
       search: "",
       oldVal: "",
       //Validation

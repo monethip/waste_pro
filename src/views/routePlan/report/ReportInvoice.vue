@@ -150,7 +150,7 @@ export default {
       //Pagination
       offset: 12,
       pagination: {},
-      per_page: 15,
+      per_page: 100,
       search: "",
       oldVal: "",
       invoices: [],

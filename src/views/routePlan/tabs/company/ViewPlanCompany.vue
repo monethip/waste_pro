@@ -11,19 +11,42 @@
 
     <v-row>
       <v-col cols="12" class="mb-4" v-if="switchMap">
-        <GmapMap :center="getCenter()" :zoom="16" style="width: 100%; height: 450px" :disableDefaultUI="true">
-          <gmap-info-window :options="infoOptions" :position="infoPosition" :opened="infoOpened" :conent="infoContent"
-            @closeclick="infoOpened = false">{{ infoContent }}
+        <GmapMap
+          :center="getCenter()"
+          :zoom="16"
+          style="width: 100%; height: 450px"
+          :disableDefaultUI="true"
+        >
+          <gmap-info-window
+            :options="infoOptions"
+            :position="infoPosition"
+            :opened="infoOpened"
+            :conent="infoContent"
+            @closeclick="infoOpened = false"
+            >{{ infoContent }}
           </gmap-info-window>
-          <GmapMarker :key="index" v-for="(m, index) in customers" :position="getMarkers(m)"
-            @click="toggleInfo(m, index)" :draggable="false" :icon="markerOptions" :animation="2"
-            :label="(index + 1).toString()" :clickable="true" />
+          <GmapMarker
+            :key="index"
+            v-for="(m, index) in customers"
+            :position="getMarkers(m)"
+            @click="toggleInfo(m, index)"
+            :draggable="false"
+            :icon="markerOptions"
+            :animation="2"
+            :label="(index + 1).toString()"
+            :clickable="true"
+          />
         </GmapMap>
       </v-col>
 
       <v-col v-if="!switchMap">
         <div class="iframe-container">
-          <iframe :src="plan.embed" height="100%" width="100%" class="embed"></iframe>
+          <iframe
+            :src="plan.embed"
+            height="100%"
+            width="100%"
+            class="embed"
+          ></iframe>
         </div>
       </v-col>
     </v-row>
@@ -35,15 +58,24 @@
         </v-btn>
       </v-col>
       <v-col>
-        <v-btn class="btn-primary" @click="editCompanyPlan(plan.id)">Update
+        <v-btn class="btn-primary" @click="editCompanyPlan(plan.id)"
+          >Update
         </v-btn>
       </v-col>
       <v-col>
         <h4>ລວມລູກຄ້າ {{ pagination.total }} ຄົນ</h4>
       </v-col>
       <v-col>
-        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ຊື່ລູກຄ້າ" type="text"
-          v-model="search" @keyup.enter="Search()">
+        <v-text-field
+          outlined
+          dense
+          clearable
+          prepend-inner-icon="mdi-magnify"
+          label="ຊື່ລູກຄ້າ"
+          type="text"
+          v-model="search"
+          @keyup.enter="Search()"
+        >
         </v-text-field>
       </v-col>
     </v-row>
@@ -52,8 +84,13 @@
       <v-card>
         <v-card flat>
           <v-card-text>
-            <v-data-table :headers="headers" :items="customers" :search="search" :disable-pagination="true"
-              hide-default-footer>
+            <v-data-table
+              :headers="headers"
+              :items="customers"
+              :search="search"
+              :disable-pagination="true"
+              hide-default-footer
+            >
               <template v-slot:item.customer="{ item }">
                 <div v-if="(item.customer.customer_type = 'company')">
                   {{ item.customer.company_name }}
@@ -64,7 +101,10 @@
                 </div>
               </template>
               <template v-slot:item.favorite_dates="{ item }">
-                <div v-for="(data, index) in item.customer.favorite_dates" :key="index">
+                <div
+                  v-for="(data, index) in item.customer.favorite_dates"
+                  :key="index"
+                >
                   <div>{{ data.name }}</div>
                 </div>
               </template>
@@ -75,12 +115,28 @@
                 <div>{{ item.default_round }} ຮອບ</div>
               </template>
               <template v-slot:item.status="{ item }">
-                <v-chip v-if="item.customer" :color="statusColor(item.customer.status)">{{ item.customer.status }}
+                <v-chip
+                  v-if="item.customer"
+                  :color="statusColor(item.customer.status)"
+                  >{{ item.customer.status }}
                 </v-chip>
               </template>
               <template v-slot:item.favorite_dates="{ item }">
-                <v-chip dark color="green" v-for="date in item.favorite_dates" :key="date.name">
+                <v-chip
+                  dark
+                  color="green"
+                  v-for="date in item.favorite_dates"
+                  :key="date.name"
+                >
                   {{ date.name }}
+                </v-chip>
+              </template>
+
+              <template v-slot:item.customer.can_collect="{ item }">
+                <v-chip
+                  :color="item.customer.can_collect ? 'success' : 'error'"
+                >
+                  {{ item.customer.can_collect ? "ເກັບໄດ້" : "ເກັບບໍ່ໄດ້" }}
                 </v-chip>
               </template>
 
@@ -88,11 +144,15 @@
                 <v-icon small class="mr-2" @click="viewPage(item)">
                   mdi-eye
                 </v-icon>
-              </template>
-            </v-data-table><br />
+              </template> </v-data-table
+            ><br />
             <template>
-              <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
-                @paginate="fetchData()"></Pagination>
+              <Pagination
+                v-if="pagination.total_pages > 1"
+                :pagination="pagination"
+                :offset="offset"
+                @paginate="fetchData()"
+              ></Pagination>
             </template>
           </v-card-text>
         </v-card>
@@ -118,7 +178,7 @@ export default {
       //Pagination
       offset: 12,
       pagination: {},
-      per_page: 15,
+      per_page: 100,
       search: "",
       oldVal: "",
       //Filter
@@ -129,13 +189,23 @@ export default {
       plan: {},
 
       headers: [
-        { text: "ລຳດັບຄວາມສຳຄັນ", value: "priority", sortable: false, align: "center" },
+        {
+          text: "ລຳດັບຄວາມສຳຄັນ",
+          value: "priority",
+          sortable: false,
+          align: "center",
+        },
         { text: "ລູກຄ້າ", value: "customer" },
+        { text: "ສະຖານະເກັບ", value: "customer.can_collect" },
         { text: "ສະຖານະ", value: "status", sortable: false },
         { text: "ປະເພດບໍລິການ", value: "cost_by_la", sortable: false },
         { text: "ມື້ບໍລິການ", value: "favorite_dates", width: "120px" },
         { text: "ຈຳນວນຮອບເລີ່ມຕົ້ນ", value: "default_round", width: "120px" },
-        { text: "ລາຍລະອຽດ", value: "customer.collect_description", sortable: false },
+        {
+          text: "ລາຍລະອຽດ",
+          value: "customer.collect_description",
+          sortable: false,
+        },
         { text: "", value: "actions", sortable: false },
       ],
       //Map
@@ -227,7 +297,7 @@ export default {
             }, 100);
           }
         })
-        .catch(() => { });
+        .catch(() => {});
     },
 
     fetchAddress() {
@@ -243,7 +313,7 @@ export default {
             }, 100);
           }
         })
-        .catch(() => { });
+        .catch(() => {});
     },
 
     fetchVillage() {
@@ -256,7 +326,7 @@ export default {
             }, 100);
           }
         })
-        .catch(() => { });
+        .catch(() => {});
     },
 
     createPage() {
@@ -344,7 +414,7 @@ export default {
       else if (value == "fix_cost") return "ທຸລະກິດເປັນຖ້ຽວ";
       else if (value == "chartered") return "ມອບເໝົາ";
       else if (value == "bag") return "ບໍລິມາດ";
-      else return '';
+      else return "";
     },
   },
 

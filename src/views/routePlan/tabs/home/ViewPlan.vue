@@ -2,27 +2,49 @@
   <v-container>
     <v-breadcrumbs large>
       <v-btn text class="text-primary" @click="backPrevios()">
-        <v-icon>mdi-keyboard-backspace </v-icon>
-      </v-btn>
-      ລາຍລະອຽດແຜນເສັ້ນທາງ
-      <span class="primary-color ml-2"> {{ plan.name }}</span>
+        <v-icon>mdi-keyboard-backspace</v-icon> </v-btn
+      >ລາຍລະອຽດແຜນເສັ້ນທາງ
+      <span class="primary-color ml-2">{{ plan.name }}</span>
     </v-breadcrumbs>
 
     <v-row>
       <v-col cols="12" class="mb-4" v-if="switchMap">
-        <GmapMap :center="getCenter()" :zoom="16" style="width: 100%; height: 450px" :disableDefaultUI="true">
-          <gmap-info-window :options="infoOptions" :position="infoPosition" :opened="infoOpened" :conent="infoContent"
-            @closeclick="infoOpened = false">{{ infoContent }}
-          </gmap-info-window>
-          <GmapMarker :key="index" v-for="(m, index) in customers" :position="getMarkers(m)"
-            @click="toggleInfo(m, index)" :draggable="false" :icon="markerOptions" :animation="2" :clickable="true"
-            :label="(index + 1).toString()" />
+        <GmapMap
+          :center="getCenter()"
+          :zoom="16"
+          style="width: 100%; height: 450px"
+          :disableDefaultUI="true"
+        >
+          <gmap-info-window
+            :options="infoOptions"
+            :position="infoPosition"
+            :opened="infoOpened"
+            :conent="infoContent"
+            @closeclick="infoOpened = false"
+            >{{ infoContent }}</gmap-info-window
+          >
+          <GmapMarker
+            :key="index"
+            v-for="(m, index) in customers"
+            :position="getMarkers(m)"
+            @click="toggleInfo(m, index)"
+            :draggable="false"
+            :icon="markerOptions"
+            :animation="2"
+            :clickable="true"
+            :label="(index + 1).toString()"
+          />
         </GmapMap>
       </v-col>
 
       <v-col v-if="!switchMap">
         <div class="iframe-container">
-          <iframe :src="plan.embed" height="100%" width="100%" class="embed"></iframe>
+          <iframe
+            :src="plan.embed"
+            height="100%"
+            width="100%"
+            class="embed"
+          ></iframe>
         </div>
       </v-col>
     </v-row>
@@ -34,16 +56,24 @@
         </v-btn>
       </v-col>
       <v-col>
-        <v-btn class="btn-primary" @click="editCompanyPlan(plan.id)">Update
-        </v-btn>
+        <v-btn class="btn-primary" @click="editCompanyPlan(plan.id)"
+          >Update</v-btn
+        >
       </v-col>
       <v-col>
         <h4>ລວມລູກຄ້າ {{ pagination.total }} ຄົນ</h4>
       </v-col>
       <v-col>
-        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ຊື່ລູກຄ້າ" type="text"
-          v-model="search" @keyup.enter="Search()">
-        </v-text-field>
+        <v-text-field
+          outlined
+          dense
+          clearable
+          prepend-inner-icon="mdi-magnify"
+          label="ຊື່ລູກຄ້າ"
+          type="text"
+          v-model="search"
+          @keyup.enter="Search()"
+        ></v-text-field>
       </v-col>
     </v-row>
 
@@ -51,8 +81,13 @@
       <v-card>
         <v-card flat>
           <v-card-text>
-            <v-data-table :headers="headers" :items="customers" :search="search" :disable-pagination="true"
-              hide-default-footer>
+            <v-data-table
+              :headers="headers"
+              :items="customers"
+              :search="search"
+              :disable-pagination="true"
+              hide-default-footer
+            >
               <template v-slot:item.customer="{ item }">
                 <div v-if="(item.customer.customer_type = 'company')">
                   {{ item.customer.company_name }}
@@ -62,20 +97,37 @@
                   {{ item.customer.surname }}
                 </div>
               </template>
-              <template v-slot:item.status="{ item }">
-                <v-chip v-if="item.customer" :color="statusColor(item.customer.status)">{{ item.customer.status }}
+
+              <template v-slot:item.customer.can_collect="{ item }">
+                <v-chip
+                  :color="item.customer.can_collect ? 'success' : 'error'"
+                >
+                  {{ item.customer.can_collect ? "ເກັບໄດ້" : "ເກັບບໍ່ໄດ້" }}
                 </v-chip>
               </template>
 
-              <template v-slot:item.actions="{ item }">
-                <v-icon small class="mr-2" @click="viewPage(item)">
-                  mdi-eye
-                </v-icon>
+              <template v-slot:item.status="{ item }">
+                <v-chip
+                  v-if="item.customer"
+                  :color="statusColor(item.customer.status)"
+                  >{{ item.customer.status }}</v-chip
+                >
               </template>
-            </v-data-table><br />
+
+              <template v-slot:item.actions="{ item }">
+                <v-icon small class="mr-2" @click="viewPage(item)"
+                  >mdi-eye</v-icon
+                >
+              </template>
+            </v-data-table>
+            <br />
             <template>
-              <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
-                @paginate="fetchData()"></Pagination>
+              <Pagination
+                v-if="pagination.total_pages > 1"
+                :pagination="pagination"
+                :offset="offset"
+                @paginate="fetchData()"
+              ></Pagination>
             </template>
           </v-card-text>
         </v-card>
@@ -101,7 +153,7 @@ export default {
       //Pagination
       offset: 12,
       pagination: {},
-      per_page: 15,
+      per_page: 100,
       search: "",
       oldVal: "",
       //Filter
@@ -112,8 +164,14 @@ export default {
       plan: {},
 
       headers: [
-        { text: "ລຳດັບຄວາມສຳຄັນ", value: "priority", sortable: false, align: "center" },
+        {
+          text: "ລຳດັບຄວາມສຳຄັນ",
+          value: "priority",
+          sortable: false,
+          align: "center",
+        },
         { text: "ລູກຄ້າ", value: "customer" },
+        { text: "ສະຖານະເກັບ", value: "customer.can_collect" },
         { text: "ສະຖານະ", value: "status", sortable: false },
         { text: "ເຮືອນເລກທີ", value: "customer.house_number", sortable: false },
         { text: "", value: "actions", sortable: false },
@@ -207,7 +265,7 @@ export default {
             }, 100);
           }
         })
-        .catch(() => { });
+        .catch(() => {});
     },
 
     fetchAddress() {
@@ -223,7 +281,7 @@ export default {
             }, 100);
           }
         })
-        .catch(() => { });
+        .catch(() => {});
     },
 
     fetchVillage() {
@@ -236,7 +294,7 @@ export default {
             }, 100);
           }
         })
-        .catch(() => { });
+        .catch(() => {});
     },
 
     createPage() {

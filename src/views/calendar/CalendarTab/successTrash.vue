@@ -87,7 +87,7 @@ export default {
       offset: 12,
       successes: [],
       pagination: {},
-      per_page: 15,
+      per_page: 100,
       search: "",
       //   oldVal: "",
       summary: {},

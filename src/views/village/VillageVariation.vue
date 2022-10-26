@@ -191,7 +191,7 @@ export default {
       //pagination
       offset: 12,
       pagination: {},
-      per_page: 15,
+      per_page: 100,
 
       //validation
       server_errors: {},

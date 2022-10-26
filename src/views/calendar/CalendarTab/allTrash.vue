@@ -168,7 +168,7 @@ export default {
       //   offset: 12,
       //   calendars: [],
       //   pagination: {},
-      //   per_page: 15,
+      //   per_page: 100,
       //   search: "",
       //   oldVal: "",
       //   summary: {},
