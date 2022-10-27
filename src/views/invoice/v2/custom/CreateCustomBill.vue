@@ -17,31 +17,72 @@
             <v-row>
               <v-col cols="4">
                 <p>ວັນທີບິນ</p>
-                <v-date-picker v-model="billDate" type="month" :max="now"></v-date-picker>
+                <v-date-picker
+                  v-model="billDate"
+                  type="month"
+                  :max="now"
+                ></v-date-picker>
               </v-col>
               <v-col cols="8">
                 <v-row>
                   <v-col>
-                    <v-text-field label="ຊື່ລາຍການ *" required v-model="data.title" :rules="totalRules" outlined dense>
+                    <v-text-field
+                      label="ຊື່ລາຍການ *"
+                      required
+                      v-model="data.title"
+                      :rules="totalRules"
+                      outlined
+                      dense
+                      :disabled="disabledTitle"
+                    >
                     </v-text-field>
                     <p class="errors">
                       {{ server_errors.title }}
                     </p>
                   </v-col>
-                </v-row>
-                <v-row>
-                  <v-col>
-                    <v-text-field label="ຄຳອະທິບາຍ *" required v-model="data.description" :rules="totalRules" outlined
-                      dense></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.description }}
-                    </p>
+                  <v-col cols="2">
+                    <v-btn
+                      @click="disabledTitle = !disabledTitle"
+                      color="primary"
+                      ><v-icon>mdi-pen</v-icon></v-btn
+                    >
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-text-field label="ລາຄາ *" required v-model="data.price" :rules="totalRules" type="number"
-                      class="input-number" outlined dense></v-text-field>
+                    <v-text-field
+                      label="ຄຳອະທິບາຍ *"
+                      required
+                      v-model="data.description"
+                      :rules="totalRules"
+                      outlined
+                      dense
+                      :disabled="disabledDescription"
+                    ></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.description }}
+                    </p>
+                  </v-col>
+                  <v-col cols="2">
+                    <v-btn
+                      @click="disabledDescription = !disabledDescription"
+                      color="primary"
+                      ><v-icon>mdi-pen</v-icon></v-btn
+                    >
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      label="ລາຄາ *"
+                      required
+                      v-model="data.price"
+                      :rules="totalRules"
+                      type="number"
+                      class="input-number"
+                      outlined
+                      dense
+                    ></v-text-field>
                     <p class="errors">
                       {{ server_errors.price }}
                     </p>
@@ -49,8 +90,16 @@
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-text-field label="ຈຳນວນ *" required v-model="data.quantity" :rules="totalRules" type="number"
-                      class="input-number" outlined dense></v-text-field>
+                    <v-text-field
+                      label="ຈຳນວນ *"
+                      required
+                      v-model="data.quantity"
+                      :rules="totalRules"
+                      type="number"
+                      class="input-number"
+                      outlined
+                      dense
+                    ></v-text-field>
                     <p class="errors">
                       {{ server_errors.quantity }}
                     </p>
@@ -64,7 +113,12 @@
             <v-btn class="elevation-0 btn-warning mr-4" @click="backPrevios()">
               ຍ້ອນກັບ
             </v-btn>
-            <v-btn class="elevation-0 btn-primary" :loading="loading" :disabled="loading" @click="AddData()">
+            <v-btn
+              class="elevation-0 btn-primary"
+              :loading="loading"
+              :disabled="loading"
+              @click="AddData()"
+            >
               ສ້າງບິນ
             </v-btn>
           </v-card-actions>
@@ -75,6 +129,7 @@
 </template>
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import moment from "moment";
 
 export default {
   name: "Invoice",
@@ -89,13 +144,15 @@ export default {
       start_date: new Date().toISOString().substr(0, 7),
       billDate: new Date().toISOString().substr(0, 7),
       end_date: "",
+      disabledTitle: true,
+      disabledDescription: true,
       start_menu: false,
       end_menu: false,
       invoices: [],
       loading: false,
       is_instantly: 0,
       data: {
-        email: '',
+        email: "",
       },
       user: {},
       calendarId: "",
@@ -114,9 +171,7 @@ export default {
       image_list: [],
       image: [],
       //Filter
-      totalRules: [
-        (v) => !!v || "Total is required",
-      ],
+      totalRules: [(v) => !!v || "Total is required"],
     };
   },
   methods: {
@@ -131,7 +186,6 @@ export default {
       this.$router.go(-1);
     },
     AddData() {
-
       const formData = {
         user_id: this.user.id,
         title: this.data.title,
@@ -139,7 +193,7 @@ export default {
         price: this.data.price,
         date: this.billDate,
         quantity: this.data.quantity,
-      }
+      };
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
@@ -189,6 +243,14 @@ export default {
     start_date: function () {
       this.server_errors.month = "";
     },
+    billDate: function (value) {
+      this.data.title = `ຄ່າບໍລິການປະຈຳເດືອນ ${moment(value).format(
+        "MM-YYYY"
+      )}`;
+      this.data.description = `ຄ່າບໍລິການປະຈຳເດືອນ ${moment(value).format(
+        "MM-YYYY"
+      )}`;
+    },
     "calendarEdit.name": function () {
       this.server_errors.name = "";
     },
@@ -198,8 +260,8 @@ export default {
   },
   created() {
     this.fetchData();
-    console.log('2222', this.items)
-    if (!this.items) this.$router.push('/')
+    console.log("2222", this.items);
+    if (!this.items) this.$router.push("/");
   },
 };
 </script>

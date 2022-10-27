@@ -17,31 +17,72 @@
             <v-row>
               <v-col cols="4">
                 <p>ວັນທີບິນ</p>
-                <v-date-picker v-model="billDate" type="month" :min="now"></v-date-picker>
+                <v-date-picker
+                  v-model="billDate"
+                  type="month"
+                  :min="now"
+                ></v-date-picker>
               </v-col>
               <v-col cols="8">
                 <v-row>
                   <v-col>
-                    <v-text-field label="ຊື່ລາຍການ *" required v-model="data.title" :rules="totalRules" outlined dense>
+                    <v-text-field
+                      label="ຊື່ລາຍການ *"
+                      required
+                      v-model="data.title"
+                      :rules="totalRules"
+                      outlined
+                      dense
+                      :disabled="disabledTitle"
+                    >
                     </v-text-field>
                     <p class="errors">
                       {{ server_errors.title }}
                     </p>
                   </v-col>
-                </v-row>
-                <v-row>
-                  <v-col>
-                    <v-text-field label="ຄຳອະທິບາຍ *" required v-model="data.description" :rules="totalRules" outlined
-                      dense></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.description }}
-                    </p>
+                  <v-col cols="2">
+                    <v-btn
+                      @click="disabledTitle = !disabledTitle"
+                      color="primary"
+                      ><v-icon>mdi-pen</v-icon></v-btn
+                    >
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-text-field label="ລາຄາ *" required v-model="data.total" :rules="totalRules" type="number"
-                      class="input-number" outlined dense></v-text-field>
+                    <v-text-field
+                      label="ຄຳອະທິບາຍ *"
+                      required
+                      v-model="data.description"
+                      :rules="totalRules"
+                      outlined
+                      dense
+                      :disabled="disabledDescription"
+                    ></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.description }}
+                    </p>
+                  </v-col>
+                  <v-col cols="2">
+                    <v-btn
+                      @click="disabledDescription = !disabledDescription"
+                      color="primary"
+                      ><v-icon>mdi-pen</v-icon></v-btn
+                    >
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      label="ລາຄາ *"
+                      required
+                      v-model="data.total"
+                      :rules="totalRules"
+                      type="number"
+                      class="input-number"
+                      outlined
+                      dense
+                    ></v-text-field>
                     <p class="errors">
                       {{ server_errors.total }}
                     </p>
@@ -49,8 +90,16 @@
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-text-field label="ຈຳນວນ *" required v-model="data.quantity" :rules="totalRules" type="number"
-                      class="input-number" outlined dense></v-text-field>
+                    <v-text-field
+                      label="ຈຳນວນ *"
+                      required
+                      v-model="data.quantity"
+                      :rules="totalRules"
+                      type="number"
+                      class="input-number"
+                      outlined
+                      dense
+                    ></v-text-field>
                     <p class="errors">
                       {{ server_errors.quantity }}
                     </p>
@@ -64,7 +113,12 @@
             <v-btn class="elevation-0 btn-warning mr-4" @click="backPrevios()">
               ຍ້ອນກັບ
             </v-btn>
-            <v-btn class="elevation-0 btn-primary" :loading="loading" :disabled="loading" @click="AddData()">
+            <v-btn
+              class="elevation-0 btn-primary"
+              :loading="loading"
+              :disabled="loading"
+              @click="AddData()"
+            >
               ສ້າງບິນ
             </v-btn>
           </v-card-actions>
@@ -91,11 +145,13 @@ export default {
       end_menu: false,
       invoices: [],
       loading: false,
+      disabledTitle: true,
+      disabledDescription: true,
       is_instantly: 0,
       payment_method: "",
       paymentType: "",
       data: {
-        email: '',
+        email: "",
       },
       customer: {},
       calendarId: "",
@@ -114,9 +170,7 @@ export default {
       image_list: [],
       image: [],
       //Filter
-      totalRules: [
-        (v) => !!v || "Total is required",
-      ],
+      totalRules: [(v) => !!v || "Total is required"],
       paymentTypeRule: [(v) => !!v || "Payment is required"],
     };
   },
@@ -229,11 +283,10 @@ export default {
     billDate: function () {
       this.server_errors.month = "";
     },
-
   },
   created() {
     this.fetchData();
-    if (!this.customer.customer) this.$router.push('/')
+    if (!this.customer.customer) this.$router.push("/");
   },
 };
 </script>
