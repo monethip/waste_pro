@@ -255,7 +255,12 @@ export default {
       items: [
         {
           icon: "mdi-home",
-          title: "ໜ້າຫຼັກ",
+          title: "home",
+          to: "/welcome",
+        },
+        {
+          icon: "mdi-monitor-dashboard",
+          title: "dashboard",
           to: "/",
           permissions: ["get_dashboard"],
         },

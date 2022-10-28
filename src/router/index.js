@@ -229,6 +229,22 @@ const routes = [
             ]
         }
     },
+    {
+        path: '/welcome',
+        name: 'Welcome',
+        component: () => import('@/views/Welcome.vue'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'Welcome',
+                    disabled: true,
+                    href: '/welcome',
+                }
+            ]
+        }
+    },
     //Team
     {
         path: '/team',
