@@ -257,13 +257,13 @@ export default {
           icon: "mdi-home",
           title: "ໜ້າຫຼັກ",
           to: "/",
-          permissions: ["create_user"],
+          permissions: ["get_dashboard"],
         },
         {
           icon: "mdi-apps",
           title: "Activity Log",
           to: "/activity-log",
-          permissions: ["create_user"],
+          permissions: ["get_activity"],
         },
       ],
       group_menu: [
