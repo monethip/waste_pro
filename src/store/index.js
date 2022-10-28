@@ -10,15 +10,15 @@ export default new Vuex.Store({
     modalAddState: false,
     modalEditState: false,
     modalDeleteState: false,
-    modalCheckTokenState:false,
-    isLogout:false,
+    modalCheckTokenState: false,
+    isLogout: false,
     modalView: false,
     notificationToastState: false,
     progressLoading: false,
     message: '',
     color: '',
     isLoading: false,
-    breadcrumbs:[
+    breadcrumbs: [
       // {
       //   text: 'Dashboard',
       //   disabled: false,
@@ -36,7 +36,7 @@ export default new Vuex.Store({
     //   console.log(payload)
     //   state.breadcrumbs = payload;
     // },
-    checkConfirmLogout(state,value){
+    checkConfirmLogout(state, value) {
       state.isLogout = value;
     },
     SET_LOGGED_IN(state) {
@@ -45,6 +45,7 @@ export default new Vuex.Store({
     modalAdd_State(state, value) {
       state.modalAddState = value;
     },
+
     modalEdit_State(state, value) {
       state.modalEditState = value;
     },
@@ -70,6 +71,6 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
-    auth:auth(),
+    auth: auth(),
   }
 })

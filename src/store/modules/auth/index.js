@@ -26,6 +26,7 @@ export default function create() {
             lastMonthBill: null,
             lastMonthBillPaid: null,
             lastMonthEvent: null,
+            loginPhone: ""
 
         },
         getters: {
@@ -45,6 +46,9 @@ export default function create() {
                 return state.credential.myToken
                     ? state.credential.myToken
                     : localStorage.getItem('access_token')
+            },
+            getLoginPhone(state) {
+                return state.loginPhone
             },
             getLastMonthBill(state) {
                 return state.lastMonthBill
@@ -89,23 +93,26 @@ export default function create() {
                 const { authUser } = payload;
                 const credential = new Credential();
                 const user = new User();
-                localStorage.setItem('phone', payload.data.phone);
-                user.fromJSON({
-                    id: authUser.userId,
-                    phone: authUser.data.phone,
-                    email: authUser.email,
-                    name: authUser.name,
-                    profile_url: authUser.userProfile,
-                    notification_token: payload.payload,
-                })
-                credential.fromJSON(
-                    {
-                        ...payload, ...{ user }
-                    }
-                );
-                state.credential = credential;
-                // console.log(state.credential)
-                localStorage.setItem(ID_TOKEN, state.credential.access_token);
+                state.loginPhone = payload.data.phone;
+                console.log(state.loginPhone);
+                if (authUser) {
+                    user.fromJSON({
+                        id: authUser.userId,
+                        phone: authUser.data.phone,
+                        email: authUser.email,
+                        name: authUser.name,
+                        profile_url: authUser.userProfile,
+                        notification_token: payload.payload,
+                    })
+                    credential.fromJSON(
+                        {
+                            ...payload, ...{ user }
+                        }
+                    );
+                    state.credential = credential;
+                    // console.log(state.credential)
+                    localStorage.setItem(ID_TOKEN, state.credential.access_token);
+                }
                 // localStorage.setItem(ACCESS_TOKEN_KEY, state.credential.access_token);
             },
             setMyToken(state, payload) {
@@ -167,6 +174,7 @@ export default function create() {
                         }
                     ).catch((error) => {
                         ///Make Catch tet called
+                        console.log(error);
                         reject(error);
                         if (error.response.status === 401) {
                             context.commit('Commit_ErrorLogin', error.response.data.message);
