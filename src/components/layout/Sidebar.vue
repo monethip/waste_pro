@@ -220,7 +220,7 @@
                 exact
                 color="primary-color"
                 :to="i.to"
-                v-if="$can(i.permissions)"
+                v-if="i.permissions.length <= 0 || $can(i.permissions)"
               >
                 <v-list-item-action>
                   <v-icon>{{ i.icon }}</v-icon>
@@ -252,26 +252,33 @@ export default {
       notifications: [],
       eventNotifications: [],
       selectedStatus: "unread",
-      items: [
-        {
-          icon: "mdi-home",
-          title: "home",
-          to: "/welcome",
-        },
-        {
-          icon: "mdi-monitor-dashboard",
-          title: "dashboard",
-          to: "/",
-          permissions: ["get_dashboard"],
-        },
-        {
-          icon: "mdi-apps",
-          title: "Activity Log",
-          to: "/activity-log",
-          permissions: ["get_activity"],
-        },
-      ],
+      items: [],
       group_menu: [
+        {
+          title: "Home",
+          icon: "mdi-home",
+          group_permissions: ["get_dashboard", "get_activity"],
+          menu: [
+            {
+              icon: "mdi-home",
+              title: "home",
+              to: "/welcome",
+              permissions: [],
+            },
+            {
+              icon: "mdi-monitor-dashboard",
+              title: "dashboard",
+              to: "/",
+              permissions: ["get_dashboard"],
+            },
+            {
+              icon: "mdi-apps",
+              title: "Activity Log",
+              to: "/activity-log",
+              permissions: ["get_activity"],
+            },
+          ],
+        },
         {
           title: "ຈັດການຂໍ້ມູນ",
           icon: "mdi-cog",
