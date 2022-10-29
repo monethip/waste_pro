@@ -155,19 +155,6 @@
             :expanded.sync="expanded"
             show-expand
           >
-            <!-- <template v-slot:body="props">
-              <tr v-for="(data, index) in props.items" :key="index">
-                <td>{{ data.log_name }}</td>
-                <td>{{ data.description }}</td>
-                <td>{{ data.model_name }}</td>
-                <td>{{ data.subject_type }}</td>
-                <td>{{ data.properties.old }}</td>
-                <td>{{ data.properties.attributes }}</td>
-                <td>{{ data.user.name }}</td>
-                <td>{{ moment(data.created_at).format("hh:mm DD-MM-YY") }}</td>
-              </tr>
-            </template> -->
-
             <template v-slot:item.created_at="{ item }">
               <div>{{ moment(item.created_at).format("hh:mm DD-MM-YY") }}</div>
             </template>
@@ -182,10 +169,17 @@
               </td>
             </template>
             <template v-slot:item.properties="{ item }">
-              <div v-text="item.properties.old"></div>
+              <pre v-text="item.properties.old"></pre>
             </template>
             <template v-slot:item.attributes="{ item }">
-              <div v-text="item.properties.attributes"></div>
+              <pre
+                v-text="item.properties.attributes"
+                :style="
+                  item.log_name == 'deleted'
+                    ? { color: 'red' }
+                    : { color: 'green' }
+                "
+              ></pre>
             </template>
           </v-data-table>
           <br />
@@ -258,17 +252,18 @@ export default {
         { text: "User", value: "user.name", sortable: false },
         { text: "Created", value: "created_at", sortable: false },
         {
-          text: "ຂໍ້ມູນເກົ່າ",
-          value: "properties",
-          sortable: false,
-          width: "350px",
-        },
-        {
           text: "ຂໍ້ມູນທີ່ອັບເດດ",
           value: "attributes",
           sortable: false,
           width: "350px",
         },
+        {
+          text: "ຂໍ້ມູນເກົ່າ",
+          value: "properties",
+          sortable: false,
+          width: "350px",
+        },
+
         // { text: "", value: "data-table-expand", sortable: false },
       ],
     };
