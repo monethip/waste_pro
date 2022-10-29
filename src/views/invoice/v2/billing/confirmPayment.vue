@@ -43,26 +43,66 @@
       <!--      </v-col>-->
 
       <v-col cols>
-        <v-select outlined dense :items="plans" v-model="selectedRoutePlan" item-text="name" item-value="id"
-          label="ເລືອກແຜນ" clearable></v-select>
+        <v-select
+          outlined
+          dense
+          :items="plans"
+          v-model="selectedRoutePlan"
+          item-text="name"
+          item-value="id"
+          label="ເລືອກແຜນ"
+          clearable
+        ></v-select>
       </v-col>
       <v-col cols>
-        <v-select outlined dense :items="billingable_types" v-model="selectedBillingable_type"
-          :item-text="filterBillingType" item-value="name" label="ປະເພດບິນ" clearable></v-select>
+        <v-select
+          outlined
+          dense
+          :items="billingable_types"
+          v-model="selectedBillingable_type"
+          :item-text="filterBillingType"
+          item-value="name"
+          label="ປະເພດບິນ"
+          clearable
+        ></v-select>
       </v-col>
       <v-col>
-        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ຊື່ລູກຄ້າ" type="text"
-          v-model="search" @keyup.enter="Search()">
+        <v-text-field
+          outlined
+          dense
+          clearable
+          prepend-inner-icon="mdi-magnify"
+          label="ຊື່ລູກຄ້າ"
+          type="text"
+          v-model="search"
+          @keyup.enter="Search()"
+        >
         </v-text-field>
       </v-col>
       <v-col>
-        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ເລກບິນ" type="text"
-          v-model="billId" @keyup.enter="Search()">
+        <v-text-field
+          outlined
+          dense
+          clearable
+          prepend-inner-icon="mdi-magnify"
+          label="ເລກບິນ"
+          type="text"
+          v-model="billId"
+          @keyup.enter="Search()"
+        >
         </v-text-field>
       </v-col>
       <v-col>
-        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ເບີໂທ" type="text"
-          v-model="phone" @keyup.enter="Search()">
+        <v-text-field
+          outlined
+          dense
+          clearable
+          prepend-inner-icon="mdi-magnify"
+          label="ເບີໂທ"
+          type="text"
+          v-model="phone"
+          @keyup.enter="Search()"
+        >
         </v-text-field>
       </v-col>
     </v-row>
@@ -84,12 +124,16 @@
         <!--            @keyup.enter="Search()"-->
         <!--          >-->
         <!--          </v-text-field>-->
-
       </v-card-title>
       <v-card-text>
-
-        <v-data-table :headers="headers" :items="invoices" :search="search" :disable-pagination="true"
-          hide-default-footer fixed-header>
+        <v-data-table
+          :headers="headers"
+          :items="invoices"
+          :search="search"
+          :disable-pagination="true"
+          hide-default-footer
+          fixed-header
+        >
           <template v-slot:item.user="{ item }">
             <div>{{ showUser(item) }}</div>
           </template>
@@ -108,7 +152,15 @@
           <template v-slot:item.actions="{ item }">
             <v-menu offset-y>
               <template v-slot:activator="{ on, attrs }">
-                <v-icon color="primary" dark v-bind="attrs" v-on="on" medium class="mr-2">mdi-dots-vertical</v-icon>
+                <v-icon
+                  color="primary"
+                  dark
+                  v-bind="attrs"
+                  v-on="on"
+                  medium
+                  class="mr-2"
+                  >mdi-dots-vertical</v-icon
+                >
               </template>
               <v-list>
                 <v-list-item link @click="ViewInvoice(item.id)">
@@ -124,8 +176,7 @@
                 <!--                    ຍົກເລີກ-->
                 <!--                  </v-list-item-title>-->
                 <!--                </v-list-item>-->
-                <div v-if="item.payment_method !== null
-                ">
+                <div v-if="item.payment_method !== null">
                   <v-list-item link @click="paymentConfirmModal(item)">
                     <v-list-item-title>
                       <v-icon small> mdi-cash-remove</v-icon>
@@ -133,15 +184,13 @@
                     </v-list-item-title>
                   </v-list-item>
                 </div>
-                <div v-if="item.payment_method !== null
-                ">
+                <div v-if="item.payment_method !== null">
                   <v-list-item link @click="paymentConfirmModal(item)">
                     <v-list-item-title>
                       <v-icon small class="mr-2">mdi-card</v-icon>
                       ຢືນຢັນການຊຳລະ
                     </v-list-item-title>
                   </v-list-item>
-
                 </div>
               </v-list>
             </v-menu>
@@ -149,8 +198,12 @@
         </v-data-table>
         <br />
         <template>
-          <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
-            @paginate="fetchData()"></Pagination>
+          <Pagination
+            v-if="pagination.total_pages > 1"
+            :pagination="pagination"
+            :offset="offset"
+            @paginate="fetchData()"
+          ></Pagination>
         </template>
       </v-card-text>
     </v-card>
@@ -160,11 +213,14 @@
         <v-card>
           <v-card-title>
             <p>
-              <v-icon class="primary-color" large color="success">mdi-checkbox-marked-circle-outline
+              <v-icon class="primary-color" large color="success"
+                >mdi-checkbox-marked-circle-outline
               </v-icon>
               ຢືນຢັນຊຳລະຄ່າຂີ້ເຫຍື້ອ
 
-              <span class="primary-color">{{ confirm.name }} {{ confirm.surname }}</span>
+              <span class="primary-color"
+                >{{ confirm.name }} {{ confirm.surname }}</span
+              >
             </p>
           </v-card-title>
           <v-card-text>
@@ -173,9 +229,15 @@
                 <v-row>
                   <v-col cols="12">
                     <v-chip-group v-model="confirmType" column>
-                      <v-chip medium class="mr-6 elevation-0" color="success" label filter outlined>
-                        <v-icon left class="ml-1"> mdi-cash
-                        </v-icon>
+                      <v-chip
+                        medium
+                        class="mr-6 elevation-0"
+                        color="success"
+                        label
+                        filter
+                        outlined
+                      >
+                        <v-icon left class="ml-1"> mdi-cash </v-icon>
                         ຢືນຢັນການຊຳລະ
                       </v-chip>
                       <v-chip medium color="error" label filter outlined>
@@ -188,8 +250,15 @@
                 <div v-if="confirmType == 1">
                   <v-row>
                     <v-col cols="12">
-                      <v-select v-model="reject_reason_id" label="ເຫດຜົນ" outlined dense :items="rejects"
-                        item-text="name" item-value="id">
+                      <v-select
+                        v-model="reject_reason_id"
+                        label="ເຫດຜົນ"
+                        outlined
+                        dense
+                        :items="rejects"
+                        item-text="name"
+                        item-value="id"
+                      >
                       </v-select>
                       <p class="errors">
                         {{ server_errors.reject_reason_id }}
@@ -199,7 +268,13 @@
 
                   <v-row>
                     <v-col cols="12">
-                      <v-text-field v-model="description" label="Description" outlined dense type="text">
+                      <v-text-field
+                        v-model="description"
+                        label="Description"
+                        outlined
+                        dense
+                        type="text"
+                      >
                       </v-text-field>
                       <p class="errors">
                         {{ server_errors.description }}
@@ -210,11 +285,21 @@
               </v-form>
               <v-card-actions class="mt-4">
                 <v-spacer></v-spacer>
-                <v-btn color="error" class="elevation-0 btn mr-4 px-12" medium @click="confirmPaymentDialog = false">
+                <v-btn
+                  color="error"
+                  class="elevation-0 btn mr-4 px-12"
+                  medium
+                  @click="confirmPaymentDialog = false"
+                >
                   ປິດ
                 </v-btn>
-                <v-btn class="elevation-0 btn btn-primary px-12" medium :loading="loading" :disabled="loading"
-                  @click="confirmPayment()">
+                <v-btn
+                  class="elevation-0 btn btn-primary px-12"
+                  medium
+                  :loading="loading"
+                  :disabled="loading"
+                  @click="confirmPayment()"
+                >
                   ຢືນຢັນ
                 </v-btn>
               </v-card-actions>
@@ -241,7 +326,9 @@ export default {
     return {
       title: "Collection",
       month: "",
-      curent_month: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+      curent_month: new Date(
+        Date.now() - new Date().getTimezoneOffset() * 60000
+      )
         .toISOString()
         .substr(0, 10),
       start_menu: false,
@@ -260,11 +347,12 @@ export default {
       customerTypes: [
         {
           text: "ຄົວເຮືອນ",
-          value: "home"
-        }, {
+          value: "home",
+        },
+        {
           text: "ຫົວໜ່ວຍທຸລະກິດ",
-          value: "company"
-        }
+          value: "company",
+        },
       ],
       //Pagination
       offset: 12,
@@ -283,10 +371,12 @@ export default {
         {
           id: 2,
           name: "NewInvoice",
-        }, {
+        },
+        {
           id: 3,
           name: "NewCollectionEvent",
-        }, {
+        },
+        {
           id: 4,
           name: "CustomBill",
         },
@@ -316,19 +406,25 @@ export default {
         {
           text: "ເດືອນ",
           value: "bill_month",
-          width: "180px"
+          width: "180px",
         },
         { text: "ລູກຄ້າ", value: "display_customer_name", width: "150px" },
         { text: "ເບີໂທ", value: "display_customer_phone", sortable: false },
+        { text: "ຊ່ອງທາງຊຳລະ", value: "payment_method", width: "150px" },
         { text: "ສ່ວນຫຼຸດ", value: "discount", width: "150px" },
         { text: "ຄ່າບໍລິການ", value: "sub_total" },
         { text: "ລວມທັງໝົດ", value: "total", sortable: false },
         { text: "ຜູ້ຊຳລະ", value: "paided_by.name", width: "100px" },
-        { text: "ປະເພດຊຳລະ", value: "payment_method", align: "center", width: "200px" },
+        {
+          text: "ປະເພດຊຳລະ",
+          value: "payment_method",
+          align: "center",
+          width: "200px",
+        },
         {
           text: "ວັນທີສ້າງ",
           value: "created_at",
-          width: "150px"
+          width: "150px",
         },
         { text: "", value: "actions", sortable: false },
       ],
@@ -336,18 +432,18 @@ export default {
   },
   computed: {
     lastMonthCreated() {
-      return this.$store.getters['auth/getLastMonthBill']
+      return this.$store.getters["auth/getLastMonthBill"];
     },
     lastMonthBillCreated() {
-      return this.$store.getters['auth/getLastMonthBillPaid']
-    }
+      return this.$store.getters["auth/getLastMonthBillPaid"];
+    },
   },
   methods: {
     getLaoStatusFunc(status) {
-      return getLaoStatus(status)
+      return getLaoStatus(status);
     },
     filterBillingType(status) {
-      return getLaoBillingType(status.name)
+      return getLaoBillingType(status.name);
     },
     onFileChange(e) {
       let input = e.target;
@@ -366,14 +462,14 @@ export default {
             { billingable_type: this.selectedBillingable_type },
             { created_month: this.lastMonthCreated },
             { bill_month: this.lastMonthBillCreated },
-            { order_by: 'newest' },
-            { status: 'to_confirm_payment' },
+            { order_by: "newest" },
+            { status: "to_confirm_payment" },
             { route_plans: this.selectedRoutePlan },
             { bill_id: this.billId },
             { phone: this.phone },
             { customer_type: this.selectedCustomerType },
             { filter: this.search },
-          ])
+          ]),
         })
         .then((res) => {
           if (res.data.code == 200) {
@@ -383,7 +479,6 @@ export default {
           }
         })
         .catch((error) => {
-
           this.$store.commit("Loading_State", false);
           if (error.response && error.response.status == 422) {
             let obj = error.response.data.errors;
@@ -401,15 +496,13 @@ export default {
             this.plans = res.data.data;
           }
         })
-        .catch(() => { });
+        .catch(() => {});
     },
     fetchSummaryData() {
-      let date = this.moment(this.month).format('YYYY-MM');
+      let date = this.moment(this.month).format("YYYY-MM");
       this.$axios
         .get("collection-event-summary", {
-          params: queryOption([
-            { month: date },
-          ])
+          params: queryOption([{ month: date }]),
         })
         .then((res) => {
           if (res.data.code == 200) {
@@ -418,7 +511,6 @@ export default {
           }
         })
         .catch((error) => {
-
           this.$store.commit("Loading_State", false);
           if (error.response && error.response.status == 422) {
             let obj = error.response.data.errors;
@@ -438,10 +530,8 @@ export default {
             this.rejects = res.data.data;
           }
         })
-        .catch(() => {
-        });
+        .catch(() => {});
     },
-
 
     createPage() {
       this.$router.push({
@@ -450,8 +540,11 @@ export default {
     },
 
     ViewInvoice(id) {
-      let route = this.$router.resolve({ name: 'billing-detail', params: { id } });
-      window.open(route.href, '_blank');
+      let route = this.$router.resolve({
+        name: "billing-detail",
+        params: { id },
+      });
+      window.open(route.href, "_blank");
     },
     Payment() {
       if (this.paymentType !== "") {
@@ -477,7 +570,6 @@ export default {
               }
             })
             .catch((error) => {
-
               this.loading = false;
               this.$store.commit("Toast_State", {
                 value: true,
@@ -503,7 +595,7 @@ export default {
     },
     async approveAny() {
       if (this.selectedRows.length > 0) {
-        const id = this.selectedRows.map(row => row.id);
+        const id = this.selectedRows.map((row) => row.id);
         this.loading = true;
         await this.$axios
           .post("approve-billings", { billing_ids: id })
@@ -520,7 +612,6 @@ export default {
             }
           })
           .catch((error) => {
-
             this.loading = false;
             this.$store.commit("Toast_State", {
               value: true,
@@ -528,7 +619,6 @@ export default {
               msg: error.response ? error.response.data.message : error,
             });
           });
-
       } else {
         this.$store.commit("Toast_State", {
           value: true,
@@ -584,7 +674,6 @@ export default {
             }
           })
           .catch((error) => {
-
             this.loading = false;
             this.$store.commit("Toast_State", {
               value: true,
@@ -677,22 +766,21 @@ export default {
     },
 
     collectStatus(status) {
-      if (status == 'requested') return 'ຮ້ອງຂໍເກັບຂີ້ເຫື້ຍອ';
-      else if (status == 'rejected') return 'ປະຕິເສດເກັບຂີ້ເຫື້ຍອ';
-      else if (status == 'approved') return 'ອະນຸມັດເກັບຂີ້ເຫື້ຍອ';
-      else if (status == 'collected') return 'ເກັບຂີເຫື້ຍອສຳເລັດ';
-      else if (status == 'collect_confirm') return 'ລູກຄ້າຢືນຢັນການເກັບ';
-      else if (status == 'collect_reject') return 'ການເກັບຖືກປະຕິເສດ';
-      else return '';
+      if (status == "requested") return "ຮ້ອງຂໍເກັບຂີ້ເຫື້ຍອ";
+      else if (status == "rejected") return "ປະຕິເສດເກັບຂີ້ເຫື້ຍອ";
+      else if (status == "approved") return "ອະນຸມັດເກັບຂີ້ເຫື້ຍອ";
+      else if (status == "collected") return "ເກັບຂີເຫື້ຍອສຳເລັດ";
+      else if (status == "collect_confirm") return "ລູກຄ້າຢືນຢັນການເກັບ";
+      else if (status == "collect_reject") return "ການເກັບຖືກປະຕິເສດ";
+      else return "";
     },
 
     showUser(item) {
       if (item.display_type === "NewCollectionEvent") {
-        if (item.billingable != null)
-          return item.billingable.name;
+        if (item.billingable != null) return item.billingable.name;
       } else {
         if (item.user.customer != null) {
-          return item.user.customer.name
+          return item.user.customer.name;
         } else {
           return item.user.name;
         }
@@ -701,26 +789,26 @@ export default {
   },
   watch: {
     selectedCollectionStatus: function () {
-      this.pagination.current_page = '';
+      this.pagination.current_page = "";
       this.fetchData();
       this.fetchSummaryData();
     },
     selectedBillingable_type: function () {
-      this.pagination.current_page = '';
+      this.pagination.current_page = "";
       this.fetchData();
     },
     selectedRoutePlan: function () {
-      this.pagination.current_page = '';
+      this.pagination.current_page = "";
       this.fetchData();
     },
     selectedCustomerType: function () {
-      this.pagination.current_page = '';
+      this.pagination.current_page = "";
       this.fetchData();
     },
 
     month: function (value) {
-      if (value !== '') {
-        this.pagination.current_page = '';
+      if (value !== "") {
+        this.pagination.current_page = "";
         this.fetchData();
         this.fetchSummaryData();
       }
@@ -732,7 +820,7 @@ export default {
       }
     },
     selectedStatus: function () {
-      this.pagination.current_page = '';
+      this.pagination.current_page = "";
       this.fetchData();
     },
     selectedPackage: function () {
@@ -776,7 +864,7 @@ export default {
     },
   },
   created() {
-    this.month = this.moment(this.curent_month).format('YYYY-MM');
+    this.month = this.moment(this.curent_month).format("YYYY-MM");
     this.fetchData();
     this.fetchSummaryData();
     this.fetchRoutePlan();
@@ -787,7 +875,7 @@ export default {
 <style lang="scss" scoped>
 @import "../../../../../public/scss/main.scss";
 
-.v-data-table>.v-data-table__wrapper>table>thead>tr>th,
+.v-data-table > .v-data-table__wrapper > table > thead > tr > th,
 td {
   min-width: 130px !important;
 }

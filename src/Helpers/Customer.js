@@ -31,6 +31,21 @@ export const getCompanyCostBy = [
     },
 ]
 
+export const getPaymentMethod = [
+    {
+        en: "bcel",
+        la: "ແນບຮູບບິນ"
+    },
+    {
+        en: "cash",
+        la: "ເງິນສົດ"
+    },
+    {
+        en: "bcel_online",
+        la: "Bcel Bill Payment"
+    },
+]
+
 export const getLaoCustomerType = function (type) {
     switch (type) {
         case "company":

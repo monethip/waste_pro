@@ -22,9 +22,7 @@
               clearable
             ></v-text-field>
           </template>
-          <v-date-picker
-            v-model="start_date"
-          ></v-date-picker>
+          <v-date-picker v-model="start_date"></v-date-picker>
         </v-menu>
       </v-col>
       <v-col>
@@ -48,10 +46,18 @@
               clearable
             ></v-text-field>
           </template>
-          <v-date-picker
-            v-model="end_date"
-          ></v-date-picker>
+          <v-date-picker v-model="end_date"></v-date-picker>
         </v-menu>
+      </v-col>
+      <v-col>
+        <v-select
+          outlined
+          dense
+          :items="logNames"
+          v-model="selectedLogName"
+          label="Log Name"
+          clearable
+        ></v-select>
       </v-col>
 
       <v-col>
@@ -207,6 +213,7 @@ export default {
   data() {
     return {
       title: "Activity Log",
+      logNames: ["created", "updated", "deleted"],
       start_date: "",
       end_date: "",
       start_menu: false,
@@ -226,6 +233,7 @@ export default {
       selectedModel: [],
 
       selectedRoles: [],
+      selectedLogName: "",
       roles: [],
       selectedUsers: [],
       users: [],
@@ -233,14 +241,34 @@ export default {
       expanded: [],
       singleExpand: false,
       headers: [
-        { text: "Log name", value: "log_name",width: "150px" },
-        { text: "ລາຍລະອຽດ", value: "description",width: "150px" },
-        { text: "Model Name", value: "model_name", sortable: false,width: "150px" },
-        { text: "Subject Type", value: "subject_type", sortable: false,width: "150px"},
+        { text: "Log name", value: "log_name", width: "150px" },
+        { text: "ລາຍລະອຽດ", value: "description", width: "150px" },
+        {
+          text: "Model Name",
+          value: "model_name",
+          sortable: false,
+          width: "150px",
+        },
+        {
+          text: "Subject Type",
+          value: "subject_type",
+          sortable: false,
+          width: "150px",
+        },
         { text: "User", value: "user.name", sortable: false },
-        { text: "Created", value: "created_at", sortable: false, },
-        { text: "ຂໍ້ມູນເກົ່າ", value: "properties", sortable: false,width: "350px"},
-        { text: "ຂໍ້ມູນທີ່ອັບເດດ", value: "attributes", sortable: false,width: "350px" },
+        { text: "Created", value: "created_at", sortable: false },
+        {
+          text: "ຂໍ້ມູນເກົ່າ",
+          value: "properties",
+          sortable: false,
+          width: "350px",
+        },
+        {
+          text: "ຂໍ້ມູນທີ່ອັບເດດ",
+          value: "attributes",
+          sortable: false,
+          width: "350px",
+        },
         // { text: "", value: "data-table-expand", sortable: false },
       ],
     };
@@ -251,20 +279,21 @@ export default {
       this.$axios
         .get("activity", {
           params: queryOption([
-            {page: this.pagination.current_page},
-            {per_page: this.per_page},
-            {date_from: this.start_date},
-            {date_end: this.end_date},
-            {model_names: this.selectedModel},
-            {users: this.selectedUsers},
-            {roles: this.selectedRoles},
+            { page: this.pagination.current_page },
+            { per_page: this.per_page },
+            { date_from: this.start_date },
+            { date_end: this.end_date },
+            { model_names: this.selectedModel },
+            { users: this.selectedUsers },
+            { roles: this.selectedRoles },
+            { log_name: this.selectedLogName },
           ]),
         })
         .then((res) => {
           if (res.data.code == 200) {
-              this.$store.commit("Loading_State", false);
-              this.activities = res.data.data.data;
-              this.pagination = res.data.data.pagination;
+            this.$store.commit("Loading_State", false);
+            this.activities = res.data.data.data;
+            this.pagination = res.data.data.pagination;
           }
         })
         .catch((error) => {
@@ -283,7 +312,7 @@ export default {
         .get("model")
         .then((res) => {
           if (res.data.code == 200) {
-              this.models = res.data.data;
+            this.models = res.data.data;
           }
         })
         .catch(() => {});
@@ -294,8 +323,8 @@ export default {
         .get("user-setting/role")
         .then((res) => {
           if (res.data.code == 200) {
-              this.roles = res.data.data;
-              this.fetchUser();
+            this.roles = res.data.data;
+            this.fetchUser();
           }
         })
         .catch(() => {});
@@ -310,7 +339,7 @@ export default {
         })
         .then((res) => {
           if (res.data.code == 200) {
-              this.users = res.data.data;
+            this.users = res.data.data;
           }
         })
         .catch(() => {
@@ -332,33 +361,37 @@ export default {
   },
   watch: {
     selectedModel: function () {
-      this.pagination.current_page ='';
+      this.pagination.current_page = "";
+      this.fetchData();
+    },
+    selectedLogName: function () {
+      this.pagination.current_page = "";
       this.fetchData();
     },
     start_date: function () {
-      this.pagination.current_page ='';
-      if(this.end_date != ''){
-        if(this.start_date > this.end_date){
-          this.start_date = '';
+      this.pagination.current_page = "";
+      if (this.end_date != "") {
+        if (this.start_date > this.end_date) {
+          this.start_date = "";
         }
       }
       this.fetchData();
     },
     end_date: function () {
-      this.pagination.current_page ='';
-      if(this.end_date < this.start_date){
-        this.end_date = '';
+      this.pagination.current_page = "";
+      if (this.end_date < this.start_date) {
+        this.end_date = "";
       }
       this.fetchData();
     },
-    selectedRoles: function (){
-      this.pagination.current_page ='';
+    selectedRoles: function () {
+      this.pagination.current_page = "";
       this.fetchData();
     },
-    selectedUsers:function (){
-      this.pagination.current_page ='';
+    selectedUsers: function () {
+      this.pagination.current_page = "";
       this.fetchData();
-    }
+    },
   },
   created() {
     this.fetchData();
