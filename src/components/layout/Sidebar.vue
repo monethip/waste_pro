@@ -375,13 +375,7 @@ export default {
         {
           title: "ຂໍ້ມູນລູກຄ້າ",
           icon: "mdi-database",
-          group_permissions: [
-            "get_role",
-            "get_user",
-            "get_customer",
-            "get_driver",
-            "create_address",
-          ],
+          group_permissions: ["get_customer"],
           menu: [
             {
               icon: "mdi-account-alert-outline",
