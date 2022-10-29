@@ -129,6 +129,7 @@
 </template>
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import moment from "moment";
 
 export default {
   name: "Invoice",
@@ -268,6 +269,15 @@ export default {
         this.fetchData();
       }
     },
+    billDate: function (value) {
+      this.data.title = `ຄ່າບໍລິການປະຈຳເດືອນ ${moment(value).format(
+        "MM-YYYY"
+      )}`;
+      this.data.description = `ຄ່າບໍລິການປະຈຳເດືອນ ${moment(value).format(
+        "MM-YYYY"
+      )}`;
+      this.server_errors.month = "";
+    },
     paymentType: function () {
       if (this.paymentType == 0) {
         this.payment_method = "cash";
@@ -278,10 +288,6 @@ export default {
         this.payment_method = "bcel";
       }
       this.server_errors.payment_method = "";
-    },
-
-    billDate: function () {
-      this.server_errors.month = "";
     },
   },
   created() {
