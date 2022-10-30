@@ -43,8 +43,16 @@
       <!--      </v-col>-->
 
       <v-col cols>
-        <v-select outlined dense :items="plans" v-model="selectedRoutePlan" item-text="name" item-value="id"
-          label="ເລືອກແຜນ" clearable></v-select>
+        <v-select
+          outlined
+          dense
+          :items="plans"
+          v-model="selectedRoutePlan"
+          item-text="name"
+          item-value="id"
+          label="ເລືອກແຜນ"
+          clearable
+        ></v-select>
       </v-col>
       <!--      <v-col cols>-->
       <!--        <v-select-->
@@ -59,34 +67,82 @@
       <!--        ></v-select>-->
       <!--      </v-col>-->
       <v-col cols>
-        <v-select outlined dense :items="billingable_types" v-model="selectedBillingable_type" item-value="name"
-          :item-text="filterBillingType" label="ປະເພດບິນ" clearable></v-select>
+        <v-select
+          outlined
+          dense
+          :items="billingable_types"
+          v-model="selectedBillingable_type"
+          item-value="name"
+          :item-text="filterBillingType"
+          label="ປະເພດບິນ"
+          clearable
+        ></v-select>
       </v-col>
       <v-col>
-        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ຊື່ລູກຄ້າ" type="text"
-          v-model="search" @keyup.enter="Search()">
+        <v-text-field
+          outlined
+          dense
+          clearable
+          prepend-inner-icon="mdi-magnify"
+          label="ຊື່ລູກຄ້າ"
+          type="text"
+          v-model="search"
+          @keyup.enter="Search()"
+        >
         </v-text-field>
       </v-col>
       <v-col>
-        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ເລກບິນ" type="text"
-          v-model="billId" @keyup.enter="Search()">
+        <v-text-field
+          outlined
+          dense
+          clearable
+          prepend-inner-icon="mdi-magnify"
+          label="ເລກບິນ"
+          type="text"
+          v-model="billId"
+          @keyup.enter="Search()"
+        >
         </v-text-field>
       </v-col>
       <v-col>
-        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ເບີໂທ" type="text"
-          v-model="phone" @keyup.enter="Search()">
+        <v-text-field
+          outlined
+          dense
+          clearable
+          prepend-inner-icon="mdi-magnify"
+          label="ເບີໂທ"
+          type="text"
+          v-model="phone"
+          @keyup.enter="Search()"
+        >
         </v-text-field>
       </v-col>
     </v-row>
 
     <v-row v-if="selectedBillingable_type == 'NewInvoice'">
       <v-col>
-        <v-select outlined dense :items="customerTypes" v-model="selectedCustomerType" item-text="name_la"
-          item-value="name" label="ເລືອກປະເພດລູກຄ້າ" clearable></v-select>
+        <v-select
+          outlined
+          dense
+          :items="customerTypes"
+          v-model="selectedCustomerType"
+          item-text="name_la"
+          item-value="name"
+          label="ເລືອກປະເພດລູກຄ້າ"
+          clearable
+        ></v-select>
       </v-col>
       <v-col v-if="selectedCustomerType == 'company'">
-        <v-select outlined dense :items="comapnyTypes" v-model="selectedComapnyType" item-text="name_la"
-          item-value="name" label="ເລືອກປະເພດບໍລິການ" clearable></v-select>
+        <v-select
+          outlined
+          dense
+          :items="comapnyTypes"
+          v-model="selectedComapnyType"
+          item-text="la"
+          item-value="en"
+          label="ເລືອກປະເພດບໍລິການ"
+          clearable
+        ></v-select>
       </v-col>
     </v-row>
 
@@ -95,13 +151,26 @@
         ຂໍ້ມູນບີນ ({{ pagination.total }})
         <v-divider class="mx-4" vertical></v-divider>
         <v-spacer></v-spacer>
-        <v-btn v-if="selectedRows.length > 0" class="btn-primary elevation-0" :loading="loading" :disabled="loading"
-          @click="approveAny">ອະນຸມັດບິນ</v-btn>
-
+        <v-btn
+          v-if="selectedRows.length > 0"
+          class="btn-primary elevation-0"
+          :loading="loading"
+          :disabled="loading"
+          @click="approveAny"
+          >ອະນຸມັດບິນ</v-btn
+        >
       </v-card-title>
       <v-card-text>
-        <v-data-table :headers="headers" :items="invoices" :search="search" :disable-pagination="true"
-          hide-default-footer v-model="selectedRows" show-select fixed-header>
+        <v-data-table
+          :headers="headers"
+          :items="invoices"
+          :search="search"
+          :disable-pagination="true"
+          hide-default-footer
+          v-model="selectedRows"
+          show-select
+          fixed-header
+        >
           <template v-slot:item.user="{ item }">
             <div>{{ showUser(item) }}</div>
           </template>
@@ -115,9 +184,19 @@
             <td>{{ Intl.NumberFormat().format(item.total) }}</td>
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-icon small class="mr-2" @click="ViewInvoice(item.id)"> mdi-eye </v-icon>
-            <v-icon v-if="item.display_type == 'CustomBill' || item.display_type == 'FutureInvoice'" color="red" small
-              class="mr-2" @click="deleteItem(item.id)">
+            <v-icon small class="mr-2" @click="ViewInvoice(item.id)">
+              mdi-eye
+            </v-icon>
+            <v-icon
+              v-if="
+                item.display_type == 'CustomBill' ||
+                item.display_type == 'FutureInvoice'
+              "
+              color="red"
+              small
+              class="mr-2"
+              @click="deleteItem(item.id)"
+            >
               mdi-delete
             </v-icon>
             <!--            <v-menu offset-y>-->
@@ -145,8 +224,12 @@
         </v-data-table>
         <br />
         <template>
-          <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
-            @paginate="fetchData()"></Pagination>
+          <Pagination
+            v-if="pagination.total_pages > 1"
+            :pagination="pagination"
+            :offset="offset"
+            @paginate="fetchData()"
+          ></Pagination>
         </template>
       </v-card-text>
     </v-card>
@@ -156,7 +239,13 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-          <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="deleteInvoice">OK
+          <v-btn
+            color="blue darken-1"
+            text
+            :loading="loading"
+            :disabled="loading"
+            @click="deleteInvoice"
+            >OK
           </v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
@@ -182,7 +271,9 @@ export default {
     return {
       title: "Collection",
       month: "",
-      curent_month: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+      curent_month: new Date(
+        Date.now() - new Date().getTimezoneOffset() * 60000
+      )
         .toISOString()
         .substr(0, 10),
       start_menu: false,
@@ -193,6 +284,7 @@ export default {
       selectedRows: [],
       plans: [],
       selectedRoutePlan: "",
+      selectedComapnyType: "",
       lastMonthBillPaid: localStorage.getItem("lastMonthBillPaid"),
       lastMonthBill: localStorage.getItem("lastMonthBill"),
       selectedCustomerType: "",
@@ -200,15 +292,16 @@ export default {
       customerTypes: [
         {
           name: "",
-          name_la: "ທັງໝົດ"
+          name_la: "ທັງໝົດ",
         },
         {
           name_la: "ຄົວເຮືອນ",
-          name: "home"
-        }, {
+          name: "home",
+        },
+        {
           name_la: "ຫົວໜ່ວຍທຸລະກິດ",
-          name: "company"
-        }
+          name: "company",
+        },
       ],
       //Pagination
       offset: 12,
@@ -229,10 +322,12 @@ export default {
         {
           id: 2,
           name: "NewInvoice",
-        }, {
+        },
+        {
           id: 3,
           name: "NewCollectionEvent",
-        }, {
+        },
+        {
           id: 4,
           name: "CustomBill",
         },
@@ -261,7 +356,7 @@ export default {
         {
           text: "ເດືອນ",
           value: "bill_month",
-          width: "180px"
+          width: "180px",
         },
         { text: "ລູກຄ້າ", value: "display_customer_name", width: "150px" },
 
@@ -273,12 +368,12 @@ export default {
         {
           text: "ວັນທີບິນ",
           value: "date",
-          width: "180px"
+          width: "180px",
         },
         {
           text: "ວັນທີສ້າງ",
           value: "created_at",
-          width: "180px"
+          width: "180px",
         },
         { text: "", value: "actions", sortable: false },
       ],
@@ -286,17 +381,17 @@ export default {
   },
   computed: {
     lastMonthCreated() {
-      return this.$store.getters['auth/getLastMonthBill']
+      return this.$store.getters["auth/getLastMonthBill"];
     },
     lastMonthBillCreated() {
-      return this.$store.getters['auth/getLastMonthBillPaid']
-    }
+      return this.$store.getters["auth/getLastMonthBillPaid"];
+    },
   },
   methods: {
     getMonth(date) {
       const d = new Date(date);
 
-      return moment(d).format('MMMM , YYYY');
+      return moment(d).format("MMMM , YYYY");
     },
     closeDelete() {
       this.$store.commit("modalDelete_State", false);
@@ -326,7 +421,6 @@ export default {
           }
         })
         .catch((error) => {
-
           this.loading = false;
           this.$store.commit("Toast_State", {
             value: true,
@@ -337,7 +431,7 @@ export default {
         });
     },
     filterBillingType(status) {
-      return getLaoBillingType(status.name)
+      return getLaoBillingType(status.name);
     },
     fetchData() {
       // let date = this.moment(this.month).format('YYYY-MM');
@@ -350,14 +444,15 @@ export default {
             { billingable_type: this.selectedBillingable_type },
             { created_month: this.lastMonthCreated },
             { bill_month: this.lastMonthBillCreated },
-            { order_by: 'newest' },
-            { status: 'created' },
+            { order_by: "newest" },
+            { status: "created" },
             { route_plans: this.selectedRoutePlan },
             { bill_id: this.billId },
             { phone: this.phone },
             { customer_type: this.selectedCustomerType },
+            { cost_by: this.selectedComapnyType },
             { filter: this.search },
-          ])
+          ]),
         })
         .then((res) => {
           if (res.data.code == 200) {
@@ -367,7 +462,6 @@ export default {
           }
         })
         .catch((error) => {
-
           this.$store.commit("Loading_State", false);
           if (error.response && error.response.status == 422) {
             let obj = error.response.data.errors;
@@ -385,7 +479,7 @@ export default {
             this.plans = res.data.data;
           }
         })
-        .catch(() => { });
+        .catch(() => {});
     },
 
     closeAddModal() {
@@ -404,12 +498,15 @@ export default {
       });
     },
     ViewInvoice(id) {
-      let route = this.$router.resolve({ name: 'billing-detail', params: { id } });
-      window.open(route.href, '_blank');
+      let route = this.$router.resolve({
+        name: "billing-detail",
+        params: { id },
+      });
+      window.open(route.href, "_blank");
     },
     async approveAny() {
       if (this.selectedRows.length > 0) {
-        const id = this.selectedRows.map(row => row.id);
+        const id = this.selectedRows.map((row) => row.id);
         this.loading = true;
         await this.$axios
           .post("approve-billings", { billing_ids: id })
@@ -426,7 +523,6 @@ export default {
             }
           })
           .catch((error) => {
-
             this.loading = false;
             this.$store.commit("Toast_State", {
               value: true,
@@ -434,7 +530,6 @@ export default {
               msg: error.response ? error.response.data.message : error,
             });
           });
-
       } else {
         this.$store.commit("Toast_State", {
           value: true,
@@ -444,18 +539,16 @@ export default {
       }
     },
 
-
     Search() {
       // GetOldValueOnInput(this);
       this.fetchData();
     },
     showUser(item) {
       if (item.display_type === "NewCollectionEvent") {
-        if (item.billingable != null)
-          return item.billingable.name;
+        if (item.billingable != null) return item.billingable.name;
       } else {
         if (item.user.customer != null) {
-          return item.user.customer.name
+          return item.user.customer.name;
         } else {
           return item.user.name;
         }
@@ -463,38 +556,42 @@ export default {
     },
   },
   watch: {
+    selectedComapnyType() {
+      this.pagination.current_page = "";
+      this.fetchData();
+    },
     selectedCollectionStatus: function () {
-      this.pagination.current_page = '';
+      this.pagination.current_page = "";
       this.fetchData();
     },
     lastMonthBill: function (value) {
-      this.$store.dispatch('auth/saveLastMonthBill', value);
+      this.$store.dispatch("auth/saveLastMonthBill", value);
     },
     lastMonthBillPaid: function (value) {
-      this.$store.dispatch('auth/saveLastMonthBillPaid', value);
+      this.$store.dispatch("auth/saveLastMonthBillPaid", value);
     },
     lastMonthCreated: function () {
-      this.fetchData()
+      this.fetchData();
     },
     lastMonthBillCreated: function () {
-      this.fetchData()
+      this.fetchData();
     },
     selectedBillingable_type: function () {
-      this.pagination.current_page = '';
+      this.pagination.current_page = "";
       this.fetchData();
     },
     selectedRoutePlan: function () {
-      this.pagination.current_page = '';
+      this.pagination.current_page = "";
       this.fetchData();
     },
     selectedCustomerType: function () {
-      this.pagination.current_page = '';
+      this.pagination.current_page = "";
       this.fetchData();
     },
 
     month: function (value) {
-      if (value !== '') {
-        this.pagination.current_page = '';
+      if (value !== "") {
+        this.pagination.current_page = "";
         this.fetchData();
       }
     },
@@ -505,7 +602,7 @@ export default {
       }
     },
     selectedStatus: function () {
-      this.pagination.current_page = '';
+      this.pagination.current_page = "";
       this.fetchData();
     },
     selectedPackage: function () {
@@ -525,10 +622,9 @@ export default {
       }
       this.server_errors.payment_method = "";
     },
-
   },
   created() {
-    this.month = this.moment(this.curent_month).format('YYYY-MM');
+    this.month = this.moment(this.curent_month).format("YYYY-MM");
     this.fetchData();
     this.fetchRoutePlan();
   },

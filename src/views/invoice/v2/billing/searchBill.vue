@@ -507,6 +507,7 @@ export default {
             { phone: this.phone },
             { customer_type: this.selectedCustomerType },
             { filter: this.search },
+            { order_by: "newest" },
           ]),
         })
         .then((res) => {
