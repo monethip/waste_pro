@@ -437,7 +437,7 @@ export default {
               icon: "mdi-note-outline",
               title: "ເກັບຂີ້ເຫື້ຍອພິເສດໃໝ່",
               to: "/v2/event-invoice",
-              permissions: ["get_invoice"],
+              permissions: ["get_invoice", "manage_event"],
             },
           ],
         },
