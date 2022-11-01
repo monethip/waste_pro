@@ -67,7 +67,7 @@
           </v-row>
           <v-row>
             <v-col cols="4">
-              <v-text-field label="ເຮືອນເລກທີ *" required v-model="data.house_number" :rules="houseNumberRules"
+              <v-text-field label="ເຮືອນເລກທີ *"  v-model="data.house_number" :rules="houseNumberRules"
                 type="number" class="input-number" outlined dense></v-text-field>
               <p class="errors">
                 {{  server_errors.house_number  }}

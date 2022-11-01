@@ -112,7 +112,6 @@
               <v-col cols>
                 <v-text-field
                   label="ເຮືອນເລກທີ *"
-                  required
                   v-model="data.house_number"
                   :rules="houseNumberRules"
                   type="number"
@@ -254,12 +253,10 @@
                   v-model="selectedVillageDetail"
                   :items="data.village_details"
                   item-text="name"
-                  item-value="id"
                   :label="data.name"
                   chips
                   deletable-chips
                   multiple
-                  return-object
                   outlined
                   dense
                 >
@@ -524,7 +521,8 @@ export default {
                 this.selectedFavoriteDate.push(item.name);
               });
               res.data.data.village_details.map((item) => {
-                this.selectedVillageDetail.push(item);
+                if (item.village_id == this.selectedVillage)
+                  this.selectedVillageDetail.push(item.id);
               });
             }, 300);
           }
@@ -614,7 +612,7 @@ export default {
         formData.append("images[]", item);
       });
       this.selectedVillageDetail.map((item) => {
-        formData.append("village_details[]", item.id);
+        formData.append("village_details[]", item);
       });
       this.selectedFavoriteDate.map((item) => {
         formData.append("favorite_dates[]", item.name ? item.name : item);
@@ -831,6 +829,7 @@ export default {
       this.fetchVillage();
     },
     selectedVillage: function (a) {
+      console.log(a, this.data.village_id);
       if (a != this.data.village_id) this.selectedVillageDetail = [];
       this.fetchVillageDetail();
     },

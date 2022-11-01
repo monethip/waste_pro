@@ -665,7 +665,8 @@ export default {
               this.selectedFavoriteDate = res.data.data.favorite_dates;
               res.data.data.village_details.map((item) => {
                 this.village_variation_id.push(item.village_variation_id);
-                this.selectedVillageDetail.push(item.id);
+                if (item.village_id == this.selectedVillage)
+                  this.selectedVillageDetail.push(item.id);
               });
             }, 300);
           }
