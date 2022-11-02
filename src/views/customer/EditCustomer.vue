@@ -253,6 +253,7 @@
                   v-model="selectedVillageDetail"
                   :items="data.village_details"
                   item-text="name"
+                  item-value="id"
                   :label="data.name"
                   chips
                   deletable-chips
