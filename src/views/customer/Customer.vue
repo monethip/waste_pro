@@ -67,7 +67,7 @@
         <v-tabs v-model="tab" dark background-color="tab-color lighten-2" slider-color="indigo lighten-5">
           <v-tab href="#tab-1">
             <v-icon>mdi-account</v-icon>
-            ລູກຄ້າ ({{  pagination.total  }})
+            ລູກຄ້າ ({{ pagination.total }})
           </v-tab>
 
         </v-tabs>
@@ -84,28 +84,34 @@
                   </template>
                   <!--Role -->
                   <template v-slot:item.status="{ item }">
-                    <v-chip label :color="statusColor(item.status)" @click="switchStatus(item.id)">{{  item.status  }}
+                    <v-chip label :color="statusColor(item.status)" @click="switchStatus(item.id)">{{ item.status }}
                     </v-chip>
                   </template>
                   <template v-slot:item.can_collect="{ item }">
-                    <v-chip :color="Can_Collect(item.can_collect)">{{  CanCollect(item.can_collect)  }}
+                    <v-chip :color="Can_Collect(item.can_collect)">{{ CanCollect(item.can_collect) }}
                     </v-chip>
                   </template>
                   <template v-slot:item.village_detail="{ item }">
                     <div v-for="(data, index) in item.village_details" :key="index">
-                      <div>{{  data.name  }}</div>
+                      <div>{{ data.name }}</div>
                     </div>
                   </template>
                   <template v-slot:item.price="{ item }">
                     <div v-if="item.package">
-                      <div>{{  Intl.NumberFormat().format(item.package.price)  }}</div>
+                      <div>{{ Intl.NumberFormat().format(item.package.price) }}</div>
+                    </div>
+                  </template>
+
+                  <template v-slot:item.next_package="{ item }">
+                    <div v-if="item.next_package">
+                      <div>{{ Intl.NumberFormat().format(item.next_package.price) }}</div>
                     </div>
                   </template>
 
                   <template v-slot:item.expect_trash="{ item }">
                     <v-chip outlined color="green" v-if="item.expect_trash">
-                      {{  Intl.NumberFormat().format(item.expect_trash)  }}
-                      {{  getCustomerUnitFunc(item.cost_by)  }}
+                      {{ Intl.NumberFormat().format(item.expect_trash) }}
+                      {{ getCustomerUnitFunc(item.cost_by) }}
                     </v-chip>
                     <div v-else>-</div>
                   </template>
@@ -113,8 +119,9 @@
                   <template v-slot:item.current_month_info="{ item }">
                     <v-chip outlined v-if="item.current_month_info"
                       :color="getTrashColor(item, getTrash(item.cost_by, item.last_month_info))">{{
-                       Intl.NumberFormat().format(getTrash(item.cost_by, item.current_month_info))  }}
-                      {{  getCustomerUnitFunc(item.cost_by)  }}
+                          Intl.NumberFormat().format(getTrash(item.cost_by, item.current_month_info))
+                      }}
+                      {{ getCustomerUnitFunc(item.cost_by) }}
                     </v-chip>
                     <div v-else>-</div>
                   </template>
@@ -122,15 +129,16 @@
                   <template v-slot:item.last_month_info="{ item }">
                     <v-chip dark v-if="item.last_month_info"
                       :color="getTrashColor(item, getTrash(item.cost_by, item.last_month_info))">{{
-                       Intl.NumberFormat().format(getTrash(item.cost_by, item.last_month_info))  }}
-                      {{  getCustomerUnitFunc(item.cost_by)  }}
+                          Intl.NumberFormat().format(getTrash(item.cost_by, item.last_month_info))
+                      }}
+                      {{ getCustomerUnitFunc(item.cost_by) }}
                     </v-chip>
                     <div v-else>-</div>
                   </template>
 
                   <template v-slot:item.favorite_dates="{ item }">
                     <div v-for="(data, index) in item.favorite_dates" :key="index">
-                      <div>{{  data.name  }}</div>
+                      <div>{{ data.name }}</div>
                     </div>
                   </template>
 
@@ -202,7 +210,7 @@
                     <v-select v-model="selectedPackage" :items="packages" item-text="name" item-value="id"
                       label="ເລືອກແພັກເກດ" outlined dense></v-select>
                     <p class="errors">
-                      {{  server_errors.package_id  }}
+                      {{ server_errors.package_id }}
                     </p>
                   </v-col>
                 </v-row>
@@ -217,7 +225,7 @@
                       <v-date-picker v-model="package_date" :min="min_date" type="month"></v-date-picker>
                     </v-menu>
                     <p class="errors">
-                      {{  server_errors.start_month  }}
+                      {{ server_errors.start_month }}
                     </p>
                   </v-col>
                 </v-row>
@@ -229,7 +237,7 @@
                       </template>
                     </v-checkbox>
                     <p class="errors">
-                      {{  server_errors.can_collect  }}
+                      {{ server_errors.can_collect }}
                     </p>
                   </v-col>
                 </v-row>
@@ -262,10 +270,10 @@
               <v-form ref="form" lazy-validation>
                 <v-row class="mb-n4 mt-0">
                   <v-col cols="12">
-                    <v-select v-model="this.change_package.package_id" :items="packages" item-text="name"
-                      item-value="id" label="ເລືອກແພັກເກດ" outlined dense></v-select>
+                    <v-select v-model="change_package.package_id" :items="packages" item-text="name" item-value="id"
+                      label="ເລືອກແພັກເກດ" outlined dense></v-select>
                     <p class="errors">
-                      {{  server_errors.package_id  }}
+                      {{ server_errors.package_id }}
                     </p>
                   </v-col>
                 </v-row>
@@ -280,7 +288,7 @@
                       <v-date-picker v-model="package_date" :min="min_date" type="month"></v-date-picker>
                     </v-menu>
                     <p class="errors">
-                      {{  server_errors.start_month  }}
+                      {{ server_errors.start_month }}
                     </p>
                   </v-col>
                 </v-row>
@@ -311,18 +319,18 @@
               <v-file-input label="File (xlsx)" show-size accept=".xlsx" truncate-length="60" v-model="file" counter
                 outlined></v-file-input>
               <p v-if="!successes.length == 0">
-                ສຳເລັດ {{  successes.length  }} ລາຍການ
+                ສຳເລັດ {{ successes.length }} ລາຍການ
               </p>
               <p class="errors" v-if="!errors.length == 0">
-                ຜິດພາດ {{  errors.length  }} ລາຍການ
+                ຜິດພາດ {{ errors.length }} ລາຍການ
               </p>
               <div v-if="!errors.length == 0">
                 <p class="errors" v-for="(error, index) in errors" :key="index">
-                  {{  error  }}
+                  {{ error }}
                 </p>
               </div>
               <p class="errors">
-                {{  server_errors.file  }}
+                {{ server_errors.file }}
               </p>
             </v-form>
             <v-card-actions>
@@ -439,6 +447,7 @@ export default {
         { text: "ເມືອງ", value: "district.name", width: "120px", sortable: false },
         { text: "ລາຍລະອຽດທີ່ຢູ່", value: "village_detail", width: "200px", sortable: false },
         { text: "ມູນຄ່າສັນຍາ", value: "price", width: "200px", sortable: false },
+        { text: "ສັນຍາເດືອນຕໍ່ໄປ", value: "next_package", width: "200px", sortable: false },
         { text: "ຂີ້ເຫຍື້ອຄາດໝາຍ", value: "expect_trash", width: "200px" },
         { text: "ຂີ້ເຫຍື້ອປັດຈຸບັນ", value: "current_month_info", width: "200px" },
         { text: "ຂີ້ເຫຍື້ອເດືອນກ່ອນ", value: "last_month_info", width: "200px" },
