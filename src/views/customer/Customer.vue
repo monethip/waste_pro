@@ -102,12 +102,6 @@
                     </div>
                   </template>
 
-                  <template v-slot:item.next_package="{ item }">
-                    <div v-if="item.next_package">
-                      <div>{{ Intl.NumberFormat().format(item.next_package.price) }}</div>
-                    </div>
-                  </template>
-
                   <template v-slot:item.expect_trash="{ item }">
                     <v-chip outlined color="green" v-if="item.expect_trash">
                       {{ Intl.NumberFormat().format(item.expect_trash) }}
@@ -277,21 +271,7 @@
                     </p>
                   </v-col>
                 </v-row>
-                <v-row class="my-n4">
-                  <v-col cols="12">
-                    <v-menu v-model="change_package_menu" :close-on-content-click="true" :nudge-right="40"
-                      transition="scale-transition" offset-y min-width="auto">
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field v-model="package_date" label="ເລີ່ມວັນທີ" readonly outlined v-bind="attrs"
-                          v-on="on" dense></v-text-field>
-                      </template>
-                      <v-date-picker v-model="package_date" :min="min_date" type="month"></v-date-picker>
-                    </v-menu>
-                    <p class="errors">
-                      {{ server_errors.start_month }}
-                    </p>
-                  </v-col>
-                </v-row>
+
               </v-form>
             </v-container>
             <v-card-actions>
@@ -447,7 +427,6 @@ export default {
         { text: "ເມືອງ", value: "district.name", width: "120px", sortable: false },
         { text: "ລາຍລະອຽດທີ່ຢູ່", value: "village_detail", width: "200px", sortable: false },
         { text: "ມູນຄ່າສັນຍາ", value: "price", width: "200px", sortable: false },
-        { text: "ສັນຍາເດືອນຕໍ່ໄປ", value: "next_package", width: "200px", sortable: false },
         { text: "ຂີ້ເຫຍື້ອຄາດໝາຍ", value: "expect_trash", width: "200px" },
         { text: "ຂີ້ເຫຍື້ອປັດຈຸບັນ", value: "current_month_info", width: "200px" },
         { text: "ຂີ້ເຫຍື້ອເດືອນກ່ອນ", value: "last_month_info", width: "200px" },
@@ -773,13 +752,11 @@ export default {
       // this.customerId = id;
     },
     changePackage() {
-      const date = this.moment(`${this.package_date} ${1}`).format('YYYY-MM-DD');
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
           .post("customer/" + this.change_package.id + "/change-package", {
             package_id: this.change_package.package_id,
-            start_month: date,
           })
           .then((res) => {
             if (res.data.code == 200) {
