@@ -217,7 +217,7 @@
 
 
 
-          <v-row v-if="invoice.payment_method == 'bcel'">
+          <v-row v-if="invoice.image_payments.length>0">
             <v-col>
               <h3 class="v-title" v-if="invoice.image_payments">ຮູບການຊຳລະ</h3>
               <v-row v-if="invoice.image_payments">
