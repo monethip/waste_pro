@@ -45,6 +45,11 @@
           @keyup.enter="Search()">
         </v-text-field>
       </v-col>
+      <v-col>
+        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ໄອດີ" type="text"
+          v-model="billId" @keyup.enter="Search()">
+        </v-text-field>
+      </v-col>
       <v-col class="align-end text-end">
 
         <v-btn @click="openAddModal()" class="btn-primary mr-4">
@@ -189,7 +194,6 @@
 </template>
 
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
 import { getLaoStatus, getBgColor } from "@/Helpers/BillingStatus";
 import { getLaoCustomerType } from "@/Helpers/Customer";
@@ -203,6 +207,7 @@ export default {
     return {
       tab: null,
       invoices: [],
+      billId: null,
       billingId: "",
       loading: false,
       calendarId: "",
@@ -311,7 +316,8 @@ export default {
             { per_page: this.per_page },
             { filter: this.search },
             { billing_status: this.selectedPaymentStatus },
-            { order_by: 'newest' }
+            { order_by: 'newest' },
+            { id: this.billId }
           ]),
         }
         )
@@ -333,7 +339,7 @@ export default {
         });
     },
     Search() {
-      GetOldValueOnInput(this);
+      this.fetchData()
     },
     async downloadExample() {
       const res = await this.$axios.get('import-old-payment-example')

@@ -1,117 +1,304 @@
 <template>
   <v-container>
-    <v-breadcrumbs large class="pt-0">ລາຍງານຂໍ້ມູນບິນ</v-breadcrumbs>
-    <v-row class="mb-n6">
-      <v-col>
-        <v-btn class="btn-primary" @click="exportData()">Export </v-btn>
-      </v-col>
-      <v-col>
-        <v-select
-          outlined
-          dense
-          :items="duration"
-          v-model="selectedDuration"
-          item-text="name"
-          item-value="duration"
-          label="ຊ່ວງເວລາ"
-        ></v-select>
-      </v-col>
-      <v-col v-if="selectedDuration == 'year'">
-        <section>
-          <date-picker
-            style="height: 40px"
-            v-model="year_from"
-            type="year"
-            placeholder="ເລີ່ມປີ"
-          ></date-picker>
-        </section>
-      </v-col>
-      <v-col v-if="selectedDuration == 'year'">
-        <section>
-          <date-picker
-            v-model="year_to"
-            type="year"
-            placeholder="ຫາປີ"
-          ></date-picker>
-        </section>
-      </v-col>
-      <v-col v-if="selectedDuration == 'month'">
-        <section>
-          <date-picker
-            v-model="month_from"
-            type="month"
-            placeholder="ເລີ່ມເດືອນ"
-          ></date-picker>
-        </section>
-      </v-col>
-      <v-col v-if="selectedDuration == 'month'">
-        <section>
-          <date-picker
-            v-model="month_to"
-            type="month"
-            placeholder="ຫາເດືອນ"
-          ></date-picker>
-        </section>
-      </v-col>
+    <v-breadcrumbs large class="pt-0">ລາຍງານຂໍ້ມູນເຊວ</v-breadcrumbs>
+    <v-col>
+      <v-row>
+        <v-col>
+          <v-menu :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y
+            min-width="auto">
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field label="ເລີ່ມວັນທີ" readonly outlined v-bind="attrs" v-on="on" dense clearable>
+              </v-text-field>
+            </template>
+            <v-date-picker v-model="start_date"></v-date-picker>
+          </v-menu>
+        </v-col>
+        <v-col>
+          <v-menu :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y
+            min-width="auto">
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field label="ຫາວັນທີ" readonly outlined v-bind="attrs" v-on="on" dense clearable>
+              </v-text-field>
+            </template>
+            <v-date-picker v-model="start_date"></v-date-picker>
+          </v-menu>
+        </v-col>
+        <v-col>
+          <v-autocomplete outlined dense label="ເລືອກເຊວທີ່ກ່ຽວຂ້ອງ" multiple></v-autocomplete>
+        </v-col>
 
-      <v-col>
-        <v-text-field
-          outlined
-          dense
-          clearable
-          prepend-inner-icon="mdi-magnify"
-          label="ຊື່ລູກຄ້າ,ເລກບິນ"
-          type="text"
-          v-model="search"
-          @keyup.enter="Search()"
-        >
-        </v-text-field>
-      </v-col>
-    </v-row>
-    <v-card elevation="1">
-      <v-card-text>
-        <v-tabs v-model="tab">
-          <v-tab href="#tab-1"> ຄົວເຮືອນ </v-tab>
-          <v-tab href="#tab-2"> ບໍລິສັດ </v-tab>
-        </v-tabs>
-        <!-- <hr /> -->
+        <v-col>
+          <v-btn color="green" dark>Export</v-btn>
+        </v-col>
+      </v-row>
 
-        <v-tabs-items v-model="tab">
-          <v-tab-item value="tab-1">
-            <HomeInvoice :tab="tab" />
-          </v-tab-item>
-        </v-tabs-items>
+      <v-row>
+        <v-col>
+          <v-simple-table>
+            <thead>
+              <tr>
+                <td>ລ/ດ</td>
+                <td>ຊື່</td>
+                <td>ບ້ານ</td>
+                <td>ສັນຍາ</td>
+                <td>ເງິນສົດ</td>
+                <td>ເງິນໂອນ</td>
+                <td>bcel bill payment</td>
+                <td>ລວມຍອດ</td>
+                <td>ລວມທັງໝົດ</td>
+              </tr>
+            </thead>
 
-        <v-tabs-items v-model="tab">
-          <v-tab-item value="tab-2">
-            <v-card flat>
-              <v-card-text>
-                <CompanyInvoice :tab="tab" />
-              </v-card-text>
-            </v-card>
-          </v-tab-item>
-        </v-tabs-items>
-      </v-card-text>
-    </v-card>
+            <tbody v-for="(sale, index) in sales" :key="index">
+              <tr>
+                <td :rowspan="sale.villages.length">{{ index + 1 }}</td>
+                <td :rowspan="sale.villages.length">{{ sale.name }}</td>
+                <td>{{ sale.villages[0].name }}</td>
+                <td>{{ sale.villages[0].count }}</td>
+                <td v-for="(detail, index) in sale.villages[0].details" :key="index">{{ detail.total }}</td>
+                <td>{{ sale.villages[0].total }}</td>
+                <td :rowspan="sale.villages.length">{{ sale.total }}</td>
+              </tr>
+              <tr v-for="(otherVillage, otherIndex) in sale.villages.slice(1)" :key="otherIndex">
+                <td>{{ otherVillage.name }}</td>
+                <td>{{ otherVillage.count }}</td>
+                <td v-for="(otherVillageDetail, otherVillageIndex) in otherVillage.details" :key="otherVillageIndex">{{
+                    otherVillageDetail.total
+                }}</td>
+                <td>{{ otherVillage.total }}</td>
+
+              </tr>
+            </tbody>
+          </v-simple-table>
+        </v-col>
+      </v-row>
+    </v-col>
   </v-container>
 </template>
 
 <script>
-import HomeInvoice from "@views/report/tab/homeInvoice";
-import CompanyInvoice from "@views/report/tab/companyInvoice";
-import invoice from "@views/report/invoice";
 export default {
   title() {
     return `Vientiane Waste Co-Dev|Calendar`;
   },
-  mixins: [invoice],
-  components: {
-    HomeInvoice,
-    CompanyInvoice,
-  },
   data() {
     return {
-      data: {},
+      sales: [
+        {
+          name: 'Jonh Doe',
+          total: 100000000,
+          villages: [
+            {
+              name: 'ດອນແດງ',
+              count: 43,
+              total: 10000000,
+              details: [
+                {
+                  type: 'ເງິນສົດ',
+                  total: 20000000
+                },
+                {
+                  type: 'ເງິນໂອນ',
+                  total: 50000000
+                },
+                {
+                  type: 'bill payment',
+                  total: 30000000
+                },
+              ]
+            },
+            {
+              name: 'ດອນກອຍ',
+              count: 43,
+              total: 10000000,
+              details: [
+                {
+                  type: 'ເງິນສົດ',
+                  total: 20000000
+                },
+                {
+                  type: 'ເງິນໂອນ',
+                  total: 50000000
+                },
+                {
+                  type: 'bill payment',
+                  total: 30000000
+                },
+              ]
+            }
+          ]
+        },
+        {
+          name: 'Jame',
+          total: 100000000,
+          villages: [
+            {
+              name: 'ດອນແດງ',
+              count: 43,
+              total: 10000000,
+              details: [
+                {
+                  type: 'ເງິນສົດ',
+                  total: 20000000
+                },
+                {
+                  type: 'ເງິນໂອນ',
+                  total: 50000000
+                },
+                {
+                  type: 'bill payment',
+                  total: 30000000
+                },
+              ]
+            },
+            {
+              name: 'ດອນກອຍ',
+              count: 43,
+              total: 10000000,
+              details: [
+                {
+                  type: 'ເງິນສົດ',
+                  total: 20000000
+                },
+                {
+                  type: 'ເງິນໂອນ',
+                  total: 50000000
+                },
+                {
+                  type: 'bill payment',
+                  total: 30000000
+                },
+              ]
+            },
+            {
+              name: 'ດົງໂດກ',
+              count: 43,
+              total: 10000000,
+              details: [
+                {
+                  type: 'ເງິນສົດ',
+                  total: 20000000
+                },
+                {
+                  type: 'ເງິນໂອນ',
+                  total: 50000000
+                },
+                {
+                  type: 'bill payment',
+                  total: 30000000
+                },
+              ]
+            }
+          ]
+        },
+        {
+          name: 'Jonh Doe',
+          total: 100000000,
+          villages: [
+            {
+              name: 'ດອນແດງ',
+              count: 43,
+              total: 10000000,
+              details: [
+                {
+                  type: 'ເງິນສົດ',
+                  total: 20000000
+                },
+                {
+                  type: 'ເງິນໂອນ',
+                  total: 50000000
+                },
+                {
+                  type: 'bill payment',
+                  total: 30000000
+                },
+              ]
+            },
+            {
+              name: 'ດອນກອຍ',
+              count: 43,
+              total: 10000000,
+              details: [
+                {
+                  type: 'ເງິນສົດ',
+                  total: 20000000
+                },
+                {
+                  type: 'ເງິນໂອນ',
+                  total: 50000000
+                },
+                {
+                  type: 'bill payment',
+                  total: 30000000
+                },
+              ]
+            }
+          ]
+        },
+        {
+          name: 'Jame',
+          total: 100000000,
+          villages: [
+            {
+              name: 'ດອນແດງ',
+              count: 43,
+              total: 10000000,
+              details: [
+                {
+                  type: 'ເງິນສົດ',
+                  total: 20000000
+                },
+                {
+                  type: 'ເງິນໂອນ',
+                  total: 50000000
+                },
+                {
+                  type: 'bill payment',
+                  total: 30000000
+                },
+              ]
+            },
+            {
+              name: 'ດອນກອຍ',
+              count: 43,
+              total: 10000000,
+              details: [
+                {
+                  type: 'ເງິນສົດ',
+                  total: 20000000
+                },
+                {
+                  type: 'ເງິນໂອນ',
+                  total: 50000000
+                },
+                {
+                  type: 'bill payment',
+                  total: 30000000
+                },
+              ]
+            },
+            {
+              name: 'ດົງໂດກ',
+              count: 43,
+              total: 10000000,
+              details: [
+                {
+                  type: 'ເງິນສົດ',
+                  total: 20000000
+                },
+                {
+                  type: 'ເງິນໂອນ',
+                  total: 50000000
+                },
+                {
+                  type: 'bill payment',
+                  total: 30000000
+                },
+              ]
+            }
+          ]
+        }
+      ]
     };
   },
   methods: {
