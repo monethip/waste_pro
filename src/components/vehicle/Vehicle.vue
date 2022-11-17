@@ -5,33 +5,31 @@
         <v-card-title>
           ຂໍ້ມູນລົດ ({{ pagination.total }})
           <v-spacer></v-spacer>
-          <v-btn color="info" medium @click="OpenModalAdd()"
-            ><v-icon color>mdi-plus</v-icon>
+          <v-btn color="info" medium @click="OpenModalAdd()">
+            <v-icon color>mdi-plus</v-icon>
           </v-btn>
         </v-card-title>
       </v-col>
     </v-row>
-    <v-data-table :headers="header" :items="data" hide-default-footer>
-      <template v-slot:[`item.created_at`]="{ item }">
-        <div>{{ moment(item.created_at).format("DD-MM-YY hh:mm") }}</div>
-      </template>
-      <template v-slot:[`item.action`]="{ item }">
-        <v-icon small color="green" class="mr-2" @click="OpenModalEdit(item)">
-          mdi-pencil
-        </v-icon>
-        <v-icon small color="red" @click="deleteItem(item.id)">
-          mdi-trash-can
-        </v-icon>
-      </template>
-    </v-data-table>
-    <template>
-      <Pagination
-        v-if="pagination.total_pages > 1"
-        :pagination="pagination"
-        :offset="offset"
-        @paginate="fetchData()"
-      ></Pagination>
-    </template>
+    <v-row>
+      <v-col>
+        <v-data-table :headers="header" :items="data" hide-default-footer :items-per-page="100">
+          <template v-slot:[`item.created_at`]="{ item }">
+            <div>{{ moment(item.created_at).format("DD-MM-YY hh:mm") }}</div>
+          </template>
+          <template v-slot:[`item.action`]="{ item }">
+            <v-icon small color="green" class="mr-2" @click="OpenModalEdit(item)">
+              mdi-pencil
+            </v-icon>
+            <v-icon small color="red" @click="deleteItem(item.id)">
+              mdi-trash-can
+            </v-icon>
+          </template>
+        </v-data-table>
+      </v-col>
+    </v-row>
+    <Pagination v-if="pagination.total_pages > 0" :pagination="pagination" :offset="offset" @paginate="fetchData()">
+    </Pagination>
 
     <!-- Add Modal -->
     <ModalAdd>
@@ -46,12 +44,7 @@
               <v-form ref="form" lazy-validation>
                 <v-row>
                   <v-col>
-                    <v-text-field
-                      v-model="vehicle.car_id"
-                      label="ID *"
-                      required
-                      :rules="carIdRules"
-                    ></v-text-field>
+                    <v-text-field v-model="vehicle.car_id" label="ID *" required :rules="carIdRules"></v-text-field>
                     <p class="errors">
                       {{ server_errors.car_id }}
                     </p>
@@ -59,11 +52,7 @@
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-text-field
-                      v-model="vehicle.car_number"
-                      label="ທະບຽນລົດ *"
-                      :rules="numberRules"
-                    ></v-text-field>
+                    <v-text-field v-model="vehicle.car_number" label="ທະບຽນລົດ *" :rules="numberRules"></v-text-field>
                     <p class="errors">
                       {{ server_errors.car_number }}
                     </p>
@@ -71,15 +60,8 @@
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-autocomplete
-                      v-model="selectedVehicleType"
-                      :items="vehicleType"
-                      item-text="name"
-                      item-value="id"
-                      label="ເລືອກປະເພດລົດ"
-                      dense
-                      :rules="typeRules"
-                    ></v-autocomplete>
+                    <v-autocomplete v-model="selectedVehicleType" :items="vehicleType" item-text="name" item-value="id"
+                      label="ເລືອກປະເພດລົດ" dense :rules="typeRules"></v-autocomplete>
                     <p class="errors">
                       {{ server_errors.vehicle_type_id }}
                     </p>
@@ -92,13 +74,7 @@
               <v-btn color="blue darken-1" text @click="closeAddModal()">
                 ຍົກເລີກ
               </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                :loading="loading"
-                :disabled="loading"
-                @click="AddItem()"
-              >
+              <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="AddItem()">
                 ບັນທຶກ
               </v-btn>
             </v-card-actions>
@@ -119,12 +95,7 @@
               <v-form ref="form" lazy-validation>
                 <v-row>
                   <v-col>
-                    <v-text-field
-                      v-model="editVehicle.car_id"
-                      label="ID *"
-                      required
-                      :rules="carIdRules"
-                    ></v-text-field>
+                    <v-text-field v-model="editVehicle.car_id" label="ID *" required :rules="carIdRules"></v-text-field>
                     <p class="errors">
                       {{ server_errors.car_id }}
                     </p>
@@ -132,11 +103,8 @@
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-text-field
-                      v-model="editVehicle.car_number"
-                      label="ທະບຽນລົດ *"
-                      :rules="numberRules"
-                    ></v-text-field>
+                    <v-text-field v-model="editVehicle.car_number" label="ທະບຽນລົດ *" :rules="numberRules">
+                    </v-text-field>
                     <p class="errors">
                       {{ server_errors.name }}
                     </p>
@@ -144,15 +112,8 @@
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-autocomplete
-                      v-model="editVehicle.vehicle_type_id"
-                      :items="vehicleType"
-                      item-text="name"
-                      item-value="id"
-                      label="ເລືອກປະເພດລົດ"
-                      dense
-                      :rules="typeRules"
-                    ></v-autocomplete>
+                    <v-autocomplete v-model="editVehicle.vehicle_type_id" :items="vehicleType" item-text="name"
+                      item-value="id" label="ເລືອກປະເພດລົດ" dense :rules="typeRules"></v-autocomplete>
                     <p class="errors">
                       {{ server_errors.vehicle_type_id }}
                     </p>
@@ -165,13 +126,7 @@
               <v-btn color="blue darken-1" text @click="closeUpdate()">
                 ຍົກເລີກ
               </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                :loading="loading"
-                :disabled="loading"
-                @click="UpdateItem()"
-              >
+              <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="UpdateItem()">
                 ບັນທຶກ
               </v-btn>
             </v-card-actions>
@@ -185,14 +140,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            :loading="loading"
-            :disabled="loading"
-            @click="deleteItemConfirm"
-            >OK</v-btn
-          >
+          <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="deleteItemConfirm">OK</v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </template>
@@ -377,9 +325,9 @@ export default {
         })
         .then((res) => {
           if (res.data.code == 200) {
-              this.$store.commit("Loading_State", false);
-              this.data = res.data.data.data;
-              this.pagination = res.data.data.pagination;
+            this.$store.commit("Loading_State", false);
+            this.data = res.data.data.data;
+            this.pagination = res.data.data.pagination;
           }
         })
         .catch((error) => {
@@ -403,7 +351,7 @@ export default {
             }, 100);
           }
         })
-        .catch(() => {});
+        .catch(() => { });
     },
   },
   watch: {
@@ -423,5 +371,6 @@ export default {
 };
 </script>
 <style lang="scss">
+
 </style>
  
