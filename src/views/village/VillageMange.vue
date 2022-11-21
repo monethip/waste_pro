@@ -331,7 +331,7 @@ export default {
           .catch(error => {
             this.loading = false;
             this.fetchVillage();
-            if (error.response.status == 422) {
+            if (error.response && error.response.status == 422) {
               this.$store.commit("Toast_State", {
                 value: true,
                 color: "error",
@@ -402,7 +402,7 @@ export default {
     //     .catch((error) => {
     //       this.loading = false;
     //       this.fetchData();
-    //       if (error.response.status == 422) {
+    //       if (error.response && error.response.status == 422) {
     //         var obj = error.response.data.errors;
     //         for (let [key, message] of Object.entries(obj)) {
     //           this.server_errors[key] = message[0];
@@ -456,7 +456,7 @@ export default {
           .catch(error => {
             this.loading = false;
             this.fetchData();
-            if (error.response.status == 422) {
+            if (error.response && error.response.status == 422) {
               this.$store.commit("Toast_State", {
                 value: true,
                 color: "error",

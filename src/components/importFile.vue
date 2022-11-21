@@ -75,10 +75,10 @@ export default {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response.data.message,
+              msg: error.response ? error.response.data.message : 'Something went wrong',
             });
             this.fetchData();
-            if (error.response.status == 422) {
+            if (error.response && error.response.status == 422) {
               var obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];

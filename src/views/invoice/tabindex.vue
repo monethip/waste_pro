@@ -99,7 +99,7 @@ export default {
           }
         })
         .catch((error) => {
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];

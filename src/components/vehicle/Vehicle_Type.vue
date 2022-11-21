@@ -255,9 +255,9 @@ export default {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response.data.message,
+              msg: error.response ? error.response.data.message : 'Something went wrong',
             });
-            if (error.response.status == 422) {
+            if (error.response && error.response.status == 422) {
               let obj = error.response.data.errors;
               for (let [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
@@ -323,11 +323,11 @@ export default {
           .catch((error) => {
             this.loading = false;
             this.fetchData();
-            if (error.response.status == 422) {
+            if (error.response && error.response.status == 422) {
               this.$store.commit("Toast_State", {
                 value: true,
                 color: "error",
-                msg: error.response.data.message,
+                msg: error.response ? error.response.data.message : 'Something went wrong',
               });
               var obj = error.response.data.error;
               for (let [key, message] of Object.entries(obj)) {
@@ -357,7 +357,7 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];

@@ -221,7 +221,7 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("customer", {
+         .get("customer", {
           params: queryOption([
             { page: this.pagination.current_page },
             { per_page: this.per_page },
@@ -244,8 +244,7 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];

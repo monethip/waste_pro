@@ -616,11 +616,11 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response.data.message,
+              msg: error.response ? error.response.data.message : 'Something went wrong',
             });
           }
         });
@@ -647,11 +647,11 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response.data.message,
+              msg: error.response ? error.response.data.message : 'Something went wrong',
             });
           }
         });

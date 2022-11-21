@@ -2,8 +2,8 @@
   <v-container>
     <v-row class="mb-n6 text-right">
       <v-col>
-        <v-btn class="btn-primary" dark medium @click="OpenModalAdd()"
-          ><v-icon color>mdi-plus</v-icon>Add
+        <v-btn class="btn-primary" dark medium @click="OpenModalAdd()">
+          <v-icon color>mdi-plus</v-icon>Add
         </v-btn>
       </v-col>
     </v-row>
@@ -13,28 +13,13 @@
           ຂໍ້ມູນລາຍລະອຽດທີ່ຢູ່
           <v-divider class="mx-4" vertical></v-divider>
           <v-spacer></v-spacer>
-          <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Search"
-            single-line
-            hide-details
-          ></v-text-field>
+          <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details>
+          </v-text-field>
         </v-card-title>
-        <v-data-table
-          :headers="headers"
-          :items="villagevariation"
-          :search="search"
-          :disable-pagination="true"
-          hide-default-footer
-        >
+        <v-data-table :headers="headers" :items="villagevariation" :search="search" :disable-pagination="true"
+          hide-default-footer>
           <template v-slot:[`item.actions`]="{ item }">
-            <v-icon
-              small
-              color="green"
-              class="mr-2"
-              @click="OpenModalEdit(item)"
-            >
+            <v-icon small color="green" class="mr-2" @click="OpenModalEdit(item)">
               mdi-pencil
             </v-icon>
             <v-icon small color="red" @click="deleteItem(item.id)">
@@ -43,12 +28,8 @@
           </template>
         </v-data-table>
         <template>
-          <Pagination
-            v-if="pagination.total_pages > 1"
-            :pagination="pagination"
-            :offset="offset"
-            @paginate="fetchData()"
-          ></Pagination>
+          <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
+            @paginate="fetchData()"></Pagination>
         </template>
       </v-card>
     </v-col>
@@ -66,12 +47,8 @@
               <v-form ref="form" lazy-validation>
                 <v-row>
                   <v-col>
-                    <v-text-field
-                      v-model="addvillagevariation"
-                      label="name*"
-                      required
-                      :rules="nameRules"
-                    ></v-text-field>
+                    <v-text-field v-model="addvillagevariation" label="name*" required :rules="nameRules">
+                    </v-text-field>
                     <p class="errors">
                       {{ server_errors.name }}
                     </p>
@@ -84,13 +61,7 @@
               <v-btn color="blue darken-1" text @click="closeAddModal()">
                 Close
               </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                :loading="loading"
-                :disabled="loading"
-                @click="AddItem()"
-              >
+              <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="AddItem()">
                 Save
               </v-btn>
             </v-card-actions>
@@ -112,11 +83,7 @@
               <v-form ref="form" lazy-validation>
                 <v-row>
                   <v-col>
-                    <v-text-field
-                      v-model="editVillagevariation.name"
-                      label="name*"
-                      required
-                    ></v-text-field>
+                    <v-text-field v-model="editVillagevariation.name" label="name*" required></v-text-field>
                     <p class="errors">
                       {{ server_errors.name }}
                     </p>
@@ -129,13 +96,7 @@
               <v-btn color="blue darken-1" text @click="closeUpdate()">
                 ຍົກເລີກ
               </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                :loading="loading"
-                :disabled="loading"
-                @click="updateItem()"
-              >
+              <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="updateItem()">
                 ບັນທຶກ
               </v-btn>
             </v-card-actions>
@@ -150,14 +111,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            :loading="loading"
-            :disabled="loading"
-            @click="DeleteItemConfirm"
-            >OK</v-btn
-          >
+          <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="DeleteItemConfirm">OK</v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </template>
@@ -259,11 +213,11 @@ export default {
           .catch((error) => {
             this.loading = false;
             this.fetchData();
-            if (error.response.status == 422) {
+            if (error.response && error.response.status == 422) {
               this.$store.commit("Toast_State", {
                 value: true,
                 color: "error",
-                msg: error.response.data.message,
+                msg: error.response ? error.response.data.message : 'Something went wrong',
               });
               var obj = error.response.data.errors;
               for (let [key, message] of Object.entries(obj)) {
@@ -303,11 +257,11 @@ export default {
     //     .catch((error) => {
     //       this.loading = false;
     //       this.fetchData();
-    //       if (error.response.status == 422) {
+    //       if (error.response && error.response.status == 422) {
     //         this.$store.commit("Toast_State", {
     //           value: true,
     //           color: "error",
-    //           msg: error.response.data.message,
+    //           msg: error.response ? error.response.data.message : 'Something went wrong',
     //         });
     //       }
     //     });
@@ -371,11 +325,11 @@ export default {
           .catch((error) => {
             this.loading = false;
             this.fetchData();
-            if (error.response.status == 422) {
+            if (error.response && error.response.status == 422) {
               this.$store.commit("Toast_State", {
                 value: true,
                 color: "error",
-                msg: error.response.data.message,
+                msg: error.response ? error.response.data.message : 'Something went wrong',
               });
               var obj = error.response.data.errors;
               for (let [key, message] of Object.entries(obj)) {
@@ -407,12 +361,11 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response.data.message,
+              msg: error.response ? error.response.data.message : 'Something went wrong',
             });
           }
         });

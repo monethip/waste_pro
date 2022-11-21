@@ -841,7 +841,7 @@ export default {
             }
           })
           .catch((error) => {
-            if (error.response.status == 422) {
+            if (error.response && error.response.status == 422) {
               let obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
@@ -850,7 +850,7 @@ export default {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response.data.message,
+              msg: error.response ? error.response.data.message : 'Something went wrong',
             });
             this.loading = false;
           });
@@ -975,11 +975,11 @@ export default {
           })
           .catch((error) => {
             this.loading = false;
-            if (error.response.status == 422) {
+            if (error.response && error.response.status == 422) {
               this.$store.commit("Toast_State", {
                 value: true,
                 color: "error",
-                msg: error.response.data.message,
+                msg: error.response ? error.response.data.message : 'Something went wrong',
               });
               let obj = error.response.data.errors;
               for (let [key, message] of Object.entries(obj)) {

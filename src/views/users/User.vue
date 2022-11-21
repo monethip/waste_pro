@@ -790,7 +790,7 @@ export default {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response.data.message,
+              msg: error.response ? error.response.data.message : 'Something went wrong',
             });
             if (error.response.status === 422) {
               let obj = error.response.data.errors;
@@ -974,7 +974,7 @@ export default {
           this.$store.commit("Toast_State", {
             value: true,
             color: "error",
-            msg: error.response.data.message,
+            msg: error.response ? error.response.data.message : 'Something went wrong',
           });
           if (error.response.status === 422) {
             let obj = error.response.data.errors;
@@ -1023,7 +1023,7 @@ export default {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response.data.message,
+              msg: error.response ? error.response.data.message : 'Something went wrong',
             });
             if (error.response.status === 422) {
               let obj = error.response.data.errors;
@@ -1065,7 +1065,7 @@ export default {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response.data.message,
+              msg: error.response ? error.response.data.message : 'Something went wrong',
             });
             if (error.response.status === 422) {
               let obj = error.response.data.errors;
@@ -1113,7 +1113,7 @@ export default {
           this.$store.commit("Toast_State", {
             value: true,
             color: "error",
-            msg: error.response.data.message,
+            msg: error.response ? error.response.data.message : 'Something went wrong',
           });
           // },300);
           this.$store.commit("modalDelete_State", false);
@@ -1156,7 +1156,7 @@ export default {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response.data.message,
+              msg: error.response ? error.response.data.message : 'Something went wrong',
             });
           });
         this.loading = false;
@@ -1200,7 +1200,7 @@ export default {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response.data.message,
+              msg: error.response ? error.response.data.message : 'Something went wrong',
             });
           });
         this.loading = false;
@@ -1245,7 +1245,7 @@ export default {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response.data.message,
+              msg: error.response ? error.response.data.message : 'Something went wrong',
             });
           });
         this.loading = false;
@@ -1289,7 +1289,7 @@ export default {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response.data.message,
+              msg: error.response ? error.response.data.message : 'Something went wrong',
             });
           });
         this.loading = false;
@@ -1340,7 +1340,7 @@ export default {
           this.$store.commit("Toast_State", {
             value: true,
             color: "error",
-            msg: error.response.data.message,
+            msg: error.response ? error.response.data.message : 'Something went wrong',
           });
         });
     },

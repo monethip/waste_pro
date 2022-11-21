@@ -4,10 +4,10 @@
       <v-col>
         <v-breadcrumbs large class="pa-0">
           <v-btn text class="text-primary" @click="backPrevios()">
-            <v-icon>mdi-chevron-left</v-icon></v-btn
-          >
-          ລາຍລະອຽດການແຈ້ງເຕືອນ</v-breadcrumbs
-        >
+            <v-icon>mdi-chevron-left</v-icon>
+          </v-btn>
+          ລາຍລະອຽດການແຈ້ງເຕືອນ
+        </v-breadcrumbs>
       </v-col>
     </v-row>
     <div>
@@ -40,13 +40,7 @@
           </v-row>
           <v-card-actions class="mt-6">
             <v-spacer></v-spacer>
-            <v-btn
-              color="info"
-              text
-              :loading="loading"
-              :disabled="loading"
-              @click="backPrevios()"
-            >
+            <v-btn color="info" text :loading="loading" :disabled="loading" @click="backPrevios()">
               Back
             </v-btn>
           </v-card-actions>
@@ -84,8 +78,7 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
@@ -119,23 +112,26 @@ export default {
   },
   created() {
     this.fetchData();
-  },
+   },
 };
 </script>
 
 <style lang="scss">
 @import "../../../public/scss/main.scss";
+
 h3 {
   line-height: 28px !important;
   font-size: 16px;
   font-weight: 500;
 }
+
 .c-divider {
   height: 10px;
   background: $primary-color;
   opacity: 0.8;
   max-height: 20px;
 }
+
 .c-divider.bottom {
   border-top: none;
   border-bottom: $primary-color solid 2px;

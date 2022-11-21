@@ -438,7 +438,7 @@ export default {
             color: "error",
             msg: error.response.data.message
           });
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             let obj = error.response.data.errors;
             for (let [key, data] of Object.entries(obj)) {
               this.server_errors[key] = data[0];
@@ -472,7 +472,7 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
@@ -543,7 +543,7 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
@@ -569,7 +569,7 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];

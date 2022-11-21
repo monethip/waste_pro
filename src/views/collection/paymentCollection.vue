@@ -4,10 +4,10 @@
       <v-col>
         <v-breadcrumbs large class="pa-0">
           <v-btn text class="text-primary" @click="backPrevios()">
-            <v-icon>mdi-chevron-left</v-icon></v-btn
-          >
-          ຊຳລະບິນຄ່າຂີ້ເຫຍື້ອດ່ວນ</v-breadcrumbs
-        >
+            <v-icon>mdi-chevron-left</v-icon>
+          </v-btn>
+          ຊຳລະບິນຄ່າຂີ້ເຫຍື້ອດ່ວນ
+        </v-breadcrumbs>
       </v-col>
     </v-row>
 
@@ -44,28 +44,16 @@
               <h3 class="my-4">ເລືອກປະເພດການຊຳລະ</h3>
               <v-row>
                 <v-col cols="12">
-                  <v-chip-group
-                    v-model="paymentType"
-                    column
-                    :rules="paymentTypeRule"
-                  >
-                    <v-chip
-                      large
-                      class="mr-6"
-                      color="info"
-                      label
-                      filter
-                      outlined
-                    >
+                  <v-chip-group v-model="paymentType" column :rules="paymentTypeRule">
+                    <v-chip large class="mr-6" color="info" label filter outlined>
                       ເງິນສົດ
                       <v-icon left class="ml-1"> mdi-currency-usd</v-icon>
                     </v-chip>
                     <v-chip large color="error" label filter outlined>
                       BCEL
                       <v-icon class="ml-1" left>
-                        mdi-credit-card</v-icon
-                      ></v-chip
-                    >
+                        mdi-credit-card</v-icon>
+                    </v-chip>
                   </v-chip-group>
                   <p class="errors">
                     {{ server_errors.payment_method }}
@@ -77,25 +65,15 @@
                 <v-row>
                   <v-col>
                     <label class="file-label">
-                      <input
-                        @change="onFileChange"
-                        class="file-input input-file-image"
-                        type="file"
-                        name="image"
-                        accept="image/*"
-                        ref="image"
-                      />
+                      <input @change="onFileChange" class="file-input input-file-image" type="file" name="image"
+                        accept="image/*" ref="image" />
                       <span class="file-cta">
                         <span class="file-icon">
-                          <v-icon
-                            style="
+                          <v-icon style="
                               font-size: 60px !important;
                               color: #719aff;
                               cursor: pointer;
-                            "
-                            class="fas fa-cloud-upload"
-                            >mdi-file-image</v-icon
-                          >
+                            " class="fas fa-cloud-upload">mdi-file-image</v-icon>
                         </span>
                       </span>
                     </label>
@@ -111,46 +89,40 @@
                     {{ server_errors.image }}
                   </p>
                 </v-row>
-<!--                <v-row>-->
-<!--                  <v-col cols="12">-->
-<!--                    <v-text-field-->
-<!--                      v-model="bcel_reference_number"-->
-<!--                      label="ເລກລະຫັດການຊຳລະ"-->
-<!--                      outlined-->
-<!--                      dense-->
-<!--                      type="number"-->
-<!--                      class="input-number"-->
-<!--                      :rules="[-->
-<!--                        () =>-->
-<!--                          !!bcel_reference_number ||-->
-<!--                          'BCEL Reference Number field is required',-->
-<!--                        () =>-->
-<!--                          (!!bcel_reference_number &&-->
-<!--                            bcel_reference_number.length == 15) ||-->
-<!--                          'BCEL Reference Number must be than 15 number',-->
-<!--                      ]"-->
-<!--                      counter="15"-->
-<!--                    >-->
-<!--                    </v-text-field>-->
-<!--                  </v-col>-->
-<!--                  <p class="errors">-->
-<!--                    {{ server_errors.bcel_reference_number }}-->
-<!--                  </p>-->
-<!--                </v-row>-->
+                <!--                <v-row>-->
+                <!--                  <v-col cols="12">-->
+                <!--                    <v-text-field-->
+                <!--                      v-model="bcel_reference_number"-->
+                <!--                      label="ເລກລະຫັດການຊຳລະ"-->
+                <!--                      outlined-->
+                <!--                      dense-->
+                <!--                      type="number"-->
+                <!--                      class="input-number"-->
+                <!--                      :rules="[-->
+                <!--                        () =>-->
+                <!--                          !!bcel_reference_number ||-->
+                <!--                          'BCEL Reference Number field is required',-->
+                <!--                        () =>-->
+                <!--                          (!!bcel_reference_number &&-->
+                <!--                            bcel_reference_number.length == 15) ||-->
+                <!--                          'BCEL Reference Number must be than 15 number',-->
+                <!--                      ]"-->
+                <!--                      counter="15"-->
+                <!--                    >-->
+                <!--                    </v-text-field>-->
+                <!--                  </v-col>-->
+                <!--                  <p class="errors">-->
+                <!--                    {{ server_errors.bcel_reference_number }}-->
+                <!--                  </p>-->
+                <!--                </v-row>-->
               </div>
             </v-form>
           </v-container>
 
           <v-divider class="my-6"></v-divider>
           <v-card-actions>
-            <v-btn
-              large
-              class="white--text c-btn px-12"
-              color="info"
-              :loading="loading"
-              :disabled="loading"
-              @click="Payment()"
-            >
+            <v-btn large class="white--text c-btn px-12" color="info" :loading="loading" :disabled="loading"
+              @click="Payment()">
               ຊຳລະ
             </v-btn>
           </v-card-actions>
@@ -164,14 +136,10 @@
         <v-card>
           <v-card-title>
             <p>
-              <v-icon class="primary-color" large color="success"
-                >mdi-checkbox-marked-circle-outline</v-icon
-              >
+              <v-icon class="primary-color" large color="success">mdi-checkbox-marked-circle-outline</v-icon>
               ຢືນຢັນຊຳລະຄ່າຂີ້ເຫຍື້ອ
-              <span class="primary-color" v-if="invoice.customer"
-                >{{ invoice.customer.name }}
-                {{ invoice.customer.surname }}</span
-              >
+              <span class="primary-color" v-if="invoice.customer">{{ invoice.customer.name }}
+                {{ invoice.customer.surname }}</span>
             </p>
           </v-card-title>
           <v-card-text>
@@ -180,37 +148,22 @@
                 <v-row>
                   <v-col cols="12">
                     <v-chip-group v-model="confirmType" column>
-                      <v-chip
-                        medium
-                        class="mr-6"
-                        color="success"
-                        label
-                        filter
-                        outlined
-                      >
+                      <v-chip medium class="mr-6" color="success" label filter outlined>
                         <v-icon left class="ml-1">
-                          mdi-account-check-outline</v-icon
-                        >ຢືນຢັນການຊຳລະ
+                          mdi-account-check-outline</v-icon>ຢືນຢັນການຊຳລະ
                       </v-chip>
                       <v-chip medium color="error" label filter outlined>
                         <v-icon class="ml-1" left> mdi-cash-remove</v-icon>
-                        ຊຳລະບໍຜ່ານ</v-chip
-                      >
+                        ຊຳລະບໍຜ່ານ
+                      </v-chip>
                     </v-chip-group>
                   </v-col>
                 </v-row>
                 <div v-if="confirmType == 1">
                   <v-row>
                     <v-col cols="12">
-                      <v-select
-                        v-model="reject_reason_id"
-                        label="ເຫດຜົນ"
-                        outlined
-                        dense
-                        :items="rejects"
-                        item-text="name"
-                        item-value="id"
-                      >
+                      <v-select v-model="reject_reason_id" label="ເຫດຜົນ" outlined dense :items="rejects"
+                        item-text="name" item-value="id">
                       </v-select>
                       <p class="errors">
                         {{ server_errors.reject_reason_id }}
@@ -220,13 +173,7 @@
 
                   <v-row>
                     <v-col cols="12">
-                      <v-text-field
-                        v-model="description"
-                        label="Description"
-                        outlined
-                        dense
-                        type="text"
-                      >
+                      <v-text-field v-model="description" label="Description" outlined dense type="text">
                       </v-text-field>
                       <p class="errors">
                         {{ server_errors.description }}
@@ -235,14 +182,8 @@
                   </v-row>
                   <v-row>
                     <v-card-actions>
-                      <v-btn
-                        color="info"
-                        class="white--text px-12 c-btn"
-                        large
-                        :loading="loading"
-                        :disabled="loading"
-                        @click="confirmReject()"
-                      >
+                      <v-btn color="info" class="white--text px-12 c-btn" large :loading="loading" :disabled="loading"
+                        @click="confirmReject()">
                         ຢືນຢັນ
                       </v-btn>
                     </v-card-actions>
@@ -299,8 +240,7 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
@@ -319,7 +259,7 @@ export default {
             }, 100);
           }
         })
-        .catch(() => {});
+        .catch(() => { });
     },
     confirmPayment() {
       this.loading = true;
@@ -385,9 +325,9 @@ export default {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response.data.message,
+              msg: error.response ? error.response.data.message : 'Something went wrong',
             });
-            if (error.response.status == 422) {
+            if (error.response && error.response.status == 422) {
               var obj = error.response.data.errors;
               for (let [key, data] of Object.entries(obj)) {
                 this.server_errors[key] = data[0];
@@ -427,9 +367,9 @@ export default {
           this.$store.commit("Toast_State", {
             value: true,
             color: "error",
-            msg: error.response.data.message,
+            msg: error.response ? error.response.data.message : 'Something went wrong',
           });
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             let obj = error.response.data.errors;
             for (let [key, data] of Object.entries(obj)) {
               this.server_errors[key] = data[0];

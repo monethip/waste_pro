@@ -224,7 +224,7 @@ export default {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response.data.message,
+              msg: error.response ? error.response.data.message : 'Something went wrong',
             });
             if (error.response.status === 422) {
               let obj = error.response.data.errors;

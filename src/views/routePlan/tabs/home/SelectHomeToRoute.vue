@@ -35,8 +35,8 @@
         <h4 v-if="pagination && pagination.total">ລູກຄ້າທັງໝົດ {{ pagination.total }} ຄົນ</h4>
         <h4 v-else>ລູກຄ້າທັງໝົດ {{ customers.length }} ຄົນ</h4>
         <h4 v-if="countExpectTrash">ຂີ້ເຫຍື້ອຄາດໝາຍ: {{ Intl.NumberFormat().format(countExpectTrash.expect_trash) + ' '
-            +
-            getCustomerUnitFunc(countExpectTrash.cost_by)
+        +
+                  getCustomerUnitFunc(countExpectTrash.cost_by)
         }}</h4>
       </v-col>
       <v-col>
@@ -230,7 +230,7 @@ export default {
         { text: "ວັນທີ່ເພີ່ມເຂົ້າ", value: "created_at" },
         // {text: "ລາຍລະອຽດທີ່ຢູ່", value: "address_detail"},
         { text: "ບ້ານ", value: "village.name", sortable: true },
-        { text: "ເມືອງ", value: "district.name", sortable: true },
+        { text: "ເມືອງ ", value: "district.name", sortable: true },
         // {text: "ລາຍລະອຽດທີ່ຢູ່", value: "description"},
         // { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
         { text: "", value: "actions", sortable: false },
@@ -327,10 +327,9 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
           this.fetchData(true)
 
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];

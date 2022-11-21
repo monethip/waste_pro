@@ -8,7 +8,7 @@
           </v-btn>
           ຈັດການເວລາໃຫ້ພະນັກງານເກັບຂີ້ເຫື້ຍອ
           <span class="ml-2 primary-color">{{
-          planmonth.name
+            planmonth.name
           }}</span>
         </v-breadcrumbs>
       </v-col>
@@ -399,7 +399,7 @@ export default {
           display: "ຄົວເຮືອນ",
         },
         {
-          name: "company",
+          name: "compa ny",
           display: "ຫົວໜ່ວຍທຸລະກິດ",
         },
       ],
@@ -475,8 +475,7 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             this.toast.msg = error.message;
             let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
@@ -569,11 +568,11 @@ export default {
         .catch((error) => {
           this.$store.commit("modalDelete_State", false);
           this.loading = false;
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response.data.message,
+              msg: error.response ? error.response.data.message : 'Something went wrong',
             });
           }
         });
@@ -611,11 +610,11 @@ export default {
           .catch((error) => {
             this.loading = false;
             this.menu = false;
-            if (error.response.status == 422) {
+            if (error.response && error.response.status == 422) {
               this.$store.commit("Toast_State", {
                 value: true,
                 color: "error",
-                msg: error.response.data.message,
+                msg: error.response ? error.response.data.message : 'Something went wrong',
               });
               const obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
@@ -655,11 +654,11 @@ export default {
           this.cancelDialog = false;
           this.$store.commit("modalDelete_State", false);
           this.loading = false;
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response.data.message,
+              msg: error.response ? error.response.data.message : 'Something went wrong',
             });
           }
         });
@@ -711,11 +710,11 @@ export default {
           .catch((error) => {
             this.loading = false;
             this.menu = false;
-            if (error.response.status == 422) {
+            if (error.response && error.response.status == 422) {
               this.$store.commit("Toast_State", {
                 value: true,
                 color: "error",
-                msg: error.response.data.message,
+                msg: error.response ? error.response.data.message : 'Something went wrong',
               });
               let obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {

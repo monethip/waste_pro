@@ -64,7 +64,7 @@
               </template>
               -->
 
-              <template slot="item.index" scope="props">
+              <template slot="item.index" slot-scope="props">
                 <div>{{ props.index + 1 }}</div>
               </template>
               <template v-slot:item.address_detail="{ item }">
@@ -252,7 +252,7 @@ export default {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response.data.message,
+              msg: error.response ? error.response.data.message : 'Something went wrong',
             });
             this.loading = false;
           });

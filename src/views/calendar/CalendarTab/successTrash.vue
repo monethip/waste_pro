@@ -139,7 +139,7 @@ export default {
             statuses: this.statuses,
           },
         })
-        .then((res) => {
+         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
@@ -151,8 +151,7 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             this.toast.msg = error.message;
           }
         });

@@ -240,11 +240,11 @@ export default {
           this.$store.commit("Loading_State", false);
           this.start_menu = false;
           this.end_menu = false;
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response.data.message,
+              msg: error.response ? error.response.data.message : 'Something went wrong',
             });
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
@@ -293,7 +293,7 @@ export default {
           this.$store.commit("Toast_State", {
             value: true,
             color: "error",
-            msg: error.response.data.message,
+            msg: error.response ? error.response.data.message : 'Something went wrong',
           });
           this.$store.commit("modalDelete_State", false);
           this.loading = false;

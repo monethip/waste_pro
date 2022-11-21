@@ -2,10 +2,10 @@
   <v-container>
     <v-breadcrumbs large class="pt-0">
       <v-btn text class="text-primary" @click="backPrevios()">
-        <v-icon>mdi-chevron-left</v-icon></v-btn
-      >
-      ລາຍລະອຽດ</v-breadcrumbs
-    >
+        <v-icon>mdi-chevron-left</v-icon>
+      </v-btn>
+      ລາຍລະອຽດ
+    </v-breadcrumbs>
     <v-card>
       <!--
       <div v-for="(item, index) in data.media" :key="index">
@@ -13,14 +13,8 @@
       </div>
       -->
       <v-carousel v-if="data.media && data.media.length">
-        <v-carousel-item
-          v-for="(item, index) in data.media"
-          :key="index"
-          :src="item.url"
-          @click="showImage(item.url)"
-          reverse-transition="fade-transition"
-          transition="fade-transition"
-        ></v-carousel-item>
+        <v-carousel-item v-for="(item, index) in data.media" :key="index" :src="item.url" @click="showImage(item.url)"
+          reverse-transition="fade-transition" transition="fade-transition"></v-carousel-item>
       </v-carousel>
 
       <v-card-text>
@@ -32,9 +26,7 @@
               </v-list-item-icon>
 
               <v-list-item-content>
-                <v-list-item-title
-                  >{{ data.name }} {{ data.surname }}</v-list-item-title
-                >
+                <v-list-item-title>{{ data.name }} {{ data.surname }}</v-list-item-title>
                 <v-list-item-subtitle>ຊື່ ແລະ ນາມສະກຸນ</v-list-item-subtitle>
               </v-list-item-content>
 
@@ -44,8 +36,7 @@
               </v-list-item-icon>
               <v-list-item-content>
                 <v-list-item-title v-if="data.user">
-                  {{ data.house_number }}</v-list-item-title
-                >
+                  {{ data.house_number }}</v-list-item-title>
                 <v-list-item-subtitle>ເຮືອນເລກທີ</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
@@ -59,8 +50,7 @@
 
               <v-list-item-content>
                 <v-list-item-title v-if="data.user">
-                  {{ data.user.phone }}</v-list-item-title
-                >
+                  {{ data.user.phone }}</v-list-item-title>
                 <v-list-item-subtitle>ເບີໂທ</v-list-item-subtitle>
               </v-list-item-content>
               <v-spacer></v-spacer>
@@ -69,8 +59,7 @@
               </v-list-item-icon>
               <v-list-item-content>
                 <v-list-item-title v-if="data.user">
-                  {{ data.user.email }}</v-list-item-title
-                >
+                  {{ data.user.email }}</v-list-item-title>
                 <v-list-item-subtitle>Email</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
@@ -82,12 +71,9 @@
 
               <v-list-item-content>
                 <v-list-item-title v-if="data.village">{{
-                  data.village.name
+                    data.village.name
                 }}</v-list-item-title>
-                <div
-                  v-for="(detail, index) in data.village_details"
-                  :key="index"
-                >
+                <div v-for="(detail, index) in data.village_details" :key="index">
                   <v-list-item-subtitle>{{ detail.name }}</v-list-item-subtitle>
                 </div>
               </v-list-item-content>
@@ -96,37 +82,26 @@
 
           <v-row>
             <v-col cols="12" class="mb-4">
-              <GmapMap
-                :center="getCenter()"
-                :zoom="16"
-                style="width: 100%; height: 450px"
-                :disableDefaultUI="true"
-              >
-                <GmapMarker
-                  :position="getMarkers(data)"
-                  @click="latlng = data"
-                  :draggable="false"
-                  :icon="markerOptions"
-                  :animation="2"
-                  ref="markers"
-                />
+              <GmapMap :center="getCenter()" :zoom="16" style="width: 100%; height: 450px" :disableDefaultUI="true">
+                <GmapMarker :position="getMarkers(data)" @click="latlng = data" :draggable="false" :icon="markerOptions"
+                  :animation="2" ref="markers" />
               </GmapMap>
             </v-col>
           </v-row>
         </v-container>
-<!--        <v-card-actions>-->
-<!--          <v-spacer></v-spacer>-->
-<!--          <v-btn-->
-<!--            color="blue darken-1"-->
-<!--            text-->
-<!--            :loading="loading"-->
-<!--            :disabled="loading"-->
-<!--            @click="editPage(data.id)"-->
-<!--          >-->
-<!--            Update-->
-<!--          </v-btn>-->
-<!--        </v-card-actions>-->
-<!--        ->-->
+        <!--        <v-card-actions>-->
+        <!--          <v-spacer></v-spacer>-->
+        <!--          <v-btn-->
+        <!--            color="blue darken-1"-->
+        <!--            text-->
+        <!--            :loading="loading"-->
+        <!--            :disabled="loading"-->
+        <!--            @click="editPage(data.id)"-->
+        <!--          >-->
+        <!--            Update-->
+        <!--          </v-btn>-->
+        <!--        </v-card-actions>-->
+        <!--        ->-->
       </v-card-text>
     </v-card>
 
@@ -183,15 +158,15 @@ export default {
           b: "px",
         },
       },
-      imageUrl:""
+      imageUrl: ""
     };
   },
   methods: {
-    showImage(url){
-     if(url != null){
-       this.imageUrl = url;
-       this.$store.commit("modalView_State", true);
-     }
+    showImage(url) {
+      if (url != null) {
+        this.imageUrl = url;
+        this.$store.commit("modalView_State", true);
+      }
     },
     fetchData() {
       this.$store.commit("Loading_State", true);
@@ -207,8 +182,7 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];

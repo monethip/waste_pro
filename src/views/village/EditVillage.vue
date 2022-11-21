@@ -1,11 +1,11 @@
 <template>
   <v-container>
     <v-breadcrumbs large>
-      <v-btn text class="text-primary" @click="backPrevios()"
-        ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
-      >
-      Edit Village Details</v-breadcrumbs
-    >
+      <v-btn text class="text-primary" @click="backPrevios()">
+        <v-icon>mdi-keyboard-backspace </v-icon>
+      </v-btn>
+      Edit Village Details
+    </v-breadcrumbs>
     <v-card>
       <v-card-title>
         <span class="headline">Edit Village</span>
@@ -15,54 +15,29 @@
           <v-form ref="form" lazy-validation>
             <v-row>
               <v-col cols="6">
-                <v-text-field
-                  label="district*"
-                  required
-                  v-model="showdistrict.name"
-                  :rules="nameRules"
-                  readonly
-                ></v-text-field>
+                <v-text-field label="district*" required v-model="showdistrict.name" :rules="nameRules" readonly>
+                </v-text-field>
                 <p class="errors">
                   {{ server_errors.name }}
                 </p>
               </v-col>
 
               <v-col cols="6">
-                <v-text-field
-                  label="village *"
-                  required
-                  v-model="data.name"
-                  :rules="nameRules"
-                  readonly
-                ></v-text-field>
+                <v-text-field label="village *" required v-model="data.name" :rules="nameRules" readonly></v-text-field>
                 <p class="errors">
                   {{ server_errors.name }}
                 </p>
               </v-col>
               <v-col cols="4">
-                <v-select
-                  v-model="selectedVillageDetail2"
-                  :items="villagevariate2"
-                  item-text="name"
-                  item-value="id"
-                  label=" ໜ່ວຍ*"
-                  :hint="`${selectedVillageDetail2.name}`"
-                  return-object
-                ></v-select>
+                <v-select v-model="selectedVillageDetail2" :items="villagevariate2" item-text="name" item-value="id"
+                  label=" ໜ່ວຍ*" :hint="`${selectedVillageDetail2.name}`" return-object></v-select>
                 <p class="errors">
                   {{ errormsg }}
                 </p>
               </v-col>
               <v-col cols="4">
-                <v-select
-                  v-model="selectedVillageDetail"
-                  :items="villagevariate1"
-                  item-text="name"
-                  item-value="id"
-                  label="ຮ່ອມ*"
-                  :hint="`${selectedVillageDetail.name}`"
-                  return-object
-                ></v-select>
+                <v-select v-model="selectedVillageDetail" :items="villagevariate1" item-text="name" item-value="id"
+                  label="ຮ່ອມ*" :hint="`${selectedVillageDetail.name}`" return-object></v-select>
                 <p class="errors">
                   {{ errormsg }}
                 </p>
@@ -75,13 +50,7 @@
           <v-btn color="blue darken-1" text @click="backPrevios()">
             Back
           </v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            :loading="loading"
-            :disabled="loading"
-            @click="UpdateData()"
-          >
+          <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="UpdateData()">
             Update
           </v-btn>
         </v-card-actions>
@@ -146,14 +115,13 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
           }
-        });
+         });
     },
 
     fetchVillageVariation() {
@@ -210,7 +178,7 @@ export default {
         .catch((error) => {
           this.loading = false;
           this.fetchData();
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             var obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
@@ -237,9 +205,11 @@ export default {
 
 <style lang="scss">
 @import "../../../public/scss/main.scss";
+
 .primary-color {
   color: $primary-color;
 }
+
 .text-field {
   border-color: $primary-color;
   padding: 12px 8px 12px 8px;

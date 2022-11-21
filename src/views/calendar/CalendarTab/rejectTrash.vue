@@ -193,7 +193,7 @@ export default {
     };
   },
   methods: {
-    backPrevios() {
+     backPrevios() {
       this.$router.go(-1);
     },
     fetchData() {
@@ -218,8 +218,7 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData();
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             this.toast.msg = error.message;
           }
         });
@@ -258,9 +257,9 @@ export default {
           this.$store.commit("Toast_State", {
             value: true,
             color: "error",
-            msg: error.response.data.message,
+            msg: error.response ? error.response.data.message : 'Something went wrong',
           });
-          if (error.response.status == 422) {
+          if (error.response && error.response.status == 422) {
             let obj = error.response.data.errors;
             for (let [key, data] of Object.entries(obj)) {
               this.server_errors[key] = data[0];
