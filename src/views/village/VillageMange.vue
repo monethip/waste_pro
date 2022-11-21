@@ -455,7 +455,6 @@ export default {
           })
           .catch(error => {
             this.loading = false;
-            this.fetchData();
             if (error.response && error.response.status == 422) {
               this.$store.commit("Toast_State", {
                 value: true,

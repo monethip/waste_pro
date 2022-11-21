@@ -198,7 +198,6 @@ export default {
               }
             }
             this.loading = false;
-            this.fetchData();
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",

@@ -568,13 +568,11 @@ export default {
         .catch((error) => {
           this.$store.commit("modalDelete_State", false);
           this.loading = false;
-          if (error.response && error.response.status == 422) {
-            this.$store.commit("Toast_State", {
+          this.$store.commit("Toast_State", {
               value: true,
               color: "error",
               msg: error.response ? error.response.data.message : 'Something went wrong',
             });
-          }
         });
     },
 
@@ -610,12 +608,13 @@ export default {
           .catch((error) => {
             this.loading = false;
             this.menu = false;
-            if (error.response && error.response.status == 422) {
-              this.$store.commit("Toast_State", {
+            this.$store.commit("Toast_State", {
                 value: true,
                 color: "error",
                 msg: error.response ? error.response.data.message : 'Something went wrong',
               });
+              if (error.response && error.response.status == 422) {
+              
               const obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
@@ -654,13 +653,11 @@ export default {
           this.cancelDialog = false;
           this.$store.commit("modalDelete_State", false);
           this.loading = false;
-          if (error.response && error.response.status == 422) {
-            this.$store.commit("Toast_State", {
+          this.$store.commit("Toast_State", {
               value: true,
               color: "error",
               msg: error.response ? error.response.data.message : 'Something went wrong',
             });
-          }
         });
     },
 
@@ -710,12 +707,13 @@ export default {
           .catch((error) => {
             this.loading = false;
             this.menu = false;
-            if (error.response && error.response.status == 422) {
-              this.$store.commit("Toast_State", {
+            this.$store.commit("Toast_State", {
                 value: true,
                 color: "error",
                 msg: error.response ? error.response.data.message : 'Something went wrong',
               });
+              if (error.response && error.response.status == 422) {
+              
               let obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];

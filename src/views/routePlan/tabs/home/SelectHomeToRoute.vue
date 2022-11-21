@@ -327,7 +327,18 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
-          this.fetchData(true)
+
+          this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response ? error.response.data.message : 'Something went wrong',
+              });
+            if (error.response && error.response.status == 422) {
+              var obj = error.response.data.error;
+              for (let [key, message] of Object.entries(obj)) {
+                this.server_errors[key] = message[0];
+              }
+            }
 
           if (error.response && error.response.status == 422) {
             let obj = error.response.data.errors;
