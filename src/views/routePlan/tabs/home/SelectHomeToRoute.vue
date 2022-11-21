@@ -32,8 +32,10 @@
         </v-btn>
       </v-col>
       <v-col>
-        <h4>ລູກຄ້າທັງໝົດ {{ pagination.total }} ຄົນ</h4>
-        <h4>ຂີ້ເຫຍື້ອຄາດໝາຍ: {{ Intl.NumberFormat().format(countExpectTrash.expect_trash) + ' ' +
+        <h4 v-if="selectedVillage.length > 0">ລູກຄ້າທັງໝົດ {{ customers.length }} ຄົນ</h4>
+        <h4 v-else-if="pagination && pagination.total">ລູກຄ້າທັງໝົດ {{ pagination.total }} ຄົນ</h4>
+        <h4 v-if="countExpectTrash">ຂີ້ເຫຍື້ອຄາດໝາຍ: {{ Intl.NumberFormat().format(countExpectTrash.expect_trash) + ' '
+            +
             getCustomerUnitFunc(countExpectTrash.cost_by)
         }}</h4>
       </v-col>
@@ -100,6 +102,10 @@
           v-model="search" @keyup.enter="Search()">
         </v-text-field>
       </v-col>
+      <v-col>
+        <v-btn style="width:100%" color="green" dark @click="fetchSearch">ຄົ້ນຫາ</v-btn>
+      </v-col>
+
     </v-row>
 
     <div>
@@ -153,8 +159,8 @@
             </v-data-table>
             <br />
             <template>
-              <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
-                @paginate="fetchData()"></Pagination>
+              <Pagination v-if="selectedVillage.length <= 0 && pagination && pagination.total_pages > 1"
+                :pagination="pagination" :offset="offset" @paginate="fetchData()"></Pagination>
             </template>
           </v-card-text>
         </v-card>
@@ -175,12 +181,17 @@ export default {
       tab: null,
       customers: [],
       selectedAllCustomer: [],
-      countExpectTrash: {},
+      countExpectTrash: {
+        expect_trash: 0,
+        cost_by: ''
+      },
       loading: false,
       customerId: "",
       //Pagination
       offset: 12,
-      pagination: {},
+      pagination: {
+        total: null
+      },
       per_page: 100,
       search: "",
       oldVal: "",
@@ -277,6 +288,8 @@ export default {
       return getLaoCompanyCostBy(costBy)
     },
     fetchData(countexpect = false) {
+      this.per_page = this.selectedVillage.length > 0 ? null : 100
+
       let options = [
         { page: this.pagination.current_page },
         { per_page: this.per_page },
@@ -303,9 +316,9 @@ export default {
                 this.countExpectTrash = res.data.data[0]
                 console.log(this.countExpectTrash);
               } else {
-                this.customers = res.data.data.data;
+                this.customers = this.per_page ? res.data.data.data : res.data.data;
                 this.selectedAllCustomer = res.data.data;
-                this.pagination = res.data.data.pagination;
+                if (res.data.data.pagination) this.pagination = res.data.data.pagination;
               }
               // this.getCenter();
             }, 100);
@@ -343,7 +356,7 @@ export default {
     },
 
     fetchVillage() {
-      this.$axios
+      if (this.selectedDistrict) this.$axios
         .get("info/district/" + this.selectedDistrict + "/village")
         .then((res) => {
           if (res.data.code == 200) {
@@ -355,7 +368,10 @@ export default {
         .catch(() => {
         });
     },
-
+    fetchSearch() {
+      this.fetchData();
+      this.fetchData(true)
+    },
     createPage() {
       //  var a = [];
       // console.log(this.customers);
@@ -545,8 +561,8 @@ export default {
     },
     selectedVillage: function () {
       this.pagination.current_page = '';
-      this.fetchData();
-      this.fetchData(true)
+      // this.fetchData();
+      // this.fetchData(true)
 
     },
     selectedDistrict: function () {
