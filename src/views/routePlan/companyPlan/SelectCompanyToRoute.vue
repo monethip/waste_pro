@@ -33,11 +33,12 @@
         </v-btn>
       </v-col>
       <v-col>
-        <h4>ລູກຄ້າທັງໝົດ {{ pagination.total }} ຄົນ</h4>
+        <h4 v-if="pagination && pagination.total">ລູກຄ້າທັງໝົດ {{ pagination.total }} ຄົນ</h4>
+        <h4 v-else>ລູກຄ້າທັງໝົດ {{ customers.length }} ຄົນ</h4>
         <h4>ຂີ້ເຫຍື້ອຄາດໝາຍ:</h4>
         <h5 v-for="item in countExpectTrash" :key="item.cost_by">{{ getLaoCompanyCostByFunc(item.cost_by) + ': ' +
-        Intl.NumberFormat().format(item.expect_trash) + ' ' +
-        getCustomerUnitFunc(item.cost_by)
+            Intl.NumberFormat().format(item.expect_trash) + ' ' +
+            getCustomerUnitFunc(item.cost_by)
         }} </h5>
       </v-col>
       <v-col>
@@ -74,6 +75,9 @@
           v-model="search" @keyup.enter="Search()">
         </v-text-field>
       </v-col>
+      <v-col>
+        <v-btn style="width:100%" color="green" dark @click="fetchSearch">ຄົ້ນຫາ</v-btn>
+      </v-col>
     </v-row>
 
     <div>
@@ -86,8 +90,8 @@
               </v-col>
               <v-col v-for="trash in selectedTrash" :key="trash.cost_by">
                 <p>{{ getLaoCompanyCostByFunc(trash.cost_by) + ': ' +
-                Intl.NumberFormat().format(trash.count) + ' ' +
-                getCustomerUnitFunc(trash.cost_by)
+                    Intl.NumberFormat().format(trash.count) + ' ' +
+                    getCustomerUnitFunc(trash.cost_by)
                 }}</p>
               </v-col>
             </v-row>
@@ -248,6 +252,10 @@ export default {
     };
   },
   methods: {
+    fetchSearch() {
+      this.fetchData();
+      this.fetchData(true)
+    },
     backPrevios() {
       this.$router.go(-1);
     },
@@ -280,6 +288,8 @@ export default {
     },
     fetchData(countexpect = false) {
       this.$store.commit("Loading_State", true);
+      this.per_page = this.selectedDistrict ? null : 100
+
       let options = [
         { page: this.pagination.current_page },
         { per_page: this.per_page },
@@ -304,9 +314,10 @@ export default {
               if (countexpect) {
                 this.countExpectTrash = res.data.data
               } else {
-                this.customers = res.data.data.data;
+                this.customers = this.per_page ? res.data.data.data : res.data.data;
                 this.selectedAllCustomer = res.data.data;
-                this.pagination = res.data.data.pagination;
+                if (res.data.data.pagination) this.pagination = res.data.data.pagination;
+                else this.pagination = {}
               }
 
               // this.getCenter();
@@ -343,7 +354,7 @@ export default {
     },
 
     fetchVillage() {
-      this.$axios
+      if (this.selectedDistrict) this.$axios
         .get("info/district/" + this.selectedDistrict + "/village")
         .then((res) => {
           if (res.data.code == 200) {
@@ -557,14 +568,14 @@ export default {
     },
     selectedVillage: function () {
       this.pagination.current_page = '';
-      this.fetchData();
-      this.fetchData(true)
+      // this.fetchData();
+      // this.fetchData(true)
     },
     selectedDistrict: function () {
       this.pagination.current_page = '';
       this.fetchVillage();
-      this.fetchData();
-      this.fetchData(true)
+      // this.fetchData();
+      // this.fetchData(true)
     },
     selectedCustomerStatus: function () {
       this.pagination.current_page = '';

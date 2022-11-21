@@ -32,8 +32,8 @@
         </v-btn>
       </v-col>
       <v-col>
-        <h4 v-if="selectedVillage.length > 0">ລູກຄ້າທັງໝົດ {{ customers.length }} ຄົນ</h4>
-        <h4 v-else-if="pagination && pagination.total">ລູກຄ້າທັງໝົດ {{ pagination.total }} ຄົນ</h4>
+        <h4 v-if="pagination && pagination.total">ລູກຄ້າທັງໝົດ {{ pagination.total }} ຄົນ</h4>
+        <h4 v-else>ລູກຄ້າທັງໝົດ {{ customers.length }} ຄົນ</h4>
         <h4 v-if="countExpectTrash">ຂີ້ເຫຍື້ອຄາດໝາຍ: {{ Intl.NumberFormat().format(countExpectTrash.expect_trash) + ' '
             +
             getCustomerUnitFunc(countExpectTrash.cost_by)
@@ -159,8 +159,8 @@
             </v-data-table>
             <br />
             <template>
-              <Pagination v-if="selectedVillage.length <= 0 && pagination && pagination.total_pages > 1"
-                :pagination="pagination" :offset="offset" @paginate="fetchData()"></Pagination>
+              <Pagination v-if="pagination && pagination.total_pages > 1" :pagination="pagination" :offset="offset"
+                @paginate="fetchData()"></Pagination>
             </template>
           </v-card-text>
         </v-card>
@@ -288,7 +288,7 @@ export default {
       return getLaoCompanyCostBy(costBy)
     },
     fetchData(countexpect = false) {
-      this.per_page = this.selectedVillage.length > 0 ? null : 100
+      this.per_page = this.selectedDistrict ? null : 100
 
       let options = [
         { page: this.pagination.current_page },
@@ -319,6 +319,7 @@ export default {
                 this.customers = this.per_page ? res.data.data.data : res.data.data;
                 this.selectedAllCustomer = res.data.data;
                 if (res.data.data.pagination) this.pagination = res.data.data.pagination;
+                else this.pagination = {}
               }
               // this.getCenter();
             }, 100);
@@ -567,8 +568,8 @@ export default {
     },
     selectedDistrict: function () {
       this.pagination.current_page = '';
-      this.fetchData();
-      this.fetchData(true)
+      // this.fetchData();
+      // this.fetchData(true)
 
       this.fetchVillage();
     },
