@@ -16,7 +16,7 @@
 
     <v-row>
       <v-col cols="12" class="mb-4">
-        <GmapMap v-if="customers" :center="getCenter()" :zoom="14" style="width: 100%; height: 400px"
+        <GmapMap v-if="customers" :center="getCenter().lat > 0 || getCenter().lat < 0 ? getCenter() : { lat: 0, lng: 0 }" :zoom="14" style="width: 100%; height: 400px"
           :disableDefaultUI="true">
           <gmap-info-window :options="infoOptions" :position="infoPosition" :opened="infoOpened" :conent="infoContent"
             @closeclick="infoOpened = false">{{ infoContent }}
@@ -350,8 +350,8 @@ export default {
         },
       ],
       latlng: {
-        lat: 18.1189434,
-        lng: 102.290218,
+        lat: 0,
+        lng: 0,
       },
       markers: [],
       infoPosition: null,

@@ -115,7 +115,7 @@
               <v-row>
                 <v-col cols="12" class="mb-4">
                   <GmapMap
-                      :center="getCenter()"
+                      :center="getCenter().lat > 0 || getCenter().lat < 0 ? getCenter() : { lat: 0, lng: 0 }"
                       :zoom="16"
                       style="width: 100%; height: 450px"
                       :disableDefaultUI="true"

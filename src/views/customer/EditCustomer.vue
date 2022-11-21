@@ -333,7 +333,7 @@
               </v-col>
               <v-col cols="12" class="mb-4">
                 <GmapMap
-                  :center="getCenter()"
+                  :center="getCenter().lat > 0 || getCenter().lat < 0 ? getCenter() : { lat: 0, lng: 0 }"
                   :zoom="16"
                   style="width: 100%; height: 450px"
                   :disableDefaultUI="true"
@@ -448,8 +448,8 @@ export default {
       selectedFavoriteDate: [],
       //Map
       latlng: {
-        lat: 18.1189434,
-        lng: 102.290218,
+        lat: 0,
+        lng: 0,
       },
       markers: [],
       currentPlace: null,

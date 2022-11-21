@@ -235,8 +235,8 @@ export default {
       errormsg: "",
       //Map
       latlng: {
-        lat: 18.1189434,
-        lng: 102.290218,
+        lat: 0,
+        lng: 0,
       },
       markers: [],
       currentPlace: null,

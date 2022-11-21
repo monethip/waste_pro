@@ -11,7 +11,7 @@
 
     <v-row>
       <v-col cols="12" class="mb-4" v-if="switchMap">
-        <GmapMap :center="getCenter()" :zoom="16" style="width: 100%; height: 450px" :disableDefaultUI="true">
+        <GmapMap :center="getCenter().lat > 0 || getCenter().lat < 0 ? getCenter() : { lat: 0, lng: 0 }" :zoom="16" style="width: 100%; height: 450px" :disableDefaultUI="true">
           <gmap-info-window :options="infoOptions" :position="infoPosition" :opened="infoOpened" :conent="infoContent"
             @closeclick="infoOpened = false">{{ infoContent }}
           </gmap-info-window>
@@ -156,8 +156,8 @@ export default {
       ],
       //Map
       latlng: {
-        lat: 18.1189434,
-        lng: 102.290218,
+        lat: 0,
+        lng: 0,
       },
       markers: [],
       markerOptions: {
