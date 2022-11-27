@@ -49,6 +49,10 @@
         <v-autocomplete outlined dense :items="customer_types" v-model="selectedCustomerType" item-text="display"
           item-value="name" label="ປະເພດແຜນເສັ້ນທາງ" clearable></v-autocomplete>
       </v-col>
+       <v-col v-if="selectedCustomerType == 'company'">
+        <v-autocomplete outlined dense :items="companyCostBy" v-model="selectedCostBy" item-text="la"
+          item-value="en" label="ປະເພດບໍລິການ" clearable></v-autocomplete>
+      </v-col>
 
       <v-col>
         <v-autocomplete v-model="selectedDriverId" :items="drivers" :item-text="getDriver" item-value="id"
@@ -341,6 +345,7 @@
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
+import {getCompanyCostBy} from "@/Helpers/Customer"
 
 export default {
   name: "Customer",
@@ -399,10 +404,11 @@ export default {
           display: "ຄົວເຮືອນ",
         },
         {
-          name: "compa ny",
+          name: "company",
           display: "ຫົວໜ່ວຍທຸລະກິດ",
         },
       ],
+      selectedCostBy:'',
 
       headers: [
         { text: "ວັນທີ", value: "date" },
@@ -445,6 +451,11 @@ export default {
       monthRules: [(v) => !!v || "Date is required"],
     };
   },
+  computed:{
+    companyCostBy(){
+      return getCompanyCostBy
+    }
+  },
   methods: {
     backPrevios() {
       this.$router.go(-1);
@@ -464,6 +475,7 @@ export default {
             { date: this.date },
             { route_plan_type: this.selectedCustomerType },
             { driver_id: this.selectedDriverId },
+            { cost_by: this.selectedCostBy },
           ])
         })
         .then((res) => {
@@ -776,6 +788,7 @@ export default {
     selectedRoutePlan: function () {
       this.server_errors.route_plan_id = "";
     },
+    
     dates: function () {
       this.server_errors.date = "";
     },
@@ -788,6 +801,10 @@ export default {
       this.fetchData();
     },
     selectedCustomerType: function () {
+      this.pagination.current_page = '';
+      this.fetchData();
+    },
+    selectedCostBy: function () {
       this.pagination.current_page = '';
       this.fetchData();
     },

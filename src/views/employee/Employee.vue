@@ -132,6 +132,16 @@
                 <v-row>
                   <v-col cols="12">
                     <v-text-field
+                      label="Card Id *"
+                      required
+                      v-model="user.card_id"
+                    ></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.card_id }}
+                    </p>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field
                       label="Name *"
                       required
                       v-model="user.name"
@@ -257,6 +267,15 @@
                 <v-row>
                   <v-col cols="12">
                     <v-text-field
+                      label="Card Id *"
+                      required
+                      v-model="edit_user.card_id"
+                    ></v-text-field>
+                    <p class="errors">
+                      {{ server_errors.card_id }}
+                    </p>
+                  </v-col> <v-col cols="12">
+                    <v-text-field
                       label="Name *"
                       required
                       v-model="edit_user.name"
@@ -344,6 +363,7 @@ export default {
   data() {
     return {
       headers: [
+        { text: "ລະຫັດ", value: "card_id" },
         { text: "ຊື່", value: "name" },
         { text: "ນາມສະກຸນ", value: "surname" },
         { text: "ເບີໂທ", value: "phone", sortable: false },
@@ -412,6 +432,7 @@ export default {
     },
     AddItem() {
       let formData = new FormData();
+      formData.append("card_id", this.user.card_id);
       formData.append("name", this.user.name);
       formData.append("surname", this.user.surname);
       formData.append("phone", this.user.phone);
@@ -502,6 +523,7 @@ export default {
     },
     updateItem() {
       let formData = new FormData();
+      formData.append("card_id", this.user.card_id);
       formData.append("name", this.edit_user.name);
       formData.append("surname", this.edit_user.surname);
       formData.append("phone", this.edit_user.phone);
@@ -599,7 +621,10 @@ export default {
     selectedStatus: function () {
       this.fetchData();
     },
-    "user.name": function () {
+    "user.card_id": function () {
+      this.server_errors.card_id = "";
+    },
+     "user.name": function () {
       this.server_errors.name = "";
     },
     "user.surname": function () {
