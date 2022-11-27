@@ -193,25 +193,21 @@ export default {
           text: "ຈຳນວນຂີ້ເຫື້ຍອ",
           value: "amount",
           align: "center",
-          sortable: false,
         },
         {
           text: "ສະຖານະ",
           value: "status",
           align: "center",
-          sortable: false,
         },
         {
           text: "ວັນທີສ້າງ",
           value: "created_at",
           align: "center",
-          sortable: false,
         },
         {
           text: "ວັນທີເກັບ",
           value: "collected_at",
           align: "center",
-          sortable: false,
         },
         {
           text: "ເປີດ/ຢຸດ",
