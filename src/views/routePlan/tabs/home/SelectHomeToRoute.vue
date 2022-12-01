@@ -390,7 +390,6 @@ export default {
               this.$store.commit("Loading_State", false);
               if (countexpect) {
                 this.countExpectTrash = res.data.data[0];
-                console.log(this.countExpectTrash);
               } else {
                 this.customers = this.per_page
                   ? res.data.data.data

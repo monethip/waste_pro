@@ -9,12 +9,30 @@
 
     <v-row>
       <v-col cols="12" class="mb-4" v-if="switchMap">
-        <GmapMap :center="getCenter().lat > 0 || getCenter().lat < 0 ? getCenter() : { lat: 0, lng: 0 }" :zoom="16" style="width: 100%; height: 450px" :disableDefaultUI="true">
-          <gmap-info-window :options="infoOptions" :position="infoPosition" :opened="infoOpened" :conent="infoContent"
-            @closeclick="infoOpened = false">{{ infoContent }}</gmap-info-window>
-          <GmapMarker :key="index" v-for="(m, index) in customers" :position="getMarkers(m)"
-            @click="toggleInfo(m, index)" :draggable="false" :icon="markerOptions" :animation="2" :clickable="true"
-            :label="(index + 1).toString()" />
+        <GmapMap
+          :center="getCenter().lat > 0 || getCenter().lat < 0 ? getCenter() : { lat: 0, lng: 0 }"
+          :zoom="16"
+          style="width: 100%; height: 450px"
+          :disableDefaultUI="true"
+        >
+          <gmap-info-window
+            :options="infoOptions"
+            :position="infoPosition"
+            :opened="infoOpened"
+            :conent="infoContent"
+            @closeclick="infoOpened = false"
+          >{{ infoContent }}</gmap-info-window>
+          <GmapMarker
+            :key="index"
+            v-for="(m, index) in customers"
+            :position="getMarkers(m)"
+            @click="toggleInfo(m, index)"
+            :draggable="false"
+            :icon="markerOptions"
+            :animation="2"
+            :clickable="true"
+            :label="(index + 1).toString()"
+          />
         </GmapMap>
       </v-col>
 
@@ -36,10 +54,24 @@
       </v-col>
       <v-col>
         <h4>ລວມລູກຄ້າ {{ pagination.total }} ຄົນ</h4>
+        <h4 v-if="countExpectTrash">
+          ຂີ້ເຫຍື້ອຄາດໝາຍ: {{ Intl.NumberFormat().format(countExpectTrash.expect_trash) + ' '
+          +
+          getCustomerUnitFunc(countExpectTrash.cost_by)
+          }}
+        </h4>
       </v-col>
       <v-col>
-        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ຊື່ລູກຄ້າ" type="text"
-          v-model="search" @keyup.enter="Search()"></v-text-field>
+        <v-text-field
+          outlined
+          dense
+          clearable
+          prepend-inner-icon="mdi-magnify"
+          label="ຊື່ລູກຄ້າ"
+          type="text"
+          v-model="search"
+          @keyup.enter="Search()"
+        ></v-text-field>
       </v-col>
     </v-row>
 
@@ -47,12 +79,17 @@
       <v-card>
         <v-card flat>
           <v-card-text>
-            <v-data-table :headers="headers" :items="customers" :search="search" :disable-pagination="true"
-              hide-default-footer>
+            <v-data-table
+              :headers="headers"
+              :items="customers"
+              :search="search"
+              :disable-pagination="true"
+              hide-default-footer
+            >
               <template v-slot:item.customer="{ item }">
-                <div v-if="(item.customer.customer_type = 'company')">
-                  {{ item.customer.company_name }}
-                </div>
+                <div
+                  v-if="(item.customer.customer_type = 'company')"
+                >{{ item.customer.company_name }}</div>
                 <div>
                   {{ item.customer.name }}
                   {{ item.customer.surname }}
@@ -60,14 +97,24 @@
               </template>
 
               <template v-slot:item.customer.can_collect="{ item }">
-                <v-chip :color="item.customer.can_collect ? 'success' : 'error'">
-                  {{ item.customer.can_collect ? "ເກັບໄດ້" : "ເກັບບໍ່ໄດ້" }}
-                </v-chip>
+                <v-chip
+                  :color="item.customer.can_collect ? 'success' : 'error'"
+                >{{ item.customer.can_collect ? "ເກັບໄດ້" : "ເກັບບໍ່ໄດ້" }}</v-chip>
               </template>
 
               <template v-slot:item.status="{ item }">
-                <v-chip v-if="item.customer" :color="statusColor(item.customer.status)">{{ item.customer.status }}
+                <v-chip
+                  v-if="item.customer"
+                  :color="statusColor(item.customer.status)"
+                >{{ item.customer.status }}</v-chip>
+              </template>
+
+              <template v-slot:item.customer.expect_trash="{ item }">
+                <v-chip outlined color="green" v-if="item.customer.expect_trash">
+                  {{ Intl.NumberFormat().format(item.customer.expect_trash) }}
+                  {{ getCustomerUnitFunc(item.customer.cost_by) }}
                 </v-chip>
+                <div v-else>-</div>
               </template>
 
               <template v-slot:item.actions="{ item }">
@@ -76,8 +123,12 @@
             </v-data-table>
             <br />
             <template>
-              <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
-                @paginate="fetchData()"></Pagination>
+              <Pagination
+                v-if="pagination.total_pages > 1"
+                :pagination="pagination"
+                :offset="offset"
+                @paginate="fetchData()"
+              ></Pagination>
             </template>
           </v-card-text>
         </v-card>
@@ -88,6 +139,8 @@
 
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import { getCustomerUnit } from "@/Helpers/Customer";
+
 export default {
   name: "Customer",
   data() {
@@ -118,18 +171,19 @@ export default {
           text: "ລຳດັບຄວາມສຳຄັນ",
           value: "priority",
           sortable: false,
-          align: "center",
+          align: "center"
         },
         { text: "ລູກຄ້າ", value: "customer" },
+        { text: "ຂີ້ເຫຍື້ອຄາດໝາຍ", value: "customer.expect_trash" },
         { text: "ສະຖານະເກັບ", value: "customer.can_collect" },
         { text: "ສະຖານະ", value: "status", sortable: false },
         { text: "ເຮືອນເລກທີ", value: "customer.house_number", sortable: false },
-        { text: "", value: "actions", sortable: false },
+        { text: "", value: "actions", sortable: false }
       ],
       //Map
       latlng: {
         lat: 0,
-        lng: 0,
+        lng: 0
       },
       markers: [],
       markerOptions: {
@@ -146,14 +200,14 @@ export default {
           width: 28,
           height: 48,
           f: "px",
-          b: "px",
+          b: "px"
         },
-         scaledSize: {
+        scaledSize: {
           width: 28,
           height: 48,
           f: "px",
-          b: "px",
-        },
+          b: "px"
+        }
       },
 
       infoPosition: null,
@@ -163,37 +217,49 @@ export default {
       infoOptions: {
         pixelOffset: {
           width: 0,
-          height: -35,
-        },
+          height: -35
+        }
       },
+      countExpectTrash: {
+        expect_trash: 0,
+        cost_by: ""
+      }
     };
   },
   methods: {
+    getCustomerUnitFunc(costBy) {
+      return getCustomerUnit(costBy);
+    },
     backPrevios() {
       this.$router.go(-1);
     },
-    fetchData() {
+    fetchData(isCountTrash = false) {
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("route-plan/" + this.$route.params.id + "/route-plan-detail", {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
+            count_expect_trash: isCountTrash ? "1" : "0",
             // filter: this.search,
-            villages: this.selectedVillage,
-          },
+            villages: this.selectedVillage
+          }
         })
-        .then((res) => {
+        .then(res => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.$store.commit("Loading_State", false);
-              this.customers = res.data.data.data;
-              this.pagination = res.data.data.pagination;
-              this.getCenter();
+              if (isCountTrash) {
+                this.countExpectTrash = res.data.data[0];
+              } else {
+                this.$store.commit("Loading_State", false);
+                this.customers = res.data.data.data;
+                this.pagination = res.data.data.pagination;
+                this.getCenter();
+              }
             }, 100);
           }
         })
-        .catch((error) => {
+        .catch(error => {
           this.$store.commit("Loading_State", false);
           if (error.response && error.response.status == 422) {
             var obj = error.response.data.errors;
@@ -206,7 +272,7 @@ export default {
     fetchDetail() {
       this.$axios
         .get("route-plan/" + this.$route.params.id)
-        .then((res) => {
+        .then(res => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.plan = res.data.data;
@@ -220,11 +286,11 @@ export default {
     fetchAddress() {
       this.$axios
         .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
-        .then((res) => {
+        .then(res => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.address = res.data.data;
-              this.address.map((item) => {
+              this.address.map(item => {
                 this.districts = item.districts;
               });
             }, 100);
@@ -236,7 +302,7 @@ export default {
     fetchVillage() {
       this.$axios
         .get("info/district/" + this.selectedDistrict + "/village")
-        .then((res) => {
+        .then(res => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.villages = res.data.data;
@@ -252,8 +318,8 @@ export default {
         name: "CreateExportPlan",
         params: {
           items: this.customers,
-          villages: this.selectedVillage,
-        },
+          villages: this.selectedVillage
+        }
       });
       this.$emit("create-plan", this.customers, this.selectedVillage);
     },
@@ -261,7 +327,7 @@ export default {
       console.log(id);
       this.$router.push({
         name: "EditHomeRoutePlanNoMap",
-        params: { id },
+        params: { id }
       });
     },
 
@@ -269,12 +335,12 @@ export default {
       if (data.customer.customer_type == "company") {
         this.$router.push({
           name: "ViewCompany",
-          params: { id: data.customer_id },
+          params: { id: data.customer_id }
         });
       } else if (data.customer.customer_type == "home") {
         this.$router.push({
           name: "ViewCustomer",
-          params: { id: data.customer_id },
+          params: { id: data.customer_id }
         });
       }
     },
@@ -290,7 +356,7 @@ export default {
       if (this.customers.length) {
         const latlng = {
           lat: parseFloat(this.customers[0].customer.lat),
-          lng: parseFloat(this.customers[0].customer.lng),
+          lng: parseFloat(this.customers[0].customer.lng)
         };
         return latlng;
       }
@@ -300,7 +366,7 @@ export default {
       if (m.customer !== null) {
         return {
           lat: parseFloat(m.customer.lat),
-          lng: parseFloat(m.customer.lng),
+          lng: parseFloat(m.customer.lng)
         };
       }
     },
@@ -325,28 +391,31 @@ export default {
       if (value == "active") return "success";
       else if (value == "inactive") return "error";
       else return "info";
-    },
+    }
   },
 
   watch: {
-    search: function (value) {
+    search: function(value) {
       if (value == "") {
         this.fetchData();
+        this.fetchData(true);
       }
     },
-    selectedVillage: function () {
+    selectedVillage: function() {
       this.fetchData();
+      this.fetchData(true);
     },
-    selectedDistrict: function () {
+    selectedDistrict: function() {
       this.fetchVillage();
-    },
+    }
   },
   created() {
     this.fetchData();
+    this.fetchData(true);
     this.fetchDetail();
     // this.fetchAddress();
     console.log(this.plan);
-  },
+  }
 };
 </script>
 
