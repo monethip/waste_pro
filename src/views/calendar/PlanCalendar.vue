@@ -87,6 +87,19 @@
 
       <v-col>
         <v-autocomplete
+          v-model="selectedVehicleType"
+          :items="vehicleType"
+          item-text="name"
+          item-value="id"
+          label="ປະເພດລົດ"
+          outlined
+          clearable
+          dense
+        ></v-autocomplete>
+      </v-col>
+
+      <v-col>
+        <v-autocomplete
           v-model="selectedDriverId"
           :items="drivers"
           :item-text="getDriver"
@@ -568,7 +581,9 @@ export default {
         v => !!v || "Name is required",
         v => (v && v.length >= 2) || "Name must be less than 2 characters"
       ],
-      monthRules: [v => !!v || "Date is required"]
+      monthRules: [v => !!v || "Date is required"],
+      vehicleType: [],
+      selectedVehicleType: ""
     };
   },
   computed: {
@@ -594,6 +609,7 @@ export default {
             { per_page: this.per_page },
             { date: this.date },
             { route_plan_type: this.selectedCustomerType },
+            { vehicle_type_id: this.selectedVehicleType },
             { driver_id: this.selectedDriverId },
             { cost_by: this.selectedCostBy }
           ])
@@ -640,9 +656,27 @@ export default {
         })
         .catch(() => {});
     },
+    fetchVehicleType() {
+      this.$axios
+        .get("vehicle_type")
+        .then(res => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.vehicleType = res.data.data;
+            }, 100);
+          }
+        })
+        .catch(() => {});
+    },
     fetchDriver() {
       this.$axios
-        .get("driver")
+        .get("driver", {
+          params: queryOption([
+            {
+              vehicle_type: this.selectedVehicleType
+            }
+          ])
+        })
         .then(res => {
           if (res.data.code == 200) {
             setTimeout(() => {
@@ -871,6 +905,7 @@ export default {
       this.$refs.form.reset();
     },
     getDriver(value) {
+      if (!value) return null;
       if (value.vehicle !== null) {
         return value.name + " " + value.vehicle.car_id;
       } else {
@@ -892,6 +927,11 @@ export default {
       if (value == "") {
         this.fetchData();
       }
+    },
+    selectedVehicleType() {
+      this.selectedDriver = "";
+      this.fetchDriver();
+      this.fetchData();
     },
     selectedDriver: function() {
       this.server_errors.driver_id = "";
@@ -932,6 +972,7 @@ export default {
   created() {
     this.fetchData();
     this.fetchPlanMonthDetail();
+    this.fetchVehicleType();
     this.fetchDriver();
   }
 };
