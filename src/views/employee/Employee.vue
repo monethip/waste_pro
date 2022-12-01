@@ -2,8 +2,8 @@
   <v-container>
     <v-row class="mb-n6">
       <v-col>
-        <v-btn @click="openAddModal()" class="btn-primary"
-          ><v-icon>mdi-plus</v-icon>
+        <v-btn @click="openAddModal()" class="btn-primary">
+          <v-icon>mdi-plus</v-icon>
         </v-btn>
       </v-col>
     </v-row>
@@ -11,20 +11,20 @@
       <v-col>
         <v-card class="pa-2">
           <v-card-title>
-            ຂໍ້ມູນພະນັກງານ ({{ pagination.total }})
+            ຂໍ້ມູນແອກລົດ ({{ pagination.total }})
             <v-divider class="mx-4" vertical></v-divider>
             <v-spacer></v-spacer>
 
-              <v-checkbox v-model="has_team_member" class="my-auto">
-                <template v-slot:label>
-                  <div>ມີທີມ</div>
-                </template>
-              </v-checkbox>
+            <v-checkbox v-model="has_team_member" class="my-auto">
+              <template v-slot:label>
+                <div>ມີທີມ</div>
+              </template>
+            </v-checkbox>
             <v-spacer></v-spacer>
 
             <v-text-field
-                outlined
-                dense
+              outlined
+              dense
               v-model="search"
               clearable
               prepend-inner-icon="mdi-magnify"
@@ -42,20 +42,14 @@
             hide-default-footer
           >
             <template v-slot:item.media="{ item }">
-              <v-avatar
-                size="36px"
-                v-for="(img, index) in item.media"
-                :key="index"
-              >
+              <v-avatar size="36px" v-for="(img, index) in item.media" :key="index">
                 <img v-if="img.url" :src="img.url" />
               </v-avatar>
             </template>
             <template v-slot:item.actions="{ item }">
               <!--  <v-icon small class="mr-2"> mdi-key </v-icon> -->
-              <v-icon small class="mr-2" @click="OpenModalEdit(item)">
-                mdi-pencil
-              </v-icon>
-              <v-icon small @click="deleteItem(item.id)"> mdi-delete </v-icon>
+              <v-icon small class="mr-2" @click="OpenModalEdit(item)">mdi-pencil</v-icon>
+              <v-icon small @click="deleteItem(item.id)">mdi-delete</v-icon>
             </template>
           </v-data-table>
           <br />
@@ -76,7 +70,7 @@
       <template @close="close">
         <v-card>
           <v-card-title>
-            <p>ເພີ່ມພະນັກງານ</p>
+            <p>ເພີ່ມແອກລົດ</p>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -103,8 +97,7 @@
                                   cursor: pointer;
                                 "
                                 class="fas fa-cloud-upload"
-                                >mdi-cloud-upload</v-icon
-                              >
+                              >mdi-cloud-upload</v-icon>
                             </span>
                             <span
                               class="file-label"
@@ -113,9 +106,7 @@
                                 text-transform: uppercase;
                                 padding-top: 20px;
                               "
-                            >
-                              Choose Profile
-                            </span>
+                            >Choose Profile</span>
                           </span>
                         </label>
                       </div>
@@ -125,31 +116,18 @@
                 <v-row>
                   <v-col align="center" class="mt-5" v-if="imageUrl">
                     <v-avatar class="avatar rounded" size="94px">
-                      <img :src="imageUrl" alt="" />
+                      <img :src="imageUrl" alt />
                     </v-avatar>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col cols="12">
-                    <v-text-field
-                      label="Card Id *"
-                      required
-                      v-model="user.card_id"
-                    ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.card_id }}
-                    </p>
+                    <v-text-field label="Card Id *" required v-model="user.card_id"></v-text-field>
+                    <p class="errors">{{ server_errors.card_id }}</p>
                   </v-col>
                   <v-col cols="12">
-                    <v-text-field
-                      label="Name *"
-                      required
-                      v-model="user.name"
-                      :rules="nameRules"
-                    ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.name }}
-                    </p>
+                    <v-text-field label="Name *" required v-model="user.name" :rules="nameRules"></v-text-field>
+                    <p class="errors">{{ server_errors.name }}</p>
                   </v-col>
                   <v-col cols="12">
                     <v-text-field
@@ -158,9 +136,7 @@
                       v-model="user.surname"
                       :rules="nameRules"
                     ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.surname }}
-                    </p>
+                    <p class="errors">{{ server_errors.surname }}</p>
                   </v-col>
                   <v-col cols="12">
                     <v-text-field
@@ -171,27 +147,21 @@
                       type="number"
                       class="input-number"
                     ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.phone }}
-                    </p>
+                    <p class="errors">{{ server_errors.phone }}</p>
                   </v-col>
                 </v-row>
               </v-form>
             </v-container>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeAddModal()">
-                ຍົກເລີກ
-              </v-btn>
+              <v-btn color="blue darken-1" text @click="closeAddModal()">ຍົກເລີກ</v-btn>
               <v-btn
                 color="blue darken-1"
                 text
                 :loading="loading"
                 :disabled="loading"
                 @click="AddItem()"
-              >
-                ບັນທຶກ
-              </v-btn>
+              >ບັນທຶກ</v-btn>
             </v-card-actions>
           </v-card-text>
         </v-card>
@@ -200,10 +170,10 @@
 
     <!--Edit Modal-->
     <ModalEdit>
-      <template @close="close" v-slot="">
+      <template @close="close" v-slot>
         <v-card>
           <v-card-title>
-            <p>ແກ້ໄຂພະນັກງານ</p>
+            <p>ແກ້ໄຂແອກລົດ</p>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -228,8 +198,7 @@
                                   cursor: pointer;
                                 "
                                 class="fas fa-cloud-upload"
-                                >mdi-cloud-upload</v-icon
-                              >
+                              >mdi-cloud-upload</v-icon>
                             </span>
                             <span
                               class="file-label"
@@ -238,9 +207,7 @@
                                 text-transform: uppercase;
                                 padding-top: 20px;
                               "
-                            >
-                              Choose Profile
-                            </span>
+                            >Choose Profile</span>
                           </span>
                         </label>
                       </div>
@@ -250,7 +217,7 @@
                 <v-row>
                   <v-col align="center" class="mt-5" v-if="imageUrl">
                     <v-avatar class="avatar rounded" size="94px">
-                      <img :src="imageUrl" alt="" />
+                      <img :src="imageUrl" alt />
                     </v-avatar>
                   </v-col>
                   <v-col align="center" class="mt-5" v-else>
@@ -266,24 +233,17 @@
                 </v-row>
                 <v-row>
                   <v-col cols="12">
-                    <v-text-field
-                      label="Card Id *"
-                      required
-                      v-model="edit_user.card_id"
-                    ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.card_id }}
-                    </p>
-                  </v-col> <v-col cols="12">
+                    <v-text-field label="Card Id *" required v-model="edit_user.card_id"></v-text-field>
+                    <p class="errors">{{ server_errors.card_id }}</p>
+                  </v-col>
+                  <v-col cols="12">
                     <v-text-field
                       label="Name *"
                       required
                       v-model="edit_user.name"
                       :rules="nameRules"
                     ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.name }}
-                    </p>
+                    <p class="errors">{{ server_errors.name }}</p>
                   </v-col>
                   <v-col cols="12">
                     <v-text-field
@@ -292,9 +252,7 @@
                       v-model="edit_user.surname"
                       :rules="nameRules"
                     ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.surname }}
-                    </p>
+                    <p class="errors">{{ server_errors.surname }}</p>
                   </v-col>
                   <v-col cols="12">
                     <v-text-field
@@ -305,27 +263,21 @@
                       type="number"
                       class="input-number"
                     ></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.phone }}
-                    </p>
+                    <p class="errors">{{ server_errors.phone }}</p>
                   </v-col>
                 </v-row>
               </v-form>
             </v-container>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeUpdateModal()">
-                Close
-              </v-btn>
+              <v-btn color="blue darken-1" text @click="closeUpdateModal()">Close</v-btn>
               <v-btn
                 color="blue darken-1"
                 text
                 :loading="loading"
                 :disabled="loading"
                 @click="updateItem()"
-              >
-                Update
-              </v-btn>
+              >Update</v-btn>
             </v-card-actions>
           </v-card-text>
         </v-card>
@@ -344,8 +296,7 @@
             :loading="loading"
             :disabled="loading"
             @click="deleteItemConfirm"
-            >OK</v-btn
-          >
+          >OK</v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </template>
@@ -368,7 +319,7 @@ export default {
         { text: "ນາມສະກຸນ", value: "surname" },
         { text: "ເບີໂທ", value: "phone", sortable: false },
         { text: "Profile", value: "media", sortable: false },
-        { text: "", value: "actions", sortable: false },
+        { text: "", value: "actions", sortable: false }
       ],
       loading: false,
       status: false,
@@ -378,7 +329,7 @@ export default {
       userID: "",
       server_errors: {
         email: "",
-        roleId: "",
+        roleId: ""
       },
       errormsg: "",
       image: "",
@@ -396,28 +347,28 @@ export default {
       statuses: [
         {
           id: 1,
-          name: "active",
+          name: "active"
         },
         {
           id: 1,
-          name: "inactive",
-        },
+          name: "inactive"
+        }
       ],
       //Validation
       emailRules: [
-        (v) => !!v || "E-mail is required",
-        (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+        v => !!v || "E-mail is required",
+        v => /.+@.+\..+/.test(v) || "E-mail must be valid"
       ],
       nameRules: [
-        (v) => !!v || "Name is required",
-        (v) => (v && v.length >= 2) || "Name must be less than 2 characters",
+        v => !!v || "Name is required",
+        v => (v && v.length >= 2) || "Name must be less than 2 characters"
       ],
       phoneRules: [
-        (v) => !!v || "Phone is required",
-        (v) =>
+        v => !!v || "Phone is required",
+        v =>
           (v && v.length >= 6 && v.length <= 8) ||
-          "Phone number must be  6 - 8 numbers",
-      ],
+          "Phone number must be  6 - 8 numbers"
+      ]
     };
   },
   methods: {
@@ -441,9 +392,9 @@ export default {
         this.loading = true;
         this.$axios
           .post("employee", formData, {
-            headers: { "Content-Type": "multipart/form-data" },
+            headers: { "Content-Type": "multipart/form-data" }
           })
-          .then((res) => {
+          .then(res => {
             if (res.data.code == 200) {
               setTimeout(() => {
                 this.loading = false;
@@ -456,17 +407,19 @@ export default {
                 this.$store.commit("Toast_State", {
                   value: true,
                   color: "success",
-                  msg: res.data.message,
+                  msg: res.data.message
                 });
               }, 300);
             }
           })
-          .catch((error) => {
+          .catch(error => {
             this.loading = false;
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response ? error.response.data.message : 'Something went wrong',
+              msg: error.response
+                ? error.response.data.message
+                : "Something went wrong"
             });
             if (error.response && error.response.status == 422) {
               let obj = error.response.data.errors;
@@ -485,25 +438,25 @@ export default {
             page: this.pagination.current_page,
             per_page: this.per_page,
             filter: this.search,
-            has_team_member:this.has_team_member,
-          },
-        })
-        .then((res) => {
-          if (res.data.code == 200) {
-              this.loading = false;
-              this.$store.commit("Loading_State", false);
-              this.data = res.data.data.data;
-              this.pagination = res.data.data.pagination;
-              this.data.map((item) => {
-                if (item.status == "active") {
-                  this.status = true;
-                } else {
-                  this.status = false;
-                }
-              });
+            has_team_member: this.has_team_member
           }
         })
-        .catch((error) => {
+        .then(res => {
+          if (res.data.code == 200) {
+            this.loading = false;
+            this.$store.commit("Loading_State", false);
+            this.data = res.data.data.data;
+            this.pagination = res.data.data.pagination;
+            this.data.map(item => {
+              if (item.status == "active") {
+                this.status = true;
+              } else {
+                this.status = false;
+              }
+            });
+          }
+        })
+        .catch(error => {
           this.$store.commit("Loading_State", false);
           if (error.response && error.response.status == 422) {
             let obj = error.response.data.errors;
@@ -533,9 +486,9 @@ export default {
         this.loading = true;
         this.$axios
           .post("employee/" + this.edit_user.id, formData, {
-            headers: { "Content-Type": "multipart/form-data" },
+            headers: { "Content-Type": "multipart/form-data" }
           })
-          .then((res) => {
+          .then(res => {
             if (res.data.code == 200) {
               setTimeout(() => {
                 this.loading = false;
@@ -547,17 +500,19 @@ export default {
                 this.$store.commit("Toast_State", {
                   value: true,
                   color: "success",
-                  msg: res.data.message,
+                  msg: res.data.message
                 });
               }, 300);
             }
           })
-          .catch((error) => {
+          .catch(error => {
             this.loading = false;
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response ? error.response.data.message : 'Something went wrong',
+              msg: error.response
+                ? error.response.data.message
+                : "Something went wrong"
             });
             if (error.response && error.response.status == 422) {
               let obj = error.response.data.errors;
@@ -585,7 +540,7 @@ export default {
       this.loading = true;
       this.$axios
         .delete("employee/" + this.userID)
-        .then((res) => {
+        .then(res => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.loading = false;
@@ -594,17 +549,19 @@ export default {
               this.$store.commit("Toast_State", {
                 value: true,
                 color: "success",
-                msg: res.data.message,
+                msg: res.data.message
               });
             }, 300);
           }
         })
-        .catch((error) => {
+        .catch(error => {
           this.fetchData();
           this.$store.commit("Toast_State", {
             value: true,
             color: "error",
-            msg: error.response ? error.response.data.message : 'Something went wrong',
+            msg: error.response
+              ? error.response.data.message
+              : "Something went wrong"
           });
           this.$store.commit("modalDelete_State", false);
           this.loading = false;
@@ -615,45 +572,45 @@ export default {
     },
     Search() {
       GetOldValueOnInput(this);
-    },
+    }
   },
   watch: {
-    selectedStatus: function () {
+    selectedStatus: function() {
       this.fetchData();
     },
-    "user.card_id": function () {
+    "user.card_id": function() {
       this.server_errors.card_id = "";
     },
-     "user.name": function () {
+    "user.name": function() {
       this.server_errors.name = "";
     },
-    "user.surname": function () {
+    "user.surname": function() {
       this.server_errors.surname = "";
     },
-    "user.phone": function () {
+    "user.phone": function() {
       this.server_errors.phone = "";
     },
-    "edit_user.name": function () {
+    "edit_user.name": function() {
       this.server_errors.name = "";
     },
-    "edit_user.surname": function () {
+    "edit_user.surname": function() {
       this.server_errors.surname = "";
     },
-    "edit_user.phone": function () {
+    "edit_user.phone": function() {
       this.server_errors.phone = "";
     },
-    "has_team_member":function (){
+    has_team_member: function() {
       this.fetchData();
     },
-    search: function (value) {
+    search: function(value) {
       if (value == "") {
         this.fetchData();
       }
-    },
+    }
   },
   created() {
     this.fetchData();
-  },
+  }
 };
 </script>
 

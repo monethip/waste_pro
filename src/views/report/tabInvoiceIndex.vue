@@ -4,21 +4,45 @@
     <v-col>
       <v-row>
         <v-col>
-          <v-menu :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y
-            min-width="auto">
+          <v-menu
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
             <template v-slot:activator="{ on, attrs }">
-              <v-text-field label="ເລີ່ມວັນທີ" readonly outlined v-bind="attrs" v-on="on" dense clearable>
-              </v-text-field>
+              <v-text-field
+                label="ເລີ່ມວັນທີ"
+                readonly
+                outlined
+                v-bind="attrs"
+                v-on="on"
+                dense
+                clearable
+              ></v-text-field>
             </template>
             <v-date-picker v-model="start_date"></v-date-picker>
           </v-menu>
         </v-col>
         <v-col>
-          <v-menu :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y
-            min-width="auto">
+          <v-menu
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
             <template v-slot:activator="{ on, attrs }">
-              <v-text-field label="ຫາວັນທີ" readonly outlined v-bind="attrs" v-on="on" dense clearable>
-              </v-text-field>
+              <v-text-field
+                label="ຫາວັນທີ"
+                readonly
+                outlined
+                v-bind="attrs"
+                v-on="on"
+                dense
+                clearable
+              ></v-text-field>
             </template>
             <v-date-picker v-model="start_date"></v-date-picker>
           </v-menu>
@@ -41,6 +65,7 @@
                 <td>ຊື່</td>
                 <td>ບ້ານ</td>
                 <td>ສັນຍາ</td>
+                <td>ລູກຄ້າ</td>
                 <td>ເງິນສົດ</td>
                 <td>ເງິນໂອນ</td>
                 <td>bcel bill payment</td>
@@ -54,19 +79,31 @@
                 <td :rowspan="sale.villages.length">{{ index + 1 }}</td>
                 <td :rowspan="sale.villages.length">{{ sale.name }}</td>
                 <td>{{ sale.villages[0].name }}</td>
-                <td>{{ sale.villages[0].count }}</td>
-                <td v-for="(detail, index) in sale.villages[0].details" :key="index">{{ detail.total }}</td>
-                <td>{{ sale.villages[0].total }}</td>
-                <td :rowspan="sale.villages.length">{{ sale.total }}</td>
+                <td>{{ Intl.NumberFormat().format(sale.villages[0].count) }}</td>
+                <td>{{ Intl.NumberFormat().format(sale.villages[0].count_customer) }}</td>
+                <td
+                  v-for="(detail, index) in sale.villages[0].details"
+                  :key="index"
+                >{{ Intl.NumberFormat().format(detail.total) }}</td>
+                <td>
+                  {{
+                  Intl.NumberFormat().format(sale.villages[0].total) }}
+                </td>
+                <td :rowspan="sale.villages.length">{{ Intl.NumberFormat().format(sale.total) }}</td>
               </tr>
               <tr v-for="(otherVillage, otherIndex) in sale.villages.slice(1)" :key="otherIndex">
                 <td>{{ otherVillage.name }}</td>
-                <td>{{ otherVillage.count }}</td>
-                <td v-for="(otherVillageDetail, otherVillageIndex) in otherVillage.details" :key="otherVillageIndex">{{
-                    otherVillageDetail.total
-                }}</td>
-                <td>{{ otherVillage.total }}</td>
-
+                <td>{{ Intl.NumberFormat().format(otherVillage.count) }}</td>
+                <td>{{ Intl.NumberFormat().format(otherVillage.count_customer) }}</td>
+                <td
+                  v-for="(otherVillageDetail, otherVillageIndex) in otherVillage.details"
+                  :key="otherVillageIndex"
+                >
+                  {{
+                  Intl.NumberFormat().format(otherVillageDetail.total)
+                  }}
+                </td>
+                <td>{{ Intl.NumberFormat().format(otherVillage.total) }}</td>
               </tr>
             </tbody>
           </v-simple-table>
@@ -85,215 +122,225 @@ export default {
     return {
       sales: [
         {
-          name: 'Jonh Doe',
+          name: "Jonh Doe",
           total: 100000000,
           villages: [
             {
-              name: 'ດອນແດງ',
+              name: "ດອນແດງ",
               count: 43,
+              count_customer: 9,
               total: 10000000,
               details: [
                 {
-                  type: 'ເງິນສົດ',
+                  type: "ເງິນສົດ",
                   total: 20000000
                 },
                 {
-                  type: 'ເງິນໂອນ',
+                  type: "ເງິນໂອນ",
                   total: 50000000
                 },
                 {
-                  type: 'bill payment',
+                  type: "bill payment",
                   total: 30000000
-                },
+                }
               ]
             },
             {
-              name: 'ດອນກອຍ',
+              name: "ດອນກອຍ",
               count: 43,
+              count_customer: 9,
               total: 10000000,
               details: [
                 {
-                  type: 'ເງິນສົດ',
+                  type: "ເງິນສົດ",
                   total: 20000000
                 },
                 {
-                  type: 'ເງິນໂອນ',
+                  type: "ເງິນໂອນ",
                   total: 50000000
                 },
                 {
-                  type: 'bill payment',
+                  type: "bill payment",
                   total: 30000000
-                },
+                }
               ]
             }
           ]
         },
         {
-          name: 'Jame',
+          name: "Jame",
           total: 100000000,
           villages: [
             {
-              name: 'ດອນແດງ',
+              name: "ດອນແດງ",
               count: 43,
+              count_customer: 9,
               total: 10000000,
               details: [
                 {
-                  type: 'ເງິນສົດ',
+                  type: "ເງິນສົດ",
                   total: 20000000
                 },
                 {
-                  type: 'ເງິນໂອນ',
+                  type: "ເງິນໂອນ",
                   total: 50000000
                 },
                 {
-                  type: 'bill payment',
+                  type: "bill payment",
                   total: 30000000
-                },
+                }
               ]
             },
             {
-              name: 'ດອນກອຍ',
+              name: "ດອນກອຍ",
               count: 43,
+              count_customer: 9,
               total: 10000000,
               details: [
                 {
-                  type: 'ເງິນສົດ',
+                  type: "ເງິນສົດ",
                   total: 20000000
                 },
                 {
-                  type: 'ເງິນໂອນ',
+                  type: "ເງິນໂອນ",
                   total: 50000000
                 },
                 {
-                  type: 'bill payment',
+                  type: "bill payment",
                   total: 30000000
-                },
+                }
               ]
             },
             {
-              name: 'ດົງໂດກ',
+              name: "ດົງໂດກ",
               count: 43,
+              count_customer: 9,
               total: 10000000,
               details: [
                 {
-                  type: 'ເງິນສົດ',
+                  type: "ເງິນສົດ",
                   total: 20000000
                 },
                 {
-                  type: 'ເງິນໂອນ',
+                  type: "ເງິນໂອນ",
                   total: 50000000
                 },
                 {
-                  type: 'bill payment',
+                  type: "bill payment",
                   total: 30000000
-                },
+                }
               ]
             }
           ]
         },
         {
-          name: 'Jonh Doe',
+          name: "Jonh Doe",
           total: 100000000,
           villages: [
             {
-              name: 'ດອນແດງ',
+              name: "ດອນແດງ",
               count: 43,
+              count_customer: 9,
               total: 10000000,
               details: [
                 {
-                  type: 'ເງິນສົດ',
+                  type: "ເງິນສົດ",
                   total: 20000000
                 },
                 {
-                  type: 'ເງິນໂອນ',
+                  type: "ເງິນໂອນ",
                   total: 50000000
                 },
                 {
-                  type: 'bill payment',
+                  type: "bill payment",
                   total: 30000000
-                },
+                }
               ]
             },
             {
-              name: 'ດອນກອຍ',
+              name: "ດອນກອຍ",
               count: 43,
+              count_customer: 9,
               total: 10000000,
               details: [
                 {
-                  type: 'ເງິນສົດ',
+                  type: "ເງິນສົດ",
                   total: 20000000
                 },
                 {
-                  type: 'ເງິນໂອນ',
+                  type: "ເງິນໂອນ",
                   total: 50000000
                 },
                 {
-                  type: 'bill payment',
+                  type: "bill payment",
                   total: 30000000
-                },
+                }
               ]
             }
           ]
         },
         {
-          name: 'Jame',
+          name: "Jame",
           total: 100000000,
           villages: [
             {
-              name: 'ດອນແດງ',
+              name: "ດອນແດງ",
               count: 43,
+              count_customer: 9,
               total: 10000000,
               details: [
                 {
-                  type: 'ເງິນສົດ',
+                  type: "ເງິນສົດ",
                   total: 20000000
                 },
                 {
-                  type: 'ເງິນໂອນ',
+                  type: "ເງິນໂອນ",
                   total: 50000000
                 },
                 {
-                  type: 'bill payment',
+                  type: "bill payment",
                   total: 30000000
-                },
+                }
               ]
             },
             {
-              name: 'ດອນກອຍ',
+              name: "ດອນກອຍ",
               count: 43,
+              count_customer: 9,
               total: 10000000,
               details: [
                 {
-                  type: 'ເງິນສົດ',
+                  type: "ເງິນສົດ",
                   total: 20000000
                 },
                 {
-                  type: 'ເງິນໂອນ',
+                  type: "ເງິນໂອນ",
                   total: 50000000
                 },
                 {
-                  type: 'bill payment',
+                  type: "bill payment",
                   total: 30000000
-                },
+                }
               ]
             },
             {
-              name: 'ດົງໂດກ',
+              name: "ດົງໂດກ",
               count: 43,
+              count_customer: 9,
               total: 10000000,
               details: [
                 {
-                  type: 'ເງິນສົດ',
+                  type: "ເງິນສົດ",
                   total: 20000000
                 },
                 {
-                  type: 'ເງິນໂອນ',
+                  type: "ເງິນໂອນ",
                   total: 50000000
                 },
                 {
-                  type: 'bill payment',
+                  type: "bill payment",
                   total: 30000000
-                },
+                }
               ]
             }
           ]
@@ -312,7 +359,7 @@ export default {
       //   name: "PlanCalendar",
       //   params: { id: this.data.plan_month_id },
       // });
-    },
+    }
     // fetchDataPlanMonth() {
     //   this.$axios
     //     .get(
@@ -357,7 +404,7 @@ export default {
     //       .catch(() => {});
     //   }
     // },
-  },
+  }
 };
 </script>
 

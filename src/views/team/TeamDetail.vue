@@ -1,12 +1,12 @@
 <template>
   <v-container>
     <v-btn text class="text-primary mb-4" @click="backPrevios()">
-      <v-icon>mdi-chevron-left</v-icon> Back</v-btn
-    >
+      <v-icon>mdi-chevron-left</v-icon>Back
+    </v-btn>
     <v-row class="mb-n6">
       <v-col>
-        <v-btn @click="openAddModal()" class="btn-primary"
-          ><v-icon>mdi-plus</v-icon>
+        <v-btn @click="openAddModal()" class="btn-primary">
+          <v-icon>mdi-plus</v-icon>
         </v-btn>
       </v-col>
       <v-col>
@@ -18,10 +18,11 @@
         <v-card class="pa-2">
           <v-card-title>
             ສະມາຊິກໃນທີມ ({{ data.length }})
-            <v-divider class="mx-4" vertical></v-divider>
-            ຜູ້ຂັບລົດ <span class="primary-color" v-if="team.driver"
-              > {{ team.driver.name }} ({{ team.driver.vehicle.car_number }})</span
-            >
+            <v-divider class="mx-4" vertical></v-divider>ຜູ້ຂັບລົດ
+            <span
+              class="primary-color"
+              v-if="team.driver"
+            >{{ team.driver.name }} ({{ team.driver.vehicle.car_number }})</span>
             <v-spacer></v-spacer>
             <v-text-field
               v-model="search"
@@ -45,7 +46,7 @@
             </template>
             <template v-slot:item.actions="{ item }">
               <!--  <v-icon small class="mr-2"> mdi-key </v-icon> -->
-              <v-icon small @click="deleteItem(item.id)"> mdi-delete </v-icon>
+              <v-icon small @click="deleteItem(item.id)">mdi-delete</v-icon>
             </template>
           </v-data-table>
           <br />
@@ -66,7 +67,7 @@
       <template @close="close">
         <v-card>
           <v-card-title>
-            <p>ເພີ່ມພະນັກງານເຂົ້າທີມ</p>
+            <p>ເພີ່ມແອກລົດເຂົ້າທີມ</p>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -78,32 +79,26 @@
                       :items="member"
                       item-text="name"
                       item-value="id"
-                      label="ພະນັກງານ"
+                      label="ແອກລົດ"
                       dense
                       :rules="driverRules"
                       multiple
                     ></v-autocomplete>
-                    <p class="errors">
-                      {{ server_errors.employees }}
-                    </p>
+                    <p class="errors">{{ server_errors.employees }}</p>
                   </v-col>
                 </v-row>
               </v-form>
             </v-container>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeAddModal()">
-                ຍົກເລີກ
-              </v-btn>
+              <v-btn color="blue darken-1" text @click="closeAddModal()">ຍົກເລີກ</v-btn>
               <v-btn
                 color="blue darken-1"
                 text
                 :loading="loading"
                 :disabled="loading"
                 @click="AddItem()"
-              >
-                ບັນທຶກ
-              </v-btn>
+              >ບັນທຶກ</v-btn>
             </v-card-actions>
           </v-card-text>
         </v-card>
@@ -122,8 +117,7 @@
             :loading="loading"
             :disabled="loading"
             @click="deleteItemConfirm"
-            >OK</v-btn
-          >
+          >OK</v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </template>
@@ -142,7 +136,7 @@ export default {
         { text: "Surname", value: "employee.surname" },
         { text: "Phone", value: "employee.phone" },
         { text: "Created", value: "created_at", sortable: false },
-        { text: "", value: "actions", sortable: false },
+        { text: "", value: "actions", sortable: false }
       ],
       loading: false,
       status: false,
@@ -162,8 +156,8 @@ export default {
       search: "",
       oldVal: "",
       //Validation
-      teamRules: [(v) => !!v || "Team name is required"],
-      driverRules: [(v) => !!v || "Driver is required"],
+      teamRules: [v => !!v || "Team name is required"],
+      driverRules: [v => !!v || "Driver is required"]
     };
   },
   methods: {
@@ -173,9 +167,9 @@ export default {
     fetchMember() {
       this.$axios
         .get("employee")
-        .then((res) => {
+        .then(res => {
           if (res.data.code == 200) {
-              this.member = res.data.data;
+            this.member = res.data.data;
           }
         })
         .catch({});
@@ -183,9 +177,9 @@ export default {
     fetchTeam() {
       this.$axios
         .get("team/" + this.$route.params.id)
-        .then((res) => {
+        .then(res => {
           if (res.data.code == 200) {
-              this.team = res.data.data;
+            this.team = res.data.data;
           }
         })
         .catch({});
@@ -203,15 +197,15 @@ export default {
           //   },
           // }
         )
-        .then((res) => {
+        .then(res => {
           if (res.data.code == 200) {
-              this.loading = false;
-              this.$store.commit("Loading_State", false);
-              this.data = res.data.data.members;
-              // this.pagination = res.data.data.pagination;
+            this.loading = false;
+            this.$store.commit("Loading_State", false);
+            this.data = res.data.data.members;
+            // this.pagination = res.data.data.pagination;
           }
         })
-        .catch((error) => {
+        .catch(error => {
           this.$store.commit("Loading_State", false);
           if (error.response && error.response.status == 422) {
             let obj = error.response.data.errors;
@@ -230,9 +224,9 @@ export default {
         this.loading = true;
         this.$axios
           .post("team/" + this.$route.params.id + "/team_member", {
-            employees: this.selectedMember,
+            employees: this.selectedMember
           })
-          .then((res) => {
+          .then(res => {
             if (res.data.code == 200) {
               setTimeout(() => {
                 this.loading = false;
@@ -243,17 +237,19 @@ export default {
                 this.$store.commit("Toast_State", {
                   value: true,
                   color: "success",
-                  msg: res.data.message,
+                  msg: res.data.message
                 });
               }, 300);
             }
           })
-          .catch((error) => {
+          .catch(error => {
             this.loading = false;
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response ? error.response.data.message : 'Something went wrong',
+              msg: error.response
+                ? error.response.data.message
+                : "Something went wrong"
             });
             this.fetchData();
             if (error.response && error.response.status == 422) {
@@ -281,7 +277,7 @@ export default {
       this.loading = true;
       this.$axios
         .delete("team/" + this.$route.params.id + "/team_member/" + this.userID)
-        .then((res) => {
+        .then(res => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.loading = false;
@@ -290,17 +286,19 @@ export default {
               this.$store.commit("Toast_State", {
                 value: true,
                 color: "success",
-                msg: res.data.message,
+                msg: res.data.message
               });
             }, 300);
           }
         })
-        .catch((error) => {
+        .catch(error => {
           this.fetchData();
           this.$store.commit("Toast_State", {
             value: true,
             color: "error",
-            msg: error.response ? error.response.data.message : 'Something went wrong',
+            msg: error.response
+              ? error.response.data.message
+              : "Something went wrong"
           });
           this.$store.commit("modalDelete_State", false);
           this.loading = false;
@@ -311,35 +309,35 @@ export default {
     },
     Search() {
       GetOldValueOnInput(this);
-    },
+    }
   },
   watch: {
-    selectedStatus: function () {
+    selectedStatus: function() {
       this.fetchData();
     },
-    teamName: function () {
+    teamName: function() {
       this.server_errors.name = "";
     },
-    selectedDriver: function () {
+    selectedDriver: function() {
       this.server_errors.driver_id = "";
     },
-    "edit_user.name": function () {
+    "edit_user.name": function() {
       this.server_errors.name = "";
     },
-    "edit_user.driver.id": function () {
+    "edit_user.driver.id": function() {
       this.server_errors.driver_id = "";
     },
-    search: function (value) {
+    search: function(value) {
       if (value == "") {
         this.fetchData();
       }
-    },
+    }
   },
   created() {
     this.fetchMember();
     this.fetchData();
     this.fetchTeam();
-  },
+  }
 };
 </script>
 
