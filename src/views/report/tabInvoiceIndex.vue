@@ -20,9 +20,9 @@
                 v-on="on"
                 dense
                 clearable
-              ></v-text-field>
+              >{{date_from}}</v-text-field>
             </template>
-            <v-date-picker v-model="start_date"></v-date-picker>
+            <v-date-picker v-model="date_from"></v-date-picker>
           </v-menu>
         </v-col>
         <v-col>
@@ -44,11 +44,19 @@
                 clearable
               ></v-text-field>
             </template>
-            <v-date-picker v-model="start_date"></v-date-picker>
+            <v-date-picker v-model="date_to"></v-date-picker>
           </v-menu>
         </v-col>
         <v-col>
-          <v-autocomplete outlined dense label="ເລືອກເຊວທີ່ກ່ຽວຂ້ອງ" multiple></v-autocomplete>
+          <v-autocomplete
+            v-model="selectedSale"
+            :items="employees"
+            item-text="name"
+            item-value="id"
+            label="ເລືອກເຊວທີ່ກ່ຽວຂ້ອງ"
+            outlined
+            dense
+          ></v-autocomplete>
         </v-col>
 
         <v-col>
@@ -60,7 +68,7 @@
         <v-col>
           <v-simple-table>
             <thead>
-              <tr>
+              <tr style="background-color:blue; color:white">
                 <td>ລ/ດ</td>
                 <td>ຊື່</td>
                 <td>ບ້ານ</td>
@@ -74,35 +82,31 @@
               </tr>
             </thead>
 
-            <tbody v-for="(sale, index) in sales" :key="index">
+            <tbody :style="getBodyColor(index)" v-for="(sale,index) in summary" :key="sale.id">
               <tr>
-                <td :rowspan="sale.villages.length">{{ index + 1 }}</td>
-                <td :rowspan="sale.villages.length">{{ sale.name }}</td>
-                <td>{{ sale.villages[0].name }}</td>
-                <td>{{ Intl.NumberFormat().format(sale.villages[0].count) }}</td>
-                <td>{{ Intl.NumberFormat().format(sale.villages[0].count_customer) }}</td>
+                <td :rowspan="sale.summary.length">{{ index + 1 }}</td>
                 <td
-                  v-for="(detail, index) in sale.villages[0].details"
-                  :key="index"
-                >{{ Intl.NumberFormat().format(detail.total) }}</td>
+                  :rowspan="sale.summary.length"
+                >{{ sale.emp_name ? sale.emp_name + ' ' + sale.emp_surname : sale.name}}</td>
+                <td>{{ sale.summary[0].village_name}}</td>
+                <td>{{ Intl.NumberFormat().format(sale.summary[0].count_bill) }}</td>
+                <td>{{ Intl.NumberFormat().format(sale.summary[0].count_customer) }}</td>
+                <td>{{ totalFromMethod(sale.summary[0].payment_methods,'cash') }}</td>
+                <td>{{ totalFromMethod(sale.summary[0].payment_methods,'bcel') }}</td>
+                <td>{{ totalFromMethod(sale.summary[0].payment_methods,'bcel_online') }}</td>
                 <td>
                   {{
-                  Intl.NumberFormat().format(sale.villages[0].total) }}
+                  Intl.NumberFormat().format(sale.summary[0].total) }}
                 </td>
-                <td :rowspan="sale.villages.length">{{ Intl.NumberFormat().format(sale.total) }}</td>
+                <td :rowspan="sale.summary.length">{{ Intl.NumberFormat().format(sale.total) }}</td>
               </tr>
-              <tr v-for="(otherVillage, otherIndex) in sale.villages.slice(1)" :key="otherIndex">
-                <td>{{ otherVillage.name }}</td>
-                <td>{{ Intl.NumberFormat().format(otherVillage.count) }}</td>
+              <tr v-for="(otherVillage, otherIndex) in sale.summary.slice(1)" :key="otherIndex">
+                <td>{{ otherVillage.village_name }}</td>
+                <td>{{ Intl.NumberFormat().format(otherVillage.count_bill) }}</td>
                 <td>{{ Intl.NumberFormat().format(otherVillage.count_customer) }}</td>
-                <td
-                  v-for="(otherVillageDetail, otherVillageIndex) in otherVillage.details"
-                  :key="otherVillageIndex"
-                >
-                  {{
-                  Intl.NumberFormat().format(otherVillageDetail.total)
-                  }}
-                </td>
+                <td>{{ totalFromMethod(otherVillage.payment_methods,'cash') }}</td>
+                <td>{{ totalFromMethod(otherVillage.payment_methods,'bcel') }}</td>
+                <td>{{ totalFromMethod(otherVillage.payment_methods,'bcel_online') }}</td>
                 <td>{{ Intl.NumberFormat().format(otherVillage.total) }}</td>
               </tr>
             </tbody>
@@ -114,241 +118,98 @@
 </template>
 
 <script>
+import queryOptions from "../../Helpers/queryOption";
+
 export default {
   title() {
     return `Vientiane Waste Co-Dev|Calendar`;
   },
   data() {
     return {
-      sales: [
-        {
-          name: "Jonh Doe",
-          total: 100000000,
-          villages: [
-            {
-              name: "ດອນແດງ",
-              count: 43,
-              count_customer: 9,
-              total: 10000000,
-              details: [
-                {
-                  type: "ເງິນສົດ",
-                  total: 20000000
-                },
-                {
-                  type: "ເງິນໂອນ",
-                  total: 50000000
-                },
-                {
-                  type: "bill payment",
-                  total: 30000000
-                }
-              ]
-            },
-            {
-              name: "ດອນກອຍ",
-              count: 43,
-              count_customer: 9,
-              total: 10000000,
-              details: [
-                {
-                  type: "ເງິນສົດ",
-                  total: 20000000
-                },
-                {
-                  type: "ເງິນໂອນ",
-                  total: 50000000
-                },
-                {
-                  type: "bill payment",
-                  total: 30000000
-                }
-              ]
-            }
-          ]
-        },
-        {
-          name: "Jame",
-          total: 100000000,
-          villages: [
-            {
-              name: "ດອນແດງ",
-              count: 43,
-              count_customer: 9,
-              total: 10000000,
-              details: [
-                {
-                  type: "ເງິນສົດ",
-                  total: 20000000
-                },
-                {
-                  type: "ເງິນໂອນ",
-                  total: 50000000
-                },
-                {
-                  type: "bill payment",
-                  total: 30000000
-                }
-              ]
-            },
-            {
-              name: "ດອນກອຍ",
-              count: 43,
-              count_customer: 9,
-              total: 10000000,
-              details: [
-                {
-                  type: "ເງິນສົດ",
-                  total: 20000000
-                },
-                {
-                  type: "ເງິນໂອນ",
-                  total: 50000000
-                },
-                {
-                  type: "bill payment",
-                  total: 30000000
-                }
-              ]
-            },
-            {
-              name: "ດົງໂດກ",
-              count: 43,
-              count_customer: 9,
-              total: 10000000,
-              details: [
-                {
-                  type: "ເງິນສົດ",
-                  total: 20000000
-                },
-                {
-                  type: "ເງິນໂອນ",
-                  total: 50000000
-                },
-                {
-                  type: "bill payment",
-                  total: 30000000
-                }
-              ]
-            }
-          ]
-        },
-        {
-          name: "Jonh Doe",
-          total: 100000000,
-          villages: [
-            {
-              name: "ດອນແດງ",
-              count: 43,
-              count_customer: 9,
-              total: 10000000,
-              details: [
-                {
-                  type: "ເງິນສົດ",
-                  total: 20000000
-                },
-                {
-                  type: "ເງິນໂອນ",
-                  total: 50000000
-                },
-                {
-                  type: "bill payment",
-                  total: 30000000
-                }
-              ]
-            },
-            {
-              name: "ດອນກອຍ",
-              count: 43,
-              count_customer: 9,
-              total: 10000000,
-              details: [
-                {
-                  type: "ເງິນສົດ",
-                  total: 20000000
-                },
-                {
-                  type: "ເງິນໂອນ",
-                  total: 50000000
-                },
-                {
-                  type: "bill payment",
-                  total: 30000000
-                }
-              ]
-            }
-          ]
-        },
-        {
-          name: "Jame",
-          total: 100000000,
-          villages: [
-            {
-              name: "ດອນແດງ",
-              count: 43,
-              count_customer: 9,
-              total: 10000000,
-              details: [
-                {
-                  type: "ເງິນສົດ",
-                  total: 20000000
-                },
-                {
-                  type: "ເງິນໂອນ",
-                  total: 50000000
-                },
-                {
-                  type: "bill payment",
-                  total: 30000000
-                }
-              ]
-            },
-            {
-              name: "ດອນກອຍ",
-              count: 43,
-              count_customer: 9,
-              total: 10000000,
-              details: [
-                {
-                  type: "ເງິນສົດ",
-                  total: 20000000
-                },
-                {
-                  type: "ເງິນໂອນ",
-                  total: 50000000
-                },
-                {
-                  type: "bill payment",
-                  total: 30000000
-                }
-              ]
-            },
-            {
-              name: "ດົງໂດກ",
-              count: 43,
-              count_customer: 9,
-              total: 10000000,
-              details: [
-                {
-                  type: "ເງິນສົດ",
-                  total: 20000000
-                },
-                {
-                  type: "ເງິນໂອນ",
-                  total: 50000000
-                },
-                {
-                  type: "bill payment",
-                  total: 30000000
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      summary: [],
+      pagination: {},
+      start_date: null,
+      salesData: [],
+      selectedSale: "",
+      search: "",
+      date_from: "",
+      date_to: ""
     };
   },
   methods: {
+    fetchSale() {
+      this.$store.commit("Loading_State", true);
+      this.$axios
+        .get("user-setting/user", {
+          params: queryOptions([
+            { roles: ["sale", "sale_admin"] },
+            { order_by: "newest" }
+          ])
+        })
+        .then(res => {
+          if (res.data.code === 200) {
+            this.loading = false;
+            this.$store.commit("Loading_State", false);
+            this.salesData = res.data.data;
+          }
+        })
+        .catch(error => {
+          this.$store.commit("Loading_State", false);
+          if (error.response.status === 422) {
+            let obj = error.response.data.errors;
+            for (let [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
+            }
+          }
+        });
+    },
+    getBodyColor(index) {
+      return index % 2 == 0 ? "background-color:#f0eae0" : "";
+    },
+    totalFromMethod(array, method) {
+      let total = 0;
+      for (const item of array) {
+        if (item.payment_method == method) total = item.total;
+      }
+      return Intl.NumberFormat().format(total);
+    },
+    fetchData() {
+      this.$store.commit("Loading_State", true);
+      this.$axios
+        .get("v2/report-billing-for-sale", {
+          params: queryOptions([
+            {
+              filter: this.search
+            },
+            {
+              id: this.selectedSale
+            },
+            {
+              created_date_from: this.date_from
+            },
+            {
+              created_date_to: this.date_to
+            }
+          ])
+        })
+        .then(res => {
+          if (res.data.code == 200) {
+            this.$store.commit("Loading_State", false);
+            this.summary = res.data.data;
+            console.log(this.summary);
+            // this.pagination = res.data.data.pagination;
+          }
+        })
+        .catch(error => {
+          this.$store.commit("Loading_State", false);
+          if (error.response && error.response.status == 422) {
+            let obj = error.response.data.errors;
+            for (let [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
+            }
+          }
+        });
+    },
     backPrevios() {
       this.$router.go(-1);
       // this.$router.push({
@@ -379,31 +240,38 @@ export default {
     //     .catch(() => {});
     // },
   },
-  // created() {
-  //   if (this.$route.query.tab == "home") {
-  //     this.tab = "tab-1";
-  //     this.fetchData();
-  //   } else if (this.$route.query.tab == "company") {
-  //     this.tab = "tab-2";
-  //     this.fetchData();
-  //   }
-  // },
+  created() {
+    this.fetchSale();
+    this.fetchData();
+  },
+  computed: {
+    employees() {
+      let data = [];
+      for (const item of this.salesData) {
+        let name = "";
+        if (item.name) name += item.name + " ";
+        if (item.phone) name += item.phone + " ";
+        if (item.emp_name) name += item.emp_name + " ";
+        if (item.emp_surname) name += item.emp_surname + " ";
+        if (item.emp_card_id) name += item.emp_card_id;
+        data.push({
+          name: name,
+          id: item.id
+        });
+      }
+      return data;
+    }
+  },
   watch: {
-    // tab: function (value) {
-    //   if (value == "tab-1") {
-    //     // this.fetchData();
-    //     this.$router
-    //       .push({ name: "Report-Invoice", query: { tab: "home" } })
-    //       .catch(() => {});
-    //   } else if (value == "tab-2") {
-    //     this.$router
-    //       .push({
-    //         name: "Report-Invoice",
-    //         query: { tab: "company" },
-    //       })
-    //       .catch(() => {});
-    //   }
-    // },
+    selectedSale() {
+      this.fetchData();
+    },
+    date_from() {
+      this.fetchData();
+    },
+    date_to() {
+      this.fetchData();
+    }
   }
 };
 </script>

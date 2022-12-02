@@ -490,7 +490,7 @@ export default {
             },
             {
               icon: "mdi-cash",
-              title: "ລາຍງານຂໍ້ມູນບັນຊີ",
+              title: "ລານງານບິນເຊວ",
               to: "/report/invoice",
               permissions: ["report"]
             },
