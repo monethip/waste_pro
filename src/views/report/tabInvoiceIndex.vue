@@ -5,6 +5,7 @@
       <v-row>
         <v-col>
           <v-menu
+            v-model="start_menu"
             :close-on-content-click="false"
             :nudge-right="40"
             transition="scale-transition"
@@ -13,20 +14,21 @@
           >
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
-                label="ເລີ່ມວັນທີ"
+                v-model="date_from"
+                label="ເລີ່ມວັນທີສ້າງບິນ"
                 readonly
                 outlined
                 v-bind="attrs"
                 v-on="on"
                 dense
-                clearable
-              >{{date_from}}</v-text-field>
+              ></v-text-field>
             </template>
             <v-date-picker v-model="date_from"></v-date-picker>
           </v-menu>
         </v-col>
         <v-col>
           <v-menu
+            v-model="end_menu"
             :close-on-content-click="false"
             :nudge-right="40"
             transition="scale-transition"
@@ -35,13 +37,13 @@
           >
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
-                label="ຫາວັນທີ"
+                v-model="date_to"
+                label="ຫາວັນທີສ້າງບິນ"
                 readonly
                 outlined
                 v-bind="attrs"
                 v-on="on"
                 dense
-                clearable
               ></v-text-field>
             </template>
             <v-date-picker v-model="date_to"></v-date-picker>
@@ -133,7 +135,9 @@ export default {
       selectedSale: "",
       search: "",
       date_from: "",
-      date_to: ""
+      date_to: "",
+      start_menu: false,
+      end_menu: false
     };
   },
   methods: {
@@ -174,6 +178,8 @@ export default {
       return Intl.NumberFormat().format(total);
     },
     fetchData() {
+      this.start_menu = false;
+      this.end_menu = false;
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("v2/report-billing-for-sale", {
