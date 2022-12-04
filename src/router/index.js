@@ -1513,7 +1513,7 @@ const routes = [
             middleware: [Middlewares.auth],
             breadcrumb: [
                 {
-                    text: 'ລານງານບິນຄ່າຂີ້ເຫຍື້ອທຸລະກິດ',
+                    text: 'ລາຍງານບິນຄ່າຂີ້ເຫຍື້ອທຸລະກິດ',
                     disabled: true,
                     href: '/report/address/collection'
                 },

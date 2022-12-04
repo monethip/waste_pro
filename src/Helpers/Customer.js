@@ -114,3 +114,23 @@ export const getEventStatus = [
         color: "#e74c3c"
     },
 ]
+
+export const billDateList = [
+    {
+        text: 'ວັນທີຈ່າຍບິນ',
+        value: 'paided_at'
+    },
+    {
+        text: 'ວັນທີສ້າງບິນ',
+        value: 'created_at'
+    },
+    {
+        text: 'ວັນທີອະນຸມັດບິນ',
+        value: 'approved_at'
+    },
+
+    {
+        text: 'ວັນທີກວດສອບບິນສຳເລັດ',
+        value: 'confirmed_payment_at'
+    },
+]

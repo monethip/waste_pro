@@ -4,6 +4,16 @@
     <v-col>
       <v-row>
         <v-col>
+          <v-autocomplete
+            :items="billDates"
+            item-text="text"
+            item-value="value"
+            v-model="selectedBillDate"
+            label="ເລືອກປະເພດວັນທີ"
+            outlined
+          ></v-autocomplete>
+        </v-col>
+        <v-col>
           <v-menu
             v-model="start_menu"
             :close-on-content-click="false"
@@ -15,7 +25,7 @@
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
                 v-model="date_from"
-                label="ເລີ່ມວັນທີສ້າງບິນ"
+                label="ເລີ່ມວັນທີ"
                 readonly
                 outlined
                 v-bind="attrs"
@@ -38,7 +48,7 @@
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
                 v-model="date_to"
-                label="ຫາວັນທີສ້າງບິນ"
+                label="ຫາວັນທີ"
                 readonly
                 outlined
                 v-bind="attrs"
@@ -49,6 +59,7 @@
             <v-date-picker v-model="date_to"></v-date-picker>
           </v-menu>
         </v-col>
+
         <v-col>
           <v-autocomplete
             v-model="selectedSale"
@@ -121,6 +132,7 @@
 
 <script>
 import queryOptions from "../../Helpers/queryOption";
+import { billDateList } from "../../Helpers/Customer";
 
 export default {
   title() {
@@ -137,7 +149,8 @@ export default {
       date_from: "",
       date_to: "",
       start_menu: false,
-      end_menu: false
+      end_menu: false,
+      selectedBillDate: billDateList[0].value
     };
   },
   methods: {
@@ -191,10 +204,13 @@ export default {
               id: this.selectedSale
             },
             {
-              created_date_from: this.date_from
+              date_from: this.date_from
             },
             {
-              created_date_to: this.date_to
+              date_to: this.date_to
+            },
+            {
+              date_method: this.selectedBillDate
             }
           ])
         })
@@ -251,6 +267,9 @@ export default {
     this.fetchData();
   },
   computed: {
+    billDates() {
+      return billDateList;
+    },
     employees() {
       let data = [];
       for (const item of this.salesData) {
@@ -277,6 +296,9 @@ export default {
     },
     date_to() {
       this.fetchData();
+    },
+    selectedBillDate() {
+      if (this.date_from || this.date_to) this.fetchData();
     }
   }
 };

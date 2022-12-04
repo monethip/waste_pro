@@ -484,13 +484,13 @@ export default {
             },
             {
               icon: "mdi-cash",
-              title: "ລານງານບິນ",
+              title: "ລາຍງານບິນ",
               to: "/report/billing/main",
               permissions: ["report"]
             },
             {
               icon: "mdi-cash",
-              title: "ລານງານບິນເຊວ",
+              title: "ລາຍງານບິນເຊວ",
               to: "/report/invoice",
               permissions: ["report"]
             },
