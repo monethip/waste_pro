@@ -73,7 +73,7 @@
         </v-col>
 
         <v-col>
-          <v-btn color="green" dark>Export</v-btn>
+          <v-btn color="green" dark @click="exportData">Export</v-btn>
         </v-col>
       </v-row>
 
@@ -150,10 +150,16 @@ export default {
       date_to: "",
       start_menu: false,
       end_menu: false,
-      selectedBillDate: billDateList[0].value
+      selectedBillDate: billDateList[0].value,
+      exportMode: ""
     };
   },
   methods: {
+    exportData() {
+      this.exportMode = "excel";
+      this.fetchData();
+      this.exportMode = "";
+    },
     fetchSale() {
       this.$store.commit("Loading_State", true);
       this.$axios
@@ -211,14 +217,18 @@ export default {
             },
             {
               date_method: this.selectedBillDate
-            }
+            },
+            { download: this.exportMode }
           ])
         })
         .then(res => {
           if (res.data.code == 200) {
             this.$store.commit("Loading_State", false);
-            this.summary = res.data.data;
-            console.log(this.summary);
+            if (res.data.data.download_link) {
+              window.open(res.data.data.download_link);
+            } else {
+              this.summary = res.data.data;
+            }
             // this.pagination = res.data.data.pagination;
           }
         })
