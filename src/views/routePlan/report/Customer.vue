@@ -2,13 +2,7 @@
   <v-container>
     <v-row class="mb-n6">
       <v-col>
-        <v-btn
-          class="btn-primary"
-          :loading="loading"
-          :disabled="loading"
-          @click="exportData"
-          >Export
-        </v-btn>
+        <v-btn class="btn-primary" :loading="loading" :disabled="loading" @click="exportData">Export</v-btn>
       </v-col>
       <v-col>
         <v-menu
@@ -30,10 +24,7 @@
               dense
             ></v-text-field>
           </template>
-          <v-date-picker
-            v-model="start_date"
-            @input="fetchData()"
-          ></v-date-picker>
+          <v-date-picker v-model="start_date" @input="fetchData()"></v-date-picker>
         </v-menu>
       </v-col>
       <v-col>
@@ -56,10 +47,7 @@
               dense
             ></v-text-field>
           </template>
-          <v-date-picker
-            v-model="end_date"
-            @input="fetchData()"
-          ></v-date-picker>
+          <v-date-picker v-model="end_date" @input="fetchData()"></v-date-picker>
         </v-menu>
       </v-col>
       <v-col>
@@ -107,8 +95,7 @@
           type="text"
           v-model="search"
           @keyup.enter="Search()"
-        >
-        </v-text-field>
+        ></v-text-field>
       </v-col>
     </v-row>
     <v-row class="my-n4">
@@ -128,43 +115,38 @@
               hide-default-footer
             >
               <template v-slot:item.media="{ item }">
-                <v-avatar
-                  size="36px"
-                  v-for="(img, index) in item.media"
-                  :key="index"
-                >
+                <v-avatar size="36px" v-for="(img, index) in item.media" :key="index">
                   <img v-if="img.thumb" :src="img.thumb" />
                 </v-avatar>
               </template>
 
               <template v-slot:item.status="{ item }">
-                <v-chip :color="statusColor(item.status)">{{
+                <v-chip :color="statusColor(item.status)">
+                  {{
                   item.status
-                }}</v-chip>
+                  }}
+                </v-chip>
               </template>
               <!--Role -->
               <template v-slot:item.roles="{ item }">
                 <div>
-                  <span v-for="(role, index) in item.roles" :key="index">
-                    {{ role.name }},
-                  </span>
+                  <span v-for="(role, index) in item.roles" :key="index">{{ role.name }},</span>
                 </div>
               </template>
               <!--Permission -->
               <template v-slot:item.permissions="{ item }">
                 <div>
                   <span v-for="(ps, index) in item.permissions" :key="index">
-                    <span>{{ ps.name }}, </span>
+                    <span>{{ ps.name }},</span>
                   </span>
                 </div>
               </template>
 
               <template v-slot:item.actions="{ item }">
-                <v-icon small class="mr-2" @click="viewPage(item.id)">
-                  mdi-eye
-                </v-icon>
-              </template> </v-data-table
-            ><br />
+                <v-icon small class="mr-2" @click="viewPage(item.id)">mdi-eye</v-icon>
+              </template>
+            </v-data-table>
+            <br />
             <template>
               <Pagination
                 v-if="pagination.total_pages > 1"
@@ -211,16 +193,16 @@ export default {
       status: [
         {
           id: 1,
-          name: "active",
+          name: "active"
         },
         {
           id: 2,
-          name: "inactive",
+          name: "inactive"
         },
         {
           id: 3,
-          name: "trial",
-        },
+          name: "trial"
+        }
       ],
 
       headers: [
@@ -231,18 +213,18 @@ export default {
         { text: "ແພັກເກດ", value: "package.name" },
         { text: "ວັນທີສະໝັກແພັກເກດ", value: "start_month", sortable: false },
         { text: "ສະຖານະ", value: "status", sortable: false },
-        { text: "", value: "actions", sortable: false },
+        { text: "", value: "actions", sortable: false }
       ],
       toast: {
         value: true,
         color: "success",
-        msg: "",
+        msg: ""
       },
       toast_error: {
         value: true,
         color: "error",
-        msg: "Something when wrong!",
-      },
+        msg: "Something when wrong!"
+      }
     };
   },
   methods: {
@@ -257,10 +239,10 @@ export default {
             date_from: this.start_date,
             date_end: this.end_date,
             statuses: this.selectedStatus,
-            villages: this.selectedVillage,
-          },
+            villages: this.selectedVillage
+          }
         })
-        .then((res) => {
+        .then(res => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
@@ -272,7 +254,7 @@ export default {
             this.fetchAddress();
           }
         })
-        .catch((error) => {
+        .catch(error => {
           this.$store.commit("Loading_State", false);
           this.start_menu = false;
           this.end_menu = false;
@@ -288,11 +270,11 @@ export default {
     fetchAddress() {
       this.$axios
         .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
-        .then((res) => {
+        .then(res => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.address = res.data.data;
-              this.address.map((item) => {
+              this.address.map(item => {
                 this.districts = item.districts;
               });
             }, 300);
@@ -304,7 +286,7 @@ export default {
     fetchVillage() {
       this.$axios
         .get("info/district/" + this.selectedDistrict + "/village")
-        .then((res) => {
+        .then(res => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.villages = res.data.data;
@@ -316,8 +298,8 @@ export default {
 
     viewPage(id) {
       this.$router.push({
-        name: "ViewCustomer",
-        params: { id },
+        name: "ViewClient",
+        params: { id }
       });
     },
     Search() {
@@ -343,7 +325,7 @@ export default {
           },
           { responseType: "blob" }
         )
-        .then((res) => {
+        .then(res => {
           if (res.status == 200) {
             setTimeout(() => {
               this.loading = false;
@@ -363,28 +345,28 @@ export default {
           this.$store.commit("modalDelete_State", false);
           this.loading = false;
         });
-    },
+    }
   },
   watch: {
-    search: function (value) {
+    search: function(value) {
       if (value == "") {
         this.fetchData();
       }
     },
 
-    selectedVillage: function () {
+    selectedVillage: function() {
       this.fetchData();
     },
-    selectedDistrict: function () {
+    selectedDistrict: function() {
       this.fetchVillage();
     },
-    selectedStatus: function () {
+    selectedStatus: function() {
       this.fetchData();
-    },
+    }
   },
   created() {
     this.fetchData();
-  },
+  }
 };
 </script>
 

@@ -334,12 +334,12 @@ export default {
     viewPage(data) {
       if (data.customer.customer_type == "company") {
         this.$router.push({
-          name: "ViewCompany",
+          name: "ViewCompanyDetail",
           params: { id: data.customer_id }
         });
       } else if (data.customer.customer_type == "home") {
         this.$router.push({
-          name: "ViewCustomer",
+          name: "ViewClient",
           params: { id: data.customer_id }
         });
       }

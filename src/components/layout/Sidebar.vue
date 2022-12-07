@@ -161,7 +161,7 @@
             :prepend-icon="item.icon"
             no-action
             color="indigo darken-4"
-            v-if="$can(item.group_permissions)"
+            v-if="item.menu.length > 0"
           >
             <template v-slot:activator>
               <v-list-item-content>
@@ -184,6 +184,14 @@
               </v-list-item>
             </div>
           </v-list-group>
+          <v-list-item v-else :to="item.to" router exact color="indigo darken-4">
+            <v-list-item-action>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-action>
+            <v-list-item-content style="padding-left: 22px">
+              <v-list-item-title v-text="item.title" />
+            </v-list-item-content>
+          </v-list-item>
         </div>
       </v-list>
     </v-navigation-drawer>
@@ -376,23 +384,11 @@ export default {
           ]
         },
         {
-          title: "ເກັບຂີ້ເຫື້ຍອ",
-          icon: "mdi-trash-can",
-          group_permissions: ["manage_event", "get_customer"],
-          menu: [
-            {
-              icon: "mdi-trash-can",
-              title: "ເກັບຂີ້ເຫື້ຍອພິເສດເກົ່າ",
-              to: "/collection-event",
-              permissions: ["manage_event", "get_customer"]
-            },
-            {
-              icon: "mdi-note-outline",
-              title: "ເກັບຂີ້ເຫື້ຍອພິເສດໃໝ່",
-              to: "/v2/event-invoice",
-              permissions: ["get_invoice", "manage_event"]
-            }
-          ]
+          icon: "mdi-delete",
+          title: "ເກັບຂີ້ເຫື້ຍອພິເສດ",
+          permissions: ["manage_event", "get_customer"],
+          to: "/v2/event-invoice",
+          menu: []
         },
         // {
         //   title: "ບິນແບບເກົ່າ",

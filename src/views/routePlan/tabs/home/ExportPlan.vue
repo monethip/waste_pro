@@ -2,9 +2,9 @@
   <v-container>
     <v-breadcrumbs large class="mt-n4">
       <v-btn text class="text-primary" @click="backPrevios()">
-        <v-icon>mdi-keyboard-backspace </v-icon>
-      </v-btn>
-      ເລືອກລູກຄ້າເຂົ້າແຜນເສັ້ນທາງ <v-spacer></v-spacer>
+        <v-icon>mdi-keyboard-backspace</v-icon>
+      </v-btn>ເລືອກລູກຄ້າເຂົ້າແຜນເສັ້ນທາງ
+      <v-spacer></v-spacer>
       <span class="mr-4">
         <v-icon color="red">mdi-map-marker</v-icon>ຍັງບໍທັນຢູ່ໃນແຜນ
       </span>
@@ -14,27 +14,54 @@
     </v-breadcrumbs>
     <v-row class="my-n4">
       <v-col cols="12" class="mb-4">
-        <GmapMap :center="getCenter().lat > 0 || getCenter().lat < 0 ? getCenter() : { lat: 0, lng: 0 }" :zoom="14" style="width: 100%; height: 450px" :disableDefaultUI="true">
-          <gmap-info-window :options="infoOptions" :position="infoPosition" :opened="infoOpened" :conent="infoContent"
-            @closeclick="infoOpened = false">{{ infoContent }}
-          </gmap-info-window>
-          <GmapMarker :key="index" v-for="(m, index) in customers" :position="getMarkers(m)"
-            @click="toggleInfo(m, index)" :draggable="false" :icon="getSiteIcon(m)" :animation="2" :clickable="true"
-            :label="(index + 1).toString()" />
+        <GmapMap
+          :center="getCenter().lat > 0 || getCenter().lat < 0 ? getCenter() : { lat: 0, lng: 0 }"
+          :zoom="14"
+          style="width: 100%; height: 450px"
+          :disableDefaultUI="true"
+        >
+          <gmap-info-window
+            :options="infoOptions"
+            :position="infoPosition"
+            :opened="infoOpened"
+            :conent="infoContent"
+            @closeclick="infoOpened = false"
+          >{{ infoContent }}</gmap-info-window>
+          <GmapMarker
+            :key="index"
+            v-for="(m, index) in customers"
+            :position="getMarkers(m)"
+            @click="toggleInfo(m, index)"
+            :draggable="false"
+            :icon="getSiteIcon(m)"
+            :animation="2"
+            :clickable="true"
+            :label="(index + 1).toString()"
+          />
         </GmapMap>
       </v-col>
     </v-row>
     <v-row class="mb-n6">
       <v-col>
-        <v-btn class="btn-primary" @click="createPage()">Next <v-icon>mdi-arrow-right-bold-circle-outline</v-icon>
+        <v-btn class="btn-primary" @click="createPage()">
+          Next
+          <v-icon>mdi-arrow-right-bold-circle-outline</v-icon>
         </v-btn>
       </v-col>
       <v-col>
         <h4>ລວມລູກຄ້າ {{ pagination.total }} ຄົນ</h4>
       </v-col>
       <v-col>
-        <v-autocomplete outlined dense :items="districts" v-model="selectedDistrict" item-text="name" item-value="id"
-          label="ເມືອງ" clearable></v-autocomplete>
+        <v-autocomplete
+          outlined
+          dense
+          :items="districts"
+          v-model="selectedDistrict"
+          item-text="name"
+          item-value="id"
+          label="ເມືອງ"
+          clearable
+        ></v-autocomplete>
       </v-col>
       <!--
       <v-col>
@@ -97,16 +124,29 @@
         </v-autocomplete>
       </v-col>
     </v-row>
--->
+    -->
     <v-row>
       <v-col cols="12">
-        <v-autocomplete v-model="selectedVillage" :items="villages" item-text="name" item-value="id" label="ເລືອກບ້ານ"
-          filled chips color="blue-grey lighten-2" multiple clearable>
+        <v-autocomplete
+          v-model="selectedVillage"
+          :items="villages"
+          item-text="name"
+          item-value="id"
+          label="ເລືອກບ້ານ"
+          filled
+          chips
+          color="blue-grey lighten-2"
+          multiple
+          clearable
+        >
           <template v-slot:selection="data">
-            <v-chip v-bind="data.attrs" :input-value="data.selected" close @click="data.select"
-              @click:close="remove(data.item)">
-              {{ data.item.name }}
-            </v-chip>
+            <v-chip
+              v-bind="data.attrs"
+              :input-value="data.selected"
+              close
+              @click="data.select"
+              @click:close="remove(data.item)"
+            >{{ data.item.name }}</v-chip>
           </template>
 
           <!--
@@ -134,8 +174,13 @@
       <v-card>
         <v-card flat>
           <v-card-text>
-            <v-data-table :headers="headers" :items="customers" :search="search" :disable-pagination="true"
-              hide-default-footer>
+            <v-data-table
+              :headers="headers"
+              :items="customers"
+              :search="search"
+              :disable-pagination="true"
+              hide-default-footer
+            >
               <template v-slot:item.address_detail="{ item }">
                 <div v-for="(data, index) in item.village_details" :key="index">
                   <span>{{ data.name }}</span>
@@ -143,14 +188,17 @@
               </template>
 
               <template v-slot:item.actions="{ item }">
-                <v-icon small class="mr-2" @click="viewPage(item.id)">
-                  mdi-eye
-                </v-icon>
+                <v-icon small class="mr-2" @click="viewPage(item.id)">mdi-eye</v-icon>
               </template>
-            </v-data-table><br />
+            </v-data-table>
+            <br />
             <template>
-              <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
-                @paginate="fetchData()"></Pagination>
+              <Pagination
+                v-if="pagination.total_pages > 1"
+                :pagination="pagination"
+                :offset="offset"
+                @paginate="fetchData()"
+              ></Pagination>
             </template>
           </v-card-text>
         </v-card>
@@ -192,12 +240,12 @@ export default {
         { text: "ບ້ານ", value: "village.name", sortable: true },
         { text: "ເມືອງ", value: "district.name", sortable: true },
         // { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
-        { text: "", value: "actions", sortable: false },
+        { text: "", value: "actions", sortable: false }
       ],
       //Map
       latlng: {
         lat: 0,
-        lng: 0,
+        lng: 0
       },
       markers: [],
       places: [],
@@ -209,9 +257,9 @@ export default {
       infoOptions: {
         pixelOffset: {
           width: 0,
-          height: -35,
-        },
-      },
+          height: -35
+        }
+      }
     };
   },
   methods: {
@@ -221,17 +269,16 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-         .get("customer", {
+        .get("customer", {
           params: queryOption([
             { page: this.pagination.current_page },
             { per_page: this.per_page },
             { villages: this.selectedVillage },
             { district_id: this.selectedDistrict },
-            { without: ['route_plan', 'calendar'] }
-          ]
-          ),
+            { without: ["route_plan", "calendar"] }
+          ])
         })
-        .then((res) => {
+        .then(res => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
@@ -242,7 +289,7 @@ export default {
             }, 100);
           }
         })
-        .catch((error) => {
+        .catch(error => {
           this.$store.commit("Loading_State", false);
           if (error.response && error.response.status == 422) {
             var obj = error.response.data.errors;
@@ -256,30 +303,30 @@ export default {
     fetchAddress() {
       this.$axios
         .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
-        .then((res) => {
+        .then(res => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.address = res.data.data;
-              this.address.map((item) => {
+              this.address.map(item => {
                 this.districts = item.districts;
               });
             }, 300);
           }
         })
-        .catch(() => { });
+        .catch(() => {});
     },
 
     fetchVillage() {
       this.$axios
         .get("info/district/" + this.selectedDistrict + "/village")
-        .then((res) => {
+        .then(res => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.villages = res.data.data;
             }, 300);
           }
         })
-        .catch(() => { });
+        .catch(() => {});
     },
 
     createPage() {
@@ -289,21 +336,21 @@ export default {
           name: "CreateExportPlan",
           params: {
             items: this.customers,
-            villages: this.selectedVillage,
-          },
+            villages: this.selectedVillage
+          }
         });
       } else {
         this.$store.commit("Toast_State", {
           value: true,
           color: "error",
-          msg: "ກາລຸນາເລືອກບ້ານ ແລະ ລູກຄ້າກ່ອນ",
+          msg: "ກາລຸນາເລືອກບ້ານ ແລະ ລູກຄ້າກ່ອນ"
         });
       }
     },
     viewPage(id) {
       this.$router.push({
-        name: "ViewCustomer",
-        params: { id },
+        name: "ViewClient",
+        params: { id }
       });
     },
     remove(item) {
@@ -322,7 +369,7 @@ export default {
         } else {
           const latlng = {
             lat: parseFloat(this.customers[0].lat),
-            lng: parseFloat(this.customers[0].lng),
+            lng: parseFloat(this.customers[0].lng)
           };
           return latlng;
         }
@@ -333,7 +380,7 @@ export default {
       if (m.customer !== null) {
         return {
           lat: parseFloat(m.lat),
-          lng: parseFloat(m.lng),
+          lng: parseFloat(m.lng)
         };
       }
     },
@@ -351,14 +398,14 @@ export default {
           width: 35,
           height: 55,
           f: "px",
-          b: "px",
+          b: "px"
         },
         scaledSize: {
           width: 35,
           height: 55,
           f: "px",
-          b: "px",
-        },
+          b: "px"
+        }
       };
       var pin2 = {
         url: require("@coms/../../src/assets/pin2.svg"),
@@ -373,14 +420,14 @@ export default {
           width: 35,
           height: 55,
           f: "px",
-          b: "px",
+          b: "px"
         },
         scaledSize: {
           width: 35,
           height: 55,
           f: "px",
-          b: "px",
-        },
+          b: "px"
+        }
       };
 
       try {
@@ -415,7 +462,7 @@ export default {
           }, 300);
         }
       });
-    },
+    }
   },
   // computed: {
   //   selectedAllVillage() {
@@ -431,23 +478,23 @@ export default {
   //   },
   // },
   watch: {
-    search: function (value) {
+    search: function(value) {
       if (value == "") {
         this.fetchData();
       }
     },
-    selectedVillage: function () {
+    selectedVillage: function() {
       this.fetchData();
     },
-    selectedDistrict: function () {
+    selectedDistrict: function() {
       this.fetchData();
       this.fetchVillage();
-    },
+    }
   },
   created() {
     this.fetchData();
     this.fetchAddress();
-  },
+  }
 };
 </script>
 

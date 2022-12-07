@@ -631,7 +631,7 @@ export default {
 
     viewPage(id) {
       this.$router.push({
-        name: "ViewCustomer",
+        name: "ViewClient",
         params: { id }
       });
       // window.open(route.href, "_blank");

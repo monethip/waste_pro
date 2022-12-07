@@ -381,26 +381,26 @@ const routes = [
             ]
         }
     },
-    {
-        path: '/view/company/:id',
-        name: 'ViewCompany',
-        component: () => import('@/views/company/ViewCompany.vue'),
-        meta: {
-            layout: "admin",
-            middleware: [Middlewares.auth],
-            breadcrumb: [
-                {
-                    text: 'ລູກຄ້າຫົວໜ່ວຍທຸລະກິດ',
-                    disabled: false,
-                    href: '/company',
-                },
-                {
-                    text: 'View',
-                    disabled: true,
-                },
-            ]
-        }
-    },
+    // {
+    //     path: '/view/company/:id',
+    //     name: 'ViewCompany',
+    //     component: () => import('@/views/company/ViewCompany.vue'),
+    //     meta: {
+    //         layout: "admin",
+    //         middleware: [Middlewares.auth],
+    //         breadcrumb: [
+    //             {
+    //                 text: 'ລູກຄ້າຫົວໜ່ວຍທຸລະກິດ',
+    //                 disabled: false,
+    //                 href: '/company',
+    //             },
+    //             {
+    //                 text: 'View',
+    //                 disabled: true,
+    //             },
+    //         ]
+    //     }
+    // },
     //Collection Event
     {
         path: '/collection-event',

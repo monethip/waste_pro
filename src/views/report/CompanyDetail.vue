@@ -220,9 +220,11 @@
                   </thead>
                   <tbody>
                     <tr v-for="item in services" :key="item.id">
-                      <router-link
-                        :to="{name:'TrashDetail',params:{plan_calendar:item.plan_calendar_id,id:item.route_plan_detail_id}}"
-                      >{{ (moment(item.collected_at).format('DD-MM-YYYY')) }}</router-link>
+                      <td>
+                        <router-link
+                          :to="{name:'PlanCalendarDetail',params: {id: item.plan_calendar_id,planMonthId: item.plan_calendar.plan_month_id}}"
+                        >{{ (moment(item.collected_at).format('DD-MM-YYYY')) }}</router-link>
+                      </td>
                       <td>
                         <div v-if="item.collection_type === 'bag'">{{ item.bag }} ຖົງ</div>
                         <div

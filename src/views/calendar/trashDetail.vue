@@ -2,10 +2,9 @@
   <v-container>
     <v-breadcrumbs large class="pt-0">
       <v-btn text class="text-primary" @click="backPrevios()">
-        <v-icon>mdi-chevron-left</v-icon></v-btn
-      >
-      ລາຍລະອຽດການເກັບຂີ້ເຫື້ຍອຂອງລູກຄ້າ</v-breadcrumbs
-    >
+        <v-icon>mdi-chevron-left</v-icon>
+      </v-btn>ລາຍລະອຽດການເກັບຂີ້ເຫື້ຍອຂອງລູກຄ້າ
+    </v-breadcrumbs>
     <v-card>
       <v-carousel v-if="detail.media">
         <v-carousel-item
@@ -24,45 +23,34 @@
           <v-row>
             <v-list-item>
               <v-list-item-icon>
-                <v-icon color="indigo"> mdi-account-circle-outline </v-icon>
+                <v-icon color="indigo">mdi-account-circle-outline</v-icon>
               </v-list-item-icon>
               <v-list-item-content v-if="detail.route_plan_detail">
-                <v-list-item-title v-if="detail.route_plan_detail.customer.customer_type =='home'"
-                  >
-                    {{ detail.route_plan_detail.customer.name }}
-                    {{
-                      detail.route_plan_detail.customer.surname
-                    }}
-                </v-list-item-title
-                >
-                <v-list-item-title v-if="detail.route_plan_detail.customer.customer_type =='company'"
-                  >
-                  {{ detail.route_plan_detail.customer.company_name }}
-                </v-list-item-title
-                >
+                <v-list-item-title v-if="detail.route_plan_detail.customer.customer_type =='home'">
+                  {{ detail.route_plan_detail.customer.name }}
+                  {{
+                  detail.route_plan_detail.customer.surname
+                  }}
+                </v-list-item-title>
+                <v-list-item-title
+                  v-if="detail.route_plan_detail.customer.customer_type =='company'"
+                >{{ detail.route_plan_detail.customer.company_name }}</v-list-item-title>
                 <v-list-item-subtitle>ຊື່</v-list-item-subtitle>
               </v-list-item-content>
               <v-spacer></v-spacer>
               <v-list-item-icon>
-                <v-icon class="mr-6" color="indigo"
-                  >mdi-trash-can-outline</v-icon
-                >
+                <v-icon class="mr-6" color="indigo">mdi-trash-can-outline</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-title v-if="detail.collection_type == 'bag' || detail.collection_type == 'chartered'">
-                  {{ detail.bag }} ຖົງ</v-list-item-title
-                >
+                <v-list-item-title
+                  v-if="detail.collection_type == 'bag' || detail.collection_type == 'chartered'"
+                >{{ detail.bag }} ຖົງ</v-list-item-title>
                 <v-list-item-title
                   v-else-if="detail.collection_type == 'container'"
-                >
-                  {{ detail.container }} Container</v-list-item-title
-                ><v-list-item-title
-                  v-else-if="detail.collection_type == 'fix_cost'"
-                >
-                   ມອບເໝົາ</v-list-item-title
-                >
+                >{{ detail.container }} Container</v-list-item-title>
+                <v-list-item-title v-else-if="detail.collection_type == 'fix_cost'">ມອບເໝົາ</v-list-item-title>
                 <v-list-item-subtitle>ຈຳນວນ</v-list-item-subtitle>
-<!--                <v-list-item-subtitle v-if="detail.route_plan_detail.customer.fix_cost">{{Intl.NumberFormat().format(detail.route_plan_detail.customer.fix_cost)}}</v-list-item-subtitle>-->
+                <!--                <v-list-item-subtitle v-if="detail.route_plan_detail.customer.fix_cost">{{Intl.NumberFormat().format(detail.route_plan_detail.customer.fix_cost)}}</v-list-item-subtitle>-->
               </v-list-item-content>
             </v-list-item>
             <v-divider inset></v-divider>
@@ -70,13 +58,13 @@
           <v-row>
             <v-list-item>
               <v-list-item-icon>
-                <v-icon color="indigo"> mdi-calendar-range </v-icon>
+                <v-icon color="indigo">mdi-calendar-range</v-icon>
               </v-list-item-icon>
 
               <v-list-item-content>
-                <v-list-item-title v-if="detail.route_plan_detail">
-                  {{ detail.route_plan_detail.priority }}</v-list-item-title
-                >
+                <v-list-item-title
+                  v-if="detail.route_plan_detail"
+                >{{ detail.route_plan_detail.priority }}</v-list-item-title>
                 <v-list-item-subtitle>ລຳດັບເກັບຂີ້ເຫື້ຍອ</v-list-item-subtitle>
               </v-list-item-content>
               <v-spacer></v-spacer>
@@ -86,39 +74,43 @@
               <v-list-item-content>
                 <v-list-item-title v-if="detail.route_plan_detail">
                   {{
-                    detail.route_plan_detail.customer.start_month
-                  }}</v-list-item-title
-                >
+                  detail.route_plan_detail.customer.start_month
+                  }}
+                </v-list-item-title>
                 <v-list-item-subtitle>ສະໝັກແພັກເກດວັນທີ</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
             <v-divider inset></v-divider>
             <v-list-item>
               <v-list-item-icon>
-                <v-icon color="indigo"> mdi-home-search </v-icon>
+                <v-icon color="indigo">mdi-home-search</v-icon>
               </v-list-item-icon>
 
               <v-list-item-content>
                 <v-list-item-title>ເຮືອນເລກທີ</v-list-item-title>
                 <div>
-                  <v-list-item-subtitle v-if="detail.route_plan_detail">{{
+                  <v-list-item-subtitle v-if="detail.route_plan_detail">
+                    {{
                     detail.route_plan_detail.customer.house_number
-                  }}</v-list-item-subtitle>
+                    }}
+                  </v-list-item-subtitle>
                 </div>
               </v-list-item-content>
               <v-spacer></v-spacer>
               <v-list-item-icon>
-                <v-icon color="indigo" class="mr-6"> mdi-home-search </v-icon>
+                <v-icon color="indigo" class="mr-6">mdi-home-search</v-icon>
               </v-list-item-icon>
 
               <v-list-item-content>
                 <v-list-item-title>ສະຖານະ</v-list-item-title>
                 <div>
-                  <v-list-item-subtitle
-                    ><v-chip label color="success">{{
+                  <v-list-item-subtitle>
+                    <v-chip label color="success">
+                      {{
                       detail.status
-                    }}</v-chip></v-list-item-subtitle
-                  >
+                      }}
+                    </v-chip>
+                  </v-list-item-subtitle>
                 </div>
               </v-list-item-content>
             </v-list-item>
@@ -156,9 +148,7 @@
             color="blue darken-1"
             text
             @click="viewCustomer(detail.route_plan_detail.customer.id)"
-          >
-            ລາຍລະອຽດລູກຄ້າ
-          </v-btn>
+          >ລາຍລະອຽດລູກຄ້າ</v-btn>
         </v-card-actions>
       </v-card-text>
     </v-card>
@@ -187,7 +177,7 @@ export default {
       //Map
       latlng: {
         lat: 0,
-        lng: 0,
+        lng: 0
       },
       markers: [],
       currentPlace: null,
@@ -198,15 +188,15 @@ export default {
           width: 35,
           height: 55,
           f: "px",
-          b: "px",
+          b: "px"
         },
         scaledSize: {
           width: 35,
           height: 55,
           f: "px",
-          b: "px",
-        },
-      },
+          b: "px"
+        }
+      }
     };
   },
   methods: {
@@ -219,16 +209,16 @@ export default {
             "/detail/" +
             this.$route.params.id
         )
-        .then((res) => {
+        .then(res => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.detail = res.data.data;
-              console.log(this.detail)
+              console.log(this.detail);
             }, 100);
           }
         })
-        .catch((error) => {
+        .catch(error => {
           this.$store.commit("Loading_State", false);
           if (error.response && error.response.status == 422) {
             this.toast.msg = error.message;
@@ -243,7 +233,7 @@ export default {
       if (this.detail.route_plan_detail) {
         const latlng = {
           lat: parseFloat(this.detail.route_plan_detail.customer.lat),
-          lng: parseFloat(this.detail.route_plan_detail.customer.lng),
+          lng: parseFloat(this.detail.route_plan_detail.customer.lng)
         };
         return latlng;
       }
@@ -252,31 +242,31 @@ export default {
     getMarkers(data) {
       return {
         lat: parseFloat(data.lat),
-        lng: parseFloat(data.lng),
+        lng: parseFloat(data.lng)
       };
     },
     viewCustomer(id) {
       this.$router.push({
-        name: "ViewCustomer",
-        params: { id },
+        name: "ViewClient",
+        params: { id }
       });
     },
     viewImage(url) {
       this.fullImage = true;
       this.url = url;
-    },
+    }
   },
   watch: {
-    selectedDistrict: function () {
+    selectedDistrict: function() {
       this.fetchVillage();
     },
-    selectedVillage: function () {
+    selectedVillage: function() {
       this.fetchVillageDetail();
-    },
+    }
   },
   created() {
     this.fetchData();
-  },
+  }
 };
 </script>
 

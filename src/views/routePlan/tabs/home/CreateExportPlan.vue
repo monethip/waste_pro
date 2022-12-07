@@ -2,9 +2,8 @@
   <v-container>
     <v-breadcrumbs large class="mt-n4">
       <v-btn text class="text-primary" @click="backPrevios()">
-        <v-icon>mdi-keyboard-backspace </v-icon>
-      </v-btn>
-      Export ຂໍ້ມູນລູກຄ້າໃນແຜນເສັ້ນທາງ
+        <v-icon>mdi-keyboard-backspace</v-icon>
+      </v-btn>Export ຂໍ້ມູນລູກຄ້າໃນແຜນເສັ້ນທາງ
       <v-spacer></v-spacer>
       <span class="mr-4">
         <v-icon color="red">mdi-map-marker</v-icon>ຍັງບໍທັນຢູ່ໃນແຜນ
@@ -15,20 +14,42 @@
     </v-breadcrumbs>
     <v-row>
       <v-col cols="12" class="mb-4">
-        <GmapMap v-if="customers" :center="getCenter().lat > 0 || getCenter().lat < 0 ? getCenter() : { lat: 0, lng: 0 }" :zoom="14" style="width: 100%; height: 450px"
-          :disableDefaultUI="true">
-          <gmap-info-window :options="infoOptions" :position="infoPosition" :opened="infoOpened" :conent="infoContent"
-            @closeclick="infoOpened = false">{{ infoContent }}
-          </gmap-info-window>
-          <GmapMarker :key="index" v-for="(m, index) in customers" :position="getMarkers(m)"
-            @click="toggleInfo(m, index)" :draggable="false" :icon="getSiteIcon(m)" :animation="2" :clickable="true"
-            :label="(index + 1).toString()" />
+        <GmapMap
+          v-if="customers"
+          :center="getCenter().lat > 0 || getCenter().lat < 0 ? getCenter() : { lat: 0, lng: 0 }"
+          :zoom="14"
+          style="width: 100%; height: 450px"
+          :disableDefaultUI="true"
+        >
+          <gmap-info-window
+            :options="infoOptions"
+            :position="infoPosition"
+            :opened="infoOpened"
+            :conent="infoContent"
+            @closeclick="infoOpened = false"
+          >{{ infoContent }}</gmap-info-window>
+          <GmapMarker
+            :key="index"
+            v-for="(m, index) in customers"
+            :position="getMarkers(m)"
+            @click="toggleInfo(m, index)"
+            :draggable="false"
+            :icon="getSiteIcon(m)"
+            :animation="2"
+            :clickable="true"
+            :label="(index + 1).toString()"
+          />
         </GmapMap>
       </v-col>
     </v-row>
     <v-row class="mb-n6">
       <v-col>
-        <v-btn class="btn-primary" @click="exportRoutePlan()" :loading="loading" :disabled="loading">
+        <v-btn
+          class="btn-primary"
+          @click="exportRoutePlan()"
+          :loading="loading"
+          :disabled="loading"
+        >
           <v-icon>mdi-arrow-right-bold-circle-outline</v-icon>
         </v-btn>
       </v-col>
@@ -36,9 +57,16 @@
         <h4 v-if="customers">ລວມລູກຄ້າ {{ customers.length }} ຄົນ</h4>
       </v-col>
       <v-col>
-        <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ຊື່ລູກຄ້າ" type="text"
-          v-model="search" @keyup.enter="Search()">
-        </v-text-field>
+        <v-text-field
+          outlined
+          dense
+          clearable
+          prepend-inner-icon="mdi-magnify"
+          label="ຊື່ລູກຄ້າ"
+          type="text"
+          v-model="search"
+          @keyup.enter="Search()"
+        ></v-text-field>
       </v-col>
     </v-row>
     <div>
@@ -47,11 +75,18 @@
           <v-card-text>
             <div>
               <v-btn text color="error" @click="deleteItem">
-                <v-icon medium> mdi-delete </v-icon>
+                <v-icon medium>mdi-delete</v-icon>
               </v-btn>
             </div>
-            <v-data-table :headers="headers" :items="customers" :search="search" :disable-pagination="true"
-              hide-default-footer v-model="selectedRows" show-select>
+            <v-data-table
+              :headers="headers"
+              :items="customers"
+              :search="search"
+              :disable-pagination="true"
+              hide-default-footer
+              v-model="selectedRows"
+              show-select
+            >
               <!--
               <template v-slot:item.media="{ item }">
                 <v-avatar
@@ -73,21 +108,19 @@
                 </div>
               </template>
               <template v-slot:item.address="{ item }">
-                <div v-if="item.district && item.village">
-                  {{ item.district.name }}, {{ item.village.name }}
-                </div>
+                <div
+                  v-if="item.district && item.village"
+                >{{ item.district.name }}, {{ item.village.name }}</div>
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-icon small class="mr-2" @click="viewPage(item.id)">
-                  mdi-eye
-                </v-icon>
+                <v-icon small class="mr-2" @click="viewPage(item.id)">mdi-eye</v-icon>
               </template>
 
               <!--
               <template slot="item.delete" slot-scope="props">
                 <v-icon small @click="deleteItem(props)"> mdi-delete </v-icon>
               </template>
--->
+              -->
               <!--
               <template v-slot:item="{ item }">
                 <tr :class="selectedRows.indexOf(item.id) - 1 ? 'cyan' : ''">
@@ -116,7 +149,13 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-          <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="deleteItemConfirm">OK</v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            :loading="loading"
+            :disabled="loading"
+            @click="deleteItemConfirm"
+          >OK</v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </template>
@@ -151,13 +190,13 @@ export default {
         { text: "Phone", value: "user.phone", sortable: false },
         { text: "ລາຍລະອຽດທີ່ຢູ່", value: "address_detail" },
         { text: "ບ້ານ", value: "village.name", sortable: true },
-        { text: "ເມືອງ", value: "district.name", sortable: true },
+        { text: "ເມືອງ", value: "district.name", sortable: true }
         // { text: "", value: "actions", sortable: false },
       ],
       //Map
       latlng: {
         lat: 0,
-        lng: 0,
+        lng: 0
       },
       markers: [],
       infoPosition: null,
@@ -167,9 +206,9 @@ export default {
       infoOptions: {
         pixelOffset: {
           width: 0,
-          height: -35,
-        },
-      },
+          height: -35
+        }
+      }
     };
   },
   methods: {
@@ -199,13 +238,13 @@ export default {
         this.selectedCustomer.push(this.customers[index]);
         this.customers.splice(index, 1);
       }
-      this.selectedCustomer.filter((item) => {
+      this.selectedCustomer.filter(item => {
         this.exclude_customers.push(item.id);
       });
       this.$store.commit("Toast_State", {
         value: true,
         color: "success",
-        msg: "ລຶບຂໍ້ມູນສຳເລັດແລ້ວ",
+        msg: "ລຶບຂໍ້ມູນສຳເລັດແລ້ວ"
       });
       this.selectedRows = [];
       this.fetchData();
@@ -221,12 +260,12 @@ export default {
             "export-customer-location/",
             {
               exclude_customers: this.exclude_customers,
-              villages: this.selectedVillage,
+              villages: this.selectedVillage
               // district_id:this.
             },
             { responseType: "blob" }
           )
-          .then((res) => {
+          .then(res => {
             if (res.status == 200) {
               setTimeout(() => {
                 this.loading = false;
@@ -244,15 +283,17 @@ export default {
                 document.body.removeChild(fileLink);
               }, 300);
               this.$router.push({
-                name: "Plan",
+                name: "Plan"
               });
             }
           })
-          .catch((error) => {
+          .catch(error => {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response ? error.response.data.message : 'Something went wrong',
+              msg: error.response
+                ? error.response.data.message
+                : "Something went wrong"
             });
             this.loading = false;
           });
@@ -260,15 +301,15 @@ export default {
         this.$store.commit("Toast_State", {
           value: true,
           color: "error",
-          msg: "ກາລຸນາເລືອກລູກຄ້າກ່ອນ",
+          msg: "ກາລຸນາເລືອກລູກຄ້າກ່ອນ"
         });
       }
     },
 
     viewPage(id) {
       this.$router.push({
-        name: "ViewCustomer",
-        params: { id },
+        name: "ViewClient",
+        params: { id }
       });
     },
     Search() {
@@ -283,7 +324,7 @@ export default {
         } else {
           const latlng = {
             lat: parseFloat(this.customers[0].lat),
-            lng: parseFloat(this.customers[0].lng),
+            lng: parseFloat(this.customers[0].lng)
           };
           return latlng;
         }
@@ -304,14 +345,14 @@ export default {
           width: 35,
           height: 55,
           f: "px",
-          b: "px",
+          b: "px"
         },
         scaledSize: {
           width: 35,
           height: 55,
           f: "px",
-          b: "px",
-        },
+          b: "px"
+        }
       };
       var pin2 = {
         url: require("@coms/../../src/assets/pin2.svg"),
@@ -326,14 +367,14 @@ export default {
           width: 35,
           height: 55,
           f: "px",
-          b: "px",
+          b: "px"
         },
         scaledSize: {
           width: 35,
           height: 55,
           f: "px",
-          b: "px",
-        },
+          b: "px"
+        }
       };
 
       try {
@@ -351,7 +392,7 @@ export default {
       if (m.customer !== null) {
         return {
           lat: parseFloat(m.lat),
-          lng: parseFloat(m.lng),
+          lng: parseFloat(m.lng)
         };
       }
     },
@@ -364,19 +405,19 @@ export default {
         this.infoOpened = true;
         this.infoCurrentKey = key;
       }
-    },
+    }
   },
   watch: {
-    search: function (value) {
+    search: function(value) {
       if (value == "") {
         this.fetchData();
       }
-    },
+    }
   },
   created() {
-    console.log("ccefsf")
+    console.log("ccefsf");
     this.fetchData();
-  },
+  }
 };
 </script>
 

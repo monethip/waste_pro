@@ -3,9 +3,8 @@
     <v-container>
       <v-breadcrumbs large class="mt-n4">
         <v-btn text class="text-primary" @click="backPrevios()">
-          <v-icon>mdi-keyboard-backspace </v-icon>
-        </v-btn>
-        ເພີ່ມແຜນເສັ້ນທາງ
+          <v-icon>mdi-keyboard-backspace</v-icon>
+        </v-btn>ເພີ່ມແຜນເສັ້ນທາງ
         <v-spacer></v-spacer>
         <span class="mr-4">
           <v-icon color="red">mdi-map-marker</v-icon>ຍັງບໍທັນຢູ່ໃນແຜນ
@@ -17,32 +16,60 @@
 
       <v-row>
         <v-col cols="12" class="mb-4">
-          <GmapMap v-if="customers" :center="getCenter().lat > 0 || getCenter().lat < 0 ? getCenter() : { lat: 0, lng: 0 }" :zoom="14" style="width: 100%; height: 400px"
-            :disableDefaultUI="true">
-            <gmap-info-window :options="infoOptions" :position="infoPosition" :opened="infoOpened" :conent="infoContent"
-              @closeclick="infoOpened = false">{{ infoContent }}
-            </gmap-info-window>
-            <GmapMarker :key="index" v-for="(m, index) in customers" :position="getMarkers(m)"
-              @click="toggleInfo(m, index)" :draggable="false" :icon="getSiteIcon(m)" :animation="2" :clickable="true"
-              :label="(index + 1).toString()" />
+          <GmapMap
+            v-if="customers"
+            :center="getCenter().lat > 0 || getCenter().lat < 0 ? getCenter() : { lat: 0, lng: 0 }"
+            :zoom="14"
+            style="width: 100%; height: 400px"
+            :disableDefaultUI="true"
+          >
+            <gmap-info-window
+              :options="infoOptions"
+              :position="infoPosition"
+              :opened="infoOpened"
+              :conent="infoContent"
+              @closeclick="infoOpened = false"
+            >{{ infoContent }}</gmap-info-window>
+            <GmapMarker
+              :key="index"
+              v-for="(m, index) in customers"
+              :position="getMarkers(m)"
+              @click="toggleInfo(m, index)"
+              :draggable="false"
+              :icon="getSiteIcon(m)"
+              :animation="2"
+              :clickable="true"
+              :label="(index + 1).toString()"
+            />
           </GmapMap>
         </v-col>
       </v-row>
       <v-row class="mb-n6">
         <v-col>
-          <v-btn class="btn-primary" @click="createRoutePlan()" :loading="loading" :disabled="loading">
-            ບັນທຶກ<v-icon>mdi-content-save</v-icon>
+          <v-btn
+            class="btn-primary"
+            @click="createRoutePlan()"
+            :loading="loading"
+            :disabled="loading"
+          >
+            ບັນທຶກ
+            <v-icon>mdi-content-save</v-icon>
           </v-btn>
         </v-col>
         <v-col>
-          <h4 v-if="customers">
-            ຈັດລຽນລຳດັບການເກັບຂີ້ເຫື້ຍອລູກຄ້າ {{ customers.length }} ຄົນ
-          </h4>
+          <h4 v-if="customers">ຈັດລຽນລຳດັບການເກັບຂີ້ເຫື້ຍອລູກຄ້າ {{ customers.length }} ຄົນ</h4>
         </v-col>
         <v-col>
-          <v-text-field outlined dense clearable prepend-inner-icon="mdi-magnify" label="ຊື່ລູກຄ້າ" type="text"
-            v-model="search" @keyup.enter="Search()">
-          </v-text-field>
+          <v-text-field
+            outlined
+            dense
+            clearable
+            prepend-inner-icon="mdi-magnify"
+            label="ຊື່ລູກຄ້າ"
+            type="text"
+            v-model="search"
+            @keyup.enter="Search()"
+          ></v-text-field>
         </v-col>
       </v-row>
       <div>
@@ -54,26 +81,34 @@
                   ><v-icon medium> mdi-delete </v-icon></v-btn
                 >
               </div>
-  -->
+            -->
             <main class="page page--table">
-              <v-data-table :headers="headers" :items="customers" :search="search" :disable-pagination="true"
-                hide-default-footer v-model="selectedRows" item-key="id" class="page__table">
+              <v-data-table
+                :headers="headers"
+                :items="customers"
+                :search="search"
+                :disable-pagination="true"
+                hide-default-footer
+                v-model="selectedRows"
+                item-key="id"
+                class="page__table"
+              >
                 <template v-slot:body="props">
                   <draggable :list="props.items" tag="tbody" @change="afterAdd">
                     <tr v-for="(user, index) in props.items" :key="index">
                       <td>
-                        <v-icon small class="page__grab-icon">
-                          mdi-arrow-all
-                        </v-icon>
+                        <v-icon small class="page__grab-icon">mdi-arrow-all</v-icon>
                       </td>
                       <td>{{ index + 1 }}</td>
                       <td>{{ user.id }}</td>
                       <td>{{ user.name }}</td>
                       <td>{{ user.surname }}</td>
                       <td>{{ user.user.phone }}</td>
-                      <td>{{ user.expect_trash ? Intl.NumberFormat().format(user.expect_trash) +
-                          getCustomerUnitFunc(user.cost_by) : '-'
-                      }}</td>
+                      <td>
+                        {{ user.expect_trash ? Intl.NumberFormat().format(user.expect_trash) +
+                        getCustomerUnitFunc(user.cost_by) : '-'
+                        }}
+                      </td>
                       <td>{{ user.created_at }}</td>
                       <td>{{ user.address_detail }}</td>
                       <td>{{ user.village.name }}</td>
@@ -84,10 +119,8 @@
                           <v-icon small class="mr-2" @click="viewPage(user.id)">
                             mdi-eye
                           </v-icon>
-                          -->
-                        <v-icon small @click="deleteItem(index)">
-                          mdi-delete
-                        </v-icon>
+                        -->
+                        <v-icon small @click="deleteItem(index)">mdi-delete</v-icon>
                       </td>
                     </tr>
                   </draggable>
@@ -111,21 +144,21 @@
                   <v-row>
                     <v-col cols="12">
                       <v-text-field label="Name *" required v-model="name"></v-text-field>
-                      <p class="errors">
-                        {{ server_errors.name }}
-                      </p>
+                      <p class="errors">{{ server_errors.name }}</p>
                     </v-col>
                   </v-row>
                 </v-form>
               </v-container>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="closeAddModal()">
-                  Close
-                </v-btn>
-                <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="saveRoutePlan()">
-                  Save
-                </v-btn>
+                <v-btn color="blue darken-1" text @click="closeAddModal()">Close</v-btn>
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  :loading="loading"
+                  :disabled="loading"
+                  @click="saveRoutePlan()"
+                >Save</v-btn>
               </v-card-actions>
             </v-card-text>
           </v-card>
@@ -138,8 +171,13 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-            <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="deleteItemConfirm">OK
-            </v-btn>
+            <v-btn
+              color="blue darken-1"
+              text
+              :loading="loading"
+              :disabled="loading"
+              @click="deleteItemConfirm"
+            >OK</v-btn>
             <v-spacer></v-spacer>
           </v-card-actions>
         </template>
@@ -151,13 +189,13 @@
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import draggable from "vuedraggable";
-import { getCustomerUnit } from "@/Helpers/Customer"
+import { getCustomerUnit } from "@/Helpers/Customer";
 
 export default {
   name: "Customer",
   props: ["selectedData", "villages", "items"],
   components: {
-    draggable,
+    draggable
   },
   data() {
     return {
@@ -189,12 +227,12 @@ export default {
         { text: "ລາຍລະອຽດທີ່ຢູ່", value: "address_detail" },
         { text: "ບ້ານ", value: "village.name", sortable: true },
         { text: "ເມືອງ", value: "district.name", sortable: true },
-        { text: "", value: "actions", sortable: false },
+        { text: "", value: "actions", sortable: false }
       ],
       //Map
       latlng: {
         lat: 0,
-        lng: 0,
+        lng: 0
       },
       markers: [],
       infoPosition: null,
@@ -204,9 +242,9 @@ export default {
       infoOptions: {
         pixelOffset: {
           width: 0,
-          height: -35,
-        },
-      },
+          height: -35
+        }
+      }
     };
   },
   methods: {
@@ -254,13 +292,13 @@ export default {
       //   this.selectedCustomer.push(this.customers[index]);
       //   this.customers.splice(index, 1);
       // }
-      this.selectedCustomer.filter((item) => {
+      this.selectedCustomer.filter(item => {
         this.exclude_customers.push(item.id);
       });
       this.$store.commit("Toast_State", {
         value: true,
         color: "success",
-        msg: "ລຶບຂໍ້ມູນສຳເລັດແລ້ວ",
+        msg: "ລຶບຂໍ້ມູນສຳເລັດແລ້ວ"
       });
       this.selectedRows = [];
       this.fetchData();
@@ -271,14 +309,14 @@ export default {
       this.$store.commit("modalAdd_State", true);
     },
     getCustomerUnitFunc(costBy) {
-      return getCustomerUnit(costBy)
+      return getCustomerUnit(costBy);
     },
     closeAddModal() {
       this.$store.commit("modalAdd_State", false);
     },
     saveRoutePlan() {
       const selectedCustomer = [];
-      this.customers.map((item) => {
+      this.customers.map(item => {
         selectedCustomer.push(item.id);
       });
       if (this.customers.length > 0) {
@@ -288,25 +326,27 @@ export default {
             "create-route-plan",
             {
               name: this.name,
-              customers: selectedCustomer,
+              customers: selectedCustomer
             },
             { responseType: "blob" }
           )
-          .then((res) => {
+          .then(res => {
             if (res.status == 200) {
               setTimeout(() => {
                 this.loading = false;
               }, 300);
               this.$router.push({
-                name: "Plan",
+                name: "Plan"
               });
             }
           })
-          .catch((error) => {
+          .catch(error => {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response ? error.response.data.message : 'Something went wrong',
+              msg: error.response
+                ? error.response.data.message
+                : "Something went wrong"
             });
             this.loading = false;
           });
@@ -314,15 +354,15 @@ export default {
         this.$store.commit("Toast_State", {
           value: true,
           color: "error",
-          msg: "ກາລຸນາເລືອກລູກຄ້າກ່ອນ",
+          msg: "ກາລຸນາເລືອກລູກຄ້າກ່ອນ"
         });
       }
     },
 
     viewPage(id) {
       this.$router.push({
-        name: "ViewCustomer",
-        params: { id },
+        name: "ViewClient",
+        params: { id }
       });
 
       // window.open(route.href, "_blank");
@@ -339,7 +379,7 @@ export default {
         } else {
           const latlng = {
             lat: parseFloat(this.customers[0].lat),
-            lng: parseFloat(this.customers[0].lng),
+            lng: parseFloat(this.customers[0].lng)
           };
           return latlng;
         }
@@ -360,14 +400,14 @@ export default {
           width: 35,
           height: 55,
           f: "px",
-          b: "px",
+          b: "px"
         },
         scaledSize: {
           width: 35,
           height: 55,
           f: "px",
-          b: "px",
-        },
+          b: "px"
+        }
       };
       var pin2 = {
         url: require("@coms/../../src/assets/pin2.svg"),
@@ -382,14 +422,14 @@ export default {
           width: 35,
           height: 55,
           f: "px",
-          b: "px",
+          b: "px"
         },
         scaledSize: {
           width: 35,
           height: 55,
           f: "px",
-          b: "px",
-        },
+          b: "px"
+        }
       };
 
       try {
@@ -407,7 +447,7 @@ export default {
       if (m.customer !== null) {
         return {
           lat: parseFloat(m.lat),
-          lng: parseFloat(m.lng),
+          lng: parseFloat(m.lng)
         };
       }
     },
@@ -429,7 +469,7 @@ export default {
     toggleSelection(keyID) {
       if (this.selectedRows.includes(keyID)) {
         this.selectedRows = this.selectedRows.filter(
-          (selectedKeyID) => selectedKeyID !== keyID
+          selectedKeyID => selectedKeyID !== keyID
         );
       } else {
         this.selectedRows.push(keyID);
@@ -448,11 +488,11 @@ export default {
     }
   },
   watch: {
-    search: function (value) {
+    search: function(value) {
       if (value == "") {
         this.fetchData();
       }
-    },
+    }
   },
   created() {
     this.fetchData();
@@ -461,7 +501,7 @@ export default {
     //   console.log(event)
     //   this.$router.go(-1)
     // })
-  },
+  }
 };
 </script>
 

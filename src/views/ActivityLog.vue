@@ -106,9 +106,7 @@
     </v-row>
     <div>
       <v-card>
-        <v-card-title>
-          ຂໍ້ມູນ Activity Log ({{ pagination.total }})
-        </v-card-title>
+        <v-card-title>ຂໍ້ມູນ Activity Log ({{ pagination.total }})</v-card-title>
         <v-card-text>
           <!--
           <v-simple-table
@@ -241,13 +239,13 @@ export default {
           text: "Model Name",
           value: "model_name",
           sortable: false,
-          width: "150px",
+          width: "150px"
         },
         {
           text: "Subject Type",
           value: "subject_type",
           sortable: false,
-          width: "150px",
+          width: "150px"
         },
         { text: "User", value: "user.name", sortable: false },
         { text: "Created", value: "created_at", sortable: false },
@@ -255,17 +253,17 @@ export default {
           text: "ຂໍ້ມູນທີ່ອັບເດດ",
           value: "attributes",
           sortable: false,
-          width: "350px",
+          width: "350px"
         },
         {
           text: "ຂໍ້ມູນເກົ່າ",
           value: "properties",
           sortable: false,
-          width: "350px",
-        },
+          width: "350px"
+        }
 
         // { text: "", value: "data-table-expand", sortable: false },
-      ],
+      ]
     };
   },
   methods: {
@@ -281,17 +279,17 @@ export default {
             { model_names: this.selectedModel },
             { users: this.selectedUsers },
             { roles: this.selectedRoles },
-            { log_name: this.selectedLogName },
-          ]),
+            { log_name: this.selectedLogName }
+          ])
         })
-        .then((res) => {
+        .then(res => {
           if (res.data.code == 200) {
             this.$store.commit("Loading_State", false);
             this.activities = res.data.data.data;
             this.pagination = res.data.data.pagination;
           }
         })
-        .catch((error) => {
+        .catch(error => {
           this.$store.commit("Loading_State", false);
           if (error.response && error.response.status == 422) {
             let obj = error.response.data.errors;
@@ -305,7 +303,7 @@ export default {
     fetchModels() {
       this.$axios
         .get("model")
-        .then((res) => {
+        .then(res => {
           if (res.data.code == 200) {
             this.models = res.data.data;
           }
@@ -316,7 +314,7 @@ export default {
     fetchRole() {
       this.$axios
         .get("user-setting/role")
-        .then((res) => {
+        .then(res => {
           if (res.data.code == 200) {
             this.roles = res.data.data;
             this.fetchUser();
@@ -329,10 +327,10 @@ export default {
       this.$axios
         .get("user-setting/user", {
           params: {
-            roles: this.selectedRoles,
-          },
+            roles: this.selectedRoles
+          }
         })
-        .then((res) => {
+        .then(res => {
           if (res.data.code == 200) {
             this.users = res.data.data;
           }
@@ -344,26 +342,26 @@ export default {
 
     viewPage(id) {
       this.$router.push({
-        name: "ViewCompany",
-        params: { id },
+        name: "ViewCompanyDetail",
+        params: { id }
       });
     },
     statusColor(value) {
       if (value == "active") return "success";
       else if (value == "inactive") return "error";
       else return "info";
-    },
+    }
   },
   watch: {
-    selectedModel: function () {
+    selectedModel: function() {
       this.pagination.current_page = "";
       this.fetchData();
     },
-    selectedLogName: function () {
+    selectedLogName: function() {
       this.pagination.current_page = "";
       this.fetchData();
     },
-    start_date: function () {
+    start_date: function() {
       this.pagination.current_page = "";
       if (this.end_date != "") {
         if (this.start_date > this.end_date) {
@@ -372,27 +370,27 @@ export default {
       }
       this.fetchData();
     },
-    end_date: function () {
+    end_date: function() {
       this.pagination.current_page = "";
       if (this.end_date < this.start_date) {
         this.end_date = "";
       }
       this.fetchData();
     },
-    selectedRoles: function () {
+    selectedRoles: function() {
       this.pagination.current_page = "";
       this.fetchData();
     },
-    selectedUsers: function () {
+    selectedUsers: function() {
       this.pagination.current_page = "";
       this.fetchData();
-    },
+    }
   },
   created() {
     this.fetchData();
     this.fetchRole();
     this.fetchModels();
-  },
+  }
 };
 </script>
 
