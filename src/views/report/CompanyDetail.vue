@@ -255,7 +255,7 @@
         <v-tabs-items v-model="tab">
           <v-tab-item value="tab-3">
             <v-container>
-              <h3>ປະຫັວດການຊຳລະ</h3>
+              <!-- <h3>ປະຫັວດການຊຳລະ</h3>
               <v-row class="mb-1 mt-1">
                 <v-col>
                   <div>Package {{ invoiceSummary.name }}</div>
@@ -275,33 +275,42 @@
                 <v-col>
                   <div>Reject: {{ Intl.NumberFormat().format(invoiceSummary.rejected_total) }}</div>
                 </v-col>
-              </v-row>
+              </v-row>-->
               <v-simple-table>
                 <template v-slot:default>
                   <thead>
                     <tr>
                       <th class="text-left">Invoice Date</th>
+                      <th class="text-left">ຫົວບິນ</th>
+                      <th class="text-left">ສະຖານະ</th>
                       <th class="text-left">Payment</th>
                       <th class="text-left">Subtotal</th>
-                      <th class="text-left">Total</th>
                       <th class="text-left">ສ່ວນຫຼູດ</th>
-                      <th class="text-left">ຈຳນວນ</th>
-                      <th class="text-left">ຈຳນວນເພີ່ມ</th>
-                      <th class="text-left">ຈຳນວນຄັ້ງ</th>
+                      <th class="text-left">Total</th>
+                      <th class="text-left">ເບິ່ງລາຍລະອຽດ</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="item in invoices" :key="item.id">
-                      <td>{{ (moment(item.updated_at).format('DD-MM-YYYY')) }}</td>
+                      <td>{{ (moment(item.date).format('DD-MM-YYYY')) }}</td>
+                      <td>{{ item.content }}</td>
+                      <td>{{ item.status_la }}</td>
                       <td>
                         <div class="primary--text">{{ item.payment_method }}</div>
                       </td>
                       <td>{{ Intl.NumberFormat().format(item.sub_total) }}</td>
-                      <td>{{ Intl.NumberFormat().format(item.total) }}</td>
                       <td>{{ Intl.NumberFormat().format(item.discount) }}</td>
-                      <td>{{ Intl.NumberFormat().format(item.total_bag) }}</td>
-                      <td>{{ Intl.NumberFormat().format(item.exceed_bag) }}</td>
-                      <td>{{ item.total_time }}</td>
+                      <td>{{ Intl.NumberFormat().format(item.total) }}</td>
+                      <td>
+                        <v-btn
+                          class="btn elevation-0"
+                          color="info"
+                          small
+                          @click="ViewInvoice(item.id)"
+                        >
+                          <v-icon class="mr-1" small>mdi-eye</v-icon>
+                        </v-btn>
+                      </td>
                     </tr>
                   </tbody>
                 </template>
@@ -401,6 +410,13 @@ export default {
     };
   },
   methods: {
+    ViewInvoice(id) {
+      let route = this.$router.resolve({
+        name: "billing-detail",
+        params: { id }
+      });
+      window.open(route.href, "_blank");
+    },
     showImage(url) {
       if (url != null) {
         this.imageUrl = url;
@@ -422,7 +438,7 @@ export default {
         .catch(error => {
           this.$store.commit("Loading_State", false);
           this.fetchData();
-          if (error.response.status === 422) {
+          if (error.response && error.response.status === 422) {
             let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
@@ -454,7 +470,7 @@ export default {
         .catch(error => {
           this.$store.commit("Loading_State", false);
           this.fetchData();
-          if (error.response.status === 422) {
+          if (error.response && error.response.status === 422) {
             let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
@@ -485,7 +501,7 @@ export default {
         .catch(error => {
           this.$store.commit("Loading_State", false);
           this.fetchData();
-          if (error.response.status === 422) {
+          if (error.response && error.response.status === 422) {
             let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];

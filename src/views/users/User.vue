@@ -9,7 +9,6 @@
         <v-btn @click="creatUser()" class="btn-primary">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
-
       </v-col>
     </v-row>
     <v-row justify="center">
@@ -21,31 +20,61 @@
             <v-spacer></v-spacer>
             <v-row>
               <v-col>
-                <v-select outlined dense :items="roles" v-model="selectedRoles" item-text="name" item-value="name"
-                  label="Roles" multiple></v-select>
+                <v-select
+                  outlined
+                  dense
+                  :items="roles"
+                  v-model="selectedRoles"
+                  item-text="name"
+                  item-value="name"
+                  label="Roles"
+                  multiple
+                ></v-select>
                 <v-spacer></v-spacer>
               </v-col>
               <v-col>
-                <v-text-field v-model="search" clearable prepend-inner-icon="mdi-magnify" label="Search" single-line
-                  hide-details @keyup.enter="Search()" outlined dense></v-text-field>
+                <v-text-field
+                  v-model="search"
+                  clearable
+                  prepend-inner-icon="mdi-magnify"
+                  label="Search"
+                  single-line
+                  hide-details
+                  @keyup.enter="Search()"
+                  outlined
+                  dense
+                ></v-text-field>
               </v-col>
 
               <v-col>
-                <v-text-field v-model="searchPhone" clearable prepend-inner-icon="mdi-magnify" label="Phone"
-                  type="number" class="input-number" single-line hide-details @keyup.enter="SearchPhone()" outlined
-                  dense></v-text-field>
+                <v-text-field
+                  v-model="searchPhone"
+                  clearable
+                  prepend-inner-icon="mdi-magnify"
+                  label="Phone"
+                  type="number"
+                  class="input-number"
+                  single-line
+                  hide-details
+                  @keyup.enter="SearchPhone()"
+                  outlined
+                  dense
+                ></v-text-field>
               </v-col>
             </v-row>
           </v-card-title>
-          <v-data-table :headers="headers" :items="users" :search="search" :disable-pagination="true"
-            hide-default-footer>
+          <v-data-table
+            :headers="headers"
+            :items="users"
+            :search="search"
+            :disable-pagination="true"
+            hide-default-footer
+          >
             <!--Role -->
             <template v-slot:item.roles="{ item }">
               <div>
                 <span v-for="(role, index) in item.roles" :key="index">
-                  <v-chip color="info" label class="mr-1 my-1">
-                    {{ role.name }}
-                  </v-chip>
+                  <v-chip color="info" label class="mr-1 my-1">{{ role.name }}</v-chip>
                 </span>
               </div>
             </template>
@@ -53,71 +82,76 @@
             <template v-slot:item.permissions="{ item }">
               <div>
                 <span v-for="(ps, index) in item.permissions" :key="index">
-                  <v-chip color="success" label class="mr-1 my-1">{{
-                  ps.name
-                  }}</v-chip>
+                  <v-chip color="success" label class="mr-1 my-1">
+                    {{
+                    ps.name
+                    }}
+                  </v-chip>
                 </span>
               </div>
             </template>
             <template v-slot:item.status="{ item }">
-              <v-chip label small class="mr-2" @click="changeStatus(item)" :color="statusColor(item.status)">
-                {{ item.status }}
-              </v-chip>
+              <v-chip
+                label
+                small
+                class="mr-2"
+                @click="changeStatus(item)"
+                :color="statusColor(item.status)"
+              >{{ item.status }}</v-chip>
             </template>
             <template v-slot:item.actions="{ item }">
               <v-menu offset-y>
                 <template v-slot:activator="{ on, attrs }">
-                  <v-icon color="primary" dark v-bind="attrs" v-on="on" medium class="mr-2">mdi-dots-vertical</v-icon>
+                  <v-icon
+                    color="primary"
+                    dark
+                    v-bind="attrs"
+                    v-on="on"
+                    medium
+                    class="mr-2"
+                  >mdi-dots-vertical</v-icon>
                 </template>
                 <v-list>
                   <v-list-item link @click="openModalRole(item)">
                     <v-list-item-title>
-                      <v-icon small class="mr-2"> mdi-plus </v-icon>
-                      ເພີ່ມ Role
+                      <v-icon small class="mr-2">mdi-plus</v-icon>ເພີ່ມ Role
                     </v-list-item-title>
                   </v-list-item>
                   <v-list-item link @click="openModalUpdateRole(item)">
                     <v-list-item-title>
-                      <v-icon small class="mr-2"> mdi-key-remove </v-icon>
-                      ຖອນ Role
+                      <v-icon small class="mr-2">mdi-key-remove</v-icon>ຖອນ Role
                     </v-list-item-title>
                   </v-list-item>
                   <v-list-item link @click="openModalPermission(item)">
                     <v-list-item-title>
-                      <v-icon small class="mr-2"> mdi-plus </v-icon>
-                      ເພີ່ມ Permission
+                      <v-icon small class="mr-2">mdi-plus</v-icon>ເພີ່ມ Permission
                     </v-list-item-title>
                   </v-list-item>
                   <v-list-item link @click="openModalUpdatePermission(item)">
                     <v-list-item-title>
-                      <v-icon small class="mr-2"> mdi-key-remove </v-icon>
-                      ຖອນ Permission
+                      <v-icon small class="mr-2">mdi-key-remove</v-icon>ຖອນ Permission
                     </v-list-item-title>
                   </v-list-item>
 
                   <v-list-item link @click="OpenModalEdit(item)">
                     <v-list-item-title>
-                      <v-icon small class="mr-2"> mdi-pencil </v-icon>
-                      ແກ້ໄຂ
+                      <v-icon small class="mr-2">mdi-pencil</v-icon>ແກ້ໄຂ
                     </v-list-item-title>
                   </v-list-item>
                   <v-list-item link @click="resetPassword(item)">
                     <v-list-item-title>
-                      <v-icon small class="mr-2"> mdi-key </v-icon>
-                      Reset Password
+                      <v-icon small class="mr-2">mdi-key</v-icon>Reset Password
                     </v-list-item-title>
                   </v-list-item>
                   <v-list-item link @click="changePhone(item.id)">
                     <v-list-item-title>
-                      <v-icon small class="mr-2"> mdi-phone </v-icon>
-                      ປ່ຽນເບີໂທ
+                      <v-icon small class="mr-2">mdi-phone</v-icon>ປ່ຽນເບີໂທ
                     </v-list-item-title>
                   </v-list-item>
 
                   <v-list-item link @click="deleteItem(item.id)">
                     <v-list-item-title>
-                      <v-icon small> mdi-delete </v-icon>
-                      ລຶບ
+                      <v-icon small>mdi-delete</v-icon>ລຶບ
                     </v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -126,8 +160,12 @@
           </v-data-table>
           <br />
           <template>
-            <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
-              @paginate="fetchData()"></Pagination>
+            <Pagination
+              v-if="pagination.total_pages > 1"
+              :pagination="pagination"
+              :offset="offset"
+              @paginate="fetchData()"
+            ></Pagination>
           </template>
         </v-card>
       </v-col>
@@ -143,57 +181,68 @@
           <v-card-text>
             <v-stepper v-model="stepValue">
               <v-stepper-header>
-                <v-stepper-step :complete="stepValue > 1" step="1">
-                  Phone Number
-                </v-stepper-step>
+                <v-stepper-step :complete="stepValue > 1" step="1">Phone Number</v-stepper-step>
 
                 <v-divider></v-divider>
 
-                <v-stepper-step :complete="stepValue > 2" step="2">
-                  Verify Code
-                </v-stepper-step>
+                <v-stepper-step :complete="stepValue > 2" step="2">Verify Code</v-stepper-step>
 
                 <v-divider></v-divider>
 
-                <v-stepper-step step="3">
-                  User Info
-                </v-stepper-step>
+                <v-stepper-step step="3">User Info</v-stepper-step>
               </v-stepper-header>
               <v-stepper-items>
                 <v-stepper-content step="1">
-
                   <v-row>
                     <v-col cols="12">
                       <v-form ref="phone" lazy-validation>
-                        <v-text-field label="ເບີໂທ *" required v-model="phone" :rules="phoneRules" type="number"
-                          class="input-number"></v-text-field>
+                        <v-text-field
+                          label="ເບີໂທ *"
+                          required
+                          v-model="phone"
+                          :rules="phoneRules"
+                          type="number"
+                          class="input-number"
+                        ></v-text-field>
                       </v-form>
-                      <p class="errors">
-                        {{ server_errors.phone }}
-                      </p>
+                      <p class="errors">{{ server_errors.phone }}</p>
                     </v-col>
                   </v-row>
 
-                  <v-btn color="primary" @click="verifyPhone" :loading="loading" :disabled="loading">
-                    Continue
-                  </v-btn>
+                  <v-btn
+                    color="primary"
+                    @click="verifyPhone"
+                    :loading="loading"
+                    :disabled="loading"
+                  >Continue</v-btn>
                 </v-stepper-content>
 
                 <v-stepper-content step="2">
                   <v-row>
                     <v-col cols="12">
                       <div style="display: flex; flex-direction: row;">
-                        <v-otp-input ref="otpInput" input-classes="otp-input" separator="" :num-inputs="6"
-                          :should-auto-focus="true" :is-input-num="true" @on-complete="handleOnComplete" class="otp" />
+                        <v-otp-input
+                          ref="otpInput"
+                          input-classes="otp-input"
+                          separator
+                          :num-inputs="6"
+                          :should-auto-focus="true"
+                          :is-input-num="true"
+                          @on-complete="handleOnComplete"
+                          class="otp"
+                        />
 
                         <v-btn class="btnClear" text @click="handleClearInput()">Clear</v-btn>
                       </div>
                     </v-col>
                   </v-row>
 
-                  <v-btn color="primary" :loading="loading" :disabled="loading" @click="verifyOtp">
-                    Continue
-                  </v-btn>
+                  <v-btn
+                    color="primary"
+                    :loading="loading"
+                    :disabled="loading"
+                    @click="verifyOtp"
+                  >Continue</v-btn>
                 </v-stepper-content>
 
                 <v-stepper-content step="3">
@@ -201,54 +250,68 @@
                     <v-form ref="form" lazy-validation>
                       <v-row>
                         <v-col cols="12">
-                          <v-text-field label="Name *" required v-model="user.name" :rules="nameRules"></v-text-field>
-                          <p class="errors">
-                            {{ server_errors.name }}
-                          </p>
+                          <v-text-field
+                            label="Name *"
+                            required
+                            v-model="user.name"
+                            :rules="nameRules"
+                          ></v-text-field>
+                          <p class="errors">{{ server_errors.name }}</p>
                         </v-col>
                         <v-col cols="12">
-                          <v-text-field label="ເບີໂທ *" required v-model="phone" :rules="phoneRules" type="number"
-                            class="input-number" disabled></v-text-field>
-                          <p class="errors">
-                            {{ server_errors.phone }}
-                          </p>
+                          <v-text-field
+                            label="ເບີໂທ *"
+                            required
+                            v-model="phone"
+                            :rules="phoneRules"
+                            type="number"
+                            class="input-number"
+                            disabled
+                          ></v-text-field>
+                          <p class="errors">{{ server_errors.phone }}</p>
                         </v-col>
                         <v-col cols="12">
                           <v-text-field label="Email" required v-model="user.email"></v-text-field>
-                          <p class="errors">
-                            {{ server_errors.email }}
-                          </p>
+                          <p class="errors">{{ server_errors.email }}</p>
                         </v-col>
                         <v-col cols="12">
-                          <v-text-field label="Password *" type="password" v-model="user.password"
-                            :rules="passwordRules" required></v-text-field>
-                          <p class="errors">
-                            {{ server_errors.password }}
-                          </p>
+                          <v-text-field
+                            label="Password *"
+                            type="password"
+                            v-model="user.password"
+                            :rules="passwordRules"
+                            required
+                          ></v-text-field>
+                          <p class="errors">{{ server_errors.password }}</p>
                         </v-col>
                         <v-col cols="12">
-                          <v-text-field label="Password Confirm *" type="password" v-model="user.password_confirmation"
-                            :rules="passwordConfirmRules" required @keyup.enter="AddItem"></v-text-field>
-                          <p class="errors">
-                            {{ server_errors.password_confirmation }}
-                          </p>
+                          <v-text-field
+                            label="Password Confirm *"
+                            type="password"
+                            v-model="user.password_confirmation"
+                            :rules="passwordConfirmRules"
+                            required
+                            @keyup.enter="AddItem"
+                          ></v-text-field>
+                          <p class="errors">{{ server_errors.password_confirmation }}</p>
                         </v-col>
                       </v-row>
                     </v-form>
                   </v-container>
 
-                  <v-btn color="primary" :loading="loading" :disabled="loading" @click="AddItem()">
-                    Save
-                  </v-btn>
+                  <v-btn
+                    color="primary"
+                    :loading="loading"
+                    :disabled="loading"
+                    @click="AddItem()"
+                  >Save</v-btn>
                 </v-stepper-content>
               </v-stepper-items>
             </v-stepper>
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeAddModal()">
-                Close
-              </v-btn>
+              <v-btn color="blue darken-1" text @click="closeAddModal()">Close</v-btn>
               <!--              <v-btn-->
               <!--                color="blue darken-1"-->
               <!--                text-->
@@ -266,7 +329,7 @@
 
     <!--Edit Modal-->
     <ModalEdit>
-      <template @close="close" v-slot="">
+      <template @close="close" v-slot>
         <v-card>
           <v-card-title>
             <span class="headline">ແກ້ໄຂ User</span>
@@ -276,50 +339,59 @@
               <v-form ref="form" lazy-validation>
                 <v-row>
                   <v-col cols="12">
-                    <v-text-field label="Name *" required v-model="edit_user.name" :rules="nameRules"></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.name }}
-                    </p>
+                    <v-text-field
+                      label="Name *"
+                      required
+                      v-model="edit_user.name"
+                      :rules="nameRules"
+                    ></v-text-field>
+                    <p class="errors">{{ server_errors.name }}</p>
                   </v-col>
                   <v-col cols="12">
-                    <v-text-field label="ເບີໂທ *" required v-model="edit_user.phone" :rules="phoneRules" type="number"
-                      class="input-number" disabled></v-text-field>
+                    <v-text-field
+                      label="ເບີໂທ *"
+                      required
+                      v-model="edit_user.phone"
+                      :rules="phoneRules"
+                      type="number"
+                      class="input-number"
+                      disabled
+                    ></v-text-field>
                   </v-col>
                   <v-col cols="12">
-                    <v-text-field label="Email" required v-model="edit_user.email" :rules="emailRules"></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.email }}
-                    </p>
+                    <v-text-field
+                      label="Email"
+                      required
+                      v-model="edit_user.email"
+                      :rules="emailRules"
+                    ></v-text-field>
+                    <p class="errors">{{ server_errors.email }}</p>
                   </v-col>
                   <v-col cols="12">
                     <v-text-field label="Real Name" v-model="edit_user.emp_name"></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.emp_name }}
-                    </p>
+                    <p class="errors">{{ server_errors.emp_name }}</p>
                   </v-col>
                   <v-col cols="12">
                     <v-text-field label="Real Surname" v-model="edit_user.emp_surname"></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.emp_surname }}
-                    </p>
+                    <p class="errors">{{ server_errors.emp_surname }}</p>
                   </v-col>
                   <v-col cols="12">
                     <v-text-field label="Card ID" v-model="edit_user.emp_card_id"></v-text-field>
-                    <p class="errors">
-                      {{ server_errors.emp_card_id }}
-                    </p>
+                    <p class="errors">{{ server_errors.emp_card_id }}</p>
                   </v-col>
                 </v-row>
               </v-form>
             </v-container>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeUpdateModal()">
-                Close
-              </v-btn>
-              <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="updateItem()">
-                Update
-              </v-btn>
+              <v-btn color="blue darken-1" text @click="closeUpdateModal()">Close</v-btn>
+              <v-btn
+                color="blue darken-1"
+                text
+                :loading="loading"
+                :disabled="loading"
+                @click="updateItem()"
+              >Update</v-btn>
             </v-card-actions>
           </v-card-text>
         </v-card>
@@ -335,60 +407,70 @@
             <span class="headline">Change Phone {{edit_user.name}}</span>
           </v-card-title>
           <v-card-text>
-
             <v-stepper v-model="stepValue">
               <v-stepper-header>
-                <v-stepper-step :complete="stepValue > 1" step="1">
-                  Phone Number
-                </v-stepper-step>
+                <v-stepper-step :complete="stepValue > 1" step="1">Phone Number</v-stepper-step>
 
                 <v-divider></v-divider>
 
-                <v-stepper-step :complete="stepValue > 2" step="2">
-                  Verify Code
-                </v-stepper-step>
+                <v-stepper-step :complete="stepValue > 2" step="2">Verify Code</v-stepper-step>
 
                 <v-divider></v-divider>
 
-                <v-stepper-step step="3">
-                  Confirm
-                </v-stepper-step>
+                <v-stepper-step step="3">Confirm</v-stepper-step>
               </v-stepper-header>
               <v-stepper-items>
                 <v-stepper-content step="1">
-
                   <v-row>
                     <v-col cols="12">
                       <v-form ref="phone" lazy-validation>
-                        <v-text-field label="ເບີໂທ *" required v-model="phone" :rules="phoneRules" type="number"
-                          class="input-number"></v-text-field>
+                        <v-text-field
+                          label="ເບີໂທ *"
+                          required
+                          v-model="phone"
+                          :rules="phoneRules"
+                          type="number"
+                          class="input-number"
+                        ></v-text-field>
                       </v-form>
-                      <p class="errors">
-                        {{ server_errors.phone }}
-                      </p>
+                      <p class="errors">{{ server_errors.phone }}</p>
                     </v-col>
                   </v-row>
 
-                  <v-btn color="primary" @click="verifyPhone" :loading="loading" :disabled="loading">
-                    Continue
-                  </v-btn>
+                  <v-btn
+                    color="primary"
+                    @click="verifyPhone"
+                    :loading="loading"
+                    :disabled="loading"
+                  >Continue</v-btn>
                 </v-stepper-content>
 
                 <v-stepper-content step="2">
                   <v-row>
                     <v-col cols="12">
                       <div style="display: flex; flex-direction: row;">
-                        <v-otp-input ref="otpInput" input-classes="otp-input" separator="" :num-inputs="6"
-                          :should-auto-focus="true" :is-input-num="true" @on-complete="handleOnComplete" class="otp" />
+                        <v-otp-input
+                          ref="otpInput"
+                          input-classes="otp-input"
+                          separator
+                          :num-inputs="6"
+                          :should-auto-focus="true"
+                          :is-input-num="true"
+                          @on-complete="handleOnComplete"
+                          class="otp"
+                        />
 
                         <v-btn class="btnClear" text @click="handleClearInput()">Clear</v-btn>
                       </div>
                     </v-col>
                   </v-row>
 
-                  <v-btn color="primary" @click="verifyOtp" :loading="loading" :disabled="loading">
-                    Continue
-                  </v-btn>
+                  <v-btn
+                    color="primary"
+                    @click="verifyOtp"
+                    :loading="loading"
+                    :disabled="loading"
+                  >Continue</v-btn>
                 </v-stepper-content>
 
                 <v-stepper-content step="3">
@@ -396,27 +478,33 @@
                     <v-form ref="form" lazy-validation>
                       <v-row>
                         <v-col cols="12">
-                          <v-text-field label="ເບີໂທ *" required v-model="phone" :rules="phoneRules" type="number"
-                            class="input-number" disabled></v-text-field>
-                          <p class="errors">
-                            {{ server_errors.phone }}
-                          </p>
+                          <v-text-field
+                            label="ເບີໂທ *"
+                            required
+                            v-model="phone"
+                            :rules="phoneRules"
+                            type="number"
+                            class="input-number"
+                            disabled
+                          ></v-text-field>
+                          <p class="errors">{{ server_errors.phone }}</p>
                         </v-col>
                       </v-row>
                     </v-form>
                   </v-container>
-                  <v-btn color="primary" :loading="loading" :disabled="loading" @click="changePhone()">
-                    Change
-                  </v-btn>
+                  <v-btn
+                    color="primary"
+                    :loading="loading"
+                    :disabled="loading"
+                    @click="changePhone()"
+                  >Change</v-btn>
                 </v-stepper-content>
               </v-stepper-items>
             </v-stepper>
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeChangePhone">
-                Close
-              </v-btn>
+              <v-btn color="blue darken-1" text @click="closeChangePhone">Close</v-btn>
             </v-card-actions>
           </v-card-text>
         </v-card>
@@ -427,38 +515,51 @@
     <v-dialog v-model="changePasswordDialog" max-width="720px" persistent>
       <v-card>
         <v-card-title>
-          <span class="headline">Reset Password
-            <span><a>{{ edit_user.name }}</a></span></span>
+          <span class="headline">
+            Reset Password
+            <span>
+              <a>{{ edit_user.name }}</a>
+            </span>
+          </span>
         </v-card-title>
         <v-card-text>
           <v-container>
             <v-form ref="form" lazy-validation>
               <v-row>
                 <v-col cols="12">
-                  <v-text-field label="Password *" type="password" v-model="password" :rules="passwordRules" required>
-                  </v-text-field>
-                  <p class="errors">
-                    {{ server_errors.password }}
-                  </p>
+                  <v-text-field
+                    label="Password *"
+                    type="password"
+                    v-model="password"
+                    :rules="passwordRules"
+                    required
+                  ></v-text-field>
+                  <p class="errors">{{ server_errors.password }}</p>
                 </v-col>
                 <v-col cols="12">
-                  <v-text-field label="Password Confirm *" type="password" v-model="password_confirm"
-                    :rules="passwordConfirmRules" required @keyup.enter="resetPasswordAction"></v-text-field>
-                  <p class="errors">
-                    {{ server_errors.password_confirmation }}
-                  </p>
+                  <v-text-field
+                    label="Password Confirm *"
+                    type="password"
+                    v-model="password_confirm"
+                    :rules="passwordConfirmRules"
+                    required
+                    @keyup.enter="resetPasswordAction"
+                  ></v-text-field>
+                  <p class="errors">{{ server_errors.password_confirmation }}</p>
                 </v-col>
               </v-row>
             </v-form>
           </v-container>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="closeReset()">
-              Close
-            </v-btn>
-            <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="resetPasswordAction">
-              Reset
-            </v-btn>
+            <v-btn color="blue darken-1" text @click="closeReset()">Close</v-btn>
+            <v-btn
+              color="blue darken-1"
+              text
+              :loading="loading"
+              :disabled="loading"
+              @click="resetPasswordAction"
+            >Reset</v-btn>
           </v-card-actions>
         </v-card-text>
       </v-card>
@@ -468,31 +569,41 @@
     <v-dialog v-model="changeStatusDialog" max-width="720px" persistent>
       <v-card>
         <v-card-title>
-          <span class="headline">ປ່ຽນສະຖານະ
-            <span><a>{{ edit_user.name }}</a></span></span>
+          <span class="headline">
+            ປ່ຽນສະຖານະ
+            <span>
+              <a>{{ edit_user.name }}</a>
+            </span>
+          </span>
         </v-card-title>
         <v-card-text>
           <v-container>
             <v-form ref="form" lazy-validation>
               <v-row>
                 <v-col cols="12">
-                  <v-select label="Status *" :items="statuses" v-model="edit_user.status" item-text="name"
-                    item-value="name" required></v-select>
-                  <p class="errors">
-                    {{ server_errors.status }}
-                  </p>
+                  <v-select
+                    label="Status *"
+                    :items="statuses"
+                    v-model="edit_user.status"
+                    item-text="name"
+                    item-value="name"
+                    required
+                  ></v-select>
+                  <p class="errors">{{ server_errors.status }}</p>
                 </v-col>
               </v-row>
             </v-form>
           </v-container>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="changeStatusDialog = false">
-              Close
-            </v-btn>
-            <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="switchStatus">
-              Change
-            </v-btn>
+            <v-btn color="blue darken-1" text @click="changeStatusDialog = false">Close</v-btn>
+            <v-btn
+              color="blue darken-1"
+              text
+              :loading="loading"
+              :disabled="loading"
+              @click="switchStatus"
+            >Change</v-btn>
           </v-card-actions>
         </v-card-text>
       </v-card>
@@ -502,31 +613,43 @@
     <v-dialog v-model="roleDialog" max-width="720px" persistent>
       <v-card>
         <v-card-title>
-          <span class="headline">Add Role to
-            <span><a>{{ edit_user.name }}</a></span></span>
+          <span class="headline">
+            Add Role to
+            <span>
+              <a>{{ edit_user.name }}</a>
+            </span>
+          </span>
         </v-card-title>
         <v-card-text>
           <v-container>
             <v-form ref="form" lazy-validation>
               <v-row>
                 <v-col cols="12">
-                  <v-select required v-model="edit_user.roles" :items="roles" item-text="name" item-value="name"
-                    label="Role" multiple :rules="rulePermissionRole"></v-select>
-                  <p class="errors">
-                    {{ errormsg }}
-                  </p>
+                  <v-select
+                    required
+                    v-model="edit_user.roles"
+                    :items="roles"
+                    item-text="name"
+                    item-value="name"
+                    label="Role"
+                    multiple
+                    :rules="rulePermissionRole"
+                  ></v-select>
+                  <p class="errors">{{ errormsg }}</p>
                 </v-col>
               </v-row>
             </v-form>
           </v-container>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="roleDialog = false">
-              Close
-            </v-btn>
-            <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="AddRole">
-              Add
-            </v-btn>
+            <v-btn color="blue darken-1" text @click="roleDialog = false">Close</v-btn>
+            <v-btn
+              color="blue darken-1"
+              text
+              :loading="loading"
+              :disabled="loading"
+              @click="AddRole"
+            >Add</v-btn>
           </v-card-actions>
         </v-card-text>
       </v-card>
@@ -536,31 +659,43 @@
     <v-dialog v-model="updateRoleDialog" max-width="720px" persistent>
       <v-card>
         <v-card-title>
-          <span class="headline">Remove Role from
-            <span><a>{{ edit_user.name }}</a></span></span>
+          <span class="headline">
+            Remove Role from
+            <span>
+              <a>{{ edit_user.name }}</a>
+            </span>
+          </span>
         </v-card-title>
         <v-card-text>
           <v-container>
             <v-form ref="form" lazy-validation>
               <v-row>
                 <v-col cols="12">
-                  <v-select required v-model="selectedRole" :items="revokeRoles" item-text="name" item-value="name"
-                    label="Role" multiple :rules="rulePermissionRole"></v-select>
-                  <p class="errors">
-                    {{ errormsg }}
-                  </p>
+                  <v-select
+                    required
+                    v-model="selectedRole"
+                    :items="revokeRoles"
+                    item-text="name"
+                    item-value="name"
+                    label="Role"
+                    multiple
+                    :rules="rulePermissionRole"
+                  ></v-select>
+                  <p class="errors">{{ errormsg }}</p>
                 </v-col>
               </v-row>
             </v-form>
           </v-container>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="updateRoleDialog = false">
-              Close
-            </v-btn>
-            <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="UpdateRole">
-              Remove
-            </v-btn>
+            <v-btn color="blue darken-1" text @click="updateRoleDialog = false">Close</v-btn>
+            <v-btn
+              color="blue darken-1"
+              text
+              :loading="loading"
+              :disabled="loading"
+              @click="UpdateRole"
+            >Remove</v-btn>
           </v-card-actions>
         </v-card-text>
       </v-card>
@@ -570,31 +705,43 @@
     <v-dialog v-model="permissionDialog" max-width="720px" persistent>
       <v-card>
         <v-card-title>
-          <span class="headline">Add Permission to
-            <span><a>{{ edit_user.name }}</a></span></span>
+          <span class="headline">
+            Add Permission to
+            <span>
+              <a>{{ edit_user.name }}</a>
+            </span>
+          </span>
         </v-card-title>
         <v-card-text>
           <v-container>
             <v-form ref="form" lazy-validation>
               <v-row>
                 <v-col cols="12">
-                  <v-select required v-model="edit_user.permissions" :items="permissions" item-text="name"
-                    item-value="name" label="Permission *" multiple :rules="rulePermission"></v-select>
-                  <p class="errors">
-                    {{ errormsg }}
-                  </p>
+                  <v-select
+                    required
+                    v-model="edit_user.permissions"
+                    :items="permissions"
+                    item-text="name"
+                    item-value="name"
+                    label="Permission *"
+                    multiple
+                    :rules="rulePermission"
+                  ></v-select>
+                  <p class="errors">{{ errormsg }}</p>
                 </v-col>
               </v-row>
             </v-form>
           </v-container>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="permissionDialog = false">
-              Close
-            </v-btn>
-            <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="AddPermission">
-              Add
-            </v-btn>
+            <v-btn color="blue darken-1" text @click="permissionDialog = false">Close</v-btn>
+            <v-btn
+              color="blue darken-1"
+              text
+              :loading="loading"
+              :disabled="loading"
+              @click="AddPermission"
+            >Add</v-btn>
           </v-card-actions>
         </v-card-text>
       </v-card>
@@ -604,31 +751,43 @@
     <v-dialog v-model="updatePermissionDialog" max-width="720px" persistent>
       <v-card>
         <v-card-title>
-          <span class="headline">Remove Permission from
-            <span><a>{{ edit_user.name }}</a></span></span>
+          <span class="headline">
+            Remove Permission from
+            <span>
+              <a>{{ edit_user.name }}</a>
+            </span>
+          </span>
         </v-card-title>
         <v-card-text>
           <v-container>
             <v-form ref="form" lazy-validation>
               <v-row>
                 <v-col cols="12">
-                  <v-select required v-model="selectedPermission" :items="revokes" item-text="name" item-value="name"
-                    label="Permission" multiple :rules="rulePermission"></v-select>
-                  <p class="errors">
-                    {{ errormsg }}
-                  </p>
+                  <v-select
+                    required
+                    v-model="selectedPermission"
+                    :items="revokes"
+                    item-text="name"
+                    item-value="name"
+                    label="Permission"
+                    multiple
+                    :rules="rulePermission"
+                  ></v-select>
+                  <p class="errors">{{ errormsg }}</p>
                 </v-col>
               </v-row>
             </v-form>
           </v-container>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="updatePermissionDialog = false">
-              Close
-            </v-btn>
-            <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="UpdatePermission">
-              Remove
-            </v-btn>
+            <v-btn color="blue darken-1" text @click="updatePermissionDialog = false">Close</v-btn>
+            <v-btn
+              color="blue darken-1"
+              text
+              :loading="loading"
+              :disabled="loading"
+              @click="UpdatePermission"
+            >Remove</v-btn>
           </v-card-actions>
         </v-card-text>
       </v-card>
@@ -642,7 +801,13 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-          <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="deleteItemConfirm">OK</v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            :loading="loading"
+            :disabled="loading"
+            @click="deleteItemConfirm"
+          >OK</v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </template>
@@ -669,12 +834,17 @@ export default {
         { text: "Phone", value: "phone", sortable: false },
         { text: "Email", value: "email", sortable: false },
         { text: "Role", value: "roles", sortable: false, width: "150px" },
-        { text: "Permission", value: "permissions", sortable: false, width: "750px" },
+        {
+          text: "Permission",
+          value: "permissions",
+          sortable: false,
+          width: "750px"
+        },
         { text: "Status", value: "status", sortable: false, align: "center" },
         { text: "Real Name", value: "emp_name", sortable: false },
         { text: "Real Surname", value: "emp_surname", sortable: false },
         { text: "Card ID", value: "emp_card_id", sortable: false },
-        { text: "", value: "actions", sortable: false },
+        { text: "", value: "actions", sortable: false }
       ],
       loading: false,
       users: [],
@@ -684,7 +854,7 @@ export default {
       userID: "",
       server_errors: {
         email: "",
-        roleId: "",
+        roleId: ""
       },
       errormsg: "",
       roleDialog: false,
@@ -719,48 +889,46 @@ export default {
       password_confirm: "",
       statuses: [
         {
-          name: "active",
+          name: "active"
         },
         {
-          name: "inactive",
-        },
+          name: "inactive"
+        }
       ],
       status: "",
       id_token: "",
 
       //Validation
       emailRules: [
-        (v) => !!v || "E-mail is required",
-        (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+        v => !!v || "E-mail is required",
+        v => /.+@.+\..+/.test(v) || "E-mail must be valid"
       ],
       passwordRules: [
-        (v) => !!v || "Password is required",
-        (v) =>
-          (v && v.length >= 8) || "Password must be more than 8 characters",
+        v => !!v || "Password is required",
+        v => (v && v.length >= 8) || "Password must be more than 8 characters"
       ],
       passwordConfirmRules: [
-        (v) => !!v || "Password Confirm is required",
-        (v) =>
-          (v && v.length >= 8) || "Password must be more than 8 characters",
+        v => !!v || "Password Confirm is required",
+        v => (v && v.length >= 8) || "Password must be more than 8 characters"
       ],
       nameRules: [
-        (v) => !!v || "Name is required",
-        (v) => (v && v.length >= 2) || "Name must be less than 2 characters",
+        v => !!v || "Name is required",
+        v => (v && v.length >= 2) || "Name must be less than 2 characters"
       ],
       phoneRules: [
-        (v) => !!v || "Phone is required",
-        (v) =>
+        v => !!v || "Phone is required",
+        v =>
           (v && v.length >= 8 && v.length <= 11) ||
-          "Phone number must be  8 - 11 numbers",
+          "Phone number must be  8 - 11 numbers"
       ],
-      rulePermission: [(v) => !!v || "Permission is required"],
-      rulePermissionRole: [(v) => !!v || "Role is required"],
+      rulePermission: [v => !!v || "Permission is required"],
+      rulePermissionRole: [v => !!v || "Role is required"]
     };
   },
   methods: {
     creatUser() {
       this.$router.push({
-        name: "CreateUser",
+        name: "CreateUser"
       });
     },
     AddItem() {
@@ -769,7 +937,7 @@ export default {
         this.user.id_token = this.id_token;
         this.$axios
           .post("user-setting/user", this.user)
-          .then((res) => {
+          .then(res => {
             if (res.data.code === 200) {
               setTimeout(() => {
                 this.loading = false;
@@ -780,19 +948,21 @@ export default {
                 this.$store.commit("Toast_State", {
                   value: true,
                   color: "success",
-                  msg: res.data.message,
+                  msg: res.data.message
                 });
               }, 300);
             }
           })
-          .catch((error) => {
+          .catch(error => {
             this.loading = false;
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response ? error.response.data.message : 'Something went wrong',
+              msg: error.response
+                ? error.response.data.message
+                : "Something went wrong"
             });
-            if (error.response.status === 422) {
+            if (error.response && error.response.status === 422) {
               let obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
@@ -807,7 +977,7 @@ export default {
       if (this.$refs.phone.validate() === true) {
         this.$axios
           .post("unique-phone", { phone: this.phone })
-          .then((res) => {
+          .then(res => {
             if (res.data.code === 200) {
               if (res.data.data.exists === false) {
                 this.initReCaptcha();
@@ -818,7 +988,7 @@ export default {
                 this.$store.commit("Toast_State", {
                   value: true,
                   color: "error",
-                  msg: "ເບີນີ້ມີໃນລະບົບແລ້ວ",
+                  msg: "ເບີນີ້ມີໃນລະບົບແລ້ວ"
                 });
               }
               // this.btnVerify = false;
@@ -835,18 +1005,20 @@ export default {
       let countryCode = "+85620"; //laos
       let phoneNumber = countryCode + this.phone;
       let appVerifier = this.appVerifier;
-      firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+      firebase
+        .auth()
+        .signInWithPhoneNumber(phoneNumber, appVerifier)
         .then(confirmationResult => {
           window.confirmationResult = confirmationResult;
           this.stepValue = 2;
           // this.btnVerify = false;
           // this.loading = true;
         })
-        .catch(function () {
+        .catch(function() {
           this.$store.commit("Toast_State", {
             value: true,
             color: "error",
-            msg: "SMS not sent",
+            msg: "SMS not sent"
           });
           // this.loading = true;
         });
@@ -857,23 +1029,21 @@ export default {
       let code = this.code;
       window.confirmationResult
         .confirm(code)
-        .then((res) => {
+        .then(res => {
           if (res) {
-            const token = (res.user);
+            const token = res.user;
             this.id_token = token._lat;
             this.stepValue = 3;
           }
         })
-        .catch(function () {
+        .catch(function() {
           this.$store.commit("Toast_State", {
             value: true,
             color: "error",
-            msg: "ມີບາງຢ່າງຜິດພາດ ກະລຸນາລອງໃໝ່",
+            msg: "ມີບາງຢ່າງຜິດພາດ ກະລຸນາລອງໃໝ່"
           });
         });
-
     },
-
 
     initReCaptcha() {
       setTimeout(() => {
@@ -885,10 +1055,10 @@ export default {
             //   // reCAPTCHA solved, allow signInWithPhoneNumber.
             //   // ...
             // },
-            "expired-callback": function () {
+            "expired-callback": function() {
               // Response expired. Ask user to solve reCAPTCHA again.
               // ...
-            },
+            }
           }
         );
         //
@@ -905,9 +1075,10 @@ export default {
             { per_page: this.per_page },
             { filter: this.search },
             { phone: this.searchPhone },
-            { roles: this.selectedRoles },])
+            { roles: this.selectedRoles }
+          ])
         })
-        .then((res) => {
+        .then(res => {
           if (res.data.code === 200) {
             this.loading = false;
             this.$store.commit("Loading_State", false);
@@ -915,9 +1086,9 @@ export default {
             this.pagination = res.data.data.pagination;
           }
         })
-        .catch((error) => {
+        .catch(error => {
           this.$store.commit("Loading_State", false);
-          if (error.response.status === 422) {
+          if (error.response && error.response.status === 422) {
             let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
@@ -930,21 +1101,21 @@ export default {
       let roles = [];
       this.$axios
         .get("user-setting/role")
-        .then((res) => {
+        .then(res => {
           if (res.data.code === 200) {
             this.loading = false;
             this.roles = res.data.data;
-            this.edit_user.roles.map((item) => {
+            this.edit_user.roles.map(item => {
               roles.push(item.name);
             });
-            this.revokeRoles = res.data.data.filter((item) =>
+            this.revokeRoles = res.data.data.filter(item =>
               roles.includes(item.name)
             );
           }
         })
-        .catch((error) => {
+        .catch(error => {
           this.loading = false;
-          if (error.response.status === 422) {
+          if (error.response && error.response.status === 422) {
             let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
@@ -957,26 +1128,28 @@ export default {
       //Permission
       this.$axios
         .get("user-setting/permission")
-        .then((res) => {
+        .then(res => {
           if (res.data.code === 200) {
             this.loading = false;
             this.permissions = res.data.data;
-            this.edit_user.permissions.map((item) => {
+            this.edit_user.permissions.map(item => {
               permissions.push(item.name);
             });
-            this.revokes = res.data.data.filter((item) =>
+            this.revokes = res.data.data.filter(item =>
               permissions.includes(item.name)
             );
           }
         })
-        .catch((error) => {
+        .catch(error => {
           this.loading = false;
           this.$store.commit("Toast_State", {
             value: true,
             color: "error",
-            msg: error.response ? error.response.data.message : 'Something went wrong',
+            msg: error.response
+              ? error.response.data.message
+              : "Something went wrong"
           });
-          if (error.response.status === 422) {
+          if (error.response && error.response.status === 422) {
             let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
@@ -1000,9 +1173,9 @@ export default {
         this.$axios
           .put("user-setting/reset-password/" + this.edit_user.id, {
             password: this.password,
-            password_confirmation: this.password_confirm,
+            password_confirmation: this.password_confirm
           })
-          .then((res) => {
+          .then(res => {
             if (res.data.code === 200) {
               setTimeout(() => {
                 this.loading = false;
@@ -1013,19 +1186,21 @@ export default {
                 this.$store.commit("Toast_State", {
                   value: true,
                   color: "success",
-                  msg: res.data.message,
+                  msg: res.data.message
                 });
               }, 300);
             }
           })
-          .catch((error) => {
+          .catch(error => {
             this.loading = false;
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response ? error.response.data.message : 'Something went wrong',
+              msg: error.response
+                ? error.response.data.message
+                : "Something went wrong"
             });
-            if (error.response.status === 422) {
+            if (error.response && error.response.status === 422) {
               let obj = error.response.data.errors;
               for (let [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
@@ -1044,7 +1219,7 @@ export default {
         this.loading = true;
         this.$axios
           .put("user-setting/user/" + this.edit_user.id, this.edit_user)
-          .then((res) => {
+          .then(res => {
             if (res.data.code === 200) {
               setTimeout(() => {
                 this.loading = false;
@@ -1055,19 +1230,21 @@ export default {
                 this.$store.commit("Toast_State", {
                   value: true,
                   color: "success",
-                  msg: res.data.message,
+                  msg: res.data.message
                 });
               }, 300);
             }
           })
-          .catch((error) => {
+          .catch(error => {
             this.loading = false;
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response ? error.response.data.message : 'Something went wrong',
+              msg: error.response
+                ? error.response.data.message
+                : "Something went wrong"
             });
-            if (error.response.status === 422) {
+            if (error.response && error.response.status === 422) {
               let obj = error.response.data.errors;
               for (let [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
@@ -1093,7 +1270,7 @@ export default {
       this.loading = true;
       this.$axios
         .delete("user-setting/user/" + this.userID)
-        .then((res) => {
+        .then(res => {
           if (res.data.code === 200) {
             setTimeout(() => {
               this.loading = false;
@@ -1102,18 +1279,20 @@ export default {
               this.$store.commit("Toast_State", {
                 value: true,
                 color: "success",
-                msg: res.data.message,
+                msg: res.data.message
               });
             }, 300);
           }
         })
-        .catch((error) => {
+        .catch(error => {
           this.loading = false;
           // setTimeout(() =>{
           this.$store.commit("Toast_State", {
             value: true,
             color: "error",
-            msg: error.response ? error.response.data.message : 'Something went wrong',
+            msg: error.response
+              ? error.response.data.message
+              : "Something went wrong"
           });
           // },300);
           this.$store.commit("modalDelete_State", false);
@@ -1131,9 +1310,9 @@ export default {
         this.loading = true;
         this.$axios
           .post("user-setting/user/" + this.userID + "/give-role", {
-            roles: this.edit_user.roles,
+            roles: this.edit_user.roles
           })
-          .then((res) => {
+          .then(res => {
             if (res.data.code === 200) {
               setTimeout(() => {
                 this.loading = false;
@@ -1144,19 +1323,21 @@ export default {
                 this.$store.commit("Toast_State", {
                   value: true,
                   color: "success",
-                  msg: res.data.message,
+                  msg: res.data.message
                 });
               }, 300);
             }
           })
-          .catch((error) => {
+          .catch(error => {
             if (error.response.data.code === 422) {
               this.errormsg = error.response.data.message;
             }
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response ? error.response.data.message : 'Something went wrong',
+              msg: error.response
+                ? error.response.data.message
+                : "Something went wrong"
             });
           });
         this.loading = false;
@@ -1175,9 +1356,9 @@ export default {
         // this.roles = this.edit_user.roles;
         this.$axios
           .post("user-setting/user/" + this.userID + "/revoke-role", {
-            roles: this.selectedRole,
+            roles: this.selectedRole
           })
-          .then((res) => {
+          .then(res => {
             if (res.data.code === 200) {
               setTimeout(() => {
                 this.loading = false;
@@ -1188,19 +1369,21 @@ export default {
                 this.$store.commit("Toast_State", {
                   value: true,
                   color: "success",
-                  msg: res.data.message,
+                  msg: res.data.message
                 });
               }, 300);
             }
           })
-          .catch((error) => {
+          .catch(error => {
             if (error.response.data.code === 422) {
               this.errormsg = error.response.data.message;
             }
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response ? error.response.data.message : 'Something went wrong',
+              msg: error.response
+                ? error.response.data.message
+                : "Something went wrong"
             });
           });
         this.loading = false;
@@ -1220,9 +1403,9 @@ export default {
         // this.roles = this.edit_user.roles;
         this.$axios
           .post("user-setting/user/" + this.userID + "/give-permission", {
-            permissions: this.edit_user.permissions,
+            permissions: this.edit_user.permissions
           })
-          .then((res) => {
+          .then(res => {
             if (res.data.code === 200) {
               setTimeout(() => {
                 this.loading = false;
@@ -1233,19 +1416,21 @@ export default {
                 this.$store.commit("Toast_State", {
                   value: true,
                   color: "success",
-                  msg: res.data.message,
+                  msg: res.data.message
                 });
               }, 300);
             }
           })
-          .catch((error) => {
+          .catch(error => {
             if (error.response.data.code === 422) {
               this.errormsg = error.response.data.message;
             }
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response ? error.response.data.message : 'Something went wrong',
+              msg: error.response
+                ? error.response.data.message
+                : "Something went wrong"
             });
           });
         this.loading = false;
@@ -1265,9 +1450,9 @@ export default {
         this.loading = true;
         this.$axios
           .post("user-setting/user/" + this.userID + "/revoke-permission", {
-            permissions: this.selectedPermission,
+            permissions: this.selectedPermission
           })
-          .then((res) => {
+          .then(res => {
             if (res.data.code === 200) {
               setTimeout(() => {
                 this.loading = false;
@@ -1277,19 +1462,21 @@ export default {
                 this.$store.commit("Toast_State", {
                   value: true,
                   color: "success",
-                  msg: res.data.message,
+                  msg: res.data.message
                 });
               }, 300);
             }
           })
-          .catch((error) => {
+          .catch(error => {
             if (error.response.data.code === 422) {
               this.errormsg = error.response.data.message;
             }
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response ? error.response.data.message : 'Something went wrong',
+              msg: error.response
+                ? error.response.data.message
+                : "Something went wrong"
             });
           });
         this.loading = false;
@@ -1319,9 +1506,9 @@ export default {
       this.loading = true;
       this.$axios
         .put("user-setting/update-status/" + this.edit_user.id, {
-          status: this.edit_user.status,
+          status: this.edit_user.status
         })
-        .then((res) => {
+        .then(res => {
           if (res.data.code === 200) {
             setTimeout(() => {
               this.loading = false;
@@ -1329,18 +1516,20 @@ export default {
               this.$store.commit("Toast_State", {
                 value: true,
                 color: "success",
-                msg: res.data.message,
+                msg: res.data.message
               });
               this.changeStatusDialog = false;
             }, 300);
           }
         })
-        .catch((error) => {
+        .catch(error => {
           this.loading = false;
           this.$store.commit("Toast_State", {
             value: true,
             color: "error",
-            msg: error.response ? error.response.data.message : 'Something went wrong',
+            msg: error.response
+              ? error.response.data.message
+              : "Something went wrong"
           });
         });
     },
@@ -1364,58 +1553,58 @@ export default {
     },
     handleClearInput() {
       this.$refs.otpInput.clearInput();
-    },
+    }
   },
 
   watch: {
-    "user.name": function () {
+    "user.name": function() {
       this.server_errors.name = "";
     },
-    "user.phone": function () {
+    "user.phone": function() {
       this.server_errors.phone = "";
     },
-    "user.email": function () {
+    "user.email": function() {
       this.server_errors.email = "";
     },
-    "user.password": function () {
+    "user.password": function() {
       this.server_errors.password = "";
     },
-    "edit_user.name": function () {
+    "edit_user.name": function() {
       this.server_errors.name = "";
     },
-    "edit_user.phone": function () {
+    "edit_user.phone": function() {
       this.server_errors.phone = "";
     },
-    "edit_user.email": function () {
+    "edit_user.email": function() {
       this.server_errors.email = "";
     },
-    password: function () {
+    password: function() {
       this.server_errors.password = "";
     },
-    password_confirmation: function () {
+    password_confirmation: function() {
       this.password_confirmation = "";
     },
-    "edit_user.roles": function () {
+    "edit_user.roles": function() {
       this.errormsg = "";
     },
-    "edit_user.permissions": function () {
+    "edit_user.permissions": function() {
       this.server_errors.permissions = "";
     },
-    search: function (value) {
-      this.pagination.current_page = '';
+    search: function(value) {
+      this.pagination.current_page = "";
       if (value === "") {
         this.fetchData();
       }
     },
 
-    searchPhone: function (value) {
-      this.pagination.current_page = '';
+    searchPhone: function(value) {
+      this.pagination.current_page = "";
       if (value.length > 4) {
         this.fetchData();
       }
     },
-    selectedRoles: function () {
-      this.pagination.current_page = '';
+    selectedRoles: function() {
+      this.pagination.current_page = "";
       this.fetchData();
     }
   },
@@ -1423,7 +1612,7 @@ export default {
     this.fetchRole();
     this.fetchData();
     this.initReCaptcha();
-  },
+  }
 };
 </script>
 

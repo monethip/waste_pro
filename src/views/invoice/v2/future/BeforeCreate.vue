@@ -2,12 +2,10 @@
   <v-container>
     <v-breadcrumbs large>
       <v-btn text class="text-primary" @click="backPrevios()">
-        <v-icon>mdi-keyboard-backspace </v-icon>
+        <v-icon>mdi-keyboard-backspace</v-icon>
       </v-btn>
 
-      <div>
-        ເລືອກ User
-      </div>
+      <div>ເລືອກ User</div>
     </v-breadcrumbs>
     <v-row justify="center">
       <v-col>
@@ -21,47 +19,71 @@
                 <v-btn dark color="primary" @click="OpenModalAdd">ເພີ່ມລູກຄ້າ Pre Customer</v-btn>
               </v-col>
               <v-col>
-                <v-text-field v-model="search" clearable prepend-inner-icon="mdi-magnify" label="Search" single-line
-                  hide-details @keyup.enter="Search()" outlined dense></v-text-field>
+                <v-text-field
+                  v-model="search"
+                  clearable
+                  prepend-inner-icon="mdi-magnify"
+                  label="Search"
+                  single-line
+                  hide-details
+                  @keyup.enter="Search()"
+                  outlined
+                  dense
+                ></v-text-field>
               </v-col>
 
               <v-col>
-                <v-text-field v-model="searchPhone" clearable prepend-inner-icon="mdi-magnify" label="Phone"
-                  type="number" class="input-number" single-line hide-details @keyup.enter="SearchPhone()" outlined
-                  dense></v-text-field>
+                <v-text-field
+                  v-model="searchPhone"
+                  clearable
+                  prepend-inner-icon="mdi-magnify"
+                  label="Phone"
+                  type="number"
+                  class="input-number"
+                  single-line
+                  hide-details
+                  @keyup.enter="SearchPhone()"
+                  outlined
+                  dense
+                ></v-text-field>
               </v-col>
             </v-row>
           </v-card-title>
-          <v-data-table :headers="headers" :items="users" :search="search" :disable-pagination="true"
-            hide-default-footer>
+          <v-data-table
+            :headers="headers"
+            :items="users"
+            :search="search"
+            :disable-pagination="true"
+            hide-default-footer
+          >
             <!--Role -->
             <template v-slot:item.customer="{ item }">
-              <div>
-                {{item.name}}
-              </div>
+              <div>{{item.name}}</div>
             </template>
             <template v-slot:item.customerType="{ item }">
               <div v-if="item.customer">
-                <div v-if="item.customer.customer_type =='home'" class="success--text">
-                  ຄົວເຮືອນ
-                </div>
-                <div v-else-if="item.customer.customer_type =='company'" class="info--text">
-                  ຫົວໜ່ວຍທຸລະກິດ
-                </div>
+                <div v-if="item.customer.customer_type =='home'" class="success--text">ຄົວເຮືອນ</div>
+                <div
+                  v-else-if="item.customer.customer_type =='company'"
+                  class="info--text"
+                >ຫົວໜ່ວຍທຸລະກິດ</div>
               </div>
               <div v-else class="error--text">ຍັງບໍ່ທັນສະໝັກບໍລິການ</div>
-
             </template>
             <template v-slot:item.status="{ item }">
               <v-btn @click="createPage(item)" medium class="btn-primary elevation-0">
-                <v-icon>mdi-plus</v-icon> ເພີ່ມ
+                <v-icon>mdi-plus</v-icon>ເພີ່ມ
               </v-btn>
             </template>
           </v-data-table>
           <br />
           <template>
-            <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
-              @paginate="fetchData()"></Pagination>
+            <Pagination
+              v-if="pagination.total_pages > 1"
+              :pagination="pagination"
+              :offset="offset"
+              @paginate="fetchData()"
+            ></Pagination>
           </template>
         </v-card>
       </v-col>
@@ -79,60 +101,65 @@
               <v-form ref="form" lazy-validation>
                 <v-row>
                   <v-col cols="12">
-                    <v-text-field label="Name " v-model="user.name">
-                    </v-text-field>
-                    <p class="errors">
-                      {{ server_errors.name }}
-                    </p>
+                    <v-text-field label="Name " v-model="user.name"></v-text-field>
+                    <p class="errors">{{ server_errors.name }}</p>
                   </v-col>
                   <v-col cols="12">
-                    <v-text-field label="ເບີໂທ *" required v-model="user.phone" :rules="phoneRules" type="number"
-                      class="input-number">
-                    </v-text-field>
+                    <v-text-field
+                      label="ເບີໂທ *"
+                      required
+                      v-model="user.phone"
+                      :rules="phoneRules"
+                      type="number"
+                      class="input-number"
+                    ></v-text-field>
                   </v-col>
                   <v-col cols="12">
-                    <v-text-field label="Email" required v-model="user.email">
-                    </v-text-field>
-                    <p class="errors">
-                      {{ server_errors.email }}
-                    </p>
+                    <v-text-field label="Email" required v-model="user.email"></v-text-field>
+                    <p class="errors">{{ server_errors.email }}</p>
                   </v-col>
                   <v-col cols="12">
-                    <v-text-field label="Password Confirm" type="password" required v-model="user.password"
-                      :rules="passwordRules" autocomplete="">
-                    </v-text-field>
-                    <p class="errors">
-                      {{ server_errors.password }}
-                    </p>
+                    <v-text-field
+                      label="Password Confirm"
+                      type="password"
+                      required
+                      v-model="user.password"
+                      :rules="passwordRules"
+                      autocomplete
+                    ></v-text-field>
+                    <p class="errors">{{ server_errors.password }}</p>
                   </v-col>
                   <v-col cols="12">
-                    <v-text-field label="Password" type="password" required v-model="user.password_confirmation"
-                      :rules="passwordRules" autocomplete="">
-                    </v-text-field>
-                    <p class="errors">
-                      {{ server_errors.password_confirmation }}
-                    </p>
+                    <v-text-field
+                      label="Password"
+                      type="password"
+                      required
+                      v-model="user.password_confirmation"
+                      :rules="passwordRules"
+                      autocomplete
+                    ></v-text-field>
+                    <p class="errors">{{ server_errors.password_confirmation }}</p>
                   </v-col>
                 </v-row>
               </v-form>
             </v-container>
-
           </v-card-text>
           <v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeAddModal()">
-                Close
-              </v-btn>
-              <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="AddItem()">
-                Save
-              </v-btn>
+              <v-btn color="blue darken-1" text @click="closeAddModal()">Close</v-btn>
+              <v-btn
+                color="blue darken-1"
+                text
+                :loading="loading"
+                :disabled="loading"
+                @click="AddItem()"
+              >Save</v-btn>
             </v-card-actions>
           </v-card-text>
         </v-card>
       </template>
     </ModalAdd>
-
   </v-container>
 </template>
 
@@ -152,9 +179,14 @@ export default {
       headers: [
         { text: "ລູກຄ້າ", value: "customer", width: "150px" },
         { text: "ເບີໂທ", value: "phone", sortable: false },
-        { text: "ປະເພດລູກຄ້າ", value: "customerType", sortable: false, width: "150px" },
+        {
+          text: "ປະເພດລູກຄ້າ",
+          value: "customerType",
+          sortable: false,
+          width: "150px"
+        },
         { text: "Email", value: "email", sortable: false },
-        { text: "", value: "status", sortable: false, align: "center" },
+        { text: "", value: "status", sortable: false, align: "center" }
       ],
       loading: false,
       users: [],
@@ -162,9 +194,8 @@ export default {
       phone: "",
       server_errors: {
         email: "",
-        roleId: "",
+        roleId: ""
       },
-
 
       selectedRole: "",
       selectedRoles: [],
@@ -181,33 +212,30 @@ export default {
 
       statuses: [
         {
-          name: "active",
+          name: "active"
         },
         {
-          name: "inactive",
-        },
+          name: "inactive"
+        }
       ],
       status: "",
       id_token: "",
 
       //Validation //Validation
       passwordRules: [
-        (v) => !!v || "Password is required",
-        (v) =>
-          (v && v.length >= 8) || "Password must be more than 8 characters",
+        v => !!v || "Password is required",
+        v => (v && v.length >= 8) || "Password must be more than 8 characters"
       ],
       passwordConfirmRules: [
-        (v) => !!v || "Password Confirm is required",
-        (v) =>
-          (v && v.length >= 8) || "Password must be more than 8 characters",
+        v => !!v || "Password Confirm is required",
+        v => (v && v.length >= 8) || "Password must be more than 8 characters"
       ],
       phoneRules: [
-        (v) => !!v || "Phone is required",
-        (v) =>
+        v => !!v || "Phone is required",
+        v =>
           (v && v.length >= 8 && v.length <= 11) ||
-          "Phone number must be  8 - 11 numbers",
-      ],
-
+          "Phone number must be  8 - 11 numbers"
+      ]
     };
   },
   methods: {
@@ -222,29 +250,31 @@ export default {
         this.loading = true;
         this.$axios
           .post("auth/register-pre-customer", this.user)
-          .then((res) => {
+          .then(res => {
             if (res.data.code === 200) {
               setTimeout(() => {
                 this.loading = false;
                 this.closeAddModal();
                 this.reset();
-                this.createPage(res.data.data)
+                this.createPage(res.data.data);
                 this.$store.commit("Toast_State", {
                   value: true,
                   color: "success",
-                  msg: res.data.message,
+                  msg: res.data.message
                 });
               }, 300);
             }
           })
-          .catch((error) => {
+          .catch(error => {
             this.loading = false;
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response ? error.response.data.message : 'Something went wrong',
+              msg: error.response
+                ? error.response.data.message
+                : "Something went wrong"
             });
-            if (error.response.status === 422) {
+            if (error.response && error.response.status === 422) {
               let obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
@@ -254,7 +284,10 @@ export default {
       }
     },
     fetchData() {
-      const roles = this.$route.query.redirect == 'create-future-customer' ? ['customer', 'company'] : ['pre_customer']
+      const roles =
+        this.$route.query.redirect == "create-future-customer"
+          ? ["customer", "company"]
+          : ["pre_customer"];
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("user-setting/user", {
@@ -263,9 +296,10 @@ export default {
             { per_page: this.per_page },
             { filter: this.search },
             { phone: this.searchPhone },
-            { roles: roles },])
+            { roles: roles }
+          ])
         })
-        .then((res) => {
+        .then(res => {
           if (res.data.code === 200) {
             this.loading = false;
             this.$store.commit("Loading_State", false);
@@ -273,9 +307,9 @@ export default {
             this.pagination = res.data.data.pagination;
           }
         })
-        .catch((error) => {
+        .catch(error => {
           this.$store.commit("Loading_State", false);
-          if (error.response.status === 422) {
+          if (error.response && error.response.status === 422) {
             let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
@@ -287,8 +321,8 @@ export default {
       this.$router.push({
         name: this.$route.query.redirect,
         params: {
-          items: data,
-        },
+          items: data
+        }
       });
     },
     backPrevios() {
@@ -302,29 +336,28 @@ export default {
     },
     SearchPhone() {
       GetOldValueOnInput(this);
-    },
-
+    }
   },
 
   watch: {
-    search: function (value) {
-      this.pagination.current_page = '';
+    search: function(value) {
+      this.pagination.current_page = "";
       if (value === "") {
         this.fetchData();
       }
     },
 
-    searchPhone: function (value) {
-      this.pagination.current_page = '';
+    searchPhone: function(value) {
+      this.pagination.current_page = "";
       if (value.length > 4) {
         this.fetchData();
       }
-    },
+    }
   },
   created() {
-    if (!this.$route.query.redirect) this.$router.push('/')
+    if (!this.$route.query.redirect) this.$router.push("/");
     this.fetchData();
-  },
+  }
 };
 </script>
 
