@@ -223,7 +223,7 @@
                       <td>
                         <router-link
                           :to="{name:'PlanCalendarDetail',params: {id: item.plan_calendar_id,planMonthId: item.plan_calendar.plan_month_id}}"
-                        >{{ (moment(item.collected_at).format('DD-MM-YYYY')) }}</router-link>
+                        >{{ (moment(item.collected_at?item.collected_at:item.date).format('DD-MM-YYYY')) }}</router-link>
                       </td>
                       <td>
                         <div v-if="item.collection_type === 'bag'">{{ item.bag }} ຖົງ</div>
@@ -460,7 +460,7 @@ export default {
           if (res.data.code === 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
-              this.services = res.data.data.details.data;
+              this.services = res.data.data.all.data;
               this.serviceSummary = res.data.data.collect_summary;
               this.statusSummary = res.data.data.status_summary;
               this.pagination = res.data.data.details.pagination;
