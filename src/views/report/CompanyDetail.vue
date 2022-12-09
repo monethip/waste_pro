@@ -216,6 +216,7 @@
                       <th class="text-left">Date</th>
                       <th class="text-left">ຈຳນວນ</th>
                       <th class="text-left">Status</th>
+                      <th class="text-left">ເວລາລົງເກັບ</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -223,7 +224,7 @@
                       <td>
                         <router-link
                           :to="{name:'PlanCalendarDetail',params: {id: item.plan_calendar_id,planMonthId: item.plan_calendar.plan_month_id}}"
-                        >{{ (moment(item.collected_at?item.collected_at:item.date).format('DD-MM-YYYY')) }}</router-link>
+                        >{{ (moment(item.date).format('DD-MM-YYYY')) }}</router-link>
                       </td>
                       <td>
                         <div v-if="item.collection_type === 'bag'">{{ item.bag }} ຖົງ</div>
@@ -236,7 +237,8 @@
                         <div v-else-if="item.collection_type === 'fix_cost'">ບໍລິການເປັນຖ້ຽວ</div>
                         <div v-else>{{ item.collection_type }}</div>
                       </td>
-                      <td>{{ item.status }}</td>
+                      <td>{{ item.status_la }}</td>
+                      <td>{{ item.collected_at }}</td>
                     </tr>
                   </tbody>
                 </template>
@@ -255,34 +257,29 @@
         <v-tabs-items v-model="tab">
           <v-tab-item value="tab-3">
             <v-container>
-              <!-- <h3>ປະຫັວດການຊຳລະ</h3>
+              <h3>ປະຫັວດການຊຳລະ</h3>
               <v-row class="mb-1 mt-1">
                 <v-col>
-                  <div>Package {{ invoiceSummary.name }}</div>
+                  <div>ລໍຖ້າອະນຸມັດ: {{ Intl.NumberFormat().format(invoiceSummary.created_total) }}</div>
                 </v-col>
                 <v-col>
-                  <div>Total Created: {{ Intl.NumberFormat().format(invoiceSummary.created_total) }}</div>
+                  <div>ອະນຸມັດແລ້ວ: {{ Intl.NumberFormat().format(invoiceSummary.approved_total) }}</div>
                 </v-col>
                 <v-col>
-                  <div>Total Success: {{ Intl.NumberFormat().format(invoiceSummary.success_total) }}</div>
+                  <div>ຈ່າຍແລ້ວ ລໍຖ້າກວດສອບ: {{ Intl.NumberFormat().format(invoiceSummary.to_confirm_payment_total) }}</div>
                 </v-col>
                 <v-col>
-                  <div>Confirm Payment: {{ Intl.NumberFormat().format(invoiceSummary.to_confirm_payment_total) }}</div>
+                  <div>ຈ່າຍແລ້ວ ກວດສອບສຳເລັດ: {{ Intl.NumberFormat().format(invoiceSummary.success_total) }}</div>
                 </v-col>
-                <v-col>
-                  <div>Approved: {{ Intl.NumberFormat().format(invoiceSummary.approved_total) }}</div>
-                </v-col>
-                <v-col>
-                  <div>Reject: {{ Intl.NumberFormat().format(invoiceSummary.rejected_total) }}</div>
-                </v-col>
-              </v-row>-->
+              </v-row>
               <v-simple-table>
                 <template v-slot:default>
                   <thead>
                     <tr>
-                      <th class="text-left">Invoice Date</th>
+                      <th class="text-left">ວັນທີບິນ</th>
                       <th class="text-left">ຫົວບິນ</th>
                       <th class="text-left">ສະຖານະ</th>
+                      <th class="text-left">ເວລາຈ່າຍ</th>
                       <th class="text-left">Payment</th>
                       <th class="text-left">Subtotal</th>
                       <th class="text-left">ສ່ວນຫຼູດ</th>
@@ -295,6 +292,7 @@
                       <td>{{ (moment(item.date).format('DD-MM-YYYY')) }}</td>
                       <td>{{ item.content }}</td>
                       <td>{{ item.status_la }}</td>
+                      <td>{{ item.paided_at }}</td>
                       <td>
                         <div class="primary--text">{{ item.payment_method }}</div>
                       </td>
