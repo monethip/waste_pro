@@ -104,7 +104,19 @@
         ></v-select>
       </v-col>
     </v-row>
-    <div>
+    <v-row>
+      <v-col>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+          @keyup.enter="fetchData"
+        ></v-text-field>
+      </v-col>
+    </v-row>
+    <v-row>
       <v-card>
         <v-card-title>ຂໍ້ມູນ Activity Log ({{ pagination.total }})</v-card-title>
         <v-card-text>
@@ -191,7 +203,7 @@
           </template>
         </v-card-text>
       </v-card>
-    </div>
+    </v-row>
   </v-container>
 </template>
 <script>
@@ -210,6 +222,7 @@ export default {
       end_date: "",
       start_menu: false,
       end_menu: false,
+      search: "",
 
       activities: [],
       loading: false,
@@ -279,7 +292,8 @@ export default {
             { model_names: this.selectedModel },
             { users: this.selectedUsers },
             { roles: this.selectedRoles },
-            { log_name: this.selectedLogName }
+            { log_name: this.selectedLogName },
+            { filter: this.search }
           ])
         })
         .then(res => {
