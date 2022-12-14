@@ -305,6 +305,7 @@ export default {
       ],
 
       headers: [
+        { text: "ໄອດີ", value: "customer_id" },
         { text: "ຊື່", value: "company_name" },
         { text: "Phone", value: "user.phone", sortable: false },
         { text: "ທີ່ຢູ່", value: "district.name", sortable: false },
