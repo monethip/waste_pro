@@ -17,6 +17,7 @@ export default {
             search: "",
             oldVal: "",
             summary: {},
+            countPause: {},
             statuses: [],
             plan_monthId: this.$route.params.id,
             headers: [
@@ -63,6 +64,7 @@ export default {
                                 this.pagination = [],
                                 this.calendars = res.data.data.data;
                             this.summary = res.data.data.summary;
+                            this.countPause = res.data.data.count_pause;
                             this.pagination = res.data.data.pagination;
                         }, 100);
                     }
