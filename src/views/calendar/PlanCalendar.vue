@@ -646,7 +646,11 @@ export default {
     },
     fetchRoutePlan() {
       this.$axios
-        .get("route-plan")
+        .get("route-plan", {
+          params: {
+            scope_for: "all"
+          }
+        })
         .then(res => {
           if (res.data.code == 200) {
             setTimeout(() => {
