@@ -442,6 +442,9 @@ export default {
     }
   },
   watch: {
+    selectedBillDate() {
+      if (this.start_date || this.end_date) this.fetchData();
+    },
     selectedSale() {
       this.fetchData();
     },

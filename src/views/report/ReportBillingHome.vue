@@ -467,6 +467,9 @@ export default {
     exportMode() {
       this.fetchData();
     },
+    selectedBillDate() {
+      if (this.start_date || this.end_date) this.fetchData();
+    },
     selectedSale() {
       this.fetchData();
     },
