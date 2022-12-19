@@ -260,7 +260,6 @@
               <v-data-table
                 :headers="addheaders"
                 :items="addCustomers"
-                :search="search"
                 :disable-pagination="true"
                 hide-default-footer
                 v-model="selectedRows"
@@ -268,7 +267,12 @@
                 class="page__table"
               >
                 <template v-slot:top>
-                  <v-text-field v-model="search" label="Search" class="mx-4"></v-text-field>
+                  <v-text-field
+                    v-model="search"
+                    @keyup.enter="fetchAddCustomer"
+                    label="Search"
+                    class="mx-4"
+                  ></v-text-field>
                 </template>
                 <template v-slot:body="props">
                   <draggable :list="props.items" tag="tbody" @change="afterAdd">
@@ -648,7 +652,8 @@ export default {
             { villages: this.selectedVillage },
             { district_id: this.selectedDistrict },
             { favorite_dates: this.selectedFavoriteDate },
-            { without: this.selectedCustomerStatus }
+            { without: this.selectedCustomerStatus },
+            { filter: this.search }
           ])
         })
         .then(res => {
