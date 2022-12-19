@@ -236,6 +236,7 @@ export default {
         }
       },
       billingListHeader: [
+        { text: "ໄອດີ", value: "billing_display_id" },
         {
           text: "ຊື່ຫົວບິນ",
           align: "start",

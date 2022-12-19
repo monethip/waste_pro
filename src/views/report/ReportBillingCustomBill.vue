@@ -253,6 +253,7 @@ export default {
       },
       selectedBillDate: billDateList[0].value,
       billingListHeader: [
+        { text: "ໄອດີ", value: "billing_display_id" },
         {
           text: "ຊື່ຫົວບິນ",
           align: "start",
