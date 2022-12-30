@@ -38,18 +38,22 @@
               <h2>
                 ສະຖານະບິນ:
                 <v-chip :color="getBgColorFunc(invoice.status)" dark>{{
-                    getLaoStatusFunc(invoice.status)
+                  getLaoStatusFunc(invoice.status)
                 }}</v-chip>
                 <div v-if="invoice.status == 'rejected'">
-                  <v-chip dark v-for="detail in invoice.reject_details" :key="detail.id">{{ detail.reject_reason.name }}
+                  <v-chip
+                    dark
+                    v-for="detail in invoice.reject_details"
+                    :key="detail.id"
+                    >{{ detail.reject_reason.name }}
                   </v-chip>
                 </div>
               </h2>
             </v-col>
-            <v-co>
+            <v-col>
               ວັນທີສ້າງບິນ:
               {{ moment(invoice.created_at).format("DD-MM-YY") }}
-            </v-co>
+            </v-col>
           </v-row>
 
           <v-row>
@@ -79,20 +83,33 @@
           </v-row>
           <v-row>
             <v-col>
-              <v-btn class="btn btn-primary mr-4 elevation-0" v-if="invoice.status === 'created'"
-                @click="approveBill(invoice.id)">ອະນຸມັດບິນ
+              <v-btn
+                class="btn btn-primary mr-4 elevation-0"
+                v-if="invoice.status === 'created'"
+                @click="approveBill(invoice.id)"
+                >ອະນຸມັດບິນ
               </v-btn>
               <!--              <v-btn class="btn btn-primary mr-4 elevation-0" v-if="invoice.status === 'created'"-->
               <!--                     @click="editBill(invoice.id)">ແກ້ໄຂບິນ-->
               <!--              </v-btn>-->
-              <v-btn class="btn btn-primary mr-4 elevation-0" v-if="invoice.status === 'approved'"
-                @click="toPay(invoice.id)">ຊຳລະບິນ</v-btn>
-              <v-btn class="btn btn-primary mr-4 elevation-0" v-if="invoice.status === 'to_confirm_payment'"
-                @click="confirmPayment">
+              <v-btn
+                class="btn btn-primary mr-4 elevation-0"
+                v-if="invoice.status === 'approved'"
+                @click="toPay(invoice.id)"
+                >ຊຳລະບິນ</v-btn
+              >
+              <v-btn
+                class="btn btn-primary mr-4 elevation-0"
+                v-if="invoice.status === 'to_confirm_payment'"
+                @click="confirmPayment"
+              >
                 ຢືນຢັນການຊຳລະບິນ
               </v-btn>
-              <v-btn class="btn btn-primary mr-4 elevation-0" v-if="invoice.status === 'to_confirm_payment'"
-                @click="toConfirm(invoice.id)">
+              <v-btn
+                class="btn btn-primary mr-4 elevation-0"
+                v-if="invoice.status === 'to_confirm_payment'"
+                @click="toConfirm(invoice.id)"
+              >
                 ປະຕິເສດການຊຳລະ
               </v-btn>
             </v-col>
@@ -113,11 +130,17 @@
                   <th class="text-left">ລາຄາ</th>
                   <th class="text-left">ລວມ</th>
                   <th class="text-left">Active</th>
-                  <th class="text-left" v-if="invoice.status === 'created'"></th>
+                  <th
+                    class="text-left"
+                    v-if="invoice.status === 'created'"
+                  ></th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(data, index) in invoice.billing_details" :key="index">
+                <tr
+                  v-for="(data, index) in invoice.billing_details"
+                  :key="index"
+                >
                   <td>{{ index + 1 }}</td>
                   <td>{{ data.item_la }}</td>
                   <td>{{ data.content }}</td>
@@ -133,7 +156,12 @@
                     </div>
                   </td>
                   <td v-if="invoice.status === 'created'">
-                    <v-icon color="success" small class="mr-2" @click="EditInvoice(data)">
+                    <v-icon
+                      color="success"
+                      small
+                      class="mr-2"
+                      @click="EditInvoice(data)"
+                    >
                       mdi-pen
                     </v-icon>
                   </td>
@@ -192,7 +220,7 @@
               <h3>
                 ວັນທີຊຳລະ:
                 <span v-if="invoice.paided_by" class="error--text">{{
-                    invoice.paided_at
+                  invoice.paided_at
                 }}</span>
               </h3>
               <h3 v-if="invoice.payment_method">
@@ -206,7 +234,7 @@
               <h3>
                 ວັນທີຢືນຢັນຊຳລະ:
                 <span v-if="invoice.confirmed_payment_by" class="error--text">{{
-                    invoice.confirmed_payment_at
+                  invoice.confirmed_payment_at
                 }}</span>
               </h3>
               <h3 v-if="invoice.confirmed_payment_by">
@@ -215,22 +243,30 @@
             </v-col>
           </v-row>
 
-
-
-          <v-row v-if="invoice.image_payments.length>0">
+          <v-row v-if="invoice.image_payments.length > 0">
             <v-col>
               <h3 class="v-title" v-if="invoice.image_payments">ຮູບການຊຳລະ</h3>
               <v-row v-if="invoice.image_payments">
-                <v-col cols="6" v-for="(img, index) in invoice.image_payments" :key="index">
+                <v-col
+                  cols="6"
+                  v-for="(img, index) in invoice.image_payments"
+                  :key="index"
+                >
                   <v-card class="elevation-0">
-                    <v-img :src="img.url" max-height="300" max-width="400" min-height="300" min-width="400"
-                      aspect-ratio="1" class="pa-2 img-payment" @click="showImage(img.url)"></v-img>
+                    <v-img
+                      :src="img.url"
+                      max-height="300"
+                      max-width="400"
+                      min-height="300"
+                      min-width="400"
+                      aspect-ratio="1"
+                      class="pa-2 img-payment"
+                      @click="showImage(img.url)"
+                    ></v-img>
                   </v-card>
                 </v-col>
               </v-row>
             </v-col>
-
-
           </v-row>
 
           <v-row v-if="invoice.image_fix_payments.length">
@@ -239,10 +275,22 @@
                 ຮູບການຊຳລະໃໝ່
               </h3>
               <v-row v-if="invoice.image_fix_payments">
-                <v-col cols="6" v-for="(img, index) in invoice.image_fix_payments" :key="index">
+                <v-col
+                  cols="6"
+                  v-for="(img, index) in invoice.image_fix_payments"
+                  :key="index"
+                >
                   <v-card class="elevation-0">
-                    <v-img :src="img.url" max-height="300" max-width="400" min-height="300" min-width="400"
-                      aspect-ratio="1" class="pa-2 img-payment-error" @click="showImage(img.url)"></v-img>
+                    <v-img
+                      :src="img.url"
+                      max-height="300"
+                      max-width="400"
+                      min-height="300"
+                      min-width="400"
+                      aspect-ratio="1"
+                      class="pa-2 img-payment-error"
+                      @click="showImage(img.url)"
+                    ></v-img>
                   </v-card>
                 </v-col>
               </v-row>
@@ -251,24 +299,41 @@
 
           <v-row>
             <v-col>
-              <v-btn class="btn btn-primary mr-4 elevation-0" color="red" dark v-if="invoice.status == 'rejected'"
-                @click="toPay(invoice.id)">ເພີ່ມຮູບແກ້ໄຂ
+              <v-btn
+                class="btn btn-primary mr-4 elevation-0"
+                color="red"
+                dark
+                v-if="invoice.status == 'rejected'"
+                @click="toPay(invoice.id)"
+                >ເພີ່ມຮູບແກ້ໄຂ
               </v-btn>
             </v-col>
             <v-col>
-              <v-btn class="btn btn-primary mr-4 elevation-0" color="green"
-                v-if="invoice.status == 'rejected' && invoice.image_fix_payments.length" dark
-                @click="confirmPayment(invoice.id)">
+              <v-btn
+                class="btn btn-primary mr-4 elevation-0"
+                color="green"
+                v-if="
+                  invoice.status == 'rejected' &&
+                    invoice.image_fix_payments.length
+                "
+                dark
+                @click="confirmPayment(invoice.id)"
+              >
                 ແກ້ໄຂ
               </v-btn>
             </v-col>
           </v-row>
 
-
           <v-card-actions class="mt-6">
             <v-spacer></v-spacer>
-            <v-btn color="info" :loading="loading" :disabled="loading" @click="Download(invoice)"
-              class="white--text px-12 btn-primary elevation-0" v-if="invoice.status === 'success'">
+            <v-btn
+              color="info"
+              :loading="loading"
+              :disabled="loading"
+              @click="Download(invoice)"
+              class="white--text px-12 btn-primary elevation-0"
+              v-if="invoice.status === 'success'"
+            >
               Download
             </v-btn>
           </v-card-actions>
@@ -292,15 +357,25 @@
                   <v-row>
                     <v-col>
                       <label class="file-label">
-                        <input @change="onFixFileChange" class="file-input input-file-image" type="file" name="image"
-                          accept="image/*" ref="image" />
+                        <input
+                          @change="onFixFileChange"
+                          class="file-input input-file-image"
+                          type="file"
+                          name="image"
+                          accept="image/*"
+                          ref="image"
+                        />
                         <span class="file-cta">
                           <span class="file-icon">
-                            <v-icon style="
+                            <v-icon
+                              style="
                                 font-size: 60px !important;
                                 color: #719aff;
                                 cursor: pointer;
-                              " class="fas fa-cloud-upload">mdi-file-image</v-icon>
+                              "
+                              class="fas fa-cloud-upload"
+                              >mdi-file-image</v-icon
+                            >
                           </span>
                         </span>
                       </label>
@@ -321,11 +396,21 @@
             </v-container>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="error" class="elevation-0 btn mr-4 px-12" medium @click="closeModal()">
+              <v-btn
+                color="error"
+                class="elevation-0 btn mr-4 px-12"
+                medium
+                @click="closeModal()"
+              >
                 ປິດ
               </v-btn>
-              <v-btn class="elevation-0 btn btn-primary px-12" medium :loading="loading" :disabled="loading"
-                @click="addFixed">
+              <v-btn
+                class="elevation-0 btn btn-primary px-12"
+                medium
+                :loading="loading"
+                :disabled="loading"
+                @click="addFixed"
+              >
                 ເພີ່ມ
               </v-btn>
             </v-card-actions>
@@ -341,8 +426,20 @@
                 <h3 class="my-4">ເລືອກປະເພດການຊຳລະ</h3>
                 <v-row>
                   <v-col cols="12">
-                    <v-chip-group v-model="paymentType" column :rules="paymentTypeRule" required>
-                      <v-chip large class="mr-8" color="info" label filter outlined>
+                    <v-chip-group
+                      v-model="paymentType"
+                      column
+                      :rules="paymentTypeRule"
+                      required
+                    >
+                      <v-chip
+                        large
+                        class="mr-8"
+                        color="info"
+                        label
+                        filter
+                        outlined
+                      >
                         ເງິນສົດ
                         <v-icon left class="ml-1"> mdi-currency-usd</v-icon>
                       </v-chip>
@@ -361,15 +458,25 @@
                   <v-row>
                     <v-col>
                       <label class="file-label">
-                        <input @change="onFileChange" class="file-input input-file-image" type="file" name="image"
-                          accept="image/*" ref="image" />
+                        <input
+                          @change="onFileChange"
+                          class="file-input input-file-image"
+                          type="file"
+                          name="image"
+                          accept="image/*"
+                          ref="image"
+                        />
                         <span class="file-cta">
                           <span class="file-icon">
-                            <v-icon style="
+                            <v-icon
+                              style="
                                 font-size: 60px !important;
                                 color: #719aff;
                                 cursor: pointer;
-                              " class="fas fa-cloud-upload">mdi-file-image</v-icon>
+                              "
+                              class="fas fa-cloud-upload"
+                              >mdi-file-image</v-icon
+                            >
                           </span>
                         </span>
                       </label>
@@ -390,11 +497,21 @@
             </v-container>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="error" class="elevation-0 btn mr-4 px-12" medium @click="closeModal()">
+              <v-btn
+                color="error"
+                class="elevation-0 btn mr-4 px-12"
+                medium
+                @click="closeModal()"
+              >
                 ປິດ
               </v-btn>
-              <v-btn class="elevation-0 btn btn-primary px-12" medium :loading="loading" :disabled="loading"
-                @click="pay">
+              <v-btn
+                class="elevation-0 btn btn-primary px-12"
+                medium
+                :loading="loading"
+                :disabled="loading"
+                @click="pay"
+              >
                 ຊຳລະ
               </v-btn>
             </v-card-actions>
@@ -409,11 +526,14 @@
         <v-card>
           <v-card-title>
             <p>
-              <v-icon class="primary-color" large color="success">mdi-checkbox-marked-circle-outline
+              <v-icon class="primary-color" large color="success"
+                >mdi-checkbox-marked-circle-outline
               </v-icon>
               ປະຕິເສດການຊຳລະຄ່າຂີ້ເຫຍື້ອ
 
-              <span class="primary-color">{{ invoice.name }} {{ invoice.content }}</span>
+              <span class="primary-color"
+                >{{ invoice.name }} {{ invoice.content }}</span
+              >
             </p>
           </v-card-title>
           <v-card-text>
@@ -421,8 +541,15 @@
               <v-form ref="form" lazy-validation>
                 <v-row>
                   <v-col cols="12">
-                    <v-select v-model="reject_reason_id" label="ເຫດຜົນ" outlined dense :items="rejects" item-text="name"
-                      item-value="id">
+                    <v-select
+                      v-model="reject_reason_id"
+                      label="ເຫດຜົນ"
+                      outlined
+                      dense
+                      :items="rejects"
+                      item-text="name"
+                      item-value="id"
+                    >
                     </v-select>
                     <p class="errors">
                       {{ server_errors.reject_reason_id }}
@@ -432,7 +559,13 @@
 
                 <v-row>
                   <v-col cols="12">
-                    <v-text-field v-model="description" label="Description" outlined dense type="text">
+                    <v-text-field
+                      v-model="description"
+                      label="Description"
+                      outlined
+                      dense
+                      type="text"
+                    >
                     </v-text-field>
                     <p class="errors">
                       {{ server_errors.description }}
@@ -442,11 +575,22 @@
               </v-form>
               <v-card-actions class="mt-4">
                 <v-spacer></v-spacer>
-                <v-btn color="error" class="btn mr-4 px-12 elevation-0" medium @click="paymentDialog = false">
+                <v-btn
+                  color="error"
+                  class="btn mr-4 px-12 elevation-0"
+                  medium
+                  @click="paymentDialog = false"
+                >
                   ປິດ
                 </v-btn>
-                <v-btn color="info" class="white--text px-12 btn-primary elevation-0" medium :loading="loading"
-                  :disabled="loading" @click="rejectPayment()">
+                <v-btn
+                  color="info"
+                  class="white--text px-12 btn-primary elevation-0"
+                  medium
+                  :loading="loading"
+                  :disabled="loading"
+                  @click="rejectPayment()"
+                >
                   ຢືນຢັນ
                 </v-btn>
               </v-card-actions>
@@ -468,16 +612,28 @@
                 <h3 class="my-4">ແກ້ໄຂຂໍ້ມູນ</h3>
                 <v-row>
                   <v-col cols>
-                    <v-text-field v-model="formData.quantity" label="Quantity" outlined dense type="number"
-                      class="input-number">
+                    <v-text-field
+                      v-model="formData.quantity"
+                      label="Quantity"
+                      outlined
+                      dense
+                      type="number"
+                      class="input-number"
+                    >
                     </v-text-field>
                     <p class="errors">
                       {{ server_errors.qty }}
                     </p>
                   </v-col>
                   <v-col cols>
-                    <v-text-field v-model="formData.price" label="Price" outlined dense type="number"
-                      class="input-number">
+                    <v-text-field
+                      v-model="formData.price"
+                      label="Price"
+                      outlined
+                      dense
+                      type="number"
+                      class="input-number"
+                    >
                     </v-text-field>
                     <p class="errors">
                       {{ server_errors.price }}
@@ -486,14 +642,24 @@
                 </v-row>
                 <v-row v-if="formData.is_default === 1">
                   <v-col cols>
-                    <v-text-field v-model="formData.item_la" label="Item (La)" outlined dense>
+                    <v-text-field
+                      v-model="formData.item_la"
+                      label="Item (La)"
+                      outlined
+                      dense
+                    >
                     </v-text-field>
                     <p class="errors">
                       {{ server_errors.item_la }}
                     </p>
                   </v-col>
                   <v-col cols>
-                    <v-text-field v-model="formData.content" label="Content" outlined dense>
+                    <v-text-field
+                      v-model="formData.content"
+                      label="Content"
+                      outlined
+                      dense
+                    >
                     </v-text-field>
                     <p class="errors">
                       {{ server_errors.content }}
@@ -502,18 +668,31 @@
                 </v-row>
                 <v-row>
                   <v-col cols>
-                    <v-switch v-model="is_active" :label="`Active : ${is_active}`"></v-switch>
+                    <v-switch
+                      v-model="is_active"
+                      :label="`Active : ${is_active}`"
+                    ></v-switch>
                   </v-col>
                 </v-row>
               </v-form>
             </v-container>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="error" class="elevation-0 btn mr-4 px-12" medium @click="closeAddModal()">
+              <v-btn
+                color="error"
+                class="elevation-0 btn mr-4 px-12"
+                medium
+                @click="closeAddModal()"
+              >
                 ປິດ
               </v-btn>
-              <v-btn class="elevation-0 btn btn-primary px-12" medium :loading="loading" :disabled="loading"
-                @click="updateInvoice()">
+              <v-btn
+                class="elevation-0 btn btn-primary px-12"
+                medium
+                :loading="loading"
+                :disabled="loading"
+                @click="updateInvoice()"
+              >
                 ອັບເດດ
               </v-btn>
             </v-card-actions>
@@ -546,7 +725,10 @@ export default {
     return {
       loading: false,
       customerId: "",
-      invoice: {},
+      invoice: {
+        image_payments: [],
+        image_fix_payments: [],
+      },
       invoiceStatusColor: "",
       is_active: null,
       paymentDialog: false,
@@ -703,13 +885,12 @@ export default {
           .post("fix-billing/" + this.invoice.id, formData)
           .then((res) => {
             if (res.data.code == 200) {
-
               // this.confirmPayment();
               this.loading = false;
               this.closeModal();
               this.fetchData();
-              this.fixed_image = ""
-              this.fixed_imageUrl = ""
+              this.fixed_image = "";
+              this.fixed_imageUrl = "";
               this.$refs.form.reset();
             }
           })
@@ -763,7 +944,7 @@ export default {
             this.rejects = res.data.data;
           }
         })
-        .catch(() => { });
+        .catch(() => {});
     },
 
     getLaoStatusFunc(status) {
@@ -888,14 +1069,14 @@ export default {
     },
   },
   watch: {
-    is_active: function (value) {
+    is_active: function(value) {
       if (value === true) {
         this.formData.is_active = 1;
       } else {
         this.formData.is_active = 0;
       }
     },
-    paymentType: function () {
+    paymentType: function() {
       if (this.paymentType == 0) {
         this.payment_method = "cash";
         this.image = "";
@@ -905,7 +1086,7 @@ export default {
       }
       this.server_errors.payment_method = "";
     },
-    image: function () {
+    image: function() {
       this.server_errors.image = "";
     },
   },

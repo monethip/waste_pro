@@ -165,6 +165,14 @@
                 </v-list-item>
               </v-list>
             </v-menu>
+
+            <v-btn
+              class="btn btn-primary mr-2 elevation-0"
+              small
+              @click="paymentPage(item)"
+            >
+              <v-icon class="mr-1" small>mdi-cash</v-icon>
+            </v-btn>
             <v-icon
               v-if="
                 (item.display_type == 'CustomBill' ||
@@ -311,6 +319,113 @@
         </v-card>
       </template>
     </v-dialog>
+
+    <!-- Modal Add-->
+    <ModalAdd>
+      <template @close="close">
+        <v-card class="py-8 px-14">
+          <v-card-title>
+            <p>ຊຳລະຄ່າຂີ້ເຫື້ຍອ {{ payment.content }}</p>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-form ref="form" lazy-validation>
+                <h3 class="my-4">ເລືອກປະເພດການຊຳລະ</h3>
+                <v-row>
+                  <v-col cols="12">
+                    <v-chip-group
+                      v-model="paymentType"
+                      column
+                      :rules="paymentTypeRule"
+                      required
+                    >
+                      <v-chip
+                        large
+                        class="mr-8"
+                        color="info"
+                        label
+                        filter
+                        outlined
+                      >
+                        ເງິນສົດ
+                        <v-icon left class="ml-1"> mdi-currency-usd</v-icon>
+                      </v-chip>
+                      <v-chip large color="error" label filter outlined>
+                        BCEL
+                        <v-icon class="ml-1" left> mdi-credit-card </v-icon>
+                      </v-chip>
+                    </v-chip-group>
+                    <p class="errors">
+                      {{ server_errors.payment_method }}
+                    </p>
+                  </v-col>
+                </v-row>
+                <div v-if="paymentType !== ''">
+                  <h3 class="my-4">ຮູບສຳເລັດການໂອນ</h3>
+                  <v-row>
+                    <v-col>
+                      <label class="file-label">
+                        <input
+                          @change="onFileChange"
+                          class="file-input input-file-image"
+                          type="file"
+                          name="image"
+                          accept="image/*"
+                          ref="image"
+                        />
+                        <span class="file-cta">
+                          <span class="file-icon">
+                            <v-icon
+                              style="
+                                font-size: 60px !important;
+                                color: #719aff;
+                                cursor: pointer;
+                              "
+                              class="fas fa-cloud-upload"
+                              >mdi-file-image</v-icon
+                            >
+                          </span>
+                        </span>
+                      </label>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col v-if="imageUrl">
+                      <v-avatar class="avatar rounded" size="194px">
+                        <img :src="imageUrl" alt="" />
+                      </v-avatar>
+                    </v-col>
+                    <p class="errors">
+                      {{ server_errors.image }}
+                    </p>
+                  </v-row>
+                </div>
+              </v-form>
+            </v-container>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="error"
+                class="elevation-0 btn mr-4 px-12"
+                medium
+                @click="closeAddModal()"
+              >
+                ປິດ
+              </v-btn>
+              <v-btn
+                class="elevation-0 btn btn-primary px-12"
+                medium
+                :loading="loading"
+                :disabled="loading"
+                @click="Payment()"
+              >
+                ຊຳລະ
+              </v-btn>
+            </v-card-actions>
+          </v-card-text>
+        </v-card>
+      </template>
+    </ModalAdd>
   </v-container>
 </template>
 
@@ -451,6 +566,64 @@ export default {
     },
   },
   methods: {
+    onFileChange(e) {
+      let input = e.target;
+      let file = e.target.files[0];
+      this.image = input.files[0];
+      this.imageUrl = URL.createObjectURL(file);
+    },
+    Payment() {
+      if (this.paymentType !== "") {
+        let formData = new FormData();
+        formData.append("payment_method", this.payment_method);
+        if (this.image instanceof File)
+          formData.append("image_payments[]", this.image);
+        formData.append("_method", "PUT");
+        if (this.$refs.form.validate() == true) {
+          this.loading = true;
+          this.$axios
+            .post("pay-billing/" + this.payment.id, formData)
+            .then((res) => {
+              if (res.data.code == 200) {
+                this.loading = false;
+                this.paymentConfirmModal(this.payment);
+                this.closeAddModal();
+                this.fetchData();
+                this.$refs.form.reset();
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
+              }
+            })
+            .catch((error) => {
+              this.loading = false;
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response ? error.response.data.message : error,
+              });
+              if (error.response && error.response.status == 422) {
+                let obj = error.response.data.errors;
+                for (let [key, data] of Object.entries(obj)) {
+                  this.server_errors[key] = data[0];
+                }
+              }
+            });
+        }
+      } else {
+        this.$store.commit("Toast_State", {
+          value: true,
+          color: "error",
+          msg: "ກາລຸນາເລືອກປະເພດການຊຳລະກ່ອນ",
+        });
+      }
+    },
+    paymentPage(item) {
+      this.payment = item;
+      this.$store.commit("modalAdd_State", true);
+    },
     async confirmPayment() {
       if (this.confirmType == "0") {
         this.loading = true;
@@ -531,6 +704,7 @@ export default {
     closeConfirmModal() {
       this.confirmPaymentDialog = false;
       this.confirmType = "";
+      this.confirm = {};
     },
     getMonth(date) {
       const d = new Date(date);

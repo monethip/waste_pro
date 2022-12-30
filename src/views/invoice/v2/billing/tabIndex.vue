@@ -89,8 +89,13 @@
             </v-badge>
           </v-tab>
         </v-tabs>
+        <v-card flat>
+          <v-card-text>
+            <allInvoice :tab="tab" />
+          </v-card-text>
+        </v-card>
         <!-- <hr /> -->
-        <v-tabs-items v-model="tab" class="primary-color">
+        <!-- <v-tabs-items v-model="tab" class="primary-color">
           <v-tab-item
             v-for="item in counts"
             :key="item.status"
@@ -102,7 +107,7 @@
               </v-card-text>
             </v-card>
           </v-tab-item>
-        </v-tabs-items>
+        </v-tabs-items> -->
       </v-card-text>
     </v-card>
   </v-container>
