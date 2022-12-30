@@ -452,6 +452,79 @@ export default {
     },
   },
   methods: {
+    async confirmPayment() {
+      if (this.confirmType == "0") {
+        this.loading = true;
+        await this.$axios
+          .put("confirm-billing/" + this.confirm.id)
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.loading = false;
+                this.fetchData();
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
+                this.closeConfirmModal();
+              }, 300);
+            }
+          })
+          .catch(() => {
+            this.loading = false;
+            this.closeConfirmModal();
+          });
+      } else if (this.confirmType == "1") {
+        let data = new FormData();
+        data.append("reject_reason_id", this.reject_reason_id);
+        data.append("description", this.description);
+        data.append("_method", "PUT");
+        this.loading = true;
+        this.$axios
+          .post("reject-billing/" + this.confirm.id, data)
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.loading = false;
+                this.fetchData();
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message,
+                });
+                this.closeConfirmModal();
+              }, 300);
+            }
+          })
+          .catch((error) => {
+            this.loading = false;
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response ? error.response.data.message : error,
+            });
+            if (error.response && error.response.status == 422) {
+              let obj = error.response.data.errors;
+              for (let [key, data] of Object.entries(obj)) {
+                this.server_errors[key] = data[0];
+              }
+            }
+          });
+      } else if (this.confirmType == "") {
+        this.$store.commit("Toast_State", {
+          value: true,
+          color: "error",
+          msg: "ກາລຸນາເລືອກຂໍ້ມູນກ່ອນ",
+        });
+      } else {
+        this.$store.commit("Toast_State", {
+          value: true,
+          color: "error",
+          msg: "ກາລຸນາເລືອກຂໍ້ມູນກ່ອນ",
+        });
+      }
+    },
     paymentConfirmModal(item) {
       this.confirm = item;
       this.confirmPaymentDialog = true;
@@ -532,8 +605,10 @@ export default {
             this.invoices = res.data.data.data;
             this.pagination = res.data.data.pagination;
           }
+          this.$store.dispatch("auth/makeCallFetch");
         })
         .catch((error) => {
+          this.$store.dispatch("auth/makeCallFetch");
           this.$store.commit("Loading_State", false);
           if (error.response && error.response.status == 422) {
             let obj = error.response.data.errors;

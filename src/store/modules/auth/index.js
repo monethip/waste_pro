@@ -26,8 +26,8 @@ export default function create() {
             lastMonthBill: null,
             lastMonthBillPaid: null,
             lastMonthEvent: null,
-            loginPhone: ""
-
+            loginPhone: "",
+            callFetch: 0
         },
         getters: {
             ///check Login or not
@@ -54,6 +54,9 @@ export default function create() {
                 return state.lastMonthBill
                     ? state.lastMonthBill
                     : localStorage.getItem('lastMonthBill')
+            },
+            getCallFetch(state) {
+                return state.callFetch
             },
             getLastMonthBillPaid(state) {
                 return state.lastMonthBillPaid
@@ -151,6 +154,9 @@ export default function create() {
                 state.message = result.msg;
                 state.color = result.color;
             },
+            doCallFetch(state) {
+                state.callFetch++
+            }
         },
         actions: {
             login(context, user) {
@@ -198,6 +204,9 @@ export default function create() {
             },
             saveLastMonthEvent(context, month) {
                 context.commit('changeLastMonthEvent', month ? month : "");
+            },
+            makeCallFetch(context) {
+                context.commit('doCallFetch');
             },
 
             async confirmLogin(context, data) {

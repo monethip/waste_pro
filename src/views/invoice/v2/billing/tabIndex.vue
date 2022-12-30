@@ -160,6 +160,9 @@ export default {
     lastMonthCreated() {
       return this.$store.getters["auth/getLastMonthBill"];
     },
+    callFetch() {
+      return this.$store.getters["auth/getCallFetch"];
+    },
     lastMonthBillPaidCreated() {
       return this.$store.getters["auth/getLastMonthBillPaid"];
     },
@@ -169,6 +172,9 @@ export default {
     this.countBilling();
   },
   watch: {
+    callFetch() {
+      this.countBilling();
+    },
     lastMonthBill: function(value) {
       this.$store.dispatch("auth/saveLastMonthBill", value);
     },
