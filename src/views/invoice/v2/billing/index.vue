@@ -138,6 +138,11 @@
             >
             <div v-else>{{ item.display_customer_name }}</div>
           </template>
+          <template v-slot:item.paided_by="{ item }">
+            <div v-if="item.paided_by">
+              {{ item.paided_by.emp_name || item.paided_by.name }}
+            </div>
+          </template>
           <template v-slot:item.user="{ item }">
             <div>{{ showUser(item) }}</div>
           </template>
@@ -565,6 +570,11 @@ export default {
         {
           text: "ວັນທີບິນ",
           value: "date",
+          width: "180px",
+        },
+        {
+          text: "ຜູ້ຈ່າຍ",
+          value: "paided_by",
           width: "180px",
         },
         {
