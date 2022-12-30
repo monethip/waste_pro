@@ -129,6 +129,15 @@
           show-select
           fixed-header
         >
+          <template v-slot:item.display_customer_name="{ item }">
+            <a
+              v-if="item.user.customer"
+              href="#"
+              @click="openCustomer(item.user.customer)"
+              >{{ item.display_customer_name }}</a
+            >
+            <div v-else>{{ item.display_customer_name }}</div>
+          </template>
           <template v-slot:item.user="{ item }">
             <div>{{ showUser(item) }}</div>
           </template>
@@ -582,6 +591,27 @@ export default {
     },
   },
   methods: {
+    openCustomer(customer) {
+      let routeData = null;
+      if (customer.customer_type == "company") {
+        routeData = this.$router.resolve({
+          name: "ViewCompanyDetail",
+          params: { id: customer.id },
+          query: {
+            tab: "tab-3",
+          },
+        });
+      } else if (customer.customer_type == "home") {
+        routeData = this.$router.resolve({
+          name: "ViewClient",
+          params: { id: customer.id },
+          query: {
+            tab: "tab-3",
+          },
+        });
+      }
+      window.open(routeData.href, "_blank");
+    },
     fetchPackage() {
       this.$axios
         .get("package")

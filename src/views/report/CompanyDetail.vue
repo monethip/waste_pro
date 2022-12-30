@@ -2,8 +2,8 @@
   <v-container>
     <v-breadcrumbs large class="pt-0">
       <v-btn text class="text-primary" @click="backPrevios()">
-        <v-icon>mdi-chevron-left</v-icon>
-      </v-btn>ລາຍລະອຽດ
+        <v-icon>mdi-chevron-left</v-icon> </v-btn
+      >ລາຍລະອຽດ
     </v-breadcrumbs>
     <v-card>
       <!--
@@ -41,7 +41,10 @@
 
                   <v-list-item-content>
                     <v-list-item-subtitle>ບໍລິສັດ</v-list-item-subtitle>
-                    <v-list-item-title>{{ data.name }} {{ data.company_name }}</v-list-item-title>
+                    <v-list-item-title
+                      >{{ data.name }}
+                      {{ data.company_name }}</v-list-item-title
+                    >
                   </v-list-item-content>
 
                   <v-spacer></v-spacer>
@@ -51,7 +54,9 @@
 
                   <v-list-item-content>
                     <v-list-item-subtitle>ເບີໂທ</v-list-item-subtitle>
-                    <v-list-item-title v-if="data.user">{{ data.user.phone }}</v-list-item-title>
+                    <v-list-item-title v-if="data.user">{{
+                      data.user.phone
+                    }}</v-list-item-title>
                   </v-list-item-content>
 
                   <v-spacer></v-spacer>
@@ -60,19 +65,26 @@
                   </v-list-item-icon>
                   <v-list-item-content>
                     <v-list-item-subtitle>Email</v-list-item-subtitle>
-                    <v-list-item-title v-if="data.user">{{ data.user.email }}</v-list-item-title>
+                    <v-list-item-title v-if="data.user">{{
+                      data.user.email
+                    }}</v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
                 <v-divider inset></v-divider>
               </v-row>
               <v-row>
-                <v-list-item v-for="(coor, index) in data.company_coordinators" :key="index">
+                <v-list-item
+                  v-for="(coor, index) in data.company_coordinators"
+                  :key="index"
+                >
                   <v-list-item-icon>
                     <v-icon color="indigo">mdi-account-circle</v-icon>
                   </v-list-item-icon>
                   <v-list-item-content>
                     <v-list-item-subtitle>ຜູ້ປະສານງານ</v-list-item-subtitle>
-                    <v-list-item-title>{{ coor.name }} {{ coor.surname }}</v-list-item-title>
+                    <v-list-item-title
+                      >{{ coor.name }} {{ coor.surname }}</v-list-item-title
+                    >
                   </v-list-item-content>
                   <v-spacer></v-spacer>
                   <v-list-item-icon>
@@ -93,8 +105,12 @@
 
                   <v-list-item-content class="text-center">
                     <v-list-item-title>
-                      <v-icon small class="mr-2" @click="editItem(coor)">mdi-pencil</v-icon>
-                      <v-icon small @click="deleteItem(coor)">mdi-delete</v-icon>
+                      <v-icon small class="mr-2" @click="editItem(coor)"
+                        >mdi-pencil</v-icon
+                      >
+                      <v-icon small @click="deleteItem(coor)"
+                        >mdi-delete</v-icon
+                      >
                     </v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
@@ -106,23 +122,25 @@
 
                   <v-list-item-content>
                     <v-list-item-subtitle>ວັນທີ່ເລີ່ມ</v-list-item-subtitle>
-                    <v-list-item-title>{{ data.start_month }}</v-list-item-title>
+                    <v-list-item-title>{{
+                      data.start_month
+                    }}</v-list-item-title>
                     <v-list-item-subtitle>
                       <span>
                         <v-chip
                           label
                           class="success"
                           v-if="data.status == 'active'"
-                        >{{ data.status }}</v-chip>
+                          >{{ data.status }}</v-chip
+                        >
                         <v-chip
                           label
                           class="error"
                           v-else-if="data.status == 'inactive'"
-                        >{{ data.status }}</v-chip>
+                          >{{ data.status }}</v-chip
+                        >
                         <v-chip label class="primary" v-else>
-                          {{
-                          data.status
-                          }}
+                          {{ data.status }}
                         </v-chip>
                       </span>
                     </v-list-item-subtitle>
@@ -134,14 +152,18 @@
                   </v-list-item-icon>
                   <v-list-item-content>
                     <v-list-item-subtitle>ປະເພດບໍລິການ</v-list-item-subtitle>
-                    <v-list-item-title v-if="data.cost_by == 'fix_cost'">ທຸລະກິດເປັນຖ້ຽວ</v-list-item-title>
-                    <v-list-item-title v-if="data.cost_by == 'container'">ຄອນເທັນເນີ</v-list-item-title>
-                    <v-list-item-title v-if="data.cost_by == 'chartered'">ມອບເໝົາ</v-list-item-title>
+                    <v-list-item-title v-if="data.cost_by == 'fix_cost'"
+                      >ທຸລະກິດເປັນຖ້ຽວ</v-list-item-title
+                    >
+                    <v-list-item-title v-if="data.cost_by == 'container'"
+                      >ຄອນເທັນເນີ</v-list-item-title
+                    >
+                    <v-list-item-title v-if="data.cost_by == 'chartered'"
+                      >ມອບເໝົາ</v-list-item-title
+                    >
 
                     <v-list-item-subtitle v-if="data.cost_by == 'fix_cost'">
-                      {{
-                      Intl.NumberFormat().format(data.fix_cost)
-                      }}
+                      {{ Intl.NumberFormat().format(data.fix_cost) }}
                     </v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
@@ -156,8 +178,13 @@
                       {{ data.village.name }},
                       {{ data.district.name }}
                     </v-list-item-title>
-                    <div v-for="(detail, index) in data.village_details" :key="index">
-                      <v-list-item-subtitle>{{ detail.name }}</v-list-item-subtitle>
+                    <div
+                      v-for="(detail, index) in data.village_details"
+                      :key="index"
+                    >
+                      <v-list-item-subtitle>{{
+                        detail.name
+                      }}</v-list-item-subtitle>
                     </div>
                   </v-list-item-content>
                 </v-list-item>
@@ -165,7 +192,11 @@
               <v-row>
                 <v-col cols="12" class="mb-4">
                   <GmapMap
-                    :center="getCenter().lat > 0 || getCenter().lat < 0 ? getCenter() : { lat: 0, lng: 0 }"
+                    :center="
+                      getCenter().lat > 0 || getCenter().lat < 0
+                        ? getCenter()
+                        : { lat: 0, lng: 0 }
+                    "
                     :zoom="16"
                     style="width: 100%; height: 450px"
                     :disableDefaultUI="true"
@@ -206,7 +237,9 @@
                   <div>ຈຳນວນສຳເລັດ: {{ statusSummary.success_count }}</div>
                 </v-col>
                 <v-col>
-                  <div>ລໍຖ້າຢືນຢັນ: {{ statusSummary.wait_to_confirm_count }}</div>
+                  <div>
+                    ລໍຖ້າຢືນຢັນ: {{ statusSummary.wait_to_confirm_count }}
+                  </div>
                 </v-col>
               </v-row>
               <v-simple-table>
@@ -223,18 +256,31 @@
                     <tr v-for="item in services" :key="item.id">
                       <td>
                         <router-link
-                          :to="{name:'PlanCalendarDetail',params: {id: item.plan_calendar_id,planMonthId: item.plan_calendar.plan_month_id}}"
-                        >{{ (moment(item.date).format('DD-MM-YYYY')) }}</router-link>
+                          :to="{
+                            name: 'PlanCalendarDetail',
+                            params: {
+                              id: item.plan_calendar_id,
+                              planMonthId: item.plan_calendar.plan_month_id,
+                            },
+                          }"
+                          >{{
+                            moment(item.date).format("DD-MM-YYYY")
+                          }}</router-link
+                        >
                       </td>
                       <td>
-                        <div v-if="item.collection_type === 'bag'">{{ item.bag }} ຖົງ</div>
-                        <div
-                          v-if="item.collection_type === 'container'"
-                        >{{ item.container }} ຄອນເທັນເນີ</div>
-                        <div
-                          v-else-if="item.collection_type === 'chartered'"
-                        >{{ item.bag }} ຖົງ(ມອບເໝົາ)</div>
-                        <div v-else-if="item.collection_type === 'fix_cost'">ບໍລິການເປັນຖ້ຽວ</div>
+                        <div v-if="item.collection_type === 'bag'">
+                          {{ item.bag }} ຖົງ
+                        </div>
+                        <div v-if="item.collection_type === 'container'">
+                          {{ item.container }} ຄອນເທັນເນີ
+                        </div>
+                        <div v-else-if="item.collection_type === 'chartered'">
+                          {{ item.bag }} ຖົງ(ມອບເໝົາ)
+                        </div>
+                        <div v-else-if="item.collection_type === 'fix_cost'">
+                          ບໍລິການເປັນຖ້ຽວ
+                        </div>
                         <div v-else>{{ item.collection_type }}</div>
                       </td>
                       <td>{{ item.status_la }}</td>
@@ -260,16 +306,38 @@
               <h3>ປະຫັວດການຊຳລະ</h3>
               <v-row class="mb-1 mt-1">
                 <v-col>
-                  <div>ລໍຖ້າອະນຸມັດ: {{ Intl.NumberFormat().format(invoiceSummary.created_total) }}</div>
+                  <div>
+                    ລໍຖ້າອະນຸມັດ:
+                    {{
+                      Intl.NumberFormat().format(invoiceSummary.created_total)
+                    }}
+                  </div>
                 </v-col>
                 <v-col>
-                  <div>ອະນຸມັດແລ້ວ: {{ Intl.NumberFormat().format(invoiceSummary.approved_total) }}</div>
+                  <div>
+                    ອະນຸມັດແລ້ວ:
+                    {{
+                      Intl.NumberFormat().format(invoiceSummary.approved_total)
+                    }}
+                  </div>
                 </v-col>
                 <v-col>
-                  <div>ຈ່າຍແລ້ວ ລໍຖ້າກວດສອບ: {{ Intl.NumberFormat().format(invoiceSummary.to_confirm_payment_total) }}</div>
+                  <div>
+                    ຈ່າຍແລ້ວ ລໍຖ້າກວດສອບ:
+                    {{
+                      Intl.NumberFormat().format(
+                        invoiceSummary.to_confirm_payment_total
+                      )
+                    }}
+                  </div>
                 </v-col>
                 <v-col>
-                  <div>ຈ່າຍແລ້ວ ກວດສອບສຳເລັດ: {{ Intl.NumberFormat().format(invoiceSummary.success_total) }}</div>
+                  <div>
+                    ຈ່າຍແລ້ວ ກວດສອບສຳເລັດ:
+                    {{
+                      Intl.NumberFormat().format(invoiceSummary.success_total)
+                    }}
+                  </div>
                 </v-col>
               </v-row>
               <v-simple-table>
@@ -289,12 +357,14 @@
                   </thead>
                   <tbody>
                     <tr v-for="item in invoices" :key="item.id">
-                      <td>{{ (moment(item.date).format('DD-MM-YYYY')) }}</td>
+                      <td>{{ moment(item.date).format("DD-MM-YYYY") }}</td>
                       <td>{{ item.content }}</td>
                       <td>{{ item.status_la }}</td>
                       <td>{{ item.paided_at }}</td>
                       <td>
-                        <div class="primary--text">{{ item.payment_method }}</div>
+                        <div class="primary--text">
+                          {{ item.payment_method }}
+                        </div>
                       </td>
                       <td>{{ Intl.NumberFormat().format(item.sub_total) }}</td>
                       <td>{{ Intl.NumberFormat().format(item.discount) }}</td>
@@ -344,7 +414,13 @@
     <ModalView>
       <template>
         <v-card>
-          <v-img :src="imageUrl" alt="Image" width="auto" height="auto" dark></v-img>
+          <v-img
+            :src="imageUrl"
+            alt="Image"
+            width="auto"
+            height="auto"
+            dark
+          ></v-img>
         </v-card>
       </template>
     </ModalView>
@@ -375,7 +451,7 @@ export default {
       //Map
       latlng: {
         lat: 0,
-        lng: 0
+        lng: 0,
       },
       markers: [],
       currentPlace: null,
@@ -386,14 +462,14 @@ export default {
           width: 35,
           height: 55,
           f: "px",
-          b: "px"
+          b: "px",
         },
         scaledSize: {
           width: 35,
           height: 55,
           f: "px",
-          b: "px"
-        }
+          b: "px",
+        },
       },
       services: [],
       serviceSummary: {},
@@ -404,14 +480,14 @@ export default {
       offset: 12,
       pagination: {},
       per_page: 100,
-      imageUrl: ""
+      imageUrl: "",
     };
   },
   methods: {
     ViewInvoice(id) {
       let route = this.$router.resolve({
         name: "billing-detail",
-        params: { id }
+        params: { id },
       });
       window.open(route.href, "_blank");
     },
@@ -425,7 +501,7 @@ export default {
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("customer/" + this.$route.params.id)
-        .then(res => {
+        .then((res) => {
           if (res.data.code === 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
@@ -433,7 +509,7 @@ export default {
             }, 300);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$store.commit("Loading_State", false);
           this.fetchData();
           if (error.response && error.response.status === 422) {
@@ -451,10 +527,10 @@ export default {
         .get("customer-collection-summary/" + this.$route.params.id, {
           params: {
             page: this.pagination.current_page,
-            per_page: this.per_page
-          }
+            per_page: this.per_page,
+          },
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.code === 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
@@ -465,7 +541,7 @@ export default {
             }, 300);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$store.commit("Loading_State", false);
           this.fetchData();
           if (error.response && error.response.status === 422) {
@@ -483,10 +559,10 @@ export default {
         .get("customer-invoice-summary/" + this.$route.params.id, {
           params: {
             page: this.pagination.current_page,
-            per_page: this.per_page
-          }
+            per_page: this.per_page,
+          },
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.code === 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
@@ -496,7 +572,7 @@ export default {
             }, 300);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$store.commit("Loading_State", false);
           this.fetchData();
           if (error.response && error.response.status === 422) {
@@ -515,7 +591,7 @@ export default {
       if (this.data.lat) {
         const latlng = {
           lat: parseFloat(this.data.lat),
-          lng: parseFloat(this.data.lng)
+          lng: parseFloat(this.data.lng),
         };
         return latlng;
       }
@@ -524,15 +600,15 @@ export default {
     getMarkers(data) {
       return {
         lat: parseFloat(data.lat),
-        lng: parseFloat(data.lng)
+        lng: parseFloat(data.lng),
       };
     },
     editPage(id) {
       this.$router.push({
         name: "EditCustomer",
-        params: { id }
+        params: { id },
       });
-    }
+    },
   },
   watch: {
     tab: function() {
@@ -543,11 +619,12 @@ export default {
       } else if (this.tab === "tab-3") {
         this.customerInvoice();
       }
-    }
+    },
   },
   created() {
     this.fetchData();
-  }
+    if (this.$route.query.tab) this.tab = this.$route.query.tab;
+  },
 };
 </script>
 
