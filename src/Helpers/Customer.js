@@ -141,7 +141,7 @@ export const concatPackage = (packageArr = []) => {
     for (const packageItem of packageArr) {
         connateArr.push({
             id: packageItem.id,
-            name: `${packageItem.name} (${Intl.NumberFormat().format(packageItem.price)} ກີບ) [${Intl.NumberFormat().format(packageItem.customers_count)} ສັນຍາ]`,
+            name: `${packageItem.name} (${Intl.NumberFormat().format(packageItem.price)} ກີບ)`,
         })
     }
 

@@ -66,7 +66,7 @@
       </v-col>
     </v-row>
 
-    <v-row v-if="selectedBillingable_type == 'NewInvoice'">
+    <v-row>
       <v-col>
         <v-select
           outlined
@@ -89,6 +89,17 @@
           item-value="en"
           label="ເລືອກປະເພດບໍລິການ"
           clearable
+        ></v-select>
+      </v-col>
+      <v-col v-if="selectedCustomerType == 'home'">
+        <v-select
+          v-model="filteredPackage"
+          :items="packageList"
+          item-text="name"
+          item-value="id"
+          label="ເລືອກແພັກເກດ"
+          outlined
+          dense
         ></v-select>
       </v-col>
     </v-row>
@@ -166,13 +177,13 @@
               </v-list>
             </v-menu>
 
-            <v-btn
-              class="btn btn-primary mr-2 elevation-0"
+            <v-icon
+              v-if="item.status == 'approved'"
               small
               @click="paymentPage(item)"
+              class="mr-1"
+              >mdi-cash</v-icon
             >
-              <v-icon class="mr-1" small>mdi-cash</v-icon>
-            </v-btn>
             <v-icon
               v-if="
                 (item.display_type == 'CustomBill' ||
@@ -434,7 +445,7 @@
 
 import queryOption from "@/Helpers/queryOption";
 import { getLaoBillingType } from "@/Helpers/BillingStatus";
-import { getCompanyCostBy } from "@/Helpers/Customer";
+import { getCompanyCostBy, concatPackage } from "@/Helpers/Customer";
 import moment from "moment";
 
 export default {
@@ -445,7 +456,9 @@ export default {
   data() {
     return {
       title: "Collection",
+      filteredPackage: "",
       confirmPaymentDialog: false,
+      packages: [],
       month: "",
       curent_month: new Date(
         Date.now() - new Date().getTimezoneOffset() * 60000
@@ -555,6 +568,9 @@ export default {
     };
   },
   computed: {
+    packageList() {
+      return concatPackage(this.packages);
+    },
     billStatus() {
       return this.$route.query.tab || "billing-approved";
     },
@@ -566,6 +582,16 @@ export default {
     },
   },
   methods: {
+    fetchPackage() {
+      this.$axios
+        .get("package")
+        .then((res) => {
+          if (res.data.code == 200) {
+            this.packages = res.data.data;
+          }
+        })
+        .catch(() => {});
+    },
     onFileChange(e) {
       let input = e.target;
       let file = e.target.files[0];
@@ -769,6 +795,10 @@ export default {
             { phone: this.phone },
             { customer_type: this.selectedCustomerType },
             { cost_by: this.selectedComapnyType },
+            {
+              package_id:
+                this.selectedCustomerType == "home" ? this.filteredPackage : "",
+            },
             { filter: this.search },
           ]),
         })
@@ -923,6 +953,10 @@ export default {
       this.pagination.current_page = "";
       this.fetchData();
     },
+    filteredPackage() {
+      this.pagination.current_page = "";
+      this.fetchData();
+    },
 
     month: function(value) {
       if (value !== "") {
@@ -963,6 +997,7 @@ export default {
     this.fetchData();
     this.fetchRoutePlan();
     this.fetchReject();
+    this.fetchPackage();
   },
 };
 </script>
