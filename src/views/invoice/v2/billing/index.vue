@@ -1,47 +1,6 @@
 <template>
   <v-container>
     <v-row class="mb-n6">
-      <!--      <v-col cols="3">-->
-      <!--        <v-menu-->
-      <!--            v-model="start_menu"-->
-      <!--            :close-on-content-click="true"-->
-      <!--            :nudge-right="40"-->
-      <!--            transition="scale-transition"-->
-      <!--            offset-y-->
-      <!--            min-width="auto"-->
-      <!--        >-->
-      <!--          <template v-slot:activator="{ on, attrs }">-->
-      <!--            <v-text-field-->
-      <!--                v-model="month"-->
-      <!--                label="ເດືອນ"-->
-      <!--                readonly-->
-      <!--                outlined-->
-      <!--                v-bind="attrs"-->
-      <!--                v-on="on"-->
-      <!--                dense-->
-      <!--                clearable-->
-      <!--            ></v-text-field>-->
-      <!--          </template>-->
-      <!--          <v-date-picker-->
-      <!--              v-model="month"-->
-      <!--              type="month"-->
-      <!--          ></v-date-picker>-->
-      <!--        </v-menu>-->
-      <!--      </v-col>-->
-
-      <!--      <v-col cols>-->
-      <!--        <v-select-->
-      <!--            outlined-->
-      <!--            dense-->
-      <!--            :items="customerTypes"-->
-      <!--            v-model="selectedCustomerType"-->
-      <!--            item-text="text"-->
-      <!--            item-value="value"-->
-      <!--            label="ປະເພດລູກຄ້າ"-->
-      <!--            clearable-->
-      <!--        ></v-select>-->
-      <!--      </v-col>-->
-
       <v-col cols>
         <v-select
           outlined
@@ -54,18 +13,6 @@
           clearable
         ></v-select>
       </v-col>
-      <!--      <v-col cols>-->
-      <!--        <v-select-->
-      <!--            outlined-->
-      <!--            dense-->
-      <!--            :items="collectionStatus"-->
-      <!--            v-model="selectedCollectionStatus"-->
-      <!--            item-text="dis_play"-->
-      <!--            item-value="name"-->
-      <!--            label="ສະຖານະບໍລິການ"-->
-      <!--            clearable-->
-      <!--        ></v-select>-->
-      <!--      </v-col>-->
       <v-col cols>
         <v-select
           outlined
@@ -190,7 +137,7 @@
             <v-icon
               v-if="
                 item.display_type == 'CustomBill' ||
-                item.display_type == 'FutureInvoice'
+                  item.display_type == 'FutureInvoice'
               "
               color="red"
               small
@@ -199,27 +146,6 @@
             >
               mdi-delete
             </v-icon>
-            <!--            <v-menu offset-y>-->
-            <!--              <template v-slot:activator="{ on, attrs }">-->
-            <!--                <v-icon-->
-            <!--                    color="primary"-->
-            <!--                    dark-->
-            <!--                    v-bind="attrs"-->
-            <!--                    v-on="on"-->
-            <!--                    medium-->
-            <!--                    class="mr-2"-->
-            <!--                >mdi-dots-vertical</v-icon-->
-            <!--                >-->
-            <!--              </template>-->
-            <!--              <v-list>-->
-            <!--                <v-list-item link @click="ViewInvoice(item.id)">-->
-            <!--                  <v-list-item-title>-->
-            <!--                    <v-icon small class="mr-2"> mdi-eye </v-icon>-->
-            <!--                    ລາຍລະອຽດ-->
-            <!--                  </v-list-item-title>-->
-            <!--                </v-list-item>-->
-            <!--              </v-list>-->
-            <!--            </v-menu>-->
           </template>
         </v-data-table>
         <br />
@@ -380,6 +306,9 @@ export default {
     };
   },
   computed: {
+    billStatus() {
+      return this.$route.query.tab || "billing-approved";
+    },
     lastMonthCreated() {
       return this.$store.getters["auth/getLastMonthBill"];
     },
@@ -445,7 +374,7 @@ export default {
             { created_month: this.lastMonthCreated },
             { bill_month: this.lastMonthBillCreated },
             { order_by: "newest" },
-            { status: "created" },
+            { status: this.billStatus },
             { route_plans: this.selectedRoutePlan },
             { bill_id: this.billId },
             { phone: this.phone },
@@ -556,62 +485,66 @@ export default {
     },
   },
   watch: {
+    billStatus() {
+      this.pagination.current_page = "";
+      this.fetchData();
+    },
     selectedComapnyType() {
       this.pagination.current_page = "";
       this.fetchData();
     },
-    selectedCollectionStatus: function () {
+    selectedCollectionStatus: function() {
       this.pagination.current_page = "";
       this.fetchData();
     },
-    lastMonthBill: function (value) {
+    lastMonthBill: function(value) {
       this.$store.dispatch("auth/saveLastMonthBill", value);
     },
-    lastMonthBillPaid: function (value) {
+    lastMonthBillPaid: function(value) {
       this.$store.dispatch("auth/saveLastMonthBillPaid", value);
     },
-    lastMonthCreated: function () {
+    lastMonthCreated: function() {
       this.fetchData();
     },
-    lastMonthBillCreated: function () {
+    lastMonthBillCreated: function() {
       this.fetchData();
     },
-    selectedBillingable_type: function () {
+    selectedBillingable_type: function() {
       this.pagination.current_page = "";
       this.fetchData();
     },
-    selectedRoutePlan: function () {
+    selectedRoutePlan: function() {
       this.pagination.current_page = "";
       this.fetchData();
     },
-    selectedCustomerType: function () {
+    selectedCustomerType: function() {
       this.pagination.current_page = "";
       this.fetchData();
     },
 
-    month: function (value) {
+    month: function(value) {
       if (value !== "") {
         this.pagination.current_page = "";
         this.fetchData();
       }
     },
-    search: function (value) {
+    search: function(value) {
       this.pagination = {};
       if (value == "") {
         this.fetchData();
       }
     },
-    selectedStatus: function () {
+    selectedStatus: function() {
       this.pagination.current_page = "";
       this.fetchData();
     },
-    selectedPackage: function () {
+    selectedPackage: function() {
       this.server_errors.package_id = "";
     },
-    start_date: function () {
+    start_date: function() {
       this.server_errors.start_month = "";
     },
-    paymentType: function () {
+    paymentType: function() {
       if (this.paymentType == 0) {
         this.payment_method = "cash";
         this.image = "";

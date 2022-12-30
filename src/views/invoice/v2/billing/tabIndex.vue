@@ -7,22 +7,53 @@
         </v-breadcrumbs>
       </v-col>
       <v-col>
-        <v-menu v-model="start_menu_created" :close-on-content-click="true" :nudge-right="40"
-          transition="scale-transition" offset-y min-width="auto">
+        <v-menu
+          v-model="start_menu_created"
+          :close-on-content-click="true"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
           <template v-slot:activator="{ on, attrs }">
-            <v-text-field v-model="lastMonthBillPaid" label="ເດືອນທີ່ຕ້ອງຊຳລະ" readonly outlined v-bind="attrs"
-              v-on="on" dense clearable>
+            <v-text-field
+              v-model="lastMonthBillPaid"
+              label="ເດືອນທີ່ຕ້ອງຊຳລະ"
+              readonly
+              outlined
+              v-bind="attrs"
+              v-on="on"
+              dense
+              clearable
+            >
             </v-text-field>
           </template>
-          <v-date-picker v-model="lastMonthBillPaid" type="month"></v-date-picker>
+          <v-date-picker
+            v-model="lastMonthBillPaid"
+            type="month"
+          ></v-date-picker>
         </v-menu>
       </v-col>
       <v-col>
-        <v-menu v-model="start_menu" :close-on-content-click="true" :nudge-right="40" transition="scale-transition"
-          offset-y min-width="auto">
+        <v-menu
+          v-model="start_menu"
+          :close-on-content-click="true"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
           <template v-slot:activator="{ on, attrs }">
-            <v-text-field v-model="lastMonthBill" label="ເດືອນທີ່ສ້າງບິນ" readonly outlined v-bind="attrs" v-on="on"
-              dense clearable>
+            <v-text-field
+              v-model="lastMonthBill"
+              label="ເດືອນທີ່ສ້າງບິນ"
+              readonly
+              outlined
+              v-bind="attrs"
+              v-on="on"
+              dense
+              clearable
+            >
             </v-text-field>
           </template>
           <v-date-picker v-model="lastMonthBill" type="month"></v-date-picker>
@@ -33,38 +64,59 @@
       <v-card-text>
         <v-tabs v-model="tab">
           <v-tab href="#tab-1">
-            <v-badge color="info" v-if="counts.length" :content="counts[0].count_status">
+            <v-badge
+              color="info"
+              v-if="counts.length"
+              :content="counts[0].count_status"
+            >
               ລໍຖ້າອະນຸມັດ
             </v-badge>
           </v-tab>
           <v-tab href="#tab-2">
-            <v-badge color="orange" v-if="counts.length" :content="counts[1].count_status">
+            <v-badge
+              color="orange"
+              v-if="counts.length"
+              :content="counts[1].count_status"
+            >
               ອະນຸມັດແລ້ວ
             </v-badge>
           </v-tab>
           <v-tab href="#tab-3">
-            <v-badge color="info" v-if="counts.length" :content="counts[4].count_status">
-              <span class="info--text">
-                ຈ່າຍແລ້ວ ລໍຖ້າກວດສອບ </span>
+            <v-badge
+              color="info"
+              v-if="counts.length"
+              :content="counts[4].count_status"
+            >
+              <span class="info--text"> ຈ່າຍແລ້ວ ລໍຖ້າກວດສອບ </span>
             </v-badge>
-
           </v-tab>
           <v-tab href="#tab-4">
-            <v-badge color="success" v-if="counts.length" :content="counts[5].count_status">
+            <v-badge
+              color="success"
+              v-if="counts.length"
+              :content="counts[5].count_status"
+            >
               <span class="success--text">
                 ຈ່າຍແລ້ວ ກວດສອບສຳເລັດ
               </span>
             </v-badge>
           </v-tab>
           <v-tab href="#tab-5">
-            <v-badge color="error" v-if="counts.length" :content="counts[3].count_status">
-              <span class="error--text">ການຈ່າຍຖືກປະຕິເສດ
-              </span>
+            <v-badge
+              color="error"
+              v-if="counts.length"
+              :content="counts[3].count_status"
+            >
+              <span class="error--text">ການຈ່າຍຖືກປະຕິເສດ </span>
             </v-badge>
           </v-tab>
           <v-spacer></v-spacer>
           <v-tab href="#tab-6">
-            <v-badge color="error" v-if="counts.length" :content="counts[2].count_status">
+            <v-badge
+              color="error"
+              v-if="counts.length"
+              :content="counts[2].count_status"
+            >
               <span class="error--text">ບິນທີ່ຍົກເລີກ </span>
             </v-badge>
           </v-tab>
@@ -84,7 +136,8 @@
           <v-tab-item value="tab-2">
             <v-card flat>
               <v-card-text>
-                <paidBill :tab="tab" />
+                <allInvoice :tab="tab" />
+                <!-- <paidBill :tab="tab" /> -->
               </v-card-text>
             </v-card>
           </v-tab-item>
@@ -134,7 +187,7 @@
 <script>
 import allInvoice from "@views/invoice/v2/billing/index";
 import confirmPayment from "@views/invoice/v2/billing/confirmPayment";
-import paidBill from "@views/invoice/v2/billing/paidBill";
+// import paidBill from "@views/invoice/v2/billing/paidBill";
 import canceled from "@views/invoice/v2/billing/cancelBill";
 import rejected from "@views/invoice/v2/billing/rejectBill";
 import success from "@views/invoice/v2/billing/successBill";
@@ -145,7 +198,7 @@ export default {
   components: {
     allInvoice,
     confirmPayment,
-    paidBill,
+    // paidBill,
     rejected,
     canceled,
     success,
@@ -158,97 +211,94 @@ export default {
       lastMonthBillPaid: localStorage.getItem("lastMonthBillPaid"),
       start_menu: false,
       start_menu_created: false,
-
     };
   },
   methods: {
     async countBilling() {
-      const option = {}
-      if (this.lastMonthCreated) option.created_month = this.lastMonthCreated
-      if (this.lastMonthBillPaid) option.bill_month = this.lastMonthBillPaid
+      const option = {};
+      if (this.lastMonthCreated) option.created_month = this.lastMonthCreated;
+      if (this.lastMonthBillPaid) option.bill_month = this.lastMonthBillPaid;
       await this.$axios.get("count-billing", { params: option }).then((res) => {
         this.counts = res.data.data;
-      })
+      });
     },
   },
   computed: {
     lastMonthCreated() {
-      return this.$store.getters['auth/getLastMonthBill']
+      return this.$store.getters["auth/getLastMonthBill"];
     },
-    lastMonthBillPaidCreated() { return this.$store.getters['auth/getLastMonthBillPaid'] },
+    lastMonthBillPaidCreated() {
+      return this.$store.getters["auth/getLastMonthBillPaid"];
+    },
   },
   created() {
-    if (this.$route.query.tab == "billing-approved") {
+    if (this.$route.query.tab == "created") {
       this.tab = "tab-1";
-    } else if (this.$route.query.tab == "billing-paid") {
+    } else if (this.$route.query.tab == "approved") {
       this.tab = "tab-2";
-    } else if (this.$route.query.tab == "billing-confirm-payment") {
+    } else if (this.$route.query.tab == "to_confirm_payment") {
       this.tab = "tab-3";
-    } else if (this.$route.query.tab == "billing-success") {
+    } else if (this.$route.query.tab == "success") {
       this.tab = "tab-4";
-    } else if (this.$route.query.tab == "billing-reject") {
+    } else if (this.$route.query.tab == "rejected") {
       this.tab = "tab-5";
-    } else if (this.$route.query.tab == "billing-canceled") {
+    } else if (this.$route.query.tab == "canceled") {
       this.tab = "tab-6";
     }
     this.countBilling();
   },
   watch: {
-    lastMonthBill: function (value) {
-      this.$store.dispatch('auth/saveLastMonthBill', value);
+    lastMonthBill: function(value) {
+      this.$store.dispatch("auth/saveLastMonthBill", value);
     },
-    lastMonthBillPaid: function (value) {
-      this.$store.dispatch('auth/saveLastMonthBillPaid', value);
+    lastMonthBillPaid: function(value) {
+      this.$store.dispatch("auth/saveLastMonthBillPaid", value);
     },
 
-    lastMonthCreated: function () {
-      this.countBilling()
+    lastMonthCreated: function() {
+      this.countBilling();
     },
-    lastMonthBillPaidCreated: function () {
-      this.countBilling()
-
+    lastMonthBillPaidCreated: function() {
+      this.countBilling();
     },
-    tab: function (value) {
+    tab: function(value) {
       if (value == "tab-1") {
         this.countBilling();
         this.$router
-          .push({ name: "billing", query: { tab: "billing-approved" } })
-          .catch(() => { });
+          .push({ name: "billing", query: { tab: "created" } })
+          .catch(() => {});
       } else if (value == "tab-2") {
         this.countBilling();
         this.$router
-          .push({ name: "billing", query: { tab: "billing-paid" } })
-          .catch(() => { });
+          .push({ name: "billing", query: { tab: "approved" } })
+          .catch(() => {});
       } else if (value == "tab-3") {
         this.countBilling();
         this.$router
           .push({
             name: "billing",
-            query: { tab: "billing-confirm-payment" },
+            query: { tab: "to_confirm_payment" },
           })
-          .catch(() => { });
+          .catch(() => {});
       } else if (value == "tab-4") {
         this.countBilling();
         this.$router
-          .push({ name: "billing", query: { tab: "billing-success" } })
-          .catch(() => { });
+          .push({ name: "billing", query: { tab: "success" } })
+          .catch(() => {});
       } else if (value == "tab-5") {
         this.countBilling();
         this.$router
-          .push({ name: "billing", query: { tab: "billing-reject" } })
-          .catch(() => { });
-      }
-      else if (value == "tab-6") {
+          .push({ name: "billing", query: { tab: "rejected" } })
+          .catch(() => {});
+      } else if (value == "tab-6") {
         this.countBilling();
         this.$router
-          .push({ name: "billing", query: { tab: "billing-canceled" } })
-          .catch(() => { });
+          .push({ name: "billing", query: { tab: "canceled" } })
+          .catch(() => {});
       }
     },
   },
 };
 </script>
 
-<style>
-
-</style>
+<style></style>
