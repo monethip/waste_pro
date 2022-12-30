@@ -1,27 +1,37 @@
-
-body, button, input, select, textarea {
-
-  font-family:'NotoSanLao', 'Google Sans', arial, serif, sans-serif !important;
+body,
+button,
+input,
+select,
+textarea {
+  font-family: "NotoSanLao", "Google Sans", arial, serif, sans-serif !important;
 }
-h1, h2, h3, h4, h5, h6, p, a,table{
-    font-family: 'Roboto', 'NotoSanLao' !important;
-    font-size: normal;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+table {
+  font-family: "Roboto", "NotoSanLao" !important;
+  font-size: normal;
 }
-table thead th{
-    font-size: 17px !important;
-    font-weight: 500;
-    color: #000 !important;
+table thead th {
+  font-size: 17px !important;
+  font-weight: 500;
+  color: #000 !important;
 }
-.v-application{
-  font-family:'NotoSanLao', 'Google Sans', arial, serif, sans-serif !important;
+.v-application {
+  font-family: "NotoSanLao", "Google Sans", arial, serif, sans-serif !important;
 }
 .primary-color {
   color: #00c1d2;
 }
 .warning-color {
-    color: #00c1d2;
+  color: #00c1d2;
 }
-.v-title{
-    padding-top: 10px;
-    padding-bottom: 10px;
+.v-title {
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
