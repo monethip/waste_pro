@@ -396,7 +396,6 @@ export default {
       selectedBillingable_type: "",
       user: {},
       item: {},
-
       //Payment
       image: "",
       imageUrl: "",
@@ -618,6 +617,17 @@ export default {
           }
         });
     },
+    fetchReject() {
+      this.$axios
+        .get("reject-reason")
+        .then((res) => {
+          if (res.data.code == 200) {
+            this.$store.commit("Loading_State", false);
+            this.rejects = res.data.data;
+          }
+        })
+        .catch(() => {});
+    },
     fetchRoutePlan() {
       this.$axios
         .get("route-plan")
@@ -778,6 +788,7 @@ export default {
     this.month = this.moment(this.curent_month).format("YYYY-MM");
     this.fetchData();
     this.fetchRoutePlan();
+    this.fetchReject();
   },
 };
 </script>
