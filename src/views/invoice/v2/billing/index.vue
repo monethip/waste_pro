@@ -134,10 +134,42 @@
             <v-icon small class="mr-2" @click="ViewInvoice(item.id)">
               mdi-eye
             </v-icon>
+            <v-menu v-if="item.status == 'to_confirm_payment'" offset-y>
+              <template v-slot:activator="{ on, attrs }">
+                <v-icon
+                  color="orange"
+                  dark
+                  v-bind="attrs"
+                  v-on="on"
+                  medium
+                  class="mr-2"
+                  >mdi-credit-card-multiple</v-icon
+                >
+              </template>
+              <v-list>
+                <v-list-item link @click="paymentConfirmModal(item)">
+                  <v-list-item-title style="color: green">
+                    <v-icon small style="color: green" class="mr-2"
+                      >mdi-check-all</v-icon
+                    >
+                    ຢືນຢັນການຊຳລະ
+                  </v-list-item-title>
+                </v-list-item>
+                <v-list-item link @click="paymentConfirmModal(item)">
+                  <v-list-item-title style="color: red">
+                    <v-icon style="color: red" small>
+                      mdi-alert-circle-outline</v-icon
+                    >
+                    ປະຕິເສດການຊຳລະ
+                  </v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
             <v-icon
               v-if="
-                item.display_type == 'CustomBill' ||
-                  item.display_type == 'FutureInvoice'
+                (item.display_type == 'CustomBill' ||
+                  item.display_type == 'FutureInvoice') &&
+                  (item.status == 'created' || item.status == 'approved')
               "
               color="red"
               small
@@ -177,6 +209,108 @@
         </v-card-actions>
       </template>
     </ModalDelete>
+
+    <!-- Confirm Payment-->
+    <v-dialog v-model="confirmPaymentDialog" max-width="620px" persistent>
+      <template>
+        <v-card>
+          <v-card-title>
+            <p>
+              <v-icon class="primary-color" large color="success"
+                >mdi-checkbox-marked-circle-outline
+              </v-icon>
+              ຢືນຢັນຊຳລະຄ່າຂີ້ເຫຍື້ອ
+
+              <span class="primary-color"
+                >{{ confirm.name }} {{ confirm.surname }}</span
+              >
+            </p>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-form ref="form" lazy-validation>
+                <v-row>
+                  <v-col cols="12">
+                    <v-chip-group v-model="confirmType" column>
+                      <v-chip
+                        medium
+                        class="mr-6 elevation-0"
+                        color="success"
+                        label
+                        filter
+                        outlined
+                      >
+                        <v-icon left class="ml-1"> mdi-cash </v-icon>
+                        ຢືນຢັນການຊຳລະ
+                      </v-chip>
+                      <v-chip medium color="error" label filter outlined>
+                        <v-icon class="ml-1" left> mdi-cash-remove</v-icon>
+                        ປະຕິເສດການຊຳລະ
+                      </v-chip>
+                    </v-chip-group>
+                  </v-col>
+                </v-row>
+                <div v-if="confirmType == 1">
+                  <v-row>
+                    <v-col cols="12">
+                      <v-select
+                        v-model="reject_reason_id"
+                        label="ເຫດຜົນ"
+                        outlined
+                        dense
+                        :items="rejects"
+                        item-text="name"
+                        item-value="id"
+                      >
+                      </v-select>
+                      <p class="errors">
+                        {{ server_errors.reject_reason_id }}
+                      </p>
+                    </v-col>
+                  </v-row>
+
+                  <v-row>
+                    <v-col cols="12">
+                      <v-text-field
+                        v-model="description"
+                        label="Description"
+                        outlined
+                        dense
+                        type="text"
+                      >
+                      </v-text-field>
+                      <p class="errors">
+                        {{ server_errors.description }}
+                      </p>
+                    </v-col>
+                  </v-row>
+                </div>
+              </v-form>
+              <v-card-actions class="mt-4">
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="error"
+                  class="elevation-0 btn mr-4 px-12"
+                  medium
+                  @click="confirmPaymentDialog = false"
+                >
+                  ປິດ
+                </v-btn>
+                <v-btn
+                  class="elevation-0 btn btn-primary px-12"
+                  medium
+                  :loading="loading"
+                  :disabled="loading"
+                  @click="confirmPayment()"
+                >
+                  ຢືນຢັນ
+                </v-btn>
+              </v-card-actions>
+            </v-container>
+          </v-card-text>
+        </v-card>
+      </template>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -196,6 +330,7 @@ export default {
   data() {
     return {
       title: "Collection",
+      confirmPaymentDialog: false,
       month: "",
       curent_month: new Date(
         Date.now() - new Date().getTimezoneOffset() * 60000
@@ -317,6 +452,14 @@ export default {
     },
   },
   methods: {
+    paymentConfirmModal(item) {
+      this.confirm = item;
+      this.confirmPaymentDialog = true;
+    },
+    closeConfirmModal() {
+      this.confirmPaymentDialog = false;
+      this.confirmType = "";
+    },
     getMonth(date) {
       const d = new Date(date);
 

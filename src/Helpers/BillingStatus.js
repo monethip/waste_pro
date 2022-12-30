@@ -77,3 +77,6 @@ export const getLaoCollectStatus = function (status) {
             return status;
     }
 }
+
+export const normal = ["created", "approved", "to_confirm_payment", "success"]
+export const red = ["rejected", "canceled"]

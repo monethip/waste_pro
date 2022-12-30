@@ -63,118 +63,42 @@
     <v-card elevation="1">
       <v-card-text>
         <v-tabs v-model="tab">
-          <v-tab href="#tab-1">
+          <v-tab
+            v-for="item in normalTabs"
+            :key="item.status"
+            :href="`#${item.status}`"
+          >
             <v-badge
-              color="info"
-              v-if="counts.length"
-              :content="counts[0].count_status"
+              :color="getBgColorFunc(item.status)"
+              :content="item.count_status"
             >
-              ລໍຖ້າອະນຸມັດ
-            </v-badge>
-          </v-tab>
-          <v-tab href="#tab-2">
-            <v-badge
-              color="orange"
-              v-if="counts.length"
-              :content="counts[1].count_status"
-            >
-              ອະນຸມັດແລ້ວ
-            </v-badge>
-          </v-tab>
-          <v-tab href="#tab-3">
-            <v-badge
-              color="info"
-              v-if="counts.length"
-              :content="counts[4].count_status"
-            >
-              <span class="info--text"> ຈ່າຍແລ້ວ ລໍຖ້າກວດສອບ </span>
-            </v-badge>
-          </v-tab>
-          <v-tab href="#tab-4">
-            <v-badge
-              color="success"
-              v-if="counts.length"
-              :content="counts[5].count_status"
-            >
-              <span class="success--text">
-                ຈ່າຍແລ້ວ ກວດສອບສຳເລັດ
-              </span>
-            </v-badge>
-          </v-tab>
-          <v-tab href="#tab-5">
-            <v-badge
-              color="error"
-              v-if="counts.length"
-              :content="counts[3].count_status"
-            >
-              <span class="error--text">ການຈ່າຍຖືກປະຕິເສດ </span>
+              {{ item.status_la }}
             </v-badge>
           </v-tab>
           <v-spacer></v-spacer>
-          <v-tab href="#tab-6">
+          <v-tab
+            v-for="item in redTabs"
+            :key="item.status"
+            :href="`#${item.status}`"
+          >
             <v-badge
-              color="error"
-              v-if="counts.length"
-              :content="counts[2].count_status"
+              :color="getBgColorFunc(item.status)"
+              :content="item.count_status"
             >
-              <span class="error--text">ບິນທີ່ຍົກເລີກ </span>
+              {{ item.status_la }}
             </v-badge>
           </v-tab>
         </v-tabs>
         <!-- <hr /> -->
         <v-tabs-items v-model="tab" class="primary-color">
-          <v-tab-item value="tab-1">
+          <v-tab-item
+            v-for="item in counts"
+            :key="item.status"
+            :value="`${item.status}`"
+          >
             <v-card flat>
               <v-card-text>
                 <allInvoice :tab="tab" />
-              </v-card-text>
-            </v-card>
-          </v-tab-item>
-        </v-tabs-items>
-
-        <v-tabs-items v-model="tab">
-          <v-tab-item value="tab-2">
-            <v-card flat>
-              <v-card-text>
-                <allInvoice :tab="tab" />
-                <!-- <paidBill :tab="tab" /> -->
-              </v-card-text>
-            </v-card>
-          </v-tab-item>
-        </v-tabs-items>
-
-        <v-tabs-items v-model="tab">
-          <v-tab-item value="tab-3">
-            <v-card flat>
-              <v-card-text>
-                <confirmPayment :tab="tab" />
-              </v-card-text>
-            </v-card>
-          </v-tab-item>
-        </v-tabs-items>
-        <v-tabs-items v-model="tab">
-          <v-tab-item value="tab-4">
-            <v-card flat>
-              <v-card-text>
-                <success :tab="tab" />
-              </v-card-text>
-            </v-card>
-          </v-tab-item>
-        </v-tabs-items>
-        <v-tabs-items v-model="tab">
-          <v-tab-item value="tab-5">
-            <v-card flat>
-              <v-card-text>
-                <rejected :tab="tab" />
-              </v-card-text>
-            </v-card>
-          </v-tab-item>
-        </v-tabs-items>
-        <v-tabs-items v-model="tab">
-          <v-tab-item value="tab-6">
-            <v-card flat>
-              <v-card-text>
-                <canceled :tab="tab" />
               </v-card-text>
             </v-card>
           </v-tab-item>
@@ -186,22 +110,14 @@
 
 <script>
 import allInvoice from "@views/invoice/v2/billing/index";
-import confirmPayment from "@views/invoice/v2/billing/confirmPayment";
-// import paidBill from "@views/invoice/v2/billing/paidBill";
-import canceled from "@views/invoice/v2/billing/cancelBill";
-import rejected from "@views/invoice/v2/billing/rejectBill";
-import success from "@views/invoice/v2/billing/successBill";
+import { getBgColor, normal, red } from "@/Helpers/BillingStatus";
+
 export default {
   title() {
     return `Vientiane Waste Co-Dev|Invoice`;
   },
   components: {
     allInvoice,
-    confirmPayment,
-    // paidBill,
-    rejected,
-    canceled,
-    success,
   },
   data() {
     return {
@@ -214,6 +130,9 @@ export default {
     };
   },
   methods: {
+    getBgColorFunc(status) {
+      return getBgColor(status);
+    },
     async countBilling() {
       const option = {};
       if (this.lastMonthCreated) option.created_month = this.lastMonthCreated;
@@ -224,6 +143,20 @@ export default {
     },
   },
   computed: {
+    normalTabs() {
+      let tabs = [];
+      for (const tab of this.counts) {
+        if (normal.includes(tab.status)) tabs.push(tab);
+      }
+      return tabs;
+    },
+    redTabs() {
+      let tabs = [];
+      for (const tab of this.counts) {
+        if (red.includes(tab.status)) tabs.push(tab);
+      }
+      return tabs;
+    },
     lastMonthCreated() {
       return this.$store.getters["auth/getLastMonthBill"];
     },
@@ -232,19 +165,7 @@ export default {
     },
   },
   created() {
-    if (this.$route.query.tab == "created") {
-      this.tab = "tab-1";
-    } else if (this.$route.query.tab == "approved") {
-      this.tab = "tab-2";
-    } else if (this.$route.query.tab == "to_confirm_payment") {
-      this.tab = "tab-3";
-    } else if (this.$route.query.tab == "success") {
-      this.tab = "tab-4";
-    } else if (this.$route.query.tab == "rejected") {
-      this.tab = "tab-5";
-    } else if (this.$route.query.tab == "canceled") {
-      this.tab = "tab-6";
-    }
+    this.tab = this.$route.query.tab;
     this.countBilling();
   },
   watch: {
@@ -262,40 +183,10 @@ export default {
       this.countBilling();
     },
     tab: function(value) {
-      if (value == "tab-1") {
-        this.countBilling();
-        this.$router
-          .push({ name: "billing", query: { tab: "created" } })
-          .catch(() => {});
-      } else if (value == "tab-2") {
-        this.countBilling();
-        this.$router
-          .push({ name: "billing", query: { tab: "approved" } })
-          .catch(() => {});
-      } else if (value == "tab-3") {
-        this.countBilling();
-        this.$router
-          .push({
-            name: "billing",
-            query: { tab: "to_confirm_payment" },
-          })
-          .catch(() => {});
-      } else if (value == "tab-4") {
-        this.countBilling();
-        this.$router
-          .push({ name: "billing", query: { tab: "success" } })
-          .catch(() => {});
-      } else if (value == "tab-5") {
-        this.countBilling();
-        this.$router
-          .push({ name: "billing", query: { tab: "rejected" } })
-          .catch(() => {});
-      } else if (value == "tab-6") {
-        this.countBilling();
-        this.$router
-          .push({ name: "billing", query: { tab: "canceled" } })
-          .catch(() => {});
-      }
+      this.countBilling();
+      this.$router
+        .push({ name: "billing", query: { tab: value } })
+        .catch(() => {});
     },
   },
 };

@@ -169,13 +169,6 @@
                     ລາຍລະອຽດ
                   </v-list-item-title>
                 </v-list-item>
-
-                <!--                <v-list-item link>-->
-                <!--                  <v-list-item-title @click="CancelBill(item)">-->
-                <!--                    <v-icon small class="mr-2"> mdi-pencil </v-icon>-->
-                <!--                    ຍົກເລີກ-->
-                <!--                  </v-list-item-title>-->
-                <!--                </v-list-item>-->
                 <div v-if="item.payment_method !== null">
                   <v-list-item link @click="paymentConfirmModal(item)">
                     <v-list-item-title>
@@ -788,58 +781,58 @@ export default {
     },
   },
   watch: {
-    selectedCollectionStatus: function () {
+    selectedCollectionStatus: function() {
       this.pagination.current_page = "";
       this.fetchData();
       this.fetchSummaryData();
     },
-    selectedBillingable_type: function () {
+    selectedBillingable_type: function() {
       this.pagination.current_page = "";
       this.fetchData();
     },
-    selectedRoutePlan: function () {
+    selectedRoutePlan: function() {
       this.pagination.current_page = "";
       this.fetchData();
     },
-    selectedCustomerType: function () {
+    selectedCustomerType: function() {
       this.pagination.current_page = "";
       this.fetchData();
     },
 
-    month: function (value) {
+    month: function(value) {
       if (value !== "") {
         this.pagination.current_page = "";
         this.fetchData();
         this.fetchSummaryData();
       }
     },
-    search: function (value) {
+    search: function(value) {
       this.pagination = {};
       if (value == "") {
         this.fetchData();
       }
     },
-    selectedStatus: function () {
+    selectedStatus: function() {
       this.pagination.current_page = "";
       this.fetchData();
     },
-    selectedPackage: function () {
+    selectedPackage: function() {
       this.server_errors.package_id = "";
     },
-    start_date: function () {
+    start_date: function() {
       this.server_errors.start_month = "";
     },
-    "user.name": function () {
+    "user.name": function() {
       this.server_errors.name = "";
     },
-    "user.surname": function () {
+    "user.surname": function() {
       this.server_errors.name = "";
     },
-    "user.phone": function () {
+    "user.phone": function() {
       this.server_errors.phone = "";
     },
 
-    paymentType: function () {
+    paymentType: function() {
       if (this.paymentType == 0) {
         this.payment_method = "cash";
         this.image = "";
@@ -859,7 +852,7 @@ export default {
     // bcel_reference_number: function () {
     //   this.server_errors.bcel_reference_number = "";
     // },
-    image: function () {
+    image: function() {
       this.server_errors.image = "";
     },
   },
