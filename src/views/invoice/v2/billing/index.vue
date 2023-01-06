@@ -199,6 +199,14 @@
               >mdi-cash</v-icon
             >
             <v-icon
+              small
+              @click="DownloadBill(item)"
+              class="mr-0"
+              color="primary"
+            >
+              mdi-download
+            </v-icon>
+            <v-icon
               v-if="
                 (item.display_type == 'CustomBill' ||
                   item.display_type == 'FutureInvoice') &&
@@ -578,6 +586,12 @@ export default {
           width: "180px",
         },
         {
+          text: "ປະເພດຊຳລະ",
+          value: "payment_method",
+          align: "center",
+          width: "150px",
+        },
+        {
           text: "ວັນທີສ້າງ",
           value: "created_at",
           width: "180px",
@@ -601,6 +615,9 @@ export default {
     },
   },
   methods: {
+    DownloadBill(item) {
+      window.open(item.download_pdf_link);
+    },
     openCustomer(customer) {
       let routeData = null;
       if (customer.customer_type == "company") {

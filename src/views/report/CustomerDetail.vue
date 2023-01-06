@@ -403,6 +403,13 @@ export default {
     };
   },
   methods: {
+    ViewInvoice(id) {
+      let route = this.$router.resolve({
+        name: "billing-detail",
+        params: { id },
+      });
+      window.open(route.href, "_blank");
+    },
     showImage(url) {
       if (url != null) {
         this.imageUrl = url;
