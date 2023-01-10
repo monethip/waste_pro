@@ -974,17 +974,17 @@ export default {
     },
   },
   watch: {
-    billStatus() {
+    billStatus(val, old) {
       this.pagination.current_page = "";
-      this.fetchData();
+      if (old !== null) this.fetchData();
     },
-    selectedComapnyType() {
+    selectedComapnyType(val, old) {
       this.pagination.current_page = "";
-      this.fetchData();
+      if (old !== null) this.fetchData();
     },
-    selectedCollectionStatus: function() {
+    selectedCollectionStatus: function(val, old) {
       this.pagination.current_page = "";
-      this.fetchData();
+      if (old !== null) this.fetchData();
     },
     lastMonthBill: function(value) {
       this.$store.dispatch("auth/saveLastMonthBill", value);
@@ -992,44 +992,44 @@ export default {
     lastMonthBillPaid: function(value) {
       this.$store.dispatch("auth/saveLastMonthBillPaid", value);
     },
-    lastMonthCreated: function() {
-      this.fetchData();
+    lastMonthCreated: function(val, old) {
+      if (old !== null) this.fetchData();
     },
-    lastMonthBillCreated: function() {
-      this.fetchData();
+    lastMonthBillCreated: function(val, old) {
+      if (old !== null) this.fetchData();
     },
-    selectedBillingable_type: function() {
+    selectedBillingable_type: function(val, old) {
       this.pagination.current_page = "";
-      this.fetchData();
+      if (old !== null) this.fetchData();
     },
-    selectedRoutePlan: function() {
+    selectedRoutePlan: function(val, old) {
       this.pagination.current_page = "";
-      this.fetchData();
+      if (old !== null) this.fetchData();
     },
-    selectedCustomerType: function() {
+    selectedCustomerType: function(val, old) {
       this.pagination.current_page = "";
-      this.fetchData();
+      if (old !== null) this.fetchData();
     },
-    filteredPackage() {
+    filteredPackage(val, old) {
       this.pagination.current_page = "";
-      this.fetchData();
+      if (old !== null) this.fetchData();
     },
 
-    month: function(value) {
+    month: function(value, old) {
       if (value !== "") {
         this.pagination.current_page = "";
-        this.fetchData();
+        if (old !== null) this.fetchData();
       }
     },
-    search: function(value) {
+    search: function(value, old) {
       this.pagination = {};
       if (value == "") {
-        this.fetchData();
+        if (old !== null) this.fetchData();
       }
     },
-    selectedStatus: function() {
+    selectedStatus: function(val, old) {
       this.pagination.current_page = "";
-      this.fetchData();
+      if (old !== null) this.fetchData();
     },
     selectedPackage: function() {
       this.server_errors.package_id = "";
