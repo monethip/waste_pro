@@ -25,6 +25,18 @@
           clearable
         ></v-select>
       </v-col>
+      <v-col cols>
+        <v-select
+          outlined
+          dense
+          :items="payment_methods_list"
+          v-model="selectedPaymentMethod"
+          item-value="value"
+          item-text="text"
+          label="ປະເພດການຊຳລະ"
+          clearable
+        ></v-select>
+      </v-col>
       <v-col>
         <v-text-field
           outlined
@@ -466,7 +478,7 @@
 // //import { GetOldValueOnInput } from "@/Helpers/GetValue";
 
 import queryOption from "@/Helpers/queryOption";
-import { getLaoBillingType } from "@/Helpers/BillingStatus";
+import { getLaoBillingType, payment_methods } from "@/Helpers/BillingStatus";
 import { getCompanyCostBy, concatPackage } from "@/Helpers/Customer";
 import moment from "moment";
 
@@ -481,6 +493,8 @@ export default {
       filteredPackage: "",
       confirmPaymentDialog: false,
       packages: [],
+      payment_methods_list: payment_methods,
+      selectedPaymentMethod: "",
       month: "",
       curent_month: new Date(
         Date.now() - new Date().getTimezoneOffset() * 60000
@@ -852,6 +866,7 @@ export default {
             { phone: this.phone },
             { customer_type: this.selectedCustomerType },
             { cost_by: this.selectedComapnyType },
+            { payment_method: this.selectedPaymentMethod },
             {
               package_id:
                 this.selectedCustomerType == "home" ? this.filteredPackage : "",
@@ -976,15 +991,19 @@ export default {
   watch: {
     billStatus(val, old) {
       this.pagination.current_page = "";
-      if (old !== null) this.fetchData();
+      if (old !== null || old !== "") this.fetchData();
     },
     selectedComapnyType(val, old) {
       this.pagination.current_page = "";
-      if (old !== null) this.fetchData();
+      if (old !== null || old !== "") this.fetchData();
+    },
+    selectedPaymentMethod(val, old) {
+      this.pagination.current_page = "";
+      if (old !== null || old !== "") this.fetchData();
     },
     selectedCollectionStatus: function(val, old) {
       this.pagination.current_page = "";
-      if (old !== null) this.fetchData();
+      if (old !== null || old !== "") this.fetchData();
     },
     lastMonthBill: function(value) {
       this.$store.dispatch("auth/saveLastMonthBill", value);
@@ -993,43 +1012,43 @@ export default {
       this.$store.dispatch("auth/saveLastMonthBillPaid", value);
     },
     lastMonthCreated: function(val, old) {
-      if (old !== null) this.fetchData();
+      if (old !== null || old !== "") this.fetchData();
     },
     lastMonthBillCreated: function(val, old) {
-      if (old !== null) this.fetchData();
+      if (old !== null || old !== "") this.fetchData();
     },
     selectedBillingable_type: function(val, old) {
       this.pagination.current_page = "";
-      if (old !== null) this.fetchData();
+      if (old !== null || old !== "") this.fetchData();
     },
     selectedRoutePlan: function(val, old) {
       this.pagination.current_page = "";
-      if (old !== null) this.fetchData();
+      if (old !== null || old !== "") this.fetchData();
     },
     selectedCustomerType: function(val, old) {
       this.pagination.current_page = "";
-      if (old !== null) this.fetchData();
+      if (old !== null || old !== "") this.fetchData();
     },
     filteredPackage(val, old) {
       this.pagination.current_page = "";
-      if (old !== null) this.fetchData();
+      if (old !== null || old !== "") this.fetchData();
     },
 
     month: function(value, old) {
       if (value !== "") {
         this.pagination.current_page = "";
-        if (old !== null) this.fetchData();
+        if (old !== null || old !== "") this.fetchData();
       }
     },
     search: function(value, old) {
       this.pagination = {};
       if (value == "") {
-        if (old !== null) this.fetchData();
+        if (old !== null || old !== "") this.fetchData();
       }
     },
     selectedStatus: function(val, old) {
       this.pagination.current_page = "";
-      if (old !== null) this.fetchData();
+      if (old !== null || old !== "") this.fetchData();
     },
     selectedPackage: function() {
       this.server_errors.package_id = "";

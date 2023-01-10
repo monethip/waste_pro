@@ -78,5 +78,20 @@ export const getLaoCollectStatus = function (status) {
     }
 }
 
+export const payment_methods = [
+    {
+        text: "cash",
+        value: "cash",
+    },
+    {
+        text: "bcel",
+        value: "bcel",
+    },
+    {
+        text: "bcel_online",
+        value: "bcel_online",
+    }
+]
+
 export const normal = ["created", "approved", "to_confirm_payment", "success"]
 export const red = ["rejected", "canceled"]

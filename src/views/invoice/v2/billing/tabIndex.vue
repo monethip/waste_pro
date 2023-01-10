@@ -178,7 +178,7 @@ export default {
   },
   watch: {
     callFetch(val, old) {
-      if (old !== null) this.countBilling();
+      if (old !== null || old !== "") this.countBilling();
     },
     lastMonthBill: function(value) {
       this.$store.dispatch("auth/saveLastMonthBill", value);
@@ -188,13 +188,13 @@ export default {
     },
 
     lastMonthCreated: function(val, old) {
-      if (old !== null) this.countBilling();
+      if (old !== null || old !== "") this.countBilling();
     },
     lastMonthBillPaidCreated: function(val, old) {
-      if (old !== null) this.countBilling();
+      if (old !== null || old !== "") this.countBilling();
     },
     tab: function(value, old) {
-      if (old !== null) this.countBilling();
+      if (old !== null || old !== "") this.countBilling();
       this.$router
         .push({ name: "billing", query: { tab: value } })
         .catch(() => {});
