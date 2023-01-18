@@ -221,6 +221,18 @@
                     </div>
                   </template>
 
+                  <template v-slot:item.expect_trash_package="{ item }">
+                    <v-chip dark color="green" v-if="item.package">
+                      {{
+                        Intl.NumberFormat().format(
+                          item.package.package_size.bag
+                        )
+                      }}
+                      {{ getCustomerUnitFunc(item.cost_by) }}
+                    </v-chip>
+                    <div v-else>-</div>
+                  </template>
+
                   <template v-slot:item.expect_trash="{ item }">
                     <v-chip outlined color="green" v-if="item.expect_trash">
                       {{ Intl.NumberFormat().format(item.expect_trash) }}
@@ -654,6 +666,11 @@ export default {
           value: "price",
           width: "200px",
           sortable: false,
+        },
+        {
+          text: "ຂີ້ເຫຍື້ອຄາດໝາຍຕາມແພັກເກຈ",
+          value: "expect_trash_package",
+          width: "200px",
         },
         { text: "ຂີ້ເຫຍື້ອຄາດໝາຍ", value: "expect_trash", width: "200px" },
         {
