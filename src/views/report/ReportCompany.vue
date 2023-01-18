@@ -165,7 +165,7 @@
               </v-col>
               <!-- Section Toal -->
               <v-col>
-                <RowSection :cards="cards" />
+                <RowSection :cards="pasts" />
               </v-col>
             </v-row>
             <v-row>
@@ -174,7 +174,7 @@
               </v-col>
               <!-- Section Toal -->
               <v-col>
-                <RowSection :cards="cards" />
+                <RowSection :cards="recents" />
               </v-col>
             </v-row>
             <v-row>
@@ -183,7 +183,7 @@
               </v-col>
               <!-- Section Toal -->
               <v-col>
-                <RowSection :cards="cards" />
+                <RowSection :cards="nexts" />
               </v-col>
             </v-row>
           </v-card-text>
@@ -301,6 +301,7 @@ export default {
       villages: [],
       selectedVillage: [],
       selectedStatus: [],
+      sumData: {},
       status: [
         {
           id: 1,
@@ -394,19 +395,7 @@ export default {
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("company", {
-          params: queryOption([
-            { page: this.pagination.current_page },
-            { per_page: this.per_page },
-            { filter: this.search },
-            { date_from: this.start_date },
-            { date_end: this.end_date },
-            { villages: this.selectedVillage },
-            { statuses: this.selectedStatus },
-            { can_collect: this.selectedCanCollect },
-            { cost_by: this.selectedCost },
-            { without: this.selectedCustomerStatus },
-            { district_id: this.selectedDistrict },
-          ]),
+          params: this.params,
         })
         .then((res) => {
           if (res.data.code == 200) {
@@ -414,6 +403,36 @@ export default {
               this.$store.commit("Loading_State", false);
               this.customers = res.data.data.data;
               this.pagination = res.data.data.pagination;
+              this.start_menu = false;
+              this.end_menu = false;
+            }, 300);
+            // this.fetchAddress();
+          }
+        })
+        .catch((error) => {
+          this.$store.commit("Loading_State", false);
+          this.start_menu = false;
+          this.end_menu = false;
+          if (error.response && error.response.status == 422) {
+            let obj = error.response.data.errors;
+            for (let [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
+            }
+          }
+        })
+        .finally(() => this.fetchSum());
+    },
+    fetchSum() {
+      this.$store.commit("Loading_State", true);
+      this.$axios
+        .get("company-billing", {
+          params: this.params,
+        })
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.$store.commit("Loading_State", false);
+              this.sumData = res.data.data;
               this.start_menu = false;
               this.end_menu = false;
             }, 300);
@@ -579,7 +598,91 @@ export default {
       this.fetchData();
     },
   },
+
   computed: {
+    params() {
+      return queryOption([
+        { page: this.pagination.current_page },
+        { per_page: this.per_page },
+        { filter: this.search },
+        { date_from: this.start_date },
+        { date_end: this.end_date },
+        { villages: this.selectedVillage },
+        { statuses: this.selectedStatus },
+        { can_collect: this.selectedCanCollect },
+        { cost_by: this.selectedCost },
+        { without: this.selectedCustomerStatus },
+        { district_id: this.selectedDistrict },
+      ]);
+    },
+    pasts() {
+      return [
+        {
+          status_la: "ລວມ",
+          total: this.sumData.past?.total?.total,
+          count_billing: this.sumData.past?.total?.count,
+          bg_color: "blue",
+        },
+        {
+          status_la: "ຈ່າຍແລ້ວ",
+          total: this.sumData.past?.paid?.total,
+          count_billing: this.sumData.past?.paid?.count,
+          bg_color: "green",
+        },
+        {
+          status_la: "ຕິດໜີ້",
+          total: this.sumData.past?.unpaid?.total,
+          count_billing: this.sumData.past?.unpaid?.count,
+          bg_color: "orange",
+        },
+      ];
+    },
+
+    recents() {
+      return [
+        {
+          status_la: "ລວມ",
+          total: this.sumData.recent?.total?.total,
+          count_billing: this.sumData.recent?.total?.count,
+          bg_color: "blue",
+        },
+        {
+          status_la: "ຈ່າຍແລ້ວ",
+          total: this.sumData.recent?.paid?.total,
+          count_billing: this.sumData.recent?.paid?.count,
+          bg_color: "green",
+        },
+        {
+          status_la: "ຕິດໜີ້",
+          total: this.sumData.recent?.unpaid?.total,
+          count_billing: this.sumData.recent?.unpaid?.count,
+          bg_color: "orange",
+        },
+      ];
+    },
+
+    nexts() {
+      return [
+        {
+          status_la: "ລວມ",
+          total: this.sumData.next?.total?.total,
+          count_billing: this.sumData.next?.total?.count,
+          bg_color: "blue",
+        },
+        {
+          status_la: "ຈ່າຍແລ້ວ",
+          total: this.sumData.next?.paid?.total,
+          count_billing: this.sumData.next?.paid?.count,
+          bg_color: "green",
+        },
+        {
+          status_la: "ຕິດໜີ້",
+          total: this.sumData.next?.unpaid?.total,
+          count_billing: this.sumData.next?.unpaid?.count,
+          bg_color: "orange",
+        },
+      ];
+    },
     cards() {
       return [
         {
@@ -603,7 +706,7 @@ export default {
       ];
     },
   },
-  created() {
+  mounted() {
     this.fetchData();
     this.fetchAddress();
   },
