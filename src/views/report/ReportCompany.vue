@@ -154,7 +154,6 @@
     </v-row>
 
     <!-- Detail -->
-
     <v-row>
       <v-col>
         <v-card outlined>
@@ -679,28 +678,6 @@ export default {
           status_la: "ຕິດໜີ້",
           total: this.sumData.next?.unpaid?.total,
           count_billing: this.sumData.next?.unpaid?.count,
-          bg_color: "orange",
-        },
-      ];
-    },
-    cards() {
-      return [
-        {
-          status_la: "ລວມ",
-          total: "500000",
-          count_billing: "15",
-          bg_color: "blue",
-        },
-        {
-          status_la: "ຈ່າຍແລ້ວ",
-          total: "400000",
-          count_billing: "10",
-          bg_color: "green",
-        },
-        {
-          status_la: "ຕິດໜີ້",
-          total: "100000",
-          count_billing: "5",
           bg_color: "orange",
         },
       ];

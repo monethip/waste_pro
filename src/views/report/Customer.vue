@@ -31,9 +31,7 @@
               clearable
             ></v-text-field>
           </template>
-          <v-date-picker
-            v-model="start_date"
-          ></v-date-picker>
+          <v-date-picker v-model="start_date"></v-date-picker>
         </v-menu>
       </v-col>
       <v-col>
@@ -57,9 +55,7 @@
               clearable
             ></v-text-field>
           </template>
-          <v-date-picker
-            v-model="end_date"
-          ></v-date-picker>
+          <v-date-picker v-model="end_date"></v-date-picker>
         </v-menu>
       </v-col>
       <v-col>
@@ -102,15 +98,15 @@
       </v-col>
       <v-col>
         <v-select
-            outlined
-            dense
-            :items="customerStatus"
-            v-model="selectedCustomerStatus"
-            item-text="name"
-            item-value="value"
-            label="ສະຖານະແຜນ"
-            multiple
-            clearable
+          outlined
+          dense
+          :items="customerStatus"
+          v-model="selectedCustomerStatus"
+          item-text="name"
+          item-value="value"
+          label="ສະຖານະແຜນ"
+          multiple
+          clearable
         ></v-select>
       </v-col>
       <v-col>
@@ -132,8 +128,45 @@
         <p class="text">ລວມຄົວເຮືອນ {{ pagination.total }}</p>
       </v-col>
     </v-row>
-    <div>
-      <v-card>
+    <!-- Detail -->
+    <v-row>
+      <v-col>
+        <v-card outlined>
+          <v-card-text>
+            <v-row>
+              <v-col cols="1">
+                <span>ເດືອນກ່ອນ</span>
+              </v-col>
+              <!-- Section Toal -->
+              <v-col>
+                <RowSection :cards="pasts" />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="1">
+                <span>ເດືອນນີ້</span>
+              </v-col>
+              <!-- Section Toal -->
+              <v-col>
+                <RowSection :cards="recents" />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="1">
+                <span>ເດືອນໜ້າ</span>
+              </v-col>
+              <!-- Section Toal -->
+              <v-col>
+                <RowSection :cards="nexts" />
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-card>
           <v-card-text>
             <v-data-table
               :headers="headers"
@@ -189,21 +222,28 @@
               ></Pagination>
             </template>
           </v-card-text>
-      </v-card>
-    </div>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
+import RowSection from "../../components/card/RowSection.vue";
+
 export default {
   name: "Customer",
   title() {
     return `Vientiane Waste Co-Dev|Report Customer`;
   },
+  components: {
+    RowSection,
+  },
   data() {
     return {
+      sumData: {},
       start_date: "",
       end_date: "",
       start_menu: false,
@@ -274,21 +314,40 @@ export default {
     };
   },
   methods: {
+    fetchSum() {
+      this.$store.commit("Loading_State", true);
+      this.$axios
+        .get("home-billing", {
+          params: this.params,
+        })
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.$store.commit("Loading_State", false);
+              this.sumData = res.data.data;
+              this.start_menu = false;
+              this.end_menu = false;
+            }, 300);
+            // this.fetchAddress();
+          }
+        })
+        .catch((error) => {
+          this.$store.commit("Loading_State", false);
+          this.start_menu = false;
+          this.end_menu = false;
+          if (error.response && error.response.status == 422) {
+            let obj = error.response.data.errors;
+            for (let [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
+            }
+          }
+        });
+    },
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("customer", {
-          params: queryOption([
-            {page: this.pagination.current_page},
-            {per_page: this.per_page},
-            {filter: this.search},
-            {date_from: this.start_date},
-            {date_end: this.end_date},
-            {villages: this.selectedVillage},
-            {statuses: this.selectedStatus},
-            {without: this.selectedCustomerStatus},
-            {district_id: this.selectedDistrict}]),
-
+          params: this.params,
         })
         .then((res) => {
           if (res.data.code == 200) {
@@ -312,7 +371,8 @@ export default {
               this.server_errors[key] = message[0];
             }
           }
-        });
+        })
+        .finally(() => [this.fetchSum()]);
     },
 
     fetchAddress() {
@@ -366,18 +426,19 @@ export default {
           "export-customer/",
           {
             params: queryOption([
-              {date_from: this.start_date},
-              {date_end: this.end_date},
-              {villages: this.selectedVillage},
-              {statuses: this.selectedStatus},
-              {district_id: this.selectedDistrict}]),
-          },
+              { date_from: this.start_date },
+              { date_end: this.end_date },
+              { villages: this.selectedVillage },
+              { statuses: this.selectedStatus },
+              { district_id: this.selectedDistrict },
+            ]),
+          }
           // { responseType: "blob" }
         )
         .then((res) => {
           if (res.status == 200) {
-            if(res.data.data.download_link != null){
-              window.open(res.data.data.download_link)
+            if (res.data.data.download_link != null) {
+              window.open(res.data.data.download_link);
             }
             this.loading = false;
             // setTimeout(() => {
@@ -399,49 +460,132 @@ export default {
         });
     },
   },
+  computed: {
+    params() {
+      return queryOption([
+        { page: this.pagination.current_page },
+        { per_page: this.per_page },
+        { filter: this.search },
+        { date_from: this.start_date },
+        { date_end: this.end_date },
+        { villages: this.selectedVillage },
+        { statuses: this.selectedStatus },
+        { without: this.selectedCustomerStatus },
+        { district_id: this.selectedDistrict },
+      ]);
+    },
+    pasts() {
+      return [
+        {
+          status_la: "ລວມ",
+          total: this.sumData.past?.total?.total,
+          count_billing: this.sumData.past?.total?.count,
+          bg_color: "blue",
+        },
+        {
+          status_la: "ຈ່າຍແລ້ວ",
+          total: this.sumData.past?.paid?.total,
+          count_billing: this.sumData.past?.paid?.count,
+          bg_color: "green",
+        },
+        {
+          status_la: "ຕິດໜີ້",
+          total: this.sumData.past?.unpaid?.total,
+          count_billing: this.sumData.past?.unpaid?.count,
+          bg_color: "orange",
+        },
+      ];
+    },
+
+    recents() {
+      return [
+        {
+          status_la: "ລວມ",
+          total: this.sumData.recent?.total?.total,
+          count_billing: this.sumData.recent?.total?.count,
+          bg_color: "blue",
+        },
+        {
+          status_la: "ຈ່າຍແລ້ວ",
+          total: this.sumData.recent?.paid?.total,
+          count_billing: this.sumData.recent?.paid?.count,
+          bg_color: "green",
+        },
+        {
+          status_la: "ຕິດໜີ້",
+          total: this.sumData.recent?.unpaid?.total,
+          count_billing: this.sumData.recent?.unpaid?.count,
+          bg_color: "orange",
+        },
+      ];
+    },
+
+    nexts() {
+      return [
+        {
+          status_la: "ລວມ",
+          total: this.sumData.next?.total?.total,
+          count_billing: this.sumData.next?.total?.count,
+          bg_color: "blue",
+        },
+        {
+          status_la: "ຈ່າຍແລ້ວ",
+          total: this.sumData.next?.paid?.total,
+          count_billing: this.sumData.next?.paid?.count,
+          bg_color: "green",
+        },
+        {
+          status_la: "ຕິດໜີ້",
+          total: this.sumData.next?.unpaid?.total,
+          count_billing: this.sumData.next?.unpaid?.count,
+          bg_color: "orange",
+        },
+      ];
+    },
+  },
   watch: {
-    start_date: function () {
-      this.pagination.current_page ='';
-      if(this.end_date !== '' && this.start_date !== ''){
-        if(this.start_date > this.end_date){
-          this.start_date = '';
+    start_date: function() {
+      this.pagination.current_page = "";
+      if (this.end_date !== "" && this.start_date !== "") {
+        if (this.start_date > this.end_date) {
+          this.start_date = "";
         }
       }
       this.fetchData();
     },
-    end_date: function () {
-      this.pagination.current_page ='';
-      if(this.end_date !== '' && this.start_date !== ''){
-        if(this.end_date < this.start_date){
-          this.end_date = '';
+    end_date: function() {
+      this.pagination.current_page = "";
+      if (this.end_date !== "" && this.start_date !== "") {
+        if (this.end_date < this.start_date) {
+          this.end_date = "";
         }
       }
       this.fetchData();
     },
-    search: function (value) {
-      this.pagination.current_page ='';
+    search: function(value) {
+      this.pagination.current_page = "";
       if (value == "") {
         this.fetchData();
       }
     },
 
-    selectedVillage: function () {
-      this.pagination.current_page ='';
+    selectedVillage: function() {
+      this.pagination.current_page = "";
       this.fetchData();
     },
-    selectedDistrict: function () {
-      this.pagination.current_page ='';
+    selectedDistrict: function() {
+      this.pagination.current_page = "";
       this.fetchVillage();
       this.fetchData();
     },
-    selectedStatus: function () {
-      this.pagination.current_page ='';
+    selectedStatus: function() {
+      this.pagination.current_page = "";
       this.fetchData();
     },
-    selectedCustomerStatus: function (){
-      this.pagination.current_page ='';
+    selectedCustomerStatus: function() {
+      this.pagination.current_page = "";
       this.fetchData();
-    }
+    },
   },
   created() {
     this.fetchData();
