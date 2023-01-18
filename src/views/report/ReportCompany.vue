@@ -2,7 +2,13 @@
   <v-container>
     <v-row class="mb-n6">
       <v-col>
-        <v-btn class="btn-primary" :loading="loading" :disabled="loading" @click="exportData">Export</v-btn>
+        <v-btn
+          class="btn-primary"
+          :loading="loading"
+          :disabled="loading"
+          @click="exportData"
+          >Export</v-btn
+        >
       </v-col>
       <v-col>
         <v-menu
@@ -146,78 +152,133 @@
         ></v-select>
       </v-col>
     </v-row>
-    <div>
-      <v-card>
-        <v-card flat>
-          <v-card-text>
-            <v-data-table
-              :headers="headers"
-              :items="customers"
-              :search="search"
-              :disable-pagination="true"
-              hide-default-footer
-            >
-              <template v-slot:item.media="{ item }">
-                <v-avatar size="36px" v-for="(img, index) in item.media" :key="index">
-                  <img v-if="img.thumb" :src="img.thumb" />
-                </v-avatar>
-              </template>
-              <template v-slot:item.created_at="{ item }">
-                <div>{{ moment(item.created_at).format("DD-MM-YY") }}</div>
-              </template>
-              <!--              <template v-slot:item.status="{ item }">-->
-              <!--                <v-chip label :color="statusColor(item.status)">{{-->
-              <!--                  item.status-->
-              <!--                }}</v-chip>-->
-              <!--              </template>-->
-              <template v-slot:item.cost_by="{ item }">
-                <div>{{ costBy(item.cost_by) }}</div>
-              </template>
-              <template v-slot:item.status="{ item }">
-                <v-chip label :color="statusColor(item.user.status)">{{ item.user.status }}</v-chip>
-              </template>
-              <!--Role -->
-              <template v-slot:item.roles="{ item }">
-                <div>
-                  <span v-for="(role, index) in item.roles" :key="index">{{ role.name }},</span>
-                </div>
-              </template>
-              <!--Permission -->
-              <template v-slot:item.permissions="{ item }">
-                <div>
-                  <span v-for="(ps, index) in item.permissions" :key="index">
-                    <span>{{ ps.name }},</span>
-                  </span>
-                </div>
-              </template>
 
-              <template v-slot:item.actions="{ item }">
-                <v-icon small class="mr-2" @click="viewPage(item.id)">mdi-eye</v-icon>
-              </template>
-            </v-data-table>
-            <br />
-            <template>
-              <Pagination
-                v-if="pagination.total_pages > 1"
-                :pagination="pagination"
-                :offset="offset"
-                @paginate="fetchData()"
-              ></Pagination>
-            </template>
+    <!-- Detail -->
+
+    <v-row>
+      <v-col>
+        <v-card outlined>
+          <v-card-text>
+            <v-row>
+              <v-col cols="1">
+                <span>ເດືອນກ່ອນ</span>
+              </v-col>
+              <!-- Section Toal -->
+              <v-col>
+                <RowSection :cards="cards" />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="1">
+                <span>ເດືອນນີ້</span>
+              </v-col>
+              <!-- Section Toal -->
+              <v-col>
+                <RowSection :cards="cards" />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="1">
+                <span>ເດືອນໜ້າ</span>
+              </v-col>
+              <!-- Section Toal -->
+              <v-col>
+                <RowSection :cards="cards" />
+              </v-col>
+            </v-row>
           </v-card-text>
         </v-card>
-      </v-card>
-    </div>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-card>
+          <v-card flat>
+            <v-card-text>
+              <v-data-table
+                :headers="headers"
+                :items="customers"
+                :search="search"
+                :disable-pagination="true"
+                hide-default-footer
+              >
+                <template v-slot:item.media="{ item }">
+                  <v-avatar
+                    size="36px"
+                    v-for="(img, index) in item.media"
+                    :key="index"
+                  >
+                    <img v-if="img.thumb" :src="img.thumb" />
+                  </v-avatar>
+                </template>
+                <template v-slot:item.created_at="{ item }">
+                  <div>{{ moment(item.created_at).format("DD-MM-YY") }}</div>
+                </template>
+                <!--              <template v-slot:item.status="{ item }">-->
+                <!--                <v-chip label :color="statusColor(item.status)">{{-->
+                <!--                  item.status-->
+                <!--                }}</v-chip>-->
+                <!--              </template>-->
+                <template v-slot:item.cost_by="{ item }">
+                  <div>{{ costBy(item.cost_by) }}</div>
+                </template>
+                <template v-slot:item.status="{ item }">
+                  <v-chip label :color="statusColor(item.user.status)">{{
+                    item.user.status
+                  }}</v-chip>
+                </template>
+                <!--Role -->
+                <template v-slot:item.roles="{ item }">
+                  <div>
+                    <span v-for="(role, index) in item.roles" :key="index"
+                      >{{ role.name }},</span
+                    >
+                  </div>
+                </template>
+                <!--Permission -->
+                <template v-slot:item.permissions="{ item }">
+                  <div>
+                    <span v-for="(ps, index) in item.permissions" :key="index">
+                      <span>{{ ps.name }},</span>
+                    </span>
+                  </div>
+                </template>
+
+                <template v-slot:item.actions="{ item }">
+                  <v-icon small class="mr-2" @click="viewPage(item.id)"
+                    >mdi-eye</v-icon
+                  >
+                </template>
+              </v-data-table>
+              <br />
+              <template>
+                <Pagination
+                  v-if="pagination.total_pages > 1"
+                  :pagination="pagination"
+                  :offset="offset"
+                  @paginate="fetchData()"
+                ></Pagination>
+              </template>
+            </v-card-text>
+          </v-card>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script>
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
+import RowSection from "../../components/card/RowSection.vue";
+
 export default {
   name: "Customer",
   title() {
     return `Vientiane Waste Co-Dev|Report Customer`;
+  },
+  components: {
+    RowSection,
   },
   data() {
     return {
@@ -243,65 +304,65 @@ export default {
       status: [
         {
           id: 1,
-          name: "active"
+          name: "active",
         },
         {
           id: 2,
-          name: "inactive"
+          name: "inactive",
         },
         {
           id: 3,
-          name: "trial"
-        }
+          name: "trial",
+        },
       ],
       selectedCanCollect: "",
       can_collects: [
         {
           id: 1,
           name: "ເກັບໄດ້",
-          value: "1"
+          value: "1",
         },
         {
           id: 2,
           name: "ເກັບບໍໄດ້",
-          value: "0"
-        }
+          value: "0",
+        },
       ],
       selectedCustomerStatus: [],
       customerStatus: [
         {
           id: 1,
           value: "calendar",
-          name: "ຍັງບໍ່ມີແຜນເດີນລົດ"
+          name: "ຍັງບໍ່ມີແຜນເດີນລົດ",
         },
         {
           id: 2,
           value: "route_plan",
-          name: "ຍັງບໍ່ມີເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ"
-        }
+          name: "ຍັງບໍ່ມີເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ",
+        },
       ],
       selectedCost: [],
       costs: [
         {
           id: 1,
           value: "container",
-          name: "ຄອນເທັນເນີ"
+          name: "ຄອນເທັນເນີ",
         },
         {
           id: 2,
           value: "fix_cost",
-          name: "ທຸລະກິດເປັນຖ້ຽວ"
+          name: "ທຸລະກິດເປັນຖ້ຽວ",
         },
         {
           id: 3,
           value: "chartered",
-          name: "ມອບເໝົາ"
+          name: "ມອບເໝົາ",
         },
         {
           id: 4,
           value: "bag",
-          name: "ບໍລິມາດ"
-        }
+          name: "ບໍລິມາດ",
+        },
       ],
 
       headers: [
@@ -314,18 +375,18 @@ export default {
         { text: "ເລີ່ມບໍລິການ", value: "start_month", sortable: false },
         { text: "Created", value: "created_at", sortable: false },
         { text: "ສະຖານະ", value: "status", sortable: false },
-        { text: "", value: "actions", sortable: false }
+        { text: "", value: "actions", sortable: false },
       ],
       toast: {
         value: true,
         color: "success",
-        msg: ""
+        msg: "",
       },
       toast_error: {
         value: true,
         color: "error",
-        msg: "Something when wrong!"
-      }
+        msg: "Something when wrong!",
+      },
     };
   },
   methods: {
@@ -344,10 +405,10 @@ export default {
             { can_collect: this.selectedCanCollect },
             { cost_by: this.selectedCost },
             { without: this.selectedCustomerStatus },
-            { district_id: this.selectedDistrict }
-          ])
+            { district_id: this.selectedDistrict },
+          ]),
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
@@ -359,7 +420,7 @@ export default {
             // this.fetchAddress();
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$store.commit("Loading_State", false);
           this.start_menu = false;
           this.end_menu = false;
@@ -375,11 +436,11 @@ export default {
     fetchAddress() {
       this.$axios
         .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
-        .then(res => {
+        .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.address = res.data.data;
-              this.address.map(item => {
+              this.address.map((item) => {
                 this.districts = item.districts;
               });
             }, 300);
@@ -391,7 +452,7 @@ export default {
     fetchVillage() {
       this.$axios
         .get("info/district/" + this.selectedDistrict + "/village")
-        .then(res => {
+        .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.villages = res.data.data;
@@ -404,7 +465,7 @@ export default {
     viewPage(id) {
       this.$router.push({
         name: "ViewCompanyDetail",
-        params: { id }
+        params: { id },
       });
     },
     Search() {
@@ -430,12 +491,12 @@ export default {
               { can_collect: this.selectedCanCollect },
               { cost_by: this.selectedCost },
               { without: this.selectedCustomerStatus },
-              { district_id: this.selectedDistrict }
-            ])
+              { district_id: this.selectedDistrict },
+            ]),
           }
           // { responseType: "blob" }
         )
-        .then(res => {
+        .then((res) => {
           if (res.status == 200) {
             if (res.data.data.download_link != null) {
               window.open(res.data.data.download_link);
@@ -464,7 +525,7 @@ export default {
       else if (value == "chartered") return "ມອບເໝົາ";
       else if (value == "bag") return "ບໍລິມາດ";
       else return "";
-    }
+    },
   },
   watch: {
     start_date: function() {
@@ -516,12 +577,36 @@ export default {
     selectedCost: function() {
       this.pagination.current_page = "";
       this.fetchData();
-    }
+    },
+  },
+  computed: {
+    cards() {
+      return [
+        {
+          status_la: "ລວມ",
+          total: "500000",
+          count_billing: "15",
+          bg_color: "blue",
+        },
+        {
+          status_la: "ຈ່າຍແລ້ວ",
+          total: "400000",
+          count_billing: "10",
+          bg_color: "green",
+        },
+        {
+          status_la: "ຕິດໜີ້",
+          total: "100000",
+          count_billing: "5",
+          bg_color: "orange",
+        },
+      ];
+    },
   },
   created() {
     this.fetchData();
     this.fetchAddress();
-  }
+  },
 };
 </script>
 
