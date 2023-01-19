@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
+    "preview": "serve -s dist -l 4001",
     "build": "vue-cli-service build",
     "build-dev": "vue-cli-service build --mode dev",
     "lint": "vue-cli-service lint"
