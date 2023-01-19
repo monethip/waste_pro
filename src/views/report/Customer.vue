@@ -2,140 +2,204 @@
   <v-container>
     <v-row class="mb-n6">
       <v-col>
-        <v-btn
-          class="btn-primary"
-          :loading="loading"
-          :disabled="loading"
-          @click="exportData"
-          >Export
-        </v-btn>
-      </v-col>
-      <v-col>
-        <v-menu
-          v-model="start_menu"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="start_date"
-              label="ເລີ່ມວັນທີ"
-              readonly
+        <v-row>
+          <v-col>
+            <v-menu
+              v-model="start_menu"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="start_date"
+                  label="ເລີ່ມວັນທີ"
+                  readonly
+                  outlined
+                  v-bind="attrs"
+                  v-on="on"
+                  dense
+                  clearable
+                ></v-text-field>
+              </template>
+              <v-date-picker v-model="start_date"></v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col>
+            <v-menu
+              v-model="end_menu"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="end_date"
+                  label="ຫາວັນທີ"
+                  readonly
+                  outlined
+                  v-bind="attrs"
+                  v-on="on"
+                  dense
+                  clearable
+                ></v-text-field>
+              </template>
+              <v-date-picker v-model="end_date"></v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col>
+            <v-autocomplete
               outlined
-              v-bind="attrs"
-              v-on="on"
+              dense
+              :items="districts"
+              v-model="selectedDistrict"
+              item-text="name"
+              item-value="id"
+              label="ເມືອງ"
+              clearable
+            ></v-autocomplete>
+          </v-col>
+          <v-col>
+            <v-autocomplete
+              outlined
+              dense
+              :items="villages"
+              v-model="selectedVillage"
+              item-text="name"
+              item-value="id"
+              label="ບ້ານ"
+              multiple
+              clearable
+            ></v-autocomplete>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-select
+              outlined
+              dense
+              :items="status"
+              v-model="selectedStatus"
+              item-text="name"
+              item-value="name"
+              label="ສະຖານະ"
+              multiple
+              clearable
+            ></v-select>
+          </v-col>
+          <v-col>
+            <v-select
+              outlined
+              dense
+              :items="customerStatus"
+              v-model="selectedCustomerStatus"
+              item-text="name"
+              item-value="value"
+              label="ສະຖານະແຜນ"
+              multiple
+              clearable
+            ></v-select>
+          </v-col>
+          <v-col>
+            <v-text-field
+              outlined
               dense
               clearable
-            ></v-text-field>
-          </template>
-          <v-date-picker v-model="start_date"></v-date-picker>
-        </v-menu>
+              prepend-inner-icon="mdi-magnify"
+              label="Search"
+              type="text"
+              v-model="search"
+              @keyup.enter="Search()"
+            >
+            </v-text-field>
+          </v-col>
+        </v-row>
       </v-col>
-      <v-col>
-        <v-menu
-          v-model="end_menu"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="end_date"
-              label="ຫາວັນທີ"
-              readonly
-              outlined
-              v-bind="attrs"
-              v-on="on"
-              dense
-              clearable
-            ></v-text-field>
-          </template>
-          <v-date-picker v-model="end_date"></v-date-picker>
-        </v-menu>
-      </v-col>
-      <v-col>
-        <v-autocomplete
-          outlined
-          dense
-          :items="districts"
-          v-model="selectedDistrict"
-          item-text="name"
-          item-value="id"
-          label="ເມືອງ"
-          clearable
-        ></v-autocomplete>
-      </v-col>
-      <v-col>
-        <v-autocomplete
-          outlined
-          dense
-          :items="villages"
-          v-model="selectedVillage"
-          item-text="name"
-          item-value="id"
-          label="ບ້ານ"
-          multiple
-          clearable
-        ></v-autocomplete>
-      </v-col>
-      <v-col>
-        <v-select
-          outlined
-          dense
-          :items="status"
-          v-model="selectedStatus"
-          item-text="name"
-          item-value="name"
-          label="ສະຖານະ"
-          multiple
-          clearable
-        ></v-select>
-      </v-col>
-      <v-col>
-        <v-select
-          outlined
-          dense
-          :items="customerStatus"
-          v-model="selectedCustomerStatus"
-          item-text="name"
-          item-value="value"
-          label="ສະຖານະແຜນ"
-          multiple
-          clearable
-        ></v-select>
-      </v-col>
-      <v-col>
-        <v-text-field
-          outlined
-          dense
-          clearable
-          prepend-inner-icon="mdi-magnify"
-          label="Search"
-          type="text"
-          v-model="search"
-          @keyup.enter="Search()"
-        >
-        </v-text-field>
+      <v-col cols="4">
+        <v-row>
+          <v-col>
+            <v-card outlined elevation="5">
+              <v-container class="spacing-playground pa-1" fluid>
+                <v-row>
+                  <v-col>
+                    <div class="px-4">
+                      <v-chip class="text-caption" color="primary" dark>
+                        <v-icon>mdi-home-circle-outline</v-icon>
+                        ລວມຄົວເຮືອນ</v-chip
+                      >
+                      <v-divider class="my-4"></v-divider>
+                      <p class="text-h5">
+                        {{ Intl.NumberFormat().format(pagination.total) }}
+                      </p>
+                    </div>
+                  </v-col>
+                  <v-col>
+                    <v-btn
+                      class="btn-primary"
+                      color="green"
+                      :loading="loading"
+                      :disabled="loading"
+                      @click="exportData"
+                      width="100%"
+                      height="100%"
+                      >Export
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card>
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
-    <v-row class="my-n4">
-      <v-col>
-        <p class="text">ລວມຄົວເຮືອນ {{ pagination.total }}</p>
-      </v-col>
-    </v-row>
+
     <!-- Detail -->
     <v-row>
       <v-col>
         <v-card outlined>
           <v-card-text>
             <v-row>
-              <v-col cols="1">
-                <span>ເດືອນກ່ອນ</span>
+              <v-col>
+                <v-menu
+                  v-model="month_menu"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="selected_month"
+                      label="ເດືອນໃນຫົວບິນ"
+                      readonly
+                      outlined
+                      v-bind="attrs"
+                      v-on="on"
+                      dense
+                      color="cyan"
+                      append-icon="mdi-calendar"
+                      clearable
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    type="month"
+                    v-model="selected_month"
+                  ></v-date-picker>
+                </v-menu>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="2">
+                <span>
+                  <v-chip outlined color="cyan lighten-2" dark>
+                    <v-icon>mdi-calendar</v-icon>
+                    {{ pastMonth }}</v-chip
+                  >
+                </span>
               </v-col>
               <!-- Section Toal -->
               <v-col>
@@ -143,8 +207,13 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="1">
-                <span>ເດືອນນີ້</span>
+              <v-col cols="2">
+                <span>
+                  <v-chip color="cyan" dark>
+                    <v-icon>mdi-calendar</v-icon>
+                    {{ selected_month }}</v-chip
+                  >
+                </span>
               </v-col>
               <!-- Section Toal -->
               <v-col>
@@ -152,8 +221,13 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="1">
-                <span>ເດືອນໜ້າ</span>
+              <v-col cols="2">
+                <span>
+                  <v-chip outlined color="cyan darken-2" dark>
+                    <v-icon>mdi-calendar</v-icon>
+                    {{ nextMonth }}</v-chip
+                  >
+                </span>
               </v-col>
               <!-- Section Toal -->
               <v-col>
@@ -232,6 +306,7 @@
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
 import RowSection from "../../components/card/RowSection.vue";
+import moment from "moment";
 
 export default {
   name: "Customer",
@@ -246,6 +321,9 @@ export default {
       sumData: {},
       start_date: "",
       end_date: "",
+      selected_month:
+        this.$route.query.month || new Date().toISOString().substr(0, 7),
+      month_menu: false,
       start_menu: false,
       end_menu: false,
       customers: [],
@@ -325,6 +403,7 @@ export default {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
               this.sumData = res.data.data;
+              this.month_menu = false;
               this.start_menu = false;
               this.end_menu = false;
             }, 300);
@@ -333,6 +412,7 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
+          this.month_menu = false;
           this.start_menu = false;
           this.end_menu = false;
           if (error.response && error.response.status == 422) {
@@ -355,6 +435,7 @@ export default {
               this.$store.commit("Loading_State", false);
               this.customers = res.data.data.data;
               this.pagination = res.data.data.pagination;
+              this.month_menu = false;
               this.start_menu = false;
               this.end_menu = false;
             }, 300);
@@ -363,6 +444,7 @@ export default {
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
+          this.month_menu = false;
           this.start_menu = false;
           this.end_menu = false;
           if (error.response && error.response.status == 422) {
@@ -372,7 +454,7 @@ export default {
             }
           }
         })
-        .finally(() => [this.fetchSum()]);
+        .finally(() => this.fetchSum());
     },
 
     fetchAddress() {
@@ -425,13 +507,7 @@ export default {
         .post(
           "export-customer/",
           {
-            params: queryOption([
-              { date_from: this.start_date },
-              { date_end: this.end_date },
-              { villages: this.selectedVillage },
-              { statuses: this.selectedStatus },
-              { district_id: this.selectedDistrict },
-            ]),
+            params: this.params,
           }
           // { responseType: "blob" }
         )
@@ -472,7 +548,22 @@ export default {
         { statuses: this.selectedStatus },
         { without: this.selectedCustomerStatus },
         { district_id: this.selectedDistrict },
+        { month_bill: this.selected_month },
       ]);
+    },
+    pastMonth() {
+      return this.selected_month
+        ? moment(this.selected_month)
+            .subtract(1, "months")
+            .format("Y-MM")
+        : null;
+    },
+    nextMonth() {
+      return this.selected_month
+        ? moment(this.selected_month)
+            .add(1, "months")
+            .format("Y-MM")
+        : null;
     },
     pasts() {
       return [
@@ -544,6 +635,10 @@ export default {
     },
   },
   watch: {
+    selected_month: function() {
+      this.pagination.current_page = "";
+      this.fetchSum();
+    },
     start_date: function() {
       this.pagination.current_page = "";
       if (this.end_date !== "" && this.start_date !== "") {

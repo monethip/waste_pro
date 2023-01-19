@@ -2,8 +2,8 @@
   <v-container>
     <v-breadcrumbs large class="mt-n4">
       <v-btn text class="text-primary" @click="backPrevios()">
-        <v-icon>mdi-keyboard-backspace</v-icon>
-      </v-btn>ເລືອກລູກຄ້າເຂົ້າແຜນເສັ້ນທາງ
+        <v-icon>mdi-keyboard-backspace</v-icon> </v-btn
+      >ເລືອກລູກຄ້າເຂົ້າແຜນເສັ້ນທາງ
       <v-spacer></v-spacer>
       <span class="mr-4">
         <v-icon color="red">mdi-map-marker</v-icon>ຍັງບໍທັນຢູ່ໃນແຜນ
@@ -15,7 +15,11 @@
     <v-row class="my-n4">
       <v-col cols="12" class="mb-4">
         <GmapMap
-          :center="getCenter().lat > 0 || getCenter().lat < 0 ? getCenter() : { lat: 0, lng: 0 }"
+          :center="
+            getCenter().lat > 0 || getCenter().lat < 0
+              ? getCenter()
+              : { lat: 0, lng: 0 }
+          "
           :zoom="14"
           style="width: 100%; height: 450px"
           :disableDefaultUI="true"
@@ -26,7 +30,8 @@
             :opened="infoOpened"
             :conent="infoContent"
             @closeclick="infoOpened = false"
-          >{{ infoContent }}</gmap-info-window>
+            >{{ infoContent }}</gmap-info-window
+          >
           <GmapMarker
             :key="index"
             v-for="(m, index) in customers"
@@ -49,12 +54,16 @@
         </v-btn>
       </v-col>
       <v-col>
-        <h4 v-if="pagination && pagination.total">ລູກຄ້າທັງໝົດ {{ pagination.total }} ຄົນ</h4>
+        <h4 v-if="pagination && pagination.total">
+          ລູກຄ້າທັງໝົດ {{ pagination.total }} ຄົນ
+        </h4>
         <h4 v-else>ລູກຄ້າທັງໝົດ {{ customers.length }} ຄົນ</h4>
         <h4 v-if="countExpectTrash">
-          ຂີ້ເຫຍື້ອຄາດໝາຍ: {{ Intl.NumberFormat().format(countExpectTrash.expect_trash) + ' '
-          +
-          getCustomerUnitFunc(countExpectTrash.cost_by)
+          ຂີ້ເຫຍື້ອຄາດໝາຍ:
+          {{
+            Intl.NumberFormat().format(countExpectTrash.expect_trash) +
+              " " +
+              getCustomerUnitFunc(countExpectTrash.cost_by)
           }}
         </h4>
       </v-col>
@@ -90,7 +99,8 @@
               close
               @click="data.select"
               @click:close="remove(data.item)"
-            >{{ data.item.name }}</v-chip>
+              >{{ data.item.name }}</v-chip
+            >
           </template>
         </v-autocomplete>
       </v-col>
@@ -166,7 +176,9 @@
         ></v-text-field>
       </v-col>
       <v-col>
-        <v-btn style="width:100%" color="green" dark @click="fetchSearch">ຄົ້ນຫາ</v-btn>
+        <v-btn style="width:100%" color="green" dark @click="fetchSearch"
+          >ຄົ້ນຫາ</v-btn
+        >
       </v-col>
     </v-row>
 
@@ -179,7 +191,10 @@
                 <p>ລູກຄ້າທີ່ເລືອກ {{ selectedRows.length }}</p>
               </v-col>
               <v-col>
-                <p>ຂີ້ເຫຍື້ອຄາດໝາຍ: {{ Intl.NumberFormat().format(selectedTrash) }} ຖົງ</p>
+                <p>
+                  ຂີ້ເຫຍື້ອຄາດໝາຍ:
+                  {{ Intl.NumberFormat().format(selectedTrash) }} ຖົງ
+                </p>
               </v-col>
             </v-row>
             <v-data-table
@@ -196,16 +211,20 @@
               </template>
 
               <template v-slot:item.actions="{ item }">
-                <v-icon small class="mr-2" @click="viewPage(item.id)">mdi-eye</v-icon>
+                <v-icon small class="mr-2" @click="viewPage(item.id)"
+                  >mdi-eye</v-icon
+                >
               </template>
               <template v-slot:item.custom_pick="{ item }">
                 <div class="main-check" @click="checkHandler(item)">
-                  <div v-if="item.check_number" class="check">{{ item.check_number }}</div>
+                  <div v-if="item.check_number" class="check">
+                    {{ item.check_number }}
+                  </div>
                   <div v-else class="uncheck"></div>
                 </div>
               </template>
 
-              <template v-slot:header.custom_pick="{ }">
+              <template v-slot:header.custom_pick="{}">
                 <div @click="checkAllToggle()">
                   <div v-if="checkAll" class="check"></div>
                   <div v-else class="uncheck"></div>
@@ -226,7 +245,8 @@
                   color="green"
                   v-for="date in item.favorite_dates"
                   :key="date.name"
-                >{{ date.name }}</v-chip>
+                  >{{ date.name }}</v-chip
+                >
               </template>
             </v-data-table>
             <br />
@@ -259,14 +279,14 @@ export default {
       selectedAllCustomer: [],
       countExpectTrash: {
         expect_trash: 0,
-        cost_by: ""
+        cost_by: "",
       },
       loading: false,
       customerId: "",
       //Pagination
       offset: 12,
       pagination: {
-        total: null
+        total: null,
       },
       per_page: 100,
       search: "",
@@ -282,13 +302,13 @@ export default {
         {
           id: 1,
           value: "calendar",
-          name: "ຍັງບໍ່ມີແຜນເດີນລົດ"
+          name: "ຍັງບໍ່ມີແຜນເດີນລົດ",
         },
         {
           id: 2,
           value: "route_plan",
-          name: "ຍັງບໍ່ມີເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ"
-        }
+          name: "ຍັງບໍ່ມີເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ",
+        },
       ],
 
       favorite_dates: [],
@@ -309,12 +329,12 @@ export default {
         { text: "ເມືອງ ", value: "district.name", sortable: true },
         // {text: "ລາຍລະອຽດທີ່ຢູ່", value: "description"},
         // { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
-        { text: "", value: "actions", sortable: false }
+        { text: "", value: "actions", sortable: false },
       ],
       //Map
       latlng: {
         lat: 0,
-        lng: 0
+        lng: 0,
       },
       markers: [],
       places: [],
@@ -326,11 +346,11 @@ export default {
       infoOptions: {
         pixelOffset: {
           width: 0,
-          height: -35
-        }
+          height: -35,
+        },
       },
       last_check_number: 0,
-      checkAll: false
+      checkAll: false,
     };
   },
   methods: {
@@ -338,7 +358,7 @@ export default {
       this.checkAll = !this.checkAll;
     },
     checkHandler(value) {
-      const index = this.customers.findIndex(item => item.id == value.id);
+      const index = this.customers.findIndex((item) => item.id == value.id);
       if (index != -1) {
         if (this.customers[index].check_number) {
           if (this.customers[index].check_number == this.last_check_number) {
@@ -374,7 +394,7 @@ export default {
         { district_id: this.selectedDistrict },
         { filter: this.search },
         { cost_by: this.selectedCost },
-        { favorite_dates: this.selectedFavoriteDate }
+        { favorite_dates: this.selectedFavoriteDate },
       ];
 
       if (countexpect) options.push({ count_expact_trash: "1" });
@@ -382,9 +402,9 @@ export default {
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("customer", {
-          params: queryOption(options)
+          params: queryOption(options),
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
@@ -403,7 +423,7 @@ export default {
             }, 100);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$store.commit("Loading_State", false);
 
           this.$store.commit("Toast_State", {
@@ -411,7 +431,7 @@ export default {
             color: "error",
             msg: error.response
               ? error.response.data.message
-              : "Something went wrong"
+              : "Something went wrong",
           });
           if (error.response && error.response.status == 422) {
             var obj = error.response.data.error;
@@ -432,11 +452,11 @@ export default {
     fetchAddress() {
       this.$axios
         .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
-        .then(res => {
+        .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.address = res.data.data;
-              this.address.map(item => {
+              this.address.map((item) => {
                 this.districts = item.districts;
               });
             }, 300);
@@ -449,7 +469,7 @@ export default {
       if (this.selectedDistrict)
         this.$axios
           .get("info/district/" + this.selectedDistrict + "/village")
-          .then(res => {
+          .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
                 this.villages = res.data.data;
@@ -469,21 +489,21 @@ export default {
         this.$router.push({
           name: "CreateRoutePlan",
           params: {
-            items: this.selectedRows
-          }
+            items: this.selectedRows,
+          },
         });
       } else {
         this.$store.commit("Toast_State", {
           value: true,
           color: "error",
-          msg: "ກາລຸນາເລືອກບ້ານ ແລະ ລູກຄ້າກ່ອນ"
+          msg: "ກາລຸນາເລືອກບ້ານ ແລະ ລູກຄ້າກ່ອນ",
         });
       }
     },
     viewPage(id) {
       this.$router.push({
         name: "ViewClient",
-        params: { id }
+        params: { id },
       });
     },
     remove(item) {
@@ -502,7 +522,7 @@ export default {
         } else {
           const latlng = {
             lat: parseFloat(this.customers[0].lat),
-            lng: parseFloat(this.customers[0].lng)
+            lng: parseFloat(this.customers[0].lng),
           };
           return latlng;
         }
@@ -513,7 +533,7 @@ export default {
       if (m.customer !== null) {
         return {
           lat: parseFloat(m.lat),
-          lng: parseFloat(m.lng)
+          lng: parseFloat(m.lng),
         };
       }
     },
@@ -531,14 +551,14 @@ export default {
           width: 35,
           height: 55,
           f: "px",
-          b: "px"
+          b: "px",
         },
         scaledSize: {
           width: 35,
           height: 55,
           f: "px",
-          b: "px"
-        }
+          b: "px",
+        },
       };
       const pin2 = {
         url: require("@coms/../../src/assets/pin2.svg"),
@@ -553,14 +573,14 @@ export default {
           width: 35,
           height: 55,
           f: "px",
-          b: "px"
+          b: "px",
         },
         scaledSize: {
           width: 35,
           height: 55,
           f: "px",
-          b: "px"
-        }
+          b: "px",
+        },
       };
 
       try {
@@ -601,7 +621,7 @@ export default {
     fetchFavorite() {
       this.$axios
         .get("favorite-date")
-        .then(res => {
+        .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.favorite_dates = res.data.data;
@@ -609,7 +629,7 @@ export default {
           }
         })
         .catch(() => {});
-    }
+    },
   },
   computed: {
     selectedTrash() {
@@ -630,7 +650,7 @@ export default {
       if (this.selectedAllVillage) return "mdi-close-box";
       if (this.selectedSomeVillage) return "mdi-minus-box";
       return "mdi-checkbox-blank-outline";
-    }
+    },
   },
   watch: {
     checkAll(value) {
@@ -679,7 +699,7 @@ export default {
       this.pagination.current_page = "";
       this.fetchData();
       this.fetchData(true);
-    }
+    },
   },
   created() {
     this.fetchFavorite();
@@ -687,7 +707,7 @@ export default {
     this.fetchData(true);
 
     this.fetchAddress();
-  }
+  },
 };
 </script>
 
