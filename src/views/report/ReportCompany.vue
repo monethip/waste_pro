@@ -146,7 +146,7 @@
         </v-row>
       </v-col>
 
-      <v-col cols="4">
+      <v-col cols="6">
         <v-row>
           <v-col>
             <v-card outlined elevation="5">
@@ -159,6 +159,9 @@
                         ລວມຫົວໜ່ວຍທຸລະກິດ</v-chip
                       >
                       <v-divider class="my-4"></v-divider>
+                      <div class="text-caption">
+                        ຫົວໜ່ວຍທຸລະກິດ
+                      </div>
                       <p class="text-h5">
                         {{ Intl.NumberFormat().format(pagination.total) }}
                       </p>

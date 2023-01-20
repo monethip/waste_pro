@@ -119,7 +119,7 @@
           </v-col>
         </v-row>
       </v-col>
-      <v-col cols="4">
+      <v-col cols="6">
         <v-row>
           <v-col>
             <v-card outlined elevation="5">
@@ -132,9 +132,30 @@
                         ລວມຄົວເຮືອນ</v-chip
                       >
                       <v-divider class="my-4"></v-divider>
-                      <p class="text-h5">
-                        {{ Intl.NumberFormat().format(pagination.total) }}
-                      </p>
+                      <v-row>
+                        <v-col>
+                          <div class="text-caption">
+                            ຄົວເຮືອນ
+                          </div>
+                          <p>
+                            {{ Intl.NumberFormat().format(pagination.total) }}
+                          </p>
+                        </v-col>
+                        <v-divider :vertical="true" class="my-4"></v-divider>
+
+                        <v-col>
+                          <div class="text-caption">
+                            ມູນຄ່າແພັກເກຈ
+                          </div>
+                          <div class="text-h6">
+                            {{
+                              Intl.NumberFormat().format(
+                                sumData.sum_packages.package_price
+                              )
+                            }}
+                          </div>
+                        </v-col>
+                      </v-row>
                     </div>
                   </v-col>
                   <v-col>
