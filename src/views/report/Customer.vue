@@ -150,7 +150,9 @@
                           <div class="text-h6">
                             {{
                               Intl.NumberFormat().format(
-                                sumData.sum_packages.package_price
+                                sumData.sum_packages
+                                  ? sumData.sum_packages.package_price
+                                  : 0
                               )
                             }}
                           </div>
