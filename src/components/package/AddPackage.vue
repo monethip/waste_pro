@@ -33,10 +33,20 @@
       </template>
 
       <template v-slot:[`item.updated_at`]="{ item }">
-        <div>{{ moment(item.updated_at).format("DD-MM-YY hh:mm") }}</div>
+        <v-row>
+          <div>{{ moment(item.updated_at).format("DD-MM-YY hh:mm:ss") }}</div>
+          <v-icon color="primary" class="ml-1" :x-small="true">
+            mdi-clock-edit
+          </v-icon>
+        </v-row>
       </template>
       <template v-slot:[`item.created_at`]="{ item }">
-        <div>{{ moment(item.created_at).format("DD-MM-YY hh:mm") }}</div>
+        <v-row>
+          <div>{{ moment(item.created_at).format("DD-MM-YY hh:mm:ss") }}</div>
+          <v-icon color="success" class="ml-1" :x-small="true">
+            mdi-clock-check
+          </v-icon>
+        </v-row>
       </template>
       <template v-slot:[`item.action`]="{ item }">
         <v-icon small color="green" class="mr-2" @click="OpenModalEdit(item)">
@@ -255,8 +265,8 @@ export default {
           value: "customers_count",
         },
         { text: "ສະແດງໃນແອັພ", value: "is_public" },
-        { text: "ແກ້ໄຂລ່າສຸດ", value: "updated_at" },
-        { text: "ວັນທີສ້າງ", value: "created_at" },
+        { text: "ແກ້ໄຂລ່າສຸດ", value: "updated_at", width: "200px" },
+        { text: "ວັນທີສ້າງ", value: "created_at", width: "200px" },
         { text: "Actions", value: "action" },
       ],
       nameRules: [(v) => !!v || "Package Name is required"],
