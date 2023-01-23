@@ -447,7 +447,7 @@ export default {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
-            order_by: "is_public",
+            order_by: "current",
           },
         })
         .then((res) => {
