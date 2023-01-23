@@ -10,9 +10,26 @@
         </v-card-title>
       </v-col>
     </v-row>
-    <v-data-table :headers="header" :items="packages" :items-per-page="per_page" hide-default-footer>
+    <v-data-table
+      :headers="header"
+      :items="packages"
+      :items-per-page="per_page"
+      hide-default-footer
+    >
       <template v-slot:[`item.is_public`]="{ item }">
-        <v-switch v-model="item.is_public" @change="switchPublic(item.id)"></v-switch>
+        <v-switch
+          v-model="item.is_public"
+          @change="switchPublic(item.id)"
+        ></v-switch>
+      </template>
+
+      <template v-slot:[`item.customers_count`]="{ item }">
+        <v-chip color="primary" outlined
+          >{{
+            Intl.NumberFormat().format(item.customers_count)
+          }}
+          ຄົວເຮືອນ</v-chip
+        >
       </template>
 
       <template v-slot:[`item.created_at`]="{ item }">
@@ -29,10 +46,14 @@
     </v-data-table>
 
     <template>
-      <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset" @paginate="fetchData()">
+      <Pagination
+        v-if="pagination.total_pages > 1"
+        :pagination="pagination"
+        :offset="offset"
+        @paginate="fetchData()"
+      >
       </Pagination>
     </template>
-
 
     <!-- Add Modal -->
     <ModalAdd>
@@ -47,7 +68,11 @@
               <v-form ref="form" lazy-validation>
                 <v-row>
                   <v-col>
-                    <v-text-field v-model="addpackage.name" label="ຊື່ບໍລິການ *" :rules="nameRules"></v-text-field>
+                    <v-text-field
+                      v-model="addpackage.name"
+                      label="ຊື່ບໍລິການ *"
+                      :rules="nameRules"
+                    ></v-text-field>
                     <p class="errors">
                       {{ server_errors.name }}
                     </p>
@@ -55,8 +80,14 @@
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-text-field v-model="addpackage.price" label="ລາຄາ *" type="number" class="input-number" required
-                      :rules="bagRules"></v-text-field>
+                    <v-text-field
+                      v-model="addpackage.price"
+                      label="ລາຄາ *"
+                      type="number"
+                      class="input-number"
+                      required
+                      :rules="bagRules"
+                    ></v-text-field>
                     <p class="errors">
                       {{ server_errors.price }}
                     </p>
@@ -64,8 +95,15 @@
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-autocomplete v-model="selectedPackageSize" :items="packageSize" item-text="size" item-value="id"
-                      label="ເລືອກຂະໜາດບໍລະການ" dense :rules="ruleSize"></v-autocomplete>
+                    <v-autocomplete
+                      v-model="selectedPackageSize"
+                      :items="packageSize"
+                      item-text="size"
+                      item-value="id"
+                      label="ເລືອກຂະໜາດບໍລະການ"
+                      dense
+                      :rules="ruleSize"
+                    ></v-autocomplete>
                     <p class="errors">
                       {{ server_errors.package_size_id }}
                     </p>
@@ -78,7 +116,13 @@
               <v-btn color="blue darken-1" text @click="closeAddModal()">
                 ຍົກເລີກ
               </v-btn>
-              <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="AddItem()">
+              <v-btn
+                color="blue darken-1"
+                text
+                :loading="loading"
+                :disabled="loading"
+                @click="AddItem()"
+              >
                 ບັນທຶກ
               </v-btn>
             </v-card-actions>
@@ -99,7 +143,11 @@
               <v-form ref="form" lazy-validation>
                 <v-row>
                   <v-col>
-                    <v-text-field v-model="editPackage.name" label="ຊື່ບໍລິການ *" :rules="nameRules"></v-text-field>
+                    <v-text-field
+                      v-model="editPackage.name"
+                      label="ຊື່ບໍລິການ *"
+                      :rules="nameRules"
+                    ></v-text-field>
                     <p class="errors">
                       {{ server_errors.name }}
                     </p>
@@ -107,8 +155,14 @@
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-text-field v-model="editPackage.price" label="ລາຄາ *" type="number" class="input-number" required
-                      :rules="bagRules"></v-text-field>
+                    <v-text-field
+                      v-model="editPackage.price"
+                      label="ລາຄາ *"
+                      type="number"
+                      class="input-number"
+                      required
+                      :rules="bagRules"
+                    ></v-text-field>
                     <p class="errors">
                       {{ server_errors.price }}
                     </p>
@@ -116,8 +170,15 @@
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-autocomplete v-model="editPackage.package_size_id" :items="packageSize" item-text="size"
-                      item-value="id" label="ເລືອກຂະໜາດປະເພດບໍລິການ" dense :rules="ruleSize"></v-autocomplete>
+                    <v-autocomplete
+                      v-model="editPackage.package_size_id"
+                      :items="packageSize"
+                      item-text="size"
+                      item-value="id"
+                      label="ເລືອກຂະໜາດປະເພດບໍລິການ"
+                      dense
+                      :rules="ruleSize"
+                    ></v-autocomplete>
                     <p class="errors">
                       {{ server_errors.package_size_id }}
                     </p>
@@ -130,7 +191,13 @@
               <v-btn color="blue darken-1" text @click="closeUpdate()">
                 ຍົກເລີກ
               </v-btn>
-              <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="UpdateItem()">
+              <v-btn
+                color="blue darken-1"
+                text
+                :loading="loading"
+                :disabled="loading"
+                @click="UpdateItem()"
+              >
                 ບັນທຶກ
               </v-btn>
             </v-card-actions>
@@ -144,7 +211,14 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-          <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="deleteItemConfirm">OK</v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            :loading="loading"
+            :disabled="loading"
+            @click="deleteItemConfirm"
+            >OK</v-btn
+          >
           <v-spacer></v-spacer>
         </v-card-actions>
       </template>
@@ -173,6 +247,10 @@ export default {
         { text: "ມູນຄ່າສັນຍາ", value: "price" },
         { text: "ຂະໜາດ", value: "package_size.size", align: "center" },
         { text: "ຈຳນວນຖົງ", value: "package_size.bag", align: "center" },
+        {
+          text: "ລູກຄ້າທີ່ກຳລັງໃຊ້ແພັກເກຈນີ້",
+          value: "customers_count",
+        },
         { text: "ສະແດງໃນແອັພ", value: "is_public" },
         { text: "Created", value: "created_at" },
         { text: "Actions", value: "action" },
@@ -223,12 +301,13 @@ export default {
           .catch((error) => {
             this.loading = false;
             this.$store.commit("Toast_State", {
-                value: true,
-                color: "error",
-                msg: error.response ? error.response.data.message : 'Something went wrong',
-              });
-              if (error.response && error.response.status == 422) {
-              
+              value: true,
+              color: "error",
+              msg: error.response
+                ? error.response.data.message
+                : "Something went wrong",
+            });
+            if (error.response && error.response.status == 422) {
               let obj = error.response.data.errors;
               for (let [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
@@ -258,12 +337,13 @@ export default {
         })
         .catch((error) => {
           this.loading = false;
-          this.fetchData();
           if (error.response && error.response.status == 422) {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response ? error.response.data.message : 'Something went wrong',
+              msg: error.response
+                ? error.response.data.message
+                : "Something went wrong",
             });
             let obj = error.response.data.errors;
             for (let [key, message] of Object.entries(obj)) {
@@ -314,12 +394,13 @@ export default {
           .catch((error) => {
             this.loading = false;
             this.$store.commit("Toast_State", {
-                value: true,
-                color: "error",
-                msg: error.response ? error.response.data.message : 'Something went wrong',
-              });
-              if (error.response && error.response.status == 422) {
-              
+              value: true,
+              color: "error",
+              msg: error.response
+                ? error.response.data.message
+                : "Something went wrong",
+            });
+            if (error.response && error.response.status == 422) {
               let obj = error.response.data.errors;
               for (let [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
@@ -362,16 +443,13 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get(
-          "package"
-          , {
-            params: {
-              page: this.pagination.current_page,
-              per_page: this.per_page,
-              order_by: 'is_public'
-            },
-          }
-        )
+        .get("package", {
+          params: {
+            page: this.pagination.current_page,
+            per_page: this.per_page,
+            order_by: "is_public",
+          },
+        })
         .then((res) => {
           if (res.data.code == 200) {
             this.$store.commit("Loading_State", false);
@@ -400,17 +478,17 @@ export default {
             }, 100);
           }
         })
-        .catch(() => { });
+        .catch(() => {});
     },
   },
   watch: {
     selectedPackageSize() {
       this.server_errors.package_size_id = "";
     },
-    "addpackage.price": function () {
+    "addpackage.price": function() {
       this.server_errors.price = "";
     },
-    "addpackage.name": function () {
+    "addpackage.name": function() {
       this.server_errors.name = "";
     },
   },
@@ -419,5 +497,4 @@ export default {
   },
 };
 </script>
-<style lang="scss">
-</style>
+<style lang="scss"></style>
