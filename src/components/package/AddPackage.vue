@@ -32,6 +32,9 @@
         >
       </template>
 
+      <template v-slot:[`item.updated_at`]="{ item }">
+        <div>{{ moment(item.updated_at).format("DD-MM-YY hh:mm") }}</div>
+      </template>
       <template v-slot:[`item.created_at`]="{ item }">
         <div>{{ moment(item.created_at).format("DD-MM-YY hh:mm") }}</div>
       </template>
@@ -252,7 +255,8 @@ export default {
           value: "customers_count",
         },
         { text: "ສະແດງໃນແອັພ", value: "is_public" },
-        { text: "Created", value: "created_at" },
+        { text: "ແກ້ໄຂລ່າສຸດ", value: "updated_at" },
+        { text: "ວັນທີສ້າງ", value: "created_at" },
         { text: "Actions", value: "action" },
       ],
       nameRules: [(v) => !!v || "Package Name is required"],
