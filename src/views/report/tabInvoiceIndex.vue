@@ -95,31 +95,72 @@
               </tr>
             </thead>
 
-            <tbody :style="getBodyColor(index)" v-for="(sale,index) in summary" :key="sale.id">
+            <tbody
+              :style="getBodyColor(index)"
+              v-for="(sale, index) in summary"
+              :key="sale.id"
+            >
               <tr>
                 <td :rowspan="sale.summary.length">{{ index + 1 }}</td>
-                <td
-                  :rowspan="sale.summary.length"
-                >{{ sale.emp_name ? sale.emp_name + ' ' + sale.emp_surname : sale.name}}</td>
-                <td>{{ sale.summary[0].village_name}}</td>
-                <td>{{ Intl.NumberFormat().format(sale.summary[0].count_bill) }}</td>
-                <td>{{ Intl.NumberFormat().format(sale.summary[0].count_customer) }}</td>
-                <td>{{ totalFromMethod(sale.summary[0].payment_methods,'cash') }}</td>
-                <td>{{ totalFromMethod(sale.summary[0].payment_methods,'bcel') }}</td>
-                <td>{{ totalFromMethod(sale.summary[0].payment_methods,'bcel_online') }}</td>
+                <td :rowspan="sale.summary.length">
+                  {{
+                    sale.emp_name
+                      ? sale.emp_name + " " + sale.emp_surname
+                      : sale.name
+                  }}
+                </td>
+                <td>{{ sale.summary[0].village_name }}</td>
+                <td>
+                  {{ Intl.NumberFormat().format(sale.summary[0].count_bill) }}
+                </td>
                 <td>
                   {{
-                  Intl.NumberFormat().format(sale.summary[0].total) }}
+                    Intl.NumberFormat().format(sale.summary[0].count_customer)
+                  }}
                 </td>
-                <td :rowspan="sale.summary.length">{{ Intl.NumberFormat().format(sale.total) }}</td>
+                <td>
+                  {{ totalFromMethod(sale.summary[0].payment_methods, "cash") }}
+                </td>
+                <td>
+                  {{ totalFromMethod(sale.summary[0].payment_methods, "bcel") }}
+                </td>
+                <td>
+                  {{
+                    totalFromMethod(
+                      sale.summary[0].payment_methods,
+                      "bcel_online"
+                    )
+                  }}
+                </td>
+                <td>
+                  {{ Intl.NumberFormat().format(sale.summary[0].total) }}
+                </td>
+                <td :rowspan="sale.summary.length">
+                  {{ Intl.NumberFormat().format(sale.total) }}
+                </td>
               </tr>
-              <tr v-for="(otherVillage, otherIndex) in sale.summary.slice(1)" :key="otherIndex">
+              <tr
+                v-for="(otherVillage, otherIndex) in sale.summary.slice(1)"
+                :key="otherIndex"
+              >
                 <td>{{ otherVillage.village_name }}</td>
-                <td>{{ Intl.NumberFormat().format(otherVillage.count_bill) }}</td>
-                <td>{{ Intl.NumberFormat().format(otherVillage.count_customer) }}</td>
-                <td>{{ totalFromMethod(otherVillage.payment_methods,'cash') }}</td>
-                <td>{{ totalFromMethod(otherVillage.payment_methods,'bcel') }}</td>
-                <td>{{ totalFromMethod(otherVillage.payment_methods,'bcel_online') }}</td>
+                <td>
+                  {{ Intl.NumberFormat().format(otherVillage.count_bill) }}
+                </td>
+                <td>
+                  {{ Intl.NumberFormat().format(otherVillage.count_customer) }}
+                </td>
+                <td>
+                  {{ totalFromMethod(otherVillage.payment_methods, "cash") }}
+                </td>
+                <td>
+                  {{ totalFromMethod(otherVillage.payment_methods, "bcel") }}
+                </td>
+                <td>
+                  {{
+                    totalFromMethod(otherVillage.payment_methods, "bcel_online")
+                  }}
+                </td>
                 <td>{{ Intl.NumberFormat().format(otherVillage.total) }}</td>
               </tr>
             </tbody>
@@ -150,8 +191,8 @@ export default {
       date_to: "",
       start_menu: false,
       end_menu: false,
-      selectedBillDate: billDateList[0].value,
-      exportMode: ""
+      selectedBillDate: "",
+      exportMode: "",
     };
   },
   methods: {
@@ -166,17 +207,17 @@ export default {
         .get("user-setting/user", {
           params: queryOptions([
             { roles: ["sale", "sale_admin"] },
-            { order_by: "newest" }
-          ])
+            { order_by: "newest" },
+          ]),
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.code === 200) {
             this.loading = false;
             this.$store.commit("Loading_State", false);
             this.salesData = res.data.data;
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$store.commit("Loading_State", false);
           if (error.response && error.response.status === 422) {
             let obj = error.response.data.errors;
@@ -204,24 +245,24 @@ export default {
         .get("v2/report-billing-for-sale", {
           params: queryOptions([
             {
-              filter: this.search
+              filter: this.search,
             },
             {
-              id: this.selectedSale
+              id: this.selectedSale,
             },
             {
-              date_from: this.date_from
+              date_from: this.date_from,
             },
             {
-              date_to: this.date_to
+              date_to: this.date_to,
             },
             {
-              date_method: this.selectedBillDate
+              date_method: this.selectedBillDate,
             },
-            { download: this.exportMode }
-          ])
+            { download: this.exportMode },
+          ]),
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.code == 200) {
             this.$store.commit("Loading_State", false);
             if (res.data.data.download_link) {
@@ -232,7 +273,7 @@ export default {
             // this.pagination = res.data.data.pagination;
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$store.commit("Loading_State", false);
           if (error.response && error.response.status == 422) {
             let obj = error.response.data.errors;
@@ -252,7 +293,7 @@ export default {
       //   name: "PlanCalendar",
       //   params: { id: this.data.plan_month_id },
       // });
-    }
+    },
     // fetchDataPlanMonth() {
     //   this.$axios
     //     .get(
@@ -277,6 +318,12 @@ export default {
     this.fetchData();
   },
   computed: {
+    lastMonthCreated() {
+      return this.$store.getters["auth/getLastMonthBill"];
+    },
+    lastMonthBillCreated() {
+      return this.$store.getters["auth/getLastMonthBillPaid"];
+    },
     billDates() {
       return billDateList;
     },
@@ -291,11 +338,11 @@ export default {
         if (item.emp_card_id) name += item.emp_card_id;
         data.push({
           name: name,
-          id: item.id
+          id: item.id,
         });
       }
       return data;
-    }
+    },
   },
   watch: {
     selectedSale() {
@@ -309,8 +356,8 @@ export default {
     },
     selectedBillDate() {
       if (this.date_from || this.date_to) this.fetchData();
-    }
-  }
+    },
+  },
 };
 </script>
 

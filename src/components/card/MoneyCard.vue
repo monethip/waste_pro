@@ -1,5 +1,5 @@
 <template>
-  <v-card outlined style="height:100px">
+  <v-card @click="openNewTab(route)" outlined style="height:100px">
     <v-card-title
       class="d-flex justify-between w-full"
       style="position: relative"
@@ -20,13 +20,16 @@
 
 <script>
 export default {
-  props: ["title", "billing_count", "total", "bg_color"],
+  props: ["title", "billing_count", "total", "bg_color", "route"],
   data() {
     return {};
   },
   methods: {
     getColor(value) {
       return "background-color: " + value;
+    },
+    openNewTab(route) {
+      if (route) window.open(route.href, "_blank");
     },
   },
   created() {

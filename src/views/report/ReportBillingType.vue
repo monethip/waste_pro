@@ -37,6 +37,7 @@
           v-model="selectedBillDate"
           label="ເລືອກປະເພດວັນທີ"
           outlined
+          clearable
         ></v-autocomplete>
       </v-col>
       <v-col>
@@ -57,9 +58,13 @@
               v-bind="attrs"
               v-on="on"
               dense
+              clearable=""
             ></v-text-field>
           </template>
-          <v-date-picker v-model="start_date" @input="fetchData()"></v-date-picker>
+          <v-date-picker
+            v-model="start_date"
+            @input="fetchData()"
+          ></v-date-picker>
         </v-menu>
       </v-col>
 
@@ -83,7 +88,10 @@
               dense
             ></v-text-field>
           </template>
-          <v-date-picker v-model="end_date" @input="fetchData()"></v-date-picker>
+          <v-date-picker
+            v-model="end_date"
+            @input="fetchData()"
+          ></v-date-picker>
         </v-menu>
       </v-col>
       <v-col>
@@ -137,9 +145,7 @@
                       :key="detailStatus.text"
                     >
                       <v-chip :color="getBgColorFunc(detailStatus.text)" dark>
-                        {{
-                        detailStatus.text
-                        }}
+                        {{ detailStatus.text }}
                       </v-chip>
                     </th>
                   </tr>
@@ -148,27 +154,24 @@
                   <tr v-for="item in summaryDetails" :key="item.billing_type">
                     <td>
                       <span class="font-weight-medium">
-                        {{
-                        item.billing_type
-                        }}
+                        {{ item.billing_type }}
                       </span>
                       <span class="font-weight-medium text-caption">
-                        {{
-                        ` (${formatNumber(item.count_billing)} ບິນ)`
-                        }}
+                        {{ ` (${formatNumber(item.count_billing)} ບິນ)` }}
                       </span>
                     </td>
-                    <td v-for="detailStatus in detailStatuses" :key="detailStatus.text">
+                    <td
+                      v-for="detailStatus in detailStatuses"
+                      :key="detailStatus.text"
+                    >
                       <span class="font-weight-medium">
-                        {{
-                        formatNumber(item[detailStatus.text].total)
-                        }}
+                        {{ formatNumber(item[detailStatus.text].total) }}
                       </span>
                       <span class="font-weight-medium text-caption">
                         {{
-                        `
+                          `
                         (${formatNumber(
-                        item[detailStatus.text].count_billing
+                          item[detailStatus.text].count_billing
                         )} ບິນ)`
                         }}
                       </span>
@@ -212,22 +215,16 @@
                 >
                   <template v-slot:item.status="{ item }">
                     <v-chip :color="getBgColorFunc(item.status)" dark>
-                      {{
-                      getLaoStatusFunc(item.status)
-                      }}
+                      {{ getLaoStatusFunc(item.status) }}
                     </v-chip>
                   </template>
 
                   <template v-slot:item.total="{ item }">
-                    {{
-                    formatNumber(item.total)
-                    }}
+                    {{ formatNumber(item.total) }}
                   </template>
 
                   <template v-slot:item.display_type="{ item }">
-                    {{
-                    getLaoBillingTypeFunc(item.display_type)
-                    }}
+                    {{ getLaoBillingTypeFunc(item.display_type) }}
                   </template>
 
                   <template v-slot:item.custom_type="{ item }">
@@ -259,7 +256,7 @@ import RowSection from "../../components/card/RowSection.vue";
 import {
   getBgColor,
   getLaoStatus,
-  getLaoBillingType
+  getLaoBillingType,
 } from "../../Helpers/BillingStatus";
 import { billDateList } from "../../Helpers/Customer";
 import numberFormat from "../../Helpers/formatNumber";
@@ -271,7 +268,7 @@ export default {
     return `Vientiane Waste Co-Dev|Report Invoice`;
   },
   components: {
-    RowSection
+    RowSection,
   },
   data() {
     return {
@@ -292,7 +289,7 @@ export default {
       billings: {
         summary: {
           count_billing: 0,
-          total: []
+          total: [],
         },
         details: [],
         data: {
@@ -302,18 +299,18 @@ export default {
             count: 0,
             per_page: 100,
             current_page: null,
-            total_pages: 0
-          }
+            total_pages: 0,
+          },
         },
-        download_link: ""
+        download_link: "",
       },
-      selectedBillDate: billDateList[0].value,
+      selectedBillDate: "",
       billingListHeader: [
         { text: "ໄອດີ", value: "billing_display_id" },
         {
           text: "ຊື່ຫົວບິນ",
           align: "start",
-          value: "content"
+          value: "content",
         },
         { text: "ສະຖານະ", value: "status" },
         { text: "ປະເພດບິນ", value: "display_type" },
@@ -321,8 +318,10 @@ export default {
         { text: "ຈ່າຍດ້ວຍ", value: "payment_method" },
         { text: "ລູກຄ້າ", value: "display_customer_name" },
         { text: "ປະເພດລູກຄ້າ", value: "custom_type" },
-        { text: "ທີ່ຢູ່", value: "display_customer_address" }
-      ]
+        { text: "ທີ່ຢູ່", value: "display_customer_address" },
+      ],
+      lastMonthBill: localStorage.getItem("lastMonthBill"),
+      lastMonthBillPaid: localStorage.getItem("lastMonthBillPaid"),
     };
   },
   methods: {
@@ -339,7 +338,7 @@ export default {
     async fetchDistrict() {
       try {
         const result = await this.$axios.get("info/district", {
-          params: { province_id: 1 }
+          params: { province_id: 1 },
         });
         this.districts = result.data.data;
       } catch (error) {
@@ -356,7 +355,9 @@ export default {
         { date_method: this.selectedBillDate },
         { start_date: this.start_date },
         { end_date: this.end_date },
-        { download: this.exportMode }
+        { download: this.exportMode },
+        { created_month: this.lastMonthCreated },
+        { bill_month: this.lastMonthBillCreated },
       ];
 
       if (this.selectedVillage)
@@ -367,9 +368,9 @@ export default {
       this.$store.commit("Loading_State", true);
       this.$axios
         .get("v2/report-billing-by-type", {
-          params: queryOptions(queryArray)
+          params: queryOptions(queryArray),
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit("Loading_State", false);
@@ -383,7 +384,7 @@ export default {
             }, 300);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$store.commit("Loading_State", false);
           if (error.response && error.response.status == 422) {
             let obj = error.response.data.errors;
@@ -399,17 +400,17 @@ export default {
         .get("user-setting/user", {
           params: queryOptions([
             { roles: ["sale", "sale_admin"] },
-            { order_by: "newest" }
-          ])
+            { order_by: "newest" },
+          ]),
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.code === 200) {
             this.loading = false;
             this.$store.commit("Loading_State", false);
             this.salesData = res.data.data;
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$store.commit("Loading_State", false);
           if (error.response && error.response.status === 422) {
             let obj = error.response.data.errors;
@@ -421,9 +422,17 @@ export default {
     },
     getCard(statusItem) {
       const data = this.billings.summary.total.find(
-        status => status.status == statusItem
+        (status) => status.status == statusItem
       );
       if (data) {
+        const routeData = this.$router.resolve({
+          path: "/billing",
+          query: {
+            tab: statusItem,
+          },
+        });
+
+        data.route = routeData;
         data.bg_color = getBgColor(data.status);
       }
       return data ? data : this.defaultStatus;
@@ -439,9 +448,15 @@ export default {
     },
     formatNumber(number) {
       return numberFormat(number);
-    }
+    },
   },
   watch: {
+    lastMonthCreated: function(val, old) {
+      if (old !== null || old !== "") this.fetchData();
+    },
+    lastMonthBillCreated: function(val, old) {
+      if (old !== null || old !== "") this.fetchData();
+    },
     selectedBillDate() {
       if (this.start_date || this.end_date) this.fetchData();
     },
@@ -459,9 +474,15 @@ export default {
     },
     exportMode() {
       this.fetchData();
-    }
+    },
   },
   computed: {
+    lastMonthCreated() {
+      return this.$store.getters["auth/getLastMonthBill"];
+    },
+    lastMonthBillCreated() {
+      return this.$store.getters["auth/getLastMonthBillPaid"];
+    },
     billDates() {
       return billDateList;
     },
@@ -476,7 +497,7 @@ export default {
         if (item.emp_card_id) name += item.emp_card_id;
         data.push({
           name: name,
-          id: item.id
+          id: item.id,
         });
       }
       return data;
@@ -489,12 +510,12 @@ export default {
       for (const detail of this.billings.details) {
         let item = {
           billing_type: detail.billingable_type_la,
-          count_billing: detail.count_billing
+          count_billing: detail.count_billing,
         };
         for (const total of detail.total) {
           item[total.status_la] = {
             count_billing: total.count_billing,
-            total: total.total
+            total: total.total,
           };
         }
 
@@ -509,7 +530,7 @@ export default {
           if (value.count_billing !== undefined) {
             data.push({
               text: key,
-              value: key + ".total"
+              value: key + ".total",
             });
           }
         }
@@ -521,8 +542,8 @@ export default {
         {
           text: "ປະເພດບິນ",
           align: "start",
-          value: "billing_type"
-        }
+          value: "billing_type",
+        },
       ];
       if (this.detailStatuses.length > 0) {
         header = [header, ...this.detailStatuses];
@@ -535,14 +556,14 @@ export default {
         status_la: "",
         total: 0,
         count_billing: 0,
-        bg_color: ""
+        bg_color: "",
       };
     },
     sectionSuccess() {
       return [
         this.successStatus,
         this.toConfirmPaymentStatus,
-        this.rejectedStatus
+        this.rejectedStatus,
       ];
     },
     sectionPending() {
@@ -565,13 +586,13 @@ export default {
     },
     approvedStatus() {
       return this.getCard("approved");
-    }
+    },
   },
   created() {
     this.fetchDistrict();
     this.fetchData();
     this.fetchSale();
-  }
+  },
 };
 </script>
 

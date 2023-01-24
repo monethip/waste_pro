@@ -1,11 +1,12 @@
 <template>
   <v-row>
-    <v-col v-for="(card,index) in cards" :key="index">
+    <v-col v-for="(card, index) in cards" :key="index">
       <MoneyCard
         :title="card.status_la"
         :total="card.total"
         :billing_count="card.count_billing"
         :bg_color="card.bg_color"
+        :route="card.route"
       />
     </v-col>
   </v-row>
@@ -17,10 +18,10 @@ import MoneyCard from "./MoneyCard.vue";
 export default {
   props: ["cards"],
   components: {
-    MoneyCard
+    MoneyCard,
   },
   data() {
     return {};
-  }
+  },
 };
 </script>

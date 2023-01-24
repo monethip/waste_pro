@@ -8,7 +8,7 @@
       </v-col>
       <v-col>
         <v-menu
-          v-model="start_menu_created"
+          v-model="start_paid_month"
           :close-on-content-click="true"
           :nudge-right="40"
           transition="scale-transition"
@@ -36,7 +36,7 @@
       </v-col>
       <v-col>
         <v-menu
-          v-model="start_menu"
+          v-model="start_created"
           :close-on-content-click="true"
           :nudge-right="40"
           transition="scale-transition"
@@ -131,7 +131,8 @@ export default {
       lastMonthBill: localStorage.getItem("lastMonthBill"),
       lastMonthBillPaid: localStorage.getItem("lastMonthBillPaid"),
       start_menu: false,
-      start_menu_created: false,
+      start_created: false,
+      start_paid_month: false,
     };
   },
   methods: {

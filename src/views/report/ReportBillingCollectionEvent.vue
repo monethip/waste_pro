@@ -36,6 +36,7 @@
           item-value="value"
           v-model="selectedBillDate"
           label="ເລືອກປະເພດວັນທີ"
+          clearable=""
           outlined
         ></v-autocomplete>
       </v-col>
@@ -249,7 +250,7 @@ export default {
         { text: "ປະເພດລູກຄ້າ", value: "custom_type" },
         { text: "ທີ່ຢູ່", value: "display_customer_address" },
       ],
-      selectedBillDate: billDateList[0].value,
+      selectedBillDate: "",
     };
   },
   methods: {
@@ -284,6 +285,8 @@ export default {
         { start_date: this.start_date },
         { end_date: this.end_date },
         { download: this.exportMode },
+        { created_month: this.lastMonthCreated },
+        { bill_month: this.lastMonthBillCreated },
       ];
 
       if (this.selectedVillage)
@@ -351,6 +354,14 @@ export default {
         (status) => status.status == statusItem
       );
       if (data) {
+        const routeData = this.$router.resolve({
+          path: "/billing",
+          query: {
+            tab: statusItem,
+          },
+        });
+
+        data.route = routeData;
         data.bg_color = getBgColor(data.status);
       }
       return data ? data : this.defaultStatus;
@@ -389,6 +400,12 @@ export default {
     },
   },
   computed: {
+    lastMonthCreated() {
+      return this.$store.getters["auth/getLastMonthBill"];
+    },
+    lastMonthBillCreated() {
+      return this.$store.getters["auth/getLastMonthBillPaid"];
+    },
     billDates() {
       return billDateList;
     },
