@@ -91,6 +91,9 @@
                 <td>ເງິນໂອນ</td>
                 <td>bcel bill payment</td>
                 <td>ລວມຍອດ</td>
+                <td>ລວມເງິນສົດ</td>
+                <td>ລວມເງິນໂອນ</td>
+                <td>ລວມ bcel bill payment</td>
                 <td>ລວມທັງໝົດ</td>
               </tr>
             </thead>
@@ -134,6 +137,15 @@
                 </td>
                 <td>
                   {{ Intl.NumberFormat().format(sale.summary[0].total) }}
+                </td>
+                <td :rowspan="sale.summary.length">
+                  {{ Intl.NumberFormat().format(sale.cash_amount) }}
+                </td>
+                <td :rowspan="sale.summary.length">
+                  {{ Intl.NumberFormat().format(sale.bcel_amount) }}
+                </td>
+                <td :rowspan="sale.summary.length">
+                  {{ Intl.NumberFormat().format(sale.bcel_online_amount) }}
                 </td>
                 <td :rowspan="sale.summary.length">
                   {{ Intl.NumberFormat().format(sale.total) }}
