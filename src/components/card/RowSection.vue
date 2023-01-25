@@ -7,6 +7,8 @@
         :billing_count="card.count_billing"
         :bg_color="card.bg_color"
         :route="card.route"
+        :icon="card.icon"
+        :icon_color="card.icon_color"
       />
     </v-col>
   </v-row>

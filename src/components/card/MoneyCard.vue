@@ -4,8 +4,21 @@
       class="d-flex justify-between w-full"
       style="position: relative"
     >
-      <v-chip class="text-caption" :color="bg_color" dark>{{ title }}</v-chip>
+      <v-chip v-if="icon" class="text-caption" :color="icon_color" dark>
+        <v-icon :x-small="true">{{ icon }}</v-icon>
+        <div :color="icon_color" class="ml-1">
+          {{ title }}
+        </div>
+      </v-chip>
+      <v-chip v-else class="text-caption" :color="bg_color" dark>
+        {{ title }}
+      </v-chip>
       <v-chip
+        v-if="
+          billing_count != null &&
+            billing_count != '' &&
+            billing_count != undefined
+        "
         style="position: absolute;right: 10px; !important"
         :color="bg_color"
         outlined
@@ -20,7 +33,15 @@
 
 <script>
 export default {
-  props: ["title", "billing_count", "total", "bg_color", "route"],
+  props: [
+    "title",
+    "billing_count",
+    "total",
+    "bg_color",
+    "route",
+    "icon",
+    "icon_color",
+  ],
   data() {
     return {};
   },

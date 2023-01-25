@@ -79,6 +79,12 @@
 
       <v-row>
         <v-col>
+          <RowSection :cards="summaryAll"></RowSection>
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col>
           <v-simple-table>
             <thead>
               <tr style="background-color:blue; color:white">
@@ -186,14 +192,45 @@
 <script>
 import queryOptions from "../../Helpers/queryOption";
 import { billDateList } from "../../Helpers/Customer";
+import RowSection from "../../components/card/RowSection.vue";
 
 export default {
   title() {
     return `Vientiane Waste Co-Dev|Calendar`;
   },
+  components: {
+    RowSection,
+  },
   data() {
     return {
       summary: [],
+      summaryMoney: [],
+      defaultMoney: [
+        {
+          status_la: "ລວມ",
+          total: 0,
+          count_billing: 0,
+          bg_color: "blue",
+        },
+        {
+          status_la: "ເງິນສົດ",
+          total: 0,
+          count_billing: 0,
+          bg_color: "blue",
+        },
+        {
+          status_la: "ເງິນໂອນ",
+          total: 0,
+          count_billing: 0,
+          bg_color: "blue",
+        },
+        {
+          status_la: "bcel online",
+          total: 0,
+          count_billing: 0,
+          bg_color: "blue",
+        },
+      ],
       pagination: {},
       start_date: null,
       salesData: [],
@@ -280,7 +317,8 @@ export default {
             if (res.data.data.download_link) {
               window.open(res.data.data.download_link);
             } else {
-              this.summary = res.data.data;
+              this.summary = res.data.data.data;
+              this.summaryMoney = res.data.data.summary;
             }
             // this.pagination = res.data.data.pagination;
           }
@@ -330,6 +368,38 @@ export default {
     this.fetchData();
   },
   computed: {
+    summaryAll() {
+      return [
+        {
+          status_la: "ລວມ",
+          total: this.summaryMoney.total,
+          bg_color: "blue",
+          icon: "mdi-chart-pie",
+          icon_color: "green",
+        },
+        {
+          status_la: "ເງົນສົດ",
+          total: this.summaryMoney.cash,
+          bg_color: "blue",
+          icon: "mdi-cash-multiple",
+          icon_color: "blue",
+        },
+        {
+          status_la: "ເງິນໂອນ",
+          total: this.summaryMoney.bcel,
+          bg_color: "blue",
+          icon: "mdi-qrcode-scan",
+          icon_color: "purple",
+        },
+        {
+          status_la: "Bcel Online",
+          total: this.summaryMoney.bcel_online,
+          bg_color: "blue",
+          icon: "mdi-cellphone-wireless",
+          icon_color: "red",
+        },
+      ];
+    },
     lastMonthCreated() {
       return this.$store.getters["auth/getLastMonthBill"];
     },
