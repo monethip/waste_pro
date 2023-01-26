@@ -94,6 +94,19 @@
         </v-menu>
       </v-col>
       <v-col>
+        <v-select
+          v-model="selectedPaymentMethod"
+          @change="fetchData()"
+          :items="paymentMethods"
+          item-text="text"
+          item-value="value"
+          label="ເລືອກປະເພດການຈ່າຍ"
+          outlined
+          dense
+        ></v-select>
+      </v-col>
+
+      <v-col>
         <v-autocomplete
           v-model="selectedSale"
           :items="sales"
@@ -173,6 +186,17 @@
                     <span v-if="customerType(item) == 'company'">ທຸລະກິດ</span>
                     <span v-if="!customerType(item)">ທົ່ວໄປ</span>
                   </template>
+
+                  <template v-slot:item.action="{ item }">
+                    <v-btn
+                      class="btn elevation-0"
+                      color="info"
+                      small
+                      @click="ViewInvoice(item.id)"
+                    >
+                      <v-icon class="mr-1" small> mdi-eye </v-icon>
+                    </v-btn>
+                  </template>
                 </v-data-table>
               </v-col>
             </v-row>
@@ -194,7 +218,11 @@
 
 <script>
 import RowSection from "../../components/card/RowSection.vue";
-import { getBgColor, getLaoStatus } from "../../Helpers/BillingStatus";
+import {
+  getBgColor,
+  getLaoStatus,
+  payment_methods,
+} from "../../Helpers/BillingStatus";
 import { getLaoCompanyCostBy, billDateList } from "../../Helpers/Customer";
 import numberFormat from "../../Helpers/formatNumber";
 import queryOptions from "../../Helpers/queryOption";
@@ -210,6 +238,8 @@ export default {
   data() {
     return {
       loading: false,
+      paymentMethods: payment_methods,
+      selectedPaymentMethod: "",
       billingListsearch: "",
       exportMode: "",
       start_date: new Date().toISOString().substr(0, 8) + "01",
@@ -244,11 +274,13 @@ export default {
           value: "content",
         },
         { text: "ສະຖານະ", value: "status" },
+        { text: "ປະເພດການຈ່າຍ", value: "payment_method_la" },
         { text: "ຈຳນວນ", value: "total" },
-        { text: "ຈ່າຍດ້ວຍ", value: "payment_method" },
+
         { text: "ລູກຄ້າ", value: "display_customer_name" },
         { text: "ປະເພດລູກຄ້າ", value: "custom_type" },
         { text: "ທີ່ຢູ່", value: "display_customer_address" },
+        { text: "action", value: "action" },
       ],
       selectedBillDate: "",
     };
@@ -281,6 +313,7 @@ export default {
         { per_page: 100 },
         { page: page },
         { sale_id: this.selectedSale },
+        { payment_method: this.selectedPaymentMethod },
         { date_method: this.selectedBillDate },
         { start_date: this.start_date },
         { end_date: this.end_date },
@@ -348,6 +381,13 @@ export default {
             }
           }
         });
+    },
+    ViewInvoice(id) {
+      let route = this.$router.resolve({
+        name: "billing-detail",
+        params: { id },
+      });
+      window.open(route.href, "_blank");
     },
     getCard(statusItem) {
       const data = this.billings.summary.find(

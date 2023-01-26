@@ -13,21 +13,6 @@
     <div>
       <v-card>
         <v-card-text class="px-16 py-16">
-          <!--          <v-row>-->
-          <!--            <v-col >-->
-          <!--              <div class="text-center mx-auto">-->
-          <!--                <v-img-->
-          <!--                    :src="require('../../../assets/logo_waste.png')"-->
-          <!--                    max-height="160px"-->
-          <!--                    max-width="160px"-->
-          <!--                    alt="logo"-->
-          <!--                    contain-->
-          <!--                    eager-->
-          <!--                    class="app-logo me-3 text-center"-->
-          <!--                ></v-img>-->
-          <!--              </div>-->
-          <!--            </v-col>-->
-          <!--          </v-row>-->
           <v-row class="pb-4">
             <v-col>
               <h2 class="text-center">ໃບບິນເກັບເງິນຄ່າຂີ້ເຫື້ຍອ</h2>

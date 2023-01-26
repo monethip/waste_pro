@@ -204,7 +204,11 @@
 //import { GetOldValueOnInput } from "@/Helpers/GetValue";
 
 import queryOption from "@/Helpers/queryOption";
-import { getLaoBillingType, getLaoStatus } from "@/Helpers/BillingStatus";
+import {
+  getLaoBillingType,
+  payment_methods,
+  getLaoStatus,
+} from "@/Helpers/BillingStatus";
 
 export default {
   name: "Customer",
@@ -659,60 +663,60 @@ export default {
     },
   },
   watch: {
-    selectedCollectionStatus: function () {
+    selectedCollectionStatus: function() {
       this.pagination.current_page = "";
       this.fetchData();
     },
-    lastMonthBill: function (value) {
+    lastMonthBill: function(value) {
       this.$store.dispatch("auth/saveLastMonthBill", value);
     },
-    lastMonthBillPaid: function (value) {
+    lastMonthBillPaid: function(value) {
       this.$store.dispatch("auth/saveLastMonthBillPaid", value);
     },
 
-    lastMonthCreated: function () {
+    lastMonthCreated: function() {
       this.fetchData();
     },
-    lastMonthBillCreated: function () {
+    lastMonthBillCreated: function() {
       this.fetchData();
     },
-    selectedBillingable_type: function () {
+    selectedBillingable_type: function() {
       this.pagination.current_page = "";
       this.fetchData();
     },
-    selectedRoutePlan: function () {
+    selectedRoutePlan: function() {
       this.pagination.current_page = "";
       this.fetchData();
     },
-    selectedCustomerType: function () {
+    selectedCustomerType: function() {
       this.pagination.current_page = "";
       this.fetchData();
     },
 
-    month: function (value) {
+    month: function(value) {
       if (value !== "") {
         this.pagination.current_page = "";
         this.fetchData();
       }
     },
-    search: function (value) {
+    search: function(value) {
       this.pagination = {};
       if (value == "") {
         this.fetchData();
       }
     },
-    selectedStatus: function () {
+    selectedStatus: function() {
       this.pagination.current_page = "";
       this.fetchData();
     },
-    selectedPackage: function () {
+    selectedPackage: function() {
       this.server_errors.package_id = "";
     },
-    start_date: function () {
+    start_date: function() {
       this.server_errors.start_month = "";
     },
 
-    paymentType: function () {
+    paymentType: function() {
       if (this.paymentType == 0) {
         this.payment_method = "cash";
         this.image = "";
@@ -723,7 +727,7 @@ export default {
       }
       this.server_errors.payment_method = "";
     },
-    image: function () {
+    image: function() {
       this.server_errors.image = "";
     },
   },

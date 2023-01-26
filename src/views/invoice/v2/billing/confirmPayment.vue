@@ -308,7 +308,11 @@
 //import { GetOldValueOnInput } from "@/Helpers/GetValue";
 
 import queryOption from "@/Helpers/queryOption";
-import { getLaoBillingType, getLaoStatus } from "@/Helpers/BillingStatus";
+import {
+  getLaoBillingType,
+  payment_methods,
+  getLaoStatus,
+} from "@/Helpers/BillingStatus";
 
 export default {
   name: "Customer",

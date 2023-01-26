@@ -22,7 +22,7 @@
           <v-row>
             <v-col>
               <p>ຂໍ້ມູນບິນ</p>
-              <h3>ປະເພດຊຳລະ: {{ invoice.payment_method }}</h3>
+              <h3>ປະເພດຊຳລະ: {{ invoice.payment_method_la }}</h3>
               <h3>
                 ວັນທີ:
                 {{ moment(invoice.created_at).format("DD-MM-YY") }}
@@ -44,15 +44,25 @@
               <h3 class="my-4">ເລືອກປະເພດການຊຳລະ</h3>
               <v-row>
                 <v-col cols="12">
-                  <v-chip-group v-model="paymentType" column :rules="paymentTypeRule">
-                    <v-chip large class="mr-6" color="info" label filter outlined>
+                  <v-chip-group
+                    v-model="paymentType"
+                    column
+                    :rules="paymentTypeRule"
+                  >
+                    <v-chip
+                      large
+                      class="mr-6"
+                      color="info"
+                      label
+                      filter
+                      outlined
+                    >
                       ເງິນສົດ
                       <v-icon left class="ml-1"> mdi-currency-usd</v-icon>
                     </v-chip>
                     <v-chip large color="error" label filter outlined>
                       BCEL
-                      <v-icon class="ml-1" left>
-                        mdi-credit-card</v-icon>
+                      <v-icon class="ml-1" left> mdi-credit-card</v-icon>
                     </v-chip>
                   </v-chip-group>
                   <p class="errors">
@@ -65,15 +75,25 @@
                 <v-row>
                   <v-col>
                     <label class="file-label">
-                      <input @change="onFileChange" class="file-input input-file-image" type="file" name="image"
-                        accept="image/*" ref="image" />
+                      <input
+                        @change="onFileChange"
+                        class="file-input input-file-image"
+                        type="file"
+                        name="image"
+                        accept="image/*"
+                        ref="image"
+                      />
                       <span class="file-cta">
                         <span class="file-icon">
-                          <v-icon style="
+                          <v-icon
+                            style="
                               font-size: 60px !important;
                               color: #719aff;
                               cursor: pointer;
-                            " class="fas fa-cloud-upload">mdi-file-image</v-icon>
+                            "
+                            class="fas fa-cloud-upload"
+                            >mdi-file-image</v-icon
+                          >
                         </span>
                       </span>
                     </label>
@@ -121,8 +141,14 @@
 
           <v-divider class="my-6"></v-divider>
           <v-card-actions>
-            <v-btn large class="white--text c-btn px-12" color="info" :loading="loading" :disabled="loading"
-              @click="Payment()">
+            <v-btn
+              large
+              class="white--text c-btn px-12"
+              color="info"
+              :loading="loading"
+              :disabled="loading"
+              @click="Payment()"
+            >
               ຊຳລະ
             </v-btn>
           </v-card-actions>
@@ -136,10 +162,14 @@
         <v-card>
           <v-card-title>
             <p>
-              <v-icon class="primary-color" large color="success">mdi-checkbox-marked-circle-outline</v-icon>
+              <v-icon class="primary-color" large color="success"
+                >mdi-checkbox-marked-circle-outline</v-icon
+              >
               ຢືນຢັນຊຳລະຄ່າຂີ້ເຫຍື້ອ
-              <span class="primary-color" v-if="invoice.customer">{{ invoice.customer.name }}
-                {{ invoice.customer.surname }}</span>
+              <span class="primary-color" v-if="invoice.customer"
+                >{{ invoice.customer.name }}
+                {{ invoice.customer.surname }}</span
+              >
             </p>
           </v-card-title>
           <v-card-text>
@@ -148,9 +178,17 @@
                 <v-row>
                   <v-col cols="12">
                     <v-chip-group v-model="confirmType" column>
-                      <v-chip medium class="mr-6" color="success" label filter outlined>
+                      <v-chip
+                        medium
+                        class="mr-6"
+                        color="success"
+                        label
+                        filter
+                        outlined
+                      >
                         <v-icon left class="ml-1">
-                          mdi-account-check-outline</v-icon>ຢືນຢັນການຊຳລະ
+                          mdi-account-check-outline</v-icon
+                        >ຢືນຢັນການຊຳລະ
                       </v-chip>
                       <v-chip medium color="error" label filter outlined>
                         <v-icon class="ml-1" left> mdi-cash-remove</v-icon>
@@ -162,8 +200,15 @@
                 <div v-if="confirmType == 1">
                   <v-row>
                     <v-col cols="12">
-                      <v-select v-model="reject_reason_id" label="ເຫດຜົນ" outlined dense :items="rejects"
-                        item-text="name" item-value="id">
+                      <v-select
+                        v-model="reject_reason_id"
+                        label="ເຫດຜົນ"
+                        outlined
+                        dense
+                        :items="rejects"
+                        item-text="name"
+                        item-value="id"
+                      >
                       </v-select>
                       <p class="errors">
                         {{ server_errors.reject_reason_id }}
@@ -173,7 +218,13 @@
 
                   <v-row>
                     <v-col cols="12">
-                      <v-text-field v-model="description" label="Description" outlined dense type="text">
+                      <v-text-field
+                        v-model="description"
+                        label="Description"
+                        outlined
+                        dense
+                        type="text"
+                      >
                       </v-text-field>
                       <p class="errors">
                         {{ server_errors.description }}
@@ -182,8 +233,14 @@
                   </v-row>
                   <v-row>
                     <v-card-actions>
-                      <v-btn color="info" class="white--text px-12 c-btn" large :loading="loading" :disabled="loading"
-                        @click="confirmReject()">
+                      <v-btn
+                        color="info"
+                        class="white--text px-12 c-btn"
+                        large
+                        :loading="loading"
+                        :disabled="loading"
+                        @click="confirmReject()"
+                      >
                         ຢືນຢັນ
                       </v-btn>
                     </v-card-actions>
@@ -259,7 +316,7 @@ export default {
             }, 100);
           }
         })
-        .catch(() => { });
+        .catch(() => {});
     },
     confirmPayment() {
       this.loading = true;
@@ -325,7 +382,9 @@ export default {
             this.$store.commit("Toast_State", {
               value: true,
               color: "error",
-              msg: error.response ? error.response.data.message : 'Something went wrong',
+              msg: error.response
+                ? error.response.data.message
+                : "Something went wrong",
             });
             if (error.response && error.response.status == 422) {
               var obj = error.response.data.errors;
@@ -367,7 +426,9 @@ export default {
           this.$store.commit("Toast_State", {
             value: true,
             color: "error",
-            msg: error.response ? error.response.data.message : 'Something went wrong',
+            msg: error.response
+              ? error.response.data.message
+              : "Something went wrong",
           });
           if (error.response && error.response.status == 422) {
             let obj = error.response.data.errors;
@@ -387,7 +448,7 @@ export default {
     },
   },
   watch: {
-    paymentType: function () {
+    paymentType: function() {
       console.log(this.paymentType);
       if (this.paymentType == 0) {
         this.payment_method = "cash";
@@ -399,7 +460,7 @@ export default {
       }
       this.server_errors.payment_method = "";
     },
-    confirmType: function () {
+    confirmType: function() {
       if (this.confirmType == 0) {
         this.confirmPayment();
       }
@@ -407,7 +468,7 @@ export default {
     // bcel_reference_number: function () {
     //   this.server_errors.bcel_reference_number = "";
     // },
-    image: function () {
+    image: function() {
       this.server_errors.image = "";
     },
   },

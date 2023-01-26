@@ -80,16 +80,16 @@ export const getLaoCollectStatus = function (status) {
 
 export const payment_methods = [
     {
-        text: "cash",
-        value: "ເງິນສົດ",
+        value: "cash",
+        text: "ເງິນສົດ",
     },
     {
-        text: "bcel",
-        value: "ເງິນໂອນ",
+        value: "bcel",
+        text: "ເງິນໂອນ",
     },
     {
-        text: "bcel_online",
-        value: "bcel bill payments",
+        value: "bcel_online",
+        text: "bcel bill payments",
     }
 ]
 
