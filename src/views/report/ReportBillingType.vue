@@ -1,7 +1,12 @@
 <template>
   <v-container>
     <v-row>
-      <span class="text-h5">ລວມທັງໝົດ</span>
+      <span class="text-h5"
+        >ລວມທັງໝົດ
+        <strong v-if="selectSaleObject"
+          >({{ selectSaleObject.name }})</strong
+        ></span
+      >
     </v-row>
     <v-row>
       <v-col>
@@ -282,8 +287,8 @@ export default {
       villages: [],
       selectedVillage: "",
       districts: [],
-      selectedDistrict: null,
-      selectedSale: null,
+      selectedDistrict: "",
+      selectedSale: "",
       salesData: [],
       current_page: 1,
       billings: {
@@ -394,21 +399,14 @@ export default {
           }
         });
     },
-    fetchSale() {
+    async fetchSale() {
       this.$store.commit("Loading_State", true);
-      this.$axios
+      const res = await this.$axios
         .get("user-setting/user", {
           params: queryOptions([
             { roles: ["sale", "sale_admin"] },
             { order_by: "newest" },
           ]),
-        })
-        .then((res) => {
-          if (res.data.code === 200) {
-            this.loading = false;
-            this.$store.commit("Loading_State", false);
-            this.salesData = res.data.data;
-          }
         })
         .catch((error) => {
           this.$store.commit("Loading_State", false);
@@ -419,6 +417,13 @@ export default {
             }
           }
         });
+
+      if (res.data.code === 200) {
+        this.salesData = res.data.data;
+      }
+
+      this.loading = false;
+      this.$store.commit("Loading_State", false);
     },
     getCard(statusItem) {
       const data = this.billings.summary.total.find(
@@ -452,31 +457,44 @@ export default {
   },
   watch: {
     lastMonthCreated: function(val, old) {
-      if (old !== null || old !== "") this.fetchData();
+      if (!this.loading && (old !== null || old !== "")) this.fetchData();
     },
     lastMonthBillCreated: function(val, old) {
-      if (old !== null || old !== "") this.fetchData();
+      if (!this.loading && (old !== null || old !== "")) this.fetchData();
     },
     selectedBillDate() {
       if (this.start_date || this.end_date) this.fetchData();
     },
-    selectedSale() {
-      this.fetchData();
+    selectedSale: function(val, old) {
+      if (!this.loading && (old !== null || old !== "")) this.fetchData();
     },
     current_page() {
       this.fetchData(this.current_page);
     },
-    selectedDistrict() {
-      this.fetchData();
+    selectedDistrict: function(val, old) {
+      if (!this.loading && (old !== null || old !== "")) this.fetchData();
     },
-    selectedVillage() {
-      this.fetchData();
+    selectedVillage: function(val, old) {
+      if (!this.loading && (old !== null || old !== "")) this.fetchData();
     },
     exportMode() {
       this.fetchData();
     },
   },
+  beforeCreate() {
+    this.loading = true;
+  },
   computed: {
+    selectSaleObject() {
+      let res = null;
+      if (this.selectedSale) {
+        const filteredSale = this.sales.find(
+          (item) => item.id == this.selectedSale
+        );
+        if (filteredSale) res = filteredSale;
+      }
+      return res;
+    },
     lastMonthCreated() {
       return this.$store.getters["auth/getLastMonthBill"];
     },
@@ -589,9 +607,36 @@ export default {
     },
   },
   created() {
-    this.fetchDistrict();
-    this.fetchData();
-    this.fetchSale();
+    this.fetchDistrict().then(() => {
+      if (this.$route.query.selected_district) {
+        this.selectedDistrict = this.districts.find(
+          (item) => item.id == this.$route.query.selected_district
+        );
+
+        this.selectedVillage =
+          typeof this.$route.query.selected_village != "number"
+            ? parseInt(this.$route.query.selected_village)
+            : this.$route.query.selected_village;
+
+        console.log(this.selectedDistrict, this.selectedVillage);
+      }
+    });
+
+    this.selectedBillDate = this.$route.query.date_method;
+    this.start_date = this.$route.query.date_from;
+    this.end_date = this.$route.query.date_to;
+
+    this.fetchSale()
+      .then(() => {
+        this.selectedSale =
+          typeof this.$route.query.selected_sale != "number"
+            ? parseInt(this.$route.query.selected_sale)
+            : this.$route.query.selected_sale;
+      })
+      .finally(() => {
+        this.loading = false;
+        this.fetchData();
+      });
   },
 };
 </script>

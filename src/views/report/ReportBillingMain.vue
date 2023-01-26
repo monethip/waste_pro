@@ -13,7 +13,7 @@
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
               v-model="lastMonthBillPaid"
-              label="ເດືອນທີ່ຕ້ອງຊຳລະ"
+              label="ບິນປະຈຳເດືອນ"
               readonly
               outlined
               v-bind="attrs"

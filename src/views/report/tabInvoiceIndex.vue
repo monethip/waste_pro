@@ -112,13 +112,27 @@
               <tr>
                 <td :rowspan="sale.summary.length">{{ index + 1 }}</td>
                 <td :rowspan="sale.summary.length">
-                  {{
-                    sale.emp_name
-                      ? sale.emp_name + " " + sale.emp_surname
-                      : sale.name
-                  }}
+                  <a href="#" @click="openRoute(sale.id, null, null)">
+                    {{
+                      sale.emp_name
+                        ? sale.emp_name + " " + sale.emp_surname
+                        : sale.name
+                    }}
+                  </a>
                 </td>
-                <td>{{ sale.summary[0].village_name }}</td>
+                <td
+                  @click="
+                    openRoute(
+                      sale.id,
+                      sale.summary[0].village_id,
+                      sale.summary[0].district_id
+                    )
+                  "
+                >
+                  <a href="#">
+                    {{ sale.summary[0].village_name }}
+                  </a>
+                </td>
                 <td>
                   {{ Intl.NumberFormat().format(sale.summary[0].count_bill) }}
                 </td>
@@ -161,7 +175,20 @@
                 v-for="(otherVillage, otherIndex) in sale.summary.slice(1)"
                 :key="otherIndex"
               >
-                <td>{{ otherVillage.village_name }}</td>
+                <td>
+                  <a
+                    @click="
+                      openRoute(
+                        sale.id,
+                        otherVillage.village_id,
+                        otherVillage.district_id
+                      )
+                    "
+                    href="#"
+                  >
+                    {{ otherVillage.village_name }}
+                  </a>
+                </td>
                 <td>
                   {{ Intl.NumberFormat().format(otherVillage.count_bill) }}
                 </td>
@@ -332,6 +359,36 @@ export default {
             }
           }
         });
+    },
+    openRoute(sale, village, district_id) {
+      localStorage.removeItem("lastMonthBill");
+      localStorage.removeItem("lastMonthBillPaid");
+
+      const routeData = this.$router.resolve({
+        name: "Report-Billing-Main",
+        query: queryOptions([
+          {
+            selected_sale: sale,
+          },
+          {
+            selected_village: village,
+          },
+          {
+            selected_district: district_id,
+          },
+          {
+            date_from: this.date_from,
+          },
+          {
+            date_to: this.date_to,
+          },
+          {
+            date_method: this.selectedBillDate,
+          },
+        ]),
+      });
+
+      window.open(routeData.href);
     },
     backPrevios() {
       this.$router.go(-1);
