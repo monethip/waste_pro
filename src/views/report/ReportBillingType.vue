@@ -649,19 +649,19 @@ export default {
       return this.getCard("approved");
     },
   },
-  created() {
-    this.fetchDistrict().then(() => {
-      if (this.$route.query.selected_district) {
-        this.selectedDistrict = this.districts.find(
-          (item) => item.id == this.$route.query.selected_district
-        );
+  async created() {
+    await this.fetchDistrict();
 
-        this.selectedVillage =
-          typeof this.$route.query.selected_village != "number"
-            ? parseInt(this.$route.query.selected_village)
-            : this.$route.query.selected_village;
-      }
-    });
+    if (this.$route.query.selected_district) {
+      this.selectedDistrict = this.districts.find(
+        (item) => item.id == this.$route.query.selected_district
+      );
+
+      this.selectedVillage =
+        typeof this.$route.query.selected_village != "number"
+          ? parseInt(this.$route.query.selected_village)
+          : this.$route.query.selected_village;
+    }
 
     this.selectedBillDate = this.$route.query.date_method;
     this.start_date = this.$route.query.date_from;
