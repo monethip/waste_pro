@@ -304,6 +304,7 @@ export default {
   data() {
     return {
       loading: false,
+      firstLoad: true,
       paymentMethods: payment_methods,
       selectedPaymentMethod: "",
       billingListsearch: "",
@@ -428,6 +429,9 @@ export default {
               this.server_errors[key] = message[0];
             }
           }
+        })
+        .finally(() => {
+          this.firstLoad = false;
         });
     },
     async fetchSale() {
@@ -494,29 +498,30 @@ export default {
     },
   },
   watch: {
-    lastMonthCreated: function(val, old) {
-      if (!this.loading && (old !== null || old !== "")) this.fetchData();
+    lastMonthCreated: function() {
+      if (!this.firstLoad) this.fetchData();
     },
-    lastMonthBillCreated: function(val, old) {
-      if (!this.loading && (old !== null || old !== "")) this.fetchData();
+    lastMonthBillCreated: function() {
+      if (!this.firstLoad) this.fetchData();
     },
     selectedBillDate() {
-      if (this.start_date || this.end_date) this.fetchData();
+      if (!this.firstLoad && (this.start_date || this.end_date))
+        this.fetchData();
     },
-    selectedSale: function(val, old) {
-      if (!this.loading && (old !== null || old !== "")) this.fetchData();
+    selectedSale: function() {
+      if (!this.firstLoad) this.fetchData();
     },
     current_page() {
-      this.fetchData(this.current_page);
+      if (!this.firstLoad) this.fetchData(this.current_page);
     },
-    selectedDistrict: function(val, old) {
-      if (!this.loading && (old !== null || old !== "")) this.fetchData();
+    selectedDistrict: function() {
+      if (!this.firstLoad) this.fetchData();
     },
-    selectedVillage: function(val, old) {
-      if (!this.loading && (old !== null || old !== "")) this.fetchData();
+    selectedVillage: function() {
+      if (!this.firstLoad) this.fetchData();
     },
     exportMode() {
-      this.fetchData();
+      if (!this.firstLoad) this.fetchData();
     },
   },
   beforeCreate() {
@@ -655,8 +660,6 @@ export default {
           typeof this.$route.query.selected_village != "number"
             ? parseInt(this.$route.query.selected_village)
             : this.$route.query.selected_village;
-
-        console.log(this.selectedDistrict, this.selectedVillage);
       }
     });
 
@@ -665,7 +668,7 @@ export default {
     this.end_date = this.$route.query.date_to;
 
     this.fetchSale()
-      .then(() => {
+      .then(async () => {
         this.selectedSale =
           typeof this.$route.query.selected_sale != "number"
             ? parseInt(this.$route.query.selected_sale)
