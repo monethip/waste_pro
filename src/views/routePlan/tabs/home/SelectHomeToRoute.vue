@@ -112,18 +112,6 @@
         :selectedVillage="selectedVillage"
         v-model="selectedDetails"
       ></VillageDetail>
-      <!-- <v-col v-for="detail in villageDetail" :key="detail.id">
-        <v-select
-          outlined
-          dense
-          :items="detail.details"
-          v-model="selectedFavoriteDate"
-          item-text="name"
-          item-value="id"
-          :label="detail.variation_name"
-          multiple
-        ></v-select>
-      </v-col> -->
     </v-row>
 
     <v-row>
