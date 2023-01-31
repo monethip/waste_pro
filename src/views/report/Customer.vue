@@ -529,9 +529,7 @@ export default {
       this.$axios
         .post(
           "export-customer/",
-          {
-            params: this.params,
-          }
+          this.params
           // { responseType: "blob" }
         )
         .then((res) => {
