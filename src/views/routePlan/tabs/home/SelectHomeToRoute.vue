@@ -105,38 +105,27 @@
         </v-autocomplete>
       </v-col>
     </v-row>
-    <!--
-    <v-row class="mb-n4">
-      <v-col>
-        <v-autocomplete
+
+    <!-- Village Detail -->
+    <v-row>
+      <VillageDetail
+        :selectedVillage="selectedVillage"
+        v-model="selectedDetails"
+      ></VillageDetail>
+      <!-- <v-col v-for="detail in villageDetail" :key="detail.id">
+        <v-select
           outlined
           dense
-          v-model="selectedVillage"
-          :items="villages"
+          :items="detail.details"
+          v-model="selectedFavoriteDate"
           item-text="name"
           item-value="id"
-          label="ເລືອກບ້ານ"
+          :label="detail.variation_name"
           multiple
-        >
-          <template v-slot:prepend-item>
-            <v-list-item ripple @click="toggle">
-              <v-list-item-action>
-                <v-icon
-                  :color="selectedVillage.length > 0 ? 'indigo darken-4' : ''"
-                >
-                  {{ icon }}
-                </v-icon>
-              </v-list-item-action>
-              <v-list-item-content>
-                <v-list-item-title> Select All </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider class="mt-2"></v-divider>
-          </template>
-        </v-autocomplete>
-      </v-col>
+        ></v-select>
+      </v-col> -->
     </v-row>
-    -->
+
     <v-row>
       <v-col cols>
         <v-select
@@ -239,6 +228,16 @@
                 <div v-else>-</div>
               </template>
 
+              <template v-slot:item.village_details="{ item }">
+                <v-chip
+                  v-for="villageItem in item.village_details"
+                  :key="villageItem.id"
+                  >{{
+                    `${villageItem.village_variation.name}: ${villageItem.name}`
+                  }}</v-chip
+                >
+              </template>
+
               <template v-slot:item.favorite_dates="{ item }">
                 <v-chip
                   dark
@@ -269,11 +268,16 @@
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
 import { getCustomerUnit, getLaoCompanyCostBy } from "@/Helpers/Customer";
+import VillageDetail from "@/components/select/VillageDetail";
 
 export default {
   name: "Customer",
+  components: {
+    VillageDetail,
+  },
   data() {
     return {
+      selectedDetails: [],
       tab: null,
       customers: [],
       selectedAllCustomer: [],
@@ -325,6 +329,7 @@ export default {
         { text: "ວັນທີ່ສະດວກເກັບ", value: "favorite_dates" },
         { text: "ວັນທີ່ເພີ່ມເຂົ້າ", value: "created_at" },
         // {text: "ລາຍລະອຽດທີ່ຢູ່", value: "address_detail"},
+        { text: "ລາຍລະອຽດທີ່ຢູ່", value: "village_details", sortable: true },
         { text: "ບ້ານ", value: "village.name", sortable: true },
         { text: "ເມືອງ ", value: "district.name", sortable: true },
         // {text: "ລາຍລະອຽດທີ່ຢູ່", value: "description"},
@@ -395,6 +400,7 @@ export default {
         { filter: this.search },
         { cost_by: this.selectedCost },
         { favorite_dates: this.selectedFavoriteDate },
+        { village_details: this.selectedDetails },
       ];
 
       if (countexpect) options.push({ count_expact_trash: "1" });
@@ -685,14 +691,9 @@ export default {
     },
     selectedVillage: function() {
       this.pagination.current_page = "";
-      // this.fetchData();
-      // this.fetchData(true)
     },
     selectedDistrict: function() {
       this.pagination.current_page = "";
-      // this.fetchData();
-      // this.fetchData(true)
-
       this.fetchVillage();
     },
     selectedCustomerStatus: function() {
@@ -701,11 +702,10 @@ export default {
       this.fetchData(true);
     },
   },
-  created() {
+  async created() {
     this.fetchFavorite();
     this.fetchData();
     this.fetchData(true);
-
     this.fetchAddress();
   },
 };
