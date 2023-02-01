@@ -152,7 +152,7 @@
       </v-col>
     </v-row>
 
-    <!-- Section Table Summary-->
+    <!-- Section Table Billingable Summary-->
     <v-row>
       <v-col>
         <v-card outlined>
@@ -163,6 +163,64 @@
                 <thead>
                   <tr>
                     <th>ປະເພດບິນ</th>
+                    <th
+                      class="text-left"
+                      v-for="detailStatus in detailStatuses"
+                      :key="detailStatus.text"
+                    >
+                      <v-chip :color="getBgColorFunc(detailStatus.text)" dark>
+                        {{ detailStatus.text }}
+                      </v-chip>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="item in billings.billingable"
+                    :key="item.display_type"
+                  >
+                    <td>
+                      <span class="font-weight-medium">{{
+                        item.display_type_la
+                      }}</span>
+                      <span class="font-weight-medium text-caption">
+                        {{ ` (${formatNumber(item.count_billing)} ບິນ)` }}
+                      </span>
+                    </td>
+                    <td
+                      v-for="itemStatus in item.total"
+                      :key="itemStatus.status"
+                    >
+                      <span class="font-weight-medium">
+                        {{ formatNumber(itemStatus.total) }}
+                      </span>
+                      <span class="font-weight-medium text-caption">
+                        {{
+                          `
+                        (${formatNumber(itemStatus.count_billing)} ບິນ)`
+                        }}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <!-- Section Table Cost By Summary-->
+    <v-row>
+      <v-col>
+        <v-card outlined>
+          <v-card-title>ຕາມປະເພດບໍລິການ</v-card-title>
+          <v-card-text>
+            <v-simple-table>
+              <template v-slot:default>
+                <thead>
+                  <tr>
+                    <th>ປະເພດບໍລິການ</th>
                     <th
                       class="text-left"
                       v-for="detailStatus in detailStatuses"
