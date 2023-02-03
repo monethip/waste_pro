@@ -201,6 +201,16 @@
             <v-card-text>
               <v-row>
                 <v-col>
+                  ລວມບິນທັງໝົດ
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <RowSection :cards="allMonths" />
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
                   <v-menu
                     v-model="month_menu"
                     :nudge-right="40"
@@ -723,6 +733,28 @@ export default {
             .add(1, "months")
             .format("Y-MM")
         : null;
+    },
+    allMonths() {
+      return [
+        {
+          status_la: "ລວມ",
+          total: this.sumData.all?.total?.total,
+          count_billing: this.sumData.all?.total?.count,
+          bg_color: "blue",
+        },
+        {
+          status_la: "ຈ່າຍແລ້ວ",
+          total: this.sumData.all?.paid?.total,
+          count_billing: this.sumData.all?.paid?.count,
+          bg_color: "green",
+        },
+        {
+          status_la: "ຕິດໜີ້",
+          total: this.sumData.all?.unpaid?.total,
+          count_billing: this.sumData.all?.unpaid?.count,
+          bg_color: "orange",
+        },
+      ];
     },
     pasts() {
       return [
