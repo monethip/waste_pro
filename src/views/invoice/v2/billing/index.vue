@@ -118,7 +118,7 @@
 
     <v-card>
       <v-card-title>
-        ຂໍ້ມູນບີນ ({{ pagination.total }})
+        <v-chip dark>ຂໍ້ມູນບີນ ({{ pagination.total }})</v-chip>
         <v-divider class="mx-4" vertical></v-divider>
         <v-spacer></v-spacer>
         <v-btn
@@ -857,6 +857,7 @@ export default {
           params: queryOption([
             { page: this.pagination.current_page },
             { per_page: this.per_page },
+            { without_month_info: true },
             { billingable_type: this.selectedBillingable_type },
             { created_month: this.lastMonthCreated },
             { bill_month: this.lastMonthBillCreated },
