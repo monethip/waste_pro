@@ -554,6 +554,7 @@ export default {
       const queryArray = [
         { per_page: 100 },
         { page: page },
+        { without_month_info: true },
         { sale_id: this.selectedSale },
         { payment_method: this.selectedPaymentMethod },
         { date_method: this.selectedBillDate },
