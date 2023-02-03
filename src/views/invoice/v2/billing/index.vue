@@ -490,6 +490,7 @@ export default {
   data() {
     return {
       title: "Collection",
+      firstLoad: true,
       filteredPackage: "",
       confirmPaymentDialog: false,
       packages: [],
@@ -891,7 +892,8 @@ export default {
               this.server_errors[key] = message[0];
             }
           }
-        });
+        })
+        .finally(() => (this.firstLoad = false));
     },
     fetchReject() {
       this.$axios
@@ -987,23 +989,36 @@ export default {
         }
       }
     },
+    async setDataFromQuery() {
+      const routeQuery = this.$route.query;
+      this.selectedBillingable_type = routeQuery.billingable_type;
+      this.lastMonthCreated = routeQuery.created_month;
+      this.lastMonthBillCreated = routeQuery.bill_month;
+      this.billStatus = routeQuery.status;
+      this.selectedRoutePlan = routeQuery.route_plans;
+      this.billId = routeQuery.bill_id;
+      this.phone = routeQuery.phone;
+      this.selectedCustomerType = routeQuery.customer_type;
+      this.selectedComapnyType = routeQuery.cost_by;
+      this.selectedPaymentMethod = routeQuery.payment_method;
+    },
   },
   watch: {
     billStatus(val, old) {
       this.pagination.current_page = "";
-      if (old !== null || old !== "") this.fetchData();
+      if (!this.firstLoad) this.fetchData();
     },
     selectedComapnyType(val, old) {
       this.pagination.current_page = "";
-      if (old !== null || old !== "") this.fetchData();
+      if (!this.firstLoad) this.fetchData();
     },
     selectedPaymentMethod(val, old) {
       this.pagination.current_page = "";
-      if (old !== null || old !== "") this.fetchData();
+      if (!this.firstLoad) this.fetchData();
     },
     selectedCollectionStatus: function(val, old) {
       this.pagination.current_page = "";
-      if (old !== null || old !== "") this.fetchData();
+      if (!this.firstLoad) this.fetchData();
     },
     lastMonthBill: function(value) {
       this.$store.dispatch("auth/saveLastMonthBill", value);
@@ -1012,43 +1027,43 @@ export default {
       this.$store.dispatch("auth/saveLastMonthBillPaid", value);
     },
     lastMonthCreated: function(val, old) {
-      if (old !== null || old !== "") this.fetchData();
+      if (!this.firstLoad) this.fetchData();
     },
     lastMonthBillCreated: function(val, old) {
-      if (old !== null || old !== "") this.fetchData();
+      if (!this.firstLoad) this.fetchData();
     },
     selectedBillingable_type: function(val, old) {
       this.pagination.current_page = "";
-      if (old !== null || old !== "") this.fetchData();
+      if (!this.firstLoad) this.fetchData();
     },
     selectedRoutePlan: function(val, old) {
       this.pagination.current_page = "";
-      if (old !== null || old !== "") this.fetchData();
+      if (!this.firstLoad) this.fetchData();
     },
     selectedCustomerType: function(val, old) {
       this.pagination.current_page = "";
-      if (old !== null || old !== "") this.fetchData();
+      if (!this.firstLoad) this.fetchData();
     },
     filteredPackage(val, old) {
       this.pagination.current_page = "";
-      if (old !== null || old !== "") this.fetchData();
+      if (!this.firstLoad) this.fetchData();
     },
 
     month: function(value, old) {
       if (value !== "") {
         this.pagination.current_page = "";
-        if (old !== null || old !== "") this.fetchData();
+        if (!this.firstLoad) this.fetchData();
       }
     },
     search: function(value, old) {
       this.pagination = {};
       if (value == "") {
-        if (old !== null || old !== "") this.fetchData();
+        if (!this.firstLoad) this.fetchData();
       }
     },
     selectedStatus: function(val, old) {
       this.pagination.current_page = "";
-      if (old !== null || old !== "") this.fetchData();
+      if (!this.firstLoad) this.fetchData();
     },
     selectedPackage: function() {
       this.server_errors.package_id = "";
@@ -1068,8 +1083,11 @@ export default {
       this.server_errors.payment_method = "";
     },
   },
-  created() {
+  async created() {
     this.month = this.moment(this.curent_month).format("YYYY-MM");
+
+    await this.setDataFromQuery();
+
     this.fetchData();
     this.fetchRoutePlan();
     this.fetchReject();

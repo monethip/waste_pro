@@ -197,7 +197,10 @@ export default {
     tab: function(value, old) {
       if (old !== null || old !== "") this.countBilling();
       this.$router
-        .push({ name: "billing", query: { tab: value } })
+        .push({
+          name: "billing",
+          query: { ...this.$route.query, ...{ tab: value } },
+        })
         .catch(() => {});
     },
   },

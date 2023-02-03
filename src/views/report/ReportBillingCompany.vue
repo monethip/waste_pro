@@ -180,12 +180,22 @@
                     :key="item.display_type"
                   >
                     <td>
-                      <span class="font-weight-medium">{{
-                        item.display_type_la
-                      }}</span>
-                      <span class="font-weight-medium text-caption">
-                        {{ ` (${formatNumber(item.count_billing)} ບິນ)` }}
-                      </span>
+                      <a
+                        href="#"
+                        @click="
+                          openRoute({
+                            customer_type: 'company',
+                            billingable_type: item.display_type,
+                          })
+                        "
+                      >
+                        <span class="font-weight-medium">{{
+                          item.display_type_la
+                        }}</span>
+                        <span class="font-weight-medium text-caption">
+                          {{ ` (${formatNumber(item.count_billing)} ບິນ)` }}
+                        </span>
+                      </a>
                     </td>
                     <td
                       v-for="itemStatus in item.total"
@@ -521,6 +531,31 @@ export default {
             }
           }
         });
+    },
+    openRoute(additionalOption = null) {
+      const defaultOption = queryOptions([
+        { created_month: this.lastMonthCreated },
+        { bill_month: this.lastMonthBillCreated },
+        // { status: this.billStatus },
+        // { route_plans: this.selectedRoutePlan },
+        // { customer_type: this.selectedCustomerType },
+        // { cost_by: this.selectedComapnyType },
+        // { payment_method: this.selectedPaymentMethod },
+      ]);
+
+      const options = additionalOption
+        ? {
+            ...defaultOption,
+            ...additionalOption,
+          }
+        : defaultOption;
+
+      const routeData = this.$router.resolve({
+        path: "/billing",
+        query: options,
+      });
+
+      window.open(routeData.href, "_blank");
     },
     ViewInvoice(id) {
       let route = this.$router.resolve({
