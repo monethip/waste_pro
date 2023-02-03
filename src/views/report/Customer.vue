@@ -562,6 +562,7 @@ export default {
       return queryOption([
         { page: this.pagination.current_page },
         { per_page: this.per_page },
+        { without_month_info: true },
         { filter: this.search },
         { date_from: this.start_date },
         { date_end: this.end_date },
