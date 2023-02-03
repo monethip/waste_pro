@@ -1004,19 +1004,19 @@ export default {
     },
   },
   watch: {
-    billStatus(val, old) {
+    billStatus() {
       this.pagination.current_page = "";
       if (!this.firstLoad) this.fetchData();
     },
-    selectedComapnyType(val, old) {
+    selectedComapnyType() {
       this.pagination.current_page = "";
       if (!this.firstLoad) this.fetchData();
     },
-    selectedPaymentMethod(val, old) {
+    selectedPaymentMethod() {
       this.pagination.current_page = "";
       if (!this.firstLoad) this.fetchData();
     },
-    selectedCollectionStatus: function(val, old) {
+    selectedCollectionStatus: function() {
       this.pagination.current_page = "";
       if (!this.firstLoad) this.fetchData();
     },
@@ -1026,42 +1026,42 @@ export default {
     lastMonthBillPaid: function(value) {
       this.$store.dispatch("auth/saveLastMonthBillPaid", value);
     },
-    lastMonthCreated: function(val, old) {
+    lastMonthCreated: function() {
       if (!this.firstLoad) this.fetchData();
     },
-    lastMonthBillCreated: function(val, old) {
+    lastMonthBillCreated: function() {
       if (!this.firstLoad) this.fetchData();
     },
-    selectedBillingable_type: function(val, old) {
+    selectedBillingable_type: function() {
       this.pagination.current_page = "";
       if (!this.firstLoad) this.fetchData();
     },
-    selectedRoutePlan: function(val, old) {
+    selectedRoutePlan: function() {
       this.pagination.current_page = "";
       if (!this.firstLoad) this.fetchData();
     },
-    selectedCustomerType: function(val, old) {
+    selectedCustomerType: function() {
       this.pagination.current_page = "";
       if (!this.firstLoad) this.fetchData();
     },
-    filteredPackage(val, old) {
+    filteredPackage() {
       this.pagination.current_page = "";
       if (!this.firstLoad) this.fetchData();
     },
 
-    month: function(value, old) {
+    month: function(value) {
       if (value !== "") {
         this.pagination.current_page = "";
         if (!this.firstLoad) this.fetchData();
       }
     },
-    search: function(value, old) {
+    search: function(value) {
       this.pagination = {};
       if (value == "") {
         if (!this.firstLoad) this.fetchData();
       }
     },
-    selectedStatus: function(val, old) {
+    selectedStatus: function() {
       this.pagination.current_page = "";
       if (!this.firstLoad) this.fetchData();
     },

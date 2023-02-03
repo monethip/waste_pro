@@ -144,6 +144,12 @@
             ></v-select>
           </v-col>
         </v-row>
+
+        <v-row v-if="false">
+          <v-col>
+            <SaleAdmin v-model="selectedSale"></SaleAdmin>
+          </v-col>
+        </v-row>
       </v-col>
 
       <v-col cols="6">
@@ -352,6 +358,7 @@ import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
 import RowSection from "../../components/card/RowSection.vue";
 import moment from "moment";
+import SaleAdmin from "@/components/select/SaleAdmin.vue";
 
 export default {
   name: "Customer",
@@ -360,9 +367,11 @@ export default {
   },
   components: {
     RowSection,
+    SaleAdmin,
   },
   data() {
     return {
+      selectedSale: "",
       selected_month:
         this.$route.query.month || new Date().toISOString().substr(0, 7),
       start_date: "",
@@ -697,6 +706,7 @@ export default {
         { without: this.selectedCustomerStatus },
         { district_id: this.selectedDistrict },
         { month_bill: this.selected_month },
+        { created_by: this.selectedSale },
       ]);
     },
     pastMonth() {

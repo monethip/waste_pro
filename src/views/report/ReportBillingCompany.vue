@@ -201,15 +201,26 @@
                       v-for="itemStatus in item.total"
                       :key="itemStatus.status"
                     >
-                      <span class="font-weight-medium">
-                        {{ formatNumber(itemStatus.total) }}
-                      </span>
-                      <span class="font-weight-medium text-caption">
-                        {{
-                          `
+                      <a
+                        href="#"
+                        @click="
+                          openRoute({
+                            customer_type: 'company',
+                            billingable_type: item.display_type,
+                            tab: itemStatus.status,
+                          })
+                        "
+                      >
+                        <span class="font-weight-medium">
+                          {{ formatNumber(itemStatus.total) }}
+                        </span>
+                        <span class="font-weight-medium text-caption">
+                          {{
+                            `
                         (${formatNumber(itemStatus.count_billing)} ບິນ)`
-                        }}
-                      </span>
+                          }}
+                        </span>
+                      </a>
                     </td>
                   </tr>
                 </tbody>
@@ -263,6 +274,64 @@
                         (${formatNumber(
                           item[detailStatus.text].count_billing
                         )} ບິນ)`
+                        }}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <!-- Section Table Village Summary-->
+    <v-row>
+      <v-col>
+        <v-card outlined>
+          <v-card-title>ຕາມບ້ານ ({{ billings.villages.length }})</v-card-title>
+          <v-card-text>
+            <v-simple-table>
+              <template v-slot:default>
+                <thead>
+                  <tr>
+                    <th>ບ້ານ</th>
+                    <th
+                      class="text-left"
+                      v-for="detailStatus in detailStatuses"
+                      :key="detailStatus.text"
+                    >
+                      <v-chip :color="getBgColorFunc(detailStatus.text)" dark>
+                        {{ detailStatus.text }}
+                      </v-chip>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="item in billings.villages"
+                    :key="item.display_type"
+                  >
+                    <td>
+                      <span class="font-weight-medium">{{
+                        item.village_name
+                      }}</span>
+                      <span class="font-weight-medium text-caption">
+                        {{ ` (${formatNumber(item.count_billing)} ບິນ)` }}
+                      </span>
+                    </td>
+                    <td
+                      v-for="itemStatus in item.total"
+                      :key="itemStatus.status"
+                    >
+                      <span class="font-weight-medium">
+                        {{ formatNumber(itemStatus.total) }}
+                      </span>
+                      <span class="font-weight-medium text-caption">
+                        {{
+                          `
+                        (${formatNumber(itemStatus.count_billing)} ບິນ)`
                         }}
                       </span>
                     </td>
@@ -536,11 +605,6 @@ export default {
       const defaultOption = queryOptions([
         { created_month: this.lastMonthCreated },
         { bill_month: this.lastMonthBillCreated },
-        // { status: this.billStatus },
-        // { route_plans: this.selectedRoutePlan },
-        // { customer_type: this.selectedCustomerType },
-        // { cost_by: this.selectedComapnyType },
-        // { payment_method: this.selectedPaymentMethod },
       ]);
 
       const options = additionalOption
