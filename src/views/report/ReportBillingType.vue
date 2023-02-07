@@ -325,6 +325,8 @@ export default {
           count_billing: 0,
           total: [],
         },
+        villages: [],
+        billingable: [],
         details: [],
         data: {
           data: [],

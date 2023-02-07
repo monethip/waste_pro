@@ -420,6 +420,15 @@ export default {
     },
   },
   watch: {
+    lastMonthCreated() {
+      this.fetchData();
+    },
+    lastMonthBillCreated() {
+      this.fetchData();
+    },
+    billDates() {
+      this.fetchData();
+    },
     selectedDistrict() {
       this.fetchData();
     },

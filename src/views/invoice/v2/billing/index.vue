@@ -993,15 +993,19 @@ export default {
     async setDataFromQuery() {
       const routeQuery = this.$route.query;
       this.selectedBillingable_type = routeQuery.billingable_type;
-      this.lastMonthCreated = routeQuery.created_month;
-      this.lastMonthBillCreated = routeQuery.bill_month;
-      this.billStatus = routeQuery.status;
+      // this.lastMonthCreated = routeQuery.created_month;
+      // this.lastMonthBillCreated = routeQuery.bill_month;
+      this.$store.dispatch("auth/saveLastMonthBill", routeQuery.created_month);
+      this.$store.dispatch("auth/saveLastMonthBillPaid", routeQuery.bill_month);
+
       this.selectedRoutePlan = routeQuery.route_plans;
       this.billId = routeQuery.bill_id;
       this.phone = routeQuery.phone;
       this.selectedCustomerType = routeQuery.customer_type;
       this.selectedComapnyType = routeQuery.cost_by;
       this.selectedPaymentMethod = routeQuery.payment_method;
+
+      this.$router.replace({query:{tab:routeQuery.status}}).catch()
     },
   },
   watch: {

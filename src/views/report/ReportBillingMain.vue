@@ -129,6 +129,7 @@ export default {
       this.$store.dispatch("auth/saveLastMonthBill", value);
     },
     lastMonthBillPaid: function(value) {
+      console.log(this.$store.state.auth.month);
       this.$store.dispatch("auth/saveLastMonthBillPaid", value);
     },
   },

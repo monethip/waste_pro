@@ -185,7 +185,6 @@
                         @click="
                           openRoute({
                             customer_type: 'company',
-                            billingable_type: item.display_type,
                           })
                         "
                       >
@@ -206,7 +205,6 @@
                         @click="
                           openRoute({
                             customer_type: 'company',
-                            billingable_type: item.display_type,
                             tab: itemStatus.status,
                           })
                         "
@@ -469,6 +467,8 @@ export default {
           count_billing: 0,
           total: [],
         },
+        villages: [],
+        billingable: [],
         details: [],
         data: {
           data: [],
@@ -559,7 +559,6 @@ export default {
                 window.open(res.data.data.download_link);
               else {
                 this.billings = res.data.data;
-                console.log(this.billings);
                 this.current_page = this.billings.data.pagination.current_page;
               }
             }, 300);
@@ -638,7 +637,6 @@ export default {
           query: {
             tab: statusItem,
             customer_type: "company",
-            billingable_type: "NewInvoice",
           },
         });
 
@@ -661,6 +659,15 @@ export default {
     },
   },
   watch: {
+    lastMonthCreated() {
+      this.fetchData();
+    },
+    lastMonthBillCreated() {
+      this.fetchData();
+    },
+    billDates() {
+      this.fetchData();
+    },
     selectedDistrict() {
       this.fetchData();
     },

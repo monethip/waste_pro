@@ -466,6 +466,8 @@ export default {
           count_billing: 0,
           total: [],
         },
+        villages: [],
+        billingable: [],
         details: [],
         data: {
           data: [],
@@ -664,6 +666,15 @@ export default {
     },
   },
   watch: {
+    lastMonthCreated() {
+      this.fetchData();
+    },
+    lastMonthBillCreated() {
+      this.fetchData();
+    },
+    billDates() {
+      this.fetchData();
+    },
     selectedDistrict() {
       this.fetchData();
     },
