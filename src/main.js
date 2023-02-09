@@ -38,8 +38,8 @@ firebase.initializeApp(firebaseConfig)
 // Google Map
 Vue.use(VueGoogleMaps, {
   load: {
-    key: 'AIzaSyCgUsajH7cANXTJDpXJCT9x2n2Hj9kN0OE',
-    // key: 'AIzaSyDLoUKYiwbjoybRZxuLf_uY022RQ6QakSk',
+    // key: 'AIzaSyCgUsajH7cANXTJDpXJCT9x2n2Hj9kN0OE',
+    key: 'AIzaSyBqImytznl-2J2gMc9tBH8R-yejuTiJ8h0',
     libraries: 'places', // This is required if you use the Autocomplete plugin
   }
 });
