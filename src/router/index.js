@@ -1522,6 +1522,23 @@ const routes = [
     },
 
     {
+        path: '/report/billing/customer',
+        name: 'Report-Billing-Customer',
+        component: () => import('@/views/report/ReportCustomerBill.vue'),
+        meta: {
+            layout: "admin",
+            middleware: [Middlewares.auth],
+            breadcrumb: [
+                {
+                    text: 'ລາຍງານບິນລູກຄ້າ',
+                    disabled: true,
+                    href: '/report/customer-billing'
+                },
+                ]
+        }
+    },
+
+    {
         path: '/report/customer',
         name: 'Report-Customer',
         component: () => import('@/views/report/Customer.vue'),

@@ -26,26 +26,26 @@ import Pagination from "@/plugins/pagination/pagination";
 import firebase from 'firebase/app'
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA_2SWi3bfLjdLhUrOD1jfc8MXsxGoemrw",
-  authDomain: "waste-pro-co-dev.firebaseapp.com",
-  projectId: "waste-pro-co-dev",
-  storageBucket: "waste-pro-co-dev.appspot.com",
-  messagingSenderId: "440912269765",
-  appId: "1:440912269765:web:e3353375567a6350187bac"
+    apiKey: "AIzaSyA_2SWi3bfLjdLhUrOD1jfc8MXsxGoemrw",
+    authDomain: "waste-pro-co-dev.firebaseapp.com",
+    projectId: "waste-pro-co-dev",
+    storageBucket: "waste-pro-co-dev.appspot.com",
+    messagingSenderId: "440912269765",
+    appId: "1:440912269765:web:e3353375567a6350187bac"
 }
 firebase.initializeApp(firebaseConfig)
 
 // Google Map
 Vue.use(VueGoogleMaps, {
-  load: {
-    // key: 'AIzaSyCgUsajH7cANXTJDpXJCT9x2n2Hj9kN0OE',
-    key: 'AIzaSyBqImytznl-2J2gMc9tBH8R-yejuTiJ8h0',
-    libraries: 'places', // This is required if you use the Autocomplete plugin
-  }
+    load: {
+         key: 'AIzaSyCgUsajH7cANXTJDpXJCT9x2n2Hj9kN0OE',
+//        key: 'AIzaSyBqImytznl-2J2gMc9tBH8R-yejuTiJ8h0',
+        libraries: 'places', // This is required if you use the Autocomplete plugin
+    }
 });
 Vue.use(DatePicker);
 Vue.config.productionTip = false,
-  Vue.component('ModalAdd', ModalAdd);
+    Vue.component('ModalAdd', ModalAdd);
 Vue.component('ModalEdit', ModalEdit);
 Vue.component('ModalView', ModalView);
 Vue.component('ModalDelete', ModalDelete);
@@ -66,8 +66,8 @@ Vue.mixin(mixin);
 // })
 
 new Vue({
-  router,
-  store,
-  vuetify,
-  render: h => h(App)
+    router,
+    store,
+    vuetify,
+    render: h => h(App)
 }).$mount('#app')
