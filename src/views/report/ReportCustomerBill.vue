@@ -1,400 +1,482 @@
 <template>
     <v-container>
         <v-breadcrumbs large class="pt-0">ລາຍງານຍອດຂາຍ</v-breadcrumbs>
-        <v-col>
-            <v-row>
-                <v-col>
-                    <v-autocomplete
-                            :items="billDates"
-                            item-text="text"
-                            item-value="value"
-                            v-model="selectedBillDate"
-                            label="ເລືອກປະເພດວັນທີ"
-                            outlined
-                    ></v-autocomplete>
-                </v-col>
-                <v-col>
-                    <v-menu
-                            v-model="start_menu"
-                            :close-on-content-click="false"
-                            :nudge-right="40"
-                            transition="scale-transition"
-                            offset-y
-                            min-width="auto"
-                    >
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                                    v-model="date_from"
-                                    label="ເລີ່ມວັນທີ"
-                                    readonly
-                                    outlined
-                                    v-bind="attrs"
-                                    v-on="on"
-                                    dense
-                            ></v-text-field>
-                        </template>
-                        <v-date-picker v-model="date_from"></v-date-picker>
-                    </v-menu>
-                </v-col>
-                <v-col>
-                    <v-menu
-                            v-model="end_menu"
-                            :close-on-content-click="false"
-                            :nudge-right="40"
-                            transition="scale-transition"
-                            offset-y
-                            min-width="auto"
-                    >
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                                    v-model="date_to"
-                                    label="ຫາວັນທີ"
-                                    readonly
-                                    outlined
-                                    v-bind="attrs"
-                                    v-on="on"
-                                    dense
-                            ></v-text-field>
-                        </template>
-                        <v-date-picker v-model="date_to"></v-date-picker>
-                    </v-menu>
-                </v-col>
-
-                <v-col>
-                    <v-autocomplete
-                            v-model="selectedSale"
-                            :items="employees"
-                            item-text="name"
-                            item-value="id"
-                            label="ເລືອກເຊວທີ່ກ່ຽວຂ້ອງ"
-                            outlined
-                            dense
-                    ></v-autocomplete>
-                </v-col>
-
-                <v-col>
-                    <v-switch :label="is_active_only ? 'sale ທີ່ active' : 'sale ທັງໝົດ'" v-model="is_active_only">
-                    </v-switch>
-                </v-col>
-
-                <v-col>
-                    <v-btn color="green" dark @click="exportData">Export</v-btn>
-                </v-col>
-            </v-row>
-
-            <v-row>
-                <v-col>
-                    <RowSection :cards="summaryAll"></RowSection>
-                </v-col>
-            </v-row>
-
-            <v-row>
-                <v-col>
-                    <v-simple-table>
-                        <thead>
-                        <tr style="background-color:blue; color:white">
-                            <td>ລ/ດ</td>
-                            <td>ຊື່</td>
-                            <td>ບ້ານ</td>
-                            <td>ສັນຍາ</td>
-                            <td>ລູກຄ້າ</td>
-                            <td>ເງິນສົດ</td>
-                            <td>ເງິນໂອນ</td>
-                            <td>bcel bill payment</td>
-                            <td>ລວມຍອດ</td>
-                            <td>ລວມເງິນສົດ</td>
-                            <td>ລວມເງິນໂອນ</td>
-                            <td>ລວມ bcel bill payment</td>
-                            <td>ລວມທັງໝົດ</td>
-                        </tr>
-                        </thead>
-
-                        <tbody
-                                :style="getBodyColor(index)"
-                                v-for="(sale, index) in summary"
-                                :key="sale.id"
+        <v-row class="mb-n6">
+            <v-col>
+                <v-row>
+                    <v-col>
+                        <v-menu
+                                v-model="start_menu"
+                                :close-on-content-click="false"
+                                :nudge-right="40"
+                                transition="scale-transition"
+                                offset-y
+                                min-width="auto"
                         >
-                        <tr>
-                            <td :rowspan="sale.summary.length">{{ index + 1 }}</td>
-                            <td :rowspan="sale.summary.length">
-                                <a href="#" @click="openRoute(sale.id, null, null)">
-                                    {{
-                                        sale.emp_name
-                                            ? sale.emp_name + " " + sale.emp_surname
-                                            : sale.name
-                                    }}
-                                </a>
-                            </td>
-                            <td
-                                    @click="
-                    openRoute(
-                      sale.id,
-                      sale.summary[0].village_id,
-                      sale.summary[0].district_id
-                    )
-                  "
-                            >
-                                <a href="#">
-                                    {{ sale.summary[0].village_name }}
-                                </a>
-                            </td>
-                            <td>
-                                {{ Intl.NumberFormat().format(sale.summary[0].count_bill) }}
-                            </td>
-                            <td>
-                                {{
-                                    Intl.NumberFormat().format(sale.summary[0].count_customer)
-                                }}
-                            </td>
-                            <td>
-                                {{ totalFromMethod(sale.summary[0].payment_methods, "cash") }}
-                            </td>
-                            <td>
-                                {{ totalFromMethod(sale.summary[0].payment_methods, "bcel") }}
-                            </td>
-                            <td>
-                                {{
-                                    totalFromMethod(
-                                        sale.summary[0].payment_methods,
-                                        "bcel_online"
-                                    )
-                                }}
-                            </td>
-                            <td>
-                                {{ Intl.NumberFormat().format(sale.summary[0].total) }}
-                            </td>
-                            <td :rowspan="sale.summary.length">
-                                {{ Intl.NumberFormat().format(sale.cash_amount) }}
-                            </td>
-                            <td :rowspan="sale.summary.length">
-                                {{ Intl.NumberFormat().format(sale.bcel_amount) }}
-                            </td>
-                            <td :rowspan="sale.summary.length">
-                                {{ Intl.NumberFormat().format(sale.bcel_online_amount) }}
-                            </td>
-                            <td :rowspan="sale.summary.length">
-                                {{ Intl.NumberFormat().format(sale.total) }}
-                            </td>
-                        </tr>
-                        <tr
-                                v-for="(otherVillage, otherIndex) in sale.summary.slice(1)"
-                                :key="otherIndex"
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-text-field
+                                        v-model="start_date"
+                                        label="ວັນທີເພີ່ມລູກຄ້າແຕ່"
+                                        readonly
+                                        outlined
+                                        v-bind="attrs"
+                                        v-on="on"
+                                        dense
+                                        clearable
+                                ></v-text-field>
+                            </template>
+                            <v-date-picker v-model="start_date"></v-date-picker>
+                        </v-menu>
+                    </v-col>
+                    <v-col>
+                        <v-menu
+                                v-model="end_menu"
+                                :close-on-content-click="false"
+                                :nudge-right="40"
+                                transition="scale-transition"
+                                offset-y
+                                min-width="auto"
                         >
-                            <td>
-                                <a
-                                        @click="
-                      openRoute(
-                        sale.id,
-                        otherVillage.village_id,
-                        otherVillage.district_id
-                      )
-                    "
-                                        href="#"
-                                >
-                                    {{ otherVillage.village_name }}
-                                </a>
-                            </td>
-                            <td>
-                                {{ Intl.NumberFormat().format(otherVillage.count_bill) }}
-                            </td>
-                            <td>
-                                {{ Intl.NumberFormat().format(otherVillage.count_customer) }}
-                            </td>
-                            <td>
-                                {{ totalFromMethod(otherVillage.payment_methods, "cash") }}
-                            </td>
-                            <td>
-                                {{ totalFromMethod(otherVillage.payment_methods, "bcel") }}
-                            </td>
-                            <td>
-                                {{
-                                    totalFromMethod(otherVillage.payment_methods, "bcel_online")
-                                }}
-                            </td>
-                            <td>{{ Intl.NumberFormat().format(otherVillage.total) }}</td>
-                        </tr>
-                        </tbody>
-                    </v-simple-table>
-                </v-col>
-            </v-row>
-        </v-col>
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-text-field
+                                        v-model="end_date"
+                                        label="ຫາວັນທີ"
+                                        readonly
+                                        outlined
+                                        v-bind="attrs"
+                                        v-on="on"
+                                        dense
+                                        clearable
+                                ></v-text-field>
+                            </template>
+                            <v-date-picker v-model="end_date"></v-date-picker>
+                        </v-menu>
+                    </v-col>
+                    <v-col>
+                        <v-autocomplete
+                                outlined
+                                dense
+                                :items="districts"
+                                v-model="selectedDistrict"
+                                item-text="name"
+                                return-object
+                                label="ເມືອງ"
+                                clearable
+                        ></v-autocomplete>
+                    </v-col>
+                    <v-col>
+                        <v-autocomplete
+                                outlined
+                                dense
+                                :items="selectedDistrict.villages"
+                                v-model="selectedVillage"
+                                item-text="name"
+                                item-value="id"
+                                label="ບ້ານ"
+                                multiple
+                                clearable
+                        ></v-autocomplete>
+                    </v-col>
+                </v-row>
+
+                <v-row>
+                    <VillageDetail
+                            :selectedVillage="selectedVillage"
+                            v-model="selectedDetails"
+                    ></VillageDetail>
+                </v-row>
+
+                <v-row>
+                    <v-col>
+                        <v-select
+                                outlined
+                                dense
+                                :items="customerTypes"
+                                v-model="selectedCustomerType"
+                                item-text="name_la"
+                                item-value="name"
+                                label="ເລືອກປະເພດລູກຄ້າ"
+                                clearable
+                        ></v-select>
+                    </v-col>
+                    <v-col v-if="selectedCustomerType == 'company'">
+                        <v-select
+                                outlined
+                                dense
+                                :items="comapnyTypes"
+                                v-model="selectedComapnyType"
+                                item-text="la"
+                                item-value="en"
+                                label="ເລືອກປະເພດບໍລິການ"
+                                clearable
+                        ></v-select>
+                    </v-col>
+                    <v-col v-if="selectedCustomerType == 'home'">
+                        <v-select
+                                v-model="filteredPackage"
+                                :items="packageList"
+                                item-text="name"
+                                item-value="id"
+                                label="ເລືອກແພັກເກດ"
+                                outlined
+                                dense
+                        ></v-select>
+                    </v-col>
+                </v-row>
+
+                <v-row>
+                    <v-col>
+                        <v-text-field
+                                outlined
+                                dense
+                                clearable
+                                prepend-inner-icon="mdi-folder-key"
+                                label="ໄອດີລູກຄ້າ"
+                                type="text"
+                                v-model="customer_id"
+                                @keyup.enter="fetchData()"
+                        >
+                        </v-text-field>
+                    </v-col>
+
+                    <v-col>
+                        <v-text-field
+                                outlined
+                                dense
+                                clearable
+                                prepend-inner-icon="mdi-phone"
+                                label="ໂທລະສັບ"
+                                type="text"
+                                v-model="phone"
+                                @keyup.enter="fetchData()"
+                        >
+                        </v-text-field>
+                    </v-col>
+
+                    <v-col>
+                        <v-text-field
+                                outlined
+                                dense
+                                clearable
+                                prepend-inner-icon="mdi-account"
+                                label="ຊື່"
+                                type="text"
+                                v-model="search"
+                                @keyup.enter="fetchData()"
+                        >
+                        </v-text-field>
+                    </v-col>
+
+                    <v-col>
+                        <v-btn style="width:100%" color="green" dark @click="fetchData()"
+                        >ຄົ້ນຫາ
+                        </v-btn
+                        >
+                    </v-col>
+                </v-row>
+            </v-col>
+
+        </v-row>
+
+        <v-row>
+            <v-col>
+                <v-row>
+                    <v-col>
+                        <v-simple-table
+                                style="white-space: nowrap"
+                        >
+                            <thead>
+                            <tr>
+                                <td v-for="header in headers" :key="header.text">{{ header.text }}</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <template v-for="customer in customers">
+                                <tr :key="customer.id">
+                                    <td :rowspan="customer.user.billings.length ? customer.user.billings.length : 1">
+                                        <v-row>
+                                            <a href="#" class="font-weight-bold text--accent-3 ml-6">{{
+                                                    customer.customer_id
+                                                }}</a>
+                                        </v-row>
+                                        <v-row>
+                                            <div class="text-large font-weight-bold ml-6">{{ customer.full_name }}</div>
+                                        </v-row>
+                                        <v-row>
+                                            <v-icon small class="ml-8 mr-1"> mdi-map-marker</v-icon>
+                                            {{ customer.village.name }},
+                                            {{ customer.village.district.name }}
+                                        </v-row>
+                                        <v-row>
+                                            <v-icon small class="ml-8 mr-1"> mdi-phone</v-icon>
+                                            {{ customer.user.phone }}
+                                        </v-row>
+                                    </td>
+                                    <td :rowspan="customer.user.billings.length ? customer.user.billings.length : 1">
+                                        {{ customer.cost_by_la }}
+                                    </td>
+                                    <td :rowspan="customer.user.billings.length ? customer.user.billings.length : 1">
+                                        <v-list>
+                                            <v-list-item>
+                                                <v-list-item-icon>
+                                                    <v-chip small color="primary" dark>
+                                                        ລວມ
+                                                    </v-chip>
+                                                </v-list-item-icon>
+                                                <v-list-item-content class="text-large">
+                                                    {{ Intl.NumberFormat().format(customer.user.billings_sum_total) }}
+                                                    ({{ customer.user.billings_count }} ບິນ)
+                                                </v-list-item-content>
+                                            </v-list-item>
+
+                                            <v-list-item>
+                                                <v-list-item-icon>
+                                                    <v-chip small color="success" dark>
+                                                        ຈ່າຍແລ້ວ
+                                                    </v-chip>
+                                                </v-list-item-icon>
+                                                <v-list-item-content class="text-large">
+                                                    {{
+                                                        Intl.NumberFormat().format(customer.user.billings_paid_sum_total)
+                                                    }}
+                                                    ({{ customer.user.billings_paid_count }} ບິນ)
+                                                </v-list-item-content>
+                                            </v-list-item>
+
+                                            <v-list-item>
+                                                <v-list-item-icon>
+                                                    <v-chip small color="warning" dark>
+                                                        ຄົງຄ້າງ
+                                                    </v-chip>
+                                                </v-list-item-icon>
+                                                <v-list-item-content class="text-large">
+                                                    {{
+                                                        Intl.NumberFormat().format(customer.user.billings_unpaid_sum_total)
+                                                    }}
+                                                    ({{ customer.user.billings_unpaid_count }} ບິນ)
+                                                </v-list-item-content>
+                                            </v-list-item>
+                                        </v-list>
+
+                                    </td>
+
+                                    <td>
+                                        <v-row>
+                                            <a @click="openBilling(customer.user.billings[0].id)" href="#"
+                                               class="font-weight-bold text--accent-3">{{
+                                                    customer.user.billings[0].billing_display_id
+                                                }}</a>
+                                        </v-row>
+                                        <v-row>
+                                            <div class="font-weight-bold">{{ customer.user.billings[0].content }}</div>
+                                        </v-row>
+                                    </td>
+                                    <td>{{ Intl.NumberFormat().format(customer.user.billings[0].total) }}</td>
+                                    <td>
+                                        <v-chip :color="getBgColorFn(customer.user.billings[0].status)" dark>
+                                            {{ customer.user.billings[0].status_la }}
+                                        </v-chip>
+                                    </td>
+                                    <td>{{ customer.user.billings[0].payment_method_la }}</td>
+                                    <td>{{
+                                            customer.user.billings[0].paided_by ? customer.user.billings[0].paided_by.name : ''
+                                        }}
+                                    </td>
+                                    <td>{{ customer.user.billings[0].created_at }}</td>
+                                    <td>{{ customer.user.billings[0].approved_at }}</td>
+                                    <td>{{ customer.user.billings[0].paided_at }}</td>
+                                    <td>{{ customer.user.billings[0].confirmed_payment_at }}</td>
+                                </tr>
+                                <tr v-for="billing in customer.user.billings.slice(1)" :key="billing.id">
+                                    <td>
+                                        <v-row>
+                                            <a @click="openBilling(billing.id)" href="#"
+                                               class="font-weight-bold text--accent-3">{{
+                                                    billing.billing_display_id
+                                                }}</a>
+                                        </v-row>
+                                        <v-row>
+                                            <div class="font-weight-bold">{{ billing.content }}</div>
+                                        </v-row>
+                                    </td>
+                                    <td>{{ Intl.NumberFormat().format(billing.total) }}</td>
+                                    <td>
+                                        <v-chip :color="getBgColorFn(billing.status)" dark>
+                                            {{ billing.status_la }}
+                                        </v-chip>
+                                    </td>
+                                    <td>{{ billing.payment_method_la }}</td>
+                                    <td>{{ billing.paided_by ? billing.paided_by.name : '' }}</td>
+                                    <td>{{ billing.created_at }}</td>
+                                    <td>{{ billing.approved_at }}</td>
+                                    <td>{{ billing.paided_at }}</td>
+                                    <td>{{ billing.confirmed_payment_at }}</td>
+                                </tr>
+                            </template>
+                            </tbody>
+                        </v-simple-table>
+                        <template>
+                            <Pagination :pagination="pagination" :offset="offset"
+                                        @paginate="fetchData()"></Pagination>
+                        </template>
+                    </v-col>
+                </v-row>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 
 <script>
 import queryOptions from "../../Helpers/queryOption";
-import {billDateList} from "../../Helpers/Customer";
-import RowSection from "../../components/card/RowSection.vue";
+import {getBgColor} from "@/Helpers/BillingStatus"
+import {getCompanyCostBy, concatPackage} from "@/Helpers/Customer";
+import VillageDetail from "@/components/select/VillageDetail"
+//import RowSection from "../../components/card/RowSection.vue";
 
 export default {
     title() {
         return `Vientiane Waste Co-Dev|Calendar`;
     },
     components: {
-        RowSection,
+//        RowSection,
+        VillageDetail
     },
     data() {
         return {
             firstLoad: true,
-            is_active_only: true,
-            summary: [],
-            summaryMoney: [],
-            defaultMoney: [
+            filteredPackage: "",
+            selectedCustomerType: "",
+            selectedComapnyType: "",
+            comapnyTypes: getCompanyCostBy,
+            customerTypes: [
                 {
-                    status_la: "ລວມ",
-                    total: 0,
-                    count_billing: 0,
-                    bg_color: "blue",
+                    name: "",
+                    name_la: "ທັງໝົດ",
                 },
                 {
-                    status_la: "ເງິນສົດ",
-                    total: 0,
-                    count_billing: 0,
-                    bg_color: "blue",
+                    name_la: "ຄົວເຮືອນ",
+                    name: "home",
                 },
                 {
-                    status_la: "ເງິນໂອນ",
-                    total: 0,
-                    count_billing: 0,
-                    bg_color: "blue",
-                },
-                {
-                    status_la: "bcel online",
-                    total: 0,
-                    count_billing: 0,
-                    bg_color: "blue",
+                    name_la: "ຫົວໜ່ວຍທຸລະກິດ",
+                    name: "company",
                 },
             ],
-            pagination: {},
-            start_date: null,
-            salesData: [],
-            selectedSale: "",
-            search: "",
-            date_from: "",
-            date_to: "",
+            start_date: "",
+            end_date: "",
+            selected_month:
+                this.$route.query.month || new Date().toISOString().substr(0, 7),
+            month_menu: false,
             start_menu: false,
             end_menu: false,
-            selectedBillDate: "",
-            exportMode: "",
+            districts: [],
+            selectedDistrict: "",
+            districtLoaded: false,
+            villages: [],
+            selectedVillage: [],
+            selectedDetails: [],
+            selectedStatus: [],
+
+            search: "",
+            phone: "",
+            customer_id: "",
+
+            loading: false,
+            customerId: "",
+            pagination: {},
+            per_page: 100,
+            offset: 12,
+
+            customers: [],
+            headers: [
+                {text: 'ລູກຄ້າ', value: 'full_name', align: 'center', divider: true},
+                {text: 'ປະເພດບໍລິການ', value: 'cost_by_la'},
+                {text: 'ຍອດລວມ', value: ''},
+                {text: 'ໄອດີບິນ', value: 'billings_id'},
+                {text: 'ຈຳນວນ', value: 'billings_total'},
+                {text: 'ສະຖານະຈ່າຍ', value: 'billings_status'},
+                {text: 'ຈ່າຍດ້ວຍ', value: 'billings_paymet_method'},
+                {text: 'ຜູ້ຈ່າຍບິນ', value: 'billings_paid_by'},
+                {text: 'ເວລາສ້າງບິນ', value: 'billings_created_at'},
+                {text: 'ເວລາອະນຸມັດບິນ', value: 'billings_approved_at'},
+                {text: 'ເວລາຈ່າຍບິນ', value: 'billings_paid_at'},
+                {text: 'ເວລາຢືນຢັນການຈ່າຍ', value: 'billings_confirm_at'},
+            ]
         };
     },
     methods: {
-        exportData() {
-            this.exportMode = "excel";
-            this.fetchData();
-            this.exportMode = "";
+        getBgColorFn(status) {
+            return getBgColor(status)
         },
-        fetchSale() {
-            this.$store.commit("Loading_State", true);
-            this.$axios
-                .get("user-setting/user", {
-                    params: queryOptions([
-                        {roles: ["sale", "sale_admin"]},
-                        {order_by: "newest"},
-                    ]),
-                })
-                .then((res) => {
-                    if (res.data.code === 200) {
-                        this.loading = false;
-                        this.$store.commit("Loading_State", false);
-                        this.salesData = res.data.data;
-                    }
-                })
-                .catch((error) => {
-                    this.$store.commit("Loading_State", false);
-                    if (error.response && error.response.status === 422) {
-                        let obj = error.response.data.errors;
-                        for (let [key, message] of Object.entries(obj)) {
-                            this.server_errors[key] = message[0];
-                        }
-                    }
+        async fetchPackage() {
+            const res = await this.$axios
+                .get("package")
+                .catch(() => {
                 });
-        },
-        getBodyColor(index) {
-            return index % 2 == 0 ? "background-color:#f0eae0" : "";
-        },
-        totalFromMethod(array, method) {
-            let total = 0;
-            for (const item of array) {
-                if (item.payment_method == method) total = item.total;
+            if (res.data.code == 200) {
+                this.packages = res.data.data;
             }
-            return Intl.NumberFormat().format(total);
         },
-        fetchData() {
-            this.start_menu = false;
-            this.end_menu = false;
-            this.$store.commit("Loading_State", true);
-            this.$axios
-                .get("v2/report-billing-for-sale", {
-                    params: queryOptions([
-                        {
-                            filter: this.search,
-                        },
-                        {
-                            id: this.selectedSale,
-                        },
-                        {
-                            date_from: this.date_from,
-                        },
-                        {
-                            date_to: this.date_to,
-                        },
-                        {
-                            date_method: this.selectedBillDate,
-                        },
-                        {download: this.exportMode},
-                        {sale_active_status: this.is_active_only ? 'active' : null},
-                    ]),
-                })
-                .then((res) => {
-                    if (res.data.code == 200) {
-                        this.$store.commit("Loading_State", false);
-                        if (res.data.data.download_link) {
-                            window.open(res.data.data.download_link);
-                        } else {
-                            this.summary = res.data.data.data;
-                            this.summaryMoney = res.data.data.summary;
-                        }
-                        // this.pagination = res.data.data.pagination;
-                    }
-                })
-                .catch((error) => {
-                    this.$store.commit("Loading_State", false);
-                    if (error.response && error.response.status == 422) {
-                        let obj = error.response.data.errors;
-                        for (let [key, message] of Object.entries(obj)) {
-                            this.server_errors[key] = message[0];
-                        }
-                    }
-                }).finally(() => {
-                this.firstLoad = false
-            });
-        },
-        openRoute(sale, village, district_id) {
-            localStorage.removeItem("lastMonthBill");
-            localStorage.removeItem("lastMonthBillPaid");
+        async fetchVillage() {
+            const res = await this.$axios
+                .get("info/district/" + this.selectedDistrict + "/village")
+                .catch(() => {
+                });
 
+            if (res.data.code == 200) {
+                this.villages = res.data.data;
+            }
+        },
+        async fetchAddress() {
+            this.districtLoaded = false
+            const res = await this.$axios
+                .get("info/address", {params: {filter: "ນະຄອນຫລວງວຽງຈັນ",with_village:true}})
+                .catch(() => {
+                });
+
+            if (res.data.code == 200) {
+                this.address = res.data.data;
+                for (const addressItem of this.address) {
+                    this.districts = addressItem.districts;
+                }
+            }
+            this.districtLoaded = true
+
+        },
+        async fetchData() {
+            this.$store.commit("Loading_State", true);
+            const res = await this.$axios.get('v2/report-billing-for-customer', {
+                params: queryOptions([
+                    {order_by: 'newest'},
+                    {without_month_info: true},
+                    {has_billing_only: true},
+                    {customer_id: this.customer_id},
+                    {phone: this.phone},
+                    {customer_type: this.selectedCustomerType},
+                    {package_id: this.package_id},
+                    {cost_by: this.selectedComapnyType},
+                    {villages: this.selectedVillage},
+                    {district_id: this.selectedDistrict},
+                    {village_details: this.selectedDetails},
+                    {date_from: this.start_date},
+                    {date_to: this.end_date},
+                    {filter: this.search},
+                    {per_page: this.per_page},
+                    {page: this.pagination.current_page}
+                ])
+            }).catch((err) => console.log(err))
+            this.$store.commit("Loading_State", false);
+
+            this.customers = res.data.data.data
+            this.pagination = res.data.data.pagination
+        },
+        openBilling(id) {
             const routeData = this.$router.resolve({
-                name: "Report-Billing-Main",
-                query: queryOptions([
+                name: "billing-detail",
+                params: queryOptions([
                     {
-                        selected_sale: sale,
-                    },
-                    {
-                        selected_village: village,
-                    },
-                    {
-                        selected_district: district_id,
-                    },
-                    {
-                        date_from: this.date_from,
-                    },
-                    {
-                        date_to: this.date_to,
-                    },
-                    {
-                        date_method: this.selectedBillDate,
-                    },
+                        id: id,
+                    }
                 ]),
             });
 
@@ -430,85 +512,18 @@ export default {
         //     .catch(() => {});
         // },
     },
-    created() {
-        this.fetchSale();
-        this.fetchData();
+    async created() {
+        await this.fetchAddress()
+        await this.fetchPackage()
+        this.fetchData()
     },
     computed: {
-        summaryAll() {
-            return [
-                {
-                    status_la: "ລວມ",
-                    total: this.summaryMoney.total,
-                    bg_color: "blue",
-                    icon: "mdi-chart-pie",
-                    icon_color: "green",
-                },
-                {
-                    status_la: "ເງົນສົດ",
-                    total: this.summaryMoney.cash,
-                    bg_color: "blue",
-                    icon: "mdi-cash-multiple",
-                    icon_color: "blue",
-                },
-                {
-                    status_la: "ເງິນໂອນ",
-                    total: this.summaryMoney.bcel,
-                    bg_color: "blue",
-                    icon: "mdi-qrcode-scan",
-                    icon_color: "purple",
-                },
-                {
-                    status_la: "Bcel Online",
-                    total: this.summaryMoney.bcel_online,
-                    bg_color: "blue",
-                    icon: "mdi-cellphone-wireless",
-                    icon_color: "red",
-                },
-            ];
-        },
-        lastMonthCreated() {
-            return this.$store.getters["auth/getLastMonthBill"];
-        },
-        lastMonthBillCreated() {
-            return this.$store.getters["auth/getLastMonthBillPaid"];
-        },
-        billDates() {
-            return billDateList;
-        },
-        employees() {
-            let data = [];
-            for (const item of this.salesData) {
-                let name = "";
-                if (item.name) name += item.name + " ";
-                if (item.phone) name += item.phone + " ";
-                if (item.emp_name) name += item.emp_name + " ";
-                if (item.emp_surname) name += item.emp_surname + " ";
-                if (item.emp_card_id) name += item.emp_card_id;
-                data.push({
-                    name: name,
-                    id: item.id,
-                });
-            }
-            return data;
+        packageList() {
+            return concatPackage(this.packages);
         },
     },
     watch: {
-        is_active_only() {
-            if(!this.firstLoad) this.fetchData()
-        },
-        selectedSale() {
-            if(!this.firstLoad) this.fetchData();
-        },
-        date_from() {
-            if(!this.firstLoad) this.fetchData();
-        },
-        date_to() {
-            if(!this.firstLoad) this.fetchData();
-        },
-        selectedBillDate() {
-            if (this.date_from || this.date_to) this.fetchData();
-        },
+
     },
 };
 </script>

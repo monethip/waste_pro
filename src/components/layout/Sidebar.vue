@@ -492,12 +492,12 @@ export default {
                             to: "/report/billing/main",
                             permissions: ["report"]
                         },
-//                        {
-//                            icon: "mdi-cashcash",
-//                            title: "ລາຍງານບິນລູກຄ້າ",
-//                            to: "/report/billing/customer",
-//                            permissions: ["report"]
-//                        },
+                        {
+                            icon: "mdi-cash",
+                            title: "ລາຍງານບິນລູກຄ້າ",
+                            to: "/report/billing/customer",
+                            permissions: ["report"]
+                        },
                         {
                             icon: "mdi-cash",
                             title: "ລາຍງານບິນເຊວ",
