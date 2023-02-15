@@ -147,7 +147,7 @@
 
         <v-row v-if="true">
           <v-col>
-            <SaleAdmin v-model="selectedSale" @change="fetchData()"></SaleAdmin>
+            <SaleAdmin label="ເລືອກຜູ້ສ້າງ" v-model="selectedSale" @change="fetchData()"></SaleAdmin>
           </v-col>
         </v-row>
       </v-col>

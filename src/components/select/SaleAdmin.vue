@@ -4,7 +4,7 @@
     :items="sales"
     item-text="name"
     item-value="id"
-    label="ເລືອກເຊວທີ່ກ່ຽວຂ້ອງ"
+    :label="label"
     outlined
     dense
   ></v-autocomplete>
@@ -14,6 +14,12 @@
 import queryOptions from "../../Helpers/queryOption";
 
 export default {
+  props: {
+    label: {
+      default: 'ເລືອກເຊວທີ່ກ່ຽວຂ້ອງ',
+      type: String
+    }
+  },
   data() {
     return {
       salesData: [],
