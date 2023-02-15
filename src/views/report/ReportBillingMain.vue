@@ -3,51 +3,51 @@
     <v-row>
       <v-col>
         <v-menu
-          v-model="start_menu_created"
-          :close-on-content-click="true"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
+            v-model="start_menu_created"
+            :close-on-content-click="true"
+            :nudge-right="40"
+            min-width="auto"
+            offset-y
+            transition="scale-transition"
         >
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
-              v-model="lastMonthBillPaid"
-              label="ບິນປະຈຳເດືອນ"
-              readonly
-              outlined
-              v-bind="attrs"
-              v-on="on"
-              dense
-              clearable
+                v-model="lastMonthBillPaid"
+                clearable
+                dense
+                label="ບິນປະຈຳເດືອນ"
+                outlined
+                readonly
+                v-bind="attrs"
+                v-on="on"
             >
             </v-text-field>
           </template>
           <v-date-picker
-            v-model="lastMonthBillPaid"
-            type="month"
+              v-model="lastMonthBillPaid"
+              type="month"
           ></v-date-picker>
         </v-menu>
       </v-col>
       <v-col>
         <v-menu
-          v-model="start_menu"
-          :close-on-content-click="true"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
+            v-model="start_menu"
+            :close-on-content-click="true"
+            :nudge-right="40"
+            min-width="auto"
+            offset-y
+            transition="scale-transition"
         >
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
-              v-model="lastMonthBill"
-              label="ເດືອນທີ່ສ້າງບິນ"
-              readonly
-              outlined
-              v-bind="attrs"
-              v-on="on"
-              dense
-              clearable
+                v-model="lastMonthBill"
+                clearable
+                dense
+                label="ເດືອນທີ່ສ້າງບິນ"
+                outlined
+                readonly
+                v-bind="attrs"
+                v-on="on"
             >
             </v-text-field>
           </template>
@@ -58,8 +58,8 @@
     <v-row>
       <v-col>
         <v-tabs
-          v-model="tab"
-          style="
+            v-model="tab"
+            style="
     position: -webkit-sticky;
     position: sticky;
     top: 4rem;
@@ -103,12 +103,12 @@ export default {
     return {
       tab: null,
       items: [
-        { tab: "ທັງໝົດ", content: "ReportBillingType" },
-        { tab: "ຫົວໜ່ວຍທຸລະກິດ", content: "ReportBillingCompany" },
-        { tab: "ຄົວເຮືອນ", content: "ReportBillingHome" },
-        { tab: "ຖ້ຽວພິເສດ", content: "ReportBillingCollectionEvent" },
-        { tab: "ຈ່າຍລ່ວງໜ້າ", content: "ReportBillingFutureInvoice" },
-        { tab: "ບິນຍ້ອນຫຼັງ", content: "ReportBillingCustomBill" },
+        {tab: "ທັງໝົດ", content: "ReportBillingType"},
+        {tab: "ຫົວໜ່ວຍທຸລະກິດ", content: "ReportBillingCompany"},
+        {tab: "ຄົວເຮືອນ", content: "ReportBillingHome"},
+        {tab: "ຖ້ຽວພິເສດ", content: "ReportBillingCollectionEvent"},
+        {tab: "ຈ່າຍລ່ວງໜ້າ", content: "ReportBillingFutureInvoice"},
+        {tab: "ບິນຍ້ອນຫຼັງ", content: "ReportBillingCustomBill"},
       ],
       lastMonthBill: localStorage.getItem("lastMonthBill"),
       lastMonthBillPaid: localStorage.getItem("lastMonthBillPaid"),
@@ -125,10 +125,10 @@ export default {
     },
   },
   watch: {
-    lastMonthBill: function(value) {
+    lastMonthBill: function (value) {
       this.$store.dispatch("auth/saveLastMonthBill", value);
     },
-    lastMonthBillPaid: function(value) {
+    lastMonthBillPaid: function (value) {
       console.log(this.$store.state.auth.month);
       this.$store.dispatch("auth/saveLastMonthBillPaid", value);
     },

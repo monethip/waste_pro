@@ -318,6 +318,10 @@
                 <v-icon small class="mr-2" @click="viewPage(item.id)">
                   mdi-eye
                 </v-icon>
+
+                <v-icon v-if="item.user.billings.length > 0" small class="mr-2" @click="viewCustomerBill(item.id)">
+                  mdi-receipt-text
+                </v-icon>
               </template> </v-data-table
             ><br />
             <template>
@@ -520,10 +524,30 @@ export default {
     },
 
     viewPage(id) {
-      this.$router.push({
+     const options = {
         name: "ViewClient",
         params: { id },
+      };
+
+     this.openRoute(options)
+    },
+    viewCustomerBill(id) {
+      const options = {
+        name: "Report-Billing-Customer",
+        query: {
+          customer_id:id,
+          selectedCustomerType: 'home'
+        },
+      };
+
+      this.openRoute(options)
+    },
+    openRoute(options) {
+      const routeData = this.$router.resolve({
+        ...options
       });
+
+      window.open(routeData.href);
     },
     Search() {
       GetOldValueOnInput(this);
@@ -573,6 +597,7 @@ export default {
         { page: this.pagination.current_page },
         { per_page: this.per_page },
         { without_month_info: true },
+        { with_billings: true },
         { filter: this.search },
         { date_from: this.start_date },
         { date_end: this.end_date },

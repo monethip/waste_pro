@@ -195,12 +195,15 @@
                                 <tr :key="customer.id">
                                     <td :rowspan="customer.user.billings.length ? customer.user.billings.length : 1">
                                         <v-row>
-                                            <a href="#" class="font-weight-bold text--accent-3 ml-6">{{
+                                            <a @click="viewCustomerDetail(customer)" href="#"
+                                               class="font-weight-bold text--accent-3 ml-6">{{
                                                     customer.customer_id
                                                 }}</a>
                                         </v-row>
                                         <v-row>
-                                            <div class="text-large font-weight-bold ml-6">{{ customer.full_name }}</div>
+                                            <p class="text-large ml-6"
+                                               :style=" customer.user.billings_sum_total - customer.user.billings_paid_sum_total <= 0 ? 'color: green' : 'color: orange'">
+                                                {{ customer.full_name }}</p>
                                         </v-row>
                                         <v-row>
                                             <v-icon small class="ml-8 mr-1"> mdi-map-marker</v-icon>
@@ -213,7 +216,7 @@
                                         </v-row>
                                     </td>
                                     <td :rowspan="customer.user.billings.length ? customer.user.billings.length : 1">
-                                        {{ customer.cost_by_la }}
+                                       <v-icon> {{customer.customer_type == 'home' ? 'mdi-account-group' : 'mdi-office-building'}}</v-icon> {{ customer.cost_by_la }}
                                     </td>
                                     <td :rowspan="customer.user.billings.length ? customer.user.billings.length : 1">
                                         <v-list>
@@ -268,7 +271,7 @@
                                                 }}</a>
                                         </v-row>
                                         <v-row>
-                                            <div class="font-weight-bold">{{ customer.user.billings[0].content }}</div>
+                                            <div class="">{{ customer.user.billings[0].content }}</div>
                                         </v-row>
                                     </td>
                                     <td>{{ Intl.NumberFormat().format(customer.user.billings[0].total) }}</td>
@@ -296,7 +299,7 @@
                                                 }}</a>
                                         </v-row>
                                         <v-row>
-                                            <div class="font-weight-bold">{{ billing.content }}</div>
+                                            <p>{{ billing.content }}</p>
                                         </v-row>
                                     </td>
                                     <td>{{ Intl.NumberFormat().format(billing.total) }}</td>
@@ -405,6 +408,22 @@ export default {
         };
     },
     methods: {
+        viewCustomerDetail(item) {
+            const routeName = item.customer_type == 'home'
+                ? 'ViewClient'
+                : 'ViewCompanyDetail'
+
+            const options = {
+                name: routeName,
+                params: queryOptions([
+                    {
+                        id: item.id,
+                    }
+                ]),
+            }
+
+            this.openRoute(options)
+        },
         getBgColorFn(status) {
             return getBgColor(status)
         },
@@ -430,7 +449,7 @@ export default {
         async fetchAddress() {
             this.districtLoaded = false
             const res = await this.$axios
-                .get("info/address", {params: {filter: "ນະຄອນຫລວງວຽງຈັນ",with_village:true}})
+                .get("info/address", {params: {filter: "ນະຄອນຫລວງວຽງຈັນ", with_village: true}})
                 .catch(() => {
                 });
 
@@ -470,14 +489,34 @@ export default {
             this.customers = res.data.data.data
             this.pagination = res.data.data.pagination
         },
+      setParam(){
+       if(this.$route.query.customer_id) this.customer_id = this.$route.query.customer_id
+       if(this.$route.query.phone) this.phone = this.$route.query.phone
+       if(this.$route.query.selectedCustomerType) this.selectedCustomerType = this.$route.query.selectedCustomerType
+       if(this.$route.query.package_id) this.package_id = this.$route.query.package_id
+       if(this.$route.query.selectedComapnyType) this.selectedComapnyType = this.$route.query.selectedComapnyType
+       if(this.$route.query.selectedVillage) this.selectedVillage = this.$route.query.selectedVillage
+       if(this.$route.query.selectedDistrict) this.selectedDistrict = this.$route.query.selectedDistrict
+       if(this.$route.query.selectedDetails) this.selectedDetails = this.$route.query.selectedDetails
+       if(this.$route.query.start_date) this.start_date = this.$route.query.start_date
+       if(this.$route.query.end_date) this.end_date = this.$route.query.end_date
+       if(this.$route.query.search) this.search = this.$route.query.search
+      },
         openBilling(id) {
-            const routeData = this.$router.resolve({
+            const options = {
                 name: "billing-detail",
                 params: queryOptions([
                     {
                         id: id,
                     }
                 ]),
+            }
+
+            this.openRoute(options)
+        },
+        openRoute(options) {
+            const routeData = this.$router.resolve({
+                ...options
             });
 
             window.open(routeData.href);
@@ -513,6 +552,7 @@ export default {
         // },
     },
     async created() {
+      this.setParam()
         await this.fetchAddress()
         await this.fetchPackage()
         this.fetchData()
@@ -522,9 +562,7 @@ export default {
             return concatPackage(this.packages);
         },
     },
-    watch: {
-
-    },
+    watch: {},
 };
 </script>
 
