@@ -274,6 +274,9 @@
     <v-row>
       <v-col>
         <v-card>
+          <v-card-title>
+            <v-switch label="ມີບິນເທົ່ານັ້ນ" v-model="only_billings" @change="fetchData()"></v-switch>
+          </v-card-title>
           <v-card-text>
             <v-data-table
               :headers="headers"
@@ -356,6 +359,7 @@ export default {
   data() {
     return {
       sumData: {},
+      only_billings:false,
       start_date: "",
       end_date: "",
       selected_month:
@@ -597,6 +601,7 @@ export default {
         { page: this.pagination.current_page },
         { per_page: this.per_page },
         { without_month_info: true },
+        { only_billings: this.only_billings },
         { with_billings: true },
         { filter: this.search },
         { date_from: this.start_date },
