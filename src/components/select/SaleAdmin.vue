@@ -18,6 +18,9 @@ export default {
     label: {
       default: 'ເລືອກເຊວທີ່ກ່ຽວຂ້ອງ',
       type: String
+    },
+    firstSale:{
+      default: ''
     }
   },
   data() {
@@ -79,6 +82,7 @@ export default {
   },
   async created() {
     await this.fetchSale();
+    if(this.firstSale) this.selectedSale = typeof this.firstSale != "number" ? Number.parseInt(this.firstSale) : this.selectedSale
   },
 };
 </script>

@@ -759,6 +759,21 @@ export default {
         { month_bill: this.selected_month },
       ]);
     },
+    billRoute() {
+      const options =this.$router.resolve(
+          {
+            name: "Report-Billing-Customer",
+            query: {
+              selectedCustomerType: 'company',
+              selectedVillage: this.selectedVillage,
+              selectedDistrict: this.selectedDistrict,
+              selectedDetails: this.selectedDetails,
+              start_date: this.start_date,
+              end_date: this.end_date,
+              created_by: this.selectedSale
+            }
+          })
+      return  options},
     pastMonth() {
       return this.selected_month
         ? moment(this.selected_month)
@@ -780,18 +795,21 @@ export default {
           total: this.sumData.all?.total?.total,
           count_billing: this.sumData.all?.total?.count,
           bg_color: "blue",
+          route: this.billRoute
         },
         {
           status_la: "ຈ່າຍແລ້ວ",
           total: this.sumData.all?.paid?.total,
           count_billing: this.sumData.all?.paid?.count,
           bg_color: "green",
+          route: this.billRoute
         },
         {
           status_la: "ຕິດໜີ້",
           total: this.sumData.all?.unpaid?.total,
           count_billing: this.sumData.all?.unpaid?.count,
           bg_color: "orange",
+          route: this.billRoute
         },
       ];
     },

@@ -167,6 +167,11 @@
                         </v-text-field>
                     </v-col>
 
+                  <v-col>
+                    <pre>{{saleData}}</pre>
+                    <SaleAdmin label="ເລືອກຜູ້ສ້າງ" v-model="created_by" :firstSale="created_by" ></SaleAdmin>
+                  </v-col>
+
                     <v-col>
                         <v-btn style="width:100%" color="green" dark @click="fetchData()"
                         >ຄົ້ນຫາ
@@ -214,6 +219,9 @@
                                             <v-icon small class="ml-8 mr-1"> mdi-phone</v-icon>
                                             {{ customer.user.phone }}
                                         </v-row>
+                                      <v-row v-if="customer.created_activity">
+                                        <v-col>ຜູ້ສ້າງ: {{customer.created_activity.causer.full_name}}</v-col>
+                                      </v-row>
                                     </td>
                                     <td :rowspan="customer.user.billings.length ? customer.user.billings.length : 1">
                                        <v-icon> {{customer.customer_type == 'home' ? 'mdi-account-group' : 'mdi-office-building'}}</v-icon> {{ customer.cost_by_la }}
@@ -334,6 +342,7 @@ import queryOptions from "../../Helpers/queryOption";
 import {getBgColor} from "@/Helpers/BillingStatus"
 import {getCompanyCostBy, concatPackage} from "@/Helpers/Customer";
 import VillageDetail from "@/components/select/VillageDetail"
+import SaleAdmin from "@coms/select/SaleAdmin.vue";
 //import RowSection from "../../components/card/RowSection.vue";
 
 export default {
@@ -342,11 +351,14 @@ export default {
     },
     components: {
 //        RowSection,
-        VillageDetail
+        VillageDetail,
+      SaleAdmin
     },
     data() {
         return {
             firstLoad: true,
+            created_by: "",
+          saleData:null,
             filteredPackage: "",
             selectedCustomerType: "",
             selectedComapnyType: "",
@@ -480,6 +492,8 @@ export default {
                     {date_from: this.start_date},
                     {date_to: this.end_date},
                     {filter: this.search},
+                  { with_created_user: true },
+                  {created_by_id: this.created_by},
                     {per_page: this.per_page},
                     {page: this.pagination.current_page}
                 ])
@@ -500,7 +514,8 @@ export default {
        if(this.$route.query.selectedDetails) this.selectedDetails = this.$route.query.selectedDetails
        if(this.$route.query.start_date) this.start_date = this.$route.query.start_date
        if(this.$route.query.end_date) this.end_date = this.$route.query.end_date
-       if(this.$route.query.search) this.search = this.$route.query.search
+        if(this.$route.query.search) this.search = this.$route.query.search
+        if(this.$route.query.created_by) this.created_by = this.$route.query.created_by
       },
         openBilling(id) {
             const options = {
@@ -553,7 +568,7 @@ export default {
     },
     async created() {
       this.setParam()
-        await this.fetchAddress()
+      await this.fetchAddress()
         await this.fetchPackage()
         this.fetchData()
     },
@@ -562,7 +577,11 @@ export default {
             return concatPackage(this.packages);
         },
     },
-    watch: {},
+    watch: {
+      created_by() {
+        if(!this.firstLoad) this.fetchData()
+      }
+    },
 };
 </script>
 
