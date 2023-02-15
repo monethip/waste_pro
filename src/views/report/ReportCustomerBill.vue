@@ -219,8 +219,8 @@
                                             <v-icon small class="ml-8 mr-1"> mdi-phone</v-icon>
                                             {{ customer.user.phone }}
                                         </v-row>
-                                      <v-row v-if="customer.created_activity">
-                                        <v-col>ຜູ້ສ້າງ: {{customer.created_activity.causer.full_name}}</v-col>
+                                      <v-row v-if="customer.customer_activity">
+                                        <v-col>ຜູ້ສ້າງ: {{customer.customer_activity.causer.full_name}}</v-col>
                                       </v-row>
                                     </td>
                                     <td :rowspan="customer.user.billings.length ? customer.user.billings.length : 1">
