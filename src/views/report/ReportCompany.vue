@@ -145,9 +145,9 @@
           </v-col>
         </v-row>
 
-        <v-row v-if="false">
+        <v-row v-if="true">
           <v-col>
-            <SaleAdmin v-model="selectedSale"></SaleAdmin>
+            <SaleAdmin v-model="selectedSale" @change="fetchData()"></SaleAdmin>
           </v-col>
         </v-row>
       </v-col>
@@ -390,6 +390,7 @@ export default {
     return {
       selectedSale: "",
       only_billings: false,
+      firstLoad:true,
       selected_month:
         this.$route.query.month || new Date().toISOString().substr(0, 7),
       start_date: "",
@@ -534,7 +535,10 @@ export default {
             }
           }
         })
-        .finally(() => this.fetchSum());
+        .finally(() => {
+          this.firstLoad = false;
+          this.fetchSum()
+        });
     },
     fetchSum() {
       this.$store.commit("Loading_State", true);
@@ -728,6 +732,9 @@ export default {
       this.pagination.current_page = "";
       this.fetchData();
     },
+    selectedSale() {
+      if (!this.firstLoad) this.fetchData();
+    }
   },
 
   computed: {
@@ -739,6 +746,7 @@ export default {
         { only_billings: this.only_billings },
         { with_billings: true },
         { with_created_user: true },
+        { created_by_id: this.selectedSale },
         { filter: this.search },
         { date_from: this.start_date },
         { date_end: this.end_date },
@@ -749,7 +757,6 @@ export default {
         { without: this.selectedCustomerStatus },
         { district_id: this.selectedDistrict },
         { month_bill: this.selected_month },
-        { created_by: this.selectedSale },
       ]);
     },
     pastMonth() {

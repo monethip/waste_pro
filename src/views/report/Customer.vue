@@ -180,6 +180,12 @@
       </v-col>
     </v-row>
 
+    <v-row v-if="true">
+      <v-col>
+        <SaleAdmin v-model="selectedSale" @change="fetchData()"></SaleAdmin>
+      </v-col>
+    </v-row>
+
     <!-- Detail -->
     <v-row>
       <v-col>
@@ -347,6 +353,7 @@ import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
 import RowSection from "../../components/card/RowSection.vue";
 import moment from "moment";
+import SaleAdmin from "@/components/select/SaleAdmin.vue";
 
 export default {
   name: "Customer",
@@ -355,10 +362,13 @@ export default {
   },
   components: {
     RowSection,
+    SaleAdmin
   },
   data() {
     return {
       sumData: {},
+      selectedSale: "",
+      firstLoad: true,
       only_billings:false,
       start_date: "",
       end_date: "",
@@ -496,7 +506,10 @@ export default {
             }
           }
         })
-        .finally(() => this.fetchSum());
+        .finally(() => {
+          this.firstLoad = false;
+          this.fetchSum()
+        });
     },
 
     fetchAddress() {
@@ -604,6 +617,7 @@ export default {
         { without_month_info: true },
         { only_billings: this.only_billings },
         { with_billings: true },
+        { created_by_id: this.selectedSale },
         { with_created_user: true },
         { filter: this.search },
         { date_from: this.start_date },
@@ -768,6 +782,9 @@ export default {
       this.pagination.current_page = "";
       this.fetchData();
     },
+    selectedSale() {
+      if (!this.firstLoad) this.fetchData();
+    }
   },
   created() {
     this.fetchData();
