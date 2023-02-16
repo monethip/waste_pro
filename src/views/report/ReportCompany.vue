@@ -239,48 +239,23 @@
                   </v-menu>
                 </v-col>
               </v-row>
-              <v-row>
-                <v-col cols="2">
-                  <span>
-                    <v-chip outlined color="cyan lighten-2" dark>
-                      <v-icon>mdi-calendar</v-icon>
-                      {{ pastMonth }}</v-chip
-                    >
-                  </span>
+
+              <v-row v-for="month in sumData.months" :key="month.month">
+                <v-col :class=" selected_month == month.month.substring(0,7) ? 'teal' : ''" cols="2">
+                <span>
+                  <v-chip outlined color="cyan lighten-2" dark>
+                    <v-icon>mdi-calendar</v-icon>
+                    {{ month.month }}</v-chip
+                  >
+                </span>
                 </v-col>
                 <!-- Section Toal -->
-                <v-col>
-                  <RowSection :cards="pasts" />
+                <v-col :class=" selected_month == month.month.substring(0,7) ? 'teal' : ''">
+                  <RowSection :cards="getCardData(month)" />
                 </v-col>
               </v-row>
-              <v-row>
-                <v-col cols="2">
-                  <span>
-                    <v-chip color="cyan " dark>
-                      <v-icon>mdi-calendar</v-icon>
-                      {{ selected_month }}</v-chip
-                    >
-                  </span>
-                </v-col>
-                <!-- Section Toal -->
-                <v-col>
-                  <RowSection :cards="recents" />
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="2">
-                  <span>
-                    <v-chip outlined color="cyan darken-2" dark>
-                      <v-icon>mdi-calendar</v-icon>
-                      {{ nextMonth }}</v-chip
-                    >
-                  </span>
-                </v-col>
-                <!-- Section Toal -->
-                <v-col>
-                  <RowSection :cards="nexts" />
-                </v-col>
-              </v-row>
+
+
             </v-card-text>
           </v-card>
         </v-col>
@@ -309,9 +284,6 @@
                   >
                     <img v-if="img.thumb" :src="img.thumb" />
                   </v-avatar>
-                </template>
-                <template v-slot:item.created_at="{ item }">
-                  <div>{{ moment(item.created_at).format("DD-MM-YY") }}</div>
                 </template>
                 <!--              <template v-slot:item.status="{ item }">-->
                 <!--                <v-chip label :color="statusColor(item.status)">{{-->
@@ -374,7 +346,6 @@
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
 import RowSection from "../../components/card/RowSection.vue";
-import moment from "moment";
 import SaleAdmin from "@/components/select/SaleAdmin.vue";
 
 export default {
@@ -676,6 +647,34 @@ export default {
       else if (value == "bag") return "ບໍລິມາດ";
       else return "";
     },
+    getCardData(month){
+      return [
+        {
+          status_la: "ລວມ",
+          total: month.status.total?.total,
+          count_billing: month.status.total?.count,
+          bg_color: "blue",
+        },
+        {
+          status_la: "ຈ່າຍແລ້ວ",
+          total: month.status.paid?.total,
+          count_billing: month.status.paid?.count,
+          bg_color: "green",
+        },
+        {
+          status_la: "ຕິດໜີ້",
+          total: month.status.unpaid?.total,
+          count_billing: month.status.unpaid?.count,
+          bg_color: "orange",
+        },
+        {
+          status_la: "ບິນຍັງບໍ່ອອກ",
+          total: month.no_bill?.package_price,
+          count_billing: month.no_bill?.count_customers,
+          bg_color: "red",
+        },
+      ]
+    }
   },
   watch: {
     selected_month: function() {
@@ -774,20 +773,6 @@ export default {
             }
           })
       return  options},
-    pastMonth() {
-      return this.selected_month
-        ? moment(this.selected_month)
-            .subtract(1, "months")
-            .format("Y-MM")
-        : null;
-    },
-    nextMonth() {
-      return this.selected_month
-        ? moment(this.selected_month)
-            .add(1, "months")
-            .format("Y-MM")
-        : null;
-    },
     allMonths() {
       return [
         {
@@ -810,74 +795,6 @@ export default {
           count_billing: this.sumData.all?.unpaid?.count,
           bg_color: "orange",
           route: this.billRoute
-        },
-      ];
-    },
-    pasts() {
-      return [
-        {
-          status_la: "ລວມ",
-          total: this.sumData.past?.total?.total,
-          count_billing: this.sumData.past?.total?.count,
-          bg_color: "blue",
-        },
-        {
-          status_la: "ຈ່າຍແລ້ວ",
-          total: this.sumData.past?.paid?.total,
-          count_billing: this.sumData.past?.paid?.count,
-          bg_color: "green",
-        },
-        {
-          status_la: "ຕິດໜີ້",
-          total: this.sumData.past?.unpaid?.total,
-          count_billing: this.sumData.past?.unpaid?.count,
-          bg_color: "orange",
-        },
-      ];
-    },
-
-    recents() {
-      return [
-        {
-          status_la: "ລວມ",
-          total: this.sumData.recent?.total?.total,
-          count_billing: this.sumData.recent?.total?.count,
-          bg_color: "blue",
-        },
-        {
-          status_la: "ຈ່າຍແລ້ວ",
-          total: this.sumData.recent?.paid?.total,
-          count_billing: this.sumData.recent?.paid?.count,
-          bg_color: "green",
-        },
-        {
-          status_la: "ຕິດໜີ້",
-          total: this.sumData.recent?.unpaid?.total,
-          count_billing: this.sumData.recent?.unpaid?.count,
-          bg_color: "orange",
-        },
-      ];
-    },
-
-    nexts() {
-      return [
-        {
-          status_la: "ລວມ",
-          total: this.sumData.next?.total?.total,
-          count_billing: this.sumData.next?.total?.count,
-          bg_color: "blue",
-        },
-        {
-          status_la: "ຈ່າຍແລ້ວ",
-          total: this.sumData.next?.paid?.total,
-          count_billing: this.sumData.next?.paid?.count,
-          bg_color: "green",
-        },
-        {
-          status_la: "ຕິດໜີ້",
-          total: this.sumData.next?.unpaid?.total,
-          count_billing: this.sumData.next?.unpaid?.count,
-          bg_color: "orange",
         },
       ];
     },

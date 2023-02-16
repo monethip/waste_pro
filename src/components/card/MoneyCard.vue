@@ -25,7 +25,7 @@
         >{{ Intl.NumberFormat().format(billing_count) }} ບິນ</v-chip
       >
     </v-card-title>
-    <v-card-text>
+    <v-card-text v-if="total">
       <p class="text-h5">{{ Intl.NumberFormat().format(total) }} K</p>
     </v-card-text>
   </v-card>

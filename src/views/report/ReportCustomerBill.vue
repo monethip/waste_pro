@@ -226,7 +226,7 @@
                                     <td :rowspan="customer.user.billings.length ? customer.user.billings.length : 1">
                                        <v-icon> {{customer.customer_type == 'home' ? 'mdi-account-group' : 'mdi-office-building'}}</v-icon> {{ customer.cost_by_la }}
                                     </td>
-                                    <td :rowspan="customer.user.billings.length ? customer.user.billings.length : 1">
+                                  <td :rowspan="customer.user.billings.length ? customer.user.billings.length : 1">
                                         <v-list>
                                             <v-list-item>
                                                 <v-list-item-icon>

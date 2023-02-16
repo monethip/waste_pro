@@ -231,46 +231,18 @@
                 </v-menu>
               </v-col>
             </v-row>
-            <v-row>
-              <v-col cols="2">
+            <v-row v-for="month in sumData.months" :key="month.month">
+              <v-col :class=" selected_month == month.month.substring(0,7) ? 'teal' : ''" cols="2">
                 <span>
                   <v-chip outlined color="cyan lighten-2" dark>
                     <v-icon>mdi-calendar</v-icon>
-                    {{ pastMonth }}</v-chip
+                    {{ month.month }}</v-chip
                   >
                 </span>
               </v-col>
               <!-- Section Toal -->
-              <v-col>
-                <RowSection :cards="pasts" />
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="2">
-                <span>
-                  <v-chip color="cyan" dark>
-                    <v-icon>mdi-calendar</v-icon>
-                    {{ selected_month }}</v-chip
-                  >
-                </span>
-              </v-col>
-              <!-- Section Toal -->
-              <v-col>
-                <RowSection :cards="recents" />
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="2">
-                <span>
-                  <v-chip outlined color="cyan darken-2" dark>
-                    <v-icon>mdi-calendar</v-icon>
-                    {{ nextMonth }}</v-chip
-                  >
-                </span>
-              </v-col>
-              <!-- Section Toal -->
-              <v-col>
-                <RowSection :cards="nexts" />
+              <v-col :class=" selected_month == month.month.substring(0,7) ? 'teal' : ''">
+                <RowSection :cards="getCardData(month)" />
               </v-col>
             </v-row>
           </v-card-text>
@@ -608,6 +580,34 @@ export default {
           this.loading = false;
         });
     },
+    getCardData(month){
+      return [
+        {
+          status_la: "ລວມ",
+          total: month.status.total?.total,
+          count_billing: month.status.total?.count,
+          bg_color: "blue",
+        },
+        {
+          status_la: "ຈ່າຍແລ້ວ",
+          total: month.status.paid?.total,
+          count_billing: month.status.paid?.count,
+          bg_color: "green",
+        },
+        {
+          status_la: "ຕິດໜີ້",
+          total: month.status.unpaid?.total,
+          count_billing: month.status.unpaid?.count,
+          bg_color: "orange",
+        },
+        {
+          status_la: "ບິນຍັງບໍ່ອອກ",
+          total: month.no_bill?.package_price,
+          count_billing: month.no_bill?.count_customers,
+          bg_color: "red",
+        },
+      ]
+    }
   },
   computed: {
     params() {
@@ -628,42 +628,6 @@ export default {
         { district_id: this.selectedDistrict },
         { month_bill: this.selected_month },
       ]);
-    },
-    pastMonth() {
-      return this.selected_month
-        ? moment(this.selected_month)
-            .subtract(1, "months")
-            .format("Y-MM")
-        : null;
-    },
-    nextMonth() {
-      return this.selected_month
-        ? moment(this.selected_month)
-            .add(1, "months")
-            .format("Y-MM")
-        : null;
-    },
-    pasts() {
-      return [
-        {
-          status_la: "ລວມ",
-          total: this.sumData.past?.total?.total,
-          count_billing: this.sumData.past?.total?.count,
-          bg_color: "blue",
-        },
-        {
-          status_la: "ຈ່າຍແລ້ວ",
-          total: this.sumData.past?.paid?.total,
-          count_billing: this.sumData.past?.paid?.count,
-          bg_color: "green",
-        },
-        {
-          status_la: "ຕິດໜີ້",
-          total: this.sumData.past?.unpaid?.total,
-          count_billing: this.sumData.past?.unpaid?.count,
-          bg_color: "orange",
-        },
-      ];
     },
 
     billRoute() {
@@ -707,52 +671,6 @@ export default {
           count_billing: this.sumData.all?.unpaid?.count,
           bg_color: "orange",
           route: this.billRoute
-        },
-      ];
-    },
-
-    recents() {
-      return [
-        {
-          status_la: "ລວມ",
-          total: this.sumData.recent?.total?.total,
-          count_billing: this.sumData.recent?.total?.count,
-          bg_color: "blue",
-        },
-        {
-          status_la: "ຈ່າຍແລ້ວ",
-          total: this.sumData.recent?.paid?.total,
-          count_billing: this.sumData.recent?.paid?.count,
-          bg_color: "green",
-        },
-        {
-          status_la: "ຕິດໜີ້",
-          total: this.sumData.recent?.unpaid?.total,
-          count_billing: this.sumData.recent?.unpaid?.count,
-          bg_color: "orange",
-        },
-      ];
-    },
-
-    nexts() {
-      return [
-        {
-          status_la: "ລວມ",
-          total: this.sumData.next?.total?.total,
-          count_billing: this.sumData.next?.total?.count,
-          bg_color: "blue",
-        },
-        {
-          status_la: "ຈ່າຍແລ້ວ",
-          total: this.sumData.next?.paid?.total,
-          count_billing: this.sumData.next?.paid?.count,
-          bg_color: "green",
-        },
-        {
-          status_la: "ຕິດໜີ້",
-          total: this.sumData.next?.unpaid?.total,
-          count_billing: this.sumData.next?.unpaid?.count,
-          bg_color: "orange",
         },
       ];
     },
