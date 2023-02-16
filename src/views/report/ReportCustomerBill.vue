@@ -213,6 +213,13 @@
             </v-col>
 
         </v-row>
+      <v-row>
+        <v-col>
+          <v-btn style="width:100%" color="green" dark @click="fetchData(true)"
+          >Export
+          </v-btn>
+        </v-col>
+      </v-row>
 
       <v-row>
         <v-col>
@@ -561,18 +568,22 @@ export default {
             this.districtLoaded = true
 
         },
-        async fetchData() {
+        async fetchData(isExport = false) {
             this.$store.commit("Loading_State", true);
-            const res = await this.$axios.get('v2/report-billing-for-customer', {
-                params: this.param,
-            }).catch((err) => console.log(err))
+          const res = await this.$axios.get('v2/report-billing-for-customer', {
+            params: { ...this.param, ...{download: isExport ? 'excel' : null}},
+          }).catch((err) => console.log(err))
 
-            this.$store.commit("Loading_State", false);
 
+         if(!isExport) {
             this.customers = res.data.data.data.data
             this.pagination = res.data.data.data.pagination
             this.sumData = res.data.data.sum;
-
+          } else {
+           console.log(res.data)
+           window.open(res.data.data.download_link)
+         }
+          this.$store.commit("Loading_State", false);
         },
       setParam(){
        if(this.$route.query.customer_id) this.customer_id = this.$route.query.customer_id
