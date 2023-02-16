@@ -666,21 +666,18 @@ export default {
             total: this.sumData.total?.total,
             count_billing: this.sumData.total?.count,
             bg_color: "blue",
-            route: this.billRoute()
           },
           {
             status_la: "ຈ່າຍແລ້ວ",
             total: this.sumData.paid?.total,
             count_billing: this.sumData.paid?.count,
             bg_color: "green",
-            route: this.billRoute()
           },
           {
             status_la: "ຕິດໜີ້",
             total: this.sumData.unpaid?.total,
             count_billing: this.sumData.unpaid?.count,
             bg_color: "orange",
-            route: this.billRoute()
           },
         ];
       },
