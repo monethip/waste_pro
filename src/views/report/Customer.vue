@@ -324,7 +324,6 @@
 import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
 import RowSection from "../../components/card/RowSection.vue";
-import moment from "moment";
 import SaleAdmin from "@/components/select/SaleAdmin.vue";
 
 export default {
