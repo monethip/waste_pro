@@ -54,7 +54,14 @@ export default {
     },
   },
   created() {
-    console.log(this.billing_count);
   },
+  beforeUpdate() {
+    this.$store.commit("Loading_State", true);
+
+  },
+  updated() {
+    this.$store.commit("Loading_State", false);
+
+  }
 };
 </script>

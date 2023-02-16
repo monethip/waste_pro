@@ -587,27 +587,53 @@ export default {
           total: month.status.total?.total,
           count_billing: month.status.total?.count,
           bg_color: "blue",
+          route: this.billRoute(month.month)
         },
         {
           status_la: "ຈ່າຍແລ້ວ",
           total: month.status.paid?.total,
           count_billing: month.status.paid?.count,
           bg_color: "green",
+          route: this.billRoute(month.month)
         },
         {
           status_la: "ຕິດໜີ້",
           total: month.status.unpaid?.total,
           count_billing: month.status.unpaid?.count,
           bg_color: "orange",
+          route: this.billRoute(month.month)
         },
         {
           status_la: "ບິນຍັງບໍ່ອອກ",
           total: month.no_bill?.package_price,
           count_billing: month.no_bill?.count_customers,
           bg_color: "red",
+          route: this.billRoute(month.month)
         },
       ]
-    }
+    },
+    billRoute(billMonth="") {
+      const items = {
+        selectedCustomerType: 'home',
+        // package_id: this.selectedPackage,
+        selectedVillage: this.selectedVillage,
+        selectedDistrict: this.selectedDistrict,
+        selectedDetails: this.selectedDetails,
+        start_date: this.start_date,
+        end_date: this.end_date,
+        created_by: this.selectedSale
+      }
+
+      if (billMonth) items.billMonth = billMonth
+
+      const options =this.$router.resolve(
+          {
+            name: "Report-Billing-Customer",
+            query: items
+          })
+
+      return options
+    },
   },
   computed: {
     params() {
@@ -630,25 +656,6 @@ export default {
       ]);
     },
 
-    billRoute() {
-      const options =this.$router.resolve(
-      {
-        name: "Report-Billing-Customer",
-        query: {
-            selectedCustomerType: 'home',
-          // package_id: this.selectedPackage,
-          selectedVillage: this.selectedVillage,
-          selectedDistrict: this.selectedDistrict,
-          selectedDetails: this.selectedDetails,
-          start_date: this.start_date,
-          end_date: this.end_date,
-          created_by: this.selectedSale
-        }
-      })
-
-      return options
-    },
-
     allMonths() {
       return [
         {
@@ -656,21 +663,21 @@ export default {
           total: this.sumData.all?.total?.total,
           count_billing: this.sumData.all?.total?.count,
           bg_color: "blue",
-          route: this.billRoute
+          route: this.billRoute()
         },
         {
           status_la: "ຈ່າຍແລ້ວ",
           total: this.sumData.all?.paid?.total,
           count_billing: this.sumData.all?.paid?.count,
           bg_color: "green",
-          route: this.billRoute
+          route: this.billRoute()
         },
         {
           status_la: "ຕິດໜີ້",
           total: this.sumData.all?.unpaid?.total,
           count_billing: this.sumData.all?.unpaid?.count,
           bg_color: "orange",
-          route: this.billRoute
+          route: this.billRoute()
         },
       ];
     },

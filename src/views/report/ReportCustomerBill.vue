@@ -86,6 +86,38 @@
                     ></VillageDetail>
                 </v-row>
 
+              <v-row>
+                <v-col>
+                  <v-menu
+                      v-model="start_paid_month"
+                      :close-on-content-click="true"
+                      :nudge-right="40"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-text-field
+                          v-model="lastMonthBillPaid"
+                          label="ບິນປະຈຳເດືອນ"
+                          readonly
+                          outlined
+                          v-bind="attrs"
+                          v-on="on"
+                          dense
+                          clearable
+                      >
+                      </v-text-field>
+                    </template>
+                    <v-date-picker
+                        v-model="lastMonthBillPaid"
+                        type="month"
+                    ></v-date-picker>
+                  </v-menu>
+                </v-col>
+
+              </v-row>
+
                 <v-row>
                     <v-col>
                         <v-select
@@ -206,9 +238,12 @@
                                                 }}</a>
                                         </v-row>
                                         <v-row>
-                                            <p class="text-large ml-6"
-                                               :style=" customer.user.billings_sum_total - customer.user.billings_paid_sum_total <= 0 ? 'color: green' : 'color: orange'">
+                                            <p v-if="customer.user.billings_sum_total > 0" class="text-large ml-6"
+                                               :style="customer.user.billings_sum_total - customer.user.billings_paid_sum_total <= 0 ? 'color: green' : 'color: orange'">
                                                 {{ customer.full_name }}</p>
+                                          <p v-else class="text-large ml-6"
+                                             >
+                                            {{ customer.full_name }}</p>
                                         </v-row>
                                         <v-row>
                                             <v-icon small class="ml-8 mr-1"> mdi-map-marker</v-icon>
@@ -271,32 +306,48 @@
 
                                     </td>
 
+                                  <template v-if="customer.user.billings.length > 0">
                                     <td>
-                                        <v-row>
-                                            <a @click="openBilling(customer.user.billings[0].id)" href="#"
-                                               class="font-weight-bold text--accent-3">{{
-                                                    customer.user.billings[0].billing_display_id
-                                                }}</a>
-                                        </v-row>
-                                        <v-row>
-                                            <div class="">{{ customer.user.billings[0].content }}</div>
-                                        </v-row>
+                                      <v-row>
+                                        <a @click="openBilling(customer.user.billings[0].id)" href="#"
+                                           class="font-weight-bold text--accent-3">{{
+                                            customer.user.billings[0].billing_display_id
+                                          }}</a>
+                                      </v-row>
+                                      <v-row>
+                                        <div class="">{{ customer.user.billings[0].content }}</div>
+                                      </v-row>
                                     </td>
                                     <td>{{ Intl.NumberFormat().format(customer.user.billings[0].total) }}</td>
                                     <td>
-                                        <v-chip :color="getBgColorFn(customer.user.billings[0].status)" dark>
-                                            {{ customer.user.billings[0].status_la }}
-                                        </v-chip>
+                                      <v-chip :color="getBgColorFn(customer.user.billings[0].status)" dark>
+                                        {{ customer.user.billings[0].status_la }}
+                                      </v-chip>
                                     </td>
                                     <td>{{ customer.user.billings[0].payment_method_la }}</td>
                                     <td>{{
-                                            customer.user.billings[0].paided_by ? customer.user.billings[0].paided_by.name : ''
-                                        }}
+                                        customer.user.billings[0].paided_by ? customer.user.billings[0].paided_by.name : ''
+                                      }}
                                     </td>
                                     <td>{{ customer.user.billings[0].created_at }}</td>
                                     <td>{{ customer.user.billings[0].approved_at }}</td>
                                     <td>{{ customer.user.billings[0].paided_at }}</td>
                                     <td>{{ customer.user.billings[0].confirmed_payment_at }}</td>
+                                  </template>
+                                  <template v-else>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+
+                                  </template>
+
+
                                 </tr>
                                 <tr v-for="billing in customer.user.billings.slice(1)" :key="billing.id">
                                     <td>
@@ -357,6 +408,8 @@ export default {
     data() {
         return {
             firstLoad: true,
+          start_paid_month: false,
+          lastMonthBillPaid: "",
             created_by: "",
           saleData:null,
             filteredPackage: "",
@@ -494,6 +547,7 @@ export default {
                     {filter: this.search},
                   { with_created_user: true },
                   {created_by_id: this.created_by},
+                  {bill_month: this.lastMonthBillPaid},
                     {per_page: this.per_page},
                     {page: this.pagination.current_page}
                 ])
@@ -516,6 +570,7 @@ export default {
        if(this.$route.query.end_date) this.end_date = this.$route.query.end_date
         if(this.$route.query.search) this.search = this.$route.query.search
         if(this.$route.query.created_by) this.created_by = this.$route.query.created_by
+        if(this.$route.query.billMonth) this.lastMonthBillPaid = this.$route.query.billMonth
       },
         openBilling(id) {
             const options = {
