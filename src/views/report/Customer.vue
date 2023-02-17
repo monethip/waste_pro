@@ -586,32 +586,32 @@ export default {
           total: month.status.total?.total,
           count_billing: month.status.total?.count,
           bg_color: "blue",
-          route: this.billRoute(month.month)
+          route: this.billRoute(month.month,'all')
         },
         {
           status_la: "ຈ່າຍແລ້ວ",
           total: month.status.paid?.total,
           count_billing: month.status.paid?.count,
           bg_color: "green",
-          route: this.billRoute(month.month)
+          route: this.billRoute(month.month,'paid')
         },
         {
           status_la: "ຕິດໜີ້",
           total: month.status.unpaid?.total,
           count_billing: month.status.unpaid?.count,
           bg_color: "orange",
-          route: this.billRoute(month.month)
+          route: this.billRoute(month.month,'unpaid')
         },
         {
           status_la: "ບິນຍັງບໍ່ອອກ",
           total: month.no_bill?.package_price,
           count_billing: month.no_bill?.count_customers,
           bg_color: "red",
-          route: this.billRoute(month.month)
+          route: this.billRoute(month.month,'noBill')
         },
       ]
     },
-    billRoute(billMonth="") {
+    billRoute(billMonth,showOne) {
       const items = {
         selectedCustomerType: 'home',
         // package_id: this.selectedPackage,
@@ -624,6 +624,7 @@ export default {
       }
 
       if (billMonth) items.billMonth = billMonth
+      if (showOne) items.showOne = showOne
 
       const options =this.$router.resolve(
           {
@@ -662,21 +663,21 @@ export default {
           total: this.sumData.all?.total?.total,
           count_billing: this.sumData.all?.total?.count,
           bg_color: "blue",
-          route: this.billRoute()
+          route: this.billRoute('','all')
         },
         {
           status_la: "ຈ່າຍແລ້ວ",
           total: this.sumData.all?.paid?.total,
           count_billing: this.sumData.all?.paid?.count,
           bg_color: "green",
-          route: this.billRoute()
+          route: this.billRoute('','paid')
         },
         {
           status_la: "ຕິດໜີ້",
           total: this.sumData.all?.unpaid?.total,
           count_billing: this.sumData.all?.unpaid?.count,
           bg_color: "orange",
-          route: this.billRoute()
+          route: this.billRoute('','unpaid')
         },
       ];
     },

@@ -245,7 +245,7 @@
                              <tbody>
                              <template v-for="customer in customers">
                                <tr :key="customer.id">
-                                 <td :rowspan="customer.user.billings.length ? customer.user.billings.length : 1">
+                                 <td :rowspan="customer.user.billings && customer.user.billings.length ? customer.user.billings.length : 1">
                                    <v-row>
                                      <a @click="viewCustomerDetail(customer)" href="#"
                                         class="font-weight-bold text--accent-3 ml-6">{{
@@ -273,10 +273,10 @@
                                      <v-col>ຜູ້ສ້າງ: {{customer.customer_activity.causer.full_name}}</v-col>
                                    </v-row>
                                  </td>
-                                 <td :rowspan="customer.user.billings.length ? customer.user.billings.length : 1">
+                                 <td :rowspan="customer.user.billings && customer.user.billings.length ? customer.user.billings.length : 1">
                                    <v-icon> {{customer.customer_type == 'home' ? 'mdi-account-group' : 'mdi-office-building'}}</v-icon> {{ customer.cost_by_la }}
                                  </td>
-                                 <td :rowspan="customer.user.billings.length ? customer.user.billings.length : 1">
+                                 <td :rowspan="customer.user.billings && customer.user.billings.length ? customer.user.billings.length : 1">
                                    <v-list>
                                      <v-list-item>
                                        <v-list-item-icon>
@@ -321,7 +321,7 @@
 
                                  </td>
 
-                                 <template v-if="customer.user.billings.length > 0">
+                                 <template v-if="customer.user.billings && customer.user.billings.length > 0">
                                    <td>
                                      <v-row>
                                        <a @click="openBilling(customer.user.billings[0].id)" href="#"
@@ -364,31 +364,37 @@
 
 
                                </tr>
-                               <tr v-for="billing in customer.user.billings.slice(1)" :key="billing.id">
-                                 <td>
-                                   <v-row>
-                                     <a @click="openBilling(billing.id)" href="#"
-                                        class="font-weight-bold text--accent-3">{{
-                                         billing.billing_display_id
-                                       }}</a>
-                                   </v-row>
-                                   <v-row>
-                                     <p>{{ billing.content }}</p>
-                                   </v-row>
-                                 </td>
-                                 <td>{{ Intl.NumberFormat().format(billing.total) }}</td>
-                                 <td>
-                                   <v-chip :color="getBgColorFn(billing.status)" dark>
-                                     {{ billing.status_la }}
-                                   </v-chip>
-                                 </td>
-                                 <td>{{ billing.payment_method_la }}</td>
-                                 <td>{{ billing.paided_by ? billing.paided_by.name : '' }}</td>
-                                 <td>{{ billing.created_at }}</td>
-                                 <td>{{ billing.approved_at }}</td>
-                                 <td>{{ billing.paided_at }}</td>
-                                 <td>{{ billing.confirmed_payment_at }}</td>
-                               </tr>
+                               <template v-if="customer.user.billings">
+                                 <tr v-for="billing in customer.user.billings.slice(1)" :key="billing.id">
+                                   <td>
+                                     <v-row>
+                                       <a @click="openBilling(billing.id)" href="#"
+                                          class="font-weight-bold text--accent-3">{{
+                                           billing.billing_display_id
+                                         }}</a>
+                                     </v-row>
+                                     <v-row>
+                                       <p>{{ billing.content }}</p>
+                                     </v-row>
+                                   </td>
+                                   <td>{{ Intl.NumberFormat().format(billing.total) }}</td>
+                                   <td>
+                                     <v-chip :color="getBgColorFn(billing.status)" dark>
+                                       {{ billing.status_la }}
+                                     </v-chip>
+                                   </td>
+                                   <td>{{ billing.payment_method_la }}</td>
+                                   <td>{{ billing.paided_by ? billing.paided_by.name : '' }}</td>
+                                   <td>{{ billing.created_at }}</td>
+                                   <td>{{ billing.approved_at }}</td>
+                                   <td>{{ billing.paided_at }}</td>
+                                   <td>{{ billing.confirmed_payment_at }}</td>
+                                 </tr>
+
+                               </template>
+
+
+
                              </template>
                              </tbody>
                            </v-simple-table>
@@ -426,6 +432,7 @@ export default {
         return {
             firstLoad: true,
           sumData: {},
+          hasBillingOnly: '',
           start_paid_month: false,
           lastMonthBillPaid: "",
             created_by: "",
@@ -491,10 +498,10 @@ export default {
         };
     },
     methods: {
-      billRoute(billMonth="") {
+      billRoute(billMonth,showOne) {
         const items = {
-          selectedCustomerType: 'home',
-          // package_id: this.selectedPackage,
+          selectedCustomerType: this.selectedCustomerType,
+          package_id: this.selectedPackage,
           selectedVillage: this.selectedVillage,
           selectedDistrict: this.selectedDistrict,
           selectedDetails: this.selectedDetails,
@@ -504,6 +511,7 @@ export default {
         }
 
         if (billMonth) items.billMonth = billMonth
+        if (showOne) items.showOne = showOne
 
         const options =this.$router.resolve(
             {
@@ -599,6 +607,12 @@ export default {
         if(this.$route.query.search) this.search = this.$route.query.search
         if(this.$route.query.created_by) this.created_by = this.$route.query.created_by
         if(this.$route.query.billMonth) this.lastMonthBillPaid = this.$route.query.billMonth
+
+        if(this.$route.query.showOne) {
+          if(this.$route.query.showOne == 'all') this.hasBillingOnly = ''
+          else if(this.$route.query.showOne == 'noBill') this.hasBillingOnly = 'no_billing'
+          else this.hasBillingOnly = 'has_billing'
+        }
       },
         openBilling(id) {
             const options = {
@@ -660,24 +674,56 @@ export default {
             return concatPackage(this.packages);
         },
       allMonths() {
+        if (this.$route.query.showOne == 'paid') return [{
+          status_la: "ຈ່າຍແລ້ວ",
+          total: this.sumData.all?.paid?.total,
+          count_billing: this.sumData.all?.paid?.count,
+          bg_color: "green",
+        }]
+
+        if (this.$route.query.showOne == 'unpaid') return[ {
+          status_la: "ຕິດໜີ້",
+          total: this.sumData.all?.unpaid?.total,
+          count_billing: this.sumData.all?.unpaid?.count,
+          bg_color: "orange",
+        }]
+
+        if (this.$route.query.showOne == 'noBill') return[{
+          status_la: "ບິນຍັງບໍ່ອອກ",
+          total: this.sumData.no_bill?.package_price,
+          count_billing: this.sumData.no_bill?.count_customers,
+          bg_color: "red",
+          route: this.billRoute(this.lastMonthBillPaid,'noBill')
+        }]
+
         return [
           {
             status_la: "ລວມ",
-            total: this.sumData.total?.total,
-            count_billing: this.sumData.total?.count,
+            total: this.sumData.all?.total?.total,
+            count_billing: this.sumData.all?.total?.count,
             bg_color: "blue",
+            route: this.billRoute(this.lastMonthBillPaid,'all')
           },
           {
             status_la: "ຈ່າຍແລ້ວ",
-            total: this.sumData.paid?.total,
-            count_billing: this.sumData.paid?.count,
+            total: this.sumData.all?.paid?.total,
+            count_billing: this.sumData.all?.paid?.count,
             bg_color: "green",
+            route: this.billRoute(this.lastMonthBillPaid,'paid')
           },
           {
             status_la: "ຕິດໜີ້",
-            total: this.sumData.unpaid?.total,
-            count_billing: this.sumData.unpaid?.count,
+            total: this.sumData.all?.unpaid?.total,
+            count_billing: this.sumData.all?.unpaid?.count,
             bg_color: "orange",
+            route: this.billRoute(this.lastMonthBillPaid,'unpaid')
+          },
+          {
+            status_la: "ບິນຍັງບໍ່ອອກ",
+            total: this.sumData.no_bill?.package_price,
+            count_billing: this.sumData.no_bill?.count_customers,
+            bg_color: "red",
+            route: this.billRoute(this.lastMonthBillPaid,'noBill')
           },
         ];
       },
@@ -685,7 +731,7 @@ export default {
           return queryOptions([
             {order_by: 'customers.id'},
             {without_month_info: true},
-            {has_billing_only: true},
+            {has_billing_only: this.hasBillingOnly},
             {customer_id: this.customer_id},
             {phone: this.phone},
             {customer_type: this.selectedCustomerType},
@@ -701,6 +747,7 @@ export default {
             {created_by_id: this.created_by},
             {bill_month: this.lastMonthBillPaid},
             {is_bill_month: true},
+            {only_user_with_bill: this.$route.query.showOne},
             {per_page: this.per_page},
             {page: this.pagination.current_page}
           ])
