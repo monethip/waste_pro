@@ -245,7 +245,7 @@
                 <span>
                   <v-chip outlined color="cyan lighten-2" dark>
                     <v-icon>mdi-calendar</v-icon>
-                    {{ month.month }}</v-chip
+                    {{ month.month.substr(0, 7) }}</v-chip
                   >
                 </span>
                 </v-col>

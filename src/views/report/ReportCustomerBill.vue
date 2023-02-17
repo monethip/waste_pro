@@ -695,7 +695,7 @@ export default {
             {district_id: this.selectedDistrict},
             {village_details: this.selectedDetails},
             {date_from: this.start_date},
-            {date_to: this.end_date},
+            {date_end: this.end_date},
             {filter: this.search},
             {with_created_user: true },
             {created_by_id: this.created_by},
