@@ -15,13 +15,13 @@
       <v-col>
         <p class="text-caption">ແພກເກຈ</p>
         <v-select
-          v-model="filteredPackage"
-          :items="packageList"
-          item-text="name"
-          item-value="id"
-          label="ເລືອກແພັກເກດ"
-          outlined
-          dense
+            v-model="filteredPackage"
+            :items="packageList"
+            dense
+            item-text="name"
+            item-value="id"
+            label="ເລືອກແພັກເກດ"
+            outlined
         ></v-select>
       </v-col>
       <v-col>
@@ -29,23 +29,23 @@
         <v-row name="date">
           <v-col>
             <v-menu
-              v-model="start_menu"
-              :close-on-content-click="true"
-              :nudge-right="40"
-              transition="scale-transition"
-              offset-y
-              min-width="auto"
+                v-model="start_menu"
+                :close-on-content-click="true"
+                :nudge-right="40"
+                min-width="auto"
+                offset-y
+                transition="scale-transition"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="start_date"
-                  label="ເລີ່ມວັນທີ"
-                  readonly
-                  outlined
-                  v-bind="attrs"
-                  v-on="on"
-                  dense
-                  clearable
+                    v-model="start_date"
+                    clearable
+                    dense
+                    label="ເລີ່ມວັນທີ"
+                    outlined
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
                 ></v-text-field>
               </template>
               <v-date-picker v-model="start_date"></v-date-picker>
@@ -53,23 +53,23 @@
           </v-col>
           <v-col>
             <v-menu
-              v-model="end_menu"
-              :close-on-content-click="true"
-              :nudge-right="40"
-              transition="scale-transition"
-              offset-y
-              min-width="auto"
+                v-model="end_menu"
+                :close-on-content-click="true"
+                :nudge-right="40"
+                min-width="auto"
+                offset-y
+                transition="scale-transition"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="end_date"
-                  label="ຫາວັນທີ"
-                  readonly
-                  outlined
-                  v-bind="attrs"
-                  v-on="on"
-                  dense
-                  clearable
+                    v-model="end_date"
+                    clearable
+                    dense
+                    label="ຫາວັນທີ"
+                    outlined
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
                 ></v-text-field>
               </template>
               <v-date-picker v-model="end_date"></v-date-picker>
@@ -81,89 +81,89 @@
     <v-row class="mb-n6">
       <v-col>
         <v-autocomplete
-          outlined
-          dense
-          :items="districts"
-          v-model="selectedDistrict"
-          item-text="name"
-          item-value="id"
-          label="ເມືອງ"
-          clearable
+            v-model="selectedDistrict"
+            :items="districts"
+            clearable
+            dense
+            item-text="name"
+            item-value="id"
+            label="ເມືອງ"
+            outlined
         ></v-autocomplete>
       </v-col>
       <v-col>
         <v-autocomplete
-          outlined
-          dense
-          :items="villages"
-          v-model="selectedVillage"
-          item-text="name"
-          item-value="id"
-          label="ບ້ານ"
-          multiple
-          clearable
+            v-model="selectedVillage"
+            :items="villages"
+            clearable
+            dense
+            item-text="name"
+            item-value="id"
+            label="ບ້ານ"
+            multiple
+            outlined
         ></v-autocomplete>
       </v-col>
       <v-col>
         <v-select
-          outlined
-          dense
-          :items="status"
-          v-model="selectedStatus"
-          item-text="name"
-          item-value="name"
-          label="ສະຖານະ"
-          multiple
-          clearable
+            v-model="selectedStatus"
+            :items="status"
+            clearable
+            dense
+            item-text="name"
+            item-value="name"
+            label="ສະຖານະ"
+            multiple
+            outlined
         ></v-select>
       </v-col>
 
       <v-col>
         <v-select
-          outlined
-          dense
-          :items="customerStatus"
-          v-model="selectedCustomerStatus"
-          item-text="name"
-          item-value="value"
-          label="ສະຖານະແຜນ"
-          multiple
-          clearable
+            v-model="selectedCustomerStatus"
+            :items="customerStatus"
+            clearable
+            dense
+            item-text="name"
+            item-value="value"
+            label="ສະຖານະແຜນ"
+            multiple
+            outlined
         ></v-select>
       </v-col>
       <v-col cols>
         <v-select
-          outlined
-          dense
-          :items="favorite_dates"
-          v-model="selectedFavoriteDate"
-          item-text="name"
-          item-value="name"
-          label="ມື້ບໍລິການ"
-          multiple
+            v-model="selectedFavoriteDate"
+            :items="favorite_dates"
+            dense
+            item-text="name"
+            item-value="name"
+            label="ມື້ບໍລິການ"
+            multiple
+            outlined
         ></v-select>
       </v-col>
 
       <v-col>
         <v-text-field
-          outlined
-          dense
-          clearable
-          prepend-inner-icon="mdi-magnify"
-          label="Search"
-          type="text"
-          v-model="search"
-          @keyup.enter="Search()"
+            v-model="search"
+            clearable
+            dense
+            label="Search"
+            outlined
+            prepend-inner-icon="mdi-magnify"
+            type="text"
+            @keyup.enter="Search()"
         ></v-text-field>
       </v-col>
     </v-row>
     <div>
       <v-card>
         <v-tabs
-          v-model="tab"
-          dark
-          background-color="tab-color lighten-2"
-          slider-color="indigo lighten-5"
+            v-model="tab"
+            background-color="tab-color lighten-2"
+            dark
+            slider-color="indigo lighten-5"
         >
           <v-tab href="#tab-1">
             <v-icon>mdi-account</v-icon>
@@ -175,40 +175,42 @@
             <v-card flat>
               <v-card-text>
                 <v-data-table
-                  :headers="headers"
-                  :items="customers"
-                  :search="search"
-                  :disable-pagination="true"
-                  hide-default-footer
+                    :disable-pagination="true"
+                    :headers="headers"
+                    :items="customers"
+                    :search="search"
+                    hide-default-footer
                 >
                   <template v-slot:item.media="{ item }">
                     <v-avatar
-                      class="mr-1"
-                      size="36px"
-                      v-for="(img, index) in item.media"
-                      :key="index"
+                        v-for="(img, index) in item.media"
+                        :key="index"
+                        class="mr-1"
+                        size="36px"
                     >
-                      <img v-if="img.url" :src="img.url" />
+                      <img v-if="img.url" :src="img.url"/>
                     </v-avatar>
                   </template>
                   <!--Role -->
                   <template v-slot:item.status="{ item }">
                     <v-chip
-                      label
-                      :color="statusColor(item.status)"
-                      @click="switchStatus(item.id)"
-                      >{{ item.status }}</v-chip
+                        :color="statusColor(item.status)"
+                        label
+                        @click="switchStatus(item.id)"
+                    >{{ item.status }}
+                    </v-chip
                     >
                   </template>
                   <template v-slot:item.can_collect="{ item }">
                     <v-chip :color="Can_Collect(item.can_collect)">{{
-                      CanCollect(item.can_collect)
-                    }}</v-chip>
+                        CanCollect(item.can_collect)
+                      }}
+                    </v-chip>
                   </template>
                   <template v-slot:item.village_detail="{ item }">
                     <div
-                      v-for="(data, index) in item.village_details"
-                      :key="index"
+                        v-for="(data, index) in item.village_details"
+                        :key="index"
                     >
                       <div>{{ data.name }}</div>
                     </div>
@@ -222,10 +224,10 @@
                   </template>
 
                   <template v-slot:item.expect_trash_package="{ item }">
-                    <v-chip dark color="green" v-if="item.package">
+                    <v-chip v-if="item.package" color="green" dark>
                       {{
                         Intl.NumberFormat().format(
-                          item.package.package_size.bag
+                            item.package.package_size.bag
                         )
                       }}
                       {{ getCustomerUnitFunc(item.cost_by) }}
@@ -234,7 +236,7 @@
                   </template>
 
                   <template v-slot:item.expect_trash="{ item }">
-                    <v-chip outlined color="green" v-if="item.expect_trash">
+                    <v-chip v-if="item.expect_trash" color="green" outlined>
                       {{ Intl.NumberFormat().format(item.expect_trash) }}
                       {{ getCustomerUnitFunc(item.cost_by) }}
                     </v-chip>
@@ -243,18 +245,18 @@
 
                   <template v-slot:item.current_month_info="{ item }">
                     <v-chip
-                      outlined
-                      v-if="item.current_month_info"
-                      :color="
+                        v-if="item.current_month_info"
+                        :color="
                         getTrashColor(
                           item,
                           getTrash(item.cost_by, item.last_month_info)
                         )
                       "
+                        outlined
                     >
                       {{
                         Intl.NumberFormat().format(
-                          getTrash(item.cost_by, item.current_month_info)
+                            getTrash(item.cost_by, item.current_month_info)
                         )
                       }}
                       {{ getCustomerUnitFunc(item.cost_by) }}
@@ -264,18 +266,18 @@
 
                   <template v-slot:item.last_month_info="{ item }">
                     <v-chip
-                      dark
-                      v-if="item.last_month_info"
-                      :color="
+                        v-if="item.last_month_info"
+                        :color="
                         getTrashColor(
                           item,
                           getTrash(item.cost_by, item.last_month_info)
                         )
                       "
+                        dark
                     >
                       {{
                         Intl.NumberFormat().format(
-                          getTrash(item.cost_by, item.last_month_info)
+                            getTrash(item.cost_by, item.last_month_info)
                         )
                       }}
                       {{ getCustomerUnitFunc(item.cost_by) }}
@@ -285,8 +287,8 @@
 
                   <template v-slot:item.favorite_dates="{ item }">
                     <div
-                      v-for="(data, index) in item.favorite_dates"
-                      :key="index"
+                        v-for="(data, index) in item.favorite_dates"
+                        :key="index"
                     >
                       <div>{{ data.name }}</div>
                     </div>
@@ -296,54 +298,62 @@
                     <v-menu offset-y>
                       <template v-slot:activator="{ on, attrs }">
                         <v-icon
-                          color="primary"
-                          dark
-                          v-bind="attrs"
-                          v-on="on"
-                          medium
-                          class="mr-2"
-                          >mdi-dots-vertical</v-icon
+                            class="mr-2"
+                            color="primary"
+                            dark
+                            medium
+                            v-bind="attrs"
+                            v-on="on"
+                        >mdi-dots-vertical
+                        </v-icon
                         >
                       </template>
                       <v-list>
                         <v-list-item link @click="addPackage(item.id)">
                           <v-list-item-title>
-                            <v-icon small class="mr-2">mdi-plus</v-icon
-                            >ເພີ່ມປະເພດບໍລິການ
+                            <v-icon class="mr-2" small>mdi-plus
+                            </v-icon
+                            >
+                            ເພີ່ມປະເພດບໍລິການ
                           </v-list-item-title>
                         </v-list-item>
                         <v-list-item link @click="openChangePackage(item)">
                           <v-list-item-title>
-                            <v-icon small class="mr-2">mdi-pencil</v-icon
-                            >ປ່ຽນປະເພດບໍລິການ
+                            <v-icon class="mr-2" small>mdi-pencil
+                            </v-icon
+                            >
+                            ປ່ຽນປະເພດບໍລິການ
                           </v-list-item-title>
                         </v-list-item>
                         <v-list-item link @click="viewPage(item.id)">
                           <v-list-item-title>
-                            <v-icon small class="mr-2">mdi-eye</v-icon>ລາຍລະອຽດ
+                            <v-icon class="mr-2" small>mdi-eye</v-icon>
+                            ລາຍລະອຽດ
                           </v-list-item-title>
                         </v-list-item>
                         <v-list-item link @click="editPage(item.id)">
                           <v-list-item-title>
-                            <v-icon small class="mr-2">mdi-pencil</v-icon>ແກ້ໄຂ
+                            <v-icon class="mr-2" small>mdi-pencil</v-icon>
+                            ແກ້ໄຂ
                           </v-list-item-title>
                         </v-list-item>
                         <v-list-item link @click="deleteItem(item.id)">
                           <v-list-item-title>
-                            <v-icon small>mdi-delete</v-icon>ລຶບ
+                            <v-icon small>mdi-delete</v-icon>
+                            ລຶບ
                           </v-list-item-title>
                         </v-list-item>
                       </v-list>
                     </v-menu>
                   </template>
                 </v-data-table>
-                <br />
+                <br/>
                 <template>
                   <Pagination
-                    v-if="pagination.total_pages > 1"
-                    :pagination="pagination"
-                    :offset="offset"
-                    @paginate="fetchData()"
+                      v-if="pagination.total_pages > 1"
+                      :offset="offset"
+                      :pagination="pagination"
+                      @paginate="fetchData()"
                   ></Pagination>
                 </template>
               </v-card-text>
@@ -366,13 +376,13 @@
                 <v-row class="mb-n4 mt-0">
                   <v-col cols="12">
                     <v-select
-                      v-model="selectedPackage"
-                      :items="packageList"
-                      item-text="name"
-                      item-value="id"
-                      label="ເລືອກແພັກເກດ"
-                      outlined
-                      dense
+                        v-model="selectedPackage"
+                        :items="packageList"
+                        dense
+                        item-text="name"
+                        item-value="id"
+                        label="ເລືອກແພັກເກດ"
+                        outlined
                     ></v-select>
                     <p class="errors">{{ server_errors.package_id }}</p>
                   </v-col>
@@ -380,28 +390,28 @@
                 <v-row class="my-n4">
                   <v-col cols="12">
                     <v-menu
-                      v-model="package_menu"
-                      :close-on-content-click="true"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
+                        v-model="package_menu"
+                        :close-on-content-click="true"
+                        :nudge-right="40"
+                        min-width="auto"
+                        offset-y
+                        transition="scale-transition"
                     >
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
-                          v-model="package_date"
-                          label="ເລີ່ມວັນທີ"
-                          readonly
-                          outlined
-                          v-bind="attrs"
-                          v-on="on"
-                          dense
+                            v-model="package_date"
+                            dense
+                            label="ເລີ່ມວັນທີ"
+                            outlined
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
                         ></v-text-field>
                       </template>
                       <v-date-picker
-                        v-model="package_date"
-                        :min="min_date"
-                        type="month"
+                          v-model="package_date"
+                          :min="min_date"
+                          type="month"
                       ></v-date-picker>
                     </v-menu>
                     <p class="errors">{{ server_errors.start_month }}</p>
@@ -422,15 +432,17 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="closeAddModal()"
-                >Close</v-btn
+              >Close
+              </v-btn
               >
               <v-btn
-                color="blue darken-1"
-                text
-                :loading="loading"
-                :disabled="loading"
-                @click="AddPackage()"
-                >ເພີ່ມ</v-btn
+                  :disabled="loading"
+                  :loading="loading"
+                  color="blue darken-1"
+                  text
+                  @click="AddPackage()"
+              >ເພີ່ມ
+              </v-btn
               >
             </v-card-actions>
           </v-card-text>
@@ -451,13 +463,13 @@
                 <v-row class="mb-n4 mt-0">
                   <v-col cols="12">
                     <v-select
-                      v-model="change_package.package_id"
-                      :items="packageList"
-                      item-text="name"
-                      item-value="id"
-                      label="ເລືອກແພັກເກດ"
-                      outlined
-                      dense
+                        v-model="change_package.package_id"
+                        :items="packageList"
+                        dense
+                        item-text="name"
+                        item-value="id"
+                        label="ເລືອກແພັກເກດ"
+                        outlined
                     ></v-select>
                     <p class="errors">{{ server_errors.package_id }}</p>
                   </v-col>
@@ -467,15 +479,17 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="closeChangeModal()"
-                >Close</v-btn
+              >Close
+              </v-btn
               >
               <v-btn
-                color="blue darken-1"
-                text
-                :loading="loading"
-                :disabled="loading"
-                @click="changePackage()"
-                >ປ່ຽນ</v-btn
+                  :disabled="loading"
+                  :loading="loading"
+                  color="blue darken-1"
+                  text
+                  @click="changePackage()"
+              >ປ່ຽນ
+              </v-btn
               >
             </v-card-actions>
           </v-card-text>
@@ -483,7 +497,7 @@
       </template>
     </ModalEdit>
 
-    <v-dialog v-model="importFile" width="720" persistent>
+    <v-dialog v-model="importFile" persistent width="720">
       <template>
         <v-card>
           <v-card-title>
@@ -492,22 +506,22 @@
           <v-card-text>
             <v-form ref="form" lazy-validation>
               <v-file-input
-                label="File (xlsx)"
-                show-size
-                accept=".xlsx"
-                truncate-length="60"
-                v-model="file"
-                counter
-                outlined
+                  v-model="file"
+                  accept=".xlsx"
+                  counter
+                  label="File (xlsx)"
+                  outlined
+                  show-size
+                  truncate-length="60"
               ></v-file-input>
               <p v-if="!successes.length == 0">
                 ສຳເລັດ {{ successes.length }} ລາຍການ
               </p>
-              <p class="errors" v-if="!errors.length == 0">
+              <p v-if="!errors.length == 0" class="errors">
                 ຜິດພາດ {{ errors.length }} ລາຍການ
               </p>
               <div v-if="!errors.length == 0">
-                <p class="errors" v-for="(error, index) in errors" :key="index">
+                <p v-for="(error, index) in errors" :key="index" class="errors">
                   {{ error }}
                 </p>
               </div>
@@ -516,15 +530,17 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="closeImport"
-                >Cancel</v-btn
+              >Cancel
+              </v-btn
               >
               <v-btn
-                color="blue darken-1"
-                text
-                :loading="loading"
-                :disabled="loading"
-                @click="importFileForm"
-                >OK</v-btn
+                  :disabled="loading"
+                  :loading="loading"
+                  color="blue darken-1"
+                  text
+                  @click="importFileForm"
+              >OK
+              </v-btn
               >
               <v-spacer></v-spacer>
             </v-card-actions>
@@ -540,12 +556,13 @@
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
           <v-btn
-            color="blue darken-1"
-            text
-            :loading="loading"
-            :disabled="loading"
-            @click="deleteItemConfirm"
-            >OK</v-btn
+              :disabled="loading"
+              :loading="loading"
+              color="blue darken-1"
+              text
+              @click="deleteItemConfirm"
+          >OK
+          </v-btn
           >
           <v-spacer></v-spacer>
         </v-card-actions>
@@ -555,8 +572,8 @@
 </template>
 
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
-import { getCustomerUnit, concatPackage } from "@/Helpers/Customer";
+import {GetOldValueOnInput} from "@/Helpers/GetValue";
+import {getCustomerUnit, concatPackage} from "@/Helpers/Customer";
 import moment from "moment";
 import queryOption from "@/Helpers/queryOption";
 
@@ -584,12 +601,12 @@ export default {
       oldVal: "",
       //Add Package
       package_date: moment()
-        .add("1", "months")
-        .format("YYYY-MM"),
+          .add("1", "months")
+          .format("YYYY-MM"),
       min_date: moment()
-        .add("1", "months")
-        .startOf("month")
-        .format("YYYY-MM-DD"),
+          .add("1", "months")
+          .startOf("month")
+          .format("YYYY-MM-DD"),
       package_menu: false,
       change_package_menu: false,
       change_package: {},
@@ -639,10 +656,10 @@ export default {
       selectedFavoriteDate: [],
 
       headers: [
-        { text: "ລະຫັດ", value: "customer_id", width: "90px" },
-        { text: "ຊື່", value: "name", width: "150px" },
-        { text: "ນາມສະກຸນ", value: "surname", width: "150px" },
-        { text: "Phone", value: "user.phone", width: "200px", sortable: false },
+        {text: "ລະຫັດ", value: "customer_id", width: "90px"},
+        {text: "ຊື່", value: "name", width: "150px"},
+        {text: "ນາມສະກຸນ", value: "surname", width: "150px"},
+        {text: "Phone", value: "user.phone", width: "200px", sortable: false},
         {
           text: "ບ້ານ",
           value: "village.name",
@@ -667,12 +684,7 @@ export default {
           width: "200px",
           sortable: false,
         },
-        {
-          text: "ຂີ້ເຫຍື້ອຄາດໝາຍຕາມແພັກເກຈ",
-          value: "expect_trash_package",
-          width: "200px",
-        },
-        { text: "ຂີ້ເຫຍື້ອຄາດໝາຍ", value: "expect_trash", width: "200px" },
+        {text: "ຂີ້ເຫຍື້ອຄາດໝາຍ", value: "expect_trash_package", width: "200px"},
         {
           text: "ຂີ້ເຫຍື້ອປັດຈຸບັນ",
           value: "current_month_info",
@@ -683,16 +695,16 @@ export default {
           value: "last_month_info",
           width: "200px",
         },
-        { text: "ສະຖານະແພັກເກດ", value: "status", width: "200px" },
-        { text: "ມື້ບໍລິການ", value: "favorite_dates", width: "100px" },
+        {text: "ສະຖານະແພັກເກດ", value: "status", width: "200px"},
+        {text: "ມື້ບໍລິການ", value: "favorite_dates", width: "100px"},
         {
           text: "ສະຖານະເກັບ",
           value: "can_collect",
           align: "center",
           width: "200px",
         },
-        { text: "Profile", value: "media" },
-        { text: "", value: "actions", sortable: false },
+        {text: "Profile", value: "media"},
+        {text: "", value: "actions", sortable: false},
       ],
     };
   },
@@ -729,73 +741,76 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("customer", {
-          params: queryOption([
-            { page: this.pagination.current_page },
-            { per_page: this.per_page },
-            { filter: this.search },
-            { date_from: this.start_date },
-            { date_end: this.end_date },
-            { without: this.selectedCustomerStatus },
-            { villages: this.selectedVillage },
-            { statuses: this.selectedStatus },
-            { district_id: this.selectedDistrict },
-            { favorite_dates: this.selectedFavoriteDate },
-            { package_id: this.filteredPackage },
-          ]),
-        })
-        .then((res) => {
-          if (res.data.code == 200) {
-            this.$store.commit("Loading_State", false);
-            this.customers = res.data.data.data;
-            this.pagination = res.data.data.pagination;
-          }
-        })
-        .catch((error) => {
-          this.$store.commit("Loading_State", false);
-          if (error.response && error.response.status == 422) {
-            let obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
-              this.server_errors[key] = message[0];
+          .get("customer", {
+            params: queryOption([
+              {page: this.pagination.current_page},
+              {per_page: this.per_page},
+              {filter: this.search},
+              {date_from: this.start_date},
+              {date_end: this.end_date},
+              {without: this.selectedCustomerStatus},
+              {villages: this.selectedVillage},
+              {statuses: this.selectedStatus},
+              {district_id: this.selectedDistrict},
+              {favorite_dates: this.selectedFavoriteDate},
+              {package_id: this.filteredPackage},
+            ]),
+          })
+          .then((res) => {
+            if (res.data.code == 200) {
+              this.$store.commit("Loading_State", false);
+              this.customers = res.data.data.data;
+              this.pagination = res.data.data.pagination;
             }
-          }
-        });
+          })
+          .catch((error) => {
+            this.$store.commit("Loading_State", false);
+            if (error.response && error.response.status == 422) {
+              let obj = error.response.data.errors;
+              for (let [key, message] of Object.entries(obj)) {
+                this.server_errors[key] = message[0];
+              }
+            }
+          });
     },
 
     fetchAddress() {
       this.$axios
-        .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
-        .then((res) => {
-          if (res.data.code == 200) {
-            this.address = res.data.data;
-            this.address.map((item) => {
-              this.districts = item.districts;
-            });
-          }
-        })
-        .catch(() => {});
+          .get("info/address", {params: {filter: "ນະຄອນຫລວງວຽງຈັນ"}})
+          .then((res) => {
+            if (res.data.code == 200) {
+              this.address = res.data.data;
+              this.address.map((item) => {
+                this.districts = item.districts;
+              });
+            }
+          })
+          .catch(() => {
+          });
     },
 
     fetchVillage() {
       this.$axios
-        .get("info/district/" + this.selectedDistrict + "/village")
-        .then((res) => {
-          if (res.data.code == 200) {
-            this.villages = res.data.data;
-          }
-        })
-        .catch(() => {});
+          .get("info/district/" + this.selectedDistrict + "/village")
+          .then((res) => {
+            if (res.data.code == 200) {
+              this.villages = res.data.data;
+            }
+          })
+          .catch(() => {
+          });
     },
 
     fetchPackage() {
       this.$axios
-        .get("package")
-        .then((res) => {
-          if (res.data.code == 200) {
-            this.packages = res.data.data;
-          }
-        })
-        .catch(() => {});
+          .get("package")
+          .then((res) => {
+            if (res.data.code == 200) {
+              this.packages = res.data.data;
+            }
+          })
+          .catch(() => {
+          });
     },
 
     closeDelete() {
@@ -809,52 +824,13 @@ export default {
     deleteItemConfirm() {
       this.loading = true;
       this.$axios
-        .delete("customer/" + this.customerId)
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.loading = false;
-              this.$store.commit("modalDelete_State", false);
-              this.fetchData();
-              this.$store.commit("Toast_State", {
-                value: true,
-                color: "success",
-                msg: res.data.message,
-              });
-            }, 300);
-          }
-        })
-        .catch((error) => {
-          this.loading = false;
-          this.$store.commit("Toast_State", {
-            value: true,
-            color: "error",
-            msg: error.response
-              ? error.response.data.message
-              : "Something went wrong",
-          });
-          this.$store.commit("modalDelete_State", false);
-        });
-    },
-    importData() {
-      this.importFile = true;
-    },
-    importFileForm() {
-      let data = new FormData();
-      data.append("file", this.file);
-      if (this.$refs.form.validate() == true) {
-        this.loading = true;
-        this.$axios
-          .post("import-customer", data, {
-            headers: { "Content-Type": "multipart/form-data" },
-          })
+          .delete("customer/" + this.customerId)
           .then((res) => {
             if (res.data.code == 200) {
-              this.loading = false;
-              this.errors = res.data.data.errors;
-              this.successes = res.data.data.data;
-              this.file = null;
               setTimeout(() => {
+                this.loading = false;
+                this.$store.commit("modalDelete_State", false);
+                this.fetchData();
                 this.$store.commit("Toast_State", {
                   value: true,
                   color: "success",
@@ -869,46 +845,85 @@ export default {
               value: true,
               color: "error",
               msg: error.response
-                ? error.response.data.message
-                : "Something went wrong",
+                  ? error.response.data.message
+                  : "Something went wrong",
             });
+            this.$store.commit("modalDelete_State", false);
+          });
+    },
+    importData() {
+      this.importFile = true;
+    },
+    importFileForm() {
+      let data = new FormData();
+      data.append("file", this.file);
+      if (this.$refs.form.validate() == true) {
+        this.loading = true;
+        this.$axios
+            .post("import-customer", data, {
+              headers: {"Content-Type": "multipart/form-data"},
+            })
+            .then((res) => {
+              if (res.data.code == 200) {
+                this.loading = false;
+                this.errors = res.data.data.errors;
+                this.successes = res.data.data.data;
+                this.file = null;
+                setTimeout(() => {
+                  this.$store.commit("Toast_State", {
+                    value: true,
+                    color: "success",
+                    msg: res.data.message,
+                  });
+                }, 300);
+              }
+            })
+            .catch((error) => {
+              this.loading = false;
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response
+                    ? error.response.data.message
+                    : "Something went wrong",
+              });
+              if (error.response && error.response.status == 422) {
+                let obj = error.response.data.errors;
+                for (let [key, customer] of Object.entries(obj)) {
+                  this.server_errors[key] = customer[0];
+                }
+              }
+            });
+      }
+    },
+    exportData() {
+      this.loading = true;
+      this.$axios
+          .get("import-example", {
+            params: queryOption([{example_type: "import_customer"}]),
+          })
+          .then((res) => {
+            if (res.data.code == 200) {
+              window.open(res.data.data.download_link);
+              this.loading = false;
+            }
+          })
+          .catch((error) => {
+            this.loading = false;
             if (error.response && error.response.status == 422) {
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response
+                    ? error.response.data.message
+                    : "Something went wrong",
+              });
               let obj = error.response.data.errors;
               for (let [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
               }
             }
           });
-      }
-    },
-    exportData() {
-      this.loading = true;
-      this.$axios
-        .get("import-example", {
-          params: queryOption([{ example_type: "import_customer" }]),
-        })
-        .then((res) => {
-          if (res.data.code == 200) {
-            window.open(res.data.data.download_link);
-            this.loading = false;
-          }
-        })
-        .catch((error) => {
-          this.loading = false;
-          if (error.response && error.response.status == 422) {
-            this.$store.commit("Toast_State", {
-              value: true,
-              color: "error",
-              msg: error.response
-                ? error.response.data.message
-                : "Something went wrong",
-            });
-            let obj = error.response.data.errors;
-            for (let [key, customer] of Object.entries(obj)) {
-              this.server_errors[key] = customer[0];
-            }
-          }
-        });
     },
     closeImport() {
       this.file = null;
@@ -925,58 +940,12 @@ export default {
     switchStatus(id) {
       this.loading = true;
       this.$axios
-        .post("customer/" + id + "/switch-status")
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.loading = false;
-              this.fetchData();
-              this.$store.commit("Toast_State", {
-                value: true,
-                color: "success",
-                msg: res.data.message,
-              });
-            }, 300);
-          }
-        })
-        .catch((error) => {
-          this.loading = false;
-          this.$store.commit("Toast_State", {
-            value: true,
-            color: "error",
-            msg: error.response
-              ? error.response.data.message
-              : "Something went wrong",
-          });
-        });
-    },
-
-    addPackage(id) {
-      this.fetchPackage();
-      this.$store.commit("modalAdd_State", true);
-      this.customerId = id;
-    },
-    AddPackage() {
-      const date = this.moment(`${this.package_date} ${1}`).format(
-        "YYYY-MM-DD"
-      );
-      if (this.$refs.form.validate() == true) {
-        this.loading = true;
-        this.$axios
-          .post("customer/" + this.customerId + "/add-package", {
-            package_id: this.selectedPackage,
-            start_month: date,
-            can_collect: this.start_collect,
-          })
+          .post("customer/" + id + "/switch-status")
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
                 this.loading = false;
-                this.closeAddModal();
-                this.selectedPackage = "";
-                this.customerId = "";
                 this.fetchData();
-                this.package_menu = false;
                 this.$store.commit("Toast_State", {
                   value: true,
                   color: "success",
@@ -991,16 +960,62 @@ export default {
               value: true,
               color: "error",
               msg: error.response
-                ? error.response.data.message
-                : "Something went wrong",
+                  ? error.response.data.message
+                  : "Something went wrong",
             });
-            if (error.response && error.response.status == 422) {
-              let obj = error.response.data.errors;
-              for (let [key, customer] of Object.entries(obj)) {
-                this.server_errors[key] = customer[0];
-              }
-            }
           });
+    },
+
+    addPackage(id) {
+      this.fetchPackage();
+      this.$store.commit("modalAdd_State", true);
+      this.customerId = id;
+    },
+    AddPackage() {
+      const date = this.moment(`${this.package_date} ${1}`).format(
+          "YYYY-MM-DD"
+      );
+      if (this.$refs.form.validate() == true) {
+        this.loading = true;
+        this.$axios
+            .post("customer/" + this.customerId + "/add-package", {
+              package_id: this.selectedPackage,
+              start_month: date,
+              can_collect: this.start_collect,
+            })
+            .then((res) => {
+              if (res.data.code == 200) {
+                setTimeout(() => {
+                  this.loading = false;
+                  this.closeAddModal();
+                  this.selectedPackage = "";
+                  this.customerId = "";
+                  this.fetchData();
+                  this.package_menu = false;
+                  this.$store.commit("Toast_State", {
+                    value: true,
+                    color: "success",
+                    msg: res.data.message,
+                  });
+                }, 300);
+              }
+            })
+            .catch((error) => {
+              this.loading = false;
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response
+                    ? error.response.data.message
+                    : "Something went wrong",
+              });
+              if (error.response && error.response.status == 422) {
+                let obj = error.response.data.errors;
+                for (let [key, customer] of Object.entries(obj)) {
+                  this.server_errors[key] = customer[0];
+                }
+              }
+            });
       }
     },
     closeAddModal() {
@@ -1020,42 +1035,42 @@ export default {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .post("customer/" + this.change_package.id + "/change-package", {
-            package_id: this.change_package.package_id,
-          })
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.loading = false;
-                this.closeChangeModal();
-                this.selectedPackage = "";
-                this.customerId = "";
-                this.fetchData();
-                this.package_menu = false;
-                this.$store.commit("Toast_State", {
-                  value: true,
-                  color: "success",
-                  msg: res.data.message,
-                });
-              }, 300);
-            }
-          })
-          .catch((error) => {
-            this.loading = false;
-            this.$store.commit("Toast_State", {
-              value: true,
-              color: "error",
-              msg: error.response
-                ? error.response.data.message
-                : "Something went wrong",
-            });
-            if (error.response && error.response.status == 422) {
-              let obj = error.response.data.errors;
-              for (let [key, customer] of Object.entries(obj)) {
-                this.server_errors[key] = customer[0];
+            .post("customer/" + this.change_package.id + "/change-package", {
+              package_id: this.change_package.package_id,
+            })
+            .then((res) => {
+              if (res.data.code == 200) {
+                setTimeout(() => {
+                  this.loading = false;
+                  this.closeChangeModal();
+                  this.selectedPackage = "";
+                  this.customerId = "";
+                  this.fetchData();
+                  this.package_menu = false;
+                  this.$store.commit("Toast_State", {
+                    value: true,
+                    color: "success",
+                    msg: res.data.message,
+                  });
+                }, 300);
               }
-            }
-          });
+            })
+            .catch((error) => {
+              this.loading = false;
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response
+                    ? error.response.data.message
+                    : "Something went wrong",
+              });
+              if (error.response && error.response.status == 422) {
+                let obj = error.response.data.errors;
+                for (let [key, customer] of Object.entries(obj)) {
+                  this.server_errors[key] = customer[0];
+                }
+              }
+            });
       }
     },
     closeChangeModal() {
@@ -1068,13 +1083,13 @@ export default {
     editPage(id) {
       this.$router.push({
         name: "EditCustomer",
-        params: { id },
+        params: {id},
       });
     },
     viewPage(id) {
       this.$router.push({
         name: "ViewClient",
-        params: { id },
+        params: {id},
       });
     },
     Search() {
@@ -1096,15 +1111,16 @@ export default {
     },
     fetchFavorite() {
       this.$axios
-        .get("favorite-date")
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.favorite_dates = res.data.data;
-            }, 100);
-          }
-        })
-        .catch(() => {});
+          .get("favorite-date")
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.favorite_dates = res.data.data;
+              }, 100);
+            }
+          })
+          .catch(() => {
+          });
     },
   },
   watch: {
@@ -1112,11 +1128,11 @@ export default {
       this.pagination.current_page = "";
       this.fetchData();
     },
-    selectedFavoriteDate: function() {
+    selectedFavoriteDate: function () {
       this.pagination.current_page = "";
       this.fetchData();
     },
-    start_date: function() {
+    start_date: function () {
       this.pagination.current_page = "";
       if (this.end_date != "") {
         if (this.start_date > this.end_date) {
@@ -1125,41 +1141,41 @@ export default {
       }
       this.fetchData();
     },
-    end_date: function() {
+    end_date: function () {
       this.pagination.current_page = "";
       if (this.end_date < this.start_date) {
         this.end_date = "";
       }
       this.fetchData();
     },
-    search: function(value) {
+    search: function (value) {
       this.pagination.current_page = "";
       if (value == "") {
         this.fetchData();
       }
     },
-    selectedVillage: function() {
+    selectedVillage: function () {
       this.pagination.current_page = "";
       this.fetchData();
     },
-    selectedDistrict: function() {
+    selectedDistrict: function () {
       this.pagination.current_page = "";
       if (this.selectedDistrict) {
         this.fetchData();
       }
       this.fetchVillage();
     },
-    selectedStatus: function() {
+    selectedStatus: function () {
       this.pagination.current_page = "";
       this.fetchData();
     },
-    selectedPackage: function() {
+    selectedPackage: function () {
       this.server_errors.package_id = "";
     },
-    package_date: function() {
+    package_date: function () {
       this.server_errors.start_month = "";
     },
-    selectedCustomerStatus: function() {
+    selectedCustomerStatus: function () {
       this.pagination.current_page = "";
       this.fetchData();
     },
