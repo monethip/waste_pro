@@ -421,6 +421,7 @@ import {getCompanyCostBy, concatPackage} from "@/Helpers/Customer";
 import VillageDetail from "@/components/select/VillageDetail"
 import SaleAdmin from "@coms/select/SaleAdmin.vue";
 import RowSection from "../../components/card/RowSection.vue";
+import ensureArray from "@/Helpers/EnsureArray";
 
 export default {
   title() {
@@ -555,7 +556,7 @@ export default {
     },
     async fetchVillage() {
       const res = await this.$axios
-          .get("info/district/" + this.selectedDistrict + "/village")
+          .get("info/district/" + this.selectedDistrict.id + "/village")
           .catch(() => {
           });
 
@@ -602,8 +603,16 @@ export default {
       if (this.$route.query.selectedCustomerType) this.selectedCustomerType = this.$route.query.selectedCustomerType
       if (this.$route.query.package_id) this.package_id = this.$route.query.package_id
       if (this.$route.query.selectedComapnyType) this.selectedComapnyType = this.$route.query.selectedComapnyType
-      if (this.$route.query.selectedVillage) this.selectedVillage = this.$route.query.selectedVillage
-      if (this.$route.query.selectedDistrict) this.selectedDistrict = this.$route.query.selectedDistrict
+
+      if (this.$route.query.selectedDistrict) {
+        const existing = this.districts.find(item => item.id == this.$route.query.selectedDistrict)
+        if (existing) this.selectedDistrict = existing
+      }
+
+      if (this.$route.query.selectedVillage) {
+        this.selectedVillage = ensureArray(this.$route.query.selectedVillage).map(item => Number(item))
+      }
+
       if (this.$route.query.selectedDetails) this.selectedDetails = this.$route.query.selectedDetails
       if (this.$route.query.start_date) this.start_date = this.$route.query.start_date
       if (this.$route.query.end_date) this.end_date = this.$route.query.end_date
@@ -667,8 +676,8 @@ export default {
     // },
   },
   async created() {
-    this.setParam()
     await this.fetchAddress()
+    this.setParam()
     await this.fetchPackage()
     this.fetchData()
   },
@@ -741,7 +750,7 @@ export default {
         {package_id: this.package_id},
         {cost_by: this.selectedComapnyType},
         {villages: this.selectedVillage},
-        {district_id: this.selectedDistrict},
+        {district_id: this.selectedDistrict.id},
         {village_details: this.selectedDetails},
         {date_from: this.start_date},
         {date_end: this.end_date},
