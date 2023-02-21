@@ -257,10 +257,10 @@
                           <p v-if="customer.user.billings_sum_total > 0"
                              :style="customer.user.billings_sum_total - customer.user.billings_paid_sum_total <= 0 ? 'color: green' : 'color: orange'"
                              class="text-large ml-6">
-                            {{ customer.user.full_name }}</p>
+                            {{ customer.full_name }}</p>
                           <p v-else class="text-large ml-6"
                           >
-                            {{ customer.user.full_name }}</p>
+                            {{ customer.full_name }}</p>
                         </v-row>
                         <v-row>
                           <v-icon class="ml-8 mr-1" small> mdi-map-marker</v-icon>
@@ -272,7 +272,9 @@
                           {{ customer.user.phone }}
                         </v-row>
                         <v-row v-if="customer.customer_activity">
-                          <v-col>ຜູ້ສ້າງ: {{ customer.customer_activity.causer.full_name }}</v-col>
+                          <v-col v-if="customer.customer_activity && customer.customer_activity.causer">ຜູ້ສ້າງ:
+                            {{ customer.customer_activity.causer.full_name }}
+                          </v-col>
                         </v-row>
                       </td>
                       <td :rowspan="customer.user.billings && customer.user.billings.length ? customer.user.billings.length : 1">
