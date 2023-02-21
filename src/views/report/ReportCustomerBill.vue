@@ -272,8 +272,8 @@
                           {{ customer.user.phone }}
                         </v-row>
                         <v-row v-if="customer.customer_activity">
-                          <v-col v-if="customer.customer_activity && customer.customer_activity.causer">ຜູ້ສ້າງ:
-                            {{ customer.customer_activity.causer.full_name }}
+                          <v-col v-if="customer.customer_activity && customer.customer_activity.user">ຜູ້ສ້າງ:
+                            {{ customer.customer_activity.user.full_name }}
                           </v-col>
                         </v-row>
                       </td>
