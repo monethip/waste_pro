@@ -257,10 +257,10 @@
                           <p v-if="customer.user.billings_sum_total > 0"
                              :style="customer.user.billings_sum_total - customer.user.billings_paid_sum_total <= 0 ? 'color: green' : 'color: orange'"
                              class="text-large ml-6">
-                            {{ customer.full_name }}</p>
+                            {{ customer.user.full_name }}</p>
                           <p v-else class="text-large ml-6"
                           >
-                            {{ customer.full_name }}</p>
+                            {{ customer.user.full_name }}</p>
                         </v-row>
                         <v-row>
                           <v-icon class="ml-8 mr-1" small> mdi-map-marker</v-icon>
