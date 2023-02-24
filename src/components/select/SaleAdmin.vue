@@ -1,12 +1,12 @@
 <template>
   <v-autocomplete
-    v-model="selectedSale"
-    :items="sales"
-    item-text="name"
-    item-value="id"
-    :label="label"
-    outlined
-    dense
+      v-model="selectedSale"
+      :items="sales"
+      :label="label"
+      dense
+      item-text="name"
+      item-value="id"
+      outlined
   ></v-autocomplete>
 </template>
 
@@ -19,7 +19,7 @@ export default {
       default: 'ເລືອກເຊວທີ່ກ່ຽວຂ້ອງ',
       type: String
     },
-    firstSale:{
+    firstSale: {
       default: ''
     }
   },
@@ -33,23 +33,23 @@ export default {
     async fetchSale() {
       this.$store.commit("Loading_State", true);
       const res = await this.$axios
-        .get("user-setting/user", {
-          params: queryOptions([
-            { roles: ["sale", "sale_admin"] },
-            { order_by: "newest" },
-          ]),
-        })
-        .catch((error) => {
-          this.$store.commit("Loading_State", false);
+          .get("user-setting/user", {
+            params: queryOptions([
+              {roles: ["sale", "sale_admin", "sale_partner"]},
+              {order_by: "newest"},
+            ]),
+          })
+          .catch((error) => {
+            this.$store.commit("Loading_State", false);
 
-          this.$store.commit("Toast_State", {
-            value: true,
-            color: "error",
-            msg: error.response
-              ? error.response.data.message
-              : "Something went wrong",
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response
+                  ? error.response.data.message
+                  : "Something went wrong",
+            });
           });
-        });
 
       if (this.$store.state.isLoading) {
         this.salesData = res.data.data;
@@ -82,7 +82,7 @@ export default {
   },
   async created() {
     await this.fetchSale();
-    if(this.firstSale) this.selectedSale = typeof this.firstSale != "number" ? Number.parseInt(this.firstSale) : this.selectedSale
+    if (this.firstSale) this.selectedSale = typeof this.firstSale != "number" ? Number.parseInt(this.firstSale) : this.selectedSale
   },
 };
 </script>
