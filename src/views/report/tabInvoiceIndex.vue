@@ -273,11 +273,11 @@ export default {
       salesData: [],
       selectedSale: "",
       search: "",
-      date_from: "",
+      date_from: new Date().toISOString().substr(0, 8) + "01",
       date_to: "",
       start_menu: false,
       end_menu: false,
-      selectedBillDate: "",
+      selectedBillDate: "paided_at",
       exportMode: "",
     };
   },
