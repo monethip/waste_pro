@@ -571,7 +571,7 @@ export default {
       if (this.selectedVillage)
         queryArray.push({village_id: this.selectedVillage});
       else if (this.selectedDistrict)
-        queryArray.push({district_id: this.selectedDistrict});
+        queryArray.push({district_id: this.selectedDistrict.id});
 
       this.$store.commit("Loading_State", true);
       this.$axios
@@ -675,7 +675,8 @@ export default {
     billDates() {
       this.fetchData();
     },
-    selectedDistrict() {
+    selectedDistrict(old, value) {
+      if (value != old) this.selectedVillage = ""
       this.fetchData();
     },
     selectedVillage() {

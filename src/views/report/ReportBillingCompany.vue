@@ -668,7 +668,8 @@ export default {
     billDates() {
       this.fetchData();
     },
-    selectedDistrict() {
+    selectedDistrict(old, value) {
+      if (value != old) this.selectedVillage = ""
       this.fetchData();
     },
     selectedVillage() {

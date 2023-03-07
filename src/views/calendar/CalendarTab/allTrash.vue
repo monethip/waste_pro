@@ -2,18 +2,18 @@
   <v-container>
     <v-row>
       <v-col>
-        <v-breadcrumbs large class="pa-0">ຂີ້ເຫື້ຍອທັງໝົດ</v-breadcrumbs>
+        <v-breadcrumbs class="pa-0" large>ຂີ້ເຫື້ຍອທັງໝົດ</v-breadcrumbs>
       </v-col>
       <v-col>
-        <v-chip color="orange" dark>{{countPause}} ຢຸດ</v-chip>
+        <v-chip color="orange" dark>{{ countPause }} ຢຸດ</v-chip>
       </v-col>
       <v-col v-if="!dragEnabled" class="text-right">
-        <v-btn @click="showDrag" color="yellow">ແກ້ໄຂລຳດັບ</v-btn>
+        <v-btn color="yellow" @click="showDrag">ແກ້ໄຂລຳດັບ</v-btn>
       </v-col>
       <v-col v-if="dragEnabled" class="text-right">
         <v-row>
           <v-col>
-            <v-btn width="100%" color="primary" @click="updatePriority">ບັນທຶກ</v-btn>
+            <v-btn color="primary" width="100%" @click="updatePriority">ບັນທຶກ</v-btn>
           </v-col>
           <v-col>
             <v-btn width="100%" @click="closeDrag">ປິດ</v-btn>
@@ -39,14 +39,16 @@
       <v-simple-table v-if="dragEnabled">
         <draggable :list="allCalendars" tag="tbody">
           <!-- eslint-disable -->
-          <tr v-if="!calendar.is_pause" v-for="(calendar,index) in allCalendars" :key="index">
+          <tr v-for="(calendar,index) in allCalendars" v-if="!calendar.is_pause" :key="index">
             <td>
               <v-icon small>mdi-arrow-all</v-icon>
             </td>
             <td>{{ calendar.priority }}</td>
             <td>
-              {{ calendar.route_plan_detail.customer.customer_type = 'company' ?
-              calendar.route_plan_detail.customer.company_name : calendar.route_plan_detail.customer.name }}
+              {{
+                calendar.route_plan_detail.customer.customer_type = 'company' ?
+                    calendar.route_plan_detail.customer.company_name : calendar.route_plan_detail.customer.name
+              }}
             </td>
           </tr>
           <!-- eslint-enable -->
@@ -54,22 +56,23 @@
       </v-simple-table>
     </div>
     <div v-if="!dragEnabled">
-      <v-dialog v-model="dialog" scrollable max-width="300px">
+      <v-dialog v-model="dialog" max-width="300px" scrollable>
         <template v-slot:activator="{ on, attrs }">
           <v-data-table
-            v-if="calendars"
-            :headers="headers"
-            :items="calendars"
-            :search="search"
-            :disable-pagination="true"
-            hide-default-footer
+              v-if="calendars"
+              :disable-pagination="true"
+              :headers="headers"
+              :items="calendars"
+              :search="search"
+              hide-default-footer
           >
             <template v-slot:item.customer="{ item }">
               <pre v-if="!item">{{ item }}</pre>
               <div v-if="item.route_plan_detail"></div>
               <div
-                v-if="(item.route_plan_detail.customer.customer_type = 'company')"
-              >{{ item.route_plan_detail.customer.company_name }}</div>
+                  v-if="(item.route_plan_detail.customer.customer_type = 'company')"
+              >{{ item.route_plan_detail.customer.company_name }}
+              </div>
               <div>
                 {{ item.route_plan_detail.customer.name }}
                 {{ item.route_plan_detail.customer.surname }}
@@ -82,7 +85,7 @@
               <div>{{ moment(item.date).format("DD-MM-YY hh:mm:ss") }}</div>
             </template>
             <template v-slot:item.status="{ item }">
-              <v-chip label :color="statusColor(item.status)">{{ item.status }}</v-chip>
+              <v-chip :color="statusColor(item.status)" label>{{ item.status }}</v-chip>
             </template>
             <template v-slot:item.amount="{ item }">
               <div v-if="item.collection_type == 'bag' || item.collection_type == 'chartered'">
@@ -100,33 +103,35 @@
 
             <template v-slot:item.is_pause="{ item }">
               <v-chip
-                @click="switchPause(item.id)"
-                label
-                :color="item.is_pause?'orange':'green'"
-                dark
+                  :color="item.is_pause?'orange':'green'"
+                  dark
+                  label
+                  @click="switchPause(item.id)"
               >
                 {{
-                item.is_pause?'ຢຸດກ່ອນ':'ໃຫ້ເກັບ' }}
+                  item.is_pause ? 'ຢຸດກ່ອນ' : 'ໃຫ້ເກັບ'
+                }}
               </v-chip>
             </template>
 
             <template v-slot:item.route_plan_detail.customer.can_collect="{ item }">
               <v-chip :color="item.route_plan_detail.customer.can_collect ? 'success' : 'error'">
                 {{
-                item.route_plan_detail.customer.can_collect ? 'ເກັບໄດ້' : 'ເກັບບໍ່ໄດ້'
+                  item.route_plan_detail.customer.can_collect ? 'ເກັບໄດ້' : 'ເກັບບໍ່ໄດ້'
                 }}
               </v-chip>
             </template>
 
             <template v-slot:item.actions="{ item }">
-              <v-icon small class="mr-2" @click="viewPage(item.plan_calendar_id, item.id)">mdi-eye</v-icon>
+              <v-icon class="mr-2" small @click="viewPage(item.plan_calendar_id, item.id)">mdi-eye</v-icon>
               <v-icon
-                small
-                class="mr-2"
-                v-bind="attrs"
-                v-on="on"
-                @click="selectedRound = item.id"
-              >mdi-plus</v-icon>
+                  class="mr-2"
+                  small
+                  v-bind="attrs"
+                  @click="selectedRound = item.id"
+                  v-on="on"
+              >mdi-plus
+              </v-icon>
             </template>
           </v-data-table>
         </template>
@@ -134,7 +139,7 @@
           <v-card-title>ເພີ່ມຈຳນວນຮອບໃນມື້</v-card-title>
           <v-divider></v-divider>
           <v-card-text>
-            <v-text-field type="number" v-model="round"></v-text-field>
+            <v-text-field v-model="round" type="number"></v-text-field>
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
@@ -143,13 +148,13 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <br />
+      <br/>
       <template>
         <Pagination
-          v-if="pagination.total_pages > 1"
-          :pagination="pagination"
-          :offset="offset"
-          @paginate="fetchData()"
+            v-if="pagination.total_pages > 1"
+            :offset="offset"
+            :pagination="pagination"
+            @paginate="fetchData()"
         ></Pagination>
       </template>
     </div>
@@ -160,6 +165,7 @@
 // import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import trashMixin from "@/views/calendar/trashMixin";
 import draggable from "vuedraggable";
+
 export default {
   mixins: [trashMixin],
   name: "Trash",
@@ -181,9 +187,9 @@ export default {
       //   statuses: ["pending"],
       enabled: true,
       list: [
-        { name: "John", id: 0 },
-        { name: "Joao", id: 1 },
-        { name: "Jean", id: 2 }
+        {name: "John", id: 0},
+        {name: "Joao", id: 1},
+        {name: "Jean", id: 2}
       ],
       dragging: false,
       dragEnabled: false,
@@ -192,8 +198,8 @@ export default {
       server_errors: {},
 
       headers: [
-        { text: "ລຳດັບຄວາມສຳຄັນ", value: "priority" },
-        { text: "ລູກຄ້າ", value: "customer" },
+        {text: "ລຳດັບຄວາມສຳຄັນ", value: "priority"},
+        {text: "ລູກຄ້າ", value: "customer"},
         {
           text: "ສະຖານະເກັບ",
           value: "item.route_plan_detail.customer.can_collect"
@@ -219,13 +225,17 @@ export default {
           align: "center"
         },
         {
+          text: "can_collect",
+          value: "route_plan_detail.customer.can_collect",
+          align: "center"
+        },
+        {
           text: "ເປີດ/ຢຸດ",
           value: "is_pause",
-          align: "center",
-          sortable: false
+          align: "center"
         },
-        { text: "", value: "actions", sortable: false },
-        { text: "", value: "add_round", sortable: false }
+        {text: "", value: "actions", sortable: false},
+        {text: "", value: "add_round", sortable: false}
       ],
 
       selectedRound: ""
@@ -235,29 +245,29 @@ export default {
     switchPause(id) {
       this.$store.commit("Loading_State", true);
       this.$axios
-        .post("plan-calendar-pause/" + id)
-        .then(res => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.$store.commit("Loading_State", false);
-              this.$store.commit("Toast_State", {
-                value: true,
-                color: "success",
-                msg: res.data.message
-              });
-            }, 100);
+          .post("plan-calendar-pause/" + id)
+          .then(res => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.$store.commit("Loading_State", false);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message
+                });
+              }, 100);
 
-            this.fetchData();
-          }
-        })
-        .catch(error => {
-          this.$store.commit("Loading_State", false);
-          if (error.response && error.response.status == 422) {
-            this.toast.msg = error.message;
-          }
-        });
+              this.fetchData();
+            }
+          })
+          .catch(error => {
+            this.$store.commit("Loading_State", false);
+            if (error.response && error.response.status == 422) {
+              this.toast.msg = error.message;
+            }
+          });
     },
-    checkMove: function(e) {
+    checkMove: function (e) {
       window.console.log("Future index: " + e.draggedContext.futureIndex);
     },
     showDrag() {
@@ -273,46 +283,46 @@ export default {
       let body = [];
       for (const planCalendarDetail of this.allCalendars) {
         if (
-          planCalendarDetail.is_pause &&
-          body.length >= planCalendarDetail.priority
+            planCalendarDetail.is_pause &&
+            body.length >= planCalendarDetail.priority
         ) {
           body.splice(
-            planCalendarDetail.priority - 1,
-            0,
-            planCalendarDetail.id
+              planCalendarDetail.priority - 1,
+              0,
+              planCalendarDetail.id
           );
         } else {
           body.push(planCalendarDetail.id);
         }
       }
       this.$axios
-        .post("plan-calendar-priority/" + this.$route.params.id, {
-          plan_calendar_details: body
-        })
-        .then(res => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.$store.commit("Loading_State", false);
-              this.$store.commit("Toast_State", {
-                value: true,
-                color: "success",
-                msg: res.data.message
-              });
-            }, 100);
+          .post("plan-calendar-priority/" + this.$route.params.id, {
+            plan_calendar_details: body
+          })
+          .then(res => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.$store.commit("Loading_State", false);
+                this.$store.commit("Toast_State", {
+                  value: true,
+                  color: "success",
+                  msg: res.data.message
+                });
+              }, 100);
 
-            this.fetchAllData();
-          }
-        })
-        .catch(error => {
-          this.$store.commit("Loading_State", false);
-          this.$store.commit("Toast_State", {
-            value: true,
-            color: "error",
-            msg: error.response
-              ? error.response.data.message
-              : "Something went wrong"
+              this.fetchAllData();
+            }
+          })
+          .catch(error => {
+            this.$store.commit("Loading_State", false);
+            this.$store.commit("Toast_State", {
+              value: true,
+              color: "error",
+              msg: error.response
+                  ? error.response.data.message
+                  : "Something went wrong"
+            });
           });
-        });
     },
     backPrevios() {
       this.$router.go(-1);
@@ -324,39 +334,39 @@ export default {
       if (this.round > 0) {
         this.$store.commit("Loading_State", true);
         this.$axios
-          .post("plan-calendar-detail-round/" + this.selectedRound, {
-            round: this.round
-          })
-          .then(res => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.$store.commit("Loading_State", false);
-                this.round = 0;
-                this.dialog = false;
-                this.selectedRound = "";
-                this.fetchData();
-              }, 100);
-            }
-          })
-          .catch(error => {
-            this.loading = false;
-            this.round = 0;
-            this.dialog = false;
-            this.selectedRound = "";
-            this.$store.commit("Toast_State", {
-              value: true,
-              color: "error",
-              msg: error.response
-                ? error.response.data.message
-                : "Something went wrong"
-            });
-            if (error.response && error.response.status == 422) {
-              let obj = error.response.data.errors;
-              for (let [key, data] of Object.entries(obj)) {
-                this.server_errors[key] = data[0];
+            .post("plan-calendar-detail-round/" + this.selectedRound, {
+              round: this.round
+            })
+            .then(res => {
+              if (res.data.code == 200) {
+                setTimeout(() => {
+                  this.$store.commit("Loading_State", false);
+                  this.round = 0;
+                  this.dialog = false;
+                  this.selectedRound = "";
+                  this.fetchData();
+                }, 100);
               }
-            }
-          });
+            })
+            .catch(error => {
+              this.loading = false;
+              this.round = 0;
+              this.dialog = false;
+              this.selectedRound = "";
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response
+                    ? error.response.data.message
+                    : "Something went wrong"
+              });
+              if (error.response && error.response.status == 422) {
+                let obj = error.response.data.errors;
+                for (let [key, data] of Object.entries(obj)) {
+                  this.server_errors[key] = data[0];
+                }
+              }
+            });
       } else {
         this.dialog = false;
       }
