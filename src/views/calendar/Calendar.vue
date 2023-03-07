@@ -3,44 +3,46 @@
     <v-row>
       <v-col>
         <v-btn class="btn-primary" @click="AddPlan()"
-          ><v-icon>mdi-plus</v-icon>
+        >
+          <v-icon>mdi-plus</v-icon>
         </v-btn>
       </v-col>
       <v-col>
         <p>ແຜນຕາຕະລາງວຽກແຕ່ລະເດືອນ</p>
       </v-col>
-<!--      <v-col>-->
-<!--        <v-text-field-->
-<!--          outlined-->
-<!--          dense-->
-<!--          clearable-->
-<!--          prepend-inner-icon="mdi-magnify"-->
-<!--          label="ຊື່"-->
-<!--          type="text"-->
-<!--          v-model="search"-->
-<!--          @keyup.enter="Search()"-->
-<!--        >-->
-<!--        </v-text-field>-->
-<!--      </v-col>-->
+      <!--      <v-col>-->
+      <!--        <v-text-field-->
+      <!--          outlined-->
+      <!--          dense-->
+      <!--          clearable-->
+      <!--          prepend-inner-icon="mdi-magnify"-->
+      <!--          label="ຊື່"-->
+      <!--          type="text"-->
+      <!--          v-model="search"-->
+      <!--          @keyup.enter="Search()"-->
+      <!--        >-->
+      <!--        </v-text-field>-->
+      <!--      </v-col>-->
     </v-row>
     <div>
       <v-card>
         <v-card-text>
           <v-data-table
-            :headers="headers"
-            :items="calendars"
-            :search="search"
-            :disable-pagination="true"
-            hide-default-footer
+              :disable-pagination="true"
+              :headers="headers"
+              :items="calendars"
+              :search="search"
+              hide-default-footer
           >
             <template v-slot:item.plan="{ item }">
-              <v-icon medium class="mr-2" @click="gotoPlanCalendar(item.id)"
-                >mdi-map-marker-path</v-icon
+              <v-icon class="mr-2" medium @click="gotoPlanCalendar(item.id,item.month)"
+              >mdi-map-marker-path
+              </v-icon
               >
             </template>
             <template v-slot:item.has_invoice="{ item }">
               <v-chip :color="HasInvoiceColor(item.has_invoice)"
-              >{{HasInvoice(item.has_invoice)}}
+              >{{ HasInvoice(item.has_invoice) }}
               </v-chip>
             </template>
             <template v-slot:item.created_at="{ item }">
@@ -50,18 +52,20 @@
               </div>
             </template>
             <template v-slot:item.actions="{ item }">
-              <v-icon small class="mr-2" @click="editModal(item)">
+              <v-icon class="mr-2" small @click="editModal(item)">
                 mdi-pencil
               </v-icon>
-              <v-icon small @click="deleteItem(item.id)"> mdi-delete </v-icon>
-            </template> </v-data-table
-          ><br />
+              <v-icon small @click="deleteItem(item.id)"> mdi-delete</v-icon>
+            </template>
+          </v-data-table
+          >
+          <br/>
           <template>
             <Pagination
-              v-if="pagination.total_pages > 1"
-              :pagination="pagination"
-              :offset="offset"
-              @paginate="fetchData()"
+                v-if="pagination.total_pages > 1"
+                :offset="offset"
+                :pagination="pagination"
+                @paginate="fetchData()"
             ></Pagination>
           </template>
         </v-card-text>
@@ -81,11 +85,11 @@
                 <v-row>
                   <v-col cols="12">
                     <v-text-field
-                      :rules="nameRules"
-                      v-model="plan.name"
-                      label="ຊື່"
-                      outlined
-                      dense
+                        v-model="plan.name"
+                        :rules="nameRules"
+                        dense
+                        label="ຊື່"
+                        outlined
                     >
                     </v-text-field>
                     <p class="errors">
@@ -96,23 +100,23 @@
                 <v-row>
                   <v-col cols="12">
                     <v-menu
-                      :rules="monthRules"
-                      v-model="start_menu"
-                      :close-on-content-click="true"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
+                        v-model="start_menu"
+                        :close-on-content-click="true"
+                        :nudge-right="40"
+                        :rules="monthRules"
+                        min-width="auto"
+                        offset-y
+                        transition="scale-transition"
                     >
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
-                          v-model="start_date"
-                          label="ເລີ່ມວັນທີ"
-                          readonly
-                          outlined
-                          v-bind="attrs"
-                          v-on="on"
-                          dense
+                            v-model="start_date"
+                            dense
+                            label="ເລີ່ມວັນທີ"
+                            outlined
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
                         ></v-text-field>
                       </template>
                       <v-date-picker v-model="start_date" type="month"
@@ -131,11 +135,11 @@
                 Close
               </v-btn>
               <v-btn
-                color="blue darken-1"
-                text
-                :loading="loading"
-                :disabled="loading"
-                @click="SubmitPlan()"
+                  :disabled="loading"
+                  :loading="loading"
+                  color="blue darken-1"
+                  text
+                  @click="SubmitPlan()"
               >
                 Add
               </v-btn>
@@ -157,11 +161,11 @@
                 <v-row>
                   <v-col cols="12">
                     <v-text-field
-                      v-model="calendarEdit.name"
-                      label="ຊື່"
-                      outlined
-                      dense
-                      :rules="nameRules"
+                        v-model="calendarEdit.name"
+                        :rules="nameRules"
+                        dense
+                        label="ຊື່"
+                        outlined
                     >
                     </v-text-field>
                     <p class="errors">
@@ -172,28 +176,28 @@
                 <v-row>
                   <v-col cols="12">
                     <v-menu
-                      v-model="edit_date"
-                      :close-on-content-click="true"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
+                        v-model="edit_date"
+                        :close-on-content-click="true"
+                        :nudge-right="40"
+                        min-width="auto"
+                        offset-y
+                        transition="scale-transition"
                     >
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
-                          v-model="calendarEdit.month"
-                          label="ເລີ່ມວັນທີ"
-                          readonly
-                          outlined
-                          v-bind="attrs"
-                          v-on="on"
-                          dense
-                          :rules="monthRules"
+                            v-model="calendarEdit.month"
+                            :rules="monthRules"
+                            dense
+                            label="ເລີ່ມວັນທີ"
+                            outlined
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
                         ></v-text-field>
                       </template>
                       <v-date-picker
-                        v-model="calendarEdit.month"
-                        type="month"
+                          v-model="calendarEdit.month"
+                          type="month"
                       ></v-date-picker>
                     </v-menu>
                     <p class="errors">
@@ -209,11 +213,11 @@
                 Close
               </v-btn>
               <v-btn
-                color="blue darken-1"
-                text
-                :loading="loading"
-                :disabled="loading"
-                @click="UpdatePlan()"
+                  :disabled="loading"
+                  :loading="loading"
+                  color="blue darken-1"
+                  text
+                  @click="UpdatePlan()"
               >
                 Update
               </v-btn>
@@ -230,12 +234,13 @@
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
           <v-btn
-            color="blue darken-1"
-            text
-            :loading="loading"
-            :disabled="loading"
-            @click="deleteItemConfirm"
-            >OK</v-btn
+              :disabled="loading"
+              :loading="loading"
+              color="blue darken-1"
+              text
+              @click="deleteItemConfirm"
+          >OK
+          </v-btn
           >
           <v-spacer></v-spacer>
         </v-card-actions>
@@ -245,8 +250,9 @@
 </template>
 
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import {GetOldValueOnInput} from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
+
 export default {
   name: "Customer",
   title() {
@@ -266,7 +272,7 @@ export default {
       //Add Package
       start_date: new Date().toISOString().substr(0, 7),
       start_menu: false,
-      edit_date:false,
+      edit_date: false,
       packages: [],
       selectedPackage: "",
       server_errors: {},
@@ -280,8 +286,8 @@ export default {
       calendarEdit: {},
 
       headers: [
-        { text: "ຊື່", value: "name" },
-        { text: "ວັນທີເລີ່ມ", value: "month" },
+        {text: "ຊື່", value: "name"},
+        {text: "ວັນທີເລີ່ມ", value: "month"},
         {
           text: "ມີບິນ",
           value: "has_invoice",
@@ -306,7 +312,7 @@ export default {
           align: "center",
           sortable: false,
         },
-        { text: "", value: "actions", sortable: false },
+        {text: "", value: "actions", sortable: false},
       ],
       toast: {
         value: true,
@@ -337,31 +343,31 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("plan-month", {
-          params: queryOption([
-            {page: this.pagination.current_page},
-            {per_page: this.per_page},
-          ]),
-        }
-        )
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.$store.commit("Loading_State", false);
-              this.calendars = res.data.data.data;
-              this.pagination = res.data.data.pagination;
-            }, 100);
-          }
-        })
-        .catch((error) => {
-          this.$store.commit("Loading_State", false);
-          if (error.response && error.response.status == 422) {
-            let obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
-              this.server_errors[key] = message[0];
+          .get("plan-month", {
+                params: queryOption([
+                  {page: this.pagination.current_page},
+                  {per_page: this.per_page},
+                ]),
+              }
+          )
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.$store.commit("Loading_State", false);
+                this.calendars = res.data.data.data;
+                this.pagination = res.data.data.pagination;
+              }, 100);
             }
-          }
-        });
+          })
+          .catch((error) => {
+            this.$store.commit("Loading_State", false);
+            if (error.response && error.response.status == 422) {
+              let obj = error.response.data.errors;
+              for (let [key, message] of Object.entries(obj)) {
+                this.server_errors[key] = message[0];
+              }
+            }
+          });
     },
 
     AddPlan() {
@@ -378,56 +384,56 @@ export default {
     deleteItemConfirm() {
       this.loading = true;
       this.$axios
-        .delete("plan-month/" + this.calendarId)
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.loading = false;
-              this.toast.msg = res.data.message;
-              this.$store.commit("Toast_State", this.toast);
-              this.$store.commit("modalDelete_State", false);
-              this.fetchData();
-            }, 300);
-          }
-        })
-        .catch(() => {
-          this.fetchData();
-          this.$store.commit("Toast_State", this.toast_error);
-          this.$store.commit("modalDelete_State", false);
-          this.loading = false;
-        });
+          .delete("plan-month/" + this.calendarId)
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.loading = false;
+                this.toast.msg = res.data.message;
+                this.$store.commit("Toast_State", this.toast);
+                this.$store.commit("modalDelete_State", false);
+                this.fetchData();
+              }, 300);
+            }
+          })
+          .catch(() => {
+            this.fetchData();
+            this.$store.commit("Toast_State", this.toast_error);
+            this.$store.commit("modalDelete_State", false);
+            this.loading = false;
+          });
     },
     SubmitPlan() {
       const date = this.moment(`${this.start_date} ${1}`).format('YYYY-MM-DD');
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .post("plan-month/", {
-            name: this.plan.name,
-            month: date,
-          })
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.loading = false;
-                this.closeAddModal();
-                this.fetchData();
-                this.reset();
-                this.$store.commit("Toast_State", this.toast);
-              }, 300);
-            }
-          })
-          .catch((error) => {
-            this.loading = false;
-            this.$store.commit("Toast_State", this.toast_error);
-            this.fetchData();
-            if (error.response && error.response.status == 422) {
-              let obj = error.response.data.errors;
-              for (let [key, customer] of Object.entries(obj)) {
-                this.server_errors[key] = customer[0];
+            .post("plan-month/", {
+              name: this.plan.name,
+              month: date,
+            })
+            .then((res) => {
+              if (res.data.code == 200) {
+                setTimeout(() => {
+                  this.loading = false;
+                  this.closeAddModal();
+                  this.fetchData();
+                  this.reset();
+                  this.$store.commit("Toast_State", this.toast);
+                }, 300);
               }
-            }
-          });
+            })
+            .catch((error) => {
+              this.loading = false;
+              this.$store.commit("Toast_State", this.toast_error);
+              this.fetchData();
+              if (error.response && error.response.status == 422) {
+                let obj = error.response.data.errors;
+                for (let [key, customer] of Object.entries(obj)) {
+                  this.server_errors[key] = customer[0];
+                }
+              }
+            });
       }
     },
     closeAddModal() {
@@ -443,31 +449,31 @@ export default {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .put("plan-month/" + this.calendarEdit.id, {
-            name: this.calendarEdit.name,
-            month: date,
-          })
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.loading = false;
-                this.closeEditModal();
-                this.fetchData();
-                this.reset();
-                this.$store.commit("Toast_State", this.toast);
-              }, 300);
-            }
-          })
-          .catch((error) => {
-            this.loading = false;
-            this.$store.commit("Toast_State", this.toast_error);
-            if (error.response && error.response.status == 422) {
-              var obj = error.response.data.errors;
-              for (let [key, customer] of Object.entries(obj)) {
-                this.server_errors[key] = customer[0];
+            .put("plan-month/" + this.calendarEdit.id, {
+              name: this.calendarEdit.name,
+              month: date,
+            })
+            .then((res) => {
+              if (res.data.code == 200) {
+                setTimeout(() => {
+                  this.loading = false;
+                  this.closeEditModal();
+                  this.fetchData();
+                  this.reset();
+                  this.$store.commit("Toast_State", this.toast);
+                }, 300);
               }
-            }
-          });
+            })
+            .catch((error) => {
+              this.loading = false;
+              this.$store.commit("Toast_State", this.toast_error);
+              if (error.response && error.response.status == 422) {
+                var obj = error.response.data.errors;
+                for (let [key, customer] of Object.entries(obj)) {
+                  this.server_errors[key] = customer[0];
+                }
+              }
+            });
       }
     },
     closeEditModal() {
@@ -476,26 +482,29 @@ export default {
     Search() {
       GetOldValueOnInput(this);
     },
-    gotoPlanCalendar(id) {
+    gotoPlanCalendar(id, month) {
       this.$router.push({
         name: "PlanCalendar",
-        params: { id },
+        params: {id},
+        query: {
+          month: month
+        }
       });
     },
     reset() {
       this.$refs.form.reset();
     },
-    HasInvoiceColor(value){
-      if(value == '1'){
+    HasInvoiceColor(value) {
+      if (value == '1') {
         return 'success';
-      } else if(value == 0){
+      } else if (value == 0) {
         return 'error';
       }
     },
-    HasInvoice(value){
-      if(value == '1'){
+    HasInvoice(value) {
+      if (value == '1') {
         return 'ມີບິນ';
-      } else if(value == 0){
+      } else if (value == 0) {
         return 'ບໍ່ມີ';
       }
     }

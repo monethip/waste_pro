@@ -2,13 +2,14 @@
   <v-container>
     <v-row>
       <v-col cols="6">
-        <v-breadcrumbs large class="pa-0">
-          <v-btn text class="text-primary" @click="backPrevios()">
+        <v-breadcrumbs class="pa-0" large>
+          <v-btn class="text-primary" text @click="backPrevios()">
             <v-icon>mdi-chevron-left</v-icon>
-          </v-btn>ຈັດການເວລາໃຫ້ພະນັກງານເກັບຂີ້ເຫື້ຍອ
+          </v-btn>
+          ຈັດການເວລາໃຫ້ພະນັກງານເກັບຂີ້ເຫື້ຍອ
           <span class="ml-2 primary-color">
             {{
-            planmonth.name
+              planmonth.name
             }}
           </span>
         </v-breadcrumbs>
@@ -38,23 +39,23 @@
     <v-row>
       <v-col>
         <v-menu
-          v-model="date_menu"
-          :close-on-content-click="true"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
+            v-model="date_menu"
+            :close-on-content-click="true"
+            :nudge-right="40"
+            min-width="auto"
+            offset-y
+            transition="scale-transition"
         >
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
-              v-model="date"
-              label="ເລີ່ມວັນທີ"
-              readonly
-              outlined
-              v-bind="attrs"
-              v-on="on"
-              dense
-              clearable
+                v-model="date"
+                clearable
+                dense
+                label="ເລີ່ມວັນທີ"
+                outlined
+                readonly
+                v-bind="attrs"
+                v-on="on"
             ></v-text-field>
           </template>
           <v-date-picker v-model="date"></v-date-picker>
@@ -62,57 +63,58 @@
       </v-col>
       <v-col>
         <v-autocomplete
-          outlined
-          dense
-          :items="customer_types"
-          v-model="selectedCustomerType"
-          item-text="display"
-          item-value="name"
-          label="ປະເພດແຜນເສັ້ນທາງ"
-          clearable
+            v-model="selectedCustomerType"
+            :items="customer_types"
+            clearable
+            dense
+            item-text="display"
+            item-value="name"
+            label="ປະເພດແຜນເສັ້ນທາງ"
+            outlined
         ></v-autocomplete>
       </v-col>
       <v-col v-if="selectedCustomerType == 'company'">
         <v-autocomplete
-          outlined
-          dense
-          :items="companyCostBy"
-          v-model="selectedCostBy"
-          item-text="la"
-          item-value="en"
-          label="ປະເພດບໍລິການ"
-          clearable
+            v-model="selectedCostBy"
+            :items="companyCostBy"
+            clearable
+            dense
+            item-text="la"
+            item-value="en"
+            label="ປະເພດບໍລິການ"
+            outlined
         ></v-autocomplete>
       </v-col>
 
       <v-col>
         <v-autocomplete
-          v-model="selectedVehicleType"
-          :items="vehicleType"
-          item-text="name"
-          item-value="id"
-          label="ປະເພດລົດ"
-          outlined
-          clearable
-          dense
+            v-model="selectedVehicleType"
+            :items="vehicleType"
+            clearable
+            dense
+            item-text="name"
+            item-value="id"
+            label="ປະເພດລົດ"
+            outlined
         ></v-autocomplete>
       </v-col>
 
       <v-col>
         <v-autocomplete
-          v-model="selectedDriverId"
-          :items="drivers"
-          :item-text="getDriver"
-          item-value="id"
-          label="ຄົນຂັບລົດ"
-          outlined
-          clearable
-          dense
+            v-model="selectedDriverId"
+            :item-text="getDriver"
+            :items="drivers"
+            clearable
+            dense
+            item-value="id"
+            label="ຄົນຂັບລົດ"
+            outlined
         >
           <template
-            slot="selection"
-            slot-scope="data"
-          >{{ data.item.name }} ({{ data.item.vehicle.car_id }})</template>
+              slot="selection"
+              slot-scope="data"
+          >{{ data.item.name }} ({{ data.item.vehicle.car_id }})
+          </template>
         </v-autocomplete>
       </v-col>
     </v-row>
@@ -121,12 +123,12 @@
       <v-card>
         <v-card-text>
           <v-data-table
-            v-if="calendars"
-            :headers="headers"
-            :items="calendars"
-            :search="search"
-            :disable-pagination="true"
-            hide-default-footer
+              v-if="calendars"
+              :disable-pagination="true"
+              :headers="headers"
+              :items="calendars"
+              :search="search"
+              hide-default-footer
           >
             <template v-slot:item.driver="{ item }">
               <div>{{ item.driver.vehicle.car_id }} ({{ item.driver.name }})</div>
@@ -165,46 +167,51 @@
               <v-menu offset-y>
                 <template v-slot:activator="{ on, attrs }">
                   <v-icon
-                    color="primary"
-                    dark
-                    v-bind="attrs"
-                    v-on="on"
-                    medium
-                    class="mr-2"
-                  >mdi-dots-vertical</v-icon>
+                      class="mr-2"
+                      color="primary"
+                      dark
+                      medium
+                      v-bind="attrs"
+                      v-on="on"
+                  >mdi-dots-vertical
+                  </v-icon>
                 </template>
                 <v-list>
                   <v-list-item link @click="gotoPlanCalendar(item)">
                     <v-list-item-title>
-                      <v-icon small class="mr-2">mdi-eye</v-icon>ລາຍລະອຽດ
+                      <v-icon class="mr-2" small>mdi-eye</v-icon>
+                      ລາຍລະອຽດ
                     </v-list-item-title>
                   </v-list-item>
                   <v-list-item link @click="editModal(item)">
                     <v-list-item-title>
-                      <v-icon small class="mr-2">mdi-pencil</v-icon>ແກ້ໄຂຂໍ້ມູນ
+                      <v-icon class="mr-2" small>mdi-pencil</v-icon>
+                      ແກ້ໄຂຂໍ້ມູນ
                     </v-list-item-title>
                   </v-list-item>
                   <v-list-item link @click="deleteItem(item.id)">
                     <v-list-item-title>
-                      <v-icon small class="mr-2">mdi-delete</v-icon>ລຶບຂໍ່ມູນ
+                      <v-icon class="mr-2" small>mdi-delete</v-icon>
+                      ລຶບຂໍ່ມູນ
                     </v-list-item-title>
                   </v-list-item>
                   <v-list-item link @click="confirmCancel(item.id)">
                     <v-list-item-title>
-                      <v-icon small class="mr-2">mdi-close</v-icon>ຍົກເລີກ
+                      <v-icon class="mr-2" small>mdi-close</v-icon>
+                      ຍົກເລີກ
                     </v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-menu>
             </template>
           </v-data-table>
-          <br />
+          <br/>
           <template>
             <Pagination
-              v-if="pagination.total_pages > 1"
-              :pagination="pagination"
-              :offset="offset"
-              @paginate="fetchData()"
+                v-if="pagination.total_pages > 1"
+                :offset="offset"
+                :pagination="pagination"
+                @paginate="fetchData()"
             ></Pagination>
           </template>
         </v-card-text>
@@ -224,18 +231,19 @@
                 <v-row>
                   <v-col cols="12">
                     <v-autocomplete
-                      v-model="selectedDriver"
-                      :items="drivers"
-                      :item-text="getDriver"
-                      item-value="id"
-                      label="ຄົນຂັບລົດ"
-                      outlined
-                      dense
+                        v-model="selectedDriver"
+                        :item-text="getDriver"
+                        :items="drivers"
+                        dense
+                        item-value="id"
+                        label="ຄົນຂັບລົດ"
+                        outlined
                     >
                       <template
-                        slot="selection"
-                        slot-scope="data"
-                      >{{ data.item.name }} ({{ data.item.vehicle.car_id }})</template>
+                          slot="selection"
+                          slot-scope="data"
+                      >{{ data.item.name }} ({{ data.item.vehicle.car_id }})
+                      </template>
                     </v-autocomplete>
                     <p class="errors">{{ server_errors.driver_id }}</p>
                   </v-col>
@@ -243,13 +251,13 @@
                 <v-row>
                   <v-col cols="12">
                     <v-autocomplete
-                      v-model="selectedRoutePlan"
-                      :items="routeplans"
-                      item-text="name"
-                      item-value="id"
-                      label="ເລືອກແຜນເສັ້ນທາງ"
-                      outlined
-                      dense
+                        v-model="selectedRoutePlan"
+                        :items="routeplans"
+                        dense
+                        item-text="name"
+                        item-value="id"
+                        label="ເລືອກແຜນເສັ້ນທາງ"
+                        outlined
                     ></v-autocomplete>
                     <p class="errors">{{ server_errors.route_plan_id }}</p>
                   </v-col>
@@ -257,30 +265,30 @@
                 <v-row>
                   <v-col cols="12">
                     <v-menu
-                      ref="menu"
-                      v-model="menu"
-                      :close-on-content-click="false"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
+                        ref="menu"
+                        v-model="menu"
+                        :close-on-content-click="false"
+                        min-width="auto"
+                        offset-y
+                        transition="scale-transition"
                     >
                       <template v-slot:activator="{ on, attrs }">
                         <v-combobox
-                          v-model="dates"
-                          multiple
-                          chips
-                          small-chips
-                          label="ວັນທີຢູ່ໃນແຜນ"
-                          prepend-icon="mdi-calendar"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
+                            v-model="dates"
+                            chips
+                            label="ວັນທີຢູ່ໃນແຜນ"
+                            multiple
+                            prepend-icon="mdi-calendar"
+                            readonly
+                            small-chips
+                            v-bind="attrs"
+                            v-on="on"
                         ></v-combobox>
                       </template>
                       <v-date-picker v-model="dates" multiple no-title scrollable>
                         <v-spacer></v-spacer>
-                        <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-                        <v-btn text color="primary" @click="$refs.menu.save(dates)">OK</v-btn>
+                        <v-btn color="primary" text @click="menu = false">Cancel</v-btn>
+                        <v-btn color="primary" text @click="$refs.menu.save(dates)">OK</v-btn>
                       </v-date-picker>
                     </v-menu>
                     <p class="errors">{{ server_errors.date }}</p>
@@ -299,13 +307,13 @@
                 <v-row v-if="hasRound">
                   <v-col cols="12">
                     <v-text-field
-                      label="ຈຳນວນຮອບ"
-                      required
-                      v-model="round"
-                      type="number"
-                      class="input-number"
-                      outlined
-                      dense
+                        v-model="round"
+                        class="input-number"
+                        dense
+                        label="ຈຳນວນຮອບ"
+                        outlined
+                        required
+                        type="number"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -315,12 +323,13 @@
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="closeAddModal()">Close</v-btn>
               <v-btn
-                color="blue darken-1"
-                text
-                :loading="loading"
-                :disabled="loading"
-                @click="SubmitPlan()"
-              >Add</v-btn>
+                  :disabled="loading"
+                  :loading="loading"
+                  color="blue darken-1"
+                  text
+                  @click="SubmitPlan()"
+              >Add
+              </v-btn>
             </v-card-actions>
           </v-card-text>
         </v-card>
@@ -339,31 +348,32 @@
                 <v-row>
                   <v-col cols="12">
                     <v-autocomplete
-                      v-model="calendarEdit.driver_id"
-                      :items="drivers"
-                      :item-text="getDriver"
-                      item-value="id"
-                      label="ຄົນຂົບລົດ"
-                      outlined
-                      dense
+                        v-model="calendarEdit.driver_id"
+                        :item-text="getDriver"
+                        :items="drivers"
+                        dense
+                        item-value="id"
+                        label="ຄົນຂົບລົດ"
+                        outlined
                     ></v-autocomplete>
                     <template
-                      slot="selection"
-                      slot-scope="data"
-                    >{{ data.item.name }} ({{ data.item.vehicle.car_id }})</template>
+                        slot="selection"
+                        slot-scope="data"
+                    >{{ data.item.name }} ({{ data.item.vehicle.car_id }})
+                    </template>
                     <p class="errors">{{ server_errors.driver_id }}</p>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col cols="12">
                     <v-autocomplete
-                      v-model="calendarEdit.route_plan_id"
-                      :items="routeplans"
-                      item-text="name"
-                      item-value="id"
-                      label="ເລືອກແຜນເສັ້ນທາງ"
-                      outlined
-                      dense
+                        v-model="calendarEdit.route_plan_id"
+                        :items="routeplans"
+                        dense
+                        item-text="name"
+                        item-value="id"
+                        label="ເລືອກແຜນເສັ້ນທາງ"
+                        outlined
                     ></v-autocomplete>
                     <p class="errors">{{ server_errors.route_plan_id }}</p>
                   </v-col>
@@ -372,23 +382,23 @@
                 <v-row>
                   <v-col cols="12">
                     <v-menu
-                      v-model="edit_menu"
-                      :close-on-content-click="true"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                      ref="edit_menu"
+                        ref="edit_menu"
+                        v-model="edit_menu"
+                        :close-on-content-click="true"
+                        :nudge-right="40"
+                        min-width="auto"
+                        offset-y
+                        transition="scale-transition"
                     >
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
-                          v-model="calendarEdit.date"
-                          label="ວັນທີຢູ່ໃນແຜນ"
-                          readonly
-                          outlined
-                          v-bind="attrs"
-                          v-on="on"
-                          dense
+                            v-model="calendarEdit.date"
+                            dense
+                            label="ວັນທີຢູ່ໃນແຜນ"
+                            outlined
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
                         ></v-text-field>
                       </template>
                       <v-date-picker v-model="calendarEdit.date"></v-date-picker>
@@ -402,12 +412,13 @@
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="closeEditModal()">Close</v-btn>
               <v-btn
-                color="blue darken-1"
-                text
-                :loading="loading"
-                :disabled="loading"
-                @click="UpdatePlan()"
-              >Update</v-btn>
+                  :disabled="loading"
+                  :loading="loading"
+                  color="blue darken-1"
+                  text
+                  @click="UpdatePlan()"
+              >Update
+              </v-btn>
             </v-card-actions>
           </v-card-text>
         </v-card>
@@ -424,7 +435,7 @@
           <v-card-text class="pa-4">
             <v-row>
               <v-col cols="12">
-                <v-textarea label="ຄຳອະທິບາຍ" required v-model="delete_description" outlined dense></v-textarea>
+                <v-textarea v-model="delete_description" dense label="ຄຳອະທິບາຍ" outlined required></v-textarea>
               </v-col>
             </v-row>
           </v-card-text>
@@ -432,12 +443,13 @@
             <v-spacer></v-spacer>
             <v-btn class="elevation-0 btn-warning" @click="closeDelete">Cancel</v-btn>
             <v-btn
-              v-if="delete_description.length > 4"
-              class="btn-primary elevation-0"
-              :loading="loading"
-              :disabled="loading"
-              @click="deleteItemConfirm"
-            >OK</v-btn>
+                v-if="delete_description.length > 4"
+                :disabled="loading"
+                :loading="loading"
+                class="btn-primary elevation-0"
+                @click="deleteItemConfirm"
+            >OK
+            </v-btn>
             <v-spacer></v-spacer>
           </v-card-actions>
         </v-card>
@@ -452,14 +464,15 @@
           </v-container>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="warning" @click="cancelDialog = false" class="elevation-0">Close</v-btn>
+            <v-btn class="elevation-0" color="warning" @click="cancelDialog = false">Close</v-btn>
             <v-btn
-              color="success"
-              class="elevation-0"
-              :loading="loading"
-              :disabled="loading"
-              @click="cancelItem()"
-            >ຢືນຢັນການຍົກເລີກ</v-btn>
+                :disabled="loading"
+                :loading="loading"
+                class="elevation-0"
+                color="success"
+                @click="cancelItem()"
+            >ຢືນຢັນການຍົກເລີກ
+            </v-btn>
             <v-spacer></v-spacer>
           </v-card-actions>
         </v-card-text>
@@ -469,9 +482,9 @@
 </template>
 
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import {GetOldValueOnInput} from "@/Helpers/GetValue";
 import queryOption from "@/Helpers/queryOption";
-import { getCompanyCostBy } from "@/Helpers/Customer";
+import {getCompanyCostBy} from "@/Helpers/Customer";
 
 export default {
   name: "Customer",
@@ -516,9 +529,9 @@ export default {
       drivers: [],
       selectedDriver: "",
       selectedDriverId: "",
-      date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-        .toISOString()
-        .substr(0, 10),
+      date: new Date()
+          .toISOString()
+          .substr(0, 10),
       date_menu: false,
       hasRound: false,
       delete_description: "",
@@ -537,9 +550,9 @@ export default {
       selectedCostBy: "",
 
       headers: [
-        { text: "ວັນທີ", value: "date" },
-        { text: "ລົດ", value: "driver" },
-        { text: "ປະເພດລົດ", value: "driver.vehicle.vehicle_type.name" },
+        {text: "ວັນທີ", value: "date"},
+        {text: "ລົດ", value: "driver"},
+        {text: "ປະເພດລົດ", value: "driver.vehicle.vehicle_type.name"},
         {
           text: "ເສັ້ນທາງ",
           value: "route_plan.name",
@@ -575,7 +588,7 @@ export default {
           align: "center",
           sortable: false
         },
-        { text: "", value: "actions", sortable: false }
+        {text: "", value: "actions", sortable: false}
       ],
       nameRules: [
         v => !!v || "Name is required",
@@ -598,97 +611,101 @@ export default {
     fetchData() {
       this.$store.commit("Loading_State", true);
       this.$axios
-        .get("plan-month/" + this.$route.params.id + "/plan-calendar", {
-          // params: {
-          //   page: this.pagination.current_page,
-          //   per_page: this.per_page,
-          //
-          // },
-          params: queryOption([
-            { page: this.pagination.current_page },
-            { per_page: this.per_page },
-            { date: this.date },
-            { route_plan_type: this.selectedCustomerType },
-            { vehicle_type_id: this.selectedVehicleType },
-            { driver_id: this.selectedDriverId },
-            { cost_by: this.selectedCostBy }
-          ])
-        })
-        .then(res => {
-          if (res.data.code == 200) {
-            this.$store.commit("Loading_State", false);
-            this.calendars = res.data.data.data;
-            this.pagination = res.data.data.pagination;
-          }
-        })
-        .catch(error => {
-          this.$store.commit("Loading_State", false);
-          if (error.response && error.response.status == 422) {
-            this.toast.msg = error.message;
-            let obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
-              this.server_errors[key] = message[0];
+          .get("plan-month/" + this.$route.params.id + "/plan-calendar", {
+            // params: {
+            //   page: this.pagination.current_page,
+            //   per_page: this.per_page,
+            //
+            // },
+            params: queryOption([
+              {page: this.pagination.current_page},
+              {per_page: this.per_page},
+              {date: this.date},
+              {route_plan_type: this.selectedCustomerType},
+              {vehicle_type_id: this.selectedVehicleType},
+              {driver_id: this.selectedDriverId},
+              {cost_by: this.selectedCostBy}
+            ])
+          })
+          .then(res => {
+            if (res.data.code == 200) {
+              this.$store.commit("Loading_State", false);
+              this.calendars = res.data.data.data;
+              this.pagination = res.data.data.pagination;
             }
-          }
-        });
+          })
+          .catch(error => {
+            this.$store.commit("Loading_State", false);
+            if (error.response && error.response.status == 422) {
+              this.toast.msg = error.message;
+              let obj = error.response.data.errors;
+              for (let [key, message] of Object.entries(obj)) {
+                this.server_errors[key] = message[0];
+              }
+            }
+          });
     },
     fetchPlanMonthDetail() {
       this.$axios
-        .get("plan-month/" + this.$route.params.id)
-        .then(res => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.planmonth = res.data.data;
-            }, 100);
-          }
-        })
-        .catch(() => {});
+          .get("plan-month/" + this.$route.params.id)
+          .then(res => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.planmonth = res.data.data;
+              }, 100);
+            }
+          })
+          .catch(() => {
+          });
     },
     fetchRoutePlan() {
       this.$axios
-        .get("route-plan", {
-          params: {
-            scope_for: "all"
-          }
-        })
-        .then(res => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.routeplans = res.data.data;
-            }, 100);
-          }
-        })
-        .catch(() => {});
+          .get("route-plan", {
+            params: {
+              scope_for: "all"
+            }
+          })
+          .then(res => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.routeplans = res.data.data;
+              }, 100);
+            }
+          })
+          .catch(() => {
+          });
     },
     fetchVehicleType() {
       this.$axios
-        .get("vehicle_type")
-        .then(res => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.vehicleType = res.data.data;
-            }, 100);
-          }
-        })
-        .catch(() => {});
+          .get("vehicle_type")
+          .then(res => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.vehicleType = res.data.data;
+              }, 100);
+            }
+          })
+          .catch(() => {
+          });
     },
     fetchDriver() {
       this.$axios
-        .get("driver", {
-          params: queryOption([
-            {
-              vehicle_type: this.selectedVehicleType
+          .get("driver", {
+            params: queryOption([
+              {
+                vehicle_type: this.selectedVehicleType
+              }
+            ])
+          })
+          .then(res => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.drivers = res.data.data;
+              }, 100);
             }
-          ])
-        })
-        .then(res => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.drivers = res.data.data;
-            }, 100);
-          }
-        })
-        .catch(() => {});
+          })
+          .catch(() => {
+          });
     },
 
     AddPlan() {
@@ -708,89 +725,89 @@ export default {
     deleteItemConfirm() {
       this.loading = true;
       this.$axios
-        .delete(
-          "plan-month/" +
-            this.$route.params.id +
-            "/plan-calendar/" +
-            this.calendarId,
-          {
-            params: queryOption([
-              { delete_description: this.delete_description }
-            ])
-          }
-        )
-        .then(res => {
-          if (res.data.code == 200) {
+          .delete(
+              "plan-month/" +
+              this.$route.params.id +
+              "/plan-calendar/" +
+              this.calendarId,
+              {
+                params: queryOption([
+                  {delete_description: this.delete_description}
+                ])
+              }
+          )
+          .then(res => {
+            if (res.data.code == 200) {
+              this.loading = false;
+              this.delete_description = "";
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message
+              });
+              this.$store.commit("modalDelete_State", false);
+              this.fetchData();
+            }
+          })
+          .catch(error => {
+            this.$store.commit("modalDelete_State", false);
             this.loading = false;
-            this.delete_description = "";
             this.$store.commit("Toast_State", {
               value: true,
-              color: "success",
-              msg: res.data.message
+              color: "error",
+              msg: error.response
+                  ? error.response.data.message
+                  : "Something went wrong"
             });
-            this.$store.commit("modalDelete_State", false);
-            this.fetchData();
-          }
-        })
-        .catch(error => {
-          this.$store.commit("modalDelete_State", false);
-          this.loading = false;
-          this.$store.commit("Toast_State", {
-            value: true,
-            color: "error",
-            msg: error.response
-              ? error.response.data.message
-              : "Something went wrong"
           });
-        });
     },
 
     SubmitPlan() {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .post("plan-month/" + this.$route.params.id + "/plan-calendar", {
-            driver_id: this.selectedDriver,
-            route_plan_id: this.selectedRoutePlan,
-            date: this.dates,
-            round: this.round
-          })
-          .then(res => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.loading = false;
-                this.dates = [];
-                this.menu = false;
-                this.closeAddModal();
-                this.fetchData();
-                this.selectedRoutePlan = "";
-                this.selectedDriver = "";
-                this.reset();
-                this.$store.commit("Toast_State", {
-                  value: true,
-                  color: "success",
-                  msg: res.data.message
-                });
-              }, 100);
-            }
-          })
-          .catch(error => {
-            this.loading = false;
-            this.menu = false;
-            this.$store.commit("Toast_State", {
-              value: true,
-              color: "error",
-              msg: error.response
-                ? error.response.data.message
-                : "Something went wrong"
-            });
-            if (error.response && error.response.status == 422) {
-              const obj = error.response.data.errors;
-              for (let [key, customer] of Object.entries(obj)) {
-                this.server_errors[key] = customer[0];
+            .post("plan-month/" + this.$route.params.id + "/plan-calendar", {
+              driver_id: this.selectedDriver,
+              route_plan_id: this.selectedRoutePlan,
+              date: this.dates,
+              round: this.round
+            })
+            .then(res => {
+              if (res.data.code == 200) {
+                setTimeout(() => {
+                  this.loading = false;
+                  this.dates = [];
+                  this.menu = false;
+                  this.closeAddModal();
+                  this.fetchData();
+                  this.selectedRoutePlan = "";
+                  this.selectedDriver = "";
+                  this.reset();
+                  this.$store.commit("Toast_State", {
+                    value: true,
+                    color: "success",
+                    msg: res.data.message
+                  });
+                }, 100);
               }
-            }
-          });
+            })
+            .catch(error => {
+              this.loading = false;
+              this.menu = false;
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response
+                    ? error.response.data.message
+                    : "Something went wrong"
+              });
+              if (error.response && error.response.status == 422) {
+                const obj = error.response.data.errors;
+                for (let [key, customer] of Object.entries(obj)) {
+                  this.server_errors[key] = customer[0];
+                }
+              }
+            });
       }
     },
 
@@ -801,33 +818,33 @@ export default {
     cancelItem() {
       this.loading = true;
       this.$axios
-        .post("plan-calendar/" + this.calendarId + "/cancel")
-        .then(res => {
-          if (res.data.code == 200) {
+          .post("plan-calendar/" + this.calendarId + "/cancel")
+          .then(res => {
+            if (res.data.code == 200) {
+              this.loading = false;
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "success",
+                msg: res.data.message
+              });
+              this.$store.commit("modalDelete_State", false);
+              this.fetchData();
+              this.calendarId = "";
+              this.cancelDialog = false;
+            }
+          })
+          .catch(error => {
+            this.cancelDialog = false;
+            this.$store.commit("modalDelete_State", false);
             this.loading = false;
             this.$store.commit("Toast_State", {
               value: true,
-              color: "success",
-              msg: res.data.message
+              color: "error",
+              msg: error.response
+                  ? error.response.data.message
+                  : "Something went wrong"
             });
-            this.$store.commit("modalDelete_State", false);
-            this.fetchData();
-            this.calendarId = "";
-            this.cancelDialog = false;
-          }
-        })
-        .catch(error => {
-          this.cancelDialog = false;
-          this.$store.commit("modalDelete_State", false);
-          this.loading = false;
-          this.$store.commit("Toast_State", {
-            value: true,
-            color: "error",
-            msg: error.response
-              ? error.response.data.message
-              : "Something went wrong"
           });
-        });
     },
 
     closeAddModal() {
@@ -846,50 +863,50 @@ export default {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .put(
-            "plan-month/" +
-              this.$route.params.id +
-              "/plan-calendar/" +
-              this.calendarEdit.id,
-            {
-              driver_id: this.calendarEdit.driver_id,
-              route_plan_id: this.calendarEdit.route_plan_id,
-              date: this.calendarEdit.date
-            }
-          )
-          .then(res => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.loading = false;
-                this.closeEditModal();
-                this.fetchData();
-                this.edit_menu = false;
-                this.reset();
-                this.$store.commit("Toast_State", {
-                  value: true,
-                  color: "success",
-                  msg: res.data.message
-                });
-              }, 300);
-            }
-          })
-          .catch(error => {
-            this.loading = false;
-            this.menu = false;
-            this.$store.commit("Toast_State", {
-              value: true,
-              color: "error",
-              msg: error.response
-                ? error.response.data.message
-                : "Something went wrong"
-            });
-            if (error.response && error.response.status == 422) {
-              let obj = error.response.data.errors;
-              for (let [key, customer] of Object.entries(obj)) {
-                this.server_errors[key] = customer[0];
+            .put(
+                "plan-month/" +
+                this.$route.params.id +
+                "/plan-calendar/" +
+                this.calendarEdit.id,
+                {
+                  driver_id: this.calendarEdit.driver_id,
+                  route_plan_id: this.calendarEdit.route_plan_id,
+                  date: this.calendarEdit.date
+                }
+            )
+            .then(res => {
+              if (res.data.code == 200) {
+                setTimeout(() => {
+                  this.loading = false;
+                  this.closeEditModal();
+                  this.fetchData();
+                  this.edit_menu = false;
+                  this.reset();
+                  this.$store.commit("Toast_State", {
+                    value: true,
+                    color: "success",
+                    msg: res.data.message
+                  });
+                }, 300);
               }
-            }
-          });
+            })
+            .catch(error => {
+              this.loading = false;
+              this.menu = false;
+              this.$store.commit("Toast_State", {
+                value: true,
+                color: "error",
+                msg: error.response
+                    ? error.response.data.message
+                    : "Something went wrong"
+              });
+              if (error.response && error.response.status == 422) {
+                let obj = error.response.data.errors;
+                for (let [key, customer] of Object.entries(obj)) {
+                  this.server_errors[key] = customer[0];
+                }
+              }
+            });
       }
     },
     closeEditModal() {
@@ -902,7 +919,7 @@ export default {
     gotoPlanCalendar(item) {
       this.$router.push({
         name: "PlanCalendarDetail",
-        params: { id: item.id, planMonthId: item.plan_month_id }
+        params: {id: item.id, planMonthId: item.plan_month_id}
       });
     },
     reset() {
@@ -910,7 +927,7 @@ export default {
     },
     getDriver(value) {
       if (!value) return null;
-      if (value.vehicle !== null) {
+      if (value.vehicle) {
         return value.name + " " + value.vehicle.car_id;
       } else {
         return value.name + " " + "(ຍັງບໍທັນມີລົດ)";
@@ -926,7 +943,7 @@ export default {
     }
   },
   watch: {
-    search: function(value) {
+    search: function (value) {
       this.pagination.current_page = "";
       if (value == "") {
         this.fetchData();
@@ -937,44 +954,44 @@ export default {
       this.fetchDriver();
       this.fetchData();
     },
-    selectedDriver: function() {
+    selectedDriver: function () {
       this.server_errors.driver_id = "";
       // if (value) {
       //   this.getDriver(value);
       // }
     },
-    "calendarEdit.driver_id": function(value) {
+    "calendarEdit.driver_id": function (value) {
       this.server_errors.driver_id = "";
       if (value) {
         this.getDriver(value);
       }
     },
-    selectedRoutePlan: function() {
+    selectedRoutePlan: function () {
       this.server_errors.route_plan_id = "";
     },
 
-    dates: function() {
+    dates: function () {
       this.server_errors.date = "";
     },
-    date: function() {
+    date: function () {
       this.pagination.current_page = "";
       this.fetchData();
     },
-    selectedDriverId: function() {
+    selectedDriverId: function () {
       this.pagination.current_page = "";
       this.fetchData();
     },
-    selectedCustomerType: function() {
+    selectedCustomerType: function () {
       this.pagination.current_page = "";
       this.fetchData();
     },
-    selectedCostBy: function() {
+    selectedCostBy: function () {
       this.pagination.current_page = "";
       this.fetchData();
     }
   },
-  created() {
-    this.fetchData();
+  async created() {
+    if (this.$route.query.month && this.$route.query.month > this.date) this.date = ''
     this.fetchPlanMonthDetail();
     this.fetchVehicleType();
     this.fetchDriver();
