@@ -66,17 +66,9 @@
               :search="search"
               hide-default-footer
           >
-            <template v-slot:item.customer="{ item }">
-              <pre v-if="!item">{{ item }}</pre>
-              <div v-if="item.route_plan_detail"></div>
-              <div
-                  v-if="(item.route_plan_detail.customer.customer_type = 'company')"
-              >{{ item.route_plan_detail.customer.company_name }}
-              </div>
-              <div>
-                {{ item.route_plan_detail.customer.name }}
-                {{ item.route_plan_detail.customer.surname }}
-              </div>
+
+            <template v-slot:item.route_plan_detail.customer.full_name="{ item }">
+              <a href="#" @click="openRoute(item)">{{ item.route_plan_detail.customer.full_name }}</a>
             </template>
             <template v-slot:item.created_at="{ item }">
               <div>{{ moment(item.created_at).format("DD-MM-YY hh:mm ") }}</div>
@@ -165,6 +157,7 @@
 // import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import trashMixin from "@/views/calendar/trashMixin";
 import draggable from "vuedraggable";
+// import queryOptions from "@/Helpers/queryOption";
 
 export default {
   mixins: [trashMixin],
@@ -199,7 +192,7 @@ export default {
 
       headers: [
         {text: "ລຳດັບຄວາມສຳຄັນ", value: "priority"},
-        {text: "ລູກຄ້າ", value: "customer"},
+        {text: "ລູກຄ້າ", value: "route_plan_detail.customer.full_name"},
         {
           text: "ສະຖານະເກັບ",
           value: "item.route_plan_detail.customer.can_collect"
@@ -242,6 +235,19 @@ export default {
     };
   },
   methods: {
+    openRoute(item) {
+      const name = item.route_plan_detail.customer.customer_type == 'home'
+          ? 'EditCustomer'
+          : 'EditCompany';
+      const routeData = this.$router.resolve({
+        name: name,
+        params: {
+          id: item.route_plan_detail.customer.id
+        }
+      });
+
+      window.open(routeData.href);
+    },
     switchPause(id) {
       this.$store.commit("Loading_State", true);
       this.$axios
