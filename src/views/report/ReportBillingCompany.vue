@@ -579,7 +579,7 @@ export default {
       this.$axios
           .get("user-setting/user", {
             params: queryOptions([
-              {roles: ["sale", "sale_admin", "sale_partner"]},
+              {roles: ["sale", "sale_admin", "sale_partner", "sale_editor"]},
               {order_by: "newest"},
             ]),
           })

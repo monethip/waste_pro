@@ -459,6 +459,10 @@ export default {
         {
           text: "Partner Sale",
           value: "sale_partner"
+        },
+        {
+          text: "Editor Sale",
+          value: "sale_editor"
         }
       ],
       headers: [
@@ -578,7 +582,7 @@ export default {
               {per_page: this.per_page},
               {filter: this.search},
               {phone: this.searchPhone},
-              {roles: ["sale", "sale_admin", "sale_partner"]},
+              {roles: ["sale", "sale_admin", "sale_partner", "sale_editor"]},
               {order_by: "newest"}
             ])
           })
