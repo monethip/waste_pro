@@ -995,6 +995,7 @@ export default {
     this.fetchPlanMonthDetail();
     this.fetchVehicleType();
     this.fetchDriver();
+    this.fetchData()
   }
 };
 </script>
