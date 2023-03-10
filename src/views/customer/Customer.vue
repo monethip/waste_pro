@@ -224,7 +224,7 @@
                   </template>
 
                   <template v-slot:item.expect_trash_package="{ item }">
-                    <v-chip v-if="item.package" color="green" dark>
+                    <v-chip v-if="item.package && item.package.package_size" color="green" dark>
                       {{
                         Intl.NumberFormat().format(
                             item.package.package_size.bag
