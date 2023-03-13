@@ -291,6 +291,9 @@
                     <tr>
                       <th class="text-left">ວັນທີບິນ</th>
                       <th class="text-left">ຫົວບິນ</th>
+                      <th class="text-left">ຊື່ລູກຄ້າ</th>
+                      <th class="text-left">ໄອດີ</th>
+                      <th class="text-left">ແພັກເກຈ</th>
                       <th class="text-left">ສະຖານະ</th>
                       <th class="text-left">ເວລາຈ່າຍ</th>
                       <th class="text-left">Payment</th>
@@ -304,6 +307,13 @@
                     <tr v-for="item in invoices" :key="item.id">
                       <td>{{ moment(item.date).format("DD-MM-YYYY") }}</td>
                       <td>{{ item.content }}</td>
+                      <td class="text-left">{{ data.full_name }}</td>
+                      <td class="text-left">{{ data.customer_id }}</td>
+                      <td class="text-left">
+                        {{ data.package.price }} ({{
+                          data.package.per_week
+                        }}ຖົງ/ອາທິດ)
+                      </td>
                       <td>{{ item.status_la }}</td>
                       <td>{{ item.paided_at }}</td>
                       <td>
