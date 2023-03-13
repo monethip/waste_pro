@@ -194,7 +194,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="item in services" :key="item.id">
+                    <tr v-for="(item, index) in services" :key="index">
                       <td>
                         <a href="#" @click="openRoute(item)"
                           >{{ moment(item.date).format("DD-MM-YYYY") }}
@@ -290,6 +290,7 @@
                   <thead>
                     <tr>
                       <th class="text-left">ວັນທີບິນ</th>
+                      <th class="text-left">ໄອດີ</th>
                       <th class="text-left">ຫົວບິນ</th>
                       <th class="text-left">ຊື່ລູກຄ້າ</th>
                       <th class="text-left">ໄອດີ</th>
@@ -306,6 +307,7 @@
                   <tbody>
                     <tr v-for="item in invoices" :key="item.id">
                       <td>{{ moment(item.date).format("DD-MM-YYYY") }}</td>
+                      <td>{{ item.billing_display_id }}</td>
                       <td>{{ item.content }}</td>
                       <td class="text-left">{{ data.full_name }}</td>
                       <td class="text-left">{{ data.customer_id }}</td>
@@ -314,7 +316,11 @@
                           data.package.per_week
                         }}ຖົງ/ອາທິດ)
                       </td>
-                      <td>{{ item.status_la }}</td>
+                      <td>
+                        <v-chip :color="getBgColorFn(item.status)" dark>
+                          {{ item.status_la }}
+                        </v-chip>
+                      </td>
                       <td>{{ item.paided_at }}</td>
                       <td>
                         <div class="primary--text">
@@ -384,6 +390,8 @@
 </template>
 
 <script>
+import { getBgColor } from "@/Helpers/BillingStatus";
+
 export default {
   data() {
     return {
@@ -440,6 +448,9 @@ export default {
     };
   },
   methods: {
+    getBgColorFn(status) {
+      return getBgColor(status);
+    },
     openRoute(item) {
       const route = this.$router.resolve({
         name: "PlanCalendarDetail",

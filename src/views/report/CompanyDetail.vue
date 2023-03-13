@@ -247,13 +247,17 @@
                   <thead>
                     <tr>
                       <th class="text-left">Date</th>
+                      <td class="text-left">ຊື່</td>
+                      <td class="text-left">ໄອດີ</td>
+                      <td class="text-left">ເບີໂທ</td>
+                      <td class="text-left">ແພກເກຈ</td>
                       <th class="text-left">ຈຳນວນ</th>
                       <th class="text-left">Status</th>
                       <th class="text-left">ເວລາລົງເກັບ</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="item in services" :key="item.id">
+                    <tr v-for="(item, index) in services" :key="index">
                       <td>
                         <router-link
                           :to="{
@@ -267,6 +271,12 @@
                             moment(item.date).format("DD-MM-YYYY")
                           }}</router-link
                         >
+                      </td>
+                      <td class="text-left">{{ data.full_name }}</td>
+                      <td class="text-left">{{ data.customer_id }}</td>
+                      <td class="text-left">{{ data.user.phone }}</td>
+                      <td class="text-left">
+                        {{ data.cost_by_la }}
                       </td>
                       <td>
                         <div v-if="item.collection_type === 'bag'">
@@ -283,7 +293,11 @@
                         </div>
                         <div v-else>{{ item.collection_type }}</div>
                       </td>
-                      <td>{{ item.status_la }}</td>
+                      <td>
+                        <v-chip :color="statusColor(item.status)" label>{{
+                          item.status_la
+                        }}</v-chip>
+                      </td>
                       <td>{{ item.collected_at }}</td>
                     </tr>
                   </tbody>
@@ -345,7 +359,11 @@
                   <thead>
                     <tr>
                       <th class="text-left">ວັນທີບິນ</th>
+                      <th class="text-left">ໄອດີ</th>
                       <th class="text-left">ຫົວບິນ</th>
+                      <th class="text-left">ຊື່ລູກຄ້າ</th>
+                      <th class="text-left">ໄອດີ</th>
+                      <th class="text-left">ແພັກເກຈ</th>
                       <th class="text-left">ສະຖານະ</th>
                       <th class="text-left">ເວລາຈ່າຍ</th>
                       <th class="text-left">Payment</th>
@@ -358,8 +376,16 @@
                   <tbody>
                     <tr v-for="item in invoices" :key="item.id">
                       <td>{{ moment(item.date).format("DD-MM-YYYY") }}</td>
+                      <td>{{ item.billing_display_id }}</td>
                       <td>{{ item.content }}</td>
-                      <td>{{ item.status_la }}</td>
+                      <td class="text-left">{{ data.full_name }}</td>
+                      <td class="text-left">{{ data.customer_id }}</td>
+                      <td class="text-left">{{ data.cost_by_la }}</td>
+                      <td>
+                        <v-chip :color="getBgColorFn(item.status)" dark>
+                          {{ item.status_la }}
+                        </v-chip>
+                      </td>
                       <td>{{ item.paided_at }}</td>
                       <td>
                         <div class="primary--text">
@@ -428,6 +454,8 @@
 </template>
 
 <script>
+import { getBgColor } from "@/Helpers/BillingStatus";
+
 export default {
   data() {
     return {
@@ -484,6 +512,17 @@ export default {
     };
   },
   methods: {
+    getBgColorFn(status) {
+      return getBgColor(status);
+    },
+    statusColor(value) {
+      console.log(value);
+      if (value == "pending") return "info";
+      else if (value == "success") return "success";
+      else if (value == "reject") return "error";
+      else if (value == "cancel") return "orange";
+      else return "error";
+    },
     ViewInvoice(id) {
       let route = this.$router.resolve({
         name: "billing-detail",
