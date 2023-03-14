@@ -57,7 +57,7 @@
                 ເດືອນ:
                 {{ invoice.bill_month }}
               </h3>
-              <h3>
+              <h3 v-if="invoice.created_activity">
                 ສ້າງໂດຍ:
                 {{ invoice.created_activity.causer.full_name }}
               </h3>
