@@ -57,6 +57,10 @@
                 ເດືອນ:
                 {{ invoice.bill_month }}
               </h3>
+              <h3>
+                ສ້າງໂດຍ:
+                {{ invoice.created_activity.causer.full_name }}
+              </h3>
             </v-col>
             <v-col>
               <h3>ຂໍ້ມູນລູກຄ້າ</h3>
