@@ -60,7 +60,7 @@
               <h3>
                 ສ້າງໂດຍ:
                 {{
-                  invoice.created_activity
+                  invoice.created_activity && invoice.created_activity.causer
                     ? invoice.created_activity.causer.full_name
                     : ""
                 }}
