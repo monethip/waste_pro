@@ -42,6 +42,18 @@
 
             </template>-->
             <!--Permission -->
+            <template v-slot:item.name="{ item }">
+              <div class="d-flex align-middle">
+                <v-icon
+                  v-if="item.role_type && item.role_type.type == 'notify'"
+                  x-small=""
+                >
+                  mdi-email
+                </v-icon>
+                <p>{{ item.name }}</p>
+              </div>
+            </template>
+
             <template v-slot:item.permissions="{ item }">
               <div>
                 <span
