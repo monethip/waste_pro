@@ -33,6 +33,13 @@
                 <v-spacer />
               </v-col>
               <v-col>
+                <v-checkbox
+                  v-model="staffOnly"
+                  label="ທີມງານເທົ່ານັ້ນ"
+                />
+                <v-spacer />
+              </v-col>
+              <v-col>
                 <v-select
                   v-model="selectedRoles"
                   outlined
@@ -92,12 +99,25 @@
                   :key="index"
                 >
                   <v-chip
+                    v-if="role.role_type && role.role_type.type"
+                    color="warning"
+                    label
+                    class="mr-1 my-1"
+                  ><v-icon
+                    small
+                    class="mr-2"
+                  >mdi-email</v-icon> {{
+                    role.name
+                  }}</v-chip>
+                  <v-chip
+                    v-else
                     color="info"
                     label
                     class="mr-1 my-1"
                   >{{
                     role.name
                   }}</v-chip>
+
                 </span>
               </div>
             </template>
@@ -1164,6 +1184,7 @@ export default {
   data() {
     return {
       noRoleCheck: false,
+      staffOnly: true,
       stepValue: 1,
       otp: '',
       isStepTwo: false,
@@ -1269,6 +1290,10 @@ export default {
 
   watch: {
     noRoleCheck(value) {
+      if (value) this.selectedRoles = [];
+      else this.fetchData();
+    },
+    staffOnly(value) {
       if (value) this.selectedRoles = [];
       else this.fetchData();
     },
@@ -1479,6 +1504,7 @@ export default {
             { filter: this.search },
             { phone: this.searchPhone },
             { roles: this.noRoleCheck ? 'none' : this.selectedRoles },
+            { with_out_customer: this.staffOnly },
           ]),
         })
         .then((res) => {
