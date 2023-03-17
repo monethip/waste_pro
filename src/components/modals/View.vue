@@ -13,7 +13,7 @@ export default {
   computed: {
     active: {
       set(val) {
-        this.$store.commit("modalView_State", val);
+        this.$store.commit('modalView_State', val);
       },
       get() {
         return this.$store.state.modalView;

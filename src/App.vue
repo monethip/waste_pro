@@ -9,9 +9,9 @@
 
 <script>
 // import NavBar from "@/components/layout/Navbar.vue";
-import Admin from "@/components/layout/Admin.vue";
-import None from "@/components/layout/None.vue";
-import Home from "@/components/layout/Home/home.vue";
+import Admin from '@/components/layout/Admin.vue';
+import None from '@/components/layout/None.vue';
+import Home from '@/components/layout/Home/home.vue';
 
 export default {
   components: { Admin, None, Home },
@@ -27,4 +27,3 @@ export default {
 @import "../public/scss/main.scss";
 /*\@import "../public/css/bulma.css";*/
 </style>
-

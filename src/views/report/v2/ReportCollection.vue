@@ -2,58 +2,125 @@
   <v-container>
     <v-row class="mb-n6">
       <v-col>
-        <v-btn class="btn-primary" :loading="loading" :disabled="loading" @click="exportData">Export
+        <v-btn
+          class="btn-primary"
+          :loading="loading"
+          :disabled="loading"
+          @click="exportData"
+        >
+          Export
         </v-btn>
       </v-col>
 
       <v-col>
-        <v-menu v-model="start_menu" :close-on-content-click="false" :nudge-right="40" transition="scale-transition"
-          offset-y min-width="auto">
+        <v-menu
+          v-model="start_menu"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
           <template v-slot:activator="{ on, attrs }">
-            <v-text-field v-model="start_date" label="ເລີ່ມວັນທີ" readonly outlined v-bind="attrs" v-on="on" dense>
-            </v-text-field>
+            <v-text-field
+              v-model="start_date"
+              label="ເລີ່ມວັນທີ"
+              readonly
+              outlined
+              v-bind="attrs"
+              dense
+              v-on="on"
+            />
           </template>
-          <v-date-picker v-model="start_date" @input="fetchData()"></v-date-picker>
+          <v-date-picker
+            v-model="start_date"
+            @input="fetchData()"
+          />
         </v-menu>
       </v-col>
 
       <v-col>
-        <v-menu v-model="end_menu" :close-on-content-click="false" :nudge-right="40" transition="scale-transition"
-          offset-y min-width="auto">
+        <v-menu
+          v-model="end_menu"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
           <template v-slot:activator="{ on, attrs }">
-            <v-text-field v-model="end_date" label="ຫາວັນທີ" readonly outlined v-bind="attrs" v-on="on" dense>
-            </v-text-field>
+            <v-text-field
+              v-model="end_date"
+              label="ຫາວັນທີ"
+              readonly
+              outlined
+              v-bind="attrs"
+              dense
+              v-on="on"
+            />
           </template>
-          <v-date-picker v-model="end_date" @input="fetchData()"></v-date-picker>
+          <v-date-picker
+            v-model="end_date"
+            @input="fetchData()"
+          />
         </v-menu>
       </v-col>
 
       <v-col>
-        <v-autocomplete outlined dense :items="customer_types" v-model="selectedCustomerType" item-text="display"
-          item-value="name" label="ປະເພດການເກັບ"></v-autocomplete>
+        <v-autocomplete
+          v-model="selectedCustomerType"
+          outlined
+          dense
+          :items="customer_types"
+          item-text="display"
+          item-value="name"
+          label="ປະເພດການເກັບ"
+        />
       </v-col>
       <v-col v-if="selectedCustomerType=='company'">
-        <v-autocomplete outlined dense :items="company_types" v-model="selectedCompanyType" item-text="la"
-          item-value="en" label="ເລືອກປະເພດບໍລິການ"></v-autocomplete>
+        <v-autocomplete
+          v-model="selectedCompanyType"
+          outlined
+          dense
+          :items="company_types"
+          item-text="la"
+          item-value="en"
+          label="ເລືອກປະເພດບໍລິການ"
+        />
       </v-col>
-
     </v-row>
     <v-row>
       <v-col>
-        <v-autocomplete outlined dense :items="drivers" v-model="selectedDriver" item-text="name" item-value="id"
-          label="ເລືອກຄົນຂັບ"></v-autocomplete>
+        <v-autocomplete
+          v-model="selectedDriver"
+          outlined
+          dense
+          :items="drivers"
+          item-text="name"
+          item-value="id"
+          label="ເລືອກຄົນຂັບ"
+        />
       </v-col>
     </v-row>
     <v-row>
       <v-col>
-        <div v-for="item in customers" :key="item.id" fixed-header>
+        <div
+          v-for="item in customers"
+          :key="item.id"
+          fixed-header
+        >
           <v-row>
             <v-col>
               <v-card>
                 <v-simple-table>
                   <thead>
                     <tr>
-                      <th colspan="11" style="background-color:cadetblue">{{item.name}}</th>
+                      <th
+                        colspan="11"
+                        style="background-color:cadetblue"
+                      >
+                        {{ item.name }}
+                      </th>
                     </tr>
                     <tr>
                       <th>ລົງເກັບທັງໝົດ(ຄັ້ງ)</th>
@@ -72,17 +139,17 @@
 
                   <tbody>
                     <tr>
-                      <td>{{item.time}}</td>
-                      <td>{{item.home_bag_time}}</td>
-                      <td>{{item.container_time}}</td>
-                      <td>{{item.fix_cost}}</td>
-                      <td>{{item.chartered_time}}</td>
-                      <td>{{item.bag_time}}</td>
-                      <td>{{item.events}}</td>
-                      <td>{{item.container}}</td>
-                      <td>{{item.home_bag}}</td>
-                      <td>{{item.bag}}</td>
-                      <td>{{item.chartered}}</td>
+                      <td>{{ item.time }}</td>
+                      <td>{{ item.home_bag_time }}</td>
+                      <td>{{ item.container_time }}</td>
+                      <td>{{ item.fix_cost }}</td>
+                      <td>{{ item.chartered_time }}</td>
+                      <td>{{ item.bag_time }}</td>
+                      <td>{{ item.events }}</td>
+                      <td>{{ item.container }}</td>
+                      <td>{{ item.home_bag }}</td>
+                      <td>{{ item.bag }}</td>
+                      <td>{{ item.chartered }}</td>
                     </tr>
                   </tbody>
                 </v-simple-table>
@@ -93,16 +160,21 @@
           <v-row>
             <v-col>
               <v-card>
-                <div v-for="village in item.collected_villages" :key="village.id">
-
+                <div
+                  v-for="village in item.collected_villages"
+                  :key="village.id"
+                >
                   <v-card>
                     <v-row>
                       <v-col>
                         <v-simple-table>
                           <thead>
                             <tr>
-                              <th colspan="11" style="background-color:aqua">
-                                {{village.name+' '+village.district_name}}
+                              <th
+                                colspan="11"
+                                style="background-color:aqua"
+                              >
+                                {{ village.name+' '+village.district_name }}
                               </th>
                             </tr>
                             <tr>
@@ -118,22 +190,21 @@
                               <th>ຈຳນວນຖົງ(ບໍລິມາດ)</th>
                               <th>ຈຳນວນຖົງ(ມອບເໝົາ)</th>
                             </tr>
-
                           </thead>
 
                           <tbody>
                             <tr>
-                              <td>{{village.time}}</td>
-                              <td>{{village.home_bag_time}}</td>
-                              <td>{{village.container_time}}</td>
-                              <td>{{village.fix_cost}}</td>
-                              <td>{{village.chartered_time}}</td>
-                              <td>{{village.bag_time}}</td>
-                              <td>{{village.events}}</td>
-                              <td>{{village.container}}</td>
-                              <td>{{village.home_bag}}</td>
-                              <td>{{village.bag}}</td>
-                              <td>{{village.chartered}}</td>
+                              <td>{{ village.time }}</td>
+                              <td>{{ village.home_bag_time }}</td>
+                              <td>{{ village.container_time }}</td>
+                              <td>{{ village.fix_cost }}</td>
+                              <td>{{ village.chartered_time }}</td>
+                              <td>{{ village.bag_time }}</td>
+                              <td>{{ village.events }}</td>
+                              <td>{{ village.container }}</td>
+                              <td>{{ village.home_bag }}</td>
+                              <td>{{ village.bag }}</td>
+                              <td>{{ village.chartered }}</td>
                             </tr>
                           </tbody>
                         </v-simple-table>
@@ -142,10 +213,18 @@
 
                     <v-row>
                       <v-col>
-                        <v-simple-table v-for="date in village.dates" :key="date.date">
+                        <v-simple-table
+                          v-for="date in village.dates"
+                          :key="date.date"
+                        >
                           <thead>
                             <tr>
-                              <th colspan="11" style="background-color:aquamarine">{{date.date }}</th>
+                              <th
+                                colspan="11"
+                                style="background-color:aquamarine"
+                              >
+                                {{ date.date }}
+                              </th>
                             </tr>
                             <tr v-if="date.details.length>0">
                               <th>ຊື່ລູກຄ້າ</th>
@@ -159,16 +238,24 @@
                             </tr>
                           </thead>
                           <tbody>
-                            <tr v-for="(detail,index) in date.details" :key="index">
-                              <td>{{ detail.customer.customer_type ==
-                              'company' ? detail.customer.company_name : detail.customer.name
-                              +' '+detail.customer.surname }}
+                            <tr
+                              v-for="(detail,index) in date.details"
+                              :key="index"
+                            >
+                              <td>
+                                {{ detail.customer.customer_type ==
+                                  'company' ? detail.customer.company_name : detail.customer.name
+                                    +' '+detail.customer.surname }}
                               </td>
                               <td>{{ detail.customer.customer_type_la }}</td>
-                              <td>{{ detail.customer.customer_type ==
-                              'company' ? detail.customer.cost_by_la : "" }}</td>
-                              <td>{{ detail.customer.expect_trash?
-                              detail.customer.expect_trash : ""}}</td>
+                              <td>
+                                {{ detail.customer.customer_type ==
+                                  'company' ? detail.customer.cost_by_la : "" }}
+                              </td>
+                              <td>
+                                {{ detail.customer.expect_trash?
+                                  detail.customer.expect_trash : "" }}
+                              </td>
                               <td>{{ detail.bag }}</td>
                               <td>{{ detail.container }}</td>
                               <td>{{ detail.status_la }}</td>
@@ -179,7 +266,12 @@
                           <v-simple-table v-if="date.events.length > 0">
                             <thead>
                               <tr>
-                                <th colspan="11" style="background-color:cornflowerblue">ເກັບຂີ້ເຫຍື້ອພິເສດ</th>
+                                <th
+                                  colspan="11"
+                                  style="background-color:cornflowerblue"
+                                >
+                                  ເກັບຂີ້ເຫຍື້ອພິເສດ
+                                </th>
                               </tr>
                               <tr>
                                 <th>ຊື່ລູກຄ້າ</th>
@@ -190,7 +282,10 @@
                             </thead>
 
                             <tbody>
-                              <tr v-for="(event,index) in date.events" :key="index">
+                              <tr
+                                v-for="(event,index) in date.events"
+                                :key="index"
+                              >
                                 <td>{{ event.name+' '+event.surname }}</td>
                                 <td>{{ event.phone }}</td>
                                 <td>{{ event.collect_status_la }}</td>
@@ -206,7 +301,6 @@
               </v-card>
             </v-col>
           </v-row>
-
         </div>
       </v-col>
     </v-row>
@@ -214,12 +308,12 @@
 </template>
 
 <script>
-import queryOption from "@/Helpers/queryOption";
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
-import { getCompanyCostBy } from "@/Helpers/Customer";
+import queryOption from '@/Helpers/queryOption';
+import { GetOldValueOnInput } from '@/Helpers/GetValue';
+import { getCompanyCostBy } from '@/Helpers/Customer';
 
 export default {
-  name: "Customer",
+  name: 'Customer',
   title() {
     return `Vientiane Waste Co-Dev|Report Customer`;
   },
@@ -233,34 +327,34 @@ export default {
         .substr(0, 10),
       start_menu: false,
       end_menu: false,
-      export: "",
+      export: '',
       customers: [],
       driverLists: [],
       loading: false,
-      customerId: "",
-      //Pagination
+      customerId: '',
+      // Pagination
       offset: 12,
       pagination: {},
       per_page: 100,
-      search: "",
-      oldVal: "",
-      car_id: "",
-      //Filter
-      selectedCustomerType: "home",
+      search: '',
+      oldVal: '',
+      car_id: '',
+      // Filter
+      selectedCustomerType: 'home',
       selectedCompanyType: null,
-      selectedDriver: "",
+      selectedDriver: '',
       customer_types: [
         {
-          name: "home",
-          display: "ຄົວເຮືອນ",
+          name: 'home',
+          display: 'ຄົວເຮືອນ',
         },
         {
-          name: "company",
-          display: "ຫົວໜ່ວຍທຸລະກິດ",
+          name: 'company',
+          display: 'ຫົວໜ່ວຍທຸລະກິດ',
         },
         {
-          name: "new_collection_event",
-          display: "ຖ້ຽວພິເສດ",
+          name: 'new_collection_event',
+          display: 'ຖ້ຽວພິເສດ',
         },
       ],
       company_types: getCompanyCostBy,
@@ -268,21 +362,41 @@ export default {
   },
   computed: {
     drivers() {
-      let data = [];
+      const data = [];
       for (const driver of this.driverLists) {
         data.push({
           id: driver.id,
-          name: driver.name + " " + driver.surname + " (" + driver.vehicle.car_id + ")",
-        })
+          name: `${driver.name} ${driver.surname} (${driver.vehicle.car_id})`,
+        });
       }
       return data;
-    }
+    },
+  },
+  watch: {
+    search(value) {
+      if (value != '') {
+        this.fetchData();
+      }
+    },
+    selectedDriver() {
+      this.fetchData();
+    },
+    selectedCustomerType() {
+      this.fetchData();
+    },
+    selectedCompanyType() {
+      this.fetchData();
+    },
+  },
+  created() {
+    this.fetchData();
+    this.fetchDriver();
   },
   methods: {
     fetchData() {
-      this.$store.commit("Loading_State", true);
+      this.$store.commit('Loading_State', true);
       this.$axios
-        .get("report-driver-collection", {
+        .get('report-driver-collection', {
           params: queryOption([
             // {page: this.pagination.current_page},
             // {per_page: this.per_page},
@@ -293,71 +407,51 @@ export default {
             // { car_id: this.car_id },
             { type: this.selectedCustomerType },
             { company_type: this.selectedCompanyType },
-            { download: this.export }
+            { download: this.export },
           ]),
         })
         .then((res) => {
           if (res.data.code == 200) {
-            this.$store.commit("Loading_State", false);
+            this.$store.commit('Loading_State', false);
             if (res.data.data.download_link) {
               window.open(res.data.data.download_link);
-              this.export = ""
+              this.export = '';
             } else {
               this.customers = res.data.data;
             }
           }
         })
         .catch(() => {
-          this.$store.commit("Loading_State", false);
-          this.export = ""
+          this.$store.commit('Loading_State', false);
+          this.export = '';
           this.start_menu = false;
           this.end_menu = false;
         });
     },
     fetchDriver() {
-      this.$store.commit("Loading_State", true);
+      this.$store.commit('Loading_State', true);
       this.$axios
-        .get("driver")
+        .get('driver')
         .then((res) => {
           if (res.data.code == 200) {
-            this.$store.commit("Loading_State", false);
+            this.$store.commit('Loading_State', false);
             this.driverLists = res.data.data;
           }
         })
         .catch(() => {
-          this.$store.commit("Loading_State", false);
+          this.$store.commit('Loading_State', false);
           this.start_menu = false;
           this.end_menu = false;
         });
     },
 
     exportData() {
-      this.export = 'excel'
+      this.export = 'excel';
       this.fetchData();
     },
     Search() {
       GetOldValueOnInput(this);
     },
-  },
-  watch: {
-    search: function (value) {
-      if (value != "") {
-        this.fetchData();
-      }
-    },
-    selectedDriver: function () {
-      this.fetchData();
-    },
-    selectedCustomerType: function () {
-      this.fetchData();
-    },
-    selectedCompanyType: function () {
-      this.fetchData();
-    }
-  },
-  created() {
-    this.fetchData();
-    this.fetchDriver();
   },
 };
 </script>

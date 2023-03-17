@@ -1,10 +1,17 @@
 <template>
   <v-container>
-    <v-breadcrumbs large class="mt-n4">
-      <v-btn text class="text-primary" @click="backPrevios()">
+    <v-breadcrumbs
+      large
+      class="mt-n4"
+    >
+      <v-btn
+        text
+        class="text-primary"
+        @click="backPrevios()"
+      >
         <v-icon>mdi-keyboard-backspace</v-icon>
       </v-btn>ເລືອກລູກຄ້າເຂົ້າແຜນເສັ້ນທາງ
-      <v-spacer></v-spacer>
+      <v-spacer />
       <span class="mr-4">
         <v-icon color="red">mdi-map-marker</v-icon>ຢູ່ໃນແຜນແລ້ວ
       </span>
@@ -13,12 +20,15 @@
       </span>
     </v-breadcrumbs>
     <v-row class="my-n4">
-      <v-col cols="12" class="mb-4">
+      <v-col
+        cols="12"
+        class="mb-4"
+      >
         <GmapMap
           :center="getCenter().lat > 0 || getCenter().lat < 0 ? getCenter() : { lat: 0, lng: 0 }"
           :zoom="14"
           style="width: 100%; height: 450px"
-          :disableDefaultUI="true"
+          :disable-default-u-i="true"
         >
           <gmap-info-window
             :options="infoOptions"
@@ -26,24 +36,29 @@
             :opened="infoOpened"
             :conent="infoContent"
             @closeclick="infoOpened = false"
-          >{{ infoContent }}</gmap-info-window>
+          >
+            {{ infoContent }}
+          </gmap-info-window>
           <GmapMarker
-            :key="index"
             v-for="(m, index) in customers"
+            :key="index"
             :position="getMarkers(m)"
-            @click="toggleInfo(m, index)"
             :draggable="false"
             :icon="getSiteIcon(m)"
             :animation="2"
             :clickable="true"
             :label="(index + 1).toString()"
+            @click="toggleInfo(m, index)"
           />
         </GmapMap>
       </v-col>
     </v-row>
     <v-row class="mb-n6">
       <v-col>
-        <v-btn class="btn-primary" @click="createPage()">
+        <v-btn
+          class="btn-primary"
+          @click="createPage()"
+        >
           Next
           <v-icon>mdi-arrow-right-bold-circle-outline</v-icon>
         </v-btn>
@@ -53,14 +68,14 @@
       </v-col>
       <v-col>
         <v-autocomplete
+          v-model="selectedDistrict"
           outlined
           dense
           :items="districts"
-          v-model="selectedDistrict"
           item-text="name"
           item-value="id"
           label="ເມືອງ"
-        ></v-autocomplete>
+        />
       </v-col>
       <!--
       <v-col>
@@ -144,7 +159,9 @@
               close
               @click="data.select"
               @click:close="remove(data.item)"
-            >{{ data.item.name }}</v-chip>
+            >
+              {{ data.item.name }}
+            </v-chip>
           </template>
 
           <!--
@@ -180,23 +197,32 @@
               hide-default-footer
             >
               <template v-slot:item.address_detail="{ item }">
-                <div v-for="(data, index) in item.village_details" :key="index">
+                <div
+                  v-for="(data, index) in item.village_details"
+                  :key="index"
+                >
                   <span>{{ data.name }}</span>
                 </div>
               </template>
 
               <template v-slot:item.actions="{ item }">
-                <v-icon small class="mr-2" @click="viewPage(item.id)">mdi-eye</v-icon>
+                <v-icon
+                  small
+                  class="mr-2"
+                  @click="viewPage(item.id)"
+                >
+                  mdi-eye
+                </v-icon>
               </template>
             </v-data-table>
-            <br />
+            <br>
             <template>
               <Pagination
                 v-if="pagination.total_pages > 1"
                 :pagination="pagination"
                 :offset="offset"
                 @paginate="fetchData()"
-              ></Pagination>
+              />
             </template>
           </v-card-text>
         </v-card>
@@ -206,44 +232,45 @@
 </template>
 
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import { GetOldValueOnInput } from '@/Helpers/GetValue';
+
 export default {
-  name: "Customer",
+  name: 'Customer',
   data() {
     return {
       tab: null,
       customers: [],
       selectedAllCustomer: [],
       loading: false,
-      customerId: "",
-      //Pagination
+      customerId: '',
+      // Pagination
       offset: 12,
       pagination: {},
       per_page: 50,
-      search: "",
-      oldVal: "",
-      //Filter
+      search: '',
+      oldVal: '',
+      // Filter
       districts: [],
-      selectedDistrict: "",
+      selectedDistrict: '',
       villages: [],
       selectedVillage: [],
       // selectedAllVillage: [],
 
       headers: [
-        { text: "ຊື່", value: "name" },
-        { text: "ນາມສະກຸນ", value: "surname" },
-        { text: "Phone", value: "user.phone", sortable: false },
+        { text: 'ຊື່', value: 'name' },
+        { text: 'ນາມສະກຸນ', value: 'surname' },
+        { text: 'Phone', value: 'user.phone', sortable: false },
         // { text: "ລາຍລະອຽດທີ່ຢູ່", value: "address_detail" },
-        { text: "ບ້ານ", value: "village.name", sortable: true },
-        { text: "ເມືອງ", value: "district.name", sortable: true },
-        { text: "ລາຍລະອຽດການບໍລິການ", value: "collect_description" },
+        { text: 'ບ້ານ', value: 'village.name', sortable: true },
+        { text: 'ເມືອງ', value: 'district.name', sortable: true },
+        { text: 'ລາຍລະອຽດການບໍລິການ', value: 'collect_description' },
         // { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
-        { text: "", value: "actions", sortable: false }
+        { text: '', value: 'actions', sortable: false },
       ],
-      //Map
+      // Map
       latlng: {
         lat: 0,
-        lng: 0
+        lng: 0,
       },
       markers: [],
       places: [],
@@ -255,30 +282,74 @@ export default {
       infoOptions: {
         pixelOffset: {
           width: 0,
-          height: -35
-        }
-      }
+          height: -35,
+        },
+      },
     };
+  },
+  computed: {
+    selectedAllVillage() {
+      return this.selectedVillage.length === this.villages.length;
+    },
+    selectedSomeVillage() {
+      return this.selectedVillage.length > 0 && !this.selectedAllVillage;
+    },
+    icon() {
+      if (this.selectedAllVillage) return 'mdi-close-box';
+      if (this.selectedSomeVillage) return 'mdi-minus-box';
+      return 'mdi-checkbox-blank-outline';
+    },
+  },
+  watch: {
+    search(value) {
+      if (value == '') {
+        this.fetchData();
+      }
+    },
+    selectedVillage() {
+      this.fetchData();
+      // var data = {};
+      // this.villages.filter((item) => {
+      //   // this.selectedVillage.includes(item.id);
+      //   if (this.selectedVillage) {
+      //     data.push(item);
+      //   }
+      // });
+      // console.log(data);
+      // // console.log("Hi" + selectedAllVillage);
+      // // // this.villages.filter((item) => {
+      // // this.selectedAllVillage.push(this.selectedVillage);
+      // // console.log(this.selectedAllVillage);
+      // // });
+    },
+    selectedDistrict() {
+      this.fetchVillage();
+    },
+  },
+  created() {
+    this.fetchData();
+    this.fetchAddress();
+    // this.selectedVillage = this.villages.slice();
   },
   methods: {
     backPrevios() {
       this.$router.go(-1);
     },
     fetchData() {
-      this.$store.commit("Loading_State", true);
+      this.$store.commit('Loading_State', true);
       this.$axios
-        .get("company", {
+        .get('company', {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
             // filter: this.search,
-            villages: this.selectedVillage
-          }
+            villages: this.selectedVillage,
+          },
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.$store.commit("Loading_State", false);
+              this.$store.commit('Loading_State', false);
               this.customers = res.data.data.data;
               this.selectedAllCustomer = res.data.data;
               this.pagination = res.data.data.pagination;
@@ -286,11 +357,11 @@ export default {
             }, 100);
           }
         })
-        .catch(error => {
-          this.$store.commit("Loading_State", false);
+        .catch((error) => {
+          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status == 422) {
-            var obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
+            const obj = error.response.data.errors;
+            for (const [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
           }
@@ -299,12 +370,12 @@ export default {
 
     fetchAddress() {
       this.$axios
-        .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
-        .then(res => {
+        .get('info/address', { params: { filter: 'ນະຄອນຫລວງວຽງຈັນ' } })
+        .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.address = res.data.data;
-              this.address.map(item => {
+              this.address.map((item) => {
                 this.districts = item.districts;
               });
             }, 300);
@@ -315,8 +386,8 @@ export default {
 
     fetchVillage() {
       this.$axios
-        .get("info/district/" + this.selectedDistrict + "/village")
-        .then(res => {
+        .get(`info/district/${this.selectedDistrict}/village`)
+        .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.villages = res.data.data;
@@ -331,23 +402,23 @@ export default {
       // console.log(this.customers);
       if (this.customers.length > 0 && this.selectedVillage.length > 0) {
         this.$router.push({
-          name: "CreateRoutePlan",
+          name: 'CreateRoutePlan',
           params: {
-            items: this.customers
-          }
+            items: this.customers,
+          },
         });
       } else {
-        this.$store.commit("Toast_State", {
+        this.$store.commit('Toast_State', {
           value: true,
-          color: "error",
-          msg: "ກາລຸນາເລືອກບ້ານ ແລະ ລູກຄ້າກ່ອນ"
+          color: 'error',
+          msg: 'ກາລຸນາເລືອກບ້ານ ແລະ ລູກຄ້າກ່ອນ',
         });
       }
     },
     viewPage(id) {
       this.$router.push({
-        name: "ViewClient",
-        params: { id }
+        name: 'ViewClient',
+        params: { id },
       });
     },
     remove(item) {
@@ -358,18 +429,17 @@ export default {
       GetOldValueOnInput(this);
     },
 
-    //Google map
+    // Google map
     getCenter() {
       if (this.customers.length) {
         if (parseFloat(this.customers[0].lat) == null) {
           return this.latlng;
-        } else {
-          const latlng = {
-            lat: parseFloat(this.customers[0].lat),
-            lng: parseFloat(this.customers[0].lng)
-          };
-          return latlng;
         }
+        const latlng = {
+          lat: parseFloat(this.customers[0].lat),
+          lng: parseFloat(this.customers[0].lng),
+        };
+        return latlng;
       }
       return this.latlng;
     },
@@ -377,13 +447,13 @@ export default {
       if (m.customer !== null) {
         return {
           lat: parseFloat(m.lat),
-          lng: parseFloat(m.lng)
+          lng: parseFloat(m.lng),
         };
       }
     },
     getSiteIcon(status) {
-      var pin1 = {
-        url: require("@coms/../../src/assets/pin1.svg"),
+      const pin1 = {
+        url: require('@coms/../../src/assets/pin1.svg'),
         zoomControl: true,
         mapTypeControl: false,
         scaleControl: false,
@@ -394,18 +464,18 @@ export default {
         size: {
           width: 35,
           height: 55,
-          f: "px",
-          b: "px"
+          f: 'px',
+          b: 'px',
         },
         scaledSize: {
           width: 35,
           height: 55,
-          f: "px",
-          b: "px"
-        }
+          f: 'px',
+          b: 'px',
+        },
       };
-      var pin2 = {
-        url: require("@coms/../../src/assets/pin2.svg"),
+      const pin2 = {
+        url: require('@coms/../../src/assets/pin2.svg'),
         zoomControl: true,
         mapTypeControl: false,
         scaleControl: false,
@@ -416,15 +486,15 @@ export default {
         size: {
           width: 35,
           height: 55,
-          f: "px",
-          b: "px"
+          f: 'px',
+          b: 'px',
         },
         scaledSize: {
           width: 35,
           height: 55,
-          f: "px",
-          b: "px"
-        }
+          f: 'px',
+          b: 'px',
+        },
       };
 
       try {
@@ -440,7 +510,7 @@ export default {
     },
     toggleInfo(m, key) {
       this.infoPosition = this.getMarkers(m);
-      this.infoContent = m.name + " (" + m.house_number + ") ";
+      this.infoContent = `${m.name} (${m.house_number}) `;
       if (this.infoCurrentKey == key) {
         this.infoOpened = !this.infoOpened;
       } else {
@@ -459,52 +529,8 @@ export default {
           }, 300);
         }
       });
-    }
+    },
   },
-  computed: {
-    selectedAllVillage() {
-      return this.selectedVillage.length === this.villages.length;
-    },
-    selectedSomeVillage() {
-      return this.selectedVillage.length > 0 && !this.selectedAllVillage;
-    },
-    icon() {
-      if (this.selectedAllVillage) return "mdi-close-box";
-      if (this.selectedSomeVillage) return "mdi-minus-box";
-      return "mdi-checkbox-blank-outline";
-    }
-  },
-  watch: {
-    search: function(value) {
-      if (value == "") {
-        this.fetchData();
-      }
-    },
-    selectedVillage: function() {
-      this.fetchData();
-      // var data = {};
-      // this.villages.filter((item) => {
-      //   // this.selectedVillage.includes(item.id);
-      //   if (this.selectedVillage) {
-      //     data.push(item);
-      //   }
-      // });
-      // console.log(data);
-      // // console.log("Hi" + selectedAllVillage);
-      // // // this.villages.filter((item) => {
-      // // this.selectedAllVillage.push(this.selectedVillage);
-      // // console.log(this.selectedAllVillage);
-      // // });
-    },
-    selectedDistrict: function() {
-      this.fetchVillage();
-    }
-  },
-  created() {
-    this.fetchData();
-    this.fetchAddress();
-    // this.selectedVillage = this.villages.slice();
-  }
 };
 </script>
 

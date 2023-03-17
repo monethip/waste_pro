@@ -7,16 +7,31 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12" md="6" sm="12">
+        <v-col
+          cols="12"
+          md="6"
+          sm="12"
+        >
           <v-card elevation="1">
             <v-card-text>
               <v-row>
                 <v-col>
-                  <v-icon large @click="user()">mdi-account</v-icon>
+                  <v-icon
+                    large
+                    @click="user()"
+                  >
+                    mdi-account
+                  </v-icon>
                 </v-col>
-                <v-divider class="mx-4" vertical></v-divider>
+                <v-divider
+                  class="mx-4"
+                  vertical
+                />
                 <v-col>
-                  <h3 class="primary-color" v-if="data.user">
+                  <h3
+                    v-if="data.user"
+                    class="primary-color"
+                  >
                     {{ data.user.all_user }}
                   </h3>
                   <h3>Users</h3>
@@ -25,7 +40,10 @@
               <v-row>
                 <v-col>
                   <h4>
-                    <span class="succes-color" v-if="data.user">{{
+                    <span
+                      v-if="data.user"
+                      class="succes-color"
+                    >{{
                       data.user.active
                     }}</span>
                   </h4>
@@ -33,7 +51,10 @@
                 </v-col>
                 <v-col>
                   <h4>
-                    <span class="red-color" v-if="data.user">{{
+                    <span
+                      v-if="data.user"
+                      class="red-color"
+                    >{{
                       data.user.inactive
                     }}</span>
                   </h4>
@@ -43,16 +64,31 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col cols="12" md="6" sm="12">
+        <v-col
+          cols="12"
+          md="6"
+          sm="12"
+        >
           <v-card elevation="1">
             <v-card-text>
               <v-row>
                 <v-col>
-                  <v-icon large @click="driver()">mdi-account-tie</v-icon>
+                  <v-icon
+                    large
+                    @click="driver()"
+                  >
+                    mdi-account-tie
+                  </v-icon>
                 </v-col>
-                <v-divider class="mx-4" vertical></v-divider>
+                <v-divider
+                  class="mx-4"
+                  vertical
+                />
                 <v-col>
-                  <h3 class="primary-color" v-if="data.customer">
+                  <h3
+                    v-if="data.customer"
+                    class="primary-color"
+                  >
                     {{ data.customer.all_driver }}
                   </h3>
                   <h3>Driver</h3>
@@ -75,18 +111,31 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col cols="12" md="6" sm="12">
+        <v-col
+          cols="12"
+          md="6"
+          sm="12"
+        >
           <v-card elevation="1">
             <v-card-text>
               <v-row>
                 <v-col>
-                  <v-icon large @click="customer()"
-                    >mdi-account-multiple</v-icon
+                  <v-icon
+                    large
+                    @click="customer()"
                   >
+                    mdi-account-multiple
+                  </v-icon>
                 </v-col>
-                <v-divider class="mx-4" vertical></v-divider>
+                <v-divider
+                  class="mx-4"
+                  vertical
+                />
                 <v-col>
-                  <h3 class="primary-color" v-if="data.customer">
+                  <h3
+                    v-if="data.customer"
+                    class="primary-color"
+                  >
                     {{ data.customer.all_driver }}
                   </h3>
                   <h3>Home</h3>
@@ -96,8 +145,7 @@
                 <v-col>
                   <h4 v-if="data.customer">
                     <span class="succes-color">
-                      {{ data.customer.active }}</span
-                    >
+                      {{ data.customer.active }}</span>
                   </h4>
                   <h4>Active</h4>
                 </v-col>
@@ -111,16 +159,31 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col cols="12" md="6" sm="12">
+        <v-col
+          cols="12"
+          md="6"
+          sm="12"
+        >
           <v-card elevation="1">
             <v-card-text>
               <v-row>
                 <v-col>
-                  <v-icon large @click="company()">mdi-office-building</v-icon>
+                  <v-icon
+                    large
+                    @click="company()"
+                  >
+                    mdi-office-building
+                  </v-icon>
                 </v-col>
-                <v-divider class="mx-4" vertical></v-divider>
+                <v-divider
+                  class="mx-4"
+                  vertical
+                />
                 <v-col>
-                  <h3 class="primary-color" v-if="data.company">
+                  <h3
+                    v-if="data.company"
+                    class="primary-color"
+                  >
                     {{ data.company.all_driver }}
                   </h3>
                   <h3>Company</h3>
@@ -146,15 +209,26 @@
       </v-row>
 
       <v-row>
-        <v-col cols="12" md="6" sm="12">
+        <v-col
+          cols="12"
+          md="6"
+          sm="12"
+        >
           <v-row>
             <v-col>
               <v-card elevation="1">
                 <v-card-text>
-                  <h3 class="my-2">ຈຳນວນຂີ້ເຫຍື້ອ</h3>
+                  <h3 class="my-2">
+                    ຈຳນວນຂີ້ເຫຍື້ອ
+                  </h3>
                   <v-row>
                     <v-col>
-                      <v-icon large @click="reportTrash()">mdi-package</v-icon>
+                      <v-icon
+                        large
+                        @click="reportTrash()"
+                      >
+                        mdi-package
+                      </v-icon>
                       <v-row>
                         <v-col>
                           <h4 v-if="data.last_month_collection">
@@ -162,7 +236,9 @@
                               data.last_month_collection.bag_amount
                             }}</span>
                           </h4>
-                          <h4 class="text-medium">ຖົງ</h4>
+                          <h4 class="text-medium">
+                            ຖົງ
+                          </h4>
                         </v-col>
                         <v-col>
                           <h4 v-if="data.last_month_collection">
@@ -170,11 +246,16 @@
                               data.last_month_collection.container_amount
                             }}</span>
                           </h4>
-                          <h4 class="text-medium">Container</h4>
+                          <h4 class="text-medium">
+                            Container
+                          </h4>
                         </v-col>
                       </v-row>
                     </v-col>
-                    <v-divider class="mx-4" vertical></v-divider>
+                    <v-divider
+                      class="mx-4"
+                      vertical
+                    />
                     <v-col>
                       <v-row>
                         <v-col>
@@ -183,7 +264,9 @@
                               data.current_month_collection.bag_amount
                             }}</span>
                           </h4>
-                          <h4 class="text-medium">ຖົງ</h4>
+                          <h4 class="text-medium">
+                            ຖົງ
+                          </h4>
                         </v-col>
                         <v-col>
                           <h4 v-if="data.current_month_collection">
@@ -191,7 +274,9 @@
                               data.current_month_collection.container_amount
                             }}</span>
                           </h4>
-                          <h4 class="text-medium">Container</h4>
+                          <h4 class="text-medium">
+                            Container
+                          </h4>
                         </v-col>
                       </v-row>
                     </v-col>
@@ -210,15 +295,26 @@
           </v-row>
         </v-col>
 
-        <v-col cols="12" md="6" sm="12">
+        <v-col
+          cols="12"
+          md="6"
+          sm="12"
+        >
           <v-row>
             <v-col>
               <v-card elevation="1">
                 <v-card-text>
-                  <h3 class="my-2">ລາຍໄດ້ສະເລ່ຍ</h3>
+                  <h3 class="my-2">
+                    ລາຍໄດ້ສະເລ່ຍ
+                  </h3>
                   <v-row>
                     <v-col>
-                      <v-icon large @click="reportTrashInvoice()">mdi-cash-plus</v-icon>
+                      <v-icon
+                        large
+                        @click="reportTrashInvoice()"
+                      >
+                        mdi-cash-plus
+                      </v-icon>
                       <v-row>
                         <v-col>
                           <h4 v-if="data.last_month_invoice">
@@ -226,7 +322,9 @@
                               data.last_month_invoice.success_total
                             }}</span>
                           </h4>
-                          <h4 class="text-medium">ກີບ</h4>
+                          <h4 class="text-medium">
+                            ກີບ
+                          </h4>
                         </v-col>
                         <v-col>
                           <h4 v-if="data.last_month_invoice">
@@ -234,11 +332,16 @@
                               data.last_month_invoice.total_invoice
                             }}</span>
                           </h4>
-                          <h4 class="text-medium">ບິນ</h4>
+                          <h4 class="text-medium">
+                            ບິນ
+                          </h4>
                         </v-col>
                       </v-row>
                     </v-col>
-                    <v-divider class="mx-4" vertical></v-divider>
+                    <v-divider
+                      class="mx-4"
+                      vertical
+                    />
                     <v-col>
                       <v-row>
                         <v-col>
@@ -247,7 +350,9 @@
                               data.current_month_invoice.success_total
                             }}</span>
                           </h4>
-                          <h4 class="text-medium">ກີບ</h4>
+                          <h4 class="text-medium">
+                            ກີບ
+                          </h4>
                         </v-col>
                         <v-col>
                           <h4 v-if="data.current_month_invoice">
@@ -255,7 +360,9 @@
                               data.current_month_invoice.total_invoice
                             }}</span>
                           </h4>
-                          <h4 class="text-medium">ບິນ</h4>
+                          <h4 class="text-medium">
+                            ບິນ
+                          </h4>
                         </v-col>
                       </v-row>
                     </v-col>
@@ -275,7 +382,7 @@
         </v-col>
       </v-row>
 
-      <br class="mx-4" />
+      <br class="mx-4">
       <v-card elevation="1">
         <v-card-text>
           <v-row>
@@ -291,7 +398,7 @@
         </v-card-text>
       </v-card>
 
-      <br class="mx-4" />
+      <br class="mx-4">
       <v-card elevation="1">
         <v-card-text>
           <!--
@@ -339,10 +446,11 @@
 </template>
 <script>
 // import UserChart from "@views/dashboard/chart/userChart";
-import TrashChart from "@views/dashboard/chart/trashChart";
+import TrashChart from '@views/dashboard/chart/trashChart';
 // import Package from "@views/dashboard/chart/package";
 // import RouteTrash from "@views/dashboard/chart/routeTrash";
-import Income from "@/views/dashboard/chart/income.vue";
+import Income from '@/views/dashboard/chart/income.vue';
+
 export default {
   title() {
     return `Vientiane Waste Co-Dev|Dashboard`;
@@ -359,53 +467,53 @@ export default {
       data: {},
     };
   },
+  created() {
+    this.fetchData();
+  },
   methods: {
     fetchData() {
-      this.$store.commit("Loading_State", true);
+      this.$store.commit('Loading_State', true);
       this.$axios
-        .get("dashboard")
+        .get('dashboard')
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.$store.commit("Loading_State", false);
+              this.$store.commit('Loading_State', false);
               this.data = res.data.data;
             }, 300);
           }
         })
         .catch((error) => {
-          this.$store.commit("Loading_State", false);
+          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status == 422) {
-            var obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
+            const obj = error.response.data.errors;
+            for (const [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
           }
         });
     },
     user() {
-      this.$router.push("user");
+      this.$router.push('user');
     },
     driver() {
-      this.$router.push("driver");
+      this.$router.push('driver');
     },
     customer() {
-      this.$router.push("customer");
+      this.$router.push('customer');
     },
     company() {
-      this.$router.push("company");
+      this.$router.push('company');
     },
     reportTrash() {
-      this.$router.push("/report/trash");
+      this.$router.push('/report/trash');
     },
     reportTrashInvoice() {
-      this.$router.push("/report/invoice");
+      this.$router.push('/report/invoice');
     },
     package() {
-      this.$router.push("package");
+      this.$router.push('package');
     },
-  },
-  created() {
-    this.fetchData();
   },
 };
 </script>

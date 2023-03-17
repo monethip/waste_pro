@@ -2,45 +2,64 @@
   <v-container>
     <v-card>
       <v-card-title>
-        <span class="headline">Change Phone - {{user.name}}</span>
+        <span class="headline">Change Phone - {{ user.name }}</span>
       </v-card-title>
       <v-card-text>
         <v-stepper v-model="stepValue">
           <v-stepper-header>
-            <v-stepper-step :complete="stepValue > 1" step="1">Phone Number</v-stepper-step>
+            <v-stepper-step
+              :complete="stepValue > 1"
+              step="1"
+            >
+              Phone Number
+            </v-stepper-step>
 
-            <v-divider></v-divider>
+            <v-divider />
 
-            <v-stepper-step :complete="stepValue > 2" step="2">Verify Code</v-stepper-step>
+            <v-stepper-step
+              :complete="stepValue > 2"
+              step="2"
+            >
+              Verify Code
+            </v-stepper-step>
 
-            <v-divider></v-divider>
+            <v-divider />
 
-            <v-stepper-step step="3">Confirm</v-stepper-step>
+            <v-stepper-step step="3">
+              Confirm
+            </v-stepper-step>
           </v-stepper-header>
           <v-stepper-items>
             <v-stepper-content step="1">
               <v-row>
                 <v-col cols="12">
-                  <v-form ref="phone" lazy-validation>
+                  <v-form
+                    ref="phone"
+                    lazy-validation
+                  >
                     <v-text-field
+                      v-model="phone"
                       label="ເບີໂທ *"
                       required
-                      v-model="phone"
                       :rules="phoneRules"
                       type="number"
                       class="input-number"
-                    ></v-text-field>
+                    />
                   </v-form>
-                  <p class="errors">{{ server_errors.phone }}</p>
+                  <p class="errors">
+                    {{ server_errors.phone }}
+                  </p>
                 </v-col>
               </v-row>
 
               <v-btn
                 color="primary"
-                @click="verifyPhone"
                 :loading="loading"
                 :disabled="loading"
-              >Continue</v-btn>
+                @click="verifyPhone"
+              >
+                Continue
+              </v-btn>
             </v-stepper-content>
 
             <v-stepper-content step="2">
@@ -54,38 +73,51 @@
                       :num-inputs="6"
                       :should-auto-focus="true"
                       :is-input-num="true"
-                      @on-complete="handleOnComplete"
                       class="otp"
+                      @on-complete="handleOnComplete"
                     />
 
-                    <v-btn class="btnClear" text @click="handleClearInput()">Clear</v-btn>
+                    <v-btn
+                      class="btnClear"
+                      text
+                      @click="handleClearInput()"
+                    >
+                      Clear
+                    </v-btn>
                   </div>
                 </v-col>
               </v-row>
 
               <v-btn
                 color="primary"
-                @click="verifyOtp"
                 :loading="loading"
                 :disabled="loading"
-              >Continue</v-btn>
+                @click="verifyOtp"
+              >
+                Continue
+              </v-btn>
             </v-stepper-content>
 
             <v-stepper-content step="3">
               <v-container>
-                <v-form ref="form" lazy-validation>
+                <v-form
+                  ref="form"
+                  lazy-validation
+                >
                   <v-row>
                     <v-col cols="12">
                       <v-text-field
+                        v-model="phone"
                         label="ເບີໂທ *"
                         required
-                        v-model="phone"
                         :rules="phoneRules"
                         type="number"
                         class="input-number"
                         disabled
-                      ></v-text-field>
-                      <p class="errors">{{ server_errors.phone }}</p>
+                      />
+                      <p class="errors">
+                        {{ server_errors.phone }}
+                      </p>
                     </v-col>
                   </v-row>
                 </v-form>
@@ -95,75 +127,103 @@
                 :loading="loading"
                 :disabled="loading"
                 @click="changePhone()"
-              >Change</v-btn>
+              >
+                Change
+              </v-btn>
             </v-stepper-content>
           </v-stepper-items>
         </v-stepper>
       </v-card-text>
     </v-card>
 
-    <div id="recaptcha-container"></div>
+    <div id="recaptcha-container" />
   </v-container>
 </template>
 
 <script>
-import firebase from "firebase";
+import firebase from 'firebase';
+
 export default {
   title() {
     return `Vientiane Waste Co-Dev|User`;
   },
-  name: "User",
+  name: 'User',
   data() {
     return {
       stepValue: 1,
-      otp: "",
+      otp: '',
       isStepTwo: false,
 
       loading: false,
       user: {},
-      phone: "",
+      phone: '',
       edit_user: {},
-      userID: "",
+      userID: '',
       server_errors: {
-        email: "",
-        roleId: ""
+        email: '',
+        roleId: '',
       },
-      errormsg: "",
+      errormsg: '',
 
-      selectedRole: "",
+      selectedRole: '',
       selectedRoles: [],
       roles: [],
       revokeRoles: [],
       permissionDialog: false,
       updatePermissionDialog: false,
-      selectedPermission: "",
+      selectedPermission: '',
       permissions: [],
       revokes: [],
-      code: "",
-      appVerifier: "",
+      code: '',
+      appVerifier: '',
       btnVerify: false,
 
       // resetPassword
-      password: "",
-      password_confirm: "",
+      password: '',
+      password_confirm: '',
 
-      id_token: "",
+      id_token: '',
 
-      //Validation
+      // Validation
       phoneRules: [
-        v => !!v || "Phone is required",
-        v =>
-          (v && v.length >= 8 && v.length <= 11) ||
-          "Phone number must be  8 - 11 numbers"
-      ]
+        (v) => !!v || 'Phone is required',
+        (v) => (v && v.length >= 8 && v.length <= 11)
+          || 'Phone number must be  8 - 11 numbers',
+      ],
     };
+  },
+
+  watch: {
+    'user.name': function () {
+      this.server_errors.name = '';
+    },
+    'user.phone': function () {
+      this.server_errors.phone = '';
+    },
+    'user.email': function () {
+      this.server_errors.email = '';
+    },
+    'user.password': function () {
+      this.server_errors.password = '';
+    },
+
+    password() {
+      this.server_errors.password = '';
+    },
+    password_confirmation() {
+      this.password_confirmation = '';
+    },
+  },
+  created() {
+    this.initReCaptcha();
+    this.getUser();
   },
   methods: {
     getUser() {
       this.loading = true;
       this.$axios
-        .get("user-setting/user/" + this.$route.params.id)
-        .then(res => {
+        .get(`user-setting/user/${this.$route.params.id}`)
+        .then((res) => {
           if (res.data.code === 200) {
             setTimeout(() => {
               this.loading = false;
@@ -178,35 +238,35 @@ export default {
       this.loading = true;
       this.user.id_token = this.id_token;
       this.$axios
-        .put("user-setting/user/" + this.$route.params.id, this.user)
-        .then(res => {
+        .put(`user-setting/user/${this.$route.params.id}`, this.user)
+        .then((res) => {
           if (res.data.code === 200) {
             setTimeout(() => {
               this.loading = false;
               this.edit_user = {};
               this.$router.push({
-                name: "User"
+                name: 'User',
               });
-              this.$store.commit("Toast_State", {
+              this.$store.commit('Toast_State', {
                 value: true,
-                color: "success",
-                msg: res.data.message
+                color: 'success',
+                msg: res.data.message,
               });
             }, 300);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.loading = false;
-          this.$store.commit("Toast_State", {
+          this.$store.commit('Toast_State', {
             value: true,
-            color: "error",
+            color: 'error',
             msg: error.response
               ? error.response.data.message
-              : "Something went wrong"
+              : 'Something went wrong',
           });
           if (error.response && error.response.status === 422) {
-            let obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
+            const obj = error.response.data.errors;
+            for (const [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
           }
@@ -218,8 +278,8 @@ export default {
       this.loading = true;
       if (this.$refs.phone.validate() === true) {
         this.$axios
-          .post("unique-phone", { phone: this.phone })
-          .then(res => {
+          .post('unique-phone', { phone: this.phone })
+          .then((res) => {
             if (res.data.code === 200) {
               console.error(res.data.data.exists);
               if (res.data.data.exists === false) {
@@ -228,10 +288,10 @@ export default {
                 this.loading = true;
               } else if (res.data.data.exists === true) {
                 this.btnVerify = false;
-                this.$store.commit("Toast_State", {
+                this.$store.commit('Toast_State', {
                   value: true,
-                  color: "error",
-                  msg: "ເບີນີ້ມີໃນລະບົບແລ້ວ"
+                  color: 'error',
+                  msg: 'ເບີນີ້ມີໃນລະບົບແລ້ວ',
                 });
               }
               // this.btnVerify = false;
@@ -245,23 +305,23 @@ export default {
     },
     sendOtp() {
       // this.btnVerify = true;
-      let countryCode = "+85620"; //laos
-      let phoneNumber = countryCode + this.phone;
-      let appVerifier = this.appVerifier;
+      const countryCode = '+85620'; // laos
+      const phoneNumber = countryCode + this.phone;
+      const { appVerifier } = this;
       firebase
         .auth()
         .signInWithPhoneNumber(phoneNumber, appVerifier)
-        .then(confirmationResult => {
+        .then((confirmationResult) => {
           window.confirmationResult = confirmationResult;
           this.stepValue = 2;
           // this.btnVerify = false;
           // this.loading = true;
         })
-        .catch(function() {
-          this.$store.commit("Toast_State", {
+        .catch(function () {
+          this.$store.commit('Toast_State', {
             value: true,
-            color: "error",
-            msg: "SMS not sent"
+            color: 'error',
+            msg: 'SMS not sent',
           });
           // this.loading = true;
         });
@@ -269,10 +329,10 @@ export default {
 
     verifyOtp() {
       // this.btnVerify = true;
-      let code = this.code;
+      const { code } = this;
       window.confirmationResult
         .confirm(code)
-        .then(res => {
+        .then((res) => {
           if (res) {
             const token = res.user;
             this.id_token = token._lat;
@@ -280,11 +340,11 @@ export default {
             this.stepValue = 3;
           }
         })
-        .catch(function() {
-          this.$store.commit("Toast_State", {
+        .catch(function () {
+          this.$store.commit('Toast_State', {
             value: true,
-            color: "error",
-            msg: "ມີບາງຢ່າງຜິດພາດ ກະລຸນາລອງໃໝ່"
+            color: 'error',
+            msg: 'ມີບາງຢ່າງຜິດພາດ ກະລຸນາລອງໃໝ່',
           });
         });
     },
@@ -292,18 +352,18 @@ export default {
     initReCaptcha() {
       setTimeout(() => {
         window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-          "recaptcha-container",
+          'recaptcha-container',
           {
-            size: "invisible",
+            size: 'invisible',
             // callback: function (response) {
             //   // reCAPTCHA solved, allow signInWithPhoneNumber.
             //   // ...
             // },
-            "expired-callback": function() {
+            'expired-callback': function () {
               // Response expired. Ask user to solve reCAPTCHA again.
               // ...
-            }
-          }
+            },
+          },
         );
         //
         this.appVerifier = window.recaptchaVerifier;
@@ -319,34 +379,8 @@ export default {
     },
     handleClearInput() {
       this.$refs.otpInput.clearInput();
-    }
+    },
   },
-
-  watch: {
-    "user.name": function() {
-      this.server_errors.name = "";
-    },
-    "user.phone": function() {
-      this.server_errors.phone = "";
-    },
-    "user.email": function() {
-      this.server_errors.email = "";
-    },
-    "user.password": function() {
-      this.server_errors.password = "";
-    },
-
-    password: function() {
-      this.server_errors.password = "";
-    },
-    password_confirmation: function() {
-      this.password_confirmation = "";
-    }
-  },
-  created() {
-    this.initReCaptcha();
-    this.getUser();
-  }
 };
 </script>
 

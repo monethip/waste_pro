@@ -1,16 +1,35 @@
 <template>
-  <v-card @click="openNewTab(route)" outlined style="height:100px">
+  <v-card
+    outlined
+    style="height:100px"
+    @click="openNewTab(route)"
+  >
     <v-card-title
       class="d-flex justify-between w-full"
       style="position: relative"
     >
-      <v-chip v-if="icon" class="text-caption" :color="icon_color" dark>
-        <v-icon :x-small="true">{{ icon }}</v-icon>
-        <div :color="icon_color" class="ml-1">
+      <v-chip
+        v-if="icon"
+        class="text-caption"
+        :color="icon_color"
+        dark
+      >
+        <v-icon :x-small="true">
+          {{ icon }}
+        </v-icon>
+        <div
+          :color="icon_color"
+          class="ml-1"
+        >
           {{ title }}
         </div>
       </v-chip>
-      <v-chip v-else class="text-caption" :color="bg_color" dark>
+      <v-chip
+        v-else
+        class="text-caption"
+        :color="bg_color"
+        dark
+      >
         {{ title }}
       </v-chip>
       <v-chip
@@ -22,11 +41,14 @@
         style="position: absolute;right: 10px; !important"
         :color="bg_color"
         outlined
-        >{{ Intl.NumberFormat().format(billing_count) }} ບິນ</v-chip
       >
+        {{ Intl.NumberFormat().format(billing_count) }} ບິນ
+      </v-chip>
     </v-card-title>
     <v-card-text v-if="total">
-      <p class="text-h5">{{ Intl.NumberFormat().format(total) }} K</p>
+      <p class="text-h5">
+        {{ Intl.NumberFormat().format(total) }} K
+      </p>
     </v-card-text>
   </v-card>
 </template>
@@ -34,34 +56,32 @@
 <script>
 export default {
   props: [
-    "title",
-    "billing_count",
-    "total",
-    "bg_color",
-    "route",
-    "icon",
-    "icon_color",
+    'title',
+    'billing_count',
+    'total',
+    'bg_color',
+    'route',
+    'icon',
+    'icon_color',
   ],
   data() {
     return {};
   },
-  methods: {
-    getColor(value) {
-      return "background-color: " + value;
-    },
-    openNewTab(route) {
-      if (route) window.open(route.href, "_blank");
-    },
-  },
   created() {
   },
   beforeUpdate() {
-    this.$store.commit("Loading_State", true);
-
+    this.$store.commit('Loading_State', true);
   },
   updated() {
-    this.$store.commit("Loading_State", false);
-
-  }
+    this.$store.commit('Loading_State', false);
+  },
+  methods: {
+    getColor(value) {
+      return `background-color: ${value}`;
+    },
+    openNewTab(route) {
+      if (route) window.open(route.href, '_blank');
+    },
+  },
 };
 </script>

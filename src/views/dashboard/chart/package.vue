@@ -1,6 +1,9 @@
 <template>
   <div>
-    <apexchart :options="options" :series="series"></apexchart>
+    <apexchart
+      :options="options"
+      :series="series"
+    />
   </div>
 </template>
 <script>
@@ -9,21 +12,21 @@ export default {
     return {
       options: {
         chart: {
-          type: "bar",
+          type: 'bar',
         },
         xaxis: {
           categories: [
-            "Package A",
-            "Package B",
-            "Pacckage C",
-            "Package D",
-            "Package E",
+            'Package A',
+            'Package B',
+            'Pacckage C',
+            'Package D',
+            'Package E',
           ],
         },
       },
       series: [
         {
-          name: "series-1",
+          name: 'series-1',
           data: [15000, 16000, 14000, 4000, 6000],
         },
       ],

@@ -11,8 +11,14 @@
     <div>
       <v-card elevation="0">
         <v-card-text>
-          <v-data-table :headers="headers" :items="notifications" :disable-pagination="true" hide-default-footer
-            fixed-header height="100vh">
+          <v-data-table
+            :headers="headers"
+            :items="notifications"
+            :disable-pagination="true"
+            hide-default-footer
+            fixed-header
+            height="100vh"
+          >
             <!--
             <template v-slot:item.read_at="{ item }">
               <v-chip color="success">{{
@@ -21,14 +27,22 @@
             </template>
             -->
             <template v-slot:item.actions="{ item }">
-              <v-icon small class="mr-2" @click="viewPage(item.id)">
+              <v-icon
+                small
+                class="mr-2"
+                @click="viewPage(item.id)"
+              >
                 mdi-eye
               </v-icon>
             </template>
-          </v-data-table><br />
+          </v-data-table><br>
           <template>
-            <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
-              @paginate="fetchData()"></Pagination>
+            <Pagination
+              v-if="pagination.total_pages > 1"
+              :pagination="pagination"
+              :offset="offset"
+              @paginate="fetchData()"
+            />
           </template>
         </v-card-text>
       </v-card>
@@ -38,20 +52,20 @@
 
 <script>
 export default {
-  name: "Customer",
+  name: 'Customer',
   data() {
     return {
       loading: false,
-      //Pagination
+      // Pagination
       offset: 12,
       pagination: {},
       per_page: 20,
       notifications: [],
       server_errors: {},
-      selectedStatus: "unread",
+      selectedStatus: 'unread',
 
       headers: [
-        { text: "Title", value: "data.name" },
+        { text: 'Title', value: 'data.name' },
         // {
         //   text: "Read",
         //   value: "read_at",
@@ -59,71 +73,71 @@ export default {
         //   align: "center",
         // },
         {
-          text: "Notification Type",
-          value: "notifiable_type",
+          text: 'Notification Type',
+          value: 'notifiable_type',
           sortable: false,
-          align: "center",
+          align: 'center',
         },
-        { text: "Type", value: "type", sortable: false },
-        { text: "", value: "actions", sortable: false },
+        { text: 'Type', value: 'type', sortable: false },
+        { text: '', value: 'actions', sortable: false },
       ],
     };
+  },
+  computed: {
+    notiType() { return this.$route.query.types; },
+
+  },
+
+  watch: {
+    notiType() {
+      this.fetchData();
+    },
+  },
+  created() {
+    this.fetchData();
   },
   methods: {
     backPrevios() {
       this.$router.go(-1);
     },
     fetchData() {
-      this.$store.commit("Loading_State", true);
+      this.$store.commit('Loading_State', true);
       const option = {
         page: this.pagination.current_page,
         per_page: this.per_page,
         status: this.selectedStatus,
-      }
+      };
 
-      if (this.notiType) option.types = this.notiType
+      if (this.notiType) option.types = this.notiType;
 
       this.$axios
-        .get("notification", {
+        .get('notification', {
           params: option,
         })
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.$store.commit("Loading_State", false);
+              this.$store.commit('Loading_State', false);
               this.notifications = res.data.data.data;
               this.pagination = res.data.data.pagination;
             }, 300);
           }
         })
         .catch((error) => {
-          this.$store.commit("Loading_State", false);
-          this.$store.commit("Toast_State", {
-              value: true,
-              color: "error",
-              msg: error.response ? error.response.data.message : 'Something went wrong',
-            });
+          this.$store.commit('Loading_State', false);
+          this.$store.commit('Toast_State', {
+            value: true,
+            color: 'error',
+            msg: error.response ? error.response.data.message : 'Something went wrong',
+          });
         });
     },
 
     viewPage(id) {
       this.$router.push({
-        name: "NotificationView",
+        name: 'NotificationView',
         params: { id },
       });
-    },
-  },
-  computed: {
-    notiType() { return this.$route.query.types },
-
-  },
-  created() {
-    this.fetchData();
-  },
-
-  watch: {
-    notiType: function () {
-      this.fetchData();
     },
   },
 };

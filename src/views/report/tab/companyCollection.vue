@@ -1,7 +1,11 @@
 <template>
   <v-container>
     <div>
-      <v-row v-for="(sum, index) in summary" :key="index" class="mb-n6 mt-n6">
+      <v-row
+        v-for="(sum, index) in summary"
+        :key="index"
+        class="mb-n6 mt-n6"
+      >
         <v-col>
           <h3>ປີ {{ sum.year }}</h3>
         </v-col>
@@ -64,35 +68,40 @@
         hide-default-footer
       >
         <template v-slot:item.status="{ item }">
-          <v-chip label :color="statusColor(item.status)">{{
+          <v-chip
+            label
+            :color="statusColor(item.status)"
+          >
+            {{
               item.status
-            }}</v-chip>
+            }}
+          </v-chip>
         </template>
         <template v-slot:item.collection_type="{ item }">
           <div>{{ costBy(item.collection_type) }}</div>
         </template>
-        <!--Role --> </v-data-table
-      ><br />
+        <!--Role -->
+      </v-data-table><br>
       <template>
         <Pagination
           v-if="pagination.total_pages > 1"
           :pagination="pagination"
           :offset="offset"
           @paginate="fetchData()"
-        ></Pagination>
+        />
       </template>
     </div>
   </v-container>
 </template>
 
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import { GetOldValueOnInput } from '@/Helpers/GetValue';
 // import collection from "@views/report/collection";
 export default {
   // mixins: [collection],
-  name: "CompanyCollection",
+  name: 'CompanyCollection',
   // props: ["tab"],
-  props:["data"],
+  props: ['data'],
   title() {
     return `Vientiane Waste Co-Dev|Report Invoice`;
   },
@@ -100,55 +109,55 @@ export default {
     return {
       customers: [],
       loading: false,
-      customerId: "",
-      //Pagination
+      customerId: '',
+      // Pagination
       offset: 12,
       pagination: {},
       per_page: 100,
-      search: "",
-      oldVal: "",
+      search: '',
+      oldVal: '',
       // invoices: [],
       // summary: {},
       headers: [
-        { text: "ວັນທີ", value: "date", sortable: false },
-        { text: "ບໍລິສັດ", value: "company_name" },
-        { text: "ປະເພດບໍລະການ", value: "collection_type" },
+        { text: 'ວັນທີ', value: 'date', sortable: false },
+        { text: 'ບໍລິສັດ', value: 'company_name' },
+        { text: 'ປະເພດບໍລະການ', value: 'collection_type' },
         {
-          text: "Container",
-          value: "container",
+          text: 'Container',
+          value: 'container',
           sortable: false,
-          align: "center",
+          align: 'center',
         },
-        { text: "ສະຖານທີ່", value: "name", sortable: false },
-        { text: "ສະຖານະ", value: "status", sortable: false },
+        { text: 'ສະຖານທີ່', value: 'name', sortable: false },
+        { text: 'ສະຖານະ', value: 'status', sortable: false },
         // { text: "", value: "actions", sortable: false },
       ],
     };
   },
-  methods: {
-    Search() {
-      GetOldValueOnInput(this);
-    },
-    statusColor(value) {
-      if (value == "success") return "success";
-      else if (value == "pending") return "primary";
-      else return "info";
-    },
-    costBy(value){
-      if (value == "container") return "ຄອນເທັນເນີ";
-      else if (value == "fix_cost") return "ທຸລະກິດເປັນຖ້ຽວ";
-      else if (value == "chartered") return "ມອບເໝົາ";
-    }
-  },
   watch: {
-    tab: function () {
-      if (this.tab == "tab-2") {
+    tab() {
+      if (this.tab == 'tab-2') {
         // this.fetchData();
       }
     },
   },
   created() {
     this.pagination = [];
+  },
+  methods: {
+    Search() {
+      GetOldValueOnInput(this);
+    },
+    statusColor(value) {
+      if (value == 'success') return 'success';
+      if (value == 'pending') return 'primary';
+      return 'info';
+    },
+    costBy(value) {
+      if (value == 'container') return 'ຄອນເທັນເນີ';
+      if (value == 'fix_cost') return 'ທຸລະກິດເປັນຖ້ຽວ';
+      if (value == 'chartered') return 'ມອບເໝົາ';
+    },
   },
 };
 </script>

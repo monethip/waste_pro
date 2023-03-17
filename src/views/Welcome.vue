@@ -1,7 +1,9 @@
 <template>
   <v-container>
     <v-row style="min-height: 100vh">
-      <v-col class="text-center"> {{ time }} </v-col>
+      <v-col class="text-center">
+        {{ time }}
+      </v-col>
     </v-row>
   </v-container>
 </template>

@@ -1,12 +1,18 @@
 <template>
   <v-container>
-    <v-breadcrumbs class="mt-n4" large>
-      <v-btn class="text-primary" text @click="backPrevios()">
-        <v-icon>mdi-keyboard-backspace</v-icon>
-      </v-btn
+    <v-breadcrumbs
+      class="mt-n4"
+      large
+    >
+      <v-btn
+        class="text-primary"
+        text
+        @click="backPrevios()"
       >
+        <v-icon>mdi-keyboard-backspace</v-icon>
+      </v-btn>
       ເລືອກລູກຄ້າເຂົ້າແຜນເສັ້ນທາງ
-      <v-spacer></v-spacer>
+      <v-spacer />
       <span class="mr-4">
         <v-icon color="red">mdi-map-marker</v-icon>ຍັງບໍທັນຢູ່ໃນແຜນ
       </span>
@@ -15,43 +21,49 @@
       </span>
     </v-breadcrumbs>
     <v-row class="my-n4">
-      <v-col class="mb-4" cols="12">
+      <v-col
+        class="mb-4"
+        cols="12"
+      >
         <GmapMap
-            :center="
+          :center="
             getCenter().lat > 0 || getCenter().lat < 0
               ? getCenter()
               : { lat: 0, lng: 0 }
           "
-            :disableDefaultUI="true"
-            :zoom="14"
-            style="width: 100%; height: 450px"
+          :disable-default-u-i="true"
+          :zoom="14"
+          style="width: 100%; height: 450px"
         >
           <gmap-info-window
-              :conent="infoContent"
-              :opened="infoOpened"
-              :options="infoOptions"
-              :position="infoPosition"
-              @closeclick="infoOpened = false"
-          >{{ infoContent }}
-          </gmap-info-window
+            :conent="infoContent"
+            :opened="infoOpened"
+            :options="infoOptions"
+            :position="infoPosition"
+            @closeclick="infoOpened = false"
           >
+            {{ infoContent }}
+          </gmap-info-window>
           <GmapMarker
-              v-for="(m, index) in customers"
-              :key="index"
-              :animation="2"
-              :clickable="true"
-              :draggable="false"
-              :icon="getSiteIcon(m)"
-              :label="m.check_number ? m.check_number.toString() : null"
-              :position="getMarkers(m)"
-              @click="toggleInfo(m, index)"
+            v-for="(m, index) in customers"
+            :key="index"
+            :animation="2"
+            :clickable="true"
+            :draggable="false"
+            :icon="getSiteIcon(m)"
+            :label="m.check_number ? m.check_number.toString() : null"
+            :position="getMarkers(m)"
+            @click="toggleInfo(m, index)"
           />
         </GmapMap>
       </v-col>
     </v-row>
     <v-row class="mb-n6">
       <v-col>
-        <v-btn class="btn-primary" @click="createPage()">
+        <v-btn
+          class="btn-primary"
+          @click="createPage()"
+        >
           Next
           <v-icon>mdi-arrow-right-bold-circle-outline</v-icon>
         </v-btn>
@@ -60,53 +72,58 @@
         <h4 v-if="pagination && pagination.total">
           ລູກຄ້າທັງໝົດ {{ pagination.total }} ຄົນ
         </h4>
-        <h4 v-else>ລູກຄ້າທັງໝົດ {{ customers.length }} ຄົນ</h4>
+        <h4 v-else>
+          ລູກຄ້າທັງໝົດ {{ customers.length }} ຄົນ
+        </h4>
         <h4>ຂີ້ເຫຍື້ອຄາດໝາຍ:</h4>
-        <h5 v-for="item in countExpectTrash" :key="item.cost_by">
+        <h5
+          v-for="item in countExpectTrash"
+          :key="item.cost_by"
+        >
           {{
             getLaoCompanyCostByFunc(item.cost_by) +
-            ": " +
-            Intl.NumberFormat().format(item.expect_trash) +
-            " " +
-            getCustomerUnitFunc(item.cost_by)
+              ": " +
+              Intl.NumberFormat().format(item.expect_trash) +
+              " " +
+              getCustomerUnitFunc(item.cost_by)
           }}
         </h5>
       </v-col>
       <v-col>
         <v-autocomplete
-            v-model="selectedDistrict"
-            :items="districts"
-            clearable
-            dense
-            item-text="name"
-            item-value="id"
-            label="ເມືອງ"
-            outlined
-        ></v-autocomplete>
+          v-model="selectedDistrict"
+          :items="districts"
+          clearable
+          dense
+          item-text="name"
+          item-value="id"
+          label="ເມືອງ"
+          outlined
+        />
       </v-col>
       <v-col>
         <v-autocomplete
-            v-model="selectedVillage"
-            :items="villages"
-            chips
-            clearable
-            dense
-            item-text="name"
-            item-value="id"
-            label="ເລືອກບ້ານ"
-            multiple
-            outlined
+          v-model="selectedVillage"
+          :items="villages"
+          chips
+          clearable
+          dense
+          item-text="name"
+          item-value="id"
+          label="ເລືອກບ້ານ"
+          multiple
+          outlined
         >
           <template v-slot:selection="data">
             <v-chip
-                :input-value="data.selected"
-                close
-                v-bind="data.attrs"
-                @click="data.select"
-                @click:close="remove(data.item)"
-            >{{ data.item.name }}
-            </v-chip
+              :input-value="data.selected"
+              close
+              v-bind="data.attrs"
+              @click="data.select"
+              @click:close="remove(data.item)"
             >
+              {{ data.item.name }}
+            </v-chip>
           </template>
         </v-autocomplete>
       </v-col>
@@ -115,67 +132,71 @@
     <!-- Village Detail -->
     <v-row>
       <VillageDetail
-          v-model="selectedDetails"
-          :selectedVillage="selectedVillage"
-      ></VillageDetail>
+        v-model="selectedDetails"
+        :selected-village="selectedVillage"
+      />
     </v-row>
 
     <v-row>
       <v-col cols>
         <v-select
-            v-model="selectedFavoriteDate"
-            :items="favorite_dates"
-            dense
-            item-text="name"
-            item-value="name"
-            label="ມື້ບໍລິການ"
-            multiple
-            outlined
-        ></v-select>
+          v-model="selectedFavoriteDate"
+          :items="favorite_dates"
+          dense
+          item-text="name"
+          item-value="name"
+          label="ມື້ບໍລິການ"
+          multiple
+          outlined
+        />
       </v-col>
       <v-col>
         <v-autocomplete
-            v-model="selectedCustomerStatus"
-            :items="customerStatus"
-            clearable
-            dense
-            item-text="name"
-            item-value="value"
-            label="ສະຖານະລູກຄ້າ"
-            multiple
-            outlined
-        ></v-autocomplete>
+          v-model="selectedCustomerStatus"
+          :items="customerStatus"
+          clearable
+          dense
+          item-text="name"
+          item-value="value"
+          label="ສະຖານະລູກຄ້າ"
+          multiple
+          outlined
+        />
       </v-col>
       <v-col>
         <v-select
-            v-model="selectedCost"
-            :items="costs"
-            clearable
-            dense
-            item-text="name"
-            item-value="value"
-            label="ປະເພດບໍລິການ"
-            multiple
-            outlined
-        ></v-select>
+          v-model="selectedCost"
+          :items="costs"
+          clearable
+          dense
+          item-text="name"
+          item-value="value"
+          label="ປະເພດບໍລິການ"
+          multiple
+          outlined
+        />
       </v-col>
       <v-col>
         <v-text-field
-            v-model="search"
-            clearable
-            dense
-            label="ຊື່ລູກຄ້າ"
-            outlined
-            prepend-inner-icon="mdi-magnify"
-            type="text"
-            @keyup.enter="Search()"
-        ></v-text-field>
+          v-model="search"
+          clearable
+          dense
+          label="ຊື່ລູກຄ້າ"
+          outlined
+          prepend-inner-icon="mdi-magnify"
+          type="text"
+          @keyup.enter="Search()"
+        />
       </v-col>
       <v-col>
-        <v-btn color="green" dark style="width:100%" @click="fetchSearch"
-        >ຄົ້ນຫາ
-        </v-btn
+        <v-btn
+          color="green"
+          dark
+          style="width:100%"
+          @click="fetchSearch"
         >
+          ຄົ້ນຫາ
+        </v-btn>
       </v-col>
     </v-row>
 
@@ -187,38 +208,44 @@
               <v-col>
                 <p>ລູກຄ້າທີ່ເລືອກ {{ selectedRows.length }}</p>
               </v-col>
-              <v-col v-for="trash in selectedTrash" :key="trash.cost_by">
+              <v-col
+                v-for="trash in selectedTrash"
+                :key="trash.cost_by"
+              >
                 <p>
                   {{
                     getLaoCompanyCostByFunc(trash.cost_by) +
-                    ": " +
-                    Intl.NumberFormat().format(trash.count) +
-                    " " +
-                    getCustomerUnitFunc(trash.cost_by)
+                      ": " +
+                      Intl.NumberFormat().format(trash.count) +
+                      " " +
+                      getCustomerUnitFunc(trash.cost_by)
                   }}
                 </p>
               </v-col>
             </v-row>
             <v-data-table
-                :disable-pagination="true"
-                :headers="headers"
-                :items="customers"
-                :search="search"
-                hide-default-footer
+              :disable-pagination="true"
+              :headers="headers"
+              :items="customers"
+              :search="search"
+              hide-default-footer
             >
               <template v-slot:item.village_details="{ item }">
                 <v-chip
-                    v-for="villageItem in item.village_details"
-                    :key="villageItem.id"
-                >{{
+                  v-for="villageItem in item.village_details"
+                  :key="villageItem.id"
+                >
+                  {{
                     `${villageItem.village_variation.name}: ${villageItem.name}`
                   }}
-                </v-chip
-                >
+                </v-chip>
               </template>
 
               <template v-slot:item.address_detail="{ item }">
-                <div v-for="(data, index) in item.village_details" :key="index">
+                <div
+                  v-for="(data, index) in item.village_details"
+                  :key="index"
+                >
                   <span>{{ data.name }}</span>
                 </div>
               </template>
@@ -227,54 +254,78 @@
               </template>
 
               <template v-slot:item.actions="{ item }">
-                <v-icon class="mr-2" small @click="viewPage(item.id)"
-                >mdi-eye
-                </v-icon
+                <v-icon
+                  class="mr-2"
+                  small
+                  @click="viewPage(item.id)"
                 >
+                  mdi-eye
+                </v-icon>
               </template>
               <template v-slot:item.custom_pick="{ item }">
-                <div class="main-check" @click="checkHandler(item)">
-                  <div v-if="item.check_number" class="check">
+                <div
+                  class="main-check"
+                  @click="checkHandler(item)"
+                >
+                  <div
+                    v-if="item.check_number"
+                    class="check"
+                  >
                     {{ item.check_number }}
                   </div>
-                  <div v-else class="uncheck"></div>
+                  <div
+                    v-else
+                    class="uncheck"
+                  />
                 </div>
               </template>
 
               <template v-slot:header.custom_pick="{}">
                 <div @click="checkAllToggle()">
-                  <div v-if="checkAll" class="check"></div>
-                  <div v-else class="uncheck"></div>
+                  <div
+                    v-if="checkAll"
+                    class="check"
+                  />
+                  <div
+                    v-else
+                    class="uncheck"
+                  />
                 </div>
               </template>
 
               <template v-slot:item.expect_trash="{ item }">
-                <v-chip v-if="item.expect_trash" color="green" outlined>
+                <v-chip
+                  v-if="item.expect_trash"
+                  color="green"
+                  outlined
+                >
                   {{ Intl.NumberFormat().format(item.expect_trash) }}
                   {{ getCustomerUnitFunc(item.cost_by) }}
                 </v-chip>
-                <div v-else>-</div>
+                <div v-else>
+                  -
+                </div>
               </template>
 
               <template v-slot:item.favorite_dates="{ item }">
                 <v-chip
-                    v-for="date in item.favorite_dates"
-                    :key="date.name"
-                    color="green"
-                    dark
-                >{{ date.name }}
-                </v-chip
+                  v-for="date in item.favorite_dates"
+                  :key="date.name"
+                  color="green"
+                  dark
                 >
+                  {{ date.name }}
+                </v-chip>
               </template>
             </v-data-table>
-            <br/>
+            <br>
             <template>
               <Pagination
-                  v-if="pagination.total_pages > 1"
-                  :offset="offset"
-                  :pagination="pagination"
-                  @paginate="fetchData()"
-              ></Pagination>
+                v-if="pagination.total_pages > 1"
+                :offset="offset"
+                :pagination="pagination"
+                @paginate="fetchData()"
+              />
             </template>
           </v-card-text>
         </v-card>
@@ -284,17 +335,17 @@
 </template>
 
 <script>
-import {GetOldValueOnInput} from "@/Helpers/GetValue";
-import queryOption from "@/Helpers/queryOption";
+import { GetOldValueOnInput } from '@/Helpers/GetValue';
+import queryOption from '@/Helpers/queryOption';
 import {
   getCustomerUnit,
   getLaoCompanyCostBy,
   getCompanyCostBy,
-} from "@/Helpers/Customer";
-import VillageDetail from "@/components/select/VillageDetail";
+} from '@/Helpers/Customer';
+import VillageDetail from '@/components/select/VillageDetail';
 
 export default {
-  name: "Customer",
+  name: 'Customer',
   components: {
     VillageDetail,
   },
@@ -306,16 +357,16 @@ export default {
       selectedAllCustomer: [],
       countExpectTrash: [],
       loading: false,
-      customerId: "",
-      //Pagination
+      customerId: '',
+      // Pagination
       offset: 12,
       pagination: {},
       per_page: 100,
-      search: "",
-      oldVal: "",
-      //Filter
+      search: '',
+      oldVal: '',
+      // Filter
       districts: [],
-      selectedDistrict: "",
+      selectedDistrict: '',
       villages: [],
       selectedVillage: [],
       // selectedAllVillage: [],
@@ -323,59 +374,59 @@ export default {
       customerStatus: [
         {
           id: 1,
-          value: "calendar",
-          name: "ຍັງບໍ່ມີແຜນເດີນລົດ",
+          value: 'calendar',
+          name: 'ຍັງບໍ່ມີແຜນເດີນລົດ',
         },
         {
           id: 2,
-          value: "route_plan",
-          name: "ຍັງບໍ່ມີເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ",
+          value: 'route_plan',
+          name: 'ຍັງບໍ່ມີເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ',
         },
       ],
       selectedCost: [],
       costs: [
         {
           id: 1,
-          value: "container",
-          name: "ຄອນເທັນເນີ",
+          value: 'container',
+          name: 'ຄອນເທັນເນີ',
         },
         {
           id: 2,
-          value: "fix_cost",
-          name: "ທຸລະກິດເປັນຖ້ຽວ",
+          value: 'fix_cost',
+          name: 'ທຸລະກິດເປັນຖ້ຽວ',
         },
         {
           id: 3,
-          value: "chartered",
-          name: "ມອບເໝົາ",
+          value: 'chartered',
+          name: 'ມອບເໝົາ',
         },
         {
           id: 4,
-          value: "bag",
-          name: "ບໍລິມາດ",
+          value: 'bag',
+          name: 'ບໍລິມາດ',
         },
       ],
       favorite_dates: [],
       selectedFavoriteDate: [],
       selectedRows: [],
       headers: [
-        {text: "", value: "custom_pick", sortable: false},
-        {text: "ID", value: "customer_id"},
-        {text: "ບໍລິສັດ", value: "company_name"},
+        { text: '', value: 'custom_pick', sortable: false },
+        { text: 'ID', value: 'customer_id' },
+        { text: 'ບໍລິສັດ', value: 'company_name' },
         // { text: "ຜູ້ຮບຜິດຊອບ", value: "company_coordinators.name" },
-        {text: "ປະເພດບໍລິການ", value: "cost_by_la", sortable: true},
-        {text: "ລາຍລະອຽດທີ່ຢູ່", value: "village_details", sortable: true},
-        {text: "ບ້ານ", value: "village.name", sortable: true},
-        {text: "ເມືອງ", value: "district.name", sortable: true},
+        { text: 'ປະເພດບໍລິການ', value: 'cost_by_la', sortable: true },
+        { text: 'ລາຍລະອຽດທີ່ຢູ່', value: 'village_details', sortable: true },
+        { text: 'ບ້ານ', value: 'village.name', sortable: true },
+        { text: 'ເມືອງ', value: 'district.name', sortable: true },
         // {text: "ລາຍລະອຽດທີ່ຢູ່", value: "address_detail"},
-        {text: "ລາຍລະອຽດການບໍລິການ", value: "collect_description"},
-        {text: "ຂີ້ເຫຍື້ອຄາດໝາຍ", value: "expect_trash"},
-        {text: "ວັນທີ່ສະດວກເກັບ", value: "favorite_dates"},
-        {text: "ວັນທີ່ເພີ່ມເຂົ້າ", value: "created_at"},
+        { text: 'ລາຍລະອຽດການບໍລິການ', value: 'collect_description' },
+        { text: 'ຂີ້ເຫຍື້ອຄາດໝາຍ', value: 'expect_trash' },
+        { text: 'ວັນທີ່ສະດວກເກັບ', value: 'favorite_dates' },
+        { text: 'ວັນທີ່ເພີ່ມເຂົ້າ', value: 'created_at' },
         // { text: "ເຮືອນເລກທີ", value: "house_number", sortable: false },
-        {text: "", value: "actions", sortable: false},
+        { text: '', value: 'actions', sortable: false },
       ],
-      //Map
+      // Map
       latlng: {
         lat: 0,
         lng: 0,
@@ -396,6 +447,100 @@ export default {
       last_check_number: 0,
       checkAll: false,
     };
+  },
+  computed: {
+    selectedTrash() {
+      const array = [];
+
+      for (const item of getCompanyCostBy) {
+        array.push({
+          cost_by: item.en,
+          count: 0,
+        });
+      }
+
+      for (const selected of this.selectedRows) {
+        const index = array.findIndex(
+          (item) => item.cost_by == selected.cost_by,
+        );
+        if (index > -1) {
+          array[index].count
+              += selected.expect_trash > 0 ? selected.expect_trash : 0;
+        }
+      }
+
+      return array;
+    },
+    selectedAllVillage() {
+      return this.selectedVillage.length === this.villages.length;
+    },
+    selectedSomeVillage() {
+      return this.selectedVillage.length > 0 && !this.selectedAllVillage;
+    },
+    icon() {
+      if (this.selectedAllVillage) return 'mdi-close-box';
+      if (this.selectedSomeVillage) return 'mdi-minus-box';
+      return 'mdi-checkbox-blank-outline';
+    },
+  },
+  watch: {
+    checkAll(value) {
+      if (value == true) {
+        this.$store.commit('Loading_State', true);
+        for (const customer of this.customers) {
+          this.checkHandler(customer);
+        }
+        this.$store.commit('Loading_State', false);
+      } else {
+        this.$store.commit('Loading_State', true);
+        this.selectedRows = [];
+        for (let i = 0; i < this.customers.length; i++) {
+          this.customers[i].check_number = null;
+          this.customers.splice(i, 1, this.customers[i]);
+        }
+        this.last_check_number = 0;
+        this.$store.commit('Loading_State', false);
+      }
+    },
+    selectedFavoriteDate() {
+      this.pagination.current_page = '';
+      this.fetchData();
+      this.fetchData(true);
+    },
+    search(value) {
+      this.pagination.current_page = '';
+      if (value == '') {
+        this.fetchData();
+        this.fetchData(true);
+      }
+    },
+    selectedVillage() {
+      this.pagination.current_page = '';
+      // this.fetchData();
+      // this.fetchData(true)
+    },
+    selectedDistrict() {
+      this.pagination.current_page = '';
+      this.fetchVillage();
+      // this.fetchData();
+      // this.fetchData(true)
+    },
+    selectedCustomerStatus() {
+      this.pagination.current_page = '';
+      this.fetchData();
+      this.fetchData(true);
+    },
+    selectedCost() {
+      this.pagination.current_page = '';
+      this.fetchData();
+      this.fetchData(true);
+    },
+  },
+  created() {
+    this.fetchData();
+    this.fetchData(true);
+    this.fetchAddress();
+    this.fetchFavorite();
   },
   methods: {
     checkAllToggle() {
@@ -433,122 +578,122 @@ export default {
       }
     },
     chooseStyle() {
-      return "check";
+      return 'check';
     },
     fetchData(countexpect = false) {
-      this.$store.commit("Loading_State", true);
+      this.$store.commit('Loading_State', true);
       this.per_page = this.selectedDistrict ? null : 100;
 
-      let options = [
-        {page: this.pagination.current_page},
-        {per_page: this.per_page},
-        {without: this.selectedCustomerStatus},
-        {villages: this.selectedVillage},
-        {district_id: this.selectedDistrict},
-        {filter: this.search},
-        {without_month_info: true},
-        {cost_by: this.selectedCost},
-        {favorite_dates: this.selectedFavoriteDate},
-        {village_details: this.selectedDetails},
+      const options = [
+        { page: this.pagination.current_page },
+        { per_page: this.per_page },
+        { without: this.selectedCustomerStatus },
+        { villages: this.selectedVillage },
+        { district_id: this.selectedDistrict },
+        { filter: this.search },
+        { without_month_info: true },
+        { cost_by: this.selectedCost },
+        { favorite_dates: this.selectedFavoriteDate },
+        { village_details: this.selectedDetails },
       ];
 
-      if (countexpect) options.push({count_expact_trash: "1"});
+      if (countexpect) options.push({ count_expact_trash: '1' });
 
       this.$axios
-          .get("company", {
-            params: queryOption(options),
-          })
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.$store.commit("Loading_State", false);
-                if (countexpect) {
-                  this.countExpectTrash = res.data.data;
-                } else {
-                  this.customers = this.per_page
-                      ? res.data.data.data
-                      : res.data.data;
-                  this.selectedAllCustomer = res.data.data;
-                  if (res.data.data.pagination)
-                    this.pagination = res.data.data.pagination;
-                  else this.pagination = {};
-                }
-
-                // this.getCenter();
-              }, 100);
-            }
-          })
-          .catch((error) => {
-            this.$store.commit("Loading_State", false);
-            this.$store.commit("Toast_State", {
-              value: true,
-              color: "error",
-              msg: error.response
-                  ? error.response.data.message
-                  : "Something went wrong",
-            });
-            if (error.response && error.response.status == 422) {
-              let obj = error.response.data.errors;
-              for (let [key, message] of Object.entries(obj)) {
-                this.server_errors[key] = message[0];
+        .get('company', {
+          params: queryOption(options),
+        })
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.$store.commit('Loading_State', false);
+              if (countexpect) {
+                this.countExpectTrash = res.data.data;
+              } else {
+                this.customers = this.per_page
+                  ? res.data.data.data
+                  : res.data.data;
+                this.selectedAllCustomer = res.data.data;
+                if (res.data.data.pagination) this.pagination = res.data.data.pagination;
+                else this.pagination = {};
               }
-            }
+
+              // this.getCenter();
+            }, 100);
+          }
+        })
+        .catch((error) => {
+          this.$store.commit('Loading_State', false);
+          this.$store.commit('Toast_State', {
+            value: true,
+            color: 'error',
+            msg: error.response
+              ? error.response.data.message
+              : 'Something went wrong',
           });
+          if (error.response && error.response.status == 422) {
+            const obj = error.response.data.errors;
+            for (const [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
+            }
+          }
+        });
     },
 
     fetchAddress() {
       this.$axios
-          .get("info/address", {params: {filter: "ນະຄອນຫລວງວຽງຈັນ"}})
+        .get('info/address', { params: { filter: 'ນະຄອນຫລວງວຽງຈັນ' } })
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.address = res.data.data;
+              this.address.map((item) => {
+                this.districts = item.districts;
+              });
+            }, 300);
+          }
+        })
+        .catch(() => {
+        });
+    },
+
+    fetchVillage() {
+      if (this.selectedDistrict) {
+        this.$axios
+          .get(`info/district/${this.selectedDistrict}/village`)
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.address = res.data.data;
-                this.address.map((item) => {
-                  this.districts = item.districts;
-                });
+                this.villages = res.data.data;
               }, 300);
             }
           })
           .catch(() => {
           });
-    },
-
-    fetchVillage() {
-      if (this.selectedDistrict)
-        this.$axios
-            .get("info/district/" + this.selectedDistrict + "/village")
-            .then((res) => {
-              if (res.data.code == 200) {
-                setTimeout(() => {
-                  this.villages = res.data.data;
-                }, 300);
-              }
-            })
-            .catch(() => {
-            });
+      }
     },
 
     createPage() {
       //  var a = [];
       if (this.selectedRows.length > 0) {
         this.$router.push({
-          name: "CreateRoutePlanCompany",
+          name: 'CreateRoutePlanCompany',
           params: {
             items: this.selectedRows,
           },
         });
       } else {
-        this.$store.commit("Toast_State", {
+        this.$store.commit('Toast_State', {
           value: true,
-          color: "error",
-          msg: "ກາລຸນາເລືອກບ້ານ ແລະ ລູກຄ້າກ່ອນ",
+          color: 'error',
+          msg: 'ກາລຸນາເລືອກບ້ານ ແລະ ລູກຄ້າກ່ອນ',
         });
       }
     },
     viewPage(id) {
       this.$router.push({
-        name: "ViewClient",
-        params: {id},
+        name: 'ViewClient',
+        params: { id },
       });
     },
     remove(item) {
@@ -559,18 +704,17 @@ export default {
       GetOldValueOnInput(this);
     },
 
-    //Google map
+    // Google map
     getCenter() {
       if (this.customers.length) {
         if (parseFloat(this.customers[0].lat) == null) {
           return this.latlng;
-        } else {
-          const latlng = {
-            lat: parseFloat(this.customers[0].lat),
-            lng: parseFloat(this.customers[0].lng),
-          };
-          return latlng;
         }
+        const latlng = {
+          lat: parseFloat(this.customers[0].lat),
+          lng: parseFloat(this.customers[0].lng),
+        };
+        return latlng;
       }
       return this.latlng;
     },
@@ -584,7 +728,7 @@ export default {
     },
     getSiteIcon(status) {
       const pin1 = {
-        url: require("@coms/../../src/assets/pin1.svg"),
+        url: require('@coms/../../src/assets/pin1.svg'),
         zoomControl: true,
         mapTypeControl: false,
         scaleControl: false,
@@ -595,18 +739,18 @@ export default {
         size: {
           width: 35,
           height: 55,
-          f: "px",
-          b: "px",
+          f: 'px',
+          b: 'px',
         },
         scaledSize: {
           width: 35,
           height: 55,
-          f: "px",
-          b: "px",
+          f: 'px',
+          b: 'px',
         },
       };
       const pin2 = {
-        url: require("@coms/../../src/assets/pin2.svg"),
+        url: require('@coms/../../src/assets/pin2.svg'),
         zoomControl: true,
         mapTypeControl: false,
         scaleControl: false,
@@ -617,14 +761,14 @@ export default {
         size: {
           width: 35,
           height: 55,
-          f: "px",
-          b: "px",
+          f: 'px',
+          b: 'px',
         },
         scaledSize: {
           width: 35,
           height: 55,
-          f: "px",
-          b: "px",
+          f: 'px',
+          b: 'px',
         },
       };
 
@@ -641,7 +785,7 @@ export default {
     },
     toggleInfo(m, key) {
       this.infoPosition = this.getMarkers(m);
-      this.infoContent = m.company_name + " (" + m.user.phone + ") ";
+      this.infoContent = `${m.company_name} (${m.user.phone}) `;
       if (this.infoCurrentKey == key) {
         this.infoOpened = !this.infoOpened;
       } else {
@@ -664,117 +808,23 @@ export default {
       });
     },
     costBy(value) {
-      if (value == "container") return "ຄອນເທັນເນີ";
-      else if (value == "fix_cost") return "ທຸລະກິດເປັນຖ້ຽວ";
-      else if (value == "chartered") return "ມອບເໝົາ";
+      if (value == 'container') return 'ຄອນເທັນເນີ';
+      if (value == 'fix_cost') return 'ທຸລະກິດເປັນຖ້ຽວ';
+      if (value == 'chartered') return 'ມອບເໝົາ';
     },
     fetchFavorite() {
       this.$axios
-          .get("favorite-date")
-          .then((res) => {
-            if (res.data.code == 200) {
-              setTimeout(() => {
-                this.favorite_dates = res.data.data;
-              }, 100);
-            }
-          })
-          .catch(() => {
-          });
-    },
-  },
-  computed: {
-    selectedTrash() {
-      let array = [];
-
-      for (const item of getCompanyCostBy) {
-        array.push({
-          cost_by: item.en,
-          count: 0,
+        .get('favorite-date')
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.favorite_dates = res.data.data;
+            }, 100);
+          }
+        })
+        .catch(() => {
         });
-      }
-
-      for (const selected of this.selectedRows) {
-        const index = array.findIndex(
-            (item) => item.cost_by == selected.cost_by
-        );
-        if (index > -1) {
-          array[index].count +=
-              selected.expect_trash > 0 ? selected.expect_trash : 0;
-        }
-      }
-
-      return array;
     },
-    selectedAllVillage() {
-      return this.selectedVillage.length === this.villages.length;
-    },
-    selectedSomeVillage() {
-      return this.selectedVillage.length > 0 && !this.selectedAllVillage;
-    },
-    icon() {
-      if (this.selectedAllVillage) return "mdi-close-box";
-      if (this.selectedSomeVillage) return "mdi-minus-box";
-      return "mdi-checkbox-blank-outline";
-    },
-  },
-  watch: {
-    checkAll(value) {
-      if (value == true) {
-        this.$store.commit("Loading_State", true);
-        for (const customer of this.customers) {
-          this.checkHandler(customer);
-        }
-        this.$store.commit("Loading_State", false);
-      } else {
-        this.$store.commit("Loading_State", true);
-        this.selectedRows = [];
-        for (let i = 0; i < this.customers.length; i++) {
-          this.customers[i].check_number = null;
-          this.customers.splice(i, 1, this.customers[i]);
-        }
-        this.last_check_number = 0;
-        this.$store.commit("Loading_State", false);
-      }
-    },
-    selectedFavoriteDate: function () {
-      this.pagination.current_page = "";
-      this.fetchData();
-      this.fetchData(true);
-    },
-    search: function (value) {
-      this.pagination.current_page = "";
-      if (value == "") {
-        this.fetchData();
-        this.fetchData(true);
-      }
-    },
-    selectedVillage: function () {
-      this.pagination.current_page = "";
-      // this.fetchData();
-      // this.fetchData(true)
-    },
-    selectedDistrict: function () {
-      this.pagination.current_page = "";
-      this.fetchVillage();
-      // this.fetchData();
-      // this.fetchData(true)
-    },
-    selectedCustomerStatus: function () {
-      this.pagination.current_page = "";
-      this.fetchData();
-      this.fetchData(true);
-    },
-    selectedCost: function () {
-      this.pagination.current_page = "";
-      this.fetchData();
-      this.fetchData(true);
-    },
-  },
-  created() {
-    this.fetchData();
-    this.fetchData(true);
-    this.fetchAddress();
-    this.fetchFavorite();
   },
 };
 </script>

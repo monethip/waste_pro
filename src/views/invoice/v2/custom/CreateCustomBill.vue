@@ -2,8 +2,15 @@
   <v-container>
     <v-row class="mb-4">
       <v-col>
-        <v-breadcrumbs large class="pa-0">
-          <v-btn text class="text-primary" @click="backPrevios()">
+        <v-breadcrumbs
+          large
+          class="pa-0"
+        >
+          <v-btn
+            text
+            class="text-primary"
+            @click="backPrevios()"
+          >
             <v-icon>mdi-chevron-left</v-icon>
           </v-btn>
           ສ້າງບິນຢ້ອນຫຼັງ
@@ -13,7 +20,10 @@
     <div>
       <v-card>
         <v-card-text class="pa-8">
-          <v-form ref="form" lazy-validation>
+          <v-form
+            ref="form"
+            lazy-validation
+          >
             <v-row>
               <v-col cols="4">
                 <p>ວັນທີບິນ</p>
@@ -21,68 +31,69 @@
                   v-model="billDate"
                   type="month"
                   :max="now"
-                ></v-date-picker>
+                />
               </v-col>
               <v-col cols="8">
                 <v-row>
                   <v-col>
                     <v-text-field
+                      v-model="data.title"
                       label="ຊື່ລາຍການ *"
                       required
-                      v-model="data.title"
                       :rules="totalRules"
                       outlined
                       dense
                       :disabled="disabledTitle"
-                    >
-                    </v-text-field>
+                    />
                     <p class="errors">
                       {{ server_errors.title }}
                     </p>
                   </v-col>
                   <v-col cols="2">
                     <v-btn
-                      @click="disabledTitle = !disabledTitle"
                       color="primary"
-                      ><v-icon>mdi-pen</v-icon></v-btn
+                      @click="disabledTitle = !disabledTitle"
                     >
+                      <v-icon>mdi-pen</v-icon>
+                    </v-btn>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col>
                     <v-text-field
+                      v-model="data.description"
                       label="ຄຳອະທິບາຍ *"
                       required
-                      v-model="data.description"
                       :rules="totalRules"
                       outlined
                       dense
                       :disabled="disabledDescription"
-                    ></v-text-field>
+                    />
                     <p class="errors">
                       {{ server_errors.description }}
                     </p>
                   </v-col>
                   <v-col cols="2">
                     <v-btn
-                      @click="disabledDescription = !disabledDescription"
                       color="primary"
-                      ><v-icon>mdi-pen</v-icon></v-btn
+                      @click="disabledDescription = !disabledDescription"
                     >
+                      <v-icon>mdi-pen</v-icon>
+                    </v-btn>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col>
                     <v-text-field
+                      v-model="data.price"
                       label="ລາຄາ *"
                       required
-                      v-model="data.price"
                       :rules="totalRules"
                       type="number"
                       class="input-number"
                       outlined
                       dense
-                    ></v-text-field>
+                    />
                     <p class="errors">
                       {{ server_errors.price }}
                     </p>
@@ -91,15 +102,15 @@
                 <v-row>
                   <v-col>
                     <v-text-field
+                      v-model="data.quantity"
                       label="ຈຳນວນ *"
                       required
-                      v-model="data.quantity"
                       :rules="totalRules"
                       type="number"
                       class="input-number"
                       outlined
                       dense
-                    ></v-text-field>
+                    />
                     <p class="errors">
                       {{ server_errors.quantity }}
                     </p>
@@ -109,8 +120,11 @@
             </v-row>
           </v-form>
           <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn class="elevation-0 btn-warning mr-4" @click="backPrevios()">
+            <v-spacer />
+            <v-btn
+              class="elevation-0 btn-warning mr-4"
+              @click="backPrevios()"
+            >
               ຍ້ອນກັບ
             </v-btn>
             <v-btn
@@ -128,12 +142,12 @@
   </v-container>
 </template>
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
-import moment from "moment";
+import { GetOldValueOnInput } from '@/Helpers/GetValue';
+import moment from 'moment';
 
 export default {
-  name: "Invoice",
-  props: ["items"],
+  name: 'Invoice',
+  props: ['items'],
   title() {
     return `Vientiane Waste Co-Dev|Invoice`;
   },
@@ -143,7 +157,7 @@ export default {
       now: new Date().toISOString().substr(0, 7),
       start_date: new Date().toISOString().substr(0, 7),
       billDate: new Date().toISOString().substr(0, 7),
-      end_date: "",
+      end_date: '',
       disabledTitle: true,
       disabledDescription: true,
       start_menu: false,
@@ -152,27 +166,62 @@ export default {
       loading: false,
       is_instantly: 0,
       data: {
-        email: "",
+        email: '',
       },
       user: {},
-      calendarId: "",
-      //Pagination
+      calendarId: '',
+      // Pagination
       offset: 12,
       pagination: {},
       per_page: 100,
-      search: "",
-      oldVal: "",
-      //Add Package
+      search: '',
+      oldVal: '',
+      // Add Package
       packages: [],
-      selectedPackage: "",
+      selectedPackage: '',
       server_errors: {},
 
       preview_list: [],
       image_list: [],
       image: [],
-      //Filter
-      totalRules: [(v) => !!v || "Total is required"],
+      // Filter
+      totalRules: [(v) => !!v || 'Total is required'],
     };
+  },
+  watch: {
+    is_instantly(value) {
+      console.log(value);
+    },
+    search(value) {
+      if (value == '') {
+        this.fetchData();
+      }
+    },
+    'plan.name': function () {
+      this.server_errors.name = '';
+    },
+    start_date() {
+      this.server_errors.month = '';
+    },
+    billDate(value) {
+      this.data.title = `ຄ່າບໍລິການປະຈຳເດືອນ ${moment(value).format(
+        'MM-YYYY',
+      )}`;
+      this.data.description = `ຄ່າບໍລິການປະຈຳເດືອນ ${moment(value).format(
+        'MM-YYYY',
+      )}`;
+    },
+    'calendarEdit.name': function () {
+      this.server_errors.name = '';
+    },
+    'calendarEdit.month': function () {
+      this.server_errors.month = '';
+    },
+  },
+  created() {
+    this.fetchData();
+    console.log('2222', this.items);
+    if (!this.items) this.$router.push('/');
   },
   methods: {
     fetchData() {
@@ -197,29 +246,29 @@ export default {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .post("custom-bill", formData)
+          .post('custom-bill', formData)
           .then((res) => {
             if (res.data.code == 200) {
               this.loading = false;
-              this.$store.commit("Toast_State", {
+              this.$store.commit('Toast_State', {
                 value: true,
-                color: "success",
+                color: 'success',
                 msg: res.data.message,
               });
               this.$router.push({
-                name: "custom-bill",
+                name: 'custom-bill',
               });
             }
           })
           .catch((error) => {
-            this.$store.commit("Toast_State", {
+            this.$store.commit('Toast_State', {
               value: true,
-              color: "error",
+              color: 'error',
               msg: error.response ? error.response.data.message : 'Something went wrong',
             });
             if (error.response && error.response.status == 422) {
-              let obj = error.response.data.errors;
-              for (let [key, customer] of Object.entries(obj)) {
+              const obj = error.response.data.errors;
+              for (const [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
               }
             }
@@ -227,41 +276,6 @@ export default {
           });
       }
     },
-  },
-  watch: {
-    is_instantly: function (value) {
-      console.log(value);
-    },
-    search: function (value) {
-      if (value == "") {
-        this.fetchData();
-      }
-    },
-    "plan.name": function () {
-      this.server_errors.name = "";
-    },
-    start_date: function () {
-      this.server_errors.month = "";
-    },
-    billDate: function (value) {
-      this.data.title = `ຄ່າບໍລິການປະຈຳເດືອນ ${moment(value).format(
-        "MM-YYYY"
-      )}`;
-      this.data.description = `ຄ່າບໍລິການປະຈຳເດືອນ ${moment(value).format(
-        "MM-YYYY"
-      )}`;
-    },
-    "calendarEdit.name": function () {
-      this.server_errors.name = "";
-    },
-    "calendarEdit.month": function () {
-      this.server_errors.month = "";
-    },
-  },
-  created() {
-    this.fetchData();
-    console.log("2222", this.items);
-    if (!this.items) this.$router.push("/");
   },
 };
 </script>

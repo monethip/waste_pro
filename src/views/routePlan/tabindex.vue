@@ -1,82 +1,91 @@
 <template>
   <v-container>
-    <v-breadcrumbs large class="pt-0">ແຜນຈັດເສັ້ນທາງການເກັບຂີ້ເຫື້ຍອ</v-breadcrumbs>
+    <v-breadcrumbs
+      large
+      class="pt-0"
+    >
+      ແຜນຈັດເສັ້ນທາງການເກັບຂີ້ເຫື້ຍອ
+    </v-breadcrumbs>
     <v-row class="mb-2">
-<!--      <v-col>-->
-<!--        <v-btn class="btn-primary" @click="exportData()">Add </v-btn>-->
-<!--      </v-col>-->
-<!--      <v-col>-->
-<!--        <v-select-->
-<!--            outlined-->
-<!--            dense-->
-<!--            :items="duration"-->
-<!--            v-model="selectedDuration"-->
-<!--            item-text="name"-->
-<!--            item-value="duration"-->
-<!--            label="ຊ່ວງເວລາ"-->
-<!--        ></v-select>-->
-<!--      </v-col>-->
-<!--      <v-col v-if="selectedDuration == 'year'">-->
-<!--        <section>-->
-<!--          <date-picker-->
-<!--              style="height: 40px"-->
-<!--              v-model="year_from"-->
-<!--              type="year"-->
-<!--              placeholder="ເລີ່ມປີ"-->
-<!--              @input="fetchData()"-->
-<!--          ></date-picker>-->
-<!--        </section>-->
-<!--      </v-col>-->
-<!--      <v-col v-if="selectedDuration == 'year'">-->
-<!--        <section>-->
-<!--          <date-picker-->
-<!--              v-model="year_to"-->
-<!--              type="year"-->
-<!--              placeholder="ຫາປີ"-->
-<!--              @input="fetchData()"-->
-<!--          ></date-picker>-->
-<!--        </section>-->
-<!--      </v-col>-->
-<!--      <v-col v-if="selectedDuration == 'month'">-->
-<!--        <section>-->
-<!--          <date-picker-->
-<!--              v-model="month_from"-->
-<!--              type="month"-->
-<!--              placeholder="ເລີ່ມເດືອນ"-->
-<!--              @input="fetchData()"-->
-<!--          ></date-picker>-->
-<!--        </section>-->
-<!--      </v-col>-->
-<!--      <v-col v-if="selectedDuration == 'month'">-->
-<!--        <section>-->
-<!--          <date-picker-->
-<!--              v-model="month_to"-->
-<!--              type="month"-->
-<!--              placeholder="ຫາເດືອນ"-->
-<!--              @input="fetchData()"-->
-<!--          ></date-picker>-->
-<!--        </section>-->
-<!--      </v-col>-->
+      <!--      <v-col>-->
+      <!--        <v-btn class="btn-primary" @click="exportData()">Add </v-btn>-->
+      <!--      </v-col>-->
+      <!--      <v-col>-->
+      <!--        <v-select-->
+      <!--            outlined-->
+      <!--            dense-->
+      <!--            :items="duration"-->
+      <!--            v-model="selectedDuration"-->
+      <!--            item-text="name"-->
+      <!--            item-value="duration"-->
+      <!--            label="ຊ່ວງເວລາ"-->
+      <!--        ></v-select>-->
+      <!--      </v-col>-->
+      <!--      <v-col v-if="selectedDuration == 'year'">-->
+      <!--        <section>-->
+      <!--          <date-picker-->
+      <!--              style="height: 40px"-->
+      <!--              v-model="year_from"-->
+      <!--              type="year"-->
+      <!--              placeholder="ເລີ່ມປີ"-->
+      <!--              @input="fetchData()"-->
+      <!--          ></date-picker>-->
+      <!--        </section>-->
+      <!--      </v-col>-->
+      <!--      <v-col v-if="selectedDuration == 'year'">-->
+      <!--        <section>-->
+      <!--          <date-picker-->
+      <!--              v-model="year_to"-->
+      <!--              type="year"-->
+      <!--              placeholder="ຫາປີ"-->
+      <!--              @input="fetchData()"-->
+      <!--          ></date-picker>-->
+      <!--        </section>-->
+      <!--      </v-col>-->
+      <!--      <v-col v-if="selectedDuration == 'month'">-->
+      <!--        <section>-->
+      <!--          <date-picker-->
+      <!--              v-model="month_from"-->
+      <!--              type="month"-->
+      <!--              placeholder="ເລີ່ມເດືອນ"-->
+      <!--              @input="fetchData()"-->
+      <!--          ></date-picker>-->
+      <!--        </section>-->
+      <!--      </v-col>-->
+      <!--      <v-col v-if="selectedDuration == 'month'">-->
+      <!--        <section>-->
+      <!--          <date-picker-->
+      <!--              v-model="month_to"-->
+      <!--              type="month"-->
+      <!--              placeholder="ຫາເດືອນ"-->
+      <!--              @input="fetchData()"-->
+      <!--          ></date-picker>-->
+      <!--        </section>-->
+      <!--      </v-col>-->
 
-<!--      <v-col>-->
-<!--        <v-text-field-->
-<!--            outlined-->
-<!--            dense-->
-<!--            clearable-->
-<!--            prepend-inner-icon="mdi-magnify"-->
-<!--            label="ຊື່ລູກຄ້າ,ເລກບິນ"-->
-<!--            type="text"-->
-<!--            v-model="search"-->
-<!--            @keyup.enter="Search()"-->
-<!--        >-->
-<!--        </v-text-field>-->
-<!--      </v-col>-->
+      <!--      <v-col>-->
+      <!--        <v-text-field-->
+      <!--            outlined-->
+      <!--            dense-->
+      <!--            clearable-->
+      <!--            prepend-inner-icon="mdi-magnify"-->
+      <!--            label="ຊື່ລູກຄ້າ,ເລກບິນ"-->
+      <!--            type="text"-->
+      <!--            v-model="search"-->
+      <!--            @keyup.enter="Search()"-->
+      <!--        >-->
+      <!--        </v-text-field>-->
+      <!--      </v-col>-->
     </v-row>
     <v-card elevation="1">
       <v-card-text>
         <v-tabs v-model="tab">
-          <v-tab href="#tab-1"> ຄົວເຮືອນ </v-tab>
-          <v-tab href="#tab-2"> ຫົວໜ່ວຍທຸລະກິດ </v-tab>
+          <v-tab href="#tab-1">
+            ຄົວເຮືອນ
+          </v-tab>
+          <v-tab href="#tab-2">
+            ຫົວໜ່ວຍທຸລະກິດ
+          </v-tab>
         </v-tabs>
         <!-- <hr /> -->
 
@@ -101,8 +110,8 @@
 </template>
 
 <script>
-import Home from "@views/routePlan/tabs/home/plan";
-import Company from "@views/routePlan/tabs/company/company";
+import Home from '@views/routePlan/tabs/home/plan';
+import Company from '@views/routePlan/tabs/company/company';
 // import home from "@views/routeplan/home";
 export default {
   title() {
@@ -118,6 +127,32 @@ export default {
       tab: null,
       data: {},
     };
+  },
+  watch: {
+    tab(value) {
+      if (value == 'tab-1') {
+        // this.fetchData();
+        this.$router
+          .push({ name: 'Plan', query: { tab: 'home' } })
+          .catch(() => {});
+      } else if (value == 'tab-2') {
+        this.$router
+          .push({
+            name: 'Plan',
+            query: { tab: 'company' },
+          })
+          .catch(() => {});
+      }
+    },
+  },
+  created() {
+    if (this.$route.query.tab == 'home') {
+      this.tab = 'tab-1';
+      // this.fetchData();
+    } else if (this.$route.query.tab == 'company') {
+      this.tab = 'tab-2';
+      // this.fetchData();
+    }
   },
   methods: {
     backPrevios() {
@@ -149,32 +184,6 @@ export default {
     //     })
     //     .catch(() => {});
     // },
-  },
-  created() {
-    if (this.$route.query.tab == "home") {
-      this.tab = "tab-1";
-      // this.fetchData();
-    } else if (this.$route.query.tab == "company") {
-      this.tab = "tab-2";
-      // this.fetchData();
-    }
-  },
-  watch: {
-    tab: function (value) {
-      if (value == "tab-1") {
-        // this.fetchData();
-        this.$router
-          .push({ name: "Plan", query: { tab: "home" } })
-          .catch(() => {});
-      } else if (value == "tab-2") {
-        this.$router
-          .push({
-            name: "Plan",
-            query: { tab: "company" },
-          })
-          .catch(() => {});
-      }
-    },
   },
 };
 </script>

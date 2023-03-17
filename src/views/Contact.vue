@@ -2,15 +2,15 @@
   <div class="container">
     <h2>Contact us</h2>
     <v-card
-        class="mx-auto"
-        elevation="1"
+      class="mx-auto"
+      elevation="1"
     >
-      <v-img src="../assets/logo_waste.png"
-             max-height="460px"
-             max-width="460px"
-             class="mx-auto"
-      >
-      </v-img>
+      <v-img
+        src="../assets/logo_waste.png"
+        max-height="460px"
+        max-width="460px"
+        class="mx-auto"
+      />
       <v-card-text>
         <h3>
           ພວກເຮົາຄືໜ່ວຍງານບໍລິການຂົນສົ່ງ ແລະ ເກັບມ້ຽນຂີ້ເຫື້ຍອ ເຊົ່ງເປັນໂຄງການຮ່ວມມືລະຫ່ວາງຫ້ອງການຄຸ້ມຄອງ ແລະ ບໍລິການ
@@ -29,7 +29,7 @@
               <v-list-item-title>Phonthan, Xaysettha, Vientiane Capital</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-divider inset></v-divider>
+          <v-divider inset />
 
           <v-list-item>
             <v-list-item-icon>
@@ -43,7 +43,7 @@
             </v-list-item-content>
           </v-list-item>
 
-          <v-divider inset></v-divider>
+          <v-divider inset />
 
           <v-list-item>
             <v-list-item-icon>
@@ -57,10 +57,8 @@
             </v-list-item-content>
           </v-list-item>
         </v-list>
-
       </v-card-text>
     </v-card>
-
   </div>
 </template>
 

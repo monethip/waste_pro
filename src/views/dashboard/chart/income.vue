@@ -3,32 +3,32 @@
     <v-row>
       <v-col>
         <v-menu
-            ref="menu"
-            v-model="month_from_menu"
-            :close-on-content-click="true"
-            transition="scale-transition"
-            offset-y
-            max-width="290px"
-            min-width="auto"
+          ref="menu"
+          v-model="month_from_menu"
+          :close-on-content-click="true"
+          transition="scale-transition"
+          offset-y
+          max-width="290px"
+          min-width="auto"
         >
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
-                v-model="month_from"
-                label="ເລືອກເດືອນ"
-                prepend-icon="mdi-calendar"
-                readonly
-                v-bind="attrs"
-                v-on="on"
-                outlined
-                dense
-            ></v-text-field>
+              v-model="month_from"
+              label="ເລືອກເດືອນ"
+              prepend-icon="mdi-calendar"
+              readonly
+              v-bind="attrs"
+              outlined
+              dense
+              v-on="on"
+            />
           </template>
           <v-date-picker
-              v-model="month_from"
-              type="month"
-              no-title
-              scrollable
-              min="2020-NaN-NaN"
+            v-model="month_from"
+            type="month"
+            no-title
+            scrollable
+            min="2020-NaN-NaN"
           >
             <!--
             <v-spacer></v-spacer>
@@ -42,55 +42,54 @@
       </v-col>
       <v-col>
         <v-menu
-            ref="menu"
-            v-model="month_to_menu"
-            :close-on-content-click="true"
-            transition="scale-transition"
-            offset-y
-            max-width="290px"
-            min-width="auto"
+          ref="menu"
+          v-model="month_to_menu"
+          :close-on-content-click="true"
+          transition="scale-transition"
+          offset-y
+          max-width="290px"
+          min-width="auto"
         >
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
-                v-model="month_to"
-                label="ຫາເດືອນ"
-                prepend-icon="mdi-calendar"
-                readonly
-                v-bind="attrs"
-                v-on="on"
-                outlined
-                dense
-            ></v-text-field>
+              v-model="month_to"
+              label="ຫາເດືອນ"
+              prepend-icon="mdi-calendar"
+              readonly
+              v-bind="attrs"
+              outlined
+              dense
+              v-on="on"
+            />
           </template>
           <v-date-picker
-              v-model="month_to"
-              type="month"
-              no-title
-              scrollable
-              min="2020-NaN-NaN"
-          >
-          </v-date-picker>
+            v-model="month_to"
+            type="month"
+            no-title
+            scrollable
+            min="2020-NaN-NaN"
+          />
         </v-menu>
       </v-col>
 
       <v-col>
         <v-select
-            outlined
-            dense
-            :items="collectionType"
-            v-model="selectedCollection"
-            item-text="name"
-            item-value="value"
-            label="ປະເພດ"
-        ></v-select>
+          v-model="selectedCollection"
+          outlined
+          dense
+          :items="collectionType"
+          item-text="name"
+          item-value="value"
+          label="ປະເພດ"
+        />
       </v-col>
     </v-row>
     <apexchart
-        type="bar"
-        height="350"
-        :options="chartOptions"
-        :series="translatedSeries"
-    ></apexchart>
+      type="bar"
+      height="350"
+      :options="chartOptions"
+      :series="translatedSeries"
+    />
   </div>
 </template>
 <script>
@@ -98,45 +97,45 @@ export default {
   data() {
     return {
       // month_from: new Date().toISOString().substr(0, 7),
-      month_from: "",
-      month_to: "",
+      month_from: '',
+      month_to: '',
       month_from_menu: false,
       month_to_menu: false,
-      max: "",
-      min: "",
+      max: '',
+      min: '',
       modal: false,
       homeInvoice: [],
       compnayInvoice: [],
-      selectedCollection: "home",
+      selectedCollection: 'home',
       collectionType: [
         {
-          name: "ຄົວເຮືອນ",
-          value: "home",
+          name: 'ຄົວເຮືອນ',
+          value: 'home',
         },
         {
-          name: "ບໍລິສັດ",
-          value: "company",
+          name: 'ບໍລິສັດ',
+          value: 'company',
         },
       ],
       series: [],
       chartOptions: {
         labels: [],
         noData: {
-          text: "Loading ...",
-          align: "center",
-          verticalAlign: "middle",
+          text: 'Loading ...',
+          align: 'center',
+          verticalAlign: 'middle',
           offsetX: 0,
           offsetY: 0,
         },
         chart: {
-          type: "bar",
+          type: 'bar',
           height: 350,
         },
         plotOptions: {
           bar: {
             // horizontal: true,
-            columnWidth: "50%",
-            endingShape: "rounded",
+            columnWidth: '50%',
+            endingShape: 'rounded',
           },
         },
         // dataLabels: {
@@ -149,23 +148,23 @@ export default {
         // },
         xaxis: {
           title: {
-            text: "Date",
+            text: 'Date',
             style: {
               colors: [],
-              fontSize: "16px",
+              fontSize: '16px',
               fontWeight: 400,
             },
           },
         },
         yaxis: {
           title: {
-            text: "ລາຍໄດ້",
+            text: 'ລາຍໄດ້',
             style: {
-              fontSize: "14px",
-              fontWeight: "bold",
+              fontSize: '14px',
+              fontWeight: 'bold',
               fontFamily:
-                  "NotoSanLao, Google Sans, arial, serif, sans-serif !important",
-              color: "#263238",
+                  'NotoSanLao, Google Sans, arial, serif, sans-serif !important',
+              color: '#263238',
             },
           },
         },
@@ -187,133 +186,133 @@ export default {
       },
       translated: [
         {
-          key:"sum_total",
-          value:"ລວມ"
+          key: 'sum_total',
+          value: 'ລວມ',
         },
         {
-          key:"total_approved",
-          value:"ອະນຸມັດ"
+          key: 'total_approved',
+          value: 'ອະນຸມັດ',
         },
         {
-          key:"total_created",
-          value:"ສ້າງບິນ"
+          key: 'total_created',
+          value: 'ສ້າງບິນ',
         },
         {
-          key:"total_rejected",
-          value:"ຍົກເລີກ"
+          key: 'total_rejected',
+          value: 'ຍົກເລີກ',
         },
         {
-          key:"total_success",
-          value:"ສຳເລັດ"
+          key: 'total_success',
+          value: 'ສຳເລັດ',
         },
         {
-          key:"total_to_confirm_payment",
-          value:"ສຳເລັດທັງໝົດ"
+          key: 'total_to_confirm_payment',
+          value: 'ສຳເລັດທັງໝົດ',
         },
       ],
     };
   },
-  methods: {
-    async fetchData() {
-      this.$store.commit("Loading_State", true);
-      // this.chartOptions.labels = [];
-      // this.series[0].data = [];
-      const data = new FormData();
-      data.append("type", this.selectedCollection);
-      data.append("duration", "month");
-      if (this.month_from !== "" && this.month_to !== "") {
-        data.append(
-            "month_from",
-            this.moment(this.month_from).format("YYYY-MM")
-        );
-        data.append("month_to", this.moment(this.month_to).format("YYYY-MM"));
-      }
-      await this.$axios
-          .post("report-invoice", data)
-          .then((res) => {
-            if (res.data.code == 200) {
-              this.$store.commit("Loading_State", false);
-              this.homeInvoice = res.data.data.summary;
-              this.series = []
-              this.homeInvoice.map((item) => {
-                if (this.selectedCollection == "home") {
-                  // this.series[0].data.push(item.home.sum_total);
-                  this.chartOptions.labels.push(item.month);
-                  for (const [sumKey, sumItem] of Object.entries(item.home)) {
-                    const serieIndex = this.series.findIndex(item => item.name == sumKey)
-                    if (serieIndex != -1) {
-                      this.series[serieIndex].data.push(sumItem)
-                    } else {
-                      this.series.push({
-                        name: sumKey,
-                        data: [sumItem]
-                      })
-                    }
-                  }
-                } else if (this.selectedCollection == "company") {
-                  // this.series[0].data.push(item.company.sum_total);
-                  this.chartOptions.labels.push(item.month);
-                  for (const [sumKey, sumItem] of Object.entries(item.company)) {
-                    if (this.inArray(sumKey, ['sum_total', 'total_approved', 'total_created', 'total_rejected', 'total_success', 'total_to_confirm_payment'])) {
-                      const serieIndex = this.series.findIndex(item => item.name == sumKey)
-                      if (serieIndex != -1) {
-                        this.series[serieIndex].data.push(sumItem)
-                      } else {
-                        this.series.push({
-                          name: sumKey,
-                          data: [sumItem]
-                        })
-                      }
-                    }
-                  }
-                }
-                window.dispatchEvent(new Event("resize"));
-              });
-            }
-          })
-          .catch(() => {
-            this.$store.commit("Loading_State", false);
-          });
-      window.dispatchEvent(new Event("resize"));
-    },
-    inArray(needle, haystack) {
-      let length = haystack.length;
-      for (let i = 0; i < length; i++) {
-        if (haystack[i] == needle) return true;
-      }
-      return false;
-    },
-  },
-  computed:{
-    translatedSeries(){
+  computed: {
+    translatedSeries() {
       const data = [];
       this.series.map((item) => {
-        const [translatedItem] = this.translated.filter((f) => f.key === item.name)
-        if(translatedItem) {
+        const [translatedItem] = this.translated.filter((f) => f.key === item.name);
+        if (translatedItem) {
           data.push({
             name: translatedItem.value,
-            data: item.data
-          })
+            data: item.data,
+          });
         }
-      })
+      });
       return data;
-    }
+    },
   },
   watch: {
-    selectedCollection: function () {
+    selectedCollection() {
       this.fetchData();
     },
-    month_to: function () {
+    month_to() {
       this.chartOptions.labels = [];
       this.fetchData();
     },
-    month_from: function () {
+    month_from() {
       this.chartOptions.labels = [];
       this.fetchData();
     },
   },
   created() {
     this.fetchData();
+  },
+  methods: {
+    async fetchData() {
+      this.$store.commit('Loading_State', true);
+      // this.chartOptions.labels = [];
+      // this.series[0].data = [];
+      const data = new FormData();
+      data.append('type', this.selectedCollection);
+      data.append('duration', 'month');
+      if (this.month_from !== '' && this.month_to !== '') {
+        data.append(
+          'month_from',
+          this.moment(this.month_from).format('YYYY-MM'),
+        );
+        data.append('month_to', this.moment(this.month_to).format('YYYY-MM'));
+      }
+      await this.$axios
+        .post('report-invoice', data)
+        .then((res) => {
+          if (res.data.code == 200) {
+            this.$store.commit('Loading_State', false);
+            this.homeInvoice = res.data.data.summary;
+            this.series = [];
+            this.homeInvoice.map((item) => {
+              if (this.selectedCollection == 'home') {
+                // this.series[0].data.push(item.home.sum_total);
+                this.chartOptions.labels.push(item.month);
+                for (const [sumKey, sumItem] of Object.entries(item.home)) {
+                  const serieIndex = this.series.findIndex((item) => item.name == sumKey);
+                  if (serieIndex != -1) {
+                    this.series[serieIndex].data.push(sumItem);
+                  } else {
+                    this.series.push({
+                      name: sumKey,
+                      data: [sumItem],
+                    });
+                  }
+                }
+              } else if (this.selectedCollection == 'company') {
+                // this.series[0].data.push(item.company.sum_total);
+                this.chartOptions.labels.push(item.month);
+                for (const [sumKey, sumItem] of Object.entries(item.company)) {
+                  if (this.inArray(sumKey, ['sum_total', 'total_approved', 'total_created', 'total_rejected', 'total_success', 'total_to_confirm_payment'])) {
+                    const serieIndex = this.series.findIndex((item) => item.name == sumKey);
+                    if (serieIndex != -1) {
+                      this.series[serieIndex].data.push(sumItem);
+                    } else {
+                      this.series.push({
+                        name: sumKey,
+                        data: [sumItem],
+                      });
+                    }
+                  }
+                }
+              }
+              window.dispatchEvent(new Event('resize'));
+            });
+          }
+        })
+        .catch(() => {
+          this.$store.commit('Loading_State', false);
+        });
+      window.dispatchEvent(new Event('resize'));
+    },
+    inArray(needle, haystack) {
+      const { length } = haystack;
+      for (let i = 0; i < length; i++) {
+        if (haystack[i] == needle) return true;
+      }
+      return false;
+    },
   },
 };
 </script>

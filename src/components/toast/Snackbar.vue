@@ -27,7 +27,7 @@ export default {
   computed: {
     show: {
       set(val) {
-        this.$store.commit("Toast_State", val);
+        this.$store.commit('Toast_State', val);
       },
       get() {
         return this.$store.state.notificationToastState;

@@ -1,8 +1,16 @@
 <template>
-  <v-dialog v-model="active" max-width="480px">
+  <v-dialog
+    v-model="active"
+    max-width="480px"
+  >
     <v-card>
       <v-card-text class="pt-8">
-        <h3 align="center" class="py-2">ຕ້ອງການລົບຂໍ້ມູນນີ້ບໍ່ ?</h3>
+        <h3
+          align="center"
+          class="py-2"
+        >
+          ຕ້ອງການລົບຂໍ້ມູນນີ້ບໍ່ ?
+        </h3>
         <slot v-bind="{ close }" />
       </v-card-text>
     </v-card>
@@ -14,7 +22,7 @@ export default {
   computed: {
     active: {
       set(val) {
-        this.$store.commit("modalDelete_State", val);
+        this.$store.commit('modalDelete_State', val);
       },
       get() {
         return this.$store.state.modalDeleteState;

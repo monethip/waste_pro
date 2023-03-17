@@ -2,34 +2,70 @@
   <v-container>
     <v-row class="mb-n6 text-right">
       <v-col>
-        <v-btn class="btn-primary" dark medium @click="OpenModalAdd()">
-          <v-icon color>mdi-plus</v-icon>Add
+        <v-btn
+          class="btn-primary"
+          dark
+          medium
+          @click="OpenModalAdd()"
+        >
+          <v-icon color>
+            mdi-plus
+          </v-icon>Add
         </v-btn>
       </v-col>
     </v-row>
     <v-col justify="center">
-      <v-card class="my-6" elevation="2">
+      <v-card
+        class="my-6"
+        elevation="2"
+      >
         <v-card-title>
           ຂໍ້ມູນລາຍລະອຽດທີ່ຢູ່
-          <v-divider class="mx-4" vertical></v-divider>
-          <v-spacer></v-spacer>
-          <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details>
-          </v-text-field>
+          <v-divider
+            class="mx-4"
+            vertical
+          />
+          <v-spacer />
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
+          />
         </v-card-title>
-        <v-data-table :headers="headers" :items="villagevariation" :search="search" :disable-pagination="true"
-          hide-default-footer>
+        <v-data-table
+          :headers="headers"
+          :items="villagevariation"
+          :search="search"
+          :disable-pagination="true"
+          hide-default-footer
+        >
           <template v-slot:[`item.actions`]="{ item }">
-            <v-icon small color="green" class="mr-2" @click="OpenModalEdit(item)">
+            <v-icon
+              small
+              color="green"
+              class="mr-2"
+              @click="OpenModalEdit(item)"
+            >
               mdi-pencil
             </v-icon>
-            <v-icon small color="red" @click="deleteItem(item.id)">
+            <v-icon
+              small
+              color="red"
+              @click="deleteItem(item.id)"
+            >
               mdi-trash-can-outline
             </v-icon>
           </template>
         </v-data-table>
         <template>
-          <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset"
-            @paginate="fetchData()"></Pagination>
+          <Pagination
+            v-if="pagination.total_pages > 1"
+            :pagination="pagination"
+            :offset="offset"
+            @paginate="fetchData()"
+          />
         </template>
       </v-card>
     </v-col>
@@ -40,15 +76,22 @@
         <v-card>
           <v-card-title>
             <span class="text-h5">Add Village Variation</span>
-            <v-spacer></v-spacer>
+            <v-spacer />
           </v-card-title>
           <v-card-text>
             <v-container>
-              <v-form ref="form" lazy-validation>
+              <v-form
+                ref="form"
+                lazy-validation
+              >
                 <v-row>
                   <v-col>
-                    <v-text-field v-model="addvillagevariation" label="name*" required :rules="nameRules">
-                    </v-text-field>
+                    <v-text-field
+                      v-model="addvillagevariation"
+                      label="name*"
+                      required
+                      :rules="nameRules"
+                    />
                     <p class="errors">
                       {{ server_errors.name }}
                     </p>
@@ -57,11 +100,21 @@
               </v-form>
             </v-container>
             <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeAddModal()">
+              <v-spacer />
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="closeAddModal()"
+              >
                 Close
               </v-btn>
-              <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="AddItem()">
+              <v-btn
+                color="blue darken-1"
+                text
+                :loading="loading"
+                :disabled="loading"
+                @click="AddItem()"
+              >
                 Save
               </v-btn>
             </v-card-actions>
@@ -80,10 +133,17 @@
           </v-card-title>
           <v-card-text>
             <v-container>
-              <v-form ref="form" lazy-validation>
+              <v-form
+                ref="form"
+                lazy-validation
+              >
                 <v-row>
                   <v-col>
-                    <v-text-field v-model="editVillagevariation.name" label="name*" required></v-text-field>
+                    <v-text-field
+                      v-model="editVillagevariation.name"
+                      label="name*"
+                      required
+                    />
                     <p class="errors">
                       {{ server_errors.name }}
                     </p>
@@ -92,11 +152,21 @@
               </v-form>
             </v-container>
             <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeUpdate()">
+              <v-spacer />
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="closeUpdate()"
+              >
                 ຍົກເລີກ
               </v-btn>
-              <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="updateItem()">
+              <v-btn
+                color="blue darken-1"
+                text
+                :loading="loading"
+                :disabled="loading"
+                @click="updateItem()"
+              >
                 ບັນທຶກ
               </v-btn>
             </v-card-actions>
@@ -109,10 +179,24 @@
     <ModalDelete>
       <template>
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-          <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="DeleteItemConfirm">OK</v-btn>
-          <v-spacer></v-spacer>
+          <v-spacer />
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="closeDelete"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            :loading="loading"
+            :disabled="loading"
+            @click="DeleteItemConfirm"
+          >
+            OK
+          </v-btn>
+          <v-spacer />
         </v-card-actions>
       </template>
     </ModalDelete>
@@ -121,41 +205,52 @@
 
 <script>
 export default {
-  name: "VillageVariation",
+  name: 'VillageVariation',
   title() {
     return `Vientiane Waste Co-Dev|Address Detail`;
   },
   data() {
     return {
-      search: "",
+      search: '',
       villagevariation: [],
-      addvillagevariation: "",
-      addvillagedetail: "",
+      addvillagevariation: '',
+      addvillagedetail: '',
       loading: false,
 
-      VillageVariation_id: "",
+      VillageVariation_id: '',
       editVillagevariation: {},
-      village_variation_id: "",
+      village_variation_id: '',
 
       //
       variation: [],
       edit_villagevariation: {},
       variationDialog: false,
 
-      //pagination
+      // pagination
       offset: 12,
       pagination: {},
       per_page: 100,
 
-      //validation
+      // validation
       server_errors: {},
-      nameRules: [(v) => !!v || "Name is required"],
+      nameRules: [(v) => !!v || 'Name is required'],
 
       headers: [
-        { text: "name", value: "name" },
-        { text: "actions", value: "actions" },
+        { text: 'name', value: 'name' },
+        { text: 'actions', value: 'actions' },
       ],
     };
+  },
+  watch: {
+    addvillagevariation() {
+      this.server_errors.name = '';
+    },
+    'editVillagevariation.name': function () {
+      this.server_errors.name = '';
+    },
+  },
+  created() {
+    this.fetchData();
   },
 
   methods: {
@@ -164,35 +259,35 @@ export default {
     },
 
     OpenModalAdd() {
-      this.$store.commit("modalAdd_State", true);
+      this.$store.commit('modalAdd_State', true);
     },
 
     closeAddModal() {
-      this.$store.commit("modalAdd_State", false);
+      this.$store.commit('modalAdd_State', false);
     },
 
     closeUpdate() {
       this.reset(),
-        (this.editVillagevariation = {}),
-        this.fetchData(),
-        this.$store.commit("modalEdit_State", false);
+      (this.editVillagevariation = {}),
+      this.fetchData(),
+      this.$store.commit('modalEdit_State', false);
     },
 
     OpenModalEdit(item) {
       this.editVillagevariation = item;
-      this.$store.commit("modalEdit_State", true);
+      this.$store.commit('modalEdit_State', true);
     },
 
     updateItem() {
-      let formData = new FormData();
-      formData.append("name", this.editVillagevariation.name);
-      formData.append("_method", "PUT");
+      const formData = new FormData();
+      formData.append('name', this.editVillagevariation.name);
+      formData.append('_method', 'PUT');
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
           .post(
-            "address/village-variation/" + this.editVillagevariation.id,
-            formData
+            `address/village-variation/${this.editVillagevariation.id}`,
+            formData,
           )
           .then((res) => {
             if (res.data.code == 200) {
@@ -202,9 +297,9 @@ export default {
                 this.editVillagevariation = {};
                 this.reset();
                 this.fetchData();
-                this.$store.commit("Toast_State", {
+                this.$store.commit('Toast_State', {
                   value: true,
-                  color: "success",
+                  color: 'success',
                   msg: res.data.message,
                 });
               }, 300);
@@ -212,15 +307,14 @@ export default {
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", {
-                value: true,
-                color: "error",
-                msg: error.response ? error.response.data.message : 'Something went wrong',
-              });
-              if (error.response && error.response.status == 422) {
-              
-              var obj = error.response.data.errors;
-              for (let [key, message] of Object.entries(obj)) {
+            this.$store.commit('Toast_State', {
+              value: true,
+              color: 'error',
+              msg: error.response ? error.response.data.message : 'Something went wrong',
+            });
+            if (error.response && error.response.status == 422) {
+              const obj = error.response.data.errors;
+              for (const [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
               }
             }
@@ -267,35 +361,35 @@ export default {
     //     });
     // },
     closeDelete() {
-      this.$store.commit("modalDelete_State", false);
+      this.$store.commit('modalDelete_State', false);
     },
 
     deleteItem(id) {
       this.VillageVariation_id = id;
-      this.$store.commit("modalDelete_State", true);
+      this.$store.commit('modalDelete_State', true);
     },
 
     DeleteItemConfirm() {
       this.loading = true;
       this.$axios
-        .delete("address/village-variation/" + this.VillageVariation_id)
+        .delete(`address/village-variation/${this.VillageVariation_id}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.loading = false;
-              this.$store.commit("Toast_State", {
+              this.$store.commit('Toast_State', {
                 value: true,
-                color: "success",
+                color: 'success',
                 msg: res.data.message,
               });
-              this.$store.commit("modalDelete_State", false);
+              this.$store.commit('modalDelete_State', false);
               this.fetchData();
             }, 300);
           }
         })
         .catch(() => {
           this.fetchData();
-          this.$store.commit("modalDelete_State", false);
+          this.$store.commit('modalDelete_State', false);
           this.loading = false;
         });
     },
@@ -304,7 +398,7 @@ export default {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .post("address/village-variation/", {
+          .post('address/village-variation/', {
             name: this.addvillagevariation,
           })
           .then((res) => {
@@ -314,9 +408,9 @@ export default {
                 this.closeAddModal();
                 this.fetchData();
                 this.reset();
-                this.$store.commit("Toast_State", {
+                this.$store.commit('Toast_State', {
                   value: true,
-                  color: "success",
+                  color: 'success',
                   msg: res.data.message,
                 });
               }, 300);
@@ -324,15 +418,14 @@ export default {
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", {
-                value: true,
-                color: "error",
-                msg: error.response ? error.response.data.message : 'Something went wrong',
-              });
-              if (error.response && error.response.status == 422) {
-              
-              var obj = error.response.data.errors;
-              for (let [key, message] of Object.entries(obj)) {
+            this.$store.commit('Toast_State', {
+              value: true,
+              color: 'error',
+              msg: error.response ? error.response.data.message : 'Something went wrong',
+            });
+            if (error.response && error.response.status == 422) {
+              const obj = error.response.data.errors;
+              for (const [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
               }
             }
@@ -341,9 +434,9 @@ export default {
     },
 
     fetchData() {
-      this.$store.commit("Loading_State", true);
+      this.$store.commit('Loading_State', true);
       this.$axios
-        .get("info/village-variation", {
+        .get('info/village-variation', {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
@@ -353,32 +446,21 @@ export default {
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.$store.commit("Loading_State", false);
+              this.$store.commit('Loading_State', false);
               this.villagevariation = res.data.data.data;
               this.pagination = res.data.data.pagination;
             }, 300);
           }
         })
         .catch((error) => {
-          this.$store.commit("Loading_State", false);
-          this.$store.commit("Toast_State", {
-              value: true,
-              color: "error",
-              msg: error.response ? error.response.data.message : 'Something went wrong',
-            });
+          this.$store.commit('Loading_State', false);
+          this.$store.commit('Toast_State', {
+            value: true,
+            color: 'error',
+            msg: error.response ? error.response.data.message : 'Something went wrong',
+          });
         });
     },
-  },
-  watch: {
-    addvillagevariation: function () {
-      this.server_errors.name = "";
-    },
-    "editVillagevariation.name": function () {
-      this.server_errors.name = "";
-    },
-  },
-  created() {
-    this.fetchData();
   },
 };
 </script>

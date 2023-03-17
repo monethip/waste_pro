@@ -2,8 +2,11 @@
   <v-container>
     <v-row class="mb-n6">
       <v-col>
-        <v-btn @click="openAddModal()" class="btn-primary"
-          ><v-icon>mdi-plus</v-icon>
+        <v-btn
+          class="btn-primary"
+          @click="openAddModal()"
+        >
+          <v-icon>mdi-plus</v-icon>
         </v-btn>
       </v-col>
     </v-row>
@@ -12,8 +15,11 @@
         <v-card class="pa-2">
           <v-card-title>
             ຂໍ້ມູນທີມ ({{ pagination.total }})
-            <v-divider class="mx-4" vertical></v-divider>
-            <v-spacer></v-spacer>
+            <v-divider
+              class="mx-4"
+              vertical
+            />
+            <v-spacer />
             <!--
             <v-select
               outlined
@@ -34,7 +40,7 @@
               single-line
               hide-details
               @keyup.enter="Search()"
-            ></v-text-field>
+            />
           </v-card-title>
           <v-data-table
             :headers="headers"
@@ -51,29 +57,51 @@
                     color="primary"
                     dark
                     v-bind="attrs"
-                    v-on="on"
                     medium
                     class="mr-2"
-                    >mdi-dots-vertical</v-icon
+                    v-on="on"
                   >
+                    mdi-dots-vertical
+                  </v-icon>
                 </template>
                 <v-list>
-                  <v-list-item link @click="viewPage(item.id)">
+                  <v-list-item
+                    link
+                    @click="viewPage(item.id)"
+                  >
                     <v-list-item-title>
-                      <v-icon small class="mr-2"> mdi-plus </v-icon>
+                      <v-icon
+                        small
+                        class="mr-2"
+                      >
+                        mdi-plus
+                      </v-icon>
                       ເພີ່ມສະມາຊິກທີມ
                     </v-list-item-title>
                   </v-list-item>
-                  <v-list-item link @click="OpenModalEdit(item)">
+                  <v-list-item
+                    link
+                    @click="OpenModalEdit(item)"
+                  >
                     <v-list-item-title>
-                      <v-icon small class="mr-2"> mdi-pencil </v-icon>
+                      <v-icon
+                        small
+                        class="mr-2"
+                      >
+                        mdi-pencil
+                      </v-icon>
                       ແກ້ໄຂ
                     </v-list-item-title>
                   </v-list-item>
 
-                  <v-list-item link @click="deleteItem(item.id)">
+                  <v-list-item
+                    link
+                    @click="deleteItem(item.id)"
+                  >
                     <v-list-item-title>
-                      <v-icon small> mdi-delete </v-icon>
+                      <v-icon small>
+                        mdi-delete
+                      </v-icon>
                       ລຶບ
                     </v-list-item-title>
                   </v-list-item>
@@ -81,14 +109,14 @@
               </v-menu>
             </template>
           </v-data-table>
-          <br />
+          <br>
           <template>
             <Pagination
               v-if="pagination.total_pages > 1"
               :pagination="pagination"
               :offset="offset"
               @paginate="fetchData()"
-            ></Pagination>
+            />
           </template>
         </v-card>
       </v-col>
@@ -103,15 +131,18 @@
           </v-card-title>
           <v-card-text>
             <v-container>
-              <v-form ref="form" lazy-validation>
+              <v-form
+                ref="form"
+                lazy-validation
+              >
                 <v-row>
                   <v-col cols="12">
                     <v-text-field
+                      v-model="teamName"
                       label="Name *"
                       required
-                      v-model="teamName"
                       :rules="teamRules"
-                    ></v-text-field>
+                    />
                     <p class="errors">
                       {{ server_errors.name }}
                     </p>
@@ -125,7 +156,7 @@
                       label="ພະນັກງານຂັບລົດ"
                       dense
                       :rules="driverRules"
-                    ></v-autocomplete>
+                    />
                     <p class="errors">
                       {{ server_errors.driver_id }}
                     </p>
@@ -134,8 +165,12 @@
               </v-form>
             </v-container>
             <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeAddModal()">
+              <v-spacer />
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="closeAddModal()"
+              >
                 ຍົກເລີກ
               </v-btn>
               <v-btn
@@ -155,22 +190,28 @@
 
     <!--Edit Modal-->
     <ModalEdit>
-      <template @close="close" v-slot="">
+      <template
+        v-slot=""
+        @close="close"
+      >
         <v-card>
           <v-card-title>
             <p>ແກ້ໄຂທີມ</p>
           </v-card-title>
           <v-card-text>
             <v-container>
-              <v-form ref="form" lazy-validation>
+              <v-form
+                ref="form"
+                lazy-validation
+              >
                 <v-row>
                   <v-col cols="12">
                     <v-text-field
+                      v-model="edit_user.name"
                       label="Name *"
                       required
-                      v-model="edit_user.name"
                       :rules="teamRules"
-                    ></v-text-field>
+                    />
                     <p class="errors">
                       {{ server_errors.name }}
                     </p>
@@ -185,7 +226,7 @@
                       label="ພະນັກງານຂັບລົດ"
                       dense
                       :rules="driverRules"
-                    ></v-autocomplete>
+                    />
                     <p class="errors">
                       {{ server_errors.driver_id }}
                     </p>
@@ -194,8 +235,12 @@
               </v-form>
             </v-container>
             <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeUpdateModal()">
+              <v-spacer />
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="closeUpdateModal()"
+              >
                 ຍົກເລີກ
               </v-btn>
               <v-btn
@@ -217,17 +262,24 @@
     <ModalDelete>
       <template>
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+          <v-spacer />
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="closeDelete"
+          >
+            Cancel
+          </v-btn>
           <v-btn
             color="blue darken-1"
             text
             :loading="loading"
             :disabled="loading"
             @click="deleteItemConfirm"
-            >OK</v-btn
           >
-          <v-spacer></v-spacer>
+            OK
+          </v-btn>
+          <v-spacer />
         </v-card-actions>
       </template>
     </ModalDelete>
@@ -235,46 +287,72 @@
 </template>
 
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import { GetOldValueOnInput } from '@/Helpers/GetValue';
+
 export default {
   title() {
     return `Vientiane Waste Co-Dev|Team`;
   },
-  name: "User",
+  name: 'User',
   data() {
     return {
       headers: [
-        { text: "ຊື່ທີມ", value: "name" },
-        { text: "ພະນັກງານຂັບລົດ", value: "driver.name" },
-        { text: "ທະບຽນລົດ", value: "driver.vehicle.car_number" },
-        { text: "ສະຖານະ", value: "driver.status", sortable: false },
-        { text: "", value: "actions", sortable: false },
+        { text: 'ຊື່ທີມ', value: 'name' },
+        { text: 'ພະນັກງານຂັບລົດ', value: 'driver.name' },
+        { text: 'ທະບຽນລົດ', value: 'driver.vehicle.car_number' },
+        { text: 'ສະຖານະ', value: 'driver.status', sortable: false },
+        { text: '', value: 'actions', sortable: false },
       ],
       loading: false,
       status: false,
       data: [],
       edit_user: {},
-      userID: "",
+      userID: '',
       server_errors: {},
-      teamName: "",
+      teamName: '',
       driver: [],
-      selectedDriver: "",
+      selectedDriver: '',
 
-      //Pagination
+      // Pagination
       offset: 12,
       pagination: {},
       per_page: 100,
-      search: "",
-      oldVal: "",
-      //Validation
-      teamRules: [(v) => !!v || "Team name is required"],
-      driverRules: [(v) => !!v || "Driver is required"],
+      search: '',
+      oldVal: '',
+      // Validation
+      teamRules: [(v) => !!v || 'Team name is required'],
+      driverRules: [(v) => !!v || 'Driver is required'],
     };
+  },
+  watch: {
+    selectedStatus() {
+      this.fetchData();
+    },
+    teamName() {
+      this.server_errors.name = '';
+    },
+    selectedDriver() {
+      this.server_errors.driver_id = '';
+    },
+    'edit_user.name': function () {
+      this.server_errors.name = '';
+    },
+    'edit_user.driver.id': function () {
+      this.server_errors.driver_id = '';
+    },
+    search(value) {
+      if (value == '') {
+        this.fetchData();
+      }
+    },
+  },
+  created() {
+    this.fetchData();
   },
   methods: {
     fetchDriver() {
       this.$axios
-        .get("driver")
+        .get('driver')
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
@@ -286,24 +364,24 @@ export default {
     },
     openAddModal() {
       this.fetchDriver();
-      this.$store.commit("modalAdd_State", true);
+      this.$store.commit('modalAdd_State', true);
     },
     AddItem() {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .post("team", { name: this.teamName, driver_id: this.selectedDriver })
+          .post('team', { name: this.teamName, driver_id: this.selectedDriver })
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
                 this.loading = false;
                 this.closeAddModal();
-                this.teamName = "";
+                this.teamName = '';
                 this.fetchData();
                 this.reset();
-                this.$store.commit("Toast_State", {
+                this.$store.commit('Toast_State', {
                   value: true,
-                  color: "success",
+                  color: 'success',
                   msg: res.data.message,
                 });
               }, 300);
@@ -311,15 +389,15 @@ export default {
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", {
+            this.$store.commit('Toast_State', {
               value: true,
-              color: "error",
+              color: 'error',
               msg: error.response ? error.response.data.message : 'Something went wrong',
             });
             this.fetchData();
             if (error.response && error.response.status == 422) {
-              var obj = error.response.data.errors;
-              for (let [key, customer] of Object.entries(obj)) {
+              const obj = error.response.data.errors;
+              for (const [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
               }
             }
@@ -327,9 +405,9 @@ export default {
       }
     },
     fetchData() {
-      this.$store.commit("Loading_State", true);
+      this.$store.commit('Loading_State', true);
       this.$axios
-        .get("team", {
+        .get('team', {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
@@ -338,17 +416,17 @@ export default {
         })
         .then((res) => {
           if (res.data.code == 200) {
-              this.loading = false;
-              this.$store.commit("Loading_State", false);
-              this.data = res.data.data.data;
-              this.pagination = res.data.data.pagination;
+            this.loading = false;
+            this.$store.commit('Loading_State', false);
+            this.data = res.data.data.data;
+            this.pagination = res.data.data.pagination;
           }
         })
         .catch((error) => {
-          this.$store.commit("Loading_State", false);
+          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status == 422) {
-            let obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
+            const obj = error.response.data.errors;
+            for (const [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
           }
@@ -356,18 +434,18 @@ export default {
     },
 
     closeAddModal() {
-      this.$store.commit("modalAdd_State", false);
+      this.$store.commit('modalAdd_State', false);
     },
     OpenModalEdit(item) {
       this.fetchDriver();
       this.edit_user = item;
-      this.$store.commit("modalEdit_State", true);
+      this.$store.commit('modalEdit_State', true);
     },
     updateItem() {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .put("team/" + this.edit_user.id, {
+          .put(`team/${this.edit_user.id}`, {
             name: this.edit_user.name,
             driver_id: this.edit_user.driver.id,
           })
@@ -378,9 +456,9 @@ export default {
                 this.closeUpdateModal();
                 this.fetchData();
                 this.reset();
-                this.$store.commit("Toast_State", {
+                this.$store.commit('Toast_State', {
                   value: true,
-                  color: "success",
+                  color: 'success',
                   msg: res.data.message,
                 });
               }, 300);
@@ -388,14 +466,14 @@ export default {
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", {
+            this.$store.commit('Toast_State', {
               value: true,
-              color: "error",
+              color: 'error',
               msg: error.response ? error.response.data.message : 'Something went wrong',
             });
             if (error.response && error.response.status == 422) {
-              var obj = error.response.data.errors;
-              for (let [key, message] of Object.entries(obj)) {
+              const obj = error.response.data.errors;
+              for (const [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
               }
             }
@@ -403,31 +481,31 @@ export default {
       }
     },
     closeUpdateModal() {
-      this.$store.commit("modalEdit_State", false);
+      this.$store.commit('modalEdit_State', false);
     },
 
     closeDelete() {
-      this.$store.commit("modalDelete_State", false);
+      this.$store.commit('modalDelete_State', false);
     },
 
     deleteItem(id) {
       this.userID = id;
-      this.$store.commit("modalDelete_State", true);
+      this.$store.commit('modalDelete_State', true);
     },
 
     deleteItemConfirm() {
       this.loading = true;
       this.$axios
-        .delete("team/" + this.userID)
+        .delete(`team/${this.userID}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.loading = false;
-              this.$store.commit("modalDelete_State", false);
+              this.$store.commit('modalDelete_State', false);
               this.fetchData();
-              this.$store.commit("Toast_State", {
+              this.$store.commit('Toast_State', {
                 value: true,
-                color: "success",
+                color: 'success',
                 msg: res.data.message,
               });
             }, 300);
@@ -435,18 +513,18 @@ export default {
         })
         .catch((error) => {
           this.fetchData();
-          this.$store.commit("Toast_State", {
+          this.$store.commit('Toast_State', {
             value: true,
-            color: "error",
+            color: 'error',
             msg: error.response ? error.response.data.message : 'Something went wrong',
           });
-          this.$store.commit("modalDelete_State", false);
+          this.$store.commit('modalDelete_State', false);
           this.loading = false;
         });
     },
     viewPage(id) {
       this.$router.push({
-        name: "TeamDetail",
+        name: 'TeamDetail',
         params: { id },
       });
     },
@@ -456,31 +534,6 @@ export default {
     Search() {
       GetOldValueOnInput(this);
     },
-  },
-  watch: {
-    selectedStatus: function () {
-      this.fetchData();
-    },
-    teamName: function () {
-      this.server_errors.name = "";
-    },
-    selectedDriver: function () {
-      this.server_errors.driver_id = "";
-    },
-    "edit_user.name": function () {
-      this.server_errors.name = "";
-    },
-    "edit_user.driver.id": function () {
-      this.server_errors.driver_id = "";
-    },
-    search: function (value) {
-      if (value == "") {
-        this.fetchData();
-      }
-    },
-  },
-  created() {
-    this.fetchData();
   },
 };
 </script>

@@ -1,32 +1,48 @@
 <template>
   <v-container>
     <v-breadcrumbs large>
-      <v-btn text class="text-primary" @click="backPrevios()"
-        ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
+      <v-btn
+        text
+        class="text-primary"
+        @click="backPrevios()"
       >
+        <v-icon>mdi-keyboard-backspace </v-icon>
+      </v-btn>
       ລາຍລະອຽດທີ່ຢູ່ໃນ
-      <span v-if="data.name" class="primary-color ml-2">
-        {{ data.name }}, {{ data.district.name }}</span
-      ></v-breadcrumbs
-    >
+      <span
+        v-if="data.name"
+        class="primary-color ml-2"
+      >
+        {{ data.name }}, {{ data.district.name }}</span>
+    </v-breadcrumbs>
     <v-row class="mb-n6 text-right">
       <v-col>
-        <v-btn class="btn-primary" dark medium @click="OpenModalAddAddress()"
-          ><v-icon color>mdi-plus</v-icon>Add
+        <v-btn
+          class="btn-primary"
+          dark
+          medium
+          @click="OpenModalAddAddress()"
+        >
+          <v-icon color>
+            mdi-plus
+          </v-icon>Add
         </v-btn>
       </v-col>
     </v-row>
-    <v-card class="my-6" elevation="2">
+    <v-card
+      class="my-6"
+      elevation="2"
+    >
       <v-card-title>
         ຂໍ້ມູນລາຍລະອຽດທີ່ຢູ່
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
           label="Search"
           single-line
           hide-details
-        ></v-text-field>
+        />
       </v-card-title>
       <v-data-table
         :headers="headers"
@@ -37,14 +53,17 @@
       >
         <template v-slot:[`item.village_details`]="{ item }">
           <div v-if="item.village_details">
-            <span v-for="(data, index) in item.village_details" :key="index">
+            <span
+              v-for="(data, index) in item.village_details"
+              :key="index"
+            >
               <span>
                 <v-chip
+                  v-if="data.name"
                   class="ma-2"
                   color="cyan"
                   text-color="white"
                   label
-                  v-if="data.name"
                 >
                   {{ data.name }}
                   <v-icon
@@ -55,7 +74,11 @@
                   >
                     mdi-pencil
                   </v-icon>
-                  <v-icon right small @click="deleteItem(data.id)">
+                  <v-icon
+                    right
+                    small
+                    @click="deleteItem(data.id)"
+                  >
                     mdi-trash-can-outline
                   </v-icon>
                 </v-chip>
@@ -64,10 +87,19 @@
           </div>
         </template>
         <template v-slot:[`item.action`]="{ item }">
-          <v-icon small color="info" class="mr-2" @click="addMoreItem(item.id)">
+          <v-icon
+            small
+            color="info"
+            class="mr-2"
+            @click="addMoreItem(item.id)"
+          >
             mdi-plus
           </v-icon>
-          <v-icon small color="red" @click="deleteAllItem(item.id)">
+          <v-icon
+            small
+            color="red"
+            @click="deleteAllItem(item.id)"
+          >
             mdi-trash-can-outline
           </v-icon>
         </template>
@@ -78,7 +110,7 @@
           :pagination="pagination"
           :offset="offset"
           @paginate="fetchData()"
-        ></Pagination>
+        />
       </template>
     </v-card>
     <!-- Modal Add-->
@@ -92,18 +124,21 @@
           </v-card-title>
           <v-card-text>
             <v-container>
-              <v-form ref="form" lazy-validation>
+              <v-form
+                ref="form"
+                lazy-validation
+              >
                 <v-row>
                   <v-col>
                     <v-autocomplete
+                      v-model="selectedDetail"
                       required
                       :items="village_detail"
-                      v-model="selectedDetail"
                       item-text="name"
                       item-value="id"
                       label="ເລືອກທີ່ຢູ່ *"
                       :rules="rulesAddress"
-                    ></v-autocomplete>
+                    />
                     <p class="errors">
                       {{ server_errors.district_id }}
                     </p>
@@ -117,7 +152,7 @@
                       required
                       prepend-inner-icon="mdi-home"
                       :rules="nameRules"
-                    ></v-text-field>
+                    />
                     <p class="errors">
                       {{ server_errors.name }}
                     </p>
@@ -126,11 +161,19 @@
               </v-form>
             </v-container>
             <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeAddModal()">
+              <v-spacer />
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="closeAddModal()"
+              >
                 Close
               </v-btn>
-              <v-btn color="blue darken-1" text @click="AddItem()">
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="AddItem()"
+              >
                 Save
               </v-btn>
             </v-card-actions>
@@ -147,18 +190,21 @@
           </v-card-title>
           <v-card-text>
             <v-container>
-              <v-form ref="form" lazy-validation>
+              <v-form
+                ref="form"
+                lazy-validation
+              >
                 <v-row>
                   <v-col>
                     <v-autocomplete
-                      required
                       v-model="editVillageDetail.village_variation_id"
+                      required
                       :items="village_detail"
                       item-text="name"
                       item-value="id"
                       label="ເລືອກທີ່ຢູ່ *"
                       :rules="rulesAddress"
-                    ></v-autocomplete>
+                    />
                     <p class="errors">
                       {{ server_errors.district_id }}
                     </p>
@@ -170,7 +216,7 @@
                       v-model="editVillageDetail.name"
                       label="ລາຍລະອຽດ*"
                       required
-                    ></v-text-field>
+                    />
                     <p class="errors">
                       {{ server_errors.name }}
                     </p>
@@ -179,8 +225,12 @@
               </v-form>
             </v-container>
             <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeUpdate()">
+              <v-spacer />
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="closeUpdate()"
+              >
                 ຍົກເລີກ
               </v-btn>
               <v-btn
@@ -202,17 +252,24 @@
     <ModalDelete>
       <template>
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+          <v-spacer />
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="closeDelete"
+          >
+            Cancel
+          </v-btn>
           <v-btn
             color="blue darken-1"
             text
             :loading="loading"
             :disabled="loading"
             @click="DeleteItemConfirm"
-            >OK</v-btn
           >
-          <v-spacer></v-spacer>
+            OK
+          </v-btn>
+          <v-spacer />
         </v-card-actions>
       </template>
     </ModalDelete>
@@ -230,53 +287,66 @@ export default {
       address: {},
       loading: false,
       server_errors: {},
-      detail_id: "",
+      detail_id: '',
       editVillageDetail: {},
-      //ໜ່ວຍ
+      // ໜ່ວຍ
       village_detail: [],
-      selectedDetail: "",
+      selectedDetail: '',
       addressdetail: [],
-      errormsg: "",
-      search: "",
+      errormsg: '',
+      search: '',
       headers: [
-        { text: "ທີ່ຢູ່", value: "name" },
-        { text: "ລາຍລະອຽດ", value: "village_details" },
-        { text: "", value: "action" },
+        { text: 'ທີ່ຢູ່', value: 'name' },
+        { text: 'ລາຍລະອຽດ', value: 'village_details' },
+        { text: '', value: 'action' },
       ],
-      //pagination
+      // pagination
       offset: 12,
       pagination: {},
       per_page: 100,
-      //Validation
-      nameRules: [(v) => !!v || "Name is required"],
-      rulesAddress: [(v) => !!v || "Address is required"],
+      // Validation
+      nameRules: [(v) => !!v || 'Name is required'],
+      rulesAddress: [(v) => !!v || 'Address is required'],
     };
+  },
+  watch: {
+    'address.name': function () {
+      this.server_errors.name = '';
+    },
+    'editVillageDetail.name': function () {
+      this.server_errors.name = '';
+    },
+  },
+
+  created() {
+    this.fetchData();
+    this.fetchVillageVariation();
   },
   methods: {
     reset() {
       this.$refs.form.reset();
     },
     fetchData() {
-      this.$store.commit("Loading_State", true);
+      this.$store.commit('Loading_State', true);
       this.$axios
-        .get("info/village/" + this.$route.params.id)
+        .get(`info/village/${this.$route.params.id}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.$store.commit("Loading_State", false);
+              this.$store.commit('Loading_State', false);
               this.data = res.data.data;
             }, 100);
           }
         })
         .catch(() => {
-          this.$store.commit("Loading_State", false);
+          this.$store.commit('Loading_State', false);
         });
     },
 
     fetchVillageVariation() {
       this.$axios
         .get(
-          "info/village/" + this.$route.params.id + "/village-detail"
+          `info/village/${this.$route.params.id}/village-detail`,
           // , {
           //   params: {
           //     page: this.pagination.current_page,
@@ -298,7 +368,7 @@ export default {
     },
     fetchVariation() {
       this.$axios
-        .get("info/village-variation")
+        .get('info/village-variation')
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
@@ -313,26 +383,26 @@ export default {
     },
     OpenModalAddAddress() {
       this.fetchVariation();
-      this.$store.commit("modalAdd_State", true);
+      this.$store.commit('modalAdd_State', true);
     },
     addMoreItem(id) {
       this.selectedDetail = id;
       this.fetchVariation();
-      this.$store.commit("modalAdd_State", true);
+      this.$store.commit('modalAdd_State', true);
     },
     closeAddModal() {
-      this.$store.commit("modalAdd_State", false);
+      this.$store.commit('modalAdd_State', false);
     },
     AddItem() {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
           .post(
-            "address/village/" + this.$route.params.id + "/village-detail",
+            `address/village/${this.$route.params.id}/village-detail`,
             {
               name: this.address.name,
               village_variation_id: this.selectedDetail,
-            }
+            },
           )
           .then((res) => {
             if (res.data.code == 200) {
@@ -341,27 +411,26 @@ export default {
                 this.closeAddModal();
                 this.fetchVillageVariation();
                 this.reset();
-                this.selectedDetail = "";
+                this.selectedDetail = '';
                 (this.address = {}),
-                  this.$store.commit("Toast_State", {
-                    value: true,
-                    color: "success",
-                    msg: res.data.message,
-                  });
+                this.$store.commit('Toast_State', {
+                  value: true,
+                  color: 'success',
+                  msg: res.data.message,
+                });
               }, 300);
             }
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", {
-                value: true,
-                color: "error",
-                msg: error.response ? error.response.data.message : 'Something went wrong',
-              });
-              if (error.response && error.response.status == 422) {
-              
-              let obj = error.response.data.errors;
-              for (let [key, message] of Object.entries(obj)) {
+            this.$store.commit('Toast_State', {
+              value: true,
+              color: 'error',
+              msg: error.response ? error.response.data.message : 'Something went wrong',
+            });
+            if (error.response && error.response.status == 422) {
+              const obj = error.response.data.errors;
+              for (const [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
               }
             }
@@ -372,31 +441,31 @@ export default {
     closeUpdate() {
       this.editVillageDetail = {};
       this.reset();
-      this.$store.commit("modalEdit_State", false);
+      this.$store.commit('modalEdit_State', false);
     },
 
     OpenModalEdit(item) {
       this.fetchVariation();
       this.editVillageDetail = item;
-      this.$store.commit("modalEdit_State", true);
+      this.$store.commit('modalEdit_State', true);
     },
     updateItem() {
-      let formData = new FormData();
-      formData.append("name", this.editVillageDetail.name);
+      const formData = new FormData();
+      formData.append('name', this.editVillageDetail.name);
       formData.append(
-        "village_variation_id",
-        this.editVillageDetail.village_variation_id
+        'village_variation_id',
+        this.editVillageDetail.village_variation_id,
       );
-      formData.append("_method", "PUT");
+      formData.append('_method', 'PUT');
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
           .post(
-            "address/village/" +
-              this.$route.params.id +
-              "/village-detail/" +
-              this.editVillageDetail.id,
-            formData
+            `address/village/${
+              this.$route.params.id
+            }/village-detail/${
+              this.editVillageDetail.id}`,
+            formData,
           )
           .then((res) => {
             if (res.data.code == 200) {
@@ -405,9 +474,9 @@ export default {
                 this.editVillageDetail = {};
                 this.reset();
                 this.fetchVillageVariation();
-                this.$store.commit("Toast_State", {
+                this.$store.commit('Toast_State', {
                   value: true,
-                  color: "success",
+                  color: 'success',
                   msg: res.data.message,
                 });
                 this.closeUpdate();
@@ -416,15 +485,14 @@ export default {
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", {
-                value: true,
-                color: "error",
-                msg: error.response ? error.response.data.message : 'Something went wrong',
-              });
-              if (error.response && error.response.status == 422) {
-              
-              var obj = error.response.data.errors;
-              for (let [key, message] of Object.entries(obj)) {
+            this.$store.commit('Toast_State', {
+              value: true,
+              color: 'error',
+              msg: error.response ? error.response.data.message : 'Something went wrong',
+            });
+            if (error.response && error.response.status == 422) {
+              const obj = error.response.data.errors;
+              for (const [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
               }
             }
@@ -433,39 +501,39 @@ export default {
     },
 
     closeDelete() {
-      this.$store.commit("modalDelete_State", false);
+      this.$store.commit('modalDelete_State', false);
     },
-    //Delete item in row
+    // Delete item in row
     deleteItem(id) {
       this.detail_id = id;
-      this.$store.commit("modalDelete_State", true);
+      this.$store.commit('modalDelete_State', true);
     },
-    //Delete Row
+    // Delete Row
     deleteAllItem(id) {
       this.detail_id = id;
-      this.$store.commit("modalDelete_State", true);
+      this.$store.commit('modalDelete_State', true);
     },
 
     DeleteItemConfirm() {
       this.loading = true;
       this.$axios
-        .delete("address/village-detail/" + this.detail_id)
+        .delete(`address/village-detail/${this.detail_id}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.loading = false;
-              this.$store.commit("Toast_State", {
+              this.$store.commit('Toast_State', {
                 value: true,
-                color: "success",
+                color: 'success',
                 msg: res.data.message,
               });
-              this.$store.commit("modalDelete_State", false);
+              this.$store.commit('modalDelete_State', false);
               this.fetchVillageVariation();
             }, 300);
           }
         })
         .catch(() => {
-          this.$store.commit("modalDelete_State", false);
+          this.$store.commit('modalDelete_State', false);
           this.loading = false;
         });
     },
@@ -473,19 +541,6 @@ export default {
     backPrevios() {
       this.$router.go(-1);
     },
-  },
-  watch: {
-    "address.name": function () {
-      this.server_errors.name = "";
-    },
-    "editVillageDetail.name": function () {
-      this.server_errors.name = "";
-    },
-  },
-
-  created() {
-    this.fetchData();
-    this.fetchVillageVariation();
   },
 };
 </script>

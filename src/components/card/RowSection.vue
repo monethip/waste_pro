@@ -1,6 +1,9 @@
 <template>
   <v-row>
-    <v-col v-for="(card, index) in cards" :key="index">
+    <v-col
+      v-for="(card, index) in cards"
+      :key="index"
+    >
       <MoneyCard
         :title="card.status_la"
         :total="card.total"
@@ -15,13 +18,13 @@
 </template>
 
 <script>
-import MoneyCard from "./MoneyCard.vue";
+import MoneyCard from './MoneyCard.vue';
 
 export default {
-  props: ["cards"],
   components: {
     MoneyCard,
   },
+  props: ['cards'],
   data() {
     return {};
   },

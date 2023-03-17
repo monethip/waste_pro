@@ -1,7 +1,11 @@
 <template>
   <v-container>
     <div>
-      <v-row v-for="(sum, index) in summary" :key="index" class="mb-n6 mt-n6">
+      <v-row
+        v-for="(sum, index) in summary"
+        :key="index"
+        class="mb-n6 mt-n6"
+      >
         <v-col>
           <h3>ປີ {{ sum.year }}</h3>
         </v-col>
@@ -63,23 +67,24 @@
         :disable-pagination="true"
         hide-default-footer
       >
-        <!--Role --> </v-data-table
-      ><br />
+      <!--Role -->
+      </v-data-table><br>
       <template>
         <Pagination
           v-if="pagination.total_pages > 1"
           :pagination="pagination"
           :offset="offset"
           @paginate="fetchData()"
-        ></Pagination>
+        />
       </template>
     </div>
   </v-container>
 </template>
 
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
-import collection from "@views/report/collection";
+import { GetOldValueOnInput } from '@/Helpers/GetValue';
+import collection from '@views/report/collection';
+
 export default {
   mixins: [collection],
   // name: "HomeInvoice",
@@ -91,30 +96,43 @@ export default {
     return {
       customers: [],
       loading: false,
-      customerId: "",
-      //Pagination
+      customerId: '',
+      // Pagination
       offset: 12,
       pagination: {},
       per_page: 100,
-      search: "",
-      oldVal: "",
+      search: '',
+      oldVal: '',
       // invoices: [],
       // summary: {},
       headers: [
-        { text: "ວັນທີ", value: "date", sortable: false },
-        { text: "ບໍລິສັດ", value: "company_name" },
-        { text: "ປະເພດການເກັບ", value: "collection_type" },
+        { text: 'ວັນທີ', value: 'date', sortable: false },
+        { text: 'ບໍລິສັດ', value: 'company_name' },
+        { text: 'ປະເພດການເກັບ', value: 'collection_type' },
         {
-          text: "Container",
-          value: "container",
+          text: 'Container',
+          value: 'container',
           sortable: false,
-          align: "center",
+          align: 'center',
         },
-        { text: "ສະຖານທີ່", value: "name", sortable: false },
-        { text: "ສະຖານະ", value: "status", sortable: false },
+        { text: 'ສະຖານທີ່', value: 'name', sortable: false },
+        { text: 'ສະຖານະ', value: 'status', sortable: false },
         // { text: "", value: "actions", sortable: false },
       ],
     };
+  },
+  watch: {
+    tab() {
+      if (this.tab == 'tab-2') {
+        // this.fetchData();
+      }
+    },
+  },
+  created() {
+    this.pagination = [];
+    // this.fetchDataInvoice();
+    // console.log(this.invoices);
+    // this.fetchData();
   },
   methods: {
     // fetchDataInvoice() {
@@ -166,19 +184,6 @@ export default {
     Search() {
       GetOldValueOnInput(this);
     },
-  },
-  watch: {
-    tab: function () {
-      if (this.tab == "tab-2") {
-        // this.fetchData();
-      }
-    },
-  },
-  created() {
-    this.pagination = [];
-    // this.fetchDataInvoice();
-    // console.log(this.invoices);
-    // this.fetchData();
   },
 };
 </script>

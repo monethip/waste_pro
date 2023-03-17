@@ -2,7 +2,11 @@
   <v-container>
     <div>
       <div v-if="summary">
-        <v-row v-for="(sum, index) in summary" :key="index" class="mb-n6 mt-0">
+        <v-row
+          v-for="(sum, index) in summary"
+          :key="index"
+          class="mb-n6 mt-0"
+        >
           <v-col>
             <h3>ປີ {{ sum.year }}</h3>
           </v-col>
@@ -46,40 +50,45 @@
         :disable-pagination="true"
         hide-default-footer
       >
-<!--        <template v-slot:item.status="{ item }">-->
-<!--          <div>-->
-<!--            <span class="success&#45;&#45;text">{{ item.status }}</span>-->
-<!--          </div>-->
-<!--        </template>-->
+        <!--        <template v-slot:item.status="{ item }">-->
+        <!--          <div>-->
+        <!--            <span class="success&#45;&#45;text">{{ item.status }}</span>-->
+        <!--          </div>-->
+        <!--        </template>-->
         <template v-slot:item.status="{ item }">
-          <v-chip label :color="statusColor(item.status)">{{
+          <v-chip
+            label
+            :color="statusColor(item.status)"
+          >
+            {{
               item.status
-            }}</v-chip>
+            }}
+          </v-chip>
         </template>
-      </v-data-table
-      ><br />
+      </v-data-table><br>
       <template>
         <Pagination
           v-if="pagination.total_pages > 1"
           :pagination="pagination"
           :offset="offset"
           @paginate="fetchData()"
-        ></Pagination>
+        />
       </template>
     </div>
   </v-container>
 </template>
 
 <script>
-import colleciton from "@views/report/collection";
+import colleciton from '@views/report/collection';
+
 export default {
+  name: 'HomeInvoice',
   mixins: [colleciton],
-  name: "HomeInvoice",
   // props: ["tab"],
-  props:{
+  props: {
     callback: {
-      type: Function
-    }
+      type: Function,
+    },
   },
   title() {
     return `Vientiane Waste Co-Dev|Report Invoice`;
@@ -88,36 +97,28 @@ export default {
     return {
       customers: [],
       loading: false,
-      customerId: "",
-      //Pagination
+      customerId: '',
+      // Pagination
       offset: 12,
       pagination: {},
       per_page: 100,
-      search: "",
-      oldVal: "",
+      search: '',
+      oldVal: '',
       headers: [
-        { text: "ວັນທີ", value: "date", sortable: false },
-        { text: "ລູກຄ້າ", value: "full_name" },
-        { text: "ຈຳນວນຖົງ", value: "bag", sortable: false, align: "center" },
-        { text: "ສະຖານທີ່", value: "name", sortable: false },
-        { text: "ສະຖານະ", value: "status", sortable: false },
+        { text: 'ວັນທີ', value: 'date', sortable: false },
+        { text: 'ລູກຄ້າ', value: 'full_name' },
+        {
+          text: 'ຈຳນວນຖົງ', value: 'bag', sortable: false, align: 'center',
+        },
+        { text: 'ສະຖານທີ່', value: 'name', sortable: false },
+        { text: 'ສະຖານະ', value: 'status', sortable: false },
         // { text: "", value: "actions", sortable: false },
       ],
     };
   },
-  methods: {
-    statusColor(value) {
-      if (value == "success") return "success";
-      else if (value == "pending") return "primary";
-      else return "info";
-    },
-    // execute() {
-    //   this.$emit('callback');
-    // }
-  },
   watch: {
-    tab: function () {
-      if (this.tab == "tab-1") {
+    tab() {
+      if (this.tab == 'tab-1') {
         this.pagination = [];
         this.fetchData();
       }
@@ -129,6 +130,16 @@ export default {
     // console.log(this.execute())
     this.fetchData();
     this.pagination = [];
+  },
+  methods: {
+    statusColor(value) {
+      if (value == 'success') return 'success';
+      if (value == 'pending') return 'primary';
+      return 'info';
+    },
+    // execute() {
+    //   this.$emit('callback');
+    // }
   },
 };
 </script>

@@ -1,10 +1,17 @@
 <template>
   <v-container>
-    <v-breadcrumbs large class="mt-n4">
-      <v-btn text class="text-primary" @click="backPrevios()">
+    <v-breadcrumbs
+      large
+      class="mt-n4"
+    >
+      <v-btn
+        text
+        class="text-primary"
+        @click="backPrevios()"
+      >
         <v-icon>mdi-keyboard-backspace</v-icon>
       </v-btn>ແກ້ໄຂແຜນເສັ້ນທາງ
-      <v-spacer></v-spacer>
+      <v-spacer />
       <span class="mr-4">
         <v-icon color="red">mdi-map-marker</v-icon>ຍັງບໍທັນຢູ່ໃນແຜນ
       </span>
@@ -14,13 +21,16 @@
     </v-breadcrumbs>
 
     <v-row>
-      <v-col cols="12" class="mb-4">
+      <v-col
+        cols="12"
+        class="mb-4"
+      >
         <GmapMap
           v-if="customers"
           :center="getCenter().lat > 0 || getCenter().lat < 0 ? getCenter() : { lat: 0, lng: 0 }"
           :zoom="14"
           style="width: 100%; height: 400px"
-          :disableDefaultUI="true"
+          :disable-default-u-i="true"
         >
           <gmap-info-window
             :options="infoOptions"
@@ -28,17 +38,19 @@
             :opened="infoOpened"
             :conent="infoContent"
             @closeclick="infoOpened = false"
-          >{{ infoContent }}</gmap-info-window>
+          >
+            {{ infoContent }}
+          </gmap-info-window>
           <GmapMarker
-            :key="index"
             v-for="(m, index) in customers"
+            :key="index"
             :position="getMarkers(m)"
-            @click="toggleInfo(m, index)"
             :draggable="false"
             :icon="getSiteIcon(m)"
             :animation="2"
             :clickable="true"
             :label="(index + 1).toString()"
+            @click="toggleInfo(m, index)"
           />
         </GmapMap>
       </v-col>
@@ -47,30 +59,42 @@
       <v-col cols="2">
         <v-btn
           class="btn-primary"
-          @click="updateRoutePlan()"
           :loading="loading"
           :disabled="loading"
-        >ແກ້ໄຂ</v-btn>
+          @click="updateRoutePlan()"
+        >
+          ແກ້ໄຂ
+        </v-btn>
       </v-col>
       <v-col cols="2">
-        <h4 v-if="customers">ລວມ {{ customers.length }}</h4>
+        <h4 v-if="customers">
+          ລວມ {{ customers.length }}
+        </h4>
       </v-col>
       <v-col cols="6">
-        <v-text-field label="Name" required v-model="plan.name" outlined dense></v-text-field>
-        <p class="errors">{{ server_errors.name }}</p>
+        <v-text-field
+          v-model="plan.name"
+          label="Name"
+          required
+          outlined
+          dense
+        />
+        <p class="errors">
+          {{ server_errors.name }}
+        </p>
       </v-col>
 
       <v-col cols="2">
         <v-text-field
+          v-model="search"
           outlined
           dense
           clearable
           prepend-inner-icon="mdi-magnify"
           label="ຄົ້ນຫາ"
           type="text"
-          v-model="search"
           @keyup.enter="Search()"
-        ></v-text-field>
+        />
       </v-col>
     </v-row>
     <div>
@@ -86,20 +110,32 @@
               <h4>ລູກຄ້າທີ່ມີຢູ່</h4>
               <main class="page page--table">
                 <v-data-table
+                  v-model="selectedRows"
                   :headers="headers"
                   :items="customers"
                   :search="search"
                   :disable-pagination="true"
                   hide-default-footer
-                  v-model="selectedRows"
                   item-key="id"
                   class="page__table"
                 >
                   <template v-slot:body="props">
-                    <draggable :list="props.items" tag="tbody" @change="afterAdd">
-                      <tr v-for="(user, index) in props.items" :key="index">
+                    <draggable
+                      :list="props.items"
+                      tag="tbody"
+                      @change="afterAdd"
+                    >
+                      <tr
+                        v-for="(user, index) in props.items"
+                        :key="index"
+                      >
                         <td>
-                          <v-icon small class="page__grab-icon">mdi-arrow-all</v-icon>
+                          <v-icon
+                            small
+                            class="page__grab-icon"
+                          >
+                            mdi-arrow-all
+                          </v-icon>
                         </td>
                         <!-- <td>{{ index + 1 }}</td> -->
                         <td>{{ user.priority }}</td>
@@ -110,7 +146,9 @@
                         <td
                           contenteditable
                           @input="event => onInputRound(event, user)"
-                        >{{ getRound(user) }}</td>
+                        >
+                          {{ getRound(user) }}
+                        </td>
 
                         <!-- <td>{{ user.address_detail }}</td>
                         <td>{{ user.village.name }}</td>
@@ -131,37 +169,55 @@
                 </v-data-table>
               </main>
             </v-col>
-            <v-divider vertical></v-divider>
+            <v-divider vertical />
             <v-col>
               <v-row class="mb-n8">
                 <v-col>
                   <div class="mb-2">
-                    <v-btn text color="primary" @click="addCustomer">
-                      <v-icon medium>mdi-plus</v-icon>ເພີ່ມລູກຄ້າ
+                    <v-btn
+                      text
+                      color="primary"
+                      @click="addCustomer"
+                    >
+                      <v-icon medium>
+                        mdi-plus
+                      </v-icon>ເພີ່ມລູກຄ້າ
                     </v-btn>
                   </div>
                 </v-col>
-                <v-spacer></v-spacer>
+                <v-spacer />
                 <v-col>
                   <h4>ລູກຄ້າທີ່ເພີ່ມເຂົ້າໃໝ່</h4>
                 </v-col>
               </v-row>
               <main class="page page--table">
                 <v-data-table
+                  v-model="selectedRows"
                   :headers="newHeaders"
                   :items="newCustomer"
                   :search="search"
                   :disable-pagination="true"
                   hide-default-footer
-                  v-model="selectedRows"
                   item-key="id"
                   class="page__table"
                 >
                   <template v-slot:body="props">
-                    <draggable :list="props.items" tag="tbody" @change="orderCustomer">
-                      <tr v-for="(user, index) in props.items" :key="index">
+                    <draggable
+                      :list="props.items"
+                      tag="tbody"
+                      @change="orderCustomer"
+                    >
+                      <tr
+                        v-for="(user, index) in props.items"
+                        :key="index"
+                      >
                         <td>
-                          <v-icon small class="page__grab-icon">mdi-arrow-all</v-icon>
+                          <v-icon
+                            small
+                            class="page__grab-icon"
+                          >
+                            mdi-arrow-all
+                          </v-icon>
                         </td>
                         <!-- <td>{{ index + 1 }}</td> -->
                         <!--                       <td>{{ user.priority }}</td>-->
@@ -184,7 +240,12 @@
                               mdi-eye
                             </v-icon>
                           -->
-                          <v-icon small @click="deleteNewCustomer(index)">mdi-delete</v-icon>
+                          <v-icon
+                            small
+                            @click="deleteNewCustomer(index)"
+                          >
+                            mdi-delete
+                          </v-icon>
                         </td>
                       </tr>
                     </draggable>
@@ -209,54 +270,54 @@
               <v-row class="mb-n6">
                 <v-col cols>
                   <v-select
+                    v-model="selectedFavoriteDate"
                     outlined
                     dense
                     :items="favorite_dates"
-                    v-model="selectedFavoriteDate"
                     item-text="name"
                     item-value="name"
                     label="ມື້ບໍລິການ"
                     multiple
-                  ></v-select>
+                  />
                 </v-col>
                 <v-col>
                   <v-autocomplete
+                    v-model="selectedCustomerStatus"
                     outlined
                     dense
                     :items="customerStatus"
-                    v-model="selectedCustomerStatus"
                     item-text="name"
                     item-value="value"
                     label="ສະຖານະລູກຄ້າ"
                     multiple
                     clearable
-                  ></v-autocomplete>
+                  />
                 </v-col>
                 <v-col>
                   <v-select
+                    v-model="selectedCost"
                     outlined
                     dense
                     :items="costs"
-                    v-model="selectedCost"
                     item-text="name"
                     item-value="value"
                     label="ປະເພດບໍລິການ"
                     multiple
-                  ></v-select>
+                  />
                 </v-col>
               </v-row>
               <v-row>
                 <v-col>
                   <v-autocomplete
+                    v-model="selectedDistrict"
                     outlined
                     dense
                     :items="districts"
-                    v-model="selectedDistrict"
                     item-text="name"
                     item-value="id"
                     label="ເມືອງ"
                     clearable
-                  ></v-autocomplete>
+                  />
                 </v-col>
               </v-row>
               <v-row>
@@ -279,7 +340,9 @@
                         close
                         @click="data.select"
                         @click:close="remove(data.item)"
-                      >{{ data.item.name }}</v-chip>
+                      >
+                        {{ data.item.name }}
+                      </v-chip>
                     </template>
                   </v-autocomplete>
                 </v-col>
@@ -299,25 +362,32 @@
               </v-row>
 
               <v-data-table
+                v-model="selectedRows"
                 :headers="addheaders"
                 :items="addCustomers"
                 :disable-pagination="true"
                 hide-default-footer
-                v-model="selectedRows"
                 item-key="id"
                 class="page__table"
               >
                 <template v-slot:top>
                   <v-text-field
                     v-model="search"
-                    @keyup.enter="fetchAddCustomer"
                     label="Search"
                     class="mx-4"
-                  ></v-text-field>
+                    @keyup.enter="fetchAddCustomer"
+                  />
                 </template>
                 <template v-slot:body="props">
-                  <draggable :list="props.items" tag="tbody" @change="afterAdd">
-                    <tr v-for="(user, index) in props.items" :key="index">
+                  <draggable
+                    :list="props.items"
+                    tag="tbody"
+                    @change="afterAdd"
+                  >
+                    <tr
+                      v-for="(user, index) in props.items"
+                      :key="index"
+                    >
                       <td>{{ index + 1 }}</td>
                       <td>{{ user.id }}</td>
                       <td>{{ user.company_name }}</td>
@@ -326,26 +396,37 @@
                       <td>{{ user.village.name }}</td>
                       <td>{{ user.district.name }}</td>
                       <td>
-                        <v-icon small @click="addItem(addCustomers, user)">mdi-plus</v-icon>
+                        <v-icon
+                          small
+                          @click="addItem(addCustomers, user)"
+                        >
+                          mdi-plus
+                        </v-icon>
                       </td>
                     </tr>
                   </draggable>
                 </template>
               </v-data-table>
 
-              <br />
+              <br>
               <template>
                 <Pagination
                   v-if="pagination.total_pages > 1"
                   :pagination="pagination"
                   :offset="offset"
                   @paginate="fetchAddCustomer()"
-                ></Pagination>
+                />
               </template>
             </v-container>
             <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeAddModal()">Close</v-btn>
+              <v-spacer />
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="closeAddModal()"
+              >
+                Close
+              </v-btn>
               <!--
               <v-btn
                 color="blue darken-1"
@@ -367,16 +448,24 @@
     <ModalDelete>
       <template>
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+          <v-spacer />
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="closeDelete"
+          >
+            Cancel
+          </v-btn>
           <v-btn
             color="blue darken-1"
             text
             :loading="loading"
             :disabled="loading"
             @click="deleteNewCustomerConfirm"
-          >OK</v-btn>
-          <v-spacer></v-spacer>
+          >
+            OK
+          </v-btn>
+          <v-spacer />
         </v-card-actions>
       </template>
     </ModalDelete>
@@ -384,15 +473,15 @@
 </template>
 
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
-import draggable from "vuedraggable";
-import queryOption from "@/Helpers/queryOption";
+import { GetOldValueOnInput } from '@/Helpers/GetValue';
+import draggable from 'vuedraggable';
+import queryOption from '@/Helpers/queryOption';
 
 export default {
-  name: "Customer",
+  name: 'Customer',
   // props: ["selectedData", "villages", "items"],
   components: {
-    draggable
+    draggable,
   },
   data() {
     return {
@@ -402,26 +491,26 @@ export default {
       customerRounds: [],
       countcutomer: 0,
       loading: false,
-      customerId: "",
-      //Pagination
+      customerId: '',
+      // Pagination
       offset: 12,
       pagination: {},
       per_page: 100,
-      search: "",
-      oldVal: "",
+      search: '',
+      oldVal: '',
       selectedVillage: [],
       selectedCustomer: [],
       exclude_customers: [],
       selectedRows: [],
       newCustomer: [],
 
-      //Filter
+      // Filter
       districts: [],
-      selectedDistrict: "",
+      selectedDistrict: '',
       villages: [],
       customer: {},
-      customerIndex: "",
-      name: "",
+      customerIndex: '',
+      name: '',
       server_errors: {},
       plan: {},
 
@@ -432,75 +521,75 @@ export default {
       costs: [
         {
           id: 1,
-          value: "container",
-          name: "ຄອນເທັນເນີ"
+          value: 'container',
+          name: 'ຄອນເທັນເນີ',
         },
         {
           id: 2,
-          value: "fix_cost",
-          name: "ທຸລະກິດເປັນຖ້ຽວ"
+          value: 'fix_cost',
+          name: 'ທຸລະກິດເປັນຖ້ຽວ',
         },
         {
           id: 3,
-          value: "chartered",
-          name: "ມອບເໝົາ"
+          value: 'chartered',
+          name: 'ມອບເໝົາ',
         },
         {
           id: 4,
-          value: "bag",
-          name: "ບໍລິມາດ"
-        }
+          value: 'bag',
+          name: 'ບໍລິມາດ',
+        },
       ],
       selectedCustomerStatus: [],
       customerStatus: [
         {
           id: 1,
-          value: "calendar",
-          name: "ຍັງບໍ່ມີແຜນເດີນລົດ"
+          value: 'calendar',
+          name: 'ຍັງບໍ່ມີແຜນເດີນລົດ',
         },
         {
           id: 2,
-          value: "route_plan",
-          name: "ຍັງບໍ່ມີເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ"
-        }
+          value: 'route_plan',
+          name: 'ຍັງບໍ່ມີເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ',
+        },
       ],
 
       headers: [
-        { text: "", value: "" },
-        { text: "ລຳດັບ", value: "" },
-        { text: "Id", value: "id" },
-        { text: "ລູກຄ້າ", value: "" },
-        { text: "ຈຳນວນຮອບເລີ່ມຕົ້ນ", value: "" },
+        { text: '', value: '' },
+        { text: 'ລຳດັບ', value: '' },
+        { text: 'Id', value: 'id' },
+        { text: 'ລູກຄ້າ', value: '' },
+        { text: 'ຈຳນວນຮອບເລີ່ມຕົ້ນ', value: '' },
         // { text: "Phone", value: "user.phone", sortable: false },
         // { text: "ລາຍລະອຽດທີ່ຢູ່", value: "address_detail" },
         // { text: "ບ້ານ", value: "village.name", sortable: true },
         // { text: "ເມືອງ", value: "district.name", sortable: true },
-        { text: "", value: "actions", sortable: false }
+        { text: '', value: 'actions', sortable: false },
       ],
       newHeaders: [
-        { text: "", value: "" },
-        { text: "Id", value: "id" },
-        { text: "ລູກຄ້າ", value: "" },
-        { text: "ທີ່ຢູ່", value: "address_detail" },
-        { text: "ລາຍລະອຽດການບໍລິການ", value: "collect_description" },
-        { text: "", value: "actions", sortable: false }
+        { text: '', value: '' },
+        { text: 'Id', value: 'id' },
+        { text: 'ລູກຄ້າ', value: '' },
+        { text: 'ທີ່ຢູ່', value: 'address_detail' },
+        { text: 'ລາຍລະອຽດການບໍລິການ', value: 'collect_description' },
+        { text: '', value: 'actions', sortable: false },
       ],
 
       addheaders: [
-        { text: "#", value: "" },
-        { text: "Id", value: "id" },
-        { text: "ລູກຄ້າ", value: "" },
-        { text: "Phone", value: "user.phone", sortable: false },
-        { text: "ທີ່ຢູ່", value: "address_detail" },
-        { text: "ລາຍລະອຽດການບໍລິການ", value: "collect_description" },
+        { text: '#', value: '' },
+        { text: 'Id', value: 'id' },
+        { text: 'ລູກຄ້າ', value: '' },
+        { text: 'Phone', value: 'user.phone', sortable: false },
+        { text: 'ທີ່ຢູ່', value: 'address_detail' },
+        { text: 'ລາຍລະອຽດການບໍລິການ', value: 'collect_description' },
         // { text: "ບ້ານ", value: "village.name", sortable: true },
         // { text: "ເມືອງ", value: "district.name", sortable: true },
-        { text: "", value: "actions", sortable: false }
+        { text: '', value: 'actions', sortable: false },
       ],
-      //Map
+      // Map
       latlng: {
         lat: 0,
-        lng: 0
+        lng: 0,
       },
       markers: [],
       infoPosition: null,
@@ -510,21 +599,52 @@ export default {
       infoOptions: {
         pixelOffset: {
           width: 0,
-          height: -35
-        }
-      }
+          height: -35,
+        },
+      },
     };
+  },
+  watch: {
+    selectedFavoriteDate() {
+      this.pagination.current_page = '';
+      this.fetchAddCustomer();
+    },
+    selectedCustomerStatus() {
+      this.pagination.current_page = '';
+      this.fetchAddCustomer();
+    },
+    search(value) {
+      if (value != '') {
+        this.fetchAddCustomer();
+      }
+    },
+
+    selectedVillage() {
+      this.fetchAddCustomer();
+    },
+    selectedDistrict() {
+      this.fetchAddCustomer();
+      this.fetchVillage();
+    },
+    selectedCost() {
+      this.fetchAddCustomer();
+    },
+  },
+  created() {
+    this.fetchData();
+    this.fetchDetail();
+    this.fetchFavorite();
   },
   methods: {
     getRound(user) {
       const exists = this.customerRounds.find(
-        cus => cus.customer_id == user.customer_id
+        (cus) => cus.customer_id == user.customer_id,
       );
       if (exists) return exists.round;
     },
     onInputRound(e, user) {
       console.log(1, this.customerRounds);
-      if (e.target.innerText && !isNaN(e.target.innerText)) {
+      if (e.target.innerText && !Number.isNaN(e.target.innerText)) {
         for (const [index, cus] of this.customerRounds.entries()) {
           if (cus.customer_id == user.customer_id) {
             this.customerRounds[index].round = e.target.innerText;
@@ -535,16 +655,16 @@ export default {
       console.log(2, this.customerRounds);
     },
     afterAdd(evt) {
-      const oldIndex = evt.moved.oldIndex;
-      const newIndex = evt.moved.newIndex;
-      let tmpOrder = this.customers[oldIndex];
+      const { oldIndex } = evt.moved;
+      const { newIndex } = evt.moved;
+      const tmpOrder = this.customers[oldIndex];
       this.customers.splice(oldIndex, 1);
       this.customers.splice(newIndex, 0, tmpOrder);
     },
     orderCustomer(evt) {
-      const oldIndex = evt.moved.oldIndex;
-      const newIndex = evt.moved.newIndex;
-      let tmpOrder = this.newCustomer[oldIndex];
+      const { oldIndex } = evt.moved;
+      const { newIndex } = evt.moved;
+      const tmpOrder = this.newCustomer[oldIndex];
       this.newCustomer.splice(oldIndex, 1);
       this.newCustomer.splice(newIndex, 0, tmpOrder);
     },
@@ -552,31 +672,31 @@ export default {
       this.$router.go(-1);
     },
     addCustomer() {
-      this.$store.commit("modalAdd_State", true);
+      this.$store.commit('modalAdd_State', true);
       this.fetchAddCustomer();
       this.fetchAddress();
     },
     fetchData() {
-      this.$store.commit("Loading_State", true);
+      this.$store.commit('Loading_State', true);
       this.$axios
-        .get("route-plan/" + this.$route.params.id + "/route-plan-detail", {
+        .get(`route-plan/${this.$route.params.id}/route-plan-detail`, {
           params: {
             // page: this.pagination.current_page,
             // per_page: this.per_page,
             // // filter: this.search,
             // villages: this.selectedVillage,
-          }
+          },
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.$store.commit("Loading_State", false);
+              this.$store.commit('Loading_State', false);
               this.customers = res.data.data;
-              let rounds = [];
+              const rounds = [];
               for (const cus of this.customers) {
                 rounds.push({
                   customer_id: cus.customer_id,
-                  round: cus.default_round
+                  round: cus.default_round,
                 });
               }
 
@@ -587,11 +707,11 @@ export default {
             }, 100);
           }
         })
-        .catch(error => {
-          this.$store.commit("Loading_State", false);
+        .catch((error) => {
+          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status == 422) {
-            let obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
+            const obj = error.response.data.errors;
+            for (const [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
           }
@@ -600,8 +720,8 @@ export default {
 
     fetchDetail() {
       this.$axios
-        .get("route-plan/" + this.$route.params.id)
-        .then(res => {
+        .get(`route-plan/${this.$route.params.id}`)
+        .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.plan = res.data.data;
@@ -612,7 +732,7 @@ export default {
     },
 
     closeDelete() {
-      this.$store.commit("modalDelete_State", false);
+      this.$store.commit('modalDelete_State', false);
     },
     // deleteItem(index) {
     //   this.customerIndex = index;
@@ -646,23 +766,23 @@ export default {
 
     deleteNewCustomer(index) {
       this.customerIndex = index;
-      this.$store.commit("modalDelete_State", true);
+      this.$store.commit('modalDelete_State', true);
     },
 
     deleteNewCustomerConfirm() {
       this.loading = true;
       this.newCustomer.splice(this.customerIndex, 1);
-      this.$store.commit("Toast_State", {
+      this.$store.commit('Toast_State', {
         value: true,
-        color: "success",
-        msg: "ລຶບຂໍ້ມູນສຳເລັດແລ້ວ"
+        color: 'success',
+        msg: 'ລຶບຂໍ້ມູນສຳເລັດແລ້ວ',
       });
       // this.fetchData();
       this.loading = false;
-      this.$store.commit("modalDelete_State", false);
+      this.$store.commit('modalDelete_State', false);
     },
     addItem(array, data) {
-      let newId = data.id;
+      const newId = data.id;
       let found = false;
       for (let i = 0; i < array.length; i++) {
         if (array[i].id === newId) {
@@ -674,15 +794,11 @@ export default {
       this.addCustomers.splice(data.index, 1);
     },
     closeAddModal() {
-      this.$store.commit("modalAdd_State", false);
+      this.$store.commit('modalAdd_State', false);
     },
     updateRoutePlan() {
-      const oldId = this.customers.map(item => {
-        return item.customer_id;
-      });
-      const newId = this.newCustomer.map(item => {
-        return item.id;
-      });
+      const oldId = this.customers.map((item) => item.customer_id);
+      const newId = this.newCustomer.map((item) => item.id);
       const allId = oldId.concat(newId);
       // let formData = new FormData();
       // allId.map((item) => {
@@ -700,55 +816,55 @@ export default {
       const body = {
         name: this.plan.name,
         customers: allId,
-        customer_rounds: this.customerRounds
+        customer_rounds: this.customerRounds,
       };
 
       if (this.customers.length > 0) {
         this.loading = true;
         this.$axios
-          .put("update-route-plan/" + this.$route.params.id, body)
-          .then(res => {
+          .put(`update-route-plan/${this.$route.params.id}`, body)
+          .then((res) => {
             if (res.status == 200) {
               setTimeout(() => {
                 this.loading = false;
               }, 300);
               this.$router.push({
-                name: "ViewCompanyRoutePlan",
-                params: { id: res.data.data.id }
+                name: 'ViewCompanyRoutePlan',
+                params: { id: res.data.data.id },
               });
             }
           })
-          .catch(error => {
-            this.$store.commit("Toast_State", {
+          .catch((error) => {
+            this.$store.commit('Toast_State', {
               value: true,
-              color: "error",
+              color: 'error',
               msg: error.response
                 ? error.response.data.message
-                : "Something went wrong"
+                : 'Something went wrong',
             });
             this.loading = false;
           });
       } else {
-        this.$store.commit("Toast_State", {
+        this.$store.commit('Toast_State', {
           value: true,
-          color: "error",
-          msg: "ກາລຸນາເລືອກລູກຄ້າກ່ອນ"
+          color: 'error',
+          msg: 'ກາລຸນາເລືອກລູກຄ້າກ່ອນ',
         });
       }
     },
 
     viewPage(id) {
       this.$router.push({
-        name: "ViewClient",
-        params: { id }
+        name: 'ViewClient',
+        params: { id },
       });
       // window.open(route.href, "_blank");
     },
 
     fetchAddCustomer() {
-      this.$store.commit("Loading_State", true);
+      this.$store.commit('Loading_State', true);
       this.$axios
-        .get("company", {
+        .get('company', {
           params: queryOption([
             { page: this.pagination.current_page },
             { per_page: this.per_page },
@@ -758,13 +874,13 @@ export default {
             { cost_by: this.selectedCost },
             { favorite_dates: this.selectedFavoriteDate },
             { without: this.selectedCustomerStatus },
-            { filter: this.search }
-          ])
+            { filter: this.search },
+          ]),
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.$store.commit("Loading_State", false);
+              this.$store.commit('Loading_State', false);
               this.addCustomers = res.data.data.data;
               // this.selectedAllCustomer = res.data.data;
               this.pagination = res.data.data.pagination;
@@ -772,11 +888,11 @@ export default {
             }, 100);
           }
         })
-        .catch(error => {
-          this.$store.commit("Loading_State", false);
+        .catch((error) => {
+          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status == 422) {
-            var obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
+            const obj = error.response.data.errors;
+            for (const [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
           }
@@ -784,12 +900,12 @@ export default {
     },
     fetchAddress() {
       this.$axios
-        .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
-        .then(res => {
+        .get('info/address', { params: { filter: 'ນະຄອນຫລວງວຽງຈັນ' } })
+        .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.address = res.data.data;
-              this.address.map(item => {
+              this.address.map((item) => {
                 this.districts = item.districts;
               });
             }, 300);
@@ -800,8 +916,8 @@ export default {
 
     fetchVillage() {
       this.$axios
-        .get("info/district/" + this.selectedDistrict + "/village")
-        .then(res => {
+        .get(`info/district/${this.selectedDistrict}/village`)
+        .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.villages = res.data.data;
@@ -815,24 +931,23 @@ export default {
       GetOldValueOnInput(this);
     },
 
-    //Google map
+    // Google map
     getCenter() {
       if (this.customers.length) {
         if (parseFloat(this.customers[0].customer.lat) == null) {
           return this.latlng;
-        } else {
-          const latlng = {
-            lat: parseFloat(this.customers[0].customer.lat),
-            lng: parseFloat(this.customers[0].customer.lng)
-          };
-          return latlng;
         }
+        const latlng = {
+          lat: parseFloat(this.customers[0].customer.lat),
+          lng: parseFloat(this.customers[0].customer.lng),
+        };
+        return latlng;
       }
       return this.latlng;
     },
     getSiteIcon(status) {
       const pin1 = {
-        url: require("@coms/../../src/assets/pin1.svg"),
+        url: require('@coms/../../src/assets/pin1.svg'),
         zoomControl: true,
         mapTypeControl: false,
         scaleControl: false,
@@ -843,18 +958,18 @@ export default {
         size: {
           width: 35,
           height: 55,
-          f: "px",
-          b: "px"
+          f: 'px',
+          b: 'px',
         },
         scaledSize: {
           width: 35,
           height: 55,
-          f: "px",
-          b: "px"
-        }
+          f: 'px',
+          b: 'px',
+        },
       };
       const pin2 = {
-        url: require("@coms/../../src/assets/pin2.svg"),
+        url: require('@coms/../../src/assets/pin2.svg'),
         zoomControl: true,
         mapTypeControl: false,
         scaleControl: false,
@@ -865,16 +980,16 @@ export default {
         size: {
           width: 35,
           height: 55,
-          f: "px",
-          b: "px"
+          f: 'px',
+          b: 'px',
         },
-        color: "#000",
+        color: '#000',
         scaledSize: {
           width: 35,
           height: 55,
-          f: "px",
-          b: "px"
-        }
+          f: 'px',
+          b: 'px',
+        },
       };
 
       try {
@@ -892,7 +1007,7 @@ export default {
       if (m.customer !== null) {
         return {
           lat: parseFloat(m.customer.lat),
-          lng: parseFloat(m.customer.lng)
+          lng: parseFloat(m.customer.lng),
         };
       }
     },
@@ -909,8 +1024,8 @@ export default {
     },
     fetchFavorite() {
       this.$axios
-        .get("favorite-date")
-        .then(res => {
+        .get('favorite-date')
+        .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.favorite_dates = res.data.data;
@@ -918,39 +1033,8 @@ export default {
           }
         })
         .catch(() => {});
-    }
+    },
   },
-  watch: {
-    selectedFavoriteDate: function() {
-      this.pagination.current_page = "";
-      this.fetchAddCustomer();
-    },
-    selectedCustomerStatus: function() {
-      this.pagination.current_page = "";
-      this.fetchAddCustomer();
-    },
-    search: function(value) {
-      if (value != "") {
-        this.fetchAddCustomer();
-      }
-    },
-
-    selectedVillage: function() {
-      this.fetchAddCustomer();
-    },
-    selectedDistrict: function() {
-      this.fetchAddCustomer();
-      this.fetchVillage();
-    },
-    selectedCost: function() {
-      this.fetchAddCustomer();
-    }
-  },
-  created() {
-    this.fetchData();
-    this.fetchDetail();
-    this.fetchFavorite();
-  }
 };
 </script>
 

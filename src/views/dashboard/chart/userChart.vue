@@ -1,7 +1,10 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="11" sm="5">
+      <v-col
+        cols="11"
+        sm="5"
+      >
         <v-menu
           ref="menu"
           v-model="menu"
@@ -20,19 +23,37 @@
               readonly
               v-bind="attrs"
               v-on="on"
-            ></v-text-field>
+            />
           </template>
-          <v-date-picker v-model="date" type="month" no-title scrollable>
-            <v-spacer></v-spacer>
-            <v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
-            <v-btn text color="primary" @click="$refs.menu.save(date)">
+          <v-date-picker
+            v-model="date"
+            type="month"
+            no-title
+            scrollable
+          >
+            <v-spacer />
+            <v-btn
+              text
+              color="primary"
+              @click="menu = false"
+            >
+              Cancel
+            </v-btn>
+            <v-btn
+              text
+              color="primary"
+              @click="$refs.menu.save(date)"
+            >
               OK
             </v-btn>
           </v-date-picker>
         </v-menu>
       </v-col>
     </v-row>
-    <apexchart :options="options" :series="series"></apexchart>
+    <apexchart
+      :options="options"
+      :series="series"
+    />
   </div>
 </template>
 <script>
@@ -44,21 +65,21 @@ export default {
       modal: false,
       options: {
         chart: {
-          type: "bar",
+          type: 'bar',
         },
         title: {
-          text: "ຈຳນວນລູກຄ້າລົງທະບຽນ",
-          align: "center",
+          text: 'ຈຳນວນລູກຄ້າລົງທະບຽນ',
+          align: 'center',
           margin: 10,
           offsetX: 0,
           offsetY: 0,
           floating: false,
           style: {
-            fontSize: "14px",
-            fontWeight: "bold",
+            fontSize: '14px',
+            fontWeight: 'bold',
             fontFamily:
-              "NotoSanLao, Google Sans, arial, serif, sans-serif !important",
-            color: "#263238",
+              'NotoSanLao, Google Sans, arial, serif, sans-serif !important',
+            color: '#263238',
           },
         },
 
@@ -68,18 +89,18 @@ export default {
             20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
           ],
           title: {
-            text: "Date",
+            text: 'Date',
             style: {
-              fontSize: "16px",
+              fontSize: '16px',
               fontWeight: 400,
             },
           },
         },
         yaxis: {
           title: {
-            text: "Amount",
+            text: 'Amount',
             style: {
-              fontSize: "16px",
+              fontSize: '16px',
               fontWeight: 400,
             },
           },
@@ -87,7 +108,7 @@ export default {
       },
       series: [
         {
-          name: "series-1",
+          name: 'series-1',
           data: [
             30, 40, 45, 50, 49, 60, 70, 91, 95, 100, 30, 40, 45, 50, 49, 60, 70,
             91, 95, 100, 30, 40, 45, 50, 49, 60, 70, 91, 95, 100,

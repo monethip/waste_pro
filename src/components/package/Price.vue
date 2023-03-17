@@ -1,6 +1,9 @@
 <template>
   <v-container>
-    <v-col justify="center" class="mt-n6">
+    <v-col
+      justify="center"
+      class="mt-n6"
+    >
       <v-card-title> ຂໍ້ມູນລາຄາ </v-card-title>
       <v-data-table
         :headers="headers"
@@ -12,7 +15,12 @@
           <div>{{ moment(item.updated_at).format("DD-MM-YY hh:mm") }}</div>
         </template>
         <template v-slot:[`item.actions`]="{ item }">
-          <v-icon small color="green" class="mr-2" @click="OpenModalEdit(item)">
+          <v-icon
+            small
+            color="green"
+            class="mr-2"
+            @click="OpenModalEdit(item)"
+          >
             mdi-pencil
           </v-icon>
         </template>
@@ -23,10 +31,13 @@
           :pagination="pagination"
           :offset="offset"
           @paginate="fetchData()"
-        ></Pagination>
+        />
       </template>
     </v-col>
-    <v-dialog max-width="720px" v-model="modalPrice">
+    <v-dialog
+      v-model="modalPrice"
+      max-width="720px"
+    >
       <template>
         <v-card>
           <v-card-title>
@@ -34,15 +45,18 @@
           </v-card-title>
           <v-card-text>
             <v-container>
-              <v-form ref="form" lazy-validation>
+              <v-form
+                ref="form"
+                lazy-validation
+              >
                 <v-row>
                   <v-col>
                     <v-text-field
-                      disabled
                       v-model="editPackageSize.name"
+                      disabled
                       label="Collection Type"
                       required
-                    ></v-text-field>
+                    />
                   </v-col>
                 </v-row>
                 <v-row>
@@ -53,7 +67,7 @@
                       required
                       type="number"
                       class="input-number"
-                    ></v-text-field>
+                    />
                   </v-col>
                   <p class="errors">
                     {{ server_errors.price }}
@@ -62,8 +76,12 @@
               </v-form>
             </v-container>
             <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeUpdate()">
+              <v-spacer />
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="closeUpdate()"
+              >
                 ຍົກເລີກ
               </v-btn>
               <v-btn
@@ -85,26 +103,30 @@
 
 <script>
 export default {
-  name: "Package",
+  name: 'Package',
   data() {
     return {
       packagessize: [],
       loading: false,
       modalPrice: false,
-      PackageSize_id: "",
+      PackageSize_id: '',
       editPackageSize: {},
       server_errors: {},
-      //pagination
+      // pagination
       offset: 12,
       pagination: {},
       per_page: 100,
       headers: [
-        { text: "Size", value: "name" },
-        { text: "Price", value: "price" },
-        { text: "Updated", value: "updated_at" },
-        { text: "actions", value: "actions", align: "center" },
+        { text: 'Size', value: 'name' },
+        { text: 'Price', value: 'price' },
+        { text: 'Updated', value: 'updated_at' },
+        { text: 'actions', value: 'actions', align: 'center' },
       ],
     };
+  },
+
+  created() {
+    this.fetchData();
   },
 
   methods: {
@@ -120,37 +142,37 @@ export default {
       this.modalPrice = true;
     },
     updateItem() {
-      let formData = new FormData();
-      formData.append("price", this.editPackageSize.price);
-      formData.append("_method", "PUT");
+      const formData = new FormData();
+      formData.append('price', this.editPackageSize.price);
+      formData.append('_method', 'PUT');
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .post("price-setting/" + this.editPackageSize.id, formData)
+          .post(`price-setting/${this.editPackageSize.id}`, formData)
           .then((res) => {
             if (res.data.code == 200) {
-                this.loading = false;
-                this.closeUpdate();
-                this.editPackageSize = {};
-                this.reset();
-                this.fetchData();
-                this.$store.commit("Toast_State", {
-                  value: true,
-                  color: "success",
-                  msg: res.data.message,
-                });
+              this.loading = false;
+              this.closeUpdate();
+              this.editPackageSize = {};
+              this.reset();
+              this.fetchData();
+              this.$store.commit('Toast_State', {
+                value: true,
+                color: 'success',
+                msg: res.data.message,
+              });
             }
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", {
+            this.$store.commit('Toast_State', {
               value: true,
-              color: "error",
+              color: 'error',
               msg: error.response ? error.response.data.message : 'Something went wrong',
             });
             if (error.response && error.response.status == 422) {
-              let obj = error.response.data.errors;
-              for (let [key, message] of Object.entries(obj)) {
+              const obj = error.response.data.errors;
+              for (const [key, message] of Object.entries(obj)) {
                 this.server_errors[key] = message[0];
               }
             }
@@ -158,9 +180,9 @@ export default {
       }
     },
     fetchData() {
-      this.$store.commit("Loading_State", true);
+      this.$store.commit('Loading_State', true);
       this.$axios
-        .get("price-setting", {
+        .get('price-setting', {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
@@ -168,25 +190,21 @@ export default {
         })
         .then((res) => {
           if (res.data.code == 200) {
-              this.$store.commit("Loading_State", false);
-              this.packagessize = res.data.data.data;
-              this.pagination = res.data.data.pagination;
+            this.$store.commit('Loading_State', false);
+            this.packagessize = res.data.data.data;
+            this.pagination = res.data.data.pagination;
           }
         })
         .catch((error) => {
-          this.$store.commit("Loading_State", false);
+          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status == 422) {
-            let obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
+            const obj = error.response.data.errors;
+            for (const [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
           }
         });
     },
-  },
-
-  created() {
-    this.fetchData();
   },
 };
 </script>

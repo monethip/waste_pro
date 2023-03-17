@@ -1,3 +1,3 @@
-export default function Base(){
-    this.String = () => JSON.stringify();
+export default function Base() {
+  this.String = () => JSON.stringify();
 }

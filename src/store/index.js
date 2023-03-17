@@ -1,12 +1,13 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import auth from '@/store/modules/auth'
-Vue.use(Vuex)
+import Vue from 'vue';
+import Vuex from 'vuex';
+import auth from '@/store/modules/auth';
+
+Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     isLogged: false,
-    phone: "",
+    phone: '',
     modalAddState: false,
     modalEditState: false,
     modalDeleteState: false,
@@ -29,7 +30,7 @@ export default new Vuex.Store({
       //   disabled: false,
       //   href: 'dashboard',
       // },
-    ]
+    ],
   },
   mutations: {
     // breadCrumbState(state,payload){
@@ -40,7 +41,7 @@ export default new Vuex.Store({
       state.isLogout = value;
     },
     SET_LOGGED_IN(state) {
-      state.isLogged = true
+      state.isLogged = true;
     },
     modalAdd_State(state, value) {
       state.modalAddState = value;
@@ -72,5 +73,5 @@ export default new Vuex.Store({
   },
   modules: {
     auth: auth(),
-  }
-})
+  },
+});

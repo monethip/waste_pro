@@ -2,7 +2,12 @@
   <v-container>
     <v-row>
       <v-col>
-        <v-breadcrumbs large class="pa-0"> ຂີ້ເຫື້ຍອທີ່ລໍຖ້າເກັບ</v-breadcrumbs>
+        <v-breadcrumbs
+          large
+          class="pa-0"
+        >
+          ຂີ້ເຫື້ຍອທີ່ລໍຖ້າເກັບ
+        </v-breadcrumbs>
       </v-col>
       <!--      <v-col>-->
       <!--        <v-text-field-->
@@ -19,8 +24,14 @@
       <!--      </v-col>-->
     </v-row>
     <div>
-      <v-data-table v-if="pending" :headers="headers" :items="pending" :search="search" :disable-pagination="true"
-        hide-default-footer>
+      <v-data-table
+        v-if="pending"
+        :headers="headers"
+        :items="pending"
+        :search="search"
+        :disable-pagination="true"
+        hide-default-footer
+      >
         <template v-slot:item.created_at="{ item }">
           <div>
             {{ moment(item.created_at).format("DD-MM-YY hh:mm ") }}
@@ -46,64 +57,107 @@
             </template>
  -->
         <template v-slot:item.status="{ item }">
-          <v-chip color="error" label>{{ item.status }}</v-chip>
+          <v-chip
+            color="error"
+            label
+          >
+            {{ item.status }}
+          </v-chip>
         </template>
         <template v-slot:item.amount="{ item }">
           <div v-if="item.collection_type == 'bag' || item.collection_type == 'chartered'">
-            <v-chip color="primary">{{ item.bag }}</v-chip>
+            <v-chip color="primary">
+              {{ item.bag }}
+            </v-chip>
             <span> {{ getUnit(item.collection_type) }}</span>
           </div>
           <div v-else-if="item.collection_type == 'fix_cost'">
             <span> {{ getUnit(item.collection_type) }}</span>
           </div>
           <div v-else>
-            <v-chip color="success">{{ item.container }}</v-chip>
+            <v-chip color="success">
+              {{ item.container }}
+            </v-chip>
             <span> {{ getUnit(item.collection_type) }}</span>
           </div>
         </template>
 
         <template v-slot:item.actions="{ item }">
-          <v-icon small class="mr-2" @click="viewPage(item.plan_calendar_id, item.id)">
+          <v-icon
+            small
+            class="mr-2"
+            @click="viewPage(item.plan_calendar_id, item.id)"
+          >
             mdi-eye
           </v-icon>
-          <v-icon small @click="openUpdate(item)">
+          <v-icon
+            small
+            @click="openUpdate(item)"
+          >
             mdi-truck
           </v-icon>
         </template>
-      </v-data-table><br />
+      </v-data-table><br>
       <template>
-        <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset" @paginate="fetchData()">
-        </Pagination>
+        <Pagination
+          v-if="pagination.total_pages > 1"
+          :pagination="pagination"
+          :offset="offset"
+          @paginate="fetchData()"
+        />
       </template>
     </div>
 
     <!-- confirm payment -->
-    <v-dialog v-model="confirmDialog" max-width="620px" persistent>
+    <v-dialog
+      v-model="confirmDialog"
+      max-width="620px"
+      persistent
+    >
       <template @close="close">
         <v-card>
           <v-card-text>
             <v-card-title>
               <p>
-                <v-icon class="primary-color" large color="success">mdi-checkbox-marked-circle-outline
+                <v-icon
+                  class="primary-color"
+                  large
+                  color="success"
+                >
+                  mdi-checkbox-marked-circle-outline
                 </v-icon>
                 ຢືນຢັນການເກັບຂີ້ເຫື້ຍອ
               </p>
             </v-card-title>
             <v-container>
-              <v-form ref="form" lazy-validation>
+              <v-form
+                ref="form"
+                lazy-validation
+              >
                 <div>
                   <v-row>
                     <v-col cols="12">
-                      <v-select v-model="confirm_status" label="ສະຖານະການຊຳລະ" outlined dense :items="confirm_statues"
-                        item-text="name" item-value="value">
-                      </v-select>
+                      <v-select
+                        v-model="confirm_status"
+                        label="ສະຖານະການຊຳລະ"
+                        outlined
+                        dense
+                        :items="confirm_statues"
+                        item-text="name"
+                        item-value="value"
+                      />
                     </v-col>
                   </v-row>
 
                   <v-row v-if="confirm_status == 'reject'">
                     <v-col cols="12">
-                      <v-text-field v-model="description" label="Description" outlined dense type="text">
-                      </v-text-field>
+                      <v-text-field
+                        v-model="description"
+                        label="Description"
+                        outlined
+                        dense
+                        type="text"
+                      />
                       <p class="errors">
                         {{ server_errors.description }}
                       </p>
@@ -111,11 +165,22 @@
                   </v-row>
                   <v-row>
                     <v-card-actions>
-                      <v-btn color="blue" class="white--text px-12 c-btn" medium :loading="loading" :disabled="loading"
-                        @click="confirmStatus()">
+                      <v-btn
+                        color="blue"
+                        class="white--text px-12 c-btn"
+                        medium
+                        :loading="loading"
+                        :disabled="loading"
+                        @click="confirmStatus()"
+                      >
                         ຢືນຢັນ
                       </v-btn>
-                      <v-btn color="error" class="white--text px-12 c-btn" medium @click="confirmDialog = false">
+                      <v-btn
+                        color="error"
+                        class="white--text px-12 c-btn"
+                        medium
+                        @click="confirmDialog = false"
+                      >
                         Close
                       </v-btn>
                     </v-card-actions>
@@ -127,31 +192,31 @@
         </v-card>
       </template>
     </v-dialog>
-
   </v-container>
 </template>
 
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import { GetOldValueOnInput } from '@/Helpers/GetValue';
+
 export default {
-  name: "Trash",
+  name: 'Trash',
   data() {
     return {
       pending: [],
       loading: false,
-      calendarId: "",
+      calendarId: '',
       //   //Pagination
       offset: 12,
       pagination: {},
       per_page: 100,
-      search: "",
-      oldVal: "",
-      statuses: ["reject"],
+      search: '',
+      oldVal: '',
+      statuses: ['reject'],
       confirm_status: 'success',
       confirm_statues: [
         {
           name: 'Success',
-          value: 'success'
+          value: 'success',
         },
       ],
       confirmDialog: false,
@@ -160,46 +225,59 @@ export default {
       server_errors: {},
 
       headers: [
-        { text: "ລຳດັບ", value: "route_plan_detail.priority" },
-        { text: "ລູກຄ້າ", value: "customer" },
+        { text: 'ລຳດັບ', value: 'route_plan_detail.priority' },
+        { text: 'ລູກຄ້າ', value: 'customer' },
         // { text: "ເລີ່ມວັນທີ", value: "route_plan_detail.customer.start_month" },
 
         {
-          text: "ຈຳນວນຂີ້ເຫື້ຍອ",
-          value: "amount",
-          align: "center",
+          text: 'ຈຳນວນຂີ້ເຫື້ຍອ',
+          value: 'amount',
+          align: 'center',
           sortable: false,
         },
         {
-          text: "ສະຖານະ",
-          value: "status",
-          align: "center",
+          text: 'ສະຖານະ',
+          value: 'status',
+          align: 'center',
           sortable: false,
         },
         {
-          text: "ວັນທີສ້າງ",
-          value: "created_at",
-          align: "center",
+          text: 'ວັນທີສ້າງ',
+          value: 'created_at',
+          align: 'center',
           sortable: false,
         },
         {
-          text: "ວັນທີເກັບ",
-          value: "collected_at",
-          align: "center",
+          text: 'ວັນທີເກັບ',
+          value: 'collected_at',
+          align: 'center',
           sortable: false,
         },
-        { text: "", value: "actions", sortable: false },
+        { text: '', value: 'actions', sortable: false },
       ],
     };
   },
+  watch: {
+    search(value) {
+      if (value == '') {
+        this.fetchData();
+      }
+    },
+    description() {
+      this.server_errors.description = '';
+    },
+  },
+  created() {
+    this.fetchData();
+  },
   methods: {
-     backPrevios() {
+    backPrevios() {
       this.$router.go(-1);
     },
     fetchData() {
-      this.$store.commit("Loading_State", true);
+      this.$store.commit('Loading_State', true);
       this.$axios
-        .get("plan-calendar/" + this.$route.params.id + "/detail", {
+        .get(`plan-calendar/${this.$route.params.id}/detail`, {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
@@ -209,7 +287,7 @@ export default {
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.$store.commit("Loading_State", false);
+              this.$store.commit('Loading_State', false);
               this.pending = res.data.data.data;
               this.summary = res.data.data.summary;
               this.pagination = res.data.data.pagination;
@@ -217,7 +295,7 @@ export default {
           }
         })
         .catch((error) => {
-          this.$store.commit("Loading_State", false);
+          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status == 422) {
             this.toast.msg = error.message;
           }
@@ -230,21 +308,21 @@ export default {
 
     confirmStatus() {
       this.loading = true;
-      let formData = new FormData();
-      formData.append('status', this.confirm_status)
+      const formData = new FormData();
+      formData.append('status', this.confirm_status);
       if (this.confirm_status == 'reject') {
-        formData.append('description', this.description)
+        formData.append('description', this.description);
       }
-      formData.append('_method', 'PUT')
+      formData.append('_method', 'PUT');
       this.$axios
-        .post("admin-collection/" + this.editItem.id + "/status", formData)
+        .post(`admin-collection/${this.editItem.id}/status`, formData)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.loading = false;
-              this.$store.commit("Toast_State", {
+              this.$store.commit('Toast_State', {
                 value: true,
-                color: "success",
+                color: 'success',
                 msg: res.data.message,
               });
               this.fetchData();
@@ -254,53 +332,40 @@ export default {
         })
         .catch((error) => {
           this.loading = false;
-          this.$store.commit("Toast_State", {
+          this.$store.commit('Toast_State', {
             value: true,
-            color: "error",
+            color: 'error',
             msg: error.response ? error.response.data.message : 'Something went wrong',
           });
           if (error.response && error.response.status == 422) {
-            let obj = error.response.data.errors;
-            for (let [key, data] of Object.entries(obj)) {
+            const obj = error.response.data.errors;
+            for (const [key, data] of Object.entries(obj)) {
               this.server_errors[key] = data[0];
             }
           }
         });
     },
     statusColor(value) {
-      if (value == "pending") return "info";
-      else if (value == "success") return "success";
-      else return "error";
+      if (value == 'pending') return 'info';
+      if (value == 'success') return 'success';
+      return 'error';
     },
     getUnit(value) {
-      if (value == "bag") return "ຖົງ";
-      else if (value == 'chartered') return "ຖົງ";
-      else if (value == "fix_cost") return "ມອບເໝົາ"
-      else if (value == "container") return "ຄອນເທັນເນີ"
-      else return '';
+      if (value == 'bag') return 'ຖົງ';
+      if (value == 'chartered') return 'ຖົງ';
+      if (value == 'fix_cost') return 'ມອບເໝົາ';
+      if (value == 'container') return 'ຄອນເທັນເນີ';
+      return '';
     },
     Search() {
       GetOldValueOnInput(this);
     },
     viewPage(plan_calendar, id) {
       this.$router.push({
-        name: "TrashDetail",
+        name: 'TrashDetail',
         params: { plan_calendar, id },
       });
     },
-  },
-  watch: {
-    search: function (value) {
-      if (value == "") {
-        this.fetchData();
-      }
-    },
-    "description": function () {
-      this.server_errors.description = "";
-    }
-  },
-  created() {
-    this.fetchData();
   },
 };
 </script>

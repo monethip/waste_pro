@@ -2,7 +2,11 @@
   <v-container>
     <div>
       <div v-if="summary">
-        <v-row v-for="(sum, index) in summary" :key="index" class="mb-n6 mt-0">
+        <v-row
+          v-for="(sum, index) in summary"
+          :key="index"
+          class="mb-n6 mt-0"
+        >
           <v-col>
             <h3>ປີ {{ sum.year }}</h3>
           </v-col>
@@ -50,23 +54,24 @@
           <div>
             <span class="success--text">{{ item.status }}</span>
           </div>
-        </template> </v-data-table
-      ><br />
+        </template>
+      </v-data-table><br>
       <template>
         <Pagination
           v-if="pagination.total_pages > 1"
           :pagination="pagination"
           :offset="offset"
           @paginate="fetchData()"
-        ></Pagination>
+        />
       </template>
     </div>
   </v-container>
 </template>
 
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
-import colleciton from "@views/report/collection";
+import { GetOldValueOnInput } from '@/Helpers/GetValue';
+import colleciton from '@views/report/collection';
+
 export default {
   mixins: [colleciton],
   // name: "HomeInvoice",
@@ -78,24 +83,39 @@ export default {
     return {
       customers: [],
       loading: false,
-      customerId: "",
-      //Pagination
+      customerId: '',
+      // Pagination
       offset: 12,
       pagination: {},
       per_page: 100,
-      search: "",
-      oldVal: "",
+      search: '',
+      oldVal: '',
       // invoices: [],
       // summary: {},
       headers: [
-        { text: "ວັນທີ", value: "date", sortable: false },
-        { text: "ລູກຄ້າ", value: "full_name" },
-        { text: "ຈຳນວນຖົງ", value: "bag", sortable: false, align: "center" },
-        { text: "ສະຖານທີ່", value: "name", sortable: false },
-        { text: "ສະຖານະ", value: "status", sortable: false },
+        { text: 'ວັນທີ', value: 'date', sortable: false },
+        { text: 'ລູກຄ້າ', value: 'full_name' },
+        {
+          text: 'ຈຳນວນຖົງ', value: 'bag', sortable: false, align: 'center',
+        },
+        { text: 'ສະຖານທີ່', value: 'name', sortable: false },
+        { text: 'ສະຖານະ', value: 'status', sortable: false },
         // { text: "", value: "actions", sortable: false },
       ],
     };
+  },
+  watch: {
+    tab() {
+      if (this.tab == 'tab-1') {
+        // this.fetchData();
+      }
+    },
+  },
+  created() {
+    this.pagination = [];
+    // this.fetchDataInvoice();
+    // console.log(this.collectionType);
+    // this.fetchData();
   },
   methods: {
     // fetchDataInvoice() {
@@ -147,19 +167,6 @@ export default {
     Search() {
       GetOldValueOnInput(this);
     },
-  },
-  watch: {
-    tab: function () {
-      if (this.tab == "tab-1") {
-        // this.fetchData();
-      }
-    },
-  },
-  created() {
-    this.pagination = [];
-    // this.fetchDataInvoice();
-    // console.log(this.collectionType);
-    // this.fetchData();
   },
 };
 </script>

@@ -1,17 +1,16 @@
 <template>
   <!-- <hello-world /> -->
-  <about/>
-  
+  <about />
 </template>
 
 <script>
-import About from './Contact.vue'
+import About from './Contact.vue';
 
-  export default {
-    name: 'About',
+export default {
+  name: 'About',
 
-    components: {
-        About,
-    },
-  }
+  components: {
+    About,
+  },
+};
 </script>

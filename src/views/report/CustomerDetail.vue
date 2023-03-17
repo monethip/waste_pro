@@ -1,7 +1,14 @@
 <template>
   <v-container>
-    <v-breadcrumbs class="pt-0" large>
-      <v-btn class="text-primary" text @click="backPrevios()">
+    <v-breadcrumbs
+      class="pt-0"
+      large
+    >
+      <v-btn
+        class="text-primary"
+        text
+        @click="backPrevios()"
+      >
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
       ລາຍລະອຽດ
@@ -20,14 +27,24 @@
           reverse-transition="fade-transition"
           transition="fade-transition"
           @click="showImage(item.url)"
-        ></v-carousel-item>
+        />
       </v-carousel>
 
       <v-card-text>
-        <v-tabs v-model="tab" background-color="#49A3DA" dark>
-          <v-tab href="#tab-1">ຂໍ້ມູນກ່ຽວກັບ</v-tab>
-          <v-tab href="#tab-2">ຂໍ້ມູນການບໍລິການ</v-tab>
-          <v-tab href="#tab-3">ຂໍ້ມູນການຊຳລະ</v-tab>
+        <v-tabs
+          v-model="tab"
+          background-color="#49A3DA"
+          dark
+        >
+          <v-tab href="#tab-1">
+            ຂໍ້ມູນກ່ຽວກັບ
+          </v-tab>
+          <v-tab href="#tab-2">
+            ຂໍ້ມູນການບໍລິການ
+          </v-tab>
+          <v-tab href="#tab-3">
+            ຂໍ້ມູນການຊຳລະ
+          </v-tab>
         </v-tabs>
         <!-- <hr /> -->
         <v-tabs-items v-model="tab">
@@ -37,58 +54,80 @@
               <v-row>
                 <v-list-item>
                   <v-list-item-icon>
-                    <v-icon color="indigo">mdi-account-circle-outline</v-icon>
+                    <v-icon color="indigo">
+                      mdi-account-circle-outline
+                    </v-icon>
                   </v-list-item-icon>
 
                   <v-list-item-content>
-                    <v-list-item-title
-                      >{{ data.name }} {{ data.surname }}
+                    <v-list-item-title>
+                      {{ data.name }} {{ data.surname }}
                     </v-list-item-title>
-                    <v-list-item-subtitle
-                      >ຊື່ ແລະ ນາມສະກຸນ
+                    <v-list-item-subtitle>
+                      ຊື່ ແລະ ນາມສະກຸນ
                     </v-list-item-subtitle>
                   </v-list-item-content>
 
-                  <v-spacer></v-spacer>
+                  <v-spacer />
                   <v-list-item-icon>
-                    <v-icon class="mr-6" color="indigo">mdi-home</v-icon>
+                    <v-icon
+                      class="mr-6"
+                      color="indigo"
+                    >
+                      mdi-home
+                    </v-icon>
                   </v-list-item-icon>
                   <v-list-item-content>
-                    <v-list-item-title v-if="data.user"
-                      >{{ data.house_number }}
+                    <v-list-item-title
+                      v-if="data.user"
+                    >
+                      {{ data.house_number }}
                     </v-list-item-title>
                     <v-list-item-subtitle>ເຮືອນເລກທີ</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
-                <v-divider inset></v-divider>
+                <v-divider inset />
               </v-row>
               <v-row>
                 <v-list-item>
                   <v-list-item-icon>
-                    <v-icon color="indigo">mdi-phone</v-icon>
+                    <v-icon color="indigo">
+                      mdi-phone
+                    </v-icon>
                   </v-list-item-icon>
 
                   <v-list-item-content>
-                    <v-list-item-title v-if="data.user"
-                      >{{ data.user.phone }}
+                    <v-list-item-title
+                      v-if="data.user"
+                    >
+                      {{ data.user.phone }}
                     </v-list-item-title>
                     <v-list-item-subtitle>ເບີໂທ</v-list-item-subtitle>
                   </v-list-item-content>
-                  <v-spacer></v-spacer>
+                  <v-spacer />
                   <v-list-item-icon>
-                    <v-icon class="mr-6" color="indigo">mdi-email</v-icon>
+                    <v-icon
+                      class="mr-6"
+                      color="indigo"
+                    >
+                      mdi-email
+                    </v-icon>
                   </v-list-item-icon>
                   <v-list-item-content>
-                    <v-list-item-title v-if="data.user"
-                      >{{ data.user.email }}
+                    <v-list-item-title
+                      v-if="data.user"
+                    >
+                      {{ data.user.email }}
                     </v-list-item-title>
                     <v-list-item-subtitle>Email</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
-                <v-divider inset></v-divider>
+                <v-divider inset />
                 <v-list-item>
                   <v-list-item-icon>
-                    <v-icon color="indigo">mdi-map-marker</v-icon>
+                    <v-icon color="indigo">
+                      mdi-map-marker
+                    </v-icon>
                   </v-list-item-icon>
 
                   <v-list-item-content>
@@ -99,25 +138,28 @@
                       v-for="(detail, index) in data.village_details"
                       :key="index"
                     >
-                      <v-list-item-subtitle
-                        >{{ detail.name }}
+                      <v-list-item-subtitle>
+                        {{ detail.name }}
                       </v-list-item-subtitle>
                     </div>
                   </v-list-item-content>
 
-                  <v-spacer></v-spacer>
+                  <v-spacer />
                   <v-list-item-icon>
-                    <v-icon class="mr-6" color="indigo"
-                      >mdi-toolbox-outline</v-icon
+                    <v-icon
+                      class="mr-6"
+                      color="indigo"
                     >
+                      mdi-toolbox-outline
+                    </v-icon>
                   </v-list-item-icon>
 
                   <v-list-item-content v-if="data.package">
                     <v-list-item-title>
                       {{ data.package.name }}
                     </v-list-item-title>
-                    <v-list-item-subtitle
-                      >{{ data.package.price }}
+                    <v-list-item-subtitle>
+                      {{ data.package.price }}
                     </v-list-item-subtitle>
                   </v-list-item-content>
                   <!--                  <v-list-item-action>-->
@@ -127,14 +169,17 @@
               </v-row>
 
               <v-row>
-                <v-col class="mb-4" cols="12">
+                <v-col
+                  class="mb-4"
+                  cols="12"
+                >
                   <GmapMap
                     :center="
                       getCenter().lat > 0 || getCenter().lat < 0
                         ? getCenter()
                         : { lat: 0, lng: 0 }
                     "
-                    :disableDefaultUI="true"
+                    :disable-default-u-i="true"
                     :zoom="16"
                     style="width: 100%; height: 450px"
                   >
@@ -183,26 +228,53 @@
                 <template v-slot:default>
                   <thead>
                     <tr>
-                      <td class="text-left">Date</td>
-                      <td class="text-left">ຊື່</td>
-                      <td class="text-left">ໄອດີ</td>
-                      <td class="text-left">ເບີໂທ</td>
-                      <td class="text-left">ແພກເກຈ</td>
-                      <td class="text-left">ຈຳນວນ</td>
-                      <td class="text-left">Status</td>
-                      <td class="text-left">ເວລາລົງເກັບ</td>
+                      <td class="text-left">
+                        Date
+                      </td>
+                      <td class="text-left">
+                        ຊື່
+                      </td>
+                      <td class="text-left">
+                        ໄອດີ
+                      </td>
+                      <td class="text-left">
+                        ເບີໂທ
+                      </td>
+                      <td class="text-left">
+                        ແພກເກຈ
+                      </td>
+                      <td class="text-left">
+                        ຈຳນວນ
+                      </td>
+                      <td class="text-left">
+                        Status
+                      </td>
+                      <td class="text-left">
+                        ເວລາລົງເກັບ
+                      </td>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(item, index) in services" :key="index">
+                    <tr
+                      v-for="(item, index) in services"
+                      :key="index"
+                    >
                       <td>
-                        <a href="#" @click="openRoute(item)"
-                          >{{ moment(item.date).format("DD-MM-YYYY") }}
+                        <a
+                          href="#"
+                          @click="openRoute(item)"
+                        >{{ moment(item.date).format("DD-MM-YYYY") }}
                         </a>
                       </td>
-                      <td class="text-left">{{ data.full_name }}</td>
-                      <td class="text-left">{{ data.customer_id }}</td>
-                      <td class="text-left">{{ data.user.phone }}</td>
+                      <td class="text-left">
+                        {{ data.full_name }}
+                      </td>
+                      <td class="text-left">
+                        {{ data.customer_id }}
+                      </td>
+                      <td class="text-left">
+                        {{ data.user.phone }}
+                      </td>
                       <td class="text-left">
                         {{ data.package.price }} ({{
                           data.package.per_week
@@ -221,26 +293,33 @@
                         <div v-else-if="item.collection_type === 'fix_cost'">
                           ບໍລິການເປັນຖ້ຽວ
                         </div>
-                        <div v-else>{{ item.collection_type }}</div>
+                        <div v-else>
+                          {{ item.collection_type }}
+                        </div>
                       </td>
 
                       <td>
-                        <v-chip :color="statusColor(item.status)" label>{{
-                          item.status_la
-                        }}</v-chip>
+                        <v-chip
+                          :color="statusColor(item.status)"
+                          label
+                        >
+                          {{
+                            item.status_la
+                          }}
+                        </v-chip>
                       </td>
                       <td>{{ item.collected_at }}</td>
                     </tr>
                   </tbody>
                 </template>
               </v-simple-table>
-              <br />
+              <br>
               <Pagination
                 v-if="pagination.total_pages > 1"
                 :offset="offset"
                 :pagination="pagination"
                 @paginate="customerCollection()"
-              ></Pagination>
+              />
             </v-container>
           </v-tab-item>
         </v-tabs-items>
@@ -289,35 +368,71 @@
                 <template v-slot:default>
                   <thead>
                     <tr>
-                      <th class="text-left">ວັນທີບິນ</th>
-                      <th class="text-left">ໄອດີ</th>
-                      <th class="text-left">ຫົວບິນ</th>
-                      <th class="text-left">ຊື່ລູກຄ້າ</th>
-                      <th class="text-left">ໄອດີ</th>
-                      <th class="text-left">ແພັກເກຈ</th>
-                      <th class="text-left">ສະຖານະ</th>
-                      <th class="text-left">ເວລາຈ່າຍ</th>
-                      <th class="text-left">Payment</th>
-                      <th class="text-left">Subtotal</th>
-                      <th class="text-left">ສ່ວນຫຼູດ</th>
-                      <th class="text-left">Total</th>
-                      <th class="text-left">ເບິ່ງລາຍລະອຽດ</th>
+                      <th class="text-left">
+                        ວັນທີບິນ
+                      </th>
+                      <th class="text-left">
+                        ໄອດີ
+                      </th>
+                      <th class="text-left">
+                        ຫົວບິນ
+                      </th>
+                      <th class="text-left">
+                        ຊື່ລູກຄ້າ
+                      </th>
+                      <th class="text-left">
+                        ໄອດີ
+                      </th>
+                      <th class="text-left">
+                        ແພັກເກຈ
+                      </th>
+                      <th class="text-left">
+                        ສະຖານະ
+                      </th>
+                      <th class="text-left">
+                        ເວລາຈ່າຍ
+                      </th>
+                      <th class="text-left">
+                        Payment
+                      </th>
+                      <th class="text-left">
+                        Subtotal
+                      </th>
+                      <th class="text-left">
+                        ສ່ວນຫຼູດ
+                      </th>
+                      <th class="text-left">
+                        Total
+                      </th>
+                      <th class="text-left">
+                        ເບິ່ງລາຍລະອຽດ
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="item in invoices" :key="item.id">
+                    <tr
+                      v-for="item in invoices"
+                      :key="item.id"
+                    >
                       <td>{{ moment(item.date).format("DD-MM-YYYY") }}</td>
                       <td>{{ item.billing_display_id }}</td>
                       <td>{{ item.content }}</td>
-                      <td class="text-left">{{ data.full_name }}</td>
-                      <td class="text-left">{{ data.customer_id }}</td>
+                      <td class="text-left">
+                        {{ data.full_name }}
+                      </td>
+                      <td class="text-left">
+                        {{ data.customer_id }}
+                      </td>
                       <td class="text-left">
                         {{ data.package.price }} ({{
                           data.package.per_week
                         }}ຖົງ/ອາທິດ)
                       </td>
                       <td>
-                        <v-chip :color="getBgColorFn(item.status)" dark>
+                        <v-chip
+                          :color="getBgColorFn(item.status)"
+                          dark
+                        >
                           {{ item.status_la }}
                         </v-chip>
                       </td>
@@ -337,21 +452,26 @@
                           small
                           @click="ViewInvoice(item.id)"
                         >
-                          <v-icon class="mr-1" small>mdi-eye</v-icon>
+                          <v-icon
+                            class="mr-1"
+                            small
+                          >
+                            mdi-eye
+                          </v-icon>
                         </v-btn>
                       </td>
                     </tr>
                   </tbody>
                 </template>
               </v-simple-table>
-              <br />
+              <br>
               <template>
                 <Pagination
                   v-if="pagination.total_pages > 1"
                   :offset="offset"
                   :pagination="pagination"
                   @paginate="customerInvoice()"
-                ></Pagination>
+                />
               </template>
             </v-container>
           </v-tab-item>
@@ -382,7 +502,7 @@
             dark
             height="auto"
             width="auto"
-          ></v-img>
+          />
         </v-card>
       </template>
     </ModalView>
@@ -390,7 +510,7 @@
 </template>
 
 <script>
-import { getBgColor } from "@/Helpers/BillingStatus";
+import { getBgColor } from '@/Helpers/BillingStatus';
 
 export default {
   data() {
@@ -400,18 +520,18 @@ export default {
       server_errors: {},
       provinces: [],
       districts: [],
-      selectedDistrict: "",
+      selectedDistrict: '',
       villages: [],
-      selectedVillage: "",
+      selectedVillage: '',
       village_details: [],
       selectedVillageDetail: [],
-      tab: "tab-1",
+      tab: 'tab-1',
 
       address: [],
       preview_list: [],
       image_list: [],
       image: [],
-      //Map
+      // Map
       latlng: {
         lat: 0,
         lng: 0,
@@ -420,18 +540,18 @@ export default {
       currentPlace: null,
       markerOptions: {
         // eslint-disable-next-line global-require
-        url: require("@coms/../../src/assets/pin1.svg"),
+        url: require('@coms/../../src/assets/pin1.svg'),
         size: {
           width: 35,
           height: 55,
-          f: "px",
-          b: "px",
+          f: 'px',
+          b: 'px',
         },
         scaledSize: {
           width: 35,
           height: 55,
-          f: "px",
-          b: "px",
+          f: 'px',
+          b: 'px',
         },
       },
       services: [],
@@ -439,13 +559,31 @@ export default {
       statusSummary: {},
       invoices: [],
       invoiceSummary: {},
-      //Pagination
+      // Pagination
       offset: 12,
       pagination: {},
       per_page: 100,
 
-      imageUrl: "",
+      imageUrl: '',
     };
+  },
+  watch: {
+    tab() {
+      if (this.tab === 'tab-1') {
+        this.fetchData();
+      } else if (this.tab === 'tab-2') {
+        this.customerCollection();
+      } else if (this.tab === 'tab-3') {
+        this.customerInvoice();
+      }
+    },
+  },
+  created() {
+    this.fetchData();
+    if (this.$route.query.tab) this.tab = this.$route.query.tab;
+
+    // this.customerInvoice();
+    // this.customerCollection();
   },
   methods: {
     getBgColorFn(status) {
@@ -453,7 +591,7 @@ export default {
     },
     openRoute(item) {
       const route = this.$router.resolve({
-        name: "PlanCalendarDetail",
+        name: 'PlanCalendarDetail',
         params: {
           id: item.plan_calendar_id,
           planMonthId: item.plan_calendar.plan_month_id,
@@ -463,42 +601,42 @@ export default {
     },
     statusColor(value) {
       console.log(value);
-      if (value == "pending") return "info";
-      else if (value == "success") return "success";
-      else if (value == "reject") return "error";
-      else if (value == "cancel") return "orange";
-      else return "error";
+      if (value == 'pending') return 'info';
+      if (value == 'success') return 'success';
+      if (value == 'reject') return 'error';
+      if (value == 'cancel') return 'orange';
+      return 'error';
     },
     ViewInvoice(id) {
-      let route = this.$router.resolve({
-        name: "billing-detail",
+      const route = this.$router.resolve({
+        name: 'billing-detail',
         params: { id },
       });
-      window.open(route.href, "_blank");
+      window.open(route.href, '_blank');
     },
     showImage(url) {
       if (url != null) {
         this.imageUrl = url;
-        this.$store.commit("modalView_State", true);
+        this.$store.commit('modalView_State', true);
       }
     },
     fetchData() {
-      this.$store.commit("Loading_State", true);
+      this.$store.commit('Loading_State', true);
       this.$axios
-        .get("customer/" + this.$route.params.id)
+        .get(`customer/${this.$route.params.id}`)
         .then((res) => {
           if (res.data.code === 200) {
             setTimeout(() => {
-              this.$store.commit("Loading_State", false);
+              this.$store.commit('Loading_State', false);
               this.data = res.data.data;
             }, 300);
           }
         })
         .catch((error) => {
-          this.$store.commit("Loading_State", false);
+          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status === 422) {
-            let obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
+            const obj = error.response.data.errors;
+            for (const [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
           }
@@ -506,9 +644,9 @@ export default {
     },
     customerCollection() {
       // this.this.pagination.current_page = "";
-      this.$store.commit("Loading_State", true);
+      this.$store.commit('Loading_State', true);
       this.$axios
-        .get("customer-collection-summary/" + this.$route.params.id, {
+        .get(`customer-collection-summary/${this.$route.params.id}`, {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
@@ -517,7 +655,7 @@ export default {
         .then((res) => {
           if (res.data.code === 200) {
             setTimeout(() => {
-              this.$store.commit("Loading_State", false);
+              this.$store.commit('Loading_State', false);
               this.services = res.data.data.all.data;
               this.serviceSummary = res.data.data.collect_summary;
               this.statusSummary = res.data.data.status_summary;
@@ -526,11 +664,11 @@ export default {
           }
         })
         .catch((error) => {
-          this.$store.commit("Loading_State", false);
+          this.$store.commit('Loading_State', false);
           this.fetchData();
           if (error.response && error.response.status === 422) {
-            let obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
+            const obj = error.response.data.errors;
+            for (const [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
           }
@@ -538,9 +676,9 @@ export default {
     },
     customerInvoice() {
       // this.this.pagination.current_page = "";
-      this.$store.commit("Loading_State", true);
+      this.$store.commit('Loading_State', true);
       this.$axios
-        .get("customer-invoice-summary/" + this.$route.params.id, {
+        .get(`customer-invoice-summary/${this.$route.params.id}`, {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
@@ -549,7 +687,7 @@ export default {
         .then((res) => {
           if (res.data.code === 200) {
             setTimeout(() => {
-              this.$store.commit("Loading_State", false);
+              this.$store.commit('Loading_State', false);
               this.invoices = res.data.data.details.data;
               this.invoiceSummary = res.data.data.invoice_summary;
               this.pagination = res.data.data.details.pagination;
@@ -557,11 +695,11 @@ export default {
           }
         })
         .catch((error) => {
-          this.$store.commit("Loading_State", false);
+          this.$store.commit('Loading_State', false);
           this.fetchData();
           if (error.response && error.response.status === 422) {
-            let obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
+            const obj = error.response.data.errors;
+            for (const [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
           }
@@ -588,28 +726,10 @@ export default {
     },
     editPage(id) {
       this.$router.push({
-        name: "EditCustomer",
+        name: 'EditCustomer',
         params: { id },
       });
     },
-  },
-  watch: {
-    tab: function() {
-      if (this.tab === "tab-1") {
-        this.fetchData();
-      } else if (this.tab === "tab-2") {
-        this.customerCollection();
-      } else if (this.tab === "tab-3") {
-        this.customerInvoice();
-      }
-    },
-  },
-  created() {
-    this.fetchData();
-    if (this.$route.query.tab) this.tab = this.$route.query.tab;
-
-    // this.customerInvoice();
-    // this.customerCollection();
   },
 };
 </script>

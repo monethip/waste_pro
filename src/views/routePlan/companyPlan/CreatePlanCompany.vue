@@ -1,10 +1,17 @@
 <template>
   <v-container>
-    <v-breadcrumbs large class="mt-n4">
-      <v-btn text class="text-primary" @click="backPrevios()">
+    <v-breadcrumbs
+      large
+      class="mt-n4"
+    >
+      <v-btn
+        text
+        class="text-primary"
+        @click="backPrevios()"
+      >
         <v-icon>mdi-keyboard-backspace</v-icon>
       </v-btn>ເພີ່ມແຜນເສັ້ນທາງ
-      <v-spacer></v-spacer>
+      <v-spacer />
       <span class="mr-4">
         <v-icon color="red">mdi-map-marker</v-icon>ຍັງບໍທັນຢູ່ໃນແຜນ
       </span>
@@ -14,13 +21,16 @@
     </v-breadcrumbs>
 
     <v-row>
-      <v-col cols="12" class="mb-4">
+      <v-col
+        cols="12"
+        class="mb-4"
+      >
         <GmapMap
           v-if="customers"
           :center="getCenter().lat > 0 || getCenter().lat < 0 ? getCenter() : { lat: 0, lng: 0 }"
           :zoom="16"
           style="width: 100%; height: 400px"
-          :disableDefaultUI="true"
+          :disable-default-u-i="true"
         >
           <gmap-info-window
             :options="infoOptions"
@@ -28,17 +38,19 @@
             :opened="infoOpened"
             :conent="infoContent"
             @closeclick="infoOpened = false"
-          >{{ infoContent }}</gmap-info-window>
+          >
+            {{ infoContent }}
+          </gmap-info-window>
           <GmapMarker
-            :key="index"
             v-for="(m, index) in customers"
+            :key="index"
             :position="getMarkers(m)"
-            @click="toggleInfo(m, index)"
             :draggable="false"
             :icon="getSiteIcon(m)"
             :animation="2"
             :clickable="true"
             :label="(index + 1).toString()"
+            @click="toggleInfo(m, index)"
           />
         </GmapMap>
       </v-col>
@@ -47,28 +59,30 @@
       <v-col>
         <v-btn
           class="btn-primary"
-          @click="createRoutePlan()"
           :loading="loading"
           :disabled="loading"
+          @click="createRoutePlan()"
         >
           ບັນທຶກ
           <v-icon>mdi-content-save</v-icon>
         </v-btn>
       </v-col>
       <v-col>
-        <h4 v-if="customers">ຈັດລຽນລຳດັບການເກັບຂີ້ເຫື້ຍອລູກຄ້າ {{ customers.length }} ຄົນ</h4>
+        <h4 v-if="customers">
+          ຈັດລຽນລຳດັບການເກັບຂີ້ເຫື້ຍອລູກຄ້າ {{ customers.length }} ຄົນ
+        </h4>
       </v-col>
       <v-col>
         <v-text-field
+          v-model="search"
           outlined
           dense
           clearable
           prepend-inner-icon="mdi-magnify"
           label="ຊື່ລູກຄ້າ"
           type="text"
-          v-model="search"
           @keyup.enter="Search()"
-        ></v-text-field>
+        />
       </v-col>
     </v-row>
     <div>
@@ -83,20 +97,32 @@
           -->
           <main class="page page--table">
             <v-data-table
+              v-model="selectedRows"
               :headers="headers"
               :items="customers"
               :search="search"
               :disable-pagination="true"
               hide-default-footer
-              v-model="selectedRows"
               item-key="id"
               class="page__table"
             >
               <template v-slot:body="props">
-                <draggable :list="props.items" tag="tbody" @change="afterAdd">
-                  <tr v-for="(user, index) in props.items" :key="index">
+                <draggable
+                  :list="props.items"
+                  tag="tbody"
+                  @change="afterAdd"
+                >
+                  <tr
+                    v-for="(user, index) in props.items"
+                    :key="index"
+                  >
                     <td>
-                      <v-icon small class="page__grab-icon">mdi-arrow-all</v-icon>
+                      <v-icon
+                        small
+                        class="page__grab-icon"
+                      >
+                        mdi-arrow-all
+                      </v-icon>
                     </td>
                     <td>{{ index + 1 }}</td>
                     <td>{{ user.id }}</td>
@@ -104,7 +130,7 @@
                     <td>{{ user.user.phone }}</td>
                     <td>
                       {{ user.expect_trash ? Intl.NumberFormat().format(user.expect_trash) +
-                      getCustomerUnitFunc(user.cost_by) : '-'
+                        getCustomerUnitFunc(user.cost_by) : '-'
                       }}
                     </td>
                     <td>{{ user.created_at }}</td>
@@ -120,7 +146,12 @@
                           mdi-eye
                         </v-icon>
                       -->
-                      <v-icon small @click="deleteItem(index)">mdi-delete</v-icon>
+                      <v-icon
+                        small
+                        @click="deleteItem(index)"
+                      >
+                        mdi-delete
+                      </v-icon>
                     </td>
                   </tr>
                 </draggable>
@@ -140,25 +171,42 @@
           </v-card-title>
           <v-card-text>
             <v-container>
-              <v-form ref="form" lazy-validation>
+              <v-form
+                ref="form"
+                lazy-validation
+              >
                 <v-row>
                   <v-col cols="12">
-                    <v-text-field label="Name *" required v-model="name"></v-text-field>
-                    <p class="errors">{{ server_errors.name }}</p>
+                    <v-text-field
+                      v-model="name"
+                      label="Name *"
+                      required
+                    />
+                    <p class="errors">
+                      {{ server_errors.name }}
+                    </p>
                   </v-col>
                 </v-row>
               </v-form>
             </v-container>
             <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeAddModal()">Close</v-btn>
+              <v-spacer />
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="closeAddModal()"
+              >
+                Close
+              </v-btn>
               <v-btn
                 color="blue darken-1"
                 text
                 :loading="loading"
                 :disabled="loading"
                 @click="saveRoutePlan()"
-              >Save</v-btn>
+              >
+                Save
+              </v-btn>
             </v-card-actions>
           </v-card-text>
         </v-card>
@@ -169,16 +217,24 @@
     <ModalDelete>
       <template>
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+          <v-spacer />
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="closeDelete"
+          >
+            Cancel
+          </v-btn>
           <v-btn
             color="blue darken-1"
             text
             :loading="loading"
             :disabled="loading"
             @click="deleteItemConfirm"
-          >OK</v-btn>
-          <v-spacer></v-spacer>
+          >
+            OK
+          </v-btn>
+          <v-spacer />
         </v-card-actions>
       </template>
     </ModalDelete>
@@ -186,54 +242,55 @@
 </template>
 
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
-import draggable from "vuedraggable";
-import { getCustomerUnit } from "@/Helpers/Customer";
+import { GetOldValueOnInput } from '@/Helpers/GetValue';
+import draggable from 'vuedraggable';
+import { getCustomerUnit } from '@/Helpers/Customer';
+
 export default {
-  name: "Customer",
-  props: ["selectedData", "villages", "items"],
+  name: 'Customer',
   components: {
-    draggable
+    draggable,
   },
+  props: ['selectedData', 'villages', 'items'],
   data() {
     return {
       customers: [],
       customersId: [],
       countcutomer: 0,
       loading: false,
-      customerId: "",
-      //Pagination
-      search: "",
-      oldVal: "",
+      customerId: '',
+      // Pagination
+      search: '',
+      oldVal: '',
       selectedVillage: [],
       selectedCustomer: [],
       exclude_customers: [],
       selectedRows: [],
       customer: {},
-      customerIndex: "",
-      name: "",
+      customerIndex: '',
+      name: '',
       server_errors: {},
       headers: [
-        { text: "", value: "" },
-        { text: "#", value: "" },
-        { text: "Id", value: "id" },
-        { text: "ບໍລິສັດ", value: "company_name" },
-        { text: "Phone", value: "user.phone", sortable: false },
-        { text: "ຂີ້ເຫຍື້ອຄາດໝາຍ", value: "expect_trash" },
-        { text: "ວັນທີ່ເພີ່ມເຂົ້າ", value: "created_at" },
-        { text: "ບ້ານ", value: "village.name", sortable: true },
-        { text: "ເມືອງ", value: "district.name", sortable: true },
+        { text: '', value: '' },
+        { text: '#', value: '' },
+        { text: 'Id', value: 'id' },
+        { text: 'ບໍລິສັດ', value: 'company_name' },
+        { text: 'Phone', value: 'user.phone', sortable: false },
+        { text: 'ຂີ້ເຫຍື້ອຄາດໝາຍ', value: 'expect_trash' },
+        { text: 'ວັນທີ່ເພີ່ມເຂົ້າ', value: 'created_at' },
+        { text: 'ບ້ານ', value: 'village.name', sortable: true },
+        { text: 'ເມືອງ', value: 'district.name', sortable: true },
         {
-          text: "ລາຍລະອຽດການບໍລິການ",
-          value: "collect_description",
-          sortable: true
+          text: 'ລາຍລະອຽດການບໍລິການ',
+          value: 'collect_description',
+          sortable: true,
         },
-        { text: "", value: "actions", sortable: false }
+        { text: '', value: 'actions', sortable: false },
       ],
-      //Map
+      // Map
       latlng: {
         lat: 0,
-        lng: 0
+        lng: 0,
       },
       markers: [],
       infoPosition: null,
@@ -243,10 +300,20 @@ export default {
       infoOptions: {
         pixelOffset: {
           width: 0,
-          height: -35
-        }
-      }
+          height: -35,
+        },
+      },
     };
+  },
+  watch: {
+    search(value) {
+      if (value == '') {
+        this.fetchData();
+      }
+    },
+  },
+  created() {
+    this.fetchData();
   },
   methods: {
     getCustomerUnitFunc(costBy) {
@@ -255,10 +322,10 @@ export default {
     afterAdd(evt) {
       // console.log(evt);
       // const element = evt.moved.element;
-      const oldIndex = evt.moved.oldIndex;
-      const newIndex = evt.moved.newIndex;
+      const { oldIndex } = evt.moved;
+      const { newIndex } = evt.moved;
 
-      var tmpOrder = this.customers[oldIndex];
+      const tmpOrder = this.customers[oldIndex];
       this.customers.splice(oldIndex, 1);
       this.customers.splice(newIndex, 0, tmpOrder);
       // console.log(this.customers);
@@ -277,12 +344,12 @@ export default {
     },
 
     closeDelete() {
-      this.$store.commit("modalDelete_State", false);
+      this.$store.commit('modalDelete_State', false);
     },
     deleteItem(index) {
       this.customerIndex = index;
       // if (this.selectedRows.length > 0) {
-      this.$store.commit("modalDelete_State", true);
+      this.$store.commit('modalDelete_State', true);
       // }
     },
 
@@ -295,74 +362,74 @@ export default {
       //   this.selectedCustomer.push(this.customers[index]);
       //   this.customers.splice(index, 1);
       // }
-      this.selectedCustomer.filter(item => {
+      this.selectedCustomer.filter((item) => {
         this.exclude_customers.push(item.id);
       });
-      this.$store.commit("Toast_State", {
+      this.$store.commit('Toast_State', {
         value: true,
-        color: "success",
-        msg: "ລຶບຂໍ້ມູນສຳເລັດແລ້ວ"
+        color: 'success',
+        msg: 'ລຶບຂໍ້ມູນສຳເລັດແລ້ວ',
       });
       this.selectedRows = [];
       this.fetchData();
       this.loading = false;
-      this.$store.commit("modalDelete_State", false);
+      this.$store.commit('modalDelete_State', false);
     },
     createRoutePlan() {
-      this.$store.commit("modalAdd_State", true);
+      this.$store.commit('modalAdd_State', true);
     },
     closeAddModal() {
-      this.$store.commit("modalAdd_State", false);
+      this.$store.commit('modalAdd_State', false);
     },
     saveRoutePlan() {
       const selectedCustomer = [];
-      this.customers.map(item => {
+      this.customers.map((item) => {
         selectedCustomer.push(item.id);
       });
       if (this.customers.length > 0) {
         this.loading = true;
         this.$axios
           .post(
-            "create-route-plan",
+            'create-route-plan',
             {
               name: this.name,
-              customers: selectedCustomer
+              customers: selectedCustomer,
             },
-            { responseType: "blob" }
+            { responseType: 'blob' },
           )
-          .then(res => {
+          .then((res) => {
             if (res.status == 200) {
               setTimeout(() => {
                 this.loading = false;
               }, 300);
               this.$router.push({
-                name: "Plan"
+                name: 'Plan',
               });
             }
           })
-          .catch(error => {
-            this.$store.commit("Toast_State", {
+          .catch((error) => {
+            this.$store.commit('Toast_State', {
               value: true,
-              color: "error",
+              color: 'error',
               msg: error.response
                 ? error.response.data.message
-                : "Something went wrong"
+                : 'Something went wrong',
             });
             this.loading = false;
           });
       } else {
-        this.$store.commit("Toast_State", {
+        this.$store.commit('Toast_State', {
           value: true,
-          color: "error",
-          msg: "ກາລຸນາເລືອກລູກຄ້າກ່ອນ"
+          color: 'error',
+          msg: 'ກາລຸນາເລືອກລູກຄ້າກ່ອນ',
         });
       }
     },
 
     viewPage(id) {
       this.$router.push({
-        name: "ViewClient",
-        params: { id }
+        name: 'ViewClient',
+        params: { id },
       });
 
       // window.open(route.href, "_blank");
@@ -371,25 +438,24 @@ export default {
       GetOldValueOnInput(this);
     },
 
-    //Google map
+    // Google map
     getCenter() {
       if (this.customers.length) {
         if (parseFloat(this.customers[0].lat) == null) {
           console.log(this.latlng);
           return this.latlng;
-        } else {
-          const latlng = {
-            lat: parseFloat(this.customers[0].lat),
-            lng: parseFloat(this.customers[0].lng)
-          };
-          return latlng;
         }
+        const latlng = {
+          lat: parseFloat(this.customers[0].lat),
+          lng: parseFloat(this.customers[0].lng),
+        };
+        return latlng;
       }
       return this.latlng;
     },
     getSiteIcon(status) {
       const pin1 = {
-        url: require("@coms/../../src/assets/pin1.svg"),
+        url: require('@coms/../../src/assets/pin1.svg'),
         zoomControl: true,
         mapTypeControl: false,
         scaleControl: false,
@@ -400,18 +466,18 @@ export default {
         size: {
           width: 35,
           height: 55,
-          f: "px",
-          b: "px"
+          f: 'px',
+          b: 'px',
         },
         scaledSize: {
           width: 35,
           height: 55,
-          f: "px",
-          b: "px"
-        }
+          f: 'px',
+          b: 'px',
+        },
       };
       const pin2 = {
-        url: require("@coms/../../src/assets/pin2.svg"),
+        url: require('@coms/../../src/assets/pin2.svg'),
         zoomControl: true,
         mapTypeControl: false,
         scaleControl: false,
@@ -422,16 +488,16 @@ export default {
         size: {
           width: 35,
           height: 55,
-          f: "px",
-          b: "px"
+          f: 'px',
+          b: 'px',
         },
-        color: "#000",
+        color: '#000',
         scaledSize: {
           width: 35,
           height: 55,
-          f: "px",
-          b: "px"
-        }
+          f: 'px',
+          b: 'px',
+        },
       };
 
       try {
@@ -449,13 +515,13 @@ export default {
       if (m.customer !== null) {
         return {
           lat: parseFloat(m.lat),
-          lng: parseFloat(m.lng)
+          lng: parseFloat(m.lng),
         };
       }
     },
     toggleInfo(m, key) {
       this.infoPosition = this.getMarkers(m);
-      this.infoContent = m.company_name + " (" + m.village.name + ") ";
+      this.infoContent = `${m.company_name} (${m.village.name}) `;
       if (this.infoCurrentKey == key) {
         this.infoOpened = !this.infoOpened;
       } else {
@@ -471,23 +537,13 @@ export default {
     toggleSelection(keyID) {
       if (this.selectedRows.includes(keyID)) {
         this.selectedRows = this.selectedRows.filter(
-          selectedKeyID => selectedKeyID !== keyID
+          (selectedKeyID) => selectedKeyID !== keyID,
         );
       } else {
         this.selectedRows.push(keyID);
       }
-    }
+    },
   },
-  watch: {
-    search: function(value) {
-      if (value == "") {
-        this.fetchData();
-      }
-    }
-  },
-  created() {
-    this.fetchData();
-  }
 };
 </script>
 

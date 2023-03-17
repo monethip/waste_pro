@@ -1,7 +1,10 @@
 <template>
   <v-container>
     <div>
-      <v-row v-for="(sum, index) in summary" :key="index">
+      <v-row
+        v-for="(sum, index) in summary"
+        :key="index"
+      >
         <v-col>
           <h3>ປີ {{ sum.year }}</h3>
         </v-col>
@@ -81,27 +84,28 @@
           <div>
             <span>{{ moment(item.created_at).format("DD-MM-YY") }}</span>
           </div>
-        </template> </v-data-table
-      ><br />
+        </template>
+      </v-data-table><br>
       <template>
         <Pagination
           v-if="pagination.total_pages > 1"
           :pagination="pagination"
           :offset="offset"
           @paginate="fetchData()"
-        ></Pagination>
+        />
       </template>
     </div>
   </v-container>
 </template>
 
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
-import invoice from "@views/report/invoice";
+import { GetOldValueOnInput } from '@/Helpers/GetValue';
+import invoice from '@views/report/invoice';
+
 export default {
   mixins: [invoice],
   // name: "HomeInvoice",
-  props: ["tab"],
+  props: ['tab'],
   title() {
     return `Vientiane Waste Co-Dev|Report Invoice`;
   },
@@ -109,27 +113,39 @@ export default {
     return {
       customers: [],
       loading: false,
-      customerId: "",
-      //Pagination
+      customerId: '',
+      // Pagination
       offset: 12,
       pagination: {},
       per_page: 100,
-      search: "",
-      oldVal: "",
+      search: '',
+      oldVal: '',
       // invoices: [],
       // summary: {},
       headers: [
-        { text: "ວັນທີ", value: "month", sortable: false },
-        { text: "ລູກຄ້າ", value: "full_name" },
-        { text: "ຈຳນວນຖົງ", value: "total_bag", sortable: false },
-        { text: "ສ່ວນຫຼຸດ", value: "discount" },
-        { text: "SubTotal", value: "sub_total", sortable: false },
-        { text: "Total", value: "total", sortable: false },
-        { text: "ສະຖານະ", value: "status", sortable: false },
-        { text: "Type", value: "type", sortable: false },
+        { text: 'ວັນທີ', value: 'month', sortable: false },
+        { text: 'ລູກຄ້າ', value: 'full_name' },
+        { text: 'ຈຳນວນຖົງ', value: 'total_bag', sortable: false },
+        { text: 'ສ່ວນຫຼຸດ', value: 'discount' },
+        { text: 'SubTotal', value: 'sub_total', sortable: false },
+        { text: 'Total', value: 'total', sortable: false },
+        { text: 'ສະຖານະ', value: 'status', sortable: false },
+        { text: 'Type', value: 'type', sortable: false },
         // { text: "", value: "actions", sortable: false },
       ],
     };
+  },
+  watch: {
+    tab() {
+      if (this.tab == 'tab-1') {
+        // this.fetchData();
+      }
+    },
+  },
+  created() {
+    // this.fetchDataInvoice();
+    console.log(this.invoices);
+    this.fetchData();
   },
   methods: {
     // fetchDataInvoice() {
@@ -181,18 +197,6 @@ export default {
     Search() {
       GetOldValueOnInput(this);
     },
-  },
-  watch: {
-    tab: function () {
-      if (this.tab == "tab-1") {
-        // this.fetchData();
-      }
-    },
-  },
-  created() {
-    // this.fetchDataInvoice();
-    console.log(this.invoices);
-    this.fetchData();
   },
 };
 </script>

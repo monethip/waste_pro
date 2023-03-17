@@ -47,8 +47,7 @@
                 href="https://www.google.com/policies/privacy/"
                 target="_blank"
                 rel="noopener noreferrer"
-                >Google Play Services</a
-              >
+              >Google Play Services</a>
             </li>
             <!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!---->
           </ul>
@@ -146,7 +145,7 @@
 
 <script>
 export default {
-  name: "Policy",
+  name: 'Policy',
   title() {
     return `Vientiane Waste Co-Dev| Policy`;
   },

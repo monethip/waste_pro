@@ -2,8 +2,15 @@
   <v-container>
     <v-row class="mb-4">
       <v-col>
-        <v-breadcrumbs large class="pa-0">
-          <v-btn text class="text-primary" @click="backPrevios()">
+        <v-breadcrumbs
+          large
+          class="pa-0"
+        >
+          <v-btn
+            text
+            class="text-primary"
+            @click="backPrevios()"
+          >
             <v-icon>mdi-chevron-left</v-icon>
           </v-btn>
           ລາຍລະອຽດການອອກບິນຄ່າຂີ້ເຫຍື້ອ
@@ -15,22 +22,30 @@
         <v-card-text class="px-16 py-16">
           <v-row class="pb-4">
             <v-col>
-              <h2 class="text-center">ໃບບິນເກັບເງິນຄ່າຂີ້ເຫື້ຍອ</h2>
+              <h2 class="text-center">
+                ໃບບິນເກັບເງິນຄ່າຂີ້ເຫື້ຍອ
+              </h2>
             </v-col>
           </v-row>
           <v-row class="pb-4">
             <v-col>
               <h2>
                 ສະຖານະບິນ:
-                <v-chip :color="getBgColorFunc(invoice.status)" dark>{{
-                  getLaoStatusFunc(invoice.status)
-                }}</v-chip>
+                <v-chip
+                  :color="getBgColorFunc(invoice.status)"
+                  dark
+                >
+                  {{
+                    getLaoStatusFunc(invoice.status)
+                  }}
+                </v-chip>
                 <div v-if="invoice.status == 'rejected'">
                   <v-chip
-                    dark
                     v-for="detail in invoice.reject_details"
                     :key="detail.id"
-                    >{{ detail.reject_reason.name }}
+                    dark
+                  >
+                    {{ detail.reject_reason.name }}
                   </v-chip>
                 </div>
               </h2>
@@ -77,30 +92,32 @@
           <v-row>
             <v-col>
               <v-btn
-                class="btn btn-primary mr-4 elevation-0"
                 v-if="invoice.status === 'created'"
+                class="btn btn-primary mr-4 elevation-0"
                 @click="approveBill(invoice.id)"
-                >ອະນຸມັດບິນ
+              >
+                ອະນຸມັດບິນ
               </v-btn>
               <!--              <v-btn class="btn btn-primary mr-4 elevation-0" v-if="invoice.status === 'created'"-->
               <!--                     @click="editBill(invoice.id)">ແກ້ໄຂບິນ-->
               <!--              </v-btn>-->
               <v-btn
-                class="btn btn-primary mr-4 elevation-0"
                 v-if="invoice.status === 'approved'"
-                @click="toPay(invoice.id)"
-                >ຊຳລະບິນ</v-btn
-              >
-              <v-btn
                 class="btn btn-primary mr-4 elevation-0"
+                @click="toPay(invoice.id)"
+              >
+                ຊຳລະບິນ
+              </v-btn>
+              <v-btn
                 v-if="invoice.status === 'to_confirm_payment'"
+                class="btn btn-primary mr-4 elevation-0"
                 @click="confirmPayment"
               >
                 ຢືນຢັນການຊຳລະບິນ
               </v-btn>
               <v-btn
-                class="btn btn-primary mr-4 elevation-0"
                 v-if="invoice.status === 'to_confirm_payment'"
+                class="btn btn-primary mr-4 elevation-0"
                 @click="toConfirm(invoice.id)"
               >
                 ປະຕິເສດການຊຳລະ
@@ -110,23 +127,37 @@
           <v-row class="mb-n6">
             <v-col>ລາຍລະອຽດ</v-col>
           </v-row>
-          <v-divider class="my-6 c-divider"></v-divider>
+          <v-divider class="my-6 c-divider" />
 
           <v-simple-table>
             <template v-slot:default>
               <thead>
                 <tr>
-                  <th class="text-left">ລຳດັບ</th>
-                  <th class="text-left">ລາຍການ</th>
-                  <th class="text-left">ລາຍລະອຽດ</th>
-                  <th class="text-left">ຈຳນວນ</th>
-                  <th class="text-left">ລາຄາ</th>
-                  <th class="text-left">ລວມ</th>
-                  <th class="text-left">Active</th>
+                  <th class="text-left">
+                    ລຳດັບ
+                  </th>
+                  <th class="text-left">
+                    ລາຍການ
+                  </th>
+                  <th class="text-left">
+                    ລາຍລະອຽດ
+                  </th>
+                  <th class="text-left">
+                    ຈຳນວນ
+                  </th>
+                  <th class="text-left">
+                    ລາຄາ
+                  </th>
+                  <th class="text-left">
+                    ລວມ
+                  </th>
+                  <th class="text-left">
+                    Active
+                  </th>
                   <th
-                    class="text-left"
                     v-if="invoice.status === 'created'"
-                  ></th>
+                    class="text-left"
+                  />
                 </tr>
               </thead>
               <tbody>
@@ -142,10 +173,17 @@
                   <td>{{ Intl.NumberFormat().format(data.total) }}</td>
                   <td>
                     <div v-if="data.is_active === 1">
-                      <v-chip color="success" label>True</v-chip>
+                      <v-chip
+                        color="success"
+                        label
+                      >
+                        True
+                      </v-chip>
                     </div>
                     <div v-if="data.is_active === 0">
-                      <v-chip label>False</v-chip>
+                      <v-chip label>
+                        False
+                      </v-chip>
                     </div>
                   </td>
                   <td v-if="invoice.status === 'created'">
@@ -165,35 +203,53 @@
             </template>
           </v-simple-table>
 
-          <v-divider class="my-6 c-divider total-height bottom"></v-divider>
+          <v-divider class="my-6 c-divider total-height bottom" />
           <v-simple-table>
             <tbody class="tb-result">
               <tr>
-                <td :colspan="4" style="font-size: 16px; font-weight: 600">
+                <td
+                  :colspan="4"
+                  style="font-size: 16px; font-weight: 600"
+                >
                   ລວມເງິນ:
                 </td>
-                <td :colspan="4" style="font-size: 16px; font-weight: 600">
+                <td
+                  :colspan="4"
+                  style="font-size: 16px; font-weight: 600"
+                >
                   {{ Intl.NumberFormat().format(invoice.sub_total) }}
                 </td>
               </tr>
               <tr>
-                <td :colspan="4" style="font-size: 16px; font-weight: 600">
+                <td
+                  :colspan="4"
+                  style="font-size: 16px; font-weight: 600"
+                >
                   ສ່ວນຫຼຸດ:
                 </td>
-                <td :colspan="4" style="font-size: 16px; font-weight: 600">
+                <td
+                  :colspan="4"
+                  style="font-size: 16px; font-weight: 600"
+                >
                   {{ Intl.NumberFormat().format(invoice.discount) }}
                 </td>
               </tr>
               <tr style="font-size: 20px">
-                <td :colspan="4" style="font-size: 16px; font-weight: 600">
+                <td
+                  :colspan="4"
+                  style="font-size: 16px; font-weight: 600"
+                >
                   ລວມທັງໝົດ:
                 </td>
-                <td :colspan="4" style="font-size: 16px; font-weight: 600">
+                <td
+                  :colspan="4"
+                  style="font-size: 16px; font-weight: 600"
+                >
                   {{ Intl.NumberFormat().format(invoice.total) }}
                 </td>
               </tr>
             </tbody>
-            <br />
+            <br>
           </v-simple-table>
           <!--          <v-row class="mb-n10">-->
           <!--            <v-col>-->
@@ -212,7 +268,10 @@
             <v-col>
               <h3>
                 ວັນທີຊຳລະ:
-                <span v-if="invoice.paided_by" class="error--text">{{
+                <span
+                  v-if="invoice.paided_by"
+                  class="error--text"
+                >{{
                   invoice.paided_at
                 }}</span>
               </h3>
@@ -226,7 +285,10 @@
             <v-col>
               <h3>
                 ວັນທີຢືນຢັນຊຳລະ:
-                <span v-if="invoice.confirmed_payment_by" class="error--text">{{
+                <span
+                  v-if="invoice.confirmed_payment_by"
+                  class="error--text"
+                >{{
                   invoice.confirmed_payment_at
                 }}</span>
               </h3>
@@ -238,12 +300,17 @@
 
           <v-row v-if="invoice.image_payments.length > 0">
             <v-col>
-              <h3 class="v-title" v-if="invoice.image_payments">ຮູບການຊຳລະ</h3>
+              <h3
+                v-if="invoice.image_payments"
+                class="v-title"
+              >
+                ຮູບການຊຳລະ
+              </h3>
               <v-row v-if="invoice.image_payments">
                 <v-col
-                  cols="6"
                   v-for="(img, index) in invoice.image_payments"
                   :key="index"
+                  cols="6"
                 >
                   <v-card class="elevation-0">
                     <v-img
@@ -255,7 +322,7 @@
                       aspect-ratio="1"
                       class="pa-2 img-payment"
                       @click="showImage(img.url)"
-                    ></v-img>
+                    />
                   </v-card>
                 </v-col>
               </v-row>
@@ -269,9 +336,9 @@
               </h3>
               <v-row v-if="invoice.image_fix_payments">
                 <v-col
-                  cols="6"
                   v-for="(img, index) in invoice.image_fix_payments"
                   :key="index"
+                  cols="6"
                 >
                   <v-card class="elevation-0">
                     <v-img
@@ -283,7 +350,7 @@
                       aspect-ratio="1"
                       class="pa-2 img-payment-error"
                       @click="showImage(img.url)"
-                    ></v-img>
+                    />
                   </v-card>
                 </v-col>
               </v-row>
@@ -293,22 +360,23 @@
           <v-row>
             <v-col>
               <v-btn
+                v-if="invoice.status == 'rejected'"
                 class="btn btn-primary mr-4 elevation-0"
                 color="red"
                 dark
-                v-if="invoice.status == 'rejected'"
                 @click="toPay(invoice.id)"
-                >ເພີ່ມຮູບແກ້ໄຂ
+              >
+                ເພີ່ມຮູບແກ້ໄຂ
               </v-btn>
             </v-col>
             <v-col>
               <v-btn
-                class="btn btn-primary mr-4 elevation-0"
-                color="green"
                 v-if="
                   invoice.status == 'rejected' &&
                     invoice.image_fix_payments.length
                 "
+                class="btn btn-primary mr-4 elevation-0"
+                color="green"
                 dark
                 @click="confirmPayment(invoice.id)"
               >
@@ -318,14 +386,14 @@
           </v-row>
 
           <v-card-actions class="mt-6">
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-btn
+              v-if="invoice.status === 'success'"
               color="info"
               :loading="loading"
               :disabled="loading"
-              @click="Download(invoice)"
               class="white--text px-12 btn-primary elevation-0"
-              v-if="invoice.status === 'success'"
+              @click="Download(invoice)"
             >
               Download
             </v-btn>
@@ -338,26 +406,34 @@
 
     <ModalEdit>
       <template @close="close">
-        <v-card v-if="invoice.status == 'rejected'" class="py-8 px-14">
+        <v-card
+          v-if="invoice.status == 'rejected'"
+          class="py-8 px-14"
+        >
           <v-card-title>
             <p>ເພີ່ມຮູບແກ້ໄຂ {{ invoice.content }}</p>
           </v-card-title>
           <v-card-text>
             <v-container>
-              <v-form ref="form" lazy-validation>
+              <v-form
+                ref="form"
+                lazy-validation
+              >
                 <div>
-                  <h3 class="my-4">ຮູບສຳເລັດການໂອນໃໝ່</h3>
+                  <h3 class="my-4">
+                    ຮູບສຳເລັດການໂອນໃໝ່
+                  </h3>
                   <v-row>
                     <v-col>
                       <label class="file-label">
                         <input
-                          @change="onFixFileChange"
+                          ref="image"
                           class="file-input input-file-image"
                           type="file"
                           name="image"
                           accept="image/*"
-                          ref="image"
-                        />
+                          @change="onFixFileChange"
+                        >
                         <span class="file-cta">
                           <span class="file-icon">
                             <v-icon
@@ -367,8 +443,7 @@
                                 cursor: pointer;
                               "
                               class="fas fa-cloud-upload"
-                              >mdi-file-image</v-icon
-                            >
+                            >mdi-file-image</v-icon>
                           </span>
                         </span>
                       </label>
@@ -376,8 +451,14 @@
                   </v-row>
                   <v-row>
                     <v-col v-if="fixed_imageUrl">
-                      <v-avatar class="avatar rounded" size="194px">
-                        <img :src="fixed_imageUrl" alt="" />
+                      <v-avatar
+                        class="avatar rounded"
+                        size="194px"
+                      >
+                        <img
+                          :src="fixed_imageUrl"
+                          alt=""
+                        >
                       </v-avatar>
                     </v-col>
                     <p class="errors">
@@ -388,7 +469,7 @@
               </v-form>
             </v-container>
             <v-card-actions>
-              <v-spacer></v-spacer>
+              <v-spacer />
               <v-btn
                 color="error"
                 class="elevation-0 btn mr-4 px-12"
@@ -409,14 +490,22 @@
             </v-card-actions>
           </v-card-text>
         </v-card>
-        <v-card v-else class="py-8 px-14">
+        <v-card
+          v-else
+          class="py-8 px-14"
+        >
           <v-card-title>
             <p>ຊຳລະຄ່າຂີ້ເຫື້ຍອ {{ invoice.content }}</p>
           </v-card-title>
           <v-card-text>
             <v-container>
-              <v-form ref="form" lazy-validation>
-                <h3 class="my-4">ເລືອກປະເພດການຊຳລະ</h3>
+              <v-form
+                ref="form"
+                lazy-validation
+              >
+                <h3 class="my-4">
+                  ເລືອກປະເພດການຊຳລະ
+                </h3>
                 <v-row>
                   <v-col cols="12">
                     <v-chip-group
@@ -434,11 +523,27 @@
                         outlined
                       >
                         ເງິນສົດ
-                        <v-icon left class="ml-1"> mdi-currency-usd</v-icon>
+                        <v-icon
+                          left
+                          class="ml-1"
+                        >
+                          mdi-currency-usd
+                        </v-icon>
                       </v-chip>
-                      <v-chip large color="error" label filter outlined>
+                      <v-chip
+                        large
+                        color="error"
+                        label
+                        filter
+                        outlined
+                      >
                         BCEL
-                        <v-icon class="ml-1" left> mdi-credit-card </v-icon>
+                        <v-icon
+                          class="ml-1"
+                          left
+                        >
+                          mdi-credit-card
+                        </v-icon>
                       </v-chip>
                     </v-chip-group>
                     <p class="errors">
@@ -447,18 +552,20 @@
                   </v-col>
                 </v-row>
                 <div v-if="paymentType == 1">
-                  <h3 class="my-4">ຮູບສຳເລັດການໂອນ</h3>
+                  <h3 class="my-4">
+                    ຮູບສຳເລັດການໂອນ
+                  </h3>
                   <v-row>
                     <v-col>
                       <label class="file-label">
                         <input
-                          @change="onFileChange"
+                          ref="image"
                           class="file-input input-file-image"
                           type="file"
                           name="image"
                           accept="image/*"
-                          ref="image"
-                        />
+                          @change="onFileChange"
+                        >
                         <span class="file-cta">
                           <span class="file-icon">
                             <v-icon
@@ -468,8 +575,7 @@
                                 cursor: pointer;
                               "
                               class="fas fa-cloud-upload"
-                              >mdi-file-image</v-icon
-                            >
+                            >mdi-file-image</v-icon>
                           </span>
                         </span>
                       </label>
@@ -477,8 +583,14 @@
                   </v-row>
                   <v-row>
                     <v-col v-if="imageUrl">
-                      <v-avatar class="avatar rounded" size="194px">
-                        <img :src="imageUrl" alt="" />
+                      <v-avatar
+                        class="avatar rounded"
+                        size="194px"
+                      >
+                        <img
+                          :src="imageUrl"
+                          alt=""
+                        >
                       </v-avatar>
                     </v-col>
                     <p class="errors">
@@ -489,7 +601,7 @@
               </v-form>
             </v-container>
             <v-card-actions>
-              <v-spacer></v-spacer>
+              <v-spacer />
               <v-btn
                 color="error"
                 class="elevation-0 btn mr-4 px-12"
@@ -514,24 +626,35 @@
     </ModalEdit>
 
     <!-- Confirm Payment-->
-    <v-dialog v-model="paymentDialog" max-width="620px" persistent>
+    <v-dialog
+      v-model="paymentDialog"
+      max-width="620px"
+      persistent
+    >
       <template>
         <v-card>
           <v-card-title>
             <p>
-              <v-icon class="primary-color" large color="success"
-                >mdi-checkbox-marked-circle-outline
+              <v-icon
+                class="primary-color"
+                large
+                color="success"
+              >
+                mdi-checkbox-marked-circle-outline
               </v-icon>
               ປະຕິເສດການຊຳລະຄ່າຂີ້ເຫຍື້ອ
 
-              <span class="primary-color"
-                >{{ invoice.name }} {{ invoice.content }}</span
-              >
+              <span
+                class="primary-color"
+              >{{ invoice.name }} {{ invoice.content }}</span>
             </p>
           </v-card-title>
           <v-card-text>
             <v-container>
-              <v-form ref="form" lazy-validation>
+              <v-form
+                ref="form"
+                lazy-validation
+              >
                 <v-row>
                   <v-col cols="12">
                     <v-select
@@ -542,8 +665,7 @@
                       :items="rejects"
                       item-text="name"
                       item-value="id"
-                    >
-                    </v-select>
+                    />
                     <p class="errors">
                       {{ server_errors.reject_reason_id }}
                     </p>
@@ -558,8 +680,7 @@
                       outlined
                       dense
                       type="text"
-                    >
-                    </v-text-field>
+                    />
                     <p class="errors">
                       {{ server_errors.description }}
                     </p>
@@ -567,7 +688,7 @@
                 </v-row>
               </v-form>
               <v-card-actions class="mt-4">
-                <v-spacer></v-spacer>
+                <v-spacer />
                 <v-btn
                   color="error"
                   class="btn mr-4 px-12 elevation-0"
@@ -601,8 +722,13 @@
           </v-card-title>
           <v-card-text>
             <v-container>
-              <v-form ref="form" lazy-validation>
-                <h3 class="my-4">ແກ້ໄຂຂໍ້ມູນ</h3>
+              <v-form
+                ref="form"
+                lazy-validation
+              >
+                <h3 class="my-4">
+                  ແກ້ໄຂຂໍ້ມູນ
+                </h3>
                 <v-row>
                   <v-col cols>
                     <v-text-field
@@ -612,8 +738,7 @@
                       dense
                       type="number"
                       class="input-number"
-                    >
-                    </v-text-field>
+                    />
                     <p class="errors">
                       {{ server_errors.qty }}
                     </p>
@@ -626,8 +751,7 @@
                       dense
                       type="number"
                       class="input-number"
-                    >
-                    </v-text-field>
+                    />
                     <p class="errors">
                       {{ server_errors.price }}
                     </p>
@@ -640,8 +764,7 @@
                       label="Item (La)"
                       outlined
                       dense
-                    >
-                    </v-text-field>
+                    />
                     <p class="errors">
                       {{ server_errors.item_la }}
                     </p>
@@ -652,8 +775,7 @@
                       label="Content"
                       outlined
                       dense
-                    >
-                    </v-text-field>
+                    />
                     <p class="errors">
                       {{ server_errors.content }}
                     </p>
@@ -664,13 +786,13 @@
                     <v-switch
                       v-model="is_active"
                       :label="`Active : ${is_active}`"
-                    ></v-switch>
+                    />
                   </v-col>
                 </v-row>
               </v-form>
             </v-container>
             <v-card-actions>
-              <v-spacer></v-spacer>
+              <v-spacer />
               <v-btn
                 color="error"
                 class="elevation-0 btn mr-4 px-12"
@@ -695,8 +817,13 @@
     </ModalAdd>
     <ModalView>
       <v-card>
-        <v-img :src="showFullImage" alt="Image" width="auto" height="auto" dark>
-        </v-img>
+        <v-img
+          :src="showFullImage"
+          alt="Image"
+          width="auto"
+          height="auto"
+          dark
+        />
       </v-card>
     </ModalView>
   </v-container>
@@ -707,60 +834,86 @@ import {
   getBgColor,
   getLaoBillingType,
   getLaoStatus,
-} from "@/Helpers/BillingStatus";
+} from '@/Helpers/BillingStatus';
 
 export default {
-  name: "InvoiceDetail",
+  name: 'InvoiceDetail',
   title() {
     return `Vientiane Waste Co-Dev|Invoice Detail`;
   },
   data() {
     return {
       loading: false,
-      customerId: "",
+      customerId: '',
       invoice: {
         image_payments: [],
         image_fix_payments: [],
       },
-      invoiceStatusColor: "",
+      invoiceStatusColor: '',
       is_active: null,
       paymentDialog: false,
 
-      fixed_image: "",
-      fixed_imageUrl: "",
+      fixed_image: '',
+      fixed_imageUrl: '',
 
-      image: "",
-      imageUrl: "",
-      showFullImage: "",
+      image: '',
+      imageUrl: '',
+      showFullImage: '',
       // bcel_reference_number: "",
-      payment_method: "",
-      paymentType: "",
-      confirmType: "",
+      payment_method: '',
+      paymentType: '',
+      confirmType: '',
       rejects: [],
-      reject_reason_id: "",
-      description: "",
+      reject_reason_id: '',
+      description: '',
 
       server_errors: {},
-      total: "",
+      total: '',
       formData: {},
-      paymentTypeRule: [(v) => !!v || "Name is required"],
+      paymentTypeRule: [(v) => !!v || 'Name is required'],
     };
   },
   computed: {
     customerDisplayId() {
-      if (!this.invoice.user) return "";
+      if (!this.invoice.user) return '';
 
-      if (this.invoice.user.customer)
-        return this.invoice.user.customer.customer_id;
+      if (this.invoice.user.customer) return this.invoice.user.customer.customer_id;
 
-      return "";
+      return '';
     },
+  },
+  watch: {
+    is_active(value) {
+      if (value === true) {
+        this.formData.is_active = 1;
+      } else {
+        this.formData.is_active = 0;
+      }
+    },
+    paymentType() {
+      if (this.paymentType == 0) {
+        this.payment_method = 'cash';
+        this.image = '';
+        this.imageUrl = '';
+      } else if (this.paymentType == 1) {
+        this.payment_method = 'bcel';
+      }
+      this.server_errors.payment_method = '';
+    },
+    image() {
+      this.server_errors.image = '';
+    },
+  },
+  created() {
+    if (this.$route.params.id) {
+      this.fetchData();
+    }
   },
   methods: {
     showImage(url) {
       if (url != null) {
         this.showFullImage = url;
-        this.$store.commit("modalView_State", true);
+        this.$store.commit('modalView_State', true);
       }
     },
     Download(link) {
@@ -769,14 +922,14 @@ export default {
       }
     },
     onFileChange(e) {
-      let input = e.target;
-      let file = e.target.files[0];
+      const input = e.target;
+      const file = e.target.files[0];
       this.image = input.files[0];
       this.imageUrl = URL.createObjectURL(file);
     },
     onFixFileChange(e) {
-      let input = e.target;
-      let file = e.target.files[0];
+      const input = e.target;
+      const file = e.target.files[0];
       this.fixed_image = input.files[0];
       this.fixed_imageUrl = URL.createObjectURL(file);
     },
@@ -785,51 +938,51 @@ export default {
       this.$router.go(-1);
     },
     fetchData() {
-      this.$store.commit("Loading_State", true);
+      this.$store.commit('Loading_State', true);
       this.$axios
-        .get("billing/" + this.$route.params.id)
+        .get(`billing/${this.$route.params.id}`)
         .then((res) => {
           if (res.data.code == 200) {
-            this.$store.commit("Loading_State", false);
+            this.$store.commit('Loading_State', false);
             this.invoice = res.data.data;
           }
         })
         .catch((error) => {
-          this.$store.commit("Loading_State", false);
+          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status == 422) {
-            let obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
+            const obj = error.response.data.errors;
+            for (const [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
           }
         });
     },
     toPay() {
-      this.$store.commit("modalEdit_State", true);
+      this.$store.commit('modalEdit_State', true);
     },
     closeModal() {
-      this.$store.commit("modalEdit_State", false);
+      this.$store.commit('modalEdit_State', false);
     },
     async pay() {
-      if (this.paymentType !== "") {
-        let formData = new FormData();
-        formData.append("payment_method", this.payment_method);
-        formData.append("image_payments[]", this.image);
-        formData.append("_method", "PUT");
+      if (this.paymentType !== '') {
+        const formData = new FormData();
+        formData.append('payment_method', this.payment_method);
+        formData.append('image_payments[]', this.image);
+        formData.append('_method', 'PUT');
         if (this.$refs.form.validate() == true) {
           this.loading = true;
           await this.$axios
-            .post("pay-billing/" + this.invoice.id, formData)
+            .post(`pay-billing/${this.invoice.id}`, formData)
             .then((res) => {
               if (res.data.code == 200) {
                 this.$axios
-                  .put("confirm-billing/" + this.invoice.id)
+                  .put(`confirm-billing/${this.invoice.id}`)
                   .then((res) => {
                     if (res.data.code == 200) {
                       setTimeout(() => {
-                        this.$store.commit("Toast_State", {
+                        this.$store.commit('Toast_State', {
                           value: true,
-                          color: "success",
+                          color: 'success',
                           msg: res.data.message,
                         });
                       }, 300);
@@ -847,14 +1000,14 @@ export default {
             })
             .catch((error) => {
               this.loading = false;
-              this.$store.commit("Toast_State", {
+              this.$store.commit('Toast_State', {
                 value: true,
-                color: "error",
+                color: 'error',
                 msg: error.response ? error.response.data.message : error,
               });
               if (error.response && error.response.status == 422) {
-                let obj = error.response.data.errors;
-                for (let [key, data] of Object.entries(obj)) {
+                const obj = error.response.data.errors;
+                for (const [key, data] of Object.entries(obj)) {
                   this.server_errors[key] = data[0];
                 }
               }
@@ -862,41 +1015,41 @@ export default {
             });
         }
       } else {
-        this.$store.commit("Toast_State", {
+        this.$store.commit('Toast_State', {
           value: true,
-          color: "error",
-          msg: "ກາລຸນາເລືອກປະເພດການຊຳລະກ່ອນ",
+          color: 'error',
+          msg: 'ກາລຸນາເລືອກປະເພດການຊຳລະກ່ອນ',
         });
       }
     },
     async addFixed() {
-      let formData = new FormData();
-      formData.append("image_fix_payments[]", this.fixed_image);
+      const formData = new FormData();
+      formData.append('image_fix_payments[]', this.fixed_image);
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         await this.$axios
-          .post("fix-billing/" + this.invoice.id, formData)
+          .post(`fix-billing/${this.invoice.id}`, formData)
           .then((res) => {
             if (res.data.code == 200) {
               // this.confirmPayment();
               this.loading = false;
               this.closeModal();
               this.fetchData();
-              this.fixed_image = "";
-              this.fixed_imageUrl = "";
+              this.fixed_image = '';
+              this.fixed_imageUrl = '';
               this.$refs.form.reset();
             }
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", {
+            this.$store.commit('Toast_State', {
               value: true,
-              color: "error",
+              color: 'error',
               msg: error.response ? error.response.data.message : error,
             });
             if (error.response && error.response.status == 422) {
-              let obj = error.response.data.errors;
-              for (let [key, data] of Object.entries(obj)) {
+              const obj = error.response.data.errors;
+              for (const [key, data] of Object.entries(obj)) {
                 this.server_errors[key] = data[0];
               }
             }
@@ -907,12 +1060,12 @@ export default {
     async confirmPayment() {
       this.loading = true;
       await this.$axios
-        .put("confirm-billing/" + this.invoice.id)
+        .put(`confirm-billing/${this.invoice.id}`)
         .then((res) => {
           if (res.data.code == 200) {
-            this.$store.commit("Toast_State", {
+            this.$store.commit('Toast_State', {
               value: true,
-              color: "success",
+              color: 'success',
               msg: res.data.message,
             });
             this.fetchData();
@@ -930,10 +1083,10 @@ export default {
     },
     fetchReject() {
       this.$axios
-        .get("reject-reason")
+        .get('reject-reason')
         .then((res) => {
           if (res.data.code == 200) {
-            this.$store.commit("Loading_State", false);
+            this.$store.commit('Loading_State', false);
             this.rejects = res.data.data;
           }
         })
@@ -950,30 +1103,30 @@ export default {
       return getLaoBillingType(status);
     },
     closeAddModal() {
-      this.$store.commit("modalAdd_State", false);
+      this.$store.commit('modalAdd_State', false);
     },
     async approveBill(id) {
-      if (this.invoice.status === "created") {
+      if (this.invoice.status === 'created') {
         this.loading = true;
         await this.$axios
-          .post("approve-billing/" + id)
+          .post(`approve-billing/${id}`)
           .then((res) => {
             if (res.data.code == 200) {
               this.loading = false;
               this.fetchData();
               this.selectedRows = [];
-              this.$store.commit("Toast_State", {
+              this.$store.commit('Toast_State', {
                 value: true,
-                color: "success",
+                color: 'success',
                 msg: res.data.message,
               });
             }
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", {
+            this.$store.commit('Toast_State', {
               value: true,
-              color: "error",
+              color: 'error',
               msg: error.response ? error.response.data.message : error,
             });
           });
@@ -986,25 +1139,25 @@ export default {
       } else {
         this.is_active = false;
       }
-      this.$store.commit("modalAdd_State", true);
+      this.$store.commit('modalAdd_State', true);
     },
 
     async rejectPayment() {
-      let data = new FormData();
-      data.append("reject_reason_id", this.reject_reason_id);
-      data.append("description", this.description);
-      data.append("_method", "PUT");
+      const data = new FormData();
+      data.append('reject_reason_id', this.reject_reason_id);
+      data.append('description', this.description);
+      data.append('_method', 'PUT');
       this.loading = true;
       this.$axios
-        .post("reject-billing/" + this.invoice.id, data)
+        .post(`reject-billing/${this.invoice.id}`, data)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.loading = false;
               this.fetchData();
-              this.$store.commit("Toast_State", {
+              this.$store.commit('Toast_State', {
                 value: true,
-                color: "success",
+                color: 'success',
                 msg: res.data.message,
               });
             }, 300);
@@ -1012,14 +1165,14 @@ export default {
         })
         .catch((error) => {
           this.loading = false;
-          this.$store.commit("Toast_State", {
+          this.$store.commit('Toast_State', {
             value: true,
-            color: "error",
+            color: 'error',
             msg: error.response ? error.response.data.message : error,
           });
           if (error.response && error.response.status == 422) {
-            let obj = error.response.data.errors;
-            for (let [key, data] of Object.entries(obj)) {
+            const obj = error.response.data.errors;
+            for (const [key, data] of Object.entries(obj)) {
               this.server_errors[key] = data[0];
             }
           }
@@ -1030,7 +1183,7 @@ export default {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         await this.$axios
-          .put("billing-detail/" + this.formData.id, {
+          .put(`billing-detail/${this.formData.id}`, {
             qty: this.formData.quantity,
             price: this.formData.price,
             content: this.formData.content,
@@ -1042,9 +1195,9 @@ export default {
               this.loading = false;
               this.fetchData();
               this.formData = {};
-              this.$store.commit("Toast_State", {
+              this.$store.commit('Toast_State', {
                 value: true,
-                color: "success",
+                color: 'success',
                 msg: res.data.message,
               });
               this.closeAddModal();
@@ -1052,41 +1205,14 @@ export default {
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", {
+            this.$store.commit('Toast_State', {
               value: true,
-              color: "error",
+              color: 'error',
               msg: error.response ? error.response.data.message : error,
             });
           });
       }
     },
-  },
-  watch: {
-    is_active: function(value) {
-      if (value === true) {
-        this.formData.is_active = 1;
-      } else {
-        this.formData.is_active = 0;
-      }
-    },
-    paymentType: function() {
-      if (this.paymentType == 0) {
-        this.payment_method = "cash";
-        this.image = "";
-        this.imageUrl = "";
-      } else if (this.paymentType == 1) {
-        this.payment_method = "bcel";
-      }
-      this.server_errors.payment_method = "";
-    },
-    image: function() {
-      this.server_errors.image = "";
-    },
-  },
-  created() {
-    if (this.$route.params.id) {
-      this.fetchData();
-    }
   },
 };
 </script>

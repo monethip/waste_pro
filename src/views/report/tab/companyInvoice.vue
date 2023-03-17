@@ -1,7 +1,10 @@
 <template>
   <v-container>
     <div>
-      <v-row v-for="(sum, index) in summary" :key="index">
+      <v-row
+        v-for="(sum, index) in summary"
+        :key="index"
+      >
         <v-col>
           <h3>ປີ {{ sum.year }}</h3>
         </v-col>
@@ -73,31 +76,36 @@
           </div>
         </template>
         <template v-slot:item.status="{ item }">
-          <v-chip label :color="statusColor(item.status)">{{
+          <v-chip
+            label
+            :color="statusColor(item.status)"
+          >
+            {{
               item.status
-            }}</v-chip>
+            }}
+          </v-chip>
         </template>
         <template v-slot:item.created_at="{ item }">
           <div>
             <span>{{ moment(item.created_at).format("DD-MM-YY") }}</span>
           </div>
-        </template> </v-data-table
-      ><br />
+        </template>
+      </v-data-table><br>
       <template>
         <Pagination
           v-if="pagination.total_pages > 1"
           :pagination="pagination"
           :offset="offset"
           @paginate="fetchData()"
-        ></Pagination>
+        />
       </template>
     </div>
   </v-container>
 </template>
 
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
-import invoice from "@views/report/invoice";
+import { GetOldValueOnInput } from '@/Helpers/GetValue';
+import invoice from '@views/report/invoice';
 // const invoices = defindePros({invoice});
 export default {
   mixins: [invoice],
@@ -110,57 +118,57 @@ export default {
     return {
       customers: [],
       loading: false,
-      customerId: "",
-      //Pagination
+      customerId: '',
+      // Pagination
       offset: 12,
       pagination: {},
       per_page: 100,
-      search: "",
-      oldVal: "",
+      search: '',
+      oldVal: '',
       headers: [
-        { text: "Invoice Id", value: "invoice_id", sortable: false },
-        { text: "ວັນທີ", value: "month", sortable: false },
-        { text: "ລູກຄ້າ", value: "company_name" },
-        { text: "ຈຳນວນເກັບ", value: "total_time", sortable: false },
+        { text: 'Invoice Id', value: 'invoice_id', sortable: false },
+        { text: 'ວັນທີ', value: 'month', sortable: false },
+        { text: 'ລູກຄ້າ', value: 'company_name' },
+        { text: 'ຈຳນວນເກັບ', value: 'total_time', sortable: false },
         {
-          text: "ຈຳນວນ Container",
-          value: "total_container",
+          text: 'ຈຳນວນ Container',
+          value: 'total_container',
           sortable: false,
-          align: "center",
+          align: 'center',
         },
         {
-          text: "ຈຳນວນຄັ້ງ",
-          value: "total_time",
+          text: 'ຈຳນວນຄັ້ງ',
+          value: 'total_time',
           sortable: false,
-          align: "center",
+          align: 'center',
         },
-        { text: "ສ່ວນຫຼຸດ", value: "discount" },
-        { text: "SubTotal", value: "sub_total", sortable: false },
-        { text: "Total", value: "total", sortable: false },
-        { text: "ສະຖານະ", value: "status", sortable: false },
-        { text: "Type", value: "type", sortable: false },
+        { text: 'ສ່ວນຫຼຸດ', value: 'discount' },
+        { text: 'SubTotal', value: 'sub_total', sortable: false },
+        { text: 'Total', value: 'total', sortable: false },
+        { text: 'ສະຖານະ', value: 'status', sortable: false },
+        { text: 'Type', value: 'type', sortable: false },
         // { text: "", value: "actions", sortable: false },
       ],
     };
   },
-  methods: {
-    Search() {
-      GetOldValueOnInput(this);
-    },
-    statusColor(value) {
-      if (value == "success") return "success";
-      else if (value == "pending") return "primary";
-      else return "info";
-    },
-  },
   watch: {
-    tab: function () {
-      if (this.tab == "tab-1") {
+    tab() {
+      if (this.tab == 'tab-1') {
         // this.fetchData();
       }
     },
   },
   created() {},
+  methods: {
+    Search() {
+      GetOldValueOnInput(this);
+    },
+    statusColor(value) {
+      if (value == 'success') return 'success';
+      if (value == 'pending') return 'primary';
+      return 'info';
+    },
+  },
 };
 </script>
 

@@ -19,12 +19,12 @@
                   readonly
                   outlined
                   v-bind="attrs"
-                  v-on="on"
                   dense
                   clearable
-                ></v-text-field>
+                  v-on="on"
+                />
               </template>
-              <v-date-picker v-model="start_date"></v-date-picker>
+              <v-date-picker v-model="start_date" />
             </v-menu>
           </v-col>
           <v-col>
@@ -43,95 +43,104 @@
                   readonly
                   outlined
                   v-bind="attrs"
-                  v-on="on"
                   dense
                   clearable
-                ></v-text-field>
+                  v-on="on"
+                />
               </template>
-              <v-date-picker v-model="end_date"></v-date-picker>
+              <v-date-picker v-model="end_date" />
             </v-menu>
           </v-col>
           <v-col>
             <v-autocomplete
+              v-model="selectedDistrict"
               outlined
               dense
               :items="districts"
-              v-model="selectedDistrict"
               item-text="name"
               item-value="id"
               label="ເມືອງ"
               clearable
-            ></v-autocomplete>
+            />
           </v-col>
           <v-col>
             <v-autocomplete
+              v-model="selectedVillage"
               outlined
               dense
               :items="villages"
-              v-model="selectedVillage"
               item-text="name"
               item-value="id"
               label="ບ້ານ"
               multiple
               clearable
-            ></v-autocomplete>
+            />
           </v-col>
         </v-row>
         <v-row>
           <v-col>
             <v-select
+              v-model="selectedStatus"
               outlined
               dense
               :items="status"
-              v-model="selectedStatus"
               item-text="name"
               item-value="name"
               label="ສະຖານະ"
               multiple
               clearable
-            ></v-select>
+            />
           </v-col>
           <v-col>
             <v-select
+              v-model="selectedCustomerStatus"
               outlined
               dense
               :items="customerStatus"
-              v-model="selectedCustomerStatus"
               item-text="name"
               item-value="value"
               label="ສະຖານະແຜນ"
               multiple
               clearable
-            ></v-select>
+            />
           </v-col>
           <v-col>
             <v-text-field
+              v-model="search"
               outlined
               dense
               clearable
               prepend-inner-icon="mdi-magnify"
               label="Search"
               type="text"
-              v-model="search"
               @keyup.enter="Search()"
-            >
-            </v-text-field>
+            />
           </v-col>
         </v-row>
       </v-col>
       <v-col cols="6">
         <v-row>
           <v-col>
-            <v-card outlined elevation="5">
-              <v-container class="spacing-playground pa-1" fluid>
+            <v-card
+              outlined
+              elevation="5"
+            >
+              <v-container
+                class="spacing-playground pa-1"
+                fluid
+              >
                 <v-row>
                   <v-col>
                     <div class="px-4">
-                      <v-chip class="text-caption" color="primary" dark>
-                        <v-icon>mdi-home-circle-outline</v-icon>
-                        ລວມຄົວເຮືອນ</v-chip
+                      <v-chip
+                        class="text-caption"
+                        color="primary"
+                        dark
                       >
-                      <v-divider class="my-4"></v-divider>
+                        <v-icon>mdi-home-circle-outline</v-icon>
+                        ລວມຄົວເຮືອນ
+                      </v-chip>
+                      <v-divider class="my-4" />
                       <v-row>
                         <v-col>
                           <div class="text-caption">
@@ -141,7 +150,10 @@
                             {{ Intl.NumberFormat().format(pagination.total) }}
                           </p>
                         </v-col>
-                        <v-divider :vertical="true" class="my-4"></v-divider>
+                        <v-divider
+                          :vertical="true"
+                          class="my-4"
+                        />
 
                         <v-col>
                           <div class="text-caption">
@@ -166,10 +178,11 @@
                       color="green"
                       :loading="loading"
                       :disabled="loading"
-                      @click="exportData"
                       width="100%"
                       height="100%"
-                      >Export
+                      @click="exportData"
+                    >
+                      Export
                     </v-btn>
                   </v-col>
                 </v-row>
@@ -182,7 +195,11 @@
 
     <v-row v-if="true">
       <v-col>
-        <SaleAdmin label="ເລືອກຜູ້ສ້າງ" v-model="selectedSale" @change="fetchData()"></SaleAdmin>
+        <SaleAdmin
+          v-model="selectedSale"
+          label="ເລືອກຜູ້ສ້າງ"
+          @change="fetchData()"
+        />
       </v-col>
     </v-row>
 
@@ -217,27 +234,36 @@
                       readonly
                       outlined
                       v-bind="attrs"
-                      v-on="on"
                       dense
                       color="cyan"
                       append-icon="mdi-calendar"
                       clearable
-                    ></v-text-field>
+                      v-on="on"
+                    />
                   </template>
                   <v-date-picker
-                    type="month"
                     v-model="selected_month"
-                  ></v-date-picker>
+                    type="month"
+                  />
                 </v-menu>
               </v-col>
             </v-row>
-            <v-row v-for="month in sumData.months" :key="month.month">
-              <v-col :class=" selected_month == month.month.substring(0,7) ? 'teal' : ''" cols="2">
+            <v-row
+              v-for="month in sumData.months"
+              :key="month.month"
+            >
+              <v-col
+                :class=" selected_month == month.month.substring(0,7) ? 'teal' : ''"
+                cols="2"
+              >
                 <span>
-                  <v-chip outlined color="cyan lighten-2" dark>
-                    <v-icon>mdi-calendar</v-icon>
-                    {{ month.month.substr(0, 7) }}</v-chip
+                  <v-chip
+                    outlined
+                    color="cyan lighten-2"
+                    dark
                   >
+                    <v-icon>mdi-calendar</v-icon>
+                    {{ month.month.substr(0, 7) }}</v-chip>
                 </span>
               </v-col>
               <!-- Section Toal -->
@@ -253,7 +279,11 @@
       <v-col>
         <v-card>
           <v-card-title>
-            <v-switch label="ມີບິນເທົ່ານັ້ນ" v-model="only_billings" @change="fetchData()"></v-switch>
+            <v-switch
+              v-model="only_billings"
+              label="ມີບິນເທົ່ານັ້ນ"
+              @change="fetchData()"
+            />
           </v-card-title>
           <v-card-text>
             <v-data-table
@@ -265,23 +295,34 @@
             >
               <template v-slot:item.media="{ item }">
                 <v-avatar
-                  size="36px"
                   v-for="(img, index) in item.media"
                   :key="index"
+                  size="36px"
                 >
-                  <img v-if="img.thumb" :src="img.thumb" />
+                  <img
+                    v-if="img.thumb"
+                    :src="img.thumb"
+                  >
                 </v-avatar>
               </template>
 
               <template v-slot:item.status="{ item }">
-                <v-chip label :color="statusColor(item.status)">{{
-                  item.status
-                }}</v-chip>
+                <v-chip
+                  label
+                  :color="statusColor(item.status)"
+                >
+                  {{
+                    item.status
+                  }}
+                </v-chip>
               </template>
               <!--Role -->
               <template v-slot:item.roles="{ item }">
                 <div>
-                  <span v-for="(role, index) in item.roles" :key="index">
+                  <span
+                    v-for="(role, index) in item.roles"
+                    :key="index"
+                  >
                     {{ role.name }},
                   </span>
                 </div>
@@ -289,29 +330,41 @@
               <!--Permission -->
               <template v-slot:item.permissions="{ item }">
                 <div>
-                  <span v-for="(ps, index) in item.permissions" :key="index">
+                  <span
+                    v-for="(ps, index) in item.permissions"
+                    :key="index"
+                  >
                     <span>{{ ps.name }}, </span>
                   </span>
                 </div>
               </template>
 
               <template v-slot:item.actions="{ item }">
-                <v-icon small class="mr-2" @click="viewPage(item.id)">
+                <v-icon
+                  small
+                  class="mr-2"
+                  @click="viewPage(item.id)"
+                >
                   mdi-eye
                 </v-icon>
 
-                <v-icon v-if="item.user.billings.length > 0" small class="mr-2" @click="viewCustomerBill(item.id)">
+                <v-icon
+                  v-if="item.user.billings.length > 0"
+                  small
+                  class="mr-2"
+                  @click="viewCustomerBill(item.id)"
+                >
                   mdi-receipt-text
                 </v-icon>
-              </template> </v-data-table
-            ><br />
+              </template>
+            </v-data-table><br>
             <template>
               <Pagination
                 v-if="pagination.total_pages > 1"
                 :pagination="pagination"
                 :offset="offset"
                 @paginate="fetchData()"
-              ></Pagination>
+              />
             </template>
           </v-card-text>
         </v-card>
@@ -321,28 +374,28 @@
 </template>
 
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
-import queryOption from "@/Helpers/queryOption";
-import RowSection from "../../components/card/RowSection.vue";
-import SaleAdmin from "@/components/select/SaleAdmin.vue";
+import { GetOldValueOnInput } from '@/Helpers/GetValue';
+import queryOption from '@/Helpers/queryOption';
+import SaleAdmin from '@/components/select/SaleAdmin.vue';
+import RowSection from '../../components/card/RowSection.vue';
 
 export default {
-  name: "Customer",
+  name: 'Customer',
   title() {
     return `Vientiane Waste Co-Dev|Report Customer`;
   },
   components: {
     RowSection,
-    SaleAdmin
+    SaleAdmin,
   },
   data() {
     return {
       sumData: {},
-      selectedSale: "",
+      selectedSale: '',
       firstLoad: true,
-      only_billings:false,
-      start_date: "",
-      end_date: "",
+      only_billings: false,
+      start_date: '',
+      end_date: '',
       selected_month:
         this.$route.query.month || new Date().toISOString().substr(0, 7),
       month_menu: false,
@@ -350,290 +403,69 @@ export default {
       end_menu: false,
       customers: [],
       loading: false,
-      customerId: "",
-      //Pagination
+      customerId: '',
+      // Pagination
       offset: 12,
       pagination: {},
       per_page: 100,
-      search: "",
-      oldVal: "",
-      //Filter
+      search: '',
+      oldVal: '',
+      // Filter
       districts: [],
-      selectedDistrict: "",
+      selectedDistrict: '',
       villages: [],
       selectedVillage: [],
       selectedStatus: [],
       status: [
         {
           id: 1,
-          name: "active",
+          name: 'active',
         },
         {
           id: 2,
-          name: "inactive",
+          name: 'inactive',
         },
         {
           id: 3,
-          name: "trial",
+          name: 'trial',
         },
       ],
       selectedCustomerStatus: [],
       customerStatus: [
         {
           id: 1,
-          value: "calendar",
-          name: "ຍັງບໍ່ມີແຜນເດີນລົດເກັບ",
+          value: 'calendar',
+          name: 'ຍັງບໍ່ມີແຜນເດີນລົດເກັບ',
         },
         {
           id: 2,
-          value: "route_plan",
-          name: "ຍັງບໍ່ມີເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ",
+          value: 'route_plan',
+          name: 'ຍັງບໍ່ມີເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ',
         },
       ],
 
       headers: [
-        { text: "ຊື່", value: "name" },
-        { text: "ນາມສະກຸນ", value: "surname" },
-        { text: "Phone", value: "user.phone", sortable: false },
-        { text: "ທີ່ຢູ່", value: "district.name", sortable: false },
-        { text: "ປະເພດບໍລິການ", value: "package.name" },
-        { text: "ຜູ້ສ້າງ", value: "customer_activity.causer.full_name" },
-        { text: "ວັນທີສະໝັກ", value: "created_at", sortable: false },
-        { text: "ສະຖານະ", value: "status", sortable: false },
-        { text: "", value: "actions", sortable: false },
+        { text: 'ຊື່', value: 'name' },
+        { text: 'ນາມສະກຸນ', value: 'surname' },
+        { text: 'Phone', value: 'user.phone', sortable: false },
+        { text: 'ທີ່ຢູ່', value: 'district.name', sortable: false },
+        { text: 'ປະເພດບໍລິການ', value: 'package.name' },
+        { text: 'ຜູ້ສ້າງ', value: 'customer_activity.causer.full_name' },
+        { text: 'ວັນທີສະໝັກ', value: 'created_at', sortable: false },
+        { text: 'ສະຖານະ', value: 'status', sortable: false },
+        { text: '', value: 'actions', sortable: false },
       ],
       toast: {
         value: true,
-        color: "success",
-        msg: "",
+        color: 'success',
+        msg: '',
       },
       toast_error: {
         value: true,
-        color: "error",
-        msg: "Something when wrong!",
+        color: 'error',
+        msg: 'Something when wrong!',
       },
     };
-  },
-  methods: {
-    fetchSum() {
-      this.$store.commit("Loading_State", true);
-      this.$axios
-        .get("home-billing", {
-          params: this.params,
-        })
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.$store.commit("Loading_State", false);
-              this.sumData = res.data.data;
-              this.month_menu = false;
-              this.start_menu = false;
-              this.end_menu = false;
-            }, 300);
-            // this.fetchAddress();
-          }
-        })
-        .catch((error) => {
-          this.$store.commit("Loading_State", false);
-          this.month_menu = false;
-          this.start_menu = false;
-          this.end_menu = false;
-          if (error.response && error.response.status == 422) {
-            let obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
-              this.server_errors[key] = message[0];
-            }
-          }
-        });
-    },
-    fetchData() {
-      this.$store.commit("Loading_State", true);
-      this.$axios
-        .get("customer", {
-          params: this.params,
-        })
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.$store.commit("Loading_State", false);
-              this.customers = res.data.data.data;
-              this.pagination = res.data.data.pagination;
-              this.month_menu = false;
-              this.start_menu = false;
-              this.end_menu = false;
-            }, 300);
-            // this.fetchAddress();
-          }
-        })
-        .catch((error) => {
-          this.$store.commit("Loading_State", false);
-          this.month_menu = false;
-          this.start_menu = false;
-          this.end_menu = false;
-          if (error.response && error.response.status == 422) {
-            let obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
-              this.server_errors[key] = message[0];
-            }
-          }
-        })
-        .finally(() => {
-          this.firstLoad = false;
-          this.fetchSum()
-        });
-    },
-
-    fetchAddress() {
-      this.$axios
-        .get("info/address", { params: { filter: "ນະຄອນຫລວງວຽງຈັນ" } })
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.address = res.data.data;
-              this.address.map((item) => {
-                this.districts = item.districts;
-              });
-            }, 300);
-          }
-        })
-        .catch(() => {});
-    },
-
-    fetchVillage() {
-      this.$axios
-        .get("info/district/" + this.selectedDistrict + "/village")
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.villages = res.data.data;
-            }, 300);
-          }
-        })
-        .catch(() => {});
-    },
-
-    viewPage(id) {
-     const options = {
-        name: "ViewClient",
-        params: { id },
-      };
-
-     this.openRoute(options)
-    },
-    viewCustomerBill(id) {
-      const options = {
-        name: "Report-Billing-Customer",
-        query: {
-          customer_id:id,
-          selectedCustomerType: 'home'
-        },
-      };
-
-      this.openRoute(options)
-    },
-    openRoute(options) {
-      const routeData = this.$router.resolve({
-        ...options
-      });
-
-      window.open(routeData.href);
-    },
-    Search() {
-      GetOldValueOnInput(this);
-    },
-    statusColor(value) {
-      if (value == "active") return "primary";
-      else if (value == "inactive") return "error";
-      else return "info";
-    },
-
-    exportData() {
-      this.loading = true;
-      this.$axios
-        .post(
-          "export-customer/",
-          this.params
-          // { responseType: "blob" }
-        )
-        .then((res) => {
-          if (res.status == 200) {
-            if (res.data.data.download_link != null) {
-              window.open(res.data.data.download_link);
-            }
-            this.loading = false;
-            // setTimeout(() => {
-            //   this.loading = false;
-            //   const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
-            //   console.log(fileUrl)
-            //   const fileLink = document.createElement("a");
-            //   fileLink.href = fileUrl;
-            //   fileLink.setAttribute("download", "customer" + ".xlsx");
-            //   document.body.appendChild(fileLink);
-            //   fileLink.click();
-            //   document.body.removeChild(fileLink);
-            // }, 300);
-          }
-        })
-        .catch(() => {
-          this.$store.commit("Toast_State", this.toast_error);
-          this.loading = false;
-        });
-    },
-    getCardData(month){
-      return [
-        {
-          status_la: "ລວມ",
-          total: month.status.total?.total,
-          count_billing: month.status.total?.count,
-          bg_color: "blue",
-          route: this.billRoute(month.month,'all')
-        },
-        {
-          status_la: "ຈ່າຍແລ້ວ",
-          total: month.status.paid?.total,
-          count_billing: month.status.paid?.count,
-          bg_color: "green",
-          route: this.billRoute(month.month,'paid')
-        },
-        {
-          status_la: "ຕິດໜີ້",
-          total: month.status.unpaid?.total,
-          count_billing: month.status.unpaid?.count,
-          bg_color: "orange",
-          route: this.billRoute(month.month,'unpaid')
-        },
-        {
-          status_la: "ບິນຍັງບໍ່ອອກ",
-          total: month.no_bill?.package_price,
-          count_billing: month.no_bill?.count_customers,
-          bg_color: "red",
-          route: this.billRoute(month.month,'noBill')
-        },
-      ]
-    },
-    billRoute(billMonth,showOne) {
-      const items = {
-        selectedCustomerType: 'home',
-        // package_id: this.selectedPackage,
-        selectedVillage: this.selectedVillage,
-        selectedDistrict: this.selectedDistrict,
-        selectedDetails: this.selectedDetails,
-        start_date: this.start_date,
-        end_date: this.end_date,
-        created_by: this.selectedSale
-      }
-
-      if (billMonth) items.billMonth = billMonth
-      if (showOne) items.showOne = showOne
-
-      const options =this.$router.resolve(
-          {
-            name: "Report-Billing-Customer",
-            query: items
-          })
-
-      return options
-    },
   },
   computed: {
     params() {
@@ -659,83 +491,305 @@ export default {
     allMonths() {
       return [
         {
-          status_la: "ລວມ",
+          status_la: 'ລວມ',
           total: this.sumData.all?.total?.total,
           count_billing: this.sumData.all?.total?.count,
-          bg_color: "blue",
-          route: this.billRoute('','all')
+          bg_color: 'blue',
+          route: this.billRoute('', 'all'),
         },
         {
-          status_la: "ຈ່າຍແລ້ວ",
+          status_la: 'ຈ່າຍແລ້ວ',
           total: this.sumData.all?.paid?.total,
           count_billing: this.sumData.all?.paid?.count,
-          bg_color: "green",
-          route: this.billRoute('','paid')
+          bg_color: 'green',
+          route: this.billRoute('', 'paid'),
         },
         {
-          status_la: "ຕິດໜີ້",
+          status_la: 'ຕິດໜີ້',
           total: this.sumData.all?.unpaid?.total,
           count_billing: this.sumData.all?.unpaid?.count,
-          bg_color: "orange",
-          route: this.billRoute('','unpaid')
+          bg_color: 'orange',
+          route: this.billRoute('', 'unpaid'),
         },
       ];
     },
   },
   watch: {
-    selected_month: function() {
-      this.pagination.current_page = "";
+    selected_month() {
+      this.pagination.current_page = '';
       this.fetchSum();
     },
-    start_date: function() {
-      this.pagination.current_page = "";
-      if (this.end_date !== "" && this.start_date !== "") {
+    start_date() {
+      this.pagination.current_page = '';
+      if (this.end_date !== '' && this.start_date !== '') {
         if (this.start_date > this.end_date) {
-          this.start_date = "";
+          this.start_date = '';
         }
       }
       this.fetchData();
     },
-    end_date: function() {
-      this.pagination.current_page = "";
-      if (this.end_date !== "" && this.start_date !== "") {
+    end_date() {
+      this.pagination.current_page = '';
+      if (this.end_date !== '' && this.start_date !== '') {
         if (this.end_date < this.start_date) {
-          this.end_date = "";
+          this.end_date = '';
         }
       }
       this.fetchData();
     },
-    search: function(value) {
-      this.pagination.current_page = "";
-      if (value == "") {
+    search(value) {
+      this.pagination.current_page = '';
+      if (value == '') {
         this.fetchData();
       }
     },
 
-    selectedVillage: function() {
-      this.pagination.current_page = "";
+    selectedVillage() {
+      this.pagination.current_page = '';
       this.fetchData();
     },
-    selectedDistrict: function() {
-      this.pagination.current_page = "";
+    selectedDistrict() {
+      this.pagination.current_page = '';
       this.fetchVillage();
       this.fetchData();
     },
-    selectedStatus: function() {
-      this.pagination.current_page = "";
+    selectedStatus() {
+      this.pagination.current_page = '';
       this.fetchData();
     },
-    selectedCustomerStatus: function() {
-      this.pagination.current_page = "";
+    selectedCustomerStatus() {
+      this.pagination.current_page = '';
       this.fetchData();
     },
     selectedSale() {
       if (!this.firstLoad) this.fetchData();
-    }
+    },
   },
   created() {
     this.fetchData();
     this.fetchAddress();
+  },
+  methods: {
+    fetchSum() {
+      this.$store.commit('Loading_State', true);
+      this.$axios
+        .get('home-billing', {
+          params: this.params,
+        })
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.$store.commit('Loading_State', false);
+              this.sumData = res.data.data;
+              this.month_menu = false;
+              this.start_menu = false;
+              this.end_menu = false;
+            }, 300);
+            // this.fetchAddress();
+          }
+        })
+        .catch((error) => {
+          this.$store.commit('Loading_State', false);
+          this.month_menu = false;
+          this.start_menu = false;
+          this.end_menu = false;
+          if (error.response && error.response.status == 422) {
+            const obj = error.response.data.errors;
+            for (const [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
+            }
+          }
+        });
+    },
+    fetchData() {
+      this.$store.commit('Loading_State', true);
+      this.$axios
+        .get('customer', {
+          params: this.params,
+        })
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.$store.commit('Loading_State', false);
+              this.customers = res.data.data.data;
+              this.pagination = res.data.data.pagination;
+              this.month_menu = false;
+              this.start_menu = false;
+              this.end_menu = false;
+            }, 300);
+            // this.fetchAddress();
+          }
+        })
+        .catch((error) => {
+          this.$store.commit('Loading_State', false);
+          this.month_menu = false;
+          this.start_menu = false;
+          this.end_menu = false;
+          if (error.response && error.response.status == 422) {
+            const obj = error.response.data.errors;
+            for (const [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
+            }
+          }
+        })
+        .finally(() => {
+          this.firstLoad = false;
+          this.fetchSum();
+        });
+    },
+
+    fetchAddress() {
+      this.$axios
+        .get('info/address', { params: { filter: 'ນະຄອນຫລວງວຽງຈັນ' } })
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.address = res.data.data;
+              this.address.map((item) => {
+                this.districts = item.districts;
+              });
+            }, 300);
+          }
+        })
+        .catch(() => {});
+    },
+
+    fetchVillage() {
+      this.$axios
+        .get(`info/district/${this.selectedDistrict}/village`)
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.villages = res.data.data;
+            }, 300);
+          }
+        })
+        .catch(() => {});
+    },
+
+    viewPage(id) {
+      const options = {
+        name: 'ViewClient',
+        params: { id },
+      };
+
+      this.openRoute(options);
+    },
+    viewCustomerBill(id) {
+      const options = {
+        name: 'Report-Billing-Customer',
+        query: {
+          customer_id: id,
+          selectedCustomerType: 'home',
+        },
+      };
+
+      this.openRoute(options);
+    },
+    openRoute(options) {
+      const routeData = this.$router.resolve({
+        ...options,
+      });
+
+      window.open(routeData.href);
+    },
+    Search() {
+      GetOldValueOnInput(this);
+    },
+    statusColor(value) {
+      if (value == 'active') return 'primary';
+      if (value == 'inactive') return 'error';
+      return 'info';
+    },
+
+    exportData() {
+      this.loading = true;
+      this.$axios
+        .post(
+          'export-customer/',
+          this.params,
+          // { responseType: "blob" }
+        )
+        .then((res) => {
+          if (res.status == 200) {
+            if (res.data.data.download_link != null) {
+              window.open(res.data.data.download_link);
+            }
+            this.loading = false;
+            // setTimeout(() => {
+            //   this.loading = false;
+            //   const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
+            //   console.log(fileUrl)
+            //   const fileLink = document.createElement("a");
+            //   fileLink.href = fileUrl;
+            //   fileLink.setAttribute("download", "customer" + ".xlsx");
+            //   document.body.appendChild(fileLink);
+            //   fileLink.click();
+            //   document.body.removeChild(fileLink);
+            // }, 300);
+          }
+        })
+        .catch(() => {
+          this.$store.commit('Toast_State', this.toast_error);
+          this.loading = false;
+        });
+    },
+    getCardData(month) {
+      return [
+        {
+          status_la: 'ລວມ',
+          total: month.status.total?.total,
+          count_billing: month.status.total?.count,
+          bg_color: 'blue',
+          route: this.billRoute(month.month, 'all'),
+        },
+        {
+          status_la: 'ຈ່າຍແລ້ວ',
+          total: month.status.paid?.total,
+          count_billing: month.status.paid?.count,
+          bg_color: 'green',
+          route: this.billRoute(month.month, 'paid'),
+        },
+        {
+          status_la: 'ຕິດໜີ້',
+          total: month.status.unpaid?.total,
+          count_billing: month.status.unpaid?.count,
+          bg_color: 'orange',
+          route: this.billRoute(month.month, 'unpaid'),
+        },
+        {
+          status_la: 'ບິນຍັງບໍ່ອອກ',
+          total: month.no_bill?.package_price,
+          count_billing: month.no_bill?.count_customers,
+          bg_color: 'red',
+          route: this.billRoute(month.month, 'noBill'),
+        },
+      ];
+    },
+    billRoute(billMonth, showOne) {
+      const items = {
+        selectedCustomerType: 'home',
+        // package_id: this.selectedPackage,
+        selectedVillage: this.selectedVillage,
+        selectedDistrict: this.selectedDistrict,
+        selectedDetails: this.selectedDetails,
+        start_date: this.start_date,
+        end_date: this.end_date,
+        created_by: this.selectedSale,
+      };
+
+      if (billMonth) items.billMonth = billMonth;
+      if (showOne) items.showOne = showOne;
+
+      const options = this.$router.resolve(
+        {
+          name: 'Report-Billing-Customer',
+          query: items,
+        },
+      );
+
+      return options;
+    },
   },
 };
 </script>

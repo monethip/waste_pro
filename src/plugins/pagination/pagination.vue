@@ -6,58 +6,44 @@
   >
     <a
       class="pagination-next"
-      @click.prevent="changePage(pagination.total_pages)"
       :disabled="pagination.total_pages >= pagination.total_pages"
-      >ໄປໜ້າສຸດທ້າຍ</a
-    >
+      @click.prevent="changePage(pagination.total_pages)"
+    >ໄປໜ້າສຸດທ້າຍ</a>
     <a
       class="pagination-next"
-      @click.prevent="changePage(pagination.total_pages + 1)"
       :disabled="pagination.total_pages >= pagination.total_pages"
-      >ຖັດໄປ</a
-    >
+      @click.prevent="changePage(pagination.total_pages + 1)"
+    >ຖັດໄປ</a>
     <a
       class="pagination-previous"
+      :disabled="pagination.current_page <= 1"
       @click.prevent="changePage(pagination.current_page - 1)"
-      :disabled="pagination.current_page <= 1"
-      >ກັບຄືນ</a
-    >
+    >ກັບຄືນ</a>
     <a
       class="pagination-previous"
-      @click.prevent="changePage(1)"
       :disabled="pagination.current_page <= 1"
-      >ກັບໜ້າທຳອິດ</a
-    >
+      @click.prevent="changePage(1)"
+    >ກັບໜ້າທຳອິດ</a>
     <ul class="pagination-list">
-      <li v-for="(page, index) in pages" :key="index">
+      <li
+        v-for="(page, index) in pages"
+        :key="index"
+      >
         <a
           class="pagination-link"
           :class="isCurrentPage(page) ? 'is-current' : ''"
           @click.prevent="changePage(page)"
-          >{{ page }}</a
-        >
+        >{{ page }}</a>
       </li>
     </ul>
   </nav>
 </template>
 <script>
 export default {
-  props: ["pagination", "offset"],
-  methods: {
-    isCurrentPage(page) {
-      return this.pagination.current_page === page;
-    },
-    changePage(page) {
-      if (page > this.pagination.total_pages) {
-        page = this.pagination.total_pages;
-      }
-      this.pagination.current_page = page;
-      this.$emit("paginate");
-    },
-  },
+  props: ['pagination', 'offset'],
   computed: {
     pages() {
-      let pages = [];
+      const pages = [];
       let from = this.pagination.current_page - Math.floor(this.offset / 2);
 
       if (from < 1) {
@@ -72,6 +58,18 @@ export default {
         from++;
       }
       return pages;
+    },
+  },
+  methods: {
+    isCurrentPage(page) {
+      return this.pagination.current_page === page;
+    },
+    changePage(page) {
+      if (page > this.pagination.total_pages) {
+        page = this.pagination.total_pages;
+      }
+      this.pagination.current_page = page;
+      this.$emit('paginate');
     },
   },
 };

@@ -1,8 +1,11 @@
 <template>
   <v-container>
-    <v-breadcrumbs large class="pt-0"
-      >ລາຍງານຂໍ້ມູນການເກັບຂີ້ເຫື້ຍອ</v-breadcrumbs
+    <v-breadcrumbs
+      large
+      class="pt-0"
     >
+      ລາຍງານຂໍ້ມູນການເກັບຂີ້ເຫື້ຍອ
+    </v-breadcrumbs>
     <v-row class="mb-n6">
       <v-col>
         <v-btn
@@ -10,30 +13,31 @@
           :loading="loading"
           :disabled="loading"
           @click="exportData()"
-          >Export
+        >
+          Export
         </v-btn>
       </v-col>
       <v-col>
         <v-select
+          v-model="selectedDuration"
           outlined
           dense
           :items="duration"
-          v-model="selectedDuration"
           item-text="name"
           item-value="duration"
           label="ຊ່ວງເວລາ"
-        ></v-select>
+        />
       </v-col>
       <v-col v-if="selectedDuration == 'year'">
         <section>
           <date-picker
-            style="height: 40px"
             v-model="year_from"
+            style="height: 40px"
             type="year"
             format="YYYY"
             placeholder="ເລີ່ມປີ"
             @input="fetchData()"
-          ></date-picker>
+          />
         </section>
       </v-col>
       <v-col v-if="selectedDuration == 'year'">
@@ -44,7 +48,7 @@
             format="YYYY"
             placeholder="ຫາປີ"
             @input="fetchData()"
-          ></date-picker>
+          />
         </section>
       </v-col>
       <v-col v-if="selectedDuration == 'month'">
@@ -54,7 +58,7 @@
             type="month"
             placeholder="ເລີ່ມເດືອນ"
             @input="fetchData()"
-          ></date-picker>
+          />
         </section>
       </v-col>
       <v-col v-if="selectedDuration == 'month'">
@@ -64,52 +68,55 @@
             type="month"
             placeholder="ຫາເດືອນ"
             @input="fetchData()"
-          ></date-picker>
+          />
         </section>
       </v-col>
 
       <v-col v-if="selectedDuration == 'merge' || selectedDuration == 'date'">
         <section>
           <date-picker
-            style="height: 40px"
             v-model="date_from"
+            style="height: 40px"
             type="date"
             placeholder="ເລີ່ມວັນທີ"
             @input="fetchData()"
-          ></date-picker>
+          />
         </section>
       </v-col>
       <v-col v-if="selectedDuration == 'merge' || selectedDuration == 'date'">
         <section>
           <date-picker
-            style="height: 40px"
             v-model="date_to"
+            style="height: 40px"
             type="date"
             placeholder="ຫາວັນທີ"
             @input="fetchData()"
-          ></date-picker>
+          />
         </section>
       </v-col>
 
       <v-col>
         <v-text-field
+          v-model="search"
           outlined
           dense
           clearable
           prepend-inner-icon="mdi-magnify"
           label="Search"
           type="text"
-          v-model="search"
           @keyup.enter="Search()"
-        >
-        </v-text-field>
+        />
       </v-col>
     </v-row>
     <v-card elevation="1">
       <v-card-text>
         <v-tabs v-model="tab">
-          <v-tab href="#tab-1"> ຄົວເຮືອນ </v-tab>
-          <v-tab href="#tab-2"> ບໍລິສັດ </v-tab>
+          <v-tab href="#tab-1">
+            ຄົວເຮືອນ
+          </v-tab>
+          <v-tab href="#tab-2">
+            ບໍລິສັດ
+          </v-tab>
         </v-tabs>
         <!-- <hr /> -->
 
@@ -134,22 +141,34 @@
 </template>
 
 <script>
-import HomeCollection from "@views/report/tab/homeCollection";
-import CompanyCollection from "@views/report/tab/companyCollection";
-import collection from "@views/report/collection";
+import HomeCollection from '@views/report/tab/homeCollection';
+import CompanyCollection from '@views/report/tab/companyCollection';
+import collection from '@views/report/collection';
+
 export default {
   title() {
     return `Vientiane Waste Co-Dev|Calendar`;
   },
-  mixins: [collection],
   components: {
     HomeCollection,
     CompanyCollection,
   },
+  mixins: [collection],
   data() {
     return {
       data: {},
     };
+  },
+  created() {
+    // if (this.$route.query.tab == "home") {
+    //   this.tab = "tab-1";
+    //   this.selectedInvoceType = "home";
+    //   this.fetchData();
+    // } else if (this.$route.query.tab == "company") {
+    //   this.tab = "tab-2";
+    //   this.selectedInvoceType = "company";
+    //   this.fetchData();
+    // }
   },
   methods: {
     backPrevios() {
@@ -181,17 +200,6 @@ export default {
     //     })
     //     .catch(() => {});
     // },
-  },
-  created() {
-    // if (this.$route.query.tab == "home") {
-    //   this.tab = "tab-1";
-    //   this.selectedInvoceType = "home";
-    //   this.fetchData();
-    // } else if (this.$route.query.tab == "company") {
-    //   this.tab = "tab-2";
-    //   this.selectedInvoceType = "company";
-    //   this.fetchData();
-    // }
   },
   // watch: {
   //   tab: function (value) {

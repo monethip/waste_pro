@@ -1,5 +1,9 @@
 <template>
-  <v-dialog v-model="dialog" persistent max-width="700px">
+  <v-dialog
+    v-model="dialog"
+    persistent
+    max-width="700px"
+  >
     <slot v-bind="{ close }" />
   </v-dialog>
 </template>
@@ -9,7 +13,7 @@ export default {
   computed: {
     dialog: {
       set(val) {
-        this.$store.commit("modalEdit_State", val);
+        this.$store.commit('modalEdit_State', val);
       },
       get() {
         return this.$store.state.modalEditState;

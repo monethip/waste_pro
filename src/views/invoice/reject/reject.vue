@@ -2,16 +2,26 @@
   <v-container>
     <v-row class="my-0">
       <v-col>
-        <v-breadcrumbs large class="pa-0">
-          <v-btn text class="text-primary" @click="backPrevios()">
-            <v-icon>mdi-chevron-left</v-icon></v-btn
-          >
-          ຂໍ້ມູນເຫດຜົນທີ່ຍົກເລີກໃບບິນ</v-breadcrumbs
+        <v-breadcrumbs
+          large
+          class="pa-0"
         >
+          <v-btn
+            text
+            class="text-primary"
+            @click="backPrevios()"
+          >
+            <v-icon>mdi-chevron-left</v-icon>
+          </v-btn>
+          ຂໍ້ມູນເຫດຜົນທີ່ຍົກເລີກໃບບິນ
+        </v-breadcrumbs>
       </v-col>
       <v-col class="text-right">
-        <v-btn class="btn-primary" @click="openAddItem()"
-          ><v-icon>mdi-plus</v-icon>
+        <v-btn
+          class="btn-primary"
+          @click="openAddItem()"
+        >
+          <v-icon>mdi-plus</v-icon>
         </v-btn>
       </v-col>
     </v-row>
@@ -29,19 +39,28 @@
                 <div>{{ moment(item.created_at).format("DD-MM-YY") }}</div>
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-icon small class="mr-2" @click="editModal(item)">
+                <v-icon
+                  small
+                  class="mr-2"
+                  @click="editModal(item)"
+                >
                   mdi-pencil
                 </v-icon>
-                <v-icon small @click="deleteItem(item.id)"> mdi-delete </v-icon>
-              </template> </v-data-table
-            ><br />
+                <v-icon
+                  small
+                  @click="deleteItem(item.id)"
+                >
+                  mdi-delete
+                </v-icon>
+              </template>
+            </v-data-table><br>
             <template>
               <Pagination
                 v-if="pagination.total_pages > 1"
                 :pagination="pagination"
                 :offset="offset"
                 @paginate="fetchData()"
-              ></Pagination>
+              />
             </template>
           </v-card-text>
         </v-card>
@@ -56,7 +75,10 @@
           </v-card-title>
           <v-card-text>
             <v-container>
-              <v-form ref="form" lazy-validation>
+              <v-form
+                ref="form"
+                lazy-validation
+              >
                 <v-row>
                   <v-col cols="12">
                     <v-text-field
@@ -65,8 +87,7 @@
                       outlined
                       dense
                       @key.enter="AddItem()"
-                    >
-                    </v-text-field>
+                    />
                     <p class="errors">
                       {{ server_errors.name }}
                     </p>
@@ -75,8 +96,12 @@
               </v-form>
             </v-container>
             <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeAddModal()">
+              <v-spacer />
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="closeAddModal()"
+              >
                 Close
               </v-btn>
               <v-btn
@@ -103,7 +128,10 @@
           </v-card-title>
           <v-card-text>
             <v-container>
-              <v-form ref="form" lazy-validation>
+              <v-form
+                ref="form"
+                lazy-validation
+              >
                 <v-row>
                   <v-col cols="12">
                     <v-text-field
@@ -112,8 +140,7 @@
                       outlined
                       dense
                       @key.enter="UpdateItem()"
-                    >
-                    </v-text-field>
+                    />
                     <p class="errors">
                       {{ server_errors.name }}
                     </p>
@@ -122,8 +149,12 @@
               </v-form>
             </v-container>
             <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeEditModal()">
+              <v-spacer />
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="closeEditModal()"
+              >
                 Close
               </v-btn>
               <v-btn
@@ -145,17 +176,24 @@
     <ModalDelete>
       <template>
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+          <v-spacer />
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="closeDelete"
+          >
+            Cancel
+          </v-btn>
           <v-btn
             color="blue darken-1"
             text
             :loading="loading"
             :disabled="loading"
             @click="deleteItemConfirm"
-            >OK</v-btn
           >
-          <v-spacer></v-spacer>
+            OK
+          </v-btn>
+          <v-spacer />
         </v-card-actions>
       </template>
     </ModalDelete>
@@ -163,34 +201,45 @@
 </template>
 <script>
 export default {
-  name: "RejectionInfo",
+  name: 'RejectionInfo',
   data() {
     return {
       loading: false,
-      //Pagination
+      // Pagination
       offset: 12,
       pagination: {},
       per_page: 100,
       rejects: [],
-      name: "",
+      name: '',
       editItem: {},
       server_errors: {},
 
       headers: [
-        { text: "Reject name", value: "name", sortable: false },
-        { text: "Created", value: "created_at", sortable: false },
-        { text: "Action", value: "actions", sortable: false },
+        { text: 'Reject name', value: 'name', sortable: false },
+        { text: 'Created', value: 'created_at', sortable: false },
+        { text: 'Action', value: 'actions', sortable: false },
       ],
     };
+  },
+  watch: {
+    name() {
+      this.server_errors.name = '';
+    },
+    'editItem.name': function () {
+      this.server_errors.name = '';
+    },
+  },
+  created() {
+    this.fetchData();
   },
   methods: {
     backPrevios() {
       this.$router.go(-1);
     },
     fetchData() {
-      this.$store.commit("Loading_State", true);
+      this.$store.commit('Loading_State', true);
       this.$axios
-        .get("reject-reason", {
+        .get('reject-reason', {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
@@ -199,24 +248,24 @@ export default {
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.$store.commit("Loading_State", false);
+              this.$store.commit('Loading_State', false);
               this.rejects = res.data.data.data;
               this.pagination = res.data.data.pagination;
             }, 100);
           }
         })
         .catch(() => {
-          this.$store.commit("Loading_State", false);
+          this.$store.commit('Loading_State', false);
         });
     },
     openAddItem() {
-      this.$store.commit("modalAdd_State", true);
+      this.$store.commit('modalAdd_State', true);
     },
     AddItem() {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .post("reject-reason", {
+          .post('reject-reason', {
             name: this.name,
           })
           .then((res) => {
@@ -226,9 +275,9 @@ export default {
                 this.closeAddModal();
                 this.fetchData();
                 this.reset();
-                this.$store.commit("Toast_State", {
+                this.$store.commit('Toast_State', {
                   value: true,
-                  color: "success",
+                  color: 'success',
                   msg: res.data.message,
                 });
               }, 100);
@@ -236,14 +285,14 @@ export default {
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", {
+            this.$store.commit('Toast_State', {
               value: true,
-              color: "error",
+              color: 'error',
               msg: error.response ? error.response.data.message : 'Something went wrong',
             });
             if (error.response && error.response.status == 422) {
-              var obj = error.response.data.errors;
-              for (let [key, customer] of Object.entries(obj)) {
+              const obj = error.response.data.errors;
+              for (const [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
               }
             }
@@ -253,18 +302,18 @@ export default {
     },
 
     closeAddModal() {
-      this.name = "";
-      this.$store.commit("modalAdd_State", false);
+      this.name = '';
+      this.$store.commit('modalAdd_State', false);
     },
     editModal(item) {
       this.editItem = item;
-      this.$store.commit("modalEdit_State", true);
+      this.$store.commit('modalEdit_State', true);
     },
     UpdateItem() {
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .put("reject-reason/" + this.editItem.id, {
+          .put(`reject-reason/${this.editItem.id}`, {
             name: this.editItem.name,
           })
           .then((res) => {
@@ -274,9 +323,9 @@ export default {
                 this.closeEditModal();
                 this.fetchData();
                 this.reset();
-                this.$store.commit("Toast_State", {
+                this.$store.commit('Toast_State', {
                   value: true,
-                  color: "success",
+                  color: 'success',
                   msg: res.data.message,
                 });
               }, 100);
@@ -284,14 +333,14 @@ export default {
           })
           .catch((error) => {
             this.loading = false;
-            this.$store.commit("Toast_State", {
+            this.$store.commit('Toast_State', {
               value: true,
-              color: "error",
+              color: 'error',
               msg: error.response ? error.response.data.message : 'Something went wrong',
             });
             if (error.response && error.response.status == 422) {
-              var obj = error.response.data.errors;
-              for (let [key, customer] of Object.entries(obj)) {
+              const obj = error.response.data.errors;
+              for (const [key, customer] of Object.entries(obj)) {
                 this.server_errors[key] = customer[0];
               }
             }
@@ -300,54 +349,43 @@ export default {
       }
     },
     closeEditModal() {
-      this.$store.commit("modalEdit_State", false);
+      this.$store.commit('modalEdit_State', false);
     },
 
     closeDelete() {
-      this.$store.commit("modalDelete_State", false);
+      this.$store.commit('modalDelete_State', false);
     },
     deleteItem(id) {
       this.editItem = id;
-      this.$store.commit("modalDelete_State", true);
+      this.$store.commit('modalDelete_State', true);
     },
     deleteItemConfirm() {
       this.loading = true;
       this.$axios
-        .delete("reject-reason/" + this.editItem)
+        .delete(`reject-reason/${this.editItem}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.loading = false;
-              this.$store.commit("Toast_State", {
+              this.$store.commit('Toast_State', {
                 value: true,
-                color: "success",
+                color: 'success',
                 msg: res.data.message,
               });
-              this.$store.commit("modalDelete_State", false);
+              this.$store.commit('modalDelete_State', false);
               this.fetchData();
             }, 300);
           }
         })
         .catch(() => {
           this.fetchData();
-          this.$store.commit("modalDelete_State", false);
+          this.$store.commit('modalDelete_State', false);
           this.loading = false;
         });
     },
     reset() {
       this.$refs.form.reset();
     },
-  },
-  watch: {
-    name: function () {
-      this.server_errors.name = "";
-    },
-    "editItem.name": function () {
-      this.server_errors.name = "";
-    },
-  },
-  created() {
-    this.fetchData();
   },
 };
 </script>

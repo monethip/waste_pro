@@ -1,26 +1,33 @@
 <template>
   <v-container>
     <v-breadcrumbs large>
-      <v-btn text class="text-primary" @click="backPrevios()"
-        ><v-icon>mdi-keyboard-backspace </v-icon></v-btn
+      <v-btn
+        text
+        class="text-primary"
+        @click="backPrevios()"
       >
-      ແກ້ໄຂແຜນເສັ້ນທາງ</v-breadcrumbs
-    >
+        <v-icon>mdi-keyboard-backspace </v-icon>
+      </v-btn>
+      ແກ້ໄຂແຜນເສັ້ນທາງ
+    </v-breadcrumbs>
     <v-card>
       <v-card-title>
         <span class="headline">Update Plan</span>
       </v-card-title>
       <v-card-text>
         <v-container>
-          <v-form ref="form" lazy-validation>
+          <v-form
+            ref="form"
+            lazy-validation
+          >
             <v-row>
               <v-col cols="12">
                 <v-text-field
+                  v-model="plan.name"
                   label="Name"
                   required
-                  v-model="plan.name"
                   :rules="nameRules"
-                ></v-text-field>
+                />
                 <p class="errors">
                   {{ server_errors.name }}
                 </p>
@@ -29,9 +36,9 @@
             <v-row>
               <v-col cols="12">
                 <v-text-field
-                    label="Description"
-                    v-model="plan.description"
-                ></v-text-field>
+                  v-model="plan.description"
+                  label="Description"
+                />
                 <p class="errors">
                   {{ server_errors.description }}
                 </p>
@@ -40,9 +47,9 @@
             <v-row>
               <v-col cols="12">
                 <v-text-field
-                  label="Embed"
                   v-model="plan.embed"
-                ></v-text-field>
+                  label="Embed"
+                />
                 <p class="errors">
                   {{ server_errors.embed }}
                 </p>
@@ -51,8 +58,12 @@
           </v-form>
         </v-container>
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="backPrevios()">
+          <v-spacer />
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="backPrevios()"
+          >
             Back
           </v-btn>
           <v-btn
@@ -77,21 +88,33 @@ export default {
       data: {},
       loading: false,
       server_errors: {},
-      selectedFile: "",
-      embed: "",
-      errormsg: "",
+      selectedFile: '',
+      embed: '',
+      errormsg: '',
       plan: {},
-      //Validation
+      // Validation
       nameRules: [
-        (v) => !!v || "Name is required",
-        (v) => (v && v.length >= 2) || "Name must be less than 2 characters",
+        (v) => !!v || 'Name is required',
+        (v) => (v && v.length >= 2) || 'Name must be less than 2 characters',
       ],
     };
+  },
+  watch: {
+    // Clear error change
+    'data.embed': function () {
+      this.server_errors.embed = '';
+    },
+    'data.name': function () {
+      this.server_errors.name = '';
+    },
+  },
+  created() {
+    this.fetchDetail();
   },
   methods: {
     fetchDetail() {
       this.$axios
-        .get("route-plan/" + this.$route.params.id)
+        .get(`route-plan/${this.$route.params.id}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
@@ -106,53 +129,41 @@ export default {
       this.$router.go(-1);
     },
     UpdateData() {
-      console.log(this.plan.name)
-      let formData = new FormData();
-      formData.append("name", this.plan.name);
-      formData.append("embed", this.plan.embed);
-      formData.append("description", this.plan.description);
-      formData.append("_method", "PUT");
+      console.log(this.plan.name);
+      const formData = new FormData();
+      formData.append('name', this.plan.name);
+      formData.append('embed', this.plan.embed);
+      formData.append('description', this.plan.description);
+      formData.append('_method', 'PUT');
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
-          .post("route-plan/" + this.$route.params.id, formData, {
-            headers: { "Content-Type": "multipart/form-data" },
+          .post(`route-plan/${this.$route.params.id}`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
           })
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
                 this.loading = false;
-                this.$store.commit("Toast_State", res.data.message);
+                this.$store.commit('Toast_State', res.data.message);
                 this.$router.push({
-                  name: "Plan",
+                  name: 'Plan',
                 });
               }, 300);
             }
           })
           .catch((error) => {
             if (error.response && error.response.status == 422) {
-              var obj = error.response.data.errors;
-              for (let [key, data] of Object.entries(obj)) {
+              const obj = error.response.data.errors;
+              for (const [key, data] of Object.entries(obj)) {
                 this.server_errors[key] = data[0];
               }
             }
             this.loading = false;
-            this.$store.commit("Toast_State", this.toast_error);
+            this.$store.commit('Toast_State', this.toast_error);
           });
       }
     },
-  },
-  watch: {
-    //Clear error change
-    "data.embed": function () {
-      this.server_errors.embed = "";
-    },
-    "data.name": function () {
-      this.server_errors.name = "";
-    },
-  },
-  created() {
-    this.fetchDetail();
   },
 };
 </script>

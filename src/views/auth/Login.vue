@@ -1,9 +1,20 @@
 <template>
   <v-container>
-    <v-row align="center" justify="center">
-      <v-col cols="12" sm="12" md="12">
-        <v-card class="elevation-1" max-width="600" style="    display: flex;
-    margin: auto;">
+    <v-row
+      align="center"
+      justify="center"
+    >
+      <v-col
+        cols="12"
+        sm="12"
+        md="12"
+      >
+        <v-card
+          class="elevation-1"
+          max-width="600"
+          style="    display: flex;
+    margin: auto;"
+        >
           <v-card-text class="py-16 px-16">
             <v-row justify="center">
               <v-col justify="center">
@@ -13,13 +24,16 @@
                   max-width="250"
                   alt="Logo"
                   class="logo"
-                ></v-img>
+                />
               </v-col>
             </v-row>
             <h3 class="text-center display-5 black--text mb-8 mt-4">
               Login to Vientaine Waste Pro
             </h3>
-            <v-form ref="form" lazy-validation>
+            <v-form
+              ref="form"
+              lazy-validation
+            >
               <v-text-field
                 v-model="user.credential"
                 label="User name"
@@ -28,7 +42,7 @@
                 solo
                 type="text"
                 :rules="credentialRules"
-              ></v-text-field>
+              />
               <v-text-field
                 v-model="user.password"
                 :rules="passwordRules"
@@ -39,7 +53,7 @@
                 :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
                 @click:append="show = !show"
                 @keyup.enter="submitLogin"
-              ></v-text-field>
+              />
               <p class="errors">
                 {{ errors }}
               </p>
@@ -50,8 +64,9 @@
                   :loading="loading"
                   :disabled="loading"
                   @click="submitLogin"
-                  >Login</v-btn
                 >
+                  Login
+                </v-btn>
               </div>
             </v-form>
           </v-card-text>
@@ -62,11 +77,11 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import User from '@/store/models/User'
+import { mapGetters } from 'vuex';
+import User from '@/store/models/User';
 
 export default {
-  name: "Login",
+  name: 'Login',
   title() {
     return `Vientiane Waste Co-Dev|Login`;
   },
@@ -75,47 +90,46 @@ export default {
       loading: false,
       show: false,
       // user: {},
-      credentialRules: [(v) => !!v || "User name required"],
+      credentialRules: [(v) => !!v || 'User name required'],
       passwordRules: [
-        (v) => !!v || "Password is required",
-        (v) =>
-          (v && v.length >= 8) || "Password must be more than 8 characters",
+        (v) => !!v || 'Password is required',
+        (v) => (v && v.length >= 8) || 'Password must be more than 8 characters',
       ],
-      user:new User(),
+      user: new User(),
       toast: {
         value: true,
-        color: "success",
-        msg: "Login Success",
+        color: 'success',
+        msg: 'Login Success',
       },
       toast_error: {
         value: true,
-        color: "error",
-        msg: "Something when wrong!",
+        color: 'error',
+        msg: 'Something when wrong!',
       },
     };
   },
 
   methods: {
-    async submitLogin(){
+    async submitLogin() {
       if (this.$refs.form.validate() === true) {
         try {
           this.loading = true;
           await this.$store.dispatch('auth/login', this.user);
-        }catch (error){
-          this.$store.commit("Toast_State", this.errors);
-        }finally{
+        } catch (error) {
+          this.$store.commit('Toast_State', this.errors);
+        } finally {
           this.loading = false;
         }
       }
-    }
+    },
   },
   computed: {
     ...mapGetters({
-      errors: "auth/ShowMsgErrors",
+      errors: 'auth/ShowMsgErrors',
     }),
   },
   created() {
-  }
+  },
 };
 </script>
 

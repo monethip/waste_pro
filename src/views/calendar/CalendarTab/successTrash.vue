@@ -2,8 +2,12 @@
   <v-container>
     <v-row>
       <v-col>
-        <v-breadcrumbs large class="pa-0">
-          ຂີ້ເຫື້ຍອທີ່ເກັບສຳເລັດແລ້ວ</v-breadcrumbs>
+        <v-breadcrumbs
+          large
+          class="pa-0"
+        >
+          ຂີ້ເຫື້ຍອທີ່ເກັບສຳເລັດແລ້ວ
+        </v-breadcrumbs>
       </v-col>
       <!--      <v-col>-->
       <!--        <v-text-field-->
@@ -20,8 +24,14 @@
       <!--      </v-col>-->
     </v-row>
     <div>
-      <v-data-table v-if="successes" :headers="headers" :items="successes" :search="search" :disable-pagination="true"
-        hide-default-footer>
+      <v-data-table
+        v-if="successes"
+        :headers="headers"
+        :items="successes"
+        :search="search"
+        :disable-pagination="true"
+        hide-default-footer
+      >
         <template v-slot:item.customer="{ item }">
           <div v-if="(item.route_plan_detail.customer.customer_type = 'company')">
             {{ item.route_plan_detail.customer.company_name }}
@@ -47,40 +57,58 @@
             </template>
  -->
         <template v-slot:item.status="{ item }">
-          <v-chip label color="success">{{ item.status }}</v-chip>
+          <v-chip
+            label
+            color="success"
+          >
+            {{ item.status }}
+          </v-chip>
         </template>
         <template v-slot:item.amount="{ item }">
           <div v-if="item.collection_type == 'bag' || item.collection_type == 'chartered'">
-            <v-chip color="primary">{{ item.bag }}</v-chip>
+            <v-chip color="primary">
+              {{ item.bag }}
+            </v-chip>
             <span> {{ getUnit(item.collection_type) }}</span>
           </div>
           <div v-else-if="item.collection_type == 'fix_cost'">
             <span> {{ getUnit(item.collection_type) }}</span>
           </div>
           <div v-else>
-            <v-chip color="success">{{ item.container }}</v-chip>
+            <v-chip color="success">
+              {{ item.container }}
+            </v-chip>
             <span> {{ getUnit(item.collection_type) }}</span>
           </div>
         </template>
 
         <template v-slot:item.actions="{ item }">
-          <v-icon small class="mr-2" @click="viewPage(item.plan_calendar_id, item.id)">
+          <v-icon
+            small
+            class="mr-2"
+            @click="viewPage(item.plan_calendar_id, item.id)"
+          >
             mdi-eye
           </v-icon>
         </template>
-      </v-data-table><br />
+      </v-data-table><br>
       <template>
-        <Pagination v-if="pagination.total_pages > 1" :pagination="pagination" :offset="offset" @paginate="fetchData()">
-        </Pagination>
+        <Pagination
+          v-if="pagination.total_pages > 1"
+          :pagination="pagination"
+          :offset="offset"
+          @paginate="fetchData()"
+        />
       </template>
     </div>
   </v-container>
 </template>
 
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
+import { GetOldValueOnInput } from '@/Helpers/GetValue';
+
 export default {
-  name: "Trash",
+  name: 'Trash',
   data() {
     return {
       //   //Pagination
@@ -88,41 +116,51 @@ export default {
       successes: [],
       pagination: {},
       per_page: 100,
-      search: "",
+      search: '',
       //   oldVal: "",
       summary: {},
-      statuses: ["success"],
+      statuses: ['success'],
       headers: [
-        { text: "ລຳດັບ", value: "route_plan_detail.priority" },
-        { text: "ລູກຄ້າ", value: "customer" },
+        { text: 'ລຳດັບ', value: 'route_plan_detail.priority' },
+        { text: 'ລູກຄ້າ', value: 'customer' },
         // { text: "ເລີ່ມວັນທີ", value: "route_plan_detail.customer.start_month" },
         {
-          text: "ຈຳນວນຂີ້ເຫື້ຍອ",
-          value: "amount",
-          align: "center",
+          text: 'ຈຳນວນຂີ້ເຫື້ຍອ',
+          value: 'amount',
+          align: 'center',
           sortable: false,
         },
         {
-          text: "ສະຖານະ",
-          value: "status",
-          align: "center",
+          text: 'ສະຖານະ',
+          value: 'status',
+          align: 'center',
           sortable: false,
         },
         {
-          text: "ວັນທີສ້າງ",
-          value: "created_at",
-          align: "center",
+          text: 'ວັນທີສ້າງ',
+          value: 'created_at',
+          align: 'center',
           sortable: false,
         },
         {
-          text: "ວັນທີເກັບ",
-          value: "collected_at",
-          align: "center",
+          text: 'ວັນທີເກັບ',
+          value: 'collected_at',
+          align: 'center',
           sortable: false,
         },
-        { text: "", value: "actions", sortable: false },
+        { text: '', value: 'actions', sortable: false },
       ],
     };
+  },
+  watch: {
+    search(value) {
+      if (value == '') {
+        this.fetchData();
+      }
+    },
+  },
+  created() {
+    this.fetchData();
   },
   methods: {
     backPrevios() {
@@ -130,19 +168,19 @@ export default {
     },
 
     fetchData() {
-      this.$store.commit("Loading_State", true);
+      this.$store.commit('Loading_State', true);
       this.$axios
-        .get("plan-calendar/" + this.$route.params.id + "/detail", {
+        .get(`plan-calendar/${this.$route.params.id}/detail`, {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
             statuses: this.statuses,
           },
         })
-         .then((res) => {
+        .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.$store.commit("Loading_State", false);
+              this.$store.commit('Loading_State', false);
               this.successes = res.data.data.data;
               this.summary = res.data.data.summary;
               this.pagination = res.data.data.pagination;
@@ -150,43 +188,33 @@ export default {
           }
         })
         .catch((error) => {
-          this.$store.commit("Loading_State", false);
+          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status == 422) {
             this.toast.msg = error.message;
           }
         });
     },
     statusColor(value) {
-      if (value == "pending") return "info";
-      else if (value == "success") return "success";
-      else return "error";
+      if (value == 'pending') return 'info';
+      if (value == 'success') return 'success';
+      return 'error';
     },
     getUnit(value) {
-      if (value == "bag") return "ຖົງ";
-      else if (value == 'chartered') return "ຖົງ";
-      else if (value == "fix_cost") return "ມອບເໝົາ"
-      else if (value == "container") return "ຄອນເທັນເນີ"
-      else return '';
+      if (value == 'bag') return 'ຖົງ';
+      if (value == 'chartered') return 'ຖົງ';
+      if (value == 'fix_cost') return 'ມອບເໝົາ';
+      if (value == 'container') return 'ຄອນເທັນເນີ';
+      return '';
     },
     Search() {
       GetOldValueOnInput(this);
     },
     viewPage(plan_calendar, id) {
       this.$router.push({
-        name: "TrashDetail",
+        name: 'TrashDetail',
         params: { plan_calendar, id },
       });
     },
-  },
-  watch: {
-    search: function (value) {
-      if (value == "") {
-        this.fetchData();
-      }
-    },
-  },
-  created() {
-    this.fetchData();
   },
 };
 </script>

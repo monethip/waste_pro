@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   transpileDependencies: [
-    'vuetify'
+    'vuetify',
   ],
   configureWebpack: {
     resolve: {
@@ -12,7 +12,7 @@ module.exports = {
         '@css': path.resolve(__dirname, 'public/css'),
         '@coms': path.resolve(__dirname, 'src/components'),
         '@views': path.resolve(__dirname, 'src/views'),
-      }
-    }
-  }
-}
+      },
+    },
+  },
+};

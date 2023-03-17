@@ -2,8 +2,15 @@
   <v-container>
     <v-row class="mb-4">
       <v-col>
-        <v-breadcrumbs large class="pa-0">
-          <v-btn text class="text-primary" @click="backPrevios()">
+        <v-breadcrumbs
+          large
+          class="pa-0"
+        >
+          <v-btn
+            text
+            class="text-primary"
+            @click="backPrevios()"
+          >
             <v-icon>mdi-chevron-left</v-icon>
           </v-btn>
           ລາຍລະອຽດການແຈ້ງເຕືອນ
@@ -13,7 +20,10 @@
     <div>
       <v-card>
         <v-card-text class="px-16 py-16">
-          <v-row align="center" class="py-4">
+          <v-row
+            align="center"
+            class="py-4"
+          >
             <v-col align="center">
               <h2>ແຈ້ງເຕືອນ</h2>
               <!-- <p v-if="invoice.plan_month">{{ invoice.plan_month.name }}</p> -->
@@ -31,16 +41,26 @@
           <v-row class="mb-n6">
             <v-col>ລາຍລະອຽດ</v-col>
           </v-row>
-          <v-divider class="my-6 c-divider"></v-divider>
+          <v-divider class="my-6 c-divider" />
           <v-row>
             <v-col>
-              <h3 v-if="notification.data">{{ notification.data.name }}</h3>
-              <p v-if="notification.data">{{ notification.data.body }}</p>
+              <h3 v-if="notification.data">
+                {{ notification.data.name }}
+              </h3>
+              <p v-if="notification.data">
+                {{ notification.data.body }}
+              </p>
             </v-col>
           </v-row>
           <v-card-actions class="mt-6">
-            <v-spacer></v-spacer>
-            <v-btn color="info" text :loading="loading" :disabled="loading" @click="backPrevios()">
+            <v-spacer />
+            <v-btn
+              color="info"
+              text
+              :loading="loading"
+              :disabled="loading"
+              @click="backPrevios()"
+            >
               Back
             </v-btn>
           </v-card-actions>
@@ -52,56 +72,59 @@
 
 <script>
 export default {
-  name: "NotificationDetail",
+  name: 'NotificationDetail',
   data() {
     return {
       loading: false,
       notification: {},
-      invoiceStatusColor: "",
+      invoiceStatusColor: '',
     };
+  },
+  created() {
+    this.fetchData();
   },
   methods: {
     backPrevios() {
       this.$router.go(-1);
     },
     fetchData() {
-      this.$store.commit("Loading_State", true);
+      this.$store.commit('Loading_State', true);
       this.$axios
-        .get("notification/" + this.$route.params.id)
+        .get(`notification/${this.$route.params.id}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.$store.commit("Loading_State", false);
+              this.$store.commit('Loading_State', false);
               this.notification = res.data.data;
             }, 100);
           }
         })
         .catch((error) => {
-          this.$store.commit("Loading_State", false);
+          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status == 422) {
-            var obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
+            const obj = error.response.data.errors;
+            for (const [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
           }
         });
     },
     invoiceStatus(data) {
-      if (data == "created") {
-        this.invoiceStatusColor = "primary--text";
-        return "ສ້າງບິນສຳເລັດ";
-      } else if (data == "approved") {
-        this.invoiceStatusColor = "info--text";
-        return "ອະນຸມັດແລ້ວ";
-      } else if (data == "to_confirm_payment") {
-        this.invoiceStatusColor = "warning--text";
-        return "ລໍຖ້າຢືນຢັນການຊຳລະ";
-      } else if (data == "rejected") {
-        this.invoiceStatusColor = "error--text";
-        return "ຊຳລະບໍ່ສຳເລັດ";
-      } else if (data == "success") {
-        this.invoiceStatusColor = "success--text";
-        return "ສຳເລັດການຊຳລະ";
+      if (data == 'created') {
+        this.invoiceStatusColor = 'primary--text';
+        return 'ສ້າງບິນສຳເລັດ';
+      } if (data == 'approved') {
+        this.invoiceStatusColor = 'info--text';
+        return 'ອະນຸມັດແລ້ວ';
+      } if (data == 'to_confirm_payment') {
+        this.invoiceStatusColor = 'warning--text';
+        return 'ລໍຖ້າຢືນຢັນການຊຳລະ';
+      } if (data == 'rejected') {
+        this.invoiceStatusColor = 'error--text';
+        return 'ຊຳລະບໍ່ສຳເລັດ';
+      } if (data == 'success') {
+        this.invoiceStatusColor = 'success--text';
+        return 'ສຳເລັດການຊຳລະ';
       }
     },
     //     invoiceStatusColor(data) {
@@ -110,9 +133,6 @@ export default {
     //   }
     // },
   },
-  created() {
-    this.fetchData();
-   },
 };
 </script>
 

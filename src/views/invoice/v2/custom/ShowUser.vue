@@ -10,21 +10,24 @@
         <v-card class="pa-2">
           <v-card-title class="my-auto">
             ຂໍ້ມູນ Users ({{ pagination.total }})
-            <v-divider class="mx-4" vertical></v-divider>
-            <v-spacer></v-spacer>
+            <v-divider
+              class="mx-4"
+              vertical
+            />
+            <v-spacer />
             <v-row>
               <v-col>
                 <v-select
+                  v-model="selectedRoles"
                   outlined
                   dense
                   :items="roles"
-                  v-model="selectedRoles"
                   item-text="name"
                   item-value="name"
                   label="Roles"
                   multiple
-                ></v-select>
-                <v-spacer></v-spacer>
+                />
+                <v-spacer />
               </v-col>
               <v-col>
                 <v-text-field
@@ -34,10 +37,10 @@
                   label="Search"
                   single-line
                   hide-details
-                  @keyup.enter="Search()"
                   outlined
                   dense
-                ></v-text-field>
+                  @keyup.enter="Search()"
+                />
               </v-col>
 
               <v-col>
@@ -50,10 +53,10 @@
                   class="input-number"
                   single-line
                   hide-details
-                  @keyup.enter="SearchPhone()"
                   outlined
                   dense
-                ></v-text-field>
+                  @keyup.enter="SearchPhone()"
+                />
               </v-col>
             </v-row>
           </v-card-title>
@@ -67,37 +70,55 @@
             <!--Role -->
             <template v-slot:item.roles="{ item }">
               <div>
-                <span v-for="(role, index) in item.roles" :key="index">
-                  <v-chip color="info" label class="mr-1 my-1">{{ role.name }}</v-chip>
+                <span
+                  v-for="(role, index) in item.roles"
+                  :key="index"
+                >
+                  <v-chip
+                    color="info"
+                    label
+                    class="mr-1 my-1"
+                  >{{ role.name }}</v-chip>
                 </span>
               </div>
             </template>
             <!--Permission -->
             <template v-slot:item.permissions="{ item }">
               <div>
-                <span v-for="(ps, index) in item.permissions" :key="index">
-                  <v-chip color="success" label class="mr-1 my-1">
+                <span
+                  v-for="(ps, index) in item.permissions"
+                  :key="index"
+                >
+                  <v-chip
+                    color="success"
+                    label
+                    class="mr-1 my-1"
+                  >
                     {{
-                    ps.name
+                      ps.name
                     }}
                   </v-chip>
                 </span>
               </div>
             </template>
             <template v-slot:item.status="{ item }">
-              <v-btn @click="createCustomPage(item)" small class="btn-primary elevation-0">
+              <v-btn
+                small
+                class="btn-primary elevation-0"
+                @click="createCustomPage(item)"
+              >
                 <v-icon>mdi-plus</v-icon>ສ້າງບິນ
               </v-btn>
             </template>
           </v-data-table>
-          <br />
+          <br>
           <template>
             <Pagination
               v-if="pagination.total_pages > 1"
               :pagination="pagination"
               :offset="offset"
               @paginate="fetchData()"
-            ></Pagination>
+            />
           </template>
         </v-card>
       </v-col>
@@ -106,99 +127,126 @@
 </template>
 
 <script>
-import { GetOldValueOnInput } from "@/Helpers/GetValue";
-import queryOption from "@/Helpers/queryOption";
+import { GetOldValueOnInput } from '@/Helpers/GetValue';
+import queryOption from '@/Helpers/queryOption';
+
 export default {
   title() {
     return `Vientiane Waste Co-Dev|User`;
   },
-  name: "User",
+  name: 'User',
   data() {
     return {
       stepValue: 1,
-      otp: "",
+      otp: '',
       isStepTwo: false,
       headers: [
-        { text: "User Name", value: "name", width: "150px" },
-        { text: "Phone", value: "phone", sortable: false },
-        { text: "Email", value: "email", sortable: false },
+        { text: 'User Name', value: 'name', width: '150px' },
+        { text: 'Phone', value: 'phone', sortable: false },
+        { text: 'Email', value: 'email', sortable: false },
         // { text: "Role", value: "roles", sortable: false,width:"150px" },
         // { text: "Permission", value: "permissions", sortable: false,width:"150px" },
-        { text: "", value: "status", sortable: false, align: "center" }
+        {
+          text: '', value: 'status', sortable: false, align: 'center',
+        },
       ],
       loading: false,
       users: [],
       user: {},
-      phone: "",
+      phone: '',
       server_errors: {
-        email: "",
-        roleId: ""
+        email: '',
+        roleId: '',
       },
 
-      selectedRole: "",
+      selectedRole: '',
       selectedRoles: [],
       roles: [],
 
-      //Pagination
+      // Pagination
       offset: 12,
       pagination: {},
       per_page: 100,
 
-      search: "",
-      searchPhone: "",
-      oldVal: "",
+      search: '',
+      searchPhone: '',
+      oldVal: '',
 
       statuses: [
         {
-          name: "active"
+          name: 'active',
         },
         {
-          name: "inactive"
-        }
+          name: 'inactive',
+        },
       ],
-      status: "",
-      id_token: ""
+      status: '',
+      id_token: '',
 
-      //Validation
+      // Validation
     };
+  },
+
+  watch: {
+    search(value) {
+      this.pagination.current_page = '';
+      if (value === '') {
+        this.fetchData();
+      }
+    },
+
+    searchPhone(value) {
+      this.pagination.current_page = '';
+      if (value.length > 4) {
+        this.fetchData();
+      }
+    },
+    selectedRoles() {
+      this.pagination.current_page = '';
+      this.fetchData();
+    },
+  },
+  created() {
+    this.fetchRole();
+    this.fetchData();
   },
   methods: {
     fetchData() {
-      this.$store.commit("Loading_State", true);
+      this.$store.commit('Loading_State', true);
       this.$axios
-        .get("user-setting/user", {
+        .get('user-setting/user', {
           params: queryOption([
             { page: this.pagination.current_page },
             { per_page: this.per_page },
             { filter: this.search },
             { phone: this.searchPhone },
-            { roles: this.selectedRoles }
-          ])
+            { roles: this.selectedRoles },
+          ]),
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.code === 200) {
             this.loading = false;
-            this.$store.commit("Loading_State", false);
+            this.$store.commit('Loading_State', false);
             this.users = res.data.data.data;
             console.log(this.users);
             this.pagination = res.data.data.pagination;
           }
         })
-        .catch(error => {
-          this.$store.commit("Loading_State", false);
+        .catch((error) => {
+          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status === 422) {
-            let obj = error.response.data.errors;
-            for (let [key, message] of Object.entries(obj)) {
+            const obj = error.response.data.errors;
+            for (const [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
           }
         });
     },
     fetchRole() {
-      //Role
+      // Role
       this.$axios
-        .get("user-setting/role")
-        .then(res => {
+        .get('user-setting/role')
+        .then((res) => {
           if (res.data.code === 200) {
             this.loading = false;
             this.roles = res.data.data;
@@ -211,11 +259,11 @@ export default {
 
     createCustomPage(data) {
       this.$router.push({
-        name: "create-custom-bill",
+        name: 'create-custom-bill',
         params: {
-          items: data
+          items: data,
           // items: this.customers,
-        }
+        },
       });
     },
 
@@ -227,32 +275,8 @@ export default {
     },
     SearchPhone() {
       GetOldValueOnInput(this);
-    }
-  },
-
-  watch: {
-    search: function(value) {
-      this.pagination.current_page = "";
-      if (value === "") {
-        this.fetchData();
-      }
     },
-
-    searchPhone: function(value) {
-      this.pagination.current_page = "";
-      if (value.length > 4) {
-        this.fetchData();
-      }
-    },
-    selectedRoles: function() {
-      this.pagination.current_page = "";
-      this.fetchData();
-    }
   },
-  created() {
-    this.fetchRole();
-    this.fetchData();
-  }
 };
 </script>
 
