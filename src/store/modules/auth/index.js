@@ -227,7 +227,7 @@ export default function create() {
           const user_role = window.localStorage.getItem('roles');
           const roleUsers = JSON.parse(user_role);
           roleUsers.filter((item) => {
-            if (item.name.includes('customer')) {
+            if (item.name == 'customer') {
               localStorage.removeItem('phone');
               localStorage.removeItem('id_token');
               localStorage.removeItem('confirmAccount');
@@ -235,7 +235,7 @@ export default function create() {
               router.push({ name: 'Login' }).then(() => {
                 window.location.reload();
               });
-            } else if (item.name.includes('company')) {
+            } else if (item.name == 'company') {
               localStorage.removeItem('phone');
               localStorage.removeItem('id_token');
               localStorage.removeItem('confirmAccount');
@@ -243,7 +243,7 @@ export default function create() {
               router.push({ name: 'Login' }).then(() => {
                 window.location.reload();
               });
-            } else if (item.name.includes('pre_customer')) {
+            } else if (item.name == 'pre_customer') {
               localStorage.removeItem('phone');
               localStorage.removeItem('id_token');
               localStorage.removeItem('confirmAccount');
@@ -251,7 +251,7 @@ export default function create() {
               router.push({ name: 'Login' }).then(() => {
                 window.location.reload();
               });
-            } else if (item.name.includes('driver')) {
+            } else if (item.name == 'driver') {
               localStorage.removeItem('phone');
               localStorage.removeItem('id_token');
               localStorage.removeItem('confirmAccount');

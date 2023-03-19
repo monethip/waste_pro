@@ -121,12 +121,12 @@
   </v-container>
 </template>
 <script>
-import { mapActions } from 'vuex';
-import firebase from 'firebase';
-import router from '@/router';
+import { mapActions } from "vuex";
+import firebase from "firebase";
+import router from "@/router";
 
 export default {
-  name: 'CheckPhone',
+  name: "CheckPhone",
   title() {
     return `Vientiane Waste Co-Dev|Login`;
   },
@@ -135,16 +135,16 @@ export default {
     btnVerify: false,
     verifyCode: false,
     verifyPhone: true,
-    phone: '',
-    showPhone: '',
-    code: '',
+    phone: "",
+    showPhone: "",
+    code: "",
     user: {},
-    error: '',
+    error: "",
     phoneRule: [
-      (v) => !!v || 'Phone is required',
-      (v) => (v && v.length >= 8) || 'Phone must be more than 8 characters',
+      (v) => !!v || "Phone is required",
+      (v) => (v && v.length >= 8) || "Phone must be more than 8 characters",
     ],
-    appVerifier: '',
+    appVerifier: "",
   }),
 
   methods: {
@@ -154,7 +154,7 @@ export default {
         // Check Phone number
         this.loading = true;
         this.$axios
-          .post('auth/check-phone', {
+          .post("auth/check-phone", {
             credential: this.user.credential,
             password: this.user.password,
             phone: this.phone,
@@ -164,12 +164,12 @@ export default {
               if (res.data.data.collect === true) {
                 // Send OTP
                 this.loading = true;
-                const countryCode = '+85620'; // laos
+                const countryCode = "+85620"; // laos
                 const phoneNumber = countryCode + this.phone;
-                const { appVerifier } = this;
+                const appVerifier = this.appVerifier;
 
                 setTimeout(() => {
-                  firebase.auth().languageCode = 'en';
+                  firebase.auth().languageCode = "en";
                   firebase
                     .auth()
                     .signInWithPhoneNumber(phoneNumber, appVerifier)
@@ -186,10 +186,10 @@ export default {
                 });
               } else if (res.data.data.collect === false) {
                 this.loading = false;
-                this.error = 'ເບີໂທບໍ່ຖືກຕ້ອງ';
+                this.error = "ເບີໂທບໍ່ຖືກຕ້ອງ";
               } else {
                 this.loading = false;
-                this.error = 'ມີບາງຢ່າງຜິດພາດ ກະລຸນາລອງໃໝ່';
+                this.error = "ມີບາງຢ່າງຜິດພາດ ກະລຸນາລອງໃໝ່";
               }
               this.loading = false;
             }
@@ -203,41 +203,44 @@ export default {
 
     verifyOtp() {
       this.btnVerify = true;
-      const { code } = this;
+      const code = Array.from(this.$refs.otpInput.otp).join('');
+      console.log(code, '88');
       window.confirmationResult
         .confirm(code)
         .then((res) => {
           if (res) {
             this.btnVerify = false;
             const token = res.user;
-            localStorage.setItem('id_token', token._lat);
+            console.log(token, 'token');
+            localStorage.setItem("id_token", token._lat);
           }
           try {
-            this.$store.commit('Loading_State', true);
-            const id_token = localStorage.getItem('id_token');
+            this.$store.commit("Loading_State", true);
+            const id_token = localStorage.getItem("id_token");
+            console.log(id_token, 'id_token');
             const user = { ...this.user, id_token };
-            this.$store.dispatch('auth/confirmLogin', user);
+            this.$store.dispatch("auth/confirmLogin", user);
           } catch (error) {
-            this.$store.commit('Toast_State', {
+            this.$store.commit("Toast_State", {
               value: true,
-              color: 'success',
+              color: "success",
               msg: error,
             });
           } finally {
-            this.$store.commit('Toast_State', {
+            this.$store.commit("Toast_State", {
               value: true,
-              color: 'success',
-              msg: 'Login Success',
+              color: "success",
+              msg: "Login Success",
             });
           }
-          this.$store.commit('Loading_State', false);
+          this.$store.commit("Loading_State", false);
           // this.$store.commit("Loading_State", true);
         })
         .catch(function () {
-          this.$store.commit('Toast_State', {
+          this.$store.commit("Toast_State", {
             value: true,
-            color: 'error',
-            msg: 'ມີບາງຢ່າງຜິດພາດ ກະລຸນາລອງໃໝ່',
+            color: "error",
+            msg: "ມີບາງຢ່າງຜິດພາດ ກະລຸນາລອງໃໝ່",
           });
         });
     },
@@ -252,10 +255,10 @@ export default {
     // },
     initReCaptcha() {
       window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-        'recaptcha-container',
+        "recaptcha-container",
         {
-          size: 'invisible',
-          'expired-callback': function () {},
+          size: "invisible",
+          "expired-callback": function () {},
         },
       );
       //
@@ -270,16 +273,16 @@ export default {
   },
   watch: {
     phone() {
-      this.error = '';
+      this.error = "";
     },
   },
   created() {
-    const data = localStorage.getItem('confirmAccount');
-    this.showPhone = this.$store.getters['auth/getLoginPhone'];
+    const data = localStorage.getItem("confirmAccount");
+    this.showPhone = this.$store.getters["auth/getLoginPhone"];
 
     this.user = JSON.parse(data);
     if (!this.showPhone) {
-      router.push({ name: 'Login' });
+      router.push({ name: "Login" });
     }
   },
 };
