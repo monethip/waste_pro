@@ -35,7 +35,7 @@
                 ແຈ້ງເຕືອນວັນທີ:
                 {{ moment(notification.created_at).format("DD-MM-YY") }}
               </h3>
-              <h3>ປະເພດແຈ້ງເຕືອນ: {{ notification.type }}</h3>
+              <h3>ປະເພດແຈ້ງເຕືອນ: {{ notification.data.type }}</h3>
             </v-col>
           </v-row>
           <v-row class="mb-n6">
@@ -52,8 +52,19 @@
               </p>
             </v-col>
           </v-row>
+          <v-row v-if="notification.data.url">
+            <v-col>
+              <a
+                color="success"
+                :href="notification.data.url"
+              >
+                View Detail
+              </a>
+            </v-col>
+          </v-row>
           <v-card-actions class="mt-6">
             <v-spacer />
+
             <v-btn
               color="info"
               text
