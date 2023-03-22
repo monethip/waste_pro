@@ -11,6 +11,12 @@
       >
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>ລາຍລະອຽດ
+      <router-link
+        class="ml-4"
+        :to="`/edit/company/${data.id}`"
+      >
+        ແກ້ໄຂ
+      </router-link>
     </v-breadcrumbs>
     <v-card>
       <!--
