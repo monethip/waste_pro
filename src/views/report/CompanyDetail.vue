@@ -19,11 +19,6 @@
       </router-link>
     </v-breadcrumbs>
     <v-card>
-      <!--
-      <div v-for="(item, index) in data.media" :key="index">
-        <v-img :src="item.url" alt="Image" height="500px" dark> </v-img>
-      </div>
-      -->
       <v-carousel v-if="data.media && data.media.length">
         <v-carousel-item
           v-for="(item, index) in data.media"

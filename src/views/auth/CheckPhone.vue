@@ -204,7 +204,6 @@ export default {
     verifyOtp() {
       this.btnVerify = true;
       const code = Array.from(this.$refs.otpInput.otp).join('');
-      console.log(code, '88');
       window.confirmationResult
         .confirm(code)
         .then((res) => {
