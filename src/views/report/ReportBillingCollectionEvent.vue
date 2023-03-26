@@ -424,8 +424,8 @@ export default {
     },
     sectionSale() {
       let item = this.defaultStatus;
-      if (this.billings.sum_sale && this.billings.sum_sale.total) {
-        item = this.billings.sum_sale.total.find((item) => item.status == 'success');
+      if (this.billings.sum_sale) {
+        item = this.billings.sum_sale.find((item) => item.status == 'success');
       }
       return [
         { ...item, bg_color: 'teal' },
@@ -433,8 +433,8 @@ export default {
     },
     sectionNotSale() {
       let item = this.defaultStatus;
-      if (this.billings.sum_not_sale && this.billings.sum_not_sale.total) {
-        item = this.billings.sum_not_sale.total.find((item) => item.status == 'success');
+      if (this.billings.sum_not_sale) {
+        item = this.billings.sum_not_sale.find((item) => item.status == 'success');
       }
       return [
         { ...item, bg_color: 'teal darken-4' },
