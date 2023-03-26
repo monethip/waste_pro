@@ -278,6 +278,14 @@
                   <template v-slot:item.total="{ item }">
                     {{ formatNumber(item.total) }}
                   </template>
+                  <template v-slot:item.paided_by_user.full_name="{ item }">
+                    <p
+                      v-if="item.paided_by_user"
+                      :class="item.paided_by_user.roles.length ? '':'text-decoration-line-through'"
+                    >
+                      {{ item.paided_by_user.full_name }}
+                    </p>
+                  </template>
 
                   <template v-slot:item.display_type="{ item }">
                     {{ getLaoBillingTypeFunc(item.display_type) }}
@@ -393,6 +401,7 @@ export default {
         },
         { text: 'ສະຖານະ', value: 'status' },
         { text: 'ປະເພດການຈ່າຍ', value: 'payment_method_la' },
+        { text: 'ຜູ້ຈ່າຍ', value: 'paided_by_user.full_name' },
         { text: 'ປະເພດບິນ', value: 'display_type' },
         { text: 'ຈຳນວນ', value: 'total' },
 

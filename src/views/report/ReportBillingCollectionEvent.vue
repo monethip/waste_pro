@@ -128,6 +128,28 @@
       </v-col>
     </v-row>
 
+    <!-- Section Sale-->
+    <v-row>
+      <v-col>
+        <v-card outlined>
+          <v-card-title>ແຍກຈາກເຊວ</v-card-title>
+          <v-card-text>
+            <v-row>
+              <v-col @click="changeSaleMode('sale')">
+                <span class="text-title mt-2 font-weight-bold">ບິນທີ່ເປັນຂອງເຊວ</span>
+                <RowSection :cards="sectionSale" />
+              </v-col>
+
+              <v-col @click="changeSaleMode('not_sale')">
+                <span class="text-title mt-2">ບິນທີ່ບໍ່ເປັນຂອງເຊວ</span>
+                <RowSection :cards="sectionNotSale" />
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+
     <!-- Section Total-->
     <v-row>
       <v-col>
@@ -152,7 +174,7 @@
         <v-card outlined>
           <v-card-title>
             <v-row>
-              <v-col>ລາຍການບິນທັງໝົດ</v-col>
+              <v-col>ລາຍການບິນທັງໝົດ <strong>{{ sale_mode ? (sale_mode == 'sale' ? 'ທີ່ເປັນຂອງເຊວ' : 'ທີ່ບໍ່ເປັນຂອງເຊວ') :'' }}</strong></v-col>
               <v-col>
                 <v-text-field
                   v-model="billingListsearch"
@@ -185,6 +207,14 @@
 
                   <template v-slot:item.total="{ item }">
                     {{ formatNumber(item.total) }}
+                  </template>
+                  <template v-slot:item.paided_by_user.full_name="{ item }">
+                    <p
+                      v-if="item.paided_by_user"
+                      :class="item.paided_by_user.roles.length ? '':'text-decoration-line-through'"
+                    >
+                      {{ item.paided_by_user.full_name }}
+                    </p>
                   </template>
                   <template v-slot:item.user.customer.package="{ item }">
                     {{ `${item.user.customer.package.name}` }}
@@ -252,6 +282,7 @@ export default {
   data() {
     return {
       loading: false,
+      sale_mode: "",
       paymentMethods: payment_methods,
       selectedPaymentMethod: '',
       billingListsearch: '',
@@ -289,6 +320,7 @@ export default {
         },
         { text: 'ສະຖານະ', value: 'status' },
         { text: 'ປະເພດການຈ່າຍ', value: 'payment_method_la' },
+        { text: 'ຜູ້ຈ່າຍ', value: 'paided_by_user.full_name' },
         { text: 'ຈຳນວນ', value: 'total' },
 
         { text: 'ລູກຄ້າ', value: 'display_customer_name' },
@@ -390,6 +422,25 @@ export default {
         this.rejectedStatus,
       ];
     },
+    sectionSale() {
+      let item = this.defaultStatus;
+      if (this.billings.sum_sale && this.billings.sum_sale.total) {
+        item = this.billings.sum_sale.total.find((item) => item.status == 'success');
+      }
+      return [
+        { ...item, bg_color: 'teal' },
+      ];
+    },
+    sectionNotSale() {
+      let item = this.defaultStatus;
+      if (this.billings.sum_not_sale && this.billings.sum_not_sale.total) {
+        item = this.billings.sum_not_sale.total.find((item) => item.status == 'success');
+      }
+      return [
+        { ...item, bg_color: 'teal darken-4' },
+
+      ];
+    },
     sectionPending() {
       return [this.approvedStatus, this.createdStatus];
     },
@@ -448,6 +499,10 @@ export default {
     this.fetchSale();
   },
   methods: {
+    changeSaleMode(mode) {
+      this.sale_mode = mode;
+      this.fetchData();
+    },
     handleExport() {
       this.exportMode = 'excel';
     },
@@ -482,6 +537,7 @@ export default {
         { download: this.exportMode },
         { created_month: this.lastMonthCreated },
         { bill_month: this.lastMonthBillCreated },
+        { sale_mode: this.sale_mode },
       ];
 
       if (this.selectedVillage) queryArray.push({ village_id: this.selectedVillage });

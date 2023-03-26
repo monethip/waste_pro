@@ -427,6 +427,7 @@ export default {
   data() {
     return {
       title: 'Collection',
+      sale_mode: "",
       paymentMethods: payment_methods,
       selectedPaymentMethod: '',
       month: '',
