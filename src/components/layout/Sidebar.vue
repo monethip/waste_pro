@@ -392,7 +392,7 @@ export default {
             'get_user',
             'get_customer',
             'get_driver',
-            'create_address',
+            'get_address',
           ],
           menu: [
             {
@@ -417,13 +417,13 @@ export default {
               icon: 'mdi-home-account',
               title: 'ຈັດການທີ່ຢູ່',
               to: '/village',
-              permissions: ['create_address', 'get_driver'],
+              permissions: ['get_address', 'get_driver'],
             },
             {
               icon: 'mdi-home-account',
               title: 'ຈັດການລາຍລະອຽດທີ່ຢູ່',
               to: '/village-variation',
-              permissions: ['create_address', 'get_driver'],
+              permissions: ['get_address', 'get_driver'],
             },
             {
               icon: 'mdi-car-multiple',
@@ -441,7 +441,7 @@ export default {
             'get_user',
             'get_customer',
             'get_driver',
-            'create_address',
+            'get_address',
           ],
           menu: [
             {
@@ -523,7 +523,7 @@ export default {
               icon: 'mdi-calendar-month',
               title: 'ຈັດແຜນເດີນລົດ',
               to: '/calendar',
-              permissions: ['update_plan_calendar'],
+              permissions: ['get_plan_calendar'],
             },
           ],
         },
