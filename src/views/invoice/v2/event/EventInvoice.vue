@@ -226,8 +226,8 @@
                       {{ data.requested_by.name }}
                     </div>
                   </td>
-                  <td>{{ Intl.NumberFormat().format( data.billing.sub_total) }}</td>
-                  <td>{{ Intl.NumberFormat().format(data.billing.total ) }}</td>
+                  <td>{{ Intl.NumberFormat().format(data.billing ? data.billing.sub_total : 0) }}</td>
+                  <td>{{ Intl.NumberFormat().format(data.billing ? data.billing.total : 0 ) }}</td>
                   <td style="width: 380px;">
                     {{ data.description }}
                   </td>
