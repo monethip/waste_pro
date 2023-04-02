@@ -905,6 +905,8 @@ export default {
       switch (costBy) {
         case 'bag':
         case 'chartered':
+        case 'infect':
+        case '32km':
           return info.bag_sum;
         case 'container':
           return info.container_sum;

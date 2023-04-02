@@ -106,6 +106,8 @@ export default {
       switch (costBy) {
         case 'bag':
         case 'chartered':
+        case 'infect':
+        case '32km':
           return info.bag_sum;
         case 'container':
           return info.container_sum;
@@ -257,6 +259,9 @@ export default {
       if (value == 'container') return 'ຄອນເທັນເນີ';
       if (value == 'fix_cost') return 'ທຸລະກິດເປັນຖ້ຽວ';
       if (value == 'chartered') return 'ມອບເໝົາ';
+      if (value == 'infect') return 'ຂີ້ເຫຍື້ອຕິດເຊື້ອ';
+      if (value == '32km') return 'ຫຼັກ32';
+      return value;
     },
     Search() {
       GetOldValueOnInput(this);

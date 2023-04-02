@@ -662,6 +662,16 @@ export default {
           value: 'bag',
           name: 'ບໍລິມາດ',
         },
+        {
+          id: 5,
+          value: '32km',
+          name: 'ຫຼັກ32',
+        },
+        {
+          id: 6,
+          value: 'infect',
+          name: 'ຂີ້ເຫຍື້ອຕິດເຊື້ອ',
+        },
       ],
       favorite_dates: [],
       selectedFavoriteDate: [],
@@ -784,6 +794,12 @@ export default {
         this.fix_cost = '';
         this.showFixed = true;
       } else if (value === 'chartered') {
+        this.fix_cost = '';
+        this.showFixed = true;
+      } else if (value === '32km') {
+        this.fix_cost = '';
+        this.showFixed = true;
+      } else if (value === 'infect') {
         this.fix_cost = '';
         this.showFixed = true;
       }

@@ -170,6 +170,12 @@
                   ທຸລະກິດເປັນຖ້ຽວ
                 </th>
                 <th class="text-left text-table-header">
+                  ຕິດເຊື້ອ
+                </th>
+                <th class="text-left text-table-header">
+                  ຫຼັກ32
+                </th>
+                <th class="text-left text-table-header">
                   ລວມຈຳນວນຄັ້ງ
                 </th>
                 <th class="text-left text-table-header">
@@ -196,6 +202,12 @@
                 </td>
                 <td class="text-table-body">
                   {{ item.fix_cost_collect_time }}
+                </td>
+                <td class="text-table-body">
+                  {{ item.infect_collect_time }}
+                </td>
+                <td class="text-table-body">
+                  {{ item._32km_collect_time }}
                 </td>
                 <td class="text-table-body">
                   {{ item.total_collect_time }}

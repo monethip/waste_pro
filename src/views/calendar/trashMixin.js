@@ -105,8 +105,7 @@ export default {
       return 'error';
     },
     getUnit(value) {
-      if (value == 'bag') return 'ຖົງ';
-      if (value == 'chartered') return 'ຖົງ';
+      if (value == 'bag' || value == 'chartered' || value == '32km' || value == 'infect') return 'ຖົງ';
       if (value == 'fix_cost') return 'ມອບເໝົາ';
       if (value == 'container') return 'ຄອນເທັນເນີ';
       return '';

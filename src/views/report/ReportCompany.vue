@@ -494,6 +494,16 @@ export default {
           value: 'bag',
           name: 'ບໍລິມາດ',
         },
+        {
+          id: 5,
+          value: '32km',
+          name: 'ຫຼັກ32',
+        },
+        {
+          id: 6,
+          value: 'infect',
+          name: 'ຂີ້ເຫຍື້ອຕິດເຊື້ອ',
+        },
       ],
 
       headers: [
@@ -804,7 +814,9 @@ export default {
       if (value == 'fix_cost') return 'ທຸລະກິດເປັນຖ້ຽວ';
       if (value == 'chartered') return 'ມອບເໝົາ';
       if (value == 'bag') return 'ບໍລິມາດ';
-      return '';
+      if (value == 'infect') return 'ຂີ້ເຫຍື້ອຕິດເຊື້ອ';
+      if (value == '32km') return 'ຫຼັກ32';
+      return value;
     },
     getCardData(month) {
       return [

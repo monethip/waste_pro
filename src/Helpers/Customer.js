@@ -8,6 +8,10 @@ export const getLaoCompanyCostBy = function (costBy) {
       return 'ມອບເໝົາ';
     case 'bag':
       return 'ບໍລິມາດ';
+    case 'infect':
+      return 'ຂີ້ເຫຍື້ອຕິດເຊື້ອ';
+    case '32km':
+      return 'ຫຼັກ32';
     default: return costBy;
   }
 };
@@ -28,6 +32,14 @@ export const getCompanyCostBy = [
   {
     en: 'bag',
     la: 'ບໍລິມາດ',
+  },
+  {
+    en: 'infect',
+    la: 'ຂີ້ເຫຍື້ອຕິດເຊື້ອ',
+  },
+  {
+    en: '32km',
+    la: 'ຫຼັກ32',
   },
 ];
 
@@ -73,6 +85,8 @@ export const getCustomerUnit = function (costBy) {
   switch (costBy) {
     case 'bag':
     case 'chartered':
+    case '32km':
+    case 'infect':
       return 'ຖົງ';
     case 'container':
       return 'ຄອນເທນເນີ';

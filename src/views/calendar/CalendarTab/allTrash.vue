@@ -126,7 +126,7 @@
               </v-chip>
             </template>
             <template v-slot:item.amount="{ item }">
-              <div v-if="item.collection_type == 'bag' || item.collection_type == 'chartered'">
+              <div v-if="item.collection_type == 'bag' || item.collection_type == 'chartered' || item.collection_type == '32km' || item.collection_type == 'infect'">
                 <v-chip color="primary">
                   {{ item.bag }}
                 </v-chip>

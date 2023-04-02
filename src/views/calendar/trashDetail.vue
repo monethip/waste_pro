@@ -59,7 +59,7 @@
               </v-list-item-icon>
               <v-list-item-content>
                 <v-list-item-title
-                  v-if="detail.collection_type == 'bag' || detail.collection_type == 'chartered'"
+                  v-if="detail.collection_type == 'bag' || detail.collection_type == 'chartered' || detail.collection_type == '32km' || detail.collection_type == 'infect'"
                 >
                   {{ detail.bag }} ຖົງ
                 </v-list-item-title>

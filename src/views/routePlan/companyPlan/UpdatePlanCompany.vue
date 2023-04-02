@@ -539,6 +539,16 @@ export default {
           value: 'bag',
           name: 'ບໍລິມາດ',
         },
+        {
+          id: 5,
+          value: '32km',
+          name: 'ຫຼັກ32',
+        },
+        {
+          id: 6,
+          value: 'infect',
+          name: 'ຂີ້ເຫຍື້ອຕິດເຊື້ອ',
+        },
       ],
       selectedCustomerStatus: [],
       customerStatus: [

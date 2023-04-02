@@ -65,7 +65,7 @@
           </v-chip>
         </template>
         <template v-slot:item.amount="{ item }">
-          <div v-if="item.collection_type == 'bag' || item.collection_type == 'chartered'">
+          <div v-if="item.collection_type == 'bag' || item.collection_type == 'chartered' || item.collection_type == '32km' || item.collection_type == 'infect'">
             <v-chip color="primary">
               {{ item.bag }}
             </v-chip>
@@ -351,8 +351,8 @@ export default {
       return 'error';
     },
     getUnit(value) {
-      if (value == 'bag') return 'ຖົງ';
-      if (value == 'chartered') return 'ຖົງ';
+      if (value == 'bag' || value == '32km' || value == 'infect' || value == 'chartered') return 'ຖົງ';
+
       if (value == 'fix_cost') return 'ມອບເໝົາ';
       if (value == 'container') return 'ຄອນເທັນເນີ';
       return '';

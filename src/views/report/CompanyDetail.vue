@@ -231,6 +231,16 @@
                     >
                       ມອບເໝົາ
                     </v-list-item-title>
+                    <v-list-item-title
+                      v-if="data.cost_by == '32km'"
+                    >
+                      ຫຼັກ32
+                    </v-list-item-title>
+                    <v-list-item-title
+                      v-if="data.cost_by == 'infect'"
+                    >
+                      ຂີ້ເຫຍື້ອຕິດເຊື້ອ
+                    </v-list-item-title>
 
                     <v-list-item-subtitle v-if="data.cost_by == 'fix_cost'">
                       {{ Intl.NumberFormat().format(data.fix_cost) }}
@@ -382,7 +392,7 @@
                         {{ data.cost_by_la }}
                       </td>
                       <td>
-                        <div v-if="item.collection_type === 'bag'">
+                        <div v-if="item.collection_type === 'bag' || item.collection_type === 'infect' || item.collection_type === '32km'">
                           {{ item.bag }} ຖົງ
                         </div>
                         <div v-if="item.collection_type === 'container'">

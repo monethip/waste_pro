@@ -505,7 +505,9 @@ export default {
       if (value == 'fix_cost') return 'ທຸລະກິດເປັນຖ້ຽວ';
       if (value == 'chartered') return 'ມອບເໝົາ';
       if (value == 'bag') return 'ບໍລິມາດ';
-      return '';
+      if (value == 'infect') return 'ຂີ້ເຫຍື້ອຕິດເຊື້ອ';
+      if (value == '32km') return 'ຫຼັກ32';
+      return value;
     },
   },
 };

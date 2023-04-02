@@ -217,6 +217,18 @@
                   ຈຳນວນຖົງທັງໝົດ (ມອບເໝົາ)
                 </th>
                 <th class="text-left text-table-header">
+                  ຈຳນວນຖົງ (ຕິດເຊື້ອ)
+                </th>
+                <th class="text-left text-table-header">
+                  ຈຳນວນຖົງທັງໝົດ (ຕິດເຊື້ອ)
+                </th>
+                <th class="text-left text-table-header">
+                  ຈຳນວນຖົງ (ຫຼັກ32)
+                </th>
+                <th class="text-left text-table-header">
+                  ຈຳນວນຖົງທັງໝົດ (ຫຼັກ32)
+                </th>
+                <th class="text-left text-table-header">
                   ຈຳນວນຖົງ (ບໍລິມາດ)
                 </th>
                 <th class="text-center text-table-header">
@@ -242,6 +254,20 @@
                 </th>
                 <th class="text-center text-table-header">
                   ຄັ້ງລົງເກັບທັງໝົດ (ບໍລິມາດ)
+                </th>
+
+                <th class="text-center text-table-header">
+                  ຄັ້ງລົງເກັບ (ຕິດເຊື້ອ)
+                </th>
+                <th class="text-center text-table-header">
+                  ຄັ້ງລົງເກັບທັງໝົດ (ຕິດເຊື້ອ)
+                </th>
+
+                <th class="text-center text-table-header">
+                  ຄັ້ງລົງເກັບ (ຫຼັກ32)
+                </th>
+                <th class="text-center text-table-header">
+                  ຄັ້ງລົງເກັບທັງໝົດ (ຫຼັກ32)
                 </th>
 
                 <th class="text-center text-table-header">
@@ -297,6 +323,30 @@
                   >
                     <v-chip color="success">
                       {{ driver.total_bag_chartered }}
+                    </v-chip>
+                  </td>
+                  <td class="text-table-body">
+                    {{ item.subtotal_bag_infect }}
+                  </td>
+                  <td
+                    v-if="iSub === 0"
+                    class="text-center"
+                    :rowspan="driver.data.length"
+                  >
+                    <v-chip color="success">
+                      {{ driver.total_bag_infect }}
+                    </v-chip>
+                  </td>
+                  <td class="text-table-body">
+                    {{ item.subtotal_bag_32km }}
+                  </td>
+                  <td
+                    v-if="iSub === 0"
+                    class="text-center"
+                    :rowspan="driver.data.length"
+                  >
+                    <v-chip color="success">
+                      {{ driver.total_bag_32km }}
                     </v-chip>
                   </td>
                   <td class="text-table-body">
@@ -359,6 +409,33 @@
                       {{ driver.total_bag_collect_time }}
                     </v-chip>
                   </td>
+
+                  <td class="text-table-body">
+                    {{ item.infect_collect_time }}
+                  </td>
+                  <td
+                    v-if="iSub === 0"
+                    class="text-center"
+                    :rowspan="driver.data.length"
+                  >
+                    <v-chip color="success">
+                      {{ driver.total_infect_collect_time }}
+                    </v-chip>
+                  </td>
+
+                  <td class="text-table-body">
+                    {{ item._32km_collect_time }}
+                  </td>
+                  <td
+                    v-if="iSub === 0"
+                    class="text-center"
+                    :rowspan="driver.data.length"
+                  >
+                    <v-chip color="success">
+                      {{ driver.total_32km_collect_time }}
+                    </v-chip>
+                  </td>
+
                   <td class="text-table-body">
                     {{ item.subtotal_collect_time }}
                   </td>

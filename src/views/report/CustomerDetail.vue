@@ -287,7 +287,7 @@
                         }}ຖົງ/ອາທິດ)
                       </td>
                       <td>
-                        <div v-if="item.collection_type === 'bag'">
+                        <div v-if="item.collection_type === 'bag' || item.collection_type === 'infect' || item.collection_type === '32km'">
                           {{ item.bag }} ຖົງ
                         </div>
                         <div v-if="item.collection_type === 'container'">
