@@ -140,28 +140,6 @@
       </v-col>
     </v-row>
 
-    <!-- Section Sale-->
-    <v-row>
-      <v-col>
-        <v-card outlined>
-          <v-card-title>ແຍກຈາກເຊວ</v-card-title>
-          <v-card-text>
-            <v-row>
-              <v-col @click="changeSaleMode('sale')">
-                <span class="text-title mt-2 font-weight-bold">ບິນທີ່ເປັນຂອງເຊວ</span>
-                <RowSection :cards="sectionSale" />
-              </v-col>
-
-              <v-col @click="changeSaleMode('not_sale')">
-                <span class="text-title mt-2">ບິນທີ່ບໍ່ເປັນຂອງເຊວ</span>
-                <RowSection :cards="sectionNotSale" />
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-
     <!-- Section Total-->
     <v-row>
       <v-col>
@@ -255,6 +233,28 @@
                 </tbody>
               </template>
             </v-simple-table>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <!-- Section Sale-->
+    <v-row>
+      <v-col>
+        <v-card outlined>
+          <v-card-title>ແຍກຈາກເຊວ</v-card-title>
+          <v-card-text>
+            <v-row>
+              <v-col @click="changeSaleMode('sale')">
+                <span class="text-title mt-2 font-weight-bold">ບິນທີ່ເປັນຂອງເຊວ</span>
+                <RowSection :cards="sectionSale" />
+              </v-col>
+
+              <v-col @click="changeSaleMode('not_sale')">
+                <span class="text-title mt-2">ບິນທີ່ບໍ່ເປັນຂອງເຊວ</span>
+                <RowSection :cards="sectionNotSale" />
+              </v-col>
+            </v-row>
           </v-card-text>
         </v-card>
       </v-col>

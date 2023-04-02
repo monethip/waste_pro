@@ -128,6 +128,24 @@
       </v-col>
     </v-row>
 
+    <!-- Section Total-->
+    <v-row>
+      <v-col>
+        <v-card outlined>
+          <v-card-title>ລວມທັງໝົດ</v-card-title>
+          <v-card-text>
+            <!-- Section Success -->
+            <span class="text-subtitle-1 mt-2">ທີ່ລູກຄ້າຈ່າຍແລ້ວ</span>
+            <RowSection :cards="sectionSuccess" />
+
+            <!-- Section Pending -->
+            <span class="text-subtitle-1 mt-2">ທີ່ລູກຄ້າຍັງບໍ່ທັນຈ່າຍ</span>
+            <RowSection :cards="sectionPending" />
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+
     <!-- Section Sale-->
     <v-row>
       <v-col>
@@ -145,24 +163,6 @@
                 <RowSection :cards="sectionNotSale" />
               </v-col>
             </v-row>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-
-    <!-- Section Total-->
-    <v-row>
-      <v-col>
-        <v-card outlined>
-          <v-card-title>ລວມທັງໝົດ</v-card-title>
-          <v-card-text>
-            <!-- Section Success -->
-            <span class="text-subtitle-1 mt-2">ທີ່ລູກຄ້າຈ່າຍແລ້ວ</span>
-            <RowSection :cards="sectionSuccess" />
-
-            <!-- Section Pending -->
-            <span class="text-subtitle-1 mt-2">ທີ່ລູກຄ້າຍັງບໍ່ທັນຈ່າຍ</span>
-            <RowSection :cards="sectionPending" />
           </v-card-text>
         </v-card>
       </v-col>
