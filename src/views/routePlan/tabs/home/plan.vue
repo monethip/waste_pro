@@ -284,6 +284,7 @@ export default {
           },
         })
         .then((res) => {
+          this.firstLoad = false;
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit('Loading_State', false);
@@ -293,6 +294,7 @@ export default {
           }
         })
         .catch((error) => {
+          this.firstLoad = false;
           this.$store.commit('Loading_State', false);
           if (error.response && error.response.status == 422) {
             const obj = error.response.data.errors;
@@ -300,7 +302,7 @@ export default {
               this.server_errors[key] = message[0];
             }
           }
-        }).final(() => this.firstLoad = false);
+        });
     },
 
     closeDelete() {
