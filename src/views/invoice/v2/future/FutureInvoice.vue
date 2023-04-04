@@ -4,35 +4,6 @@
       <v-col>
         <p>ຈັດການຂໍ້ມູນບິນລ່ວງໜ້າ</p>
       </v-col>
-      <!--
-      <v-col>
-        <v-menu
-          v-model="start_menu"
-          :close-on-content-click="true"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="date"
-              label="ເດືອນ"
-              readonly
-              outlined
-              v-bind="attrs"
-              v-on="on"
-              dense
-            ></v-text-field>
-          </template>
-          <v-date-picker
-            v-model="date"
-            @input="fetchData()"
-            type="month"
-          ></v-date-picker>
-        </v-menu>
-      </v-col>
-      -->
       <v-col>
         <v-select
           v-model="selectedPaymentStatus"

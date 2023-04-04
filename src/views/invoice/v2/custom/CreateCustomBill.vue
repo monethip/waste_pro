@@ -103,7 +103,7 @@
                   <v-col>
                     <v-text-field
                       v-model="data.quantity"
-                      :label="data.unit ? `ຈຳນວນ /${data.unit}` : 'ຈຳນວນ *'"
+                      :label="data.unit ? `ຈຳນວນ/${data.unit}` : 'ຈຳນວນ *'"
                       required
                       :rules="totalRules"
                       type="number"
@@ -115,9 +115,9 @@
                       {{ server_errors.quantity }}
                     </p>
                   </v-col>
-                  <v-col cols="4">
+                  <v-col>
                     <v-row>
-                      <v-col>
+                      <v-col cols="5">
                         <v-autocomplete
                           v-model="data.unit"
                           label="ຫົວໜ່ວຍ"
@@ -134,9 +134,8 @@
                           @click="disabledUnit = !disabledUnit"
                         >
                           <v-icon left>
-                            mdi-plus
+                            mdi-pen
                           </v-icon>
-                          ຫົວໜ່ວຍ
                         </v-btn>
                       </v-col>
                     </v-row>
@@ -249,8 +248,7 @@ export default {
   },
   created() {
     this.fetchData();
-    console.log('2222', this.items);
-    if (!this.items) this.$router.push('/');
+    if (!this.items) this.$router.push('/v2/custom-bill');
   },
   methods: {
     fetchData() {
@@ -271,8 +269,8 @@ export default {
         price: this.data.price,
         date: this.billDate,
         quantity: this.data.quantity,
-        unit: this.data.unit,
       };
+      if (this.data.unit) formData.unit = this.data.unit;
       if (this.$refs.form.validate() == true) {
         this.loading = true;
         this.$axios
