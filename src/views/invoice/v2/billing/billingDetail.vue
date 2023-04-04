@@ -168,7 +168,7 @@
                   <td>{{ index + 1 }}</td>
                   <td>{{ data.item_la }}</td>
                   <td>{{ data.content }}</td>
-                  <td>{{ Intl.NumberFormat().format(data.quantity) }}</td>
+                  <td>{{ Intl.NumberFormat().format(data.quantity) }} {{ data.unit ? `${data.unit}` : '' }}</td>
                   <td>{{ Intl.NumberFormat().format(data.price) }}</td>
                   <td>{{ Intl.NumberFormat().format(data.total) }}</td>
                   <td>
