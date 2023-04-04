@@ -95,3 +95,5 @@ export const payment_methods = [
 
 export const normal = ['created', 'approved', 'to_confirm_payment', 'success'];
 export const red = ['rejected', 'canceled'];
+
+export const units = ['kg', 'ຖົງ', 'container', 'ຄັ້ງ'];

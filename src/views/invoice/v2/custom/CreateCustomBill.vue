@@ -103,7 +103,7 @@
                   <v-col>
                     <v-text-field
                       v-model="data.quantity"
-                      label="ຈຳນວນ *"
+                      :label="data.unit ? `ຈຳນວນ /${data.unit}` : 'ຈຳນວນ *'"
                       required
                       :rules="totalRules"
                       type="number"
@@ -114,6 +114,32 @@
                     <p class="errors">
                       {{ server_errors.quantity }}
                     </p>
+                  </v-col>
+                  <v-col cols="4">
+                    <v-row>
+                      <v-col>
+                        <v-autocomplete
+                          v-model="data.unit"
+                          label="ຫົວໜ່ວຍ"
+                          :items="units"
+                          outlined
+                          dense
+                          :disabled="disabledUnit"
+                        />
+                      </v-col>
+                      <v-col>
+                        <v-btn
+                          color="blue-grey"
+                          dark
+                          @click="disabledUnit = !disabledUnit"
+                        >
+                          <v-icon left>
+                            mdi-plus
+                          </v-icon>
+                          ຫົວໜ່ວຍ
+                        </v-btn>
+                      </v-col>
+                    </v-row>
                   </v-col>
                 </v-row>
               </v-col>
@@ -143,6 +169,7 @@
 </template>
 <script>
 import { GetOldValueOnInput } from '@/Helpers/GetValue';
+import { units } from '@/Helpers/BillingStatus';
 import moment from 'moment';
 
 export default {
@@ -160,11 +187,13 @@ export default {
       end_date: '',
       disabledTitle: true,
       disabledDescription: true,
+      disabledUnit: true,
       start_menu: false,
       end_menu: false,
       invoices: [],
       loading: false,
       is_instantly: 0,
+      units,
       data: {
         email: '',
       },
@@ -242,6 +271,7 @@ export default {
         price: this.data.price,
         date: this.billDate,
         quantity: this.data.quantity,
+        unit: this.data.unit,
       };
       if (this.$refs.form.validate() == true) {
         this.loading = true;
