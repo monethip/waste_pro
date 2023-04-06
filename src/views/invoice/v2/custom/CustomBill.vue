@@ -108,7 +108,7 @@
             </template>
             <template v-slot:item.customerType="{ item }">
               <div v-if="item.billing.user.customer">
-                {{ getLaoCustomerType(item.billing.user.customer.customer_type) }}
+                {{ item.billing.user.customer.customer_type_la }}
               </div>
             </template>
             <template v-slot:item.total="{ item }">
