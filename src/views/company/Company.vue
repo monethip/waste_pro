@@ -892,10 +892,12 @@ export default {
       });
     },
     viewPage(id) {
-      this.$router.push({
+      const route = this.$router.resolve({
         name: 'ViewCompanyDetail',
         params: { id },
       });
+
+      window.open(route.href);
     },
     Search() {
       GetOldValueOnInput(this);
