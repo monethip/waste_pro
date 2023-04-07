@@ -136,7 +136,7 @@
           </v-col>
           <v-col v-if="selectedCustomerType == 'company'">
             <v-select
-              v-model="selectedComapnyType"
+              v-model="selectedCompanyType"
               :items="comapnyTypes"
               clearable
               dense
@@ -510,7 +510,7 @@ export default {
       saleData: null,
       filteredPackage: '',
       selectedCustomerType: '',
-      selectedComapnyType: '',
+      selectedCompanyType: '',
       comapnyTypes: getCompanyCostBy,
       customerTypes: [
         {
@@ -643,7 +643,7 @@ export default {
         { phone: this.phone },
         { customer_type: this.selectedCustomerType },
         { package_id: this.package_id },
-        { cost_by: this.selectedComapnyType },
+        { cost_by: this.selectedCompanyType },
         { villages: this.selectedVillage },
         { district_id: this.selectedDistrict.id },
         { village_details: this.selectedDetails },
@@ -682,6 +682,7 @@ export default {
         start_date: this.start_date,
         end_date: this.end_date,
         created_by: this.selectedSale,
+        selectedCompanyType: this.selectedCompanyType,
       };
 
       if (billMonth) items.billMonth = billMonth;
@@ -771,7 +772,7 @@ export default {
       if (this.$route.query.phone) this.phone = this.$route.query.phone;
       if (this.$route.query.selectedCustomerType) this.selectedCustomerType = this.$route.query.selectedCustomerType;
       if (this.$route.query.package_id) this.package_id = this.$route.query.package_id;
-      if (this.$route.query.selectedComapnyType) this.selectedComapnyType = this.$route.query.selectedComapnyType;
+      if (this.$route.query.selectedCompanyType) this.selectedCompanyType = this.$route.query.selectedCompanyType;
 
       if (this.$route.query.selectedDistrict) {
         const existing = this.districts.find((item) => item.id == this.$route.query.selectedDistrict);

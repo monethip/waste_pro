@@ -90,7 +90,7 @@
       </v-col>
       <v-col v-if="selectedCustomerType == 'company'">
         <v-select
-          v-model="selectedComapnyType"
+          v-model="selectedCompanyType"
           outlined
           dense
           :items="comapnyTypes"
@@ -599,7 +599,7 @@ export default {
       selectedRows: [],
       plans: [],
       selectedRoutePlan: '',
-      selectedComapnyType: '',
+      selectedCompanyType: '',
       lastMonthBillPaid: localStorage.getItem('lastMonthBillPaid'),
       lastMonthBill: localStorage.getItem('lastMonthBill'),
       selectedCustomerType: '',
@@ -725,7 +725,7 @@ export default {
       this.pagination.current_page = '';
       if (!this.firstLoad) this.fetchData();
     },
-    selectedComapnyType() {
+    selectedCompanyType() {
       this.pagination.current_page = '';
       if (!this.firstLoad) this.fetchData();
     },
@@ -1047,7 +1047,7 @@ export default {
             { bill_id: this.billId },
             { phone: this.phone },
             { customer_type: this.selectedCustomerType },
-            { cost_by: this.selectedComapnyType },
+            { cost_by: this.selectedCompanyType },
             { payment_method: this.selectedPaymentMethod },
             {
               package_id:
@@ -1181,7 +1181,7 @@ export default {
       this.billId = routeQuery.bill_id;
       this.phone = routeQuery.phone;
       this.selectedCustomerType = routeQuery.customer_type;
-      this.selectedComapnyType = routeQuery.cost_by;
+      this.selectedCompanyType = routeQuery.cost_by;
       this.selectedPaymentMethod = routeQuery.payment_method;
 
       this.$router.replace({ query: { tab: routeQuery.status } }).catch();
