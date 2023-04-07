@@ -485,6 +485,9 @@
                   outlined
                   dense
                 />
+                <p class="errors">
+                  {{ server_errors.lat }}
+                </p>
               </v-col>
               <v-col cols="6">
                 <v-text-field
@@ -496,6 +499,9 @@
                   dense
                 />
               </v-col>
+              <p class="errors">
+                {{ server_errors.lng }}
+              </p>
             </v-row>
 
             <v-row>
@@ -757,6 +763,7 @@ export default {
     },
     fetchData() {
       this.selectedVillageDetail = [];
+      this.server_errors = {};
       this.$store.commit('Loading_State', true);
       this.$axios
         .get(`company/${this.$route.params.id}`)
