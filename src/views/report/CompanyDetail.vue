@@ -634,7 +634,7 @@ export default {
       loading: false,
       server_errors: {},
       start_menu: false,
-      month: "",
+      month: new Date().toISOString().substr(0, 7),
       provinces: [],
       districts: [],
       selectedDistrict: '',
