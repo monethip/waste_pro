@@ -358,13 +358,13 @@
                             outlined
                             v-bind="attrs"
                             dense
+                            clearable
                             v-on="on"
                           />
                         </template>
                         <v-date-picker
                           v-model="month"
                           type="month"
-                          @change="customerInvoice"
                         />
                       </v-menu>
                     </v-col>
@@ -625,6 +625,9 @@ export default {
       } else if (this.tab === 'tab-3') {
         this.customerInvoice();
       }
+    },
+    month() {
+      this.customerInvoice();
     },
   },
   created() {
