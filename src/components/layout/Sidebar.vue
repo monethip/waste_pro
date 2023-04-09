@@ -410,7 +410,7 @@ export default {
             {
               icon: 'mdi-package',
               title: 'ຈັດການຂໍ້ມູນບໍລິການ',
-              to: 'package',
+              to: '/package',
               permissions: ['get_package', 'get_customer'],
             },
             {
