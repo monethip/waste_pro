@@ -1265,10 +1265,12 @@ export default {
       });
     },
     viewPage(id) {
-      this.$router.push({
+      const router = this.$router.resolve({
         name: 'ViewClient',
         params: { id },
       });
+
+      window.open(router.href);
     },
     Search() {
       GetOldValueOnInput(this);
