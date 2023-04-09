@@ -437,141 +437,145 @@
         <v-tabs-items v-model="tab">
           <v-tab-item value="tab-3">
             <v-container>
-              <h3>ປະຫັວດການຊຳລະ</h3>
-              <v-row class="mb-1 mt-1">
+              <v-row>
                 <v-col>
-                  <div>
-                    ລໍຖ້າອະນຸມັດ:
-                    {{
-                      Intl.NumberFormat().format(invoiceSummary.created_total)
-                    }}
-                  </div>
-                </v-col>
-                <v-col>
-                  <div>
-                    ອະນຸມັດແລ້ວ:
-                    {{
-                      Intl.NumberFormat().format(invoiceSummary.approved_total)
-                    }}
-                  </div>
-                </v-col>
-                <v-col>
-                  <div>
-                    ຈ່າຍແລ້ວ ລໍຖ້າກວດສອບ:
-                    {{
-                      Intl.NumberFormat().format(
-                        invoiceSummary.to_confirm_payment_total
-                      )
-                    }}
-                  </div>
-                </v-col>
-                <v-col>
-                  <div>
-                    ຈ່າຍແລ້ວ ກວດສອບສຳເລັດ:
-                    {{
-                      Intl.NumberFormat().format(invoiceSummary.success_total)
-                    }}
-                  </div>
+                  <h3>ປະຫັວດການຊຳລະ</h3>
+                  <v-row>
+                    <v-col>
+                      <v-menu
+                        v-model="start_menu"
+                        :close-on-content-click="true"
+                        :nudge-right="40"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="auto"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                            v-model="month"
+                            label="ເດືອນ"
+                            readonly
+                            outlined
+                            v-bind="attrs"
+                            dense
+                            v-on="on"
+                          />
+                        </template>
+                        <v-date-picker
+                          v-model="month"
+                          type="month"
+                          @change="customerInvoice"
+                        />
+                      </v-menu>
+                    </v-col>
+                  </v-row>
+                  <RowSection :cards="allMonths" />
                 </v-col>
               </v-row>
-              <v-simple-table>
-                <template v-slot:default>
-                  <thead>
-                    <tr>
-                      <th class="text-left">
-                        ວັນທີບິນ
-                      </th>
-                      <th class="text-left">
-                        ໄອດີ
-                      </th>
-                      <th class="text-left">
-                        ຫົວບິນ
-                      </th>
-                      <th class="text-left">
-                        ຊື່ລູກຄ້າ
-                      </th>
-                      <th class="text-left">
-                        ໄອດີ
-                      </th>
-                      <th class="text-left">
-                        ແພັກເກຈ
-                      </th>
-                      <th class="text-left">
-                        ສະຖານະ
-                      </th>
-                      <th class="text-left">
-                        ເວລາຈ່າຍ
-                      </th>
-                      <th class="text-left">
-                        Payment
-                      </th>
-                      <th class="text-left">
-                        Subtotal
-                      </th>
-                      <th class="text-left">
-                        ສ່ວນຫຼູດ
-                      </th>
-                      <th class="text-left">
-                        Total
-                      </th>
-                      <th class="text-left">
-                        ເບິ່ງລາຍລະອຽດ
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="item in invoices"
-                      :key="item.id"
-                    >
-                      <td>{{ moment(item.date).format("DD-MM-YYYY") }}</td>
-                      <td>{{ item.billing_display_id }}</td>
-                      <td>{{ item.content }}</td>
-                      <td class="text-left">
-                        {{ data.full_name }}
-                      </td>
-                      <td class="text-left">
-                        {{ data.customer_id }}
-                      </td>
-                      <td class="text-left">
-                        {{ data.cost_by_la }}
-                      </td>
-                      <td>
-                        <v-chip
-                          :color="getBgColorFn(item.status)"
-                          dark
+
+              <v-row>
+                <v-col>
+                  <v-simple-table>
+                    <template v-slot:default>
+                      <thead>
+                        <tr>
+                          <th class="text-left">
+                            ວັນທີບິນ
+                          </th>
+                          <th class="text-left">
+                            ໄອດີ
+                          </th>
+                          <th class="text-left">
+                            ຫົວບິນ
+                          </th>
+                          <th class="text-left">
+                            ຊື່ລູກຄ້າ
+                          </th>
+                          <th class="text-left">
+                            ໄອດີ
+                          </th>
+                          <th class="text-left">
+                            ແພັກເກຈ
+                          </th>
+                          <th class="text-left">
+                            ສະຖານະ
+                          </th>
+                          <th class="text-left">
+                            ເວລາຈ່າຍ
+                          </th>
+                          <th class="text-left">
+                            Payment
+                          </th>
+                          <th class="text-left">
+                            Subtotal
+                          </th>
+                          <th class="text-left">
+                            ສ່ວນຫຼູດ
+                          </th>
+                          <th class="text-left">
+                            Total
+                          </th>
+                          <th class="text-left">
+                            ເບິ່ງລາຍລະອຽດ
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          v-for="item in invoices"
+                          :key="item.id"
                         >
-                          {{ item.status_la }}
-                        </v-chip>
-                      </td>
-                      <td>{{ item.paided_at }}</td>
-                      <td>
-                        <div class="primary--text">
-                          {{ item.payment_method }}
-                        </div>
-                      </td>
-                      <td>{{ Intl.NumberFormat().format(item.sub_total) }}</td>
-                      <td>{{ Intl.NumberFormat().format(item.discount) }}</td>
-                      <td>{{ Intl.NumberFormat().format(item.total) }}</td>
-                      <td>
-                        <v-btn
-                          class="btn elevation-0"
-                          color="info"
-                          small
-                          @click="ViewInvoice(item.id)"
-                        >
-                          <v-icon
-                            class="mr-1"
-                            small
-                          >
-                            mdi-eye
-                          </v-icon>
-                        </v-btn>
-                      </td>
-                    </tr>
-                  </tbody>
-                </template>
-              </v-simple-table>
+                          <td>{{ moment(item.date).format("DD-MM-YYYY") }}</td>
+                          <td>{{ item.billing_display_id }}</td>
+                          <td>{{ item.content }}</td>
+                          <td class="text-left">
+                            {{ data.full_name }}
+                          </td>
+                          <td class="text-left">
+                            {{ data.customer_id }}
+                          </td>
+                          <td class="text-left">
+                            {{ data.cost_by_la }}
+                          </td>
+                          <td>
+                            <v-chip
+                              :color="getBgColorFn(item.status)"
+                              dark
+                            >
+                              {{ item.status_la }}
+                            </v-chip>
+                          </td>
+                          <td>{{ item.paided_at }}</td>
+                          <td>
+                            <div class="primary--text">
+                              {{ item.payment_method }}
+                            </div>
+                          </td>
+                          <td>{{ Intl.NumberFormat().format(item.sub_total) }}</td>
+                          <td>{{ Intl.NumberFormat().format(item.discount) }}</td>
+                          <td>{{ Intl.NumberFormat().format(item.total) }}</td>
+                          <td>
+                            <v-btn
+                              class="btn elevation-0"
+                              color="info"
+                              small
+                              @click="ViewInvoice(item.id)"
+                            >
+                              <v-icon
+                                class="mr-1"
+                                small
+                              >
+                                mdi-eye
+                              </v-icon>
+                            </v-btn>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table>
+                </v-col>
+              </v-row>
+
               <br>
               <template>
                 <Pagination
@@ -618,13 +622,19 @@
 
 <script>
 import { getBgColor } from '@/Helpers/BillingStatus';
+import RowSection from '../../components/card/RowSection.vue';
 
 export default {
+  components: {
+    RowSection,
+  },
   data() {
     return {
       data: {},
       loading: false,
       server_errors: {},
+      start_menu: false,
+      month: "",
       provinces: [],
       districts: [],
       selectedDistrict: '',
@@ -688,6 +698,36 @@ export default {
   created() {
     this.fetchData();
     if (this.$route.query.tab) this.tab = this.$route.query.tab;
+  },
+  computed: {
+    allMonths() {
+      return [
+        {
+          status_la: 'ລໍຖ້າອະນຸມັດ',
+          total: this.invoiceSummary.created_total,
+          count_billing: null,
+          bg_color: '#73b8fd',
+        },
+        {
+          status_la: 'ອະນຸມັດແລ້ວ',
+          total: this.invoiceSummary.approved_total,
+          count_billing: null,
+          bg_color: '#0080fc',
+        },
+        {
+          status_la: 'ຈ່າຍແລ້ວ ລໍຖ້າກວດສອບ',
+          total: this.invoiceSummary.to_confirm_payment_total,
+          count_billing: null,
+          bg_color: '#9c540d',
+        },
+        {
+          status_la: 'ຈ່າຍແລ້ວ ກວດສອບສຳເລັດ',
+          total: this.invoiceSummary.success_total,
+          count_billing: null,
+          bg_color: '#02a38a',
+        },
+      ];
+    },
   },
   methods: {
     getBgColorFn(status) {
@@ -777,6 +817,7 @@ export default {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
+            bill_month: this.month,
           },
         })
         .then((res) => {
