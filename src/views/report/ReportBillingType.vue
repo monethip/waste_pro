@@ -223,12 +223,28 @@
           <v-card-title>ແຍກຈາກເຊວ</v-card-title>
           <v-card-text>
             <v-row>
-              <v-col @click="changeSaleMode('sale')">
-                <span class="text-title mt-2 font-weight-bold">ບິນທີ່ເປັນຂອງເຊວ</span>
-                <RowSection :cards="sectionSale" />
-              </v-col>
+              <v-col>
+                <v-alert
+                  outlined
+                  color="purple"
+                >
+                  <v-row>
+                    <v-col @click="changeSaleMode('sale')">
+                      <span class="text-title mt-2 font-weight-bold">ບິນທີ່ເປັນຂອງເຊວ</span>
+                      <RowSection :cards="sectionSale" />
+                    </v-col>
 
-              <v-col @click="changeSaleMode('not_sale')">
+                    <v-col @click="changeSaleMode('sale_inactive')">
+                      <span class="text-title mt-2 font-weight-bold">ຊະເພາະ (inactive)</span>
+                      <RowSection :cards="sectionSaleInactive" />
+                    </v-col>
+                  </v-row>
+                </v-alert>
+              </v-col>
+              <v-col
+                cols="4"
+                @click="changeSaleMode('not_sale')"
+              >
                 <span class="text-title mt-2">ບິນທີ່ບໍ່ເປັນຂອງເຊວ</span>
                 <RowSection :cards="sectionNotSale" />
               </v-col>
@@ -521,6 +537,15 @@ export default {
       }
       return [
         { ...item, bg_color: 'teal' },
+      ];
+    },
+    sectionSaleInactive() {
+      let item = this.defaultStatus;
+      if (this.billings.sum_inactive_sale && this.billings.sum_inactive_sale.total) {
+        item = this.billings.sum_inactive_sale.total.find((item) => item.status == 'success');
+      }
+      return [
+        { ...item, bg_color: 'indigo' },
       ];
     },
     sectionNotSale() {
