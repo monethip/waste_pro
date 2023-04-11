@@ -319,8 +319,8 @@ export default {
   methods: {
     openRoute(item) {
       const name = item.route_plan_detail.customer.customer_type == 'home'
-        ? 'EditCustomer'
-        : 'EditCompany';
+        ? 'ViewClient'
+        : 'ViewCompanyDetail';
       const routeData = this.$router.resolve({
         name,
         params: {
