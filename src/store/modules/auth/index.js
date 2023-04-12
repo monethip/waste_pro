@@ -23,7 +23,7 @@ export default function create() {
       myToken: '',
       user: {},
       roles: [],
-      lastMonthBill: new Date().toISOString().substr(0, 7),
+      lastMonthBill: '',
       lastMonthBillPaid: null,
       lastMonthEvent: null,
       loginPhone: '',
