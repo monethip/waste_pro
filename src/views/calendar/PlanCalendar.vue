@@ -162,6 +162,34 @@
                 {{ item.count_wait_to_confirm }}
               </p>
             </template>
+            <template v-slot:item.count_pause="{ item }">
+              <p
+                v-if="!item.count_pause"
+                style="color:green"
+              >
+                {{ item.count_pause }}
+              </p>
+              <p
+                v-else
+                style="color:orange"
+              >
+                {{ item.count_pause }}
+              </p>
+            </template>
+            <template v-slot:item.count_unpause="{ item }">
+              <p
+                v-if="!item.count_unpause"
+                style="color:green"
+              >
+                {{ item.count_unpause }}
+              </p>
+              <p
+                v-else
+                style="color:orange"
+              >
+                {{ item.count_unpause }}
+              </p>
+            </template>
 
             <!--            <template v-slot:item.detail="{ item }">-->
             <!--              <v-icon small class="mr-2" @click="gotoPlanCalendar(item)"-->
@@ -700,22 +728,29 @@ export default {
           sortable: false,
         },
         {
+          text: 'ທີ່ຕ້ອງເກັບ',
+          value: 'count_unpause',
+          align: 'center',
+        },
+        {
+          text: 'ທີ່ຖືກຢຸດໄວ້',
+          value: 'count_pause',
+          align: 'center',
+        },
+        {
           text: 'ເກັບຂີເຫື້ຍອສຳເລັດ',
           value: 'count_success',
           align: 'center',
-          sortable: false,
         },
         {
           text: 'ລໍຖ້າຢືນຢັນ',
           value: 'count_wait_to_confirm',
           align: 'center',
-          sortable: false,
         },
         {
           text: 'ວັນທີສ້າງ',
           value: 'created_at',
           align: 'center',
-          sortable: false,
         },
         { text: '', value: 'actions', sortable: false },
       ],
