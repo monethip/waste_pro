@@ -161,3 +161,18 @@ export const concatPackage = (packageArr = []) => {
 
   return connateArr;
 };
+
+export const getCustomerCanCollect = [
+  {
+    value: '',
+    text: 'ທັງໝົດ',
+  },
+  {
+    value: 'can',
+    text: 'ເກັບໄດ້',
+  },
+  {
+    value: 'not',
+    text: 'ເກັບບໍ່ໄດ້',
+  },
+];

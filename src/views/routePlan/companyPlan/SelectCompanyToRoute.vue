@@ -164,6 +164,18 @@
         />
       </v-col>
       <v-col>
+        <v-autocomplete
+          v-model="selectedCustomerCanCollects"
+          :items="customerCanCollects"
+          clearable
+          dense
+          item-text="text"
+          item-value="value"
+          label="ສະຖານະໃຫ້ເກັບ"
+          outlined
+        />
+      </v-col>
+      <v-col>
         <v-select
           v-model="selectedCost"
           :items="costs"
@@ -237,6 +249,17 @@
                 >
                   {{
                     `${villageItem.village_variation.name}: ${villageItem.name}`
+                  }}
+                </v-chip>
+              </template>
+
+              <template v-slot:item.can_collect="{ item }">
+                <v-chip
+                  dark
+                  :color="item.can_collect ? 'green' : 'orange'"
+                >
+                  {{
+                    item.can_collect ? 'ເກັບໄດ້': 'ເກັບບໍ່ໄດ້'
                   }}
                 </v-chip>
               </template>
@@ -341,6 +364,7 @@ import {
   getCustomerUnit,
   getLaoCompanyCostBy,
   getCompanyCostBy,
+  getCustomerCanCollect,
 } from '@/Helpers/Customer';
 import VillageDetail from '@/components/select/VillageDetail';
 
@@ -355,6 +379,8 @@ export default {
       tab: null,
       customers: [],
       selectedAllCustomer: [],
+      customerCanCollects: getCustomerCanCollect,
+      selectedCustomerCanCollects: '',
       countExpectTrash: [],
       loading: false,
       customerId: '',
@@ -425,6 +451,7 @@ export default {
         { text: 'ບໍລິສັດ', value: 'company_name' },
         // { text: "ຜູ້ຮບຜິດຊອບ", value: "company_coordinators.name" },
         { text: 'ປະເພດບໍລິການ', value: 'cost_by_la', sortable: true },
+        { text: 'ສະຖານະໃຫ້ເກັບ', value: 'can_collect' },
         { text: 'ລາຍລະອຽດທີ່ຢູ່', value: 'village_details', sortable: true },
         { text: 'ບ້ານ', value: 'village.name', sortable: true },
         { text: 'ເມືອງ', value: 'district.name', sortable: true },
@@ -511,6 +538,11 @@ export default {
         this.last_check_number = 0;
         this.$store.commit('Loading_State', false);
       }
+    },
+    selectedCustomerCanCollects() {
+      this.pagination.current_page = '';
+      this.fetchData();
+      this.fetchData(true);
     },
     selectedFavoriteDate() {
       this.pagination.current_page = '';
@@ -605,6 +637,7 @@ export default {
         { cost_by: this.selectedCost },
         { favorite_dates: this.selectedFavoriteDate },
         { village_details: this.selectedDetails },
+        { customer_can_collect: this.selectedCustomerCanCollects },
       ];
 
       if (countexpect) options.push({ count_expact_trash: '1' });

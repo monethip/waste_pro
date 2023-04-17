@@ -159,6 +159,18 @@
         />
       </v-col>
       <v-col>
+        <v-autocomplete
+          v-model="selectedCustomerCanCollects"
+          :items="customerCanCollects"
+          clearable
+          dense
+          item-text="text"
+          item-value="value"
+          label="ສະຖານະໃຫ້ເກັບ"
+          outlined
+        />
+      </v-col>
+      <v-col>
         <v-text-field
           v-model="search"
           clearable
@@ -211,6 +223,17 @@
                 >
                   <span>{{ data.name }}</span>
                 </div>
+              </template>
+
+              <template v-slot:item.can_collect="{ item }">
+                <v-chip
+                  dark
+                  :color="item.can_collect ? 'green' : 'orange'"
+                >
+                  {{
+                    item.can_collect ? 'ເກັບໄດ້': 'ເກັບບໍ່ໄດ້'
+                  }}
+                </v-chip>
               </template>
 
               <template v-slot:item.actions="{ item }">
@@ -308,7 +331,7 @@
 <script>
 import { GetOldValueOnInput } from '@/Helpers/GetValue';
 import queryOption from '@/Helpers/queryOption';
-import { getCustomerUnit, getLaoCompanyCostBy } from '@/Helpers/Customer';
+import { getCustomerUnit, getLaoCompanyCostBy, getCustomerCanCollect } from '@/Helpers/Customer';
 import VillageDetail from '@/components/select/VillageDetail';
 
 export default {
@@ -322,6 +345,8 @@ export default {
       tab: null,
       customers: [],
       selectedAllCustomer: [],
+      customerCanCollects: getCustomerCanCollect,
+      selectedCustomerCanCollects: '',
       countExpectTrash: {
         expect_bag: 0,
         cost_by: '',
@@ -366,6 +391,7 @@ export default {
         { text: 'ນາມສະກຸນ', value: 'surname' },
         // { text: "ຜູ້ຮບຜິດຊອບ", value: "company_coordinators.name" },
         { text: 'Phone', value: 'user.phone', sortable: false },
+        { text: 'ສະຖານະໃຫ້ເກັບ', value: 'can_collect' },
         { text: 'ຂີ້ເຫຍື້ອຄາດໝາຍ', value: 'package.package_size.bag' },
         { text: 'ວັນທີ່ສະດວກເກັບ', value: 'favorite_dates' },
         { text: 'ວັນທີ່ເພີ່ມເຂົ້າ', value: 'created_at' },
@@ -444,6 +470,11 @@ export default {
       this.fetchData();
       this.fetchData(true);
     },
+    selectedCustomerCanCollects() {
+      this.pagination.current_page = '';
+      this.fetchData();
+      this.fetchData(true);
+    },
     search(value) {
       this.pagination.current_page = '';
       if (value == '') {
@@ -514,6 +545,7 @@ export default {
         { cost_by: this.selectedCost },
         { favorite_dates: this.selectedFavoriteDate },
         { village_details: this.selectedDetails },
+        { customer_can_collect: this.selectedCustomerCanCollects },
       ];
 
       if (countexpect) options.push({ count_expact_trash: '1' });
