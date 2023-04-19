@@ -860,6 +860,7 @@ export default {
         start_date: this.start_date,
         end_date: this.end_date,
         created_by: this.selectedSale,
+        selectedCompanyType: this.selectedCost,
       };
 
       if (billMonth) items.billMonth = billMonth;
