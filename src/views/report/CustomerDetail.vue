@@ -176,39 +176,6 @@
                 </v-list-item>
               </v-row>
               <v-row>
-                <v-list-item>
-                  <v-list-item-icon>
-                    <v-icon color="indigo">
-                      mdi-phone
-                    </v-icon>
-                  </v-list-item-icon>
-
-                  <v-list-item-content>
-                    <v-list-item-title
-                      v-if="data.user"
-                    >
-                      {{ data.user.phone }}
-                    </v-list-item-title>
-                    <v-list-item-subtitle>ເບີໂທ</v-list-item-subtitle>
-                  </v-list-item-content>
-                  <v-spacer />
-                  <v-list-item-icon>
-                    <v-icon
-                      class="mr-6"
-                      color="indigo"
-                    >
-                      mdi-email
-                    </v-icon>
-                  </v-list-item-icon>
-                  <v-list-item-content>
-                    <v-list-item-title
-                      v-if="data.user"
-                    >
-                      {{ data.user.email }}
-                    </v-list-item-title>
-                    <v-list-item-subtitle>Email</v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
                 <v-divider inset />
                 <v-list-item>
                   <v-list-item-icon>
@@ -218,8 +185,8 @@
                   </v-list-item-icon>
 
                   <v-list-item-content>
-                    <v-list-item-title v-if="customer_activity">
-                      {{ customer_activity.causer ? customer_activity.causer.full_name : "" }}
+                    <v-list-item-title v-if="data.customer_activity">
+                      {{ data.customer_activity.causer ? data.customer_activity.causer.full_name : "" }}
                     </v-list-item-title>
                     <v-list-item-subtitle>
                       {{ data.created_at }}

@@ -55,35 +55,17 @@
                 <v-list-item>
                   <v-list-item-icon>
                     <v-icon color="indigo">
-                      mdi-office-building
+                      mdi-account-circle-outline
                     </v-icon>
                   </v-list-item-icon>
 
                   <v-list-item-content>
-                    <v-list-item-subtitle>ບໍລິສັດ</v-list-item-subtitle>
                     <v-list-item-title>
-                      {{ data.name }}
                       {{ data.company_name }}
                     </v-list-item-title>
-                  </v-list-item-content>
-
-                  <v-spacer />
-                  <v-list-item-icon>
-                    <v-icon
-                      color="indigo"
-                      class="mr-6"
-                    >
-                      mdi-phone
-                    </v-icon>
-                  </v-list-item-icon>
-
-                  <v-list-item-content>
-                    <v-list-item-subtitle>ເບີໂທ</v-list-item-subtitle>
-                    <v-list-item-title v-if="data.user">
-                      {{
-                        data.user.phone
-                      }}
-                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      {{ data.customer_id }}
+                    </v-list-item-subtitle>
                   </v-list-item-content>
 
                   <v-spacer />
@@ -92,191 +74,113 @@
                       class="mr-6"
                       color="indigo"
                     >
-                      mdi-email
+                      mdi-home
                     </v-icon>
                   </v-list-item-icon>
                   <v-list-item-content>
-                    <v-list-item-subtitle>Email</v-list-item-subtitle>
-                    <v-list-item-title v-if="data.user">
-                      {{
-                        data.user.email
-                      }}
+                    <v-list-item-title
+                      v-if="data.user"
+                    >
+                      ທີ່ຕັ້ງ {{ data.house_number }}
                     </v-list-item-title>
+                    <v-list-item-subtitle v-if="data.village">
+                      {{ data.village.name }}, {{ data.district ? data.district.name : "" }}
+                    </v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
                 <v-divider inset />
               </v-row>
               <v-row>
-                <v-list-item
-                  v-for="(coor, index) in data.company_coordinators"
-                  :key="index"
-                >
+                <v-list-item>
                   <v-list-item-icon>
                     <v-icon color="indigo">
-                      mdi-account-circle
+                      mdi-delete-empty
                     </v-icon>
                   </v-list-item-icon>
+
                   <v-list-item-content>
-                    <v-list-item-subtitle>ຜູ້ປະສານງານ</v-list-item-subtitle>
-                    <v-list-item-title>
-                      {{ coor.name }} {{ coor.surname }}
-                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      {{ Intl.NumberFormat().format(data.fix_cost) }}
+                    </v-list-item-subtitle>
+                    <v-list-item-subtitle>{{ data.cost_by_la }}</v-list-item-subtitle>
                   </v-list-item-content>
                   <v-spacer />
                   <v-list-item-icon>
                     <v-icon
-                      color="indigo"
                       class="mr-6"
-                    >
-                      mdi-phone
-                    </v-icon>
-                  </v-list-item-icon>
-                  <v-list-item-content>
-                    <v-list-item-subtitle>ເບີໂທ</v-list-item-subtitle>
-                    <v-list-item-title>{{ coor.phone }}</v-list-item-title>
-                  </v-list-item-content>
-                  <v-spacer />
-                  <v-list-item-icon>
-                    <v-icon
                       color="indigo"
-                      class="mr-6"
                     >
                       mdi-email
                     </v-icon>
                   </v-list-item-icon>
                   <v-list-item-content>
-                    <v-list-item-subtitle>Email</v-list-item-subtitle>
-                    <v-list-item-title>{{ coor.email }}</v-list-item-title>
-                  </v-list-item-content>
-
-                  <v-list-item-content class="text-center">
-                    <v-list-item-title>
-                      <v-icon
-                        small
-                        class="mr-2"
-                        @click="editItem(coor)"
-                      >
-                        mdi-pencil
-                      </v-icon>
-                      <v-icon
-                        small
-                        @click="deleteItem(coor)"
-                      >
-                        mdi-delete
-                      </v-icon>
+                    <v-list-item-title
+                      v-if="data.user"
+                    >
+                      {{ data.user.email }}
                     </v-list-item-title>
+                    <v-list-item-subtitle>Email</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
+                <v-divider inset />
+              </v-row>
+              <v-row>
                 <v-divider inset />
                 <v-list-item>
                   <v-list-item-icon>
                     <v-icon color="indigo">
-                      mdi-calendar
+                      mdi-calendar-account
                     </v-icon>
                   </v-list-item-icon>
 
                   <v-list-item-content>
-                    <v-list-item-subtitle>ວັນທີ່ເລີ່ມ</v-list-item-subtitle>
-                    <v-list-item-title>
-                      {{
-                        data.start_month
-                      }}
+                    <v-list-item-title v-if="data.customer_activity">
+                      {{ data.customer_activity.causer ? data.customer_activity.causer.full_name : "" }}
                     </v-list-item-title>
                     <v-list-item-subtitle>
-                      <span>
-                        <v-chip
-                          v-if="data.status == 'active'"
-                          label
-                          class="success"
-                        >{{ data.status }}</v-chip>
-                        <v-chip
-                          v-else-if="data.status == 'inactive'"
-                          label
-                          class="error"
-                        >{{ data.status }}</v-chip>
-                        <v-chip
-                          v-else
-                          label
-                          class="primary"
-                        >
-                          {{ data.status }}
-                        </v-chip>
-                      </span>
+                      {{ data.created_at }}
                     </v-list-item-subtitle>
                   </v-list-item-content>
 
                   <v-spacer />
                   <v-list-item-icon>
                     <v-icon
-                      color="indigo"
                       class="mr-6"
+                      color="indigo"
                     >
-                      mdi-package
-                    </v-icon>
-                  </v-list-item-icon>
-                  <v-list-item-content>
-                    <v-list-item-subtitle>ປະເພດບໍລິການ</v-list-item-subtitle>
-                    <v-list-item-title
-                      v-if="data.cost_by == 'fix_cost'"
-                    >
-                      ທຸລະກິດເປັນຖ້ຽວ
-                    </v-list-item-title>
-                    <v-list-item-title
-                      v-if="data.cost_by == 'container'"
-                    >
-                      ຄອນເທັນເນີ
-                    </v-list-item-title>
-                    <v-list-item-title
-                      v-if="data.cost_by == 'chartered'"
-                    >
-                      ມອບເໝົາ
-                    </v-list-item-title>
-                    <v-list-item-title
-                      v-if="data.cost_by == '32km'"
-                    >
-                      ຫຼັກ32
-                    </v-list-item-title>
-                    <v-list-item-title
-                      v-if="data.cost_by == 'infect'"
-                    >
-                      ຂີ້ເຫຍື້ອຕິດເຊື້ອ
-                    </v-list-item-title>
-
-                    <v-list-item-subtitle v-if="data.cost_by == 'fix_cost'">
-                      {{ Intl.NumberFormat().format(data.fix_cost) }}
-                    </v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
-                <v-divider inset />
-                <v-list-item>
-                  <v-list-item-icon>
-                    <v-icon color="indigo">
-                      mdi-map-marker
+                      mdi-truck
                     </v-icon>
                   </v-list-item-icon>
 
                   <v-list-item-content>
-                    <v-list-item-title v-if="data.village">
-                      {{ data.village.name }},
-                      {{ data.district.name }}
-                    </v-list-item-title>
-                    <div
-                      v-for="(detail, index) in data.village_details"
-                      :key="index"
-                    >
-                      <v-list-item-subtitle>
+                    <v-list-item-title>
+                      <v-chip
+                        label
+                        :color="statusColor(data.status)"
+                      >
                         {{
-                          detail.name
+                          data.status
                         }}
-                      </v-list-item-subtitle>
-                    </div>
+                      </v-chip>
+                      <v-chip
+                        class="ml-2"
+                        :color="data.can_collect ? 'success' : 'error'"
+                      >
+                        {{
+                          data.can_collect ? 'ເກັບໄດ້' : 'ເກັບບໍ່ໄດ້'
+                        }}
+                      </v-chip>
+                    </v-list-item-title>
                   </v-list-item-content>
+                  <!--                  <v-list-item-action>-->
+                  <!--                    <v-btn>ປ່ຽນແພກເກຈ</v-btn>-->
+                  <!--                  </v-list-item-action>-->
                 </v-list-item>
               </v-row>
               <v-row>
                 <v-col
-                  cols="12"
                   class="mb-4"
+                  cols="12"
                 >
                   <GmapMap
                     :center="
@@ -284,16 +188,16 @@
                         ? getCenter()
                         : { lat: 0, lng: 0 }
                     "
+                    :disable-default-u-i="true"
                     :zoom="16"
                     style="width: 100%; height: 450px"
-                    :disable-default-u-i="true"
                   >
                     <GmapMarker
                       ref="markers"
-                      :position="getMarkers(data)"
+                      :animation="2"
                       :draggable="false"
                       :icon="markerOptions"
-                      :animation="2"
+                      :position="getMarkers(data)"
                       @click="latlng = data"
                     />
                   </GmapMap>
