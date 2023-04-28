@@ -316,6 +316,9 @@
                   }}
                 </v-chip>
               </template>
+              <template v-slot:item.package.price="{ item }">
+                {{ item.package ? Intl.NumberFormat().format(item.package.price) : 0 }}
+              </template>
               <!--Role -->
               <template v-slot:item.roles="{ item }">
                 <div>
@@ -445,11 +448,14 @@ export default {
       ],
 
       headers: [
+        { text: 'ໄອດີ', value: 'customer_id' },
         { text: 'ຊື່', value: 'name' },
         { text: 'ນາມສະກຸນ', value: 'surname' },
         { text: 'Phone', value: 'user.phone', sortable: false },
         { text: 'ທີ່ຢູ່', value: 'district.name', sortable: false },
         { text: 'ປະເພດບໍລິການ', value: 'package.name' },
+        { text: 'ບ້ານ', value: 'village.name' },
+        { text: 'ມູນຄ່າແພັກເກຈ', value: 'package.price' },
         { text: 'ຜູ້ສ້າງ', value: 'customer_activity.causer.full_name' },
         { text: 'ວັນທີສະໝັກ', value: 'created_at', sortable: false },
         { text: 'ສະຖານະ', value: 'status', sortable: false },
