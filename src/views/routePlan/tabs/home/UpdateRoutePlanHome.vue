@@ -728,7 +728,10 @@ export default {
                 this.loading = false;
               }, 300);
               this.$router.push({
-                name: 'Plan',
+                name: 'ViewPlan',
+                params: {
+                  id: this.$route.params.id,
+                },
               });
             }
           })

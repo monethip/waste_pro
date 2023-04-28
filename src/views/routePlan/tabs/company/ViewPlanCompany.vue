@@ -65,6 +65,7 @@
     <v-row class="mb-n6">
       <v-col>
         <v-btn
+          style="width:100%"
           class="btn-primary"
           @click="viewMap()"
         >
@@ -73,10 +74,21 @@
       </v-col>
       <v-col>
         <v-btn
+          style="width:100%"
           class="btn-primary"
           @click="editCompanyPlan(plan.id)"
         >
           Update
+        </v-btn>
+      </v-col>
+      <v-col>
+        <v-btn
+          style="width:100%"
+          dark
+          class="teal"
+          @click="dialog=true"
+        >
+          Update ໃຫ້ແຜນເດີນລົດ
         </v-btn>
       </v-col>
       <v-col>
@@ -107,6 +119,127 @@
         />
       </v-col>
     </v-row>
+
+    <v-dialog
+      v-model="dialog"
+      fullscreen
+      hide-overlay
+      transition="dialog-bottom-transition"
+      scrollable
+    >
+      <v-card tile>
+        <v-toolbar
+          flat
+          dark
+          color="teal"
+        >
+          <v-btn
+            icon
+            dark
+            height="50"
+            @click="dialog = false"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          <v-toolbar-title>Update ໃຫ້ແຜນເດີນລົດ <strong>{{ plan.name }}</strong></v-toolbar-title>
+        </v-toolbar>
+        <v-card-text>
+          <v-data-table
+            :disable-pagination="true"
+            :headers="headerCalendars"
+            :items="planCalendars"
+            :search="search"
+            hide-default-footer
+          >
+            <template v-slot:item.driver="{ item }">
+              <div>{{ item.driver.vehicle.car_id }} ({{ item.driver.name }})</div>
+            </template>
+            <template v-slot:item.date="{ item }">
+              <v-chip
+                dark
+                color="green"
+              >
+                {{ item.date }}
+              </v-chip>
+            </template>
+            <template v-slot:item.created_at="{ item }">
+              <div>{{ moment(item.created_at).format("hh:mm:ss DD-MM-YY") }}</div>
+            </template>
+            <template v-slot:item.count_success="{ item }">
+              <p style="color:green">
+                {{ item.count_success }}
+              </p>
+            </template>
+            <template v-slot:item.count_wait_to_confirm="{ item }">
+              <p style="color:orange">
+                {{ item.count_wait_to_confirm }}
+              </p>
+            </template>
+            <template v-slot:item.count_pause="{ item }">
+              <p
+                v-if="!item.count_pause"
+                style="color:green"
+              >
+                {{ item.count_pause }}
+              </p>
+              <p
+                v-else
+                style="color:orange"
+              >
+                {{ item.count_pause }}
+              </p>
+            </template>
+            <template v-slot:item.count_unpause="{ item }">
+              <p
+                v-if="!item.count_unpause"
+                style="color:green"
+              >
+                {{ item.count_unpause }}
+              </p>
+              <p
+                v-else
+                style="color:orange"
+              >
+                {{ item.count_unpause }}
+              </p>
+            </template>
+            <template v-slot:item.actions="{ item }">
+              <v-menu offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon
+                    class="mr-2"
+                    color="primary"
+                    dark
+                    medium
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    mdi-refresh
+                  </v-icon>
+                </template>
+                <v-list>
+                  <v-list-item
+                    link
+                    @click="updatePlanCalendar(item)"
+                  >
+                    <v-list-item-title>
+                      <v-icon
+                        class="mr-2"
+                        small
+                      >
+                        mdi-check
+                      </v-icon>
+                      ຢືນຢັນ
+                    </v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </template>
+          </v-data-table>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
     <v-row>
       <v-col>
         <div>
@@ -228,7 +361,47 @@ export default {
         return `Vientiane Waste Co-Dev|View Plan`;
       },
       tab: null,
+      dialog: false,
       customers: [],
+      planCalendars: [],
+      headerCalendars: [
+        { text: 'ວັນທີ', value: 'date' },
+        { text: 'ລົດ', value: 'driver' },
+        { text: 'ປະເພດລົດ', value: 'driver.vehicle.vehicle_type.name' },
+
+        {
+          text: 'ລູກຄ້າ',
+          value: 'plan_calendar_details_count',
+          align: 'center',
+          sortable: false,
+        },
+        {
+          text: 'ທີ່ຕ້ອງເກັບ',
+          value: 'count_unpause',
+          align: 'center',
+        },
+        {
+          text: 'ທີ່ຖືກຢຸດໄວ້',
+          value: 'count_pause',
+          align: 'center',
+        },
+        {
+          text: 'ເກັບຂີເຫື້ຍອສຳເລັດ',
+          value: 'count_success',
+          align: 'center',
+        },
+        {
+          text: 'ລໍຖ້າຢືນຢັນ',
+          value: 'count_wait_to_confirm',
+          align: 'center',
+        },
+        {
+          text: 'ວັນທີສ້າງ',
+          value: 'created_at',
+          align: 'center',
+        },
+        { text: '', value: 'actions', sortable: false },
+      ],
       loading: false,
       switchMap: true,
       customerId: '',
@@ -311,6 +484,9 @@ export default {
   },
 
   watch: {
+    dialog(value) {
+      if (value) { this.fetchPlanCalendar(); }
+    },
     search(value) {
       if (value == '') {
         this.fetchData();
@@ -332,6 +508,65 @@ export default {
     // this.fetchAddress();
   },
   methods: {
+    updatePlanCalendar(item) {
+      this.$store.commit('Loading_State', true);
+      this.$axios
+        .post(`update-from-route/${item.id}`)
+        .then((res) => {
+          this.$store.commit('Loading_State', false);
+          setTimeout(() => {
+            this.loading = false;
+            this.$store.commit('modalDelete_State', false);
+            this.fetchData();
+            this.$store.commit('Toast_State', {
+              value: true,
+              color: 'success',
+              msg: res.data.message,
+            });
+          }, 300);
+          if (res.data.code == 200) {
+            this.fetchPlanCalendar();
+          }
+        })
+        .catch((error) => {
+          this.$store.commit('Loading_State', false);
+          this.$store.commit('Toast_State', {
+            value: true,
+            color: 'error',
+            msg: error.response
+              ? error.response.data.message
+              : 'Something went wrong',
+          });
+        });
+    },
+    fetchPlanCalendar() {
+      this.$store.commit('Loading_State', true);
+      this.$axios
+        .get(`plan-calendar`, {
+          params: {
+            route_plan_id: this.$route.params.id,
+            date: new Date().toISOString().substr(0, 10),
+            operation: '>=',
+          },
+        })
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.$store.commit('Loading_State', false);
+              this.planCalendars = res.data.data;
+            }, 100);
+          }
+        })
+        .catch((error) => {
+          this.$store.commit('Loading_State', false);
+          if (error.response && error.response.status == 422) {
+            const obj = error.response.data.errors;
+            for (const [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
+            }
+          }
+        });
+    },
     getLaoCompanyCostByFunc(costBy) {
       return getLaoCompanyCostBy(costBy);
     },
