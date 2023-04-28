@@ -83,7 +83,14 @@
             </v-col>
             <v-col>
               <h3>ຂໍ້ມູນລູກຄ້າ</h3>
-              <h3>ໄອດີ: {{ customerDisplayId }}</h3>
+              <a
+                v-if="invoice.user.customer"
+                href="#"
+                @click="viewCustomerDetail(invoice.user.customer)"
+              >ໄອດີ: {{ customerDisplayId }}</a>
+              <h4 v-else>
+                ໄອດີ: {{ customerDisplayId }}
+              </h4>
               <h3>ຊື່: {{ invoice.display_customer_name }}</h3>
               <h3>ທີ່ຢູ່: {{ invoice.display_customer_address }}</h3>
               <h3>ເບີໂທ: {{ invoice.display_customer_phone }}</h3>
@@ -835,6 +842,7 @@ import {
   getLaoBillingType,
   getLaoStatus,
 } from '@/Helpers/BillingStatus';
+import queryOptions from '@/Helpers/queryOption';
 
 export default {
   name: 'InvoiceDetail',
@@ -910,6 +918,33 @@ export default {
     }
   },
   methods: {
+    viewCustomerDetail(item) {
+      const routeName = item.customer_type == 'home'
+        ? 'ViewClient'
+        : 'ViewCompanyDetail';
+
+      const options = {
+        name: routeName,
+        params: queryOptions([
+          {
+            id: item.id,
+          },
+        ]),
+        query: {
+          view_tab: 'tab-3',
+          view_month: this.invoice.date.substr(0, 7),
+        },
+      };
+
+      this.openRoute(options);
+    },
+    openRoute(options) {
+      const routeData = this.$router.resolve({
+        ...options,
+      });
+
+      window.open(routeData.href);
+    },
     showImage(url) {
       if (url != null) {
         this.showFullImage = url;

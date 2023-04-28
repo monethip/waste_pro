@@ -283,10 +283,19 @@
                           <td class="text-left">
                             {{ data.user.phone }}
                           </td>
-                          <td class="text-left">
+                          <td
+                            v-if="data.package"
+                            class="text-left"
+                          >
                             {{ data.package.price }} ({{
                               data.package.per_week
                             }}ຖົງ/ອາທິດ)
+                          </td>
+                          <td
+                            v-else
+                            class="text-left"
+                          >
+                            -
                           </td>
                           <td>
                             <div v-if="item.collection_type === 'bag' || item.collection_type === 'infect' || item.collection_type === '32km'">
@@ -433,10 +442,19 @@
                           <td class="text-left">
                             {{ data.customer_id }}
                           </td>
-                          <td class="text-left">
+                          <td
+                            v-if="data.package"
+                            class="text-left"
+                          >
                             {{ data.package.price }} ({{
                               data.package.per_week
                             }}ຖົງ/ອາທິດ)
+                          </td>
+                          <td
+                            v-else
+                            class="text-left"
+                          >
+                            -
                           </td>
                           <td>
                             <v-chip
@@ -535,7 +553,7 @@ export default {
       loading: false,
       server_errors: {},
       start_menu: false,
-      month: new Date().toISOString().substr(0, 7),
+      month: this.$route.query.view_month ? this.$route.query.view_month : new Date().toISOString().substr(0, 7),
       provinces: [],
       districts: [],
       selectedDistrict: '',
@@ -543,7 +561,7 @@ export default {
       selectedVillage: '',
       village_details: [],
       selectedVillageDetail: [],
-      tab: 'tab-1',
+      tab: this.$route.query.view_tab ? this.$route.query.view_tab : 'tab-1',
 
       address: [],
       preview_list: [],
@@ -631,7 +649,13 @@ export default {
     },
   },
   created() {
-    this.fetchData();
+    if (this.tab == 'tab-1') {
+      this.fetchData();
+    } else if (this.tab == 'tab-2') {
+      this.customerCollection();
+    } else if (this.tab == 'tab-3') {
+      this.customerInvoice();
+    }
     if (this.$route.query.tab) this.tab = this.$route.query.tab;
 
     // this.customerInvoice();
