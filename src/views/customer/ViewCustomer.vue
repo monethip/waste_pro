@@ -42,7 +42,7 @@
 
               <v-list-item-content>
                 <v-list-item-title>{{ data.name }} {{ data.surname }}</v-list-item-title>
-                <v-list-item-subtitle>ຊື່ ແລະ ນາມສະກຸນ</v-list-item-subtitle>
+                <v-list-item-subtitle>{{ data.customer_id }}</v-list-item-subtitle>
               </v-list-item-content>
 
               <v-spacer />

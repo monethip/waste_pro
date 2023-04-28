@@ -70,7 +70,7 @@
                       {{ data.name }} {{ data.surname }}
                     </v-list-item-title>
                     <v-list-item-subtitle>
-                      ຊື່ ແລະ ນາມສະກຸນ
+                      {{ data.customer_id }}
                     </v-list-item-subtitle>
                   </v-list-item-content>
 
@@ -87,9 +87,11 @@
                     <v-list-item-title
                       v-if="data.user"
                     >
-                      {{ data.house_number }}
+                      ບ້ານເລກທີ {{ data.house_number }}
                     </v-list-item-title>
-                    <v-list-item-subtitle>ເຮືອນເລກທີ</v-list-item-subtitle>
+                    <v-list-item-subtitle v-if="data.village">
+                      {{ data.village.name }}, {{ data.district ? data.district.name : "" }}
+                    </v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
                 <v-divider inset />
@@ -167,6 +169,92 @@
                     <v-list-item-subtitle>
                       {{ data.package.price }}
                     </v-list-item-subtitle>
+                  </v-list-item-content>
+                  <!--                  <v-list-item-action>-->
+                  <!--                    <v-btn>ປ່ຽນແພກເກຈ</v-btn>-->
+                  <!--                  </v-list-item-action>-->
+                </v-list-item>
+              </v-row>
+              <v-row>
+                <v-list-item>
+                  <v-list-item-icon>
+                    <v-icon color="indigo">
+                      mdi-phone
+                    </v-icon>
+                  </v-list-item-icon>
+
+                  <v-list-item-content>
+                    <v-list-item-title
+                      v-if="data.user"
+                    >
+                      {{ data.user.phone }}
+                    </v-list-item-title>
+                    <v-list-item-subtitle>ເບີໂທ</v-list-item-subtitle>
+                  </v-list-item-content>
+                  <v-spacer />
+                  <v-list-item-icon>
+                    <v-icon
+                      class="mr-6"
+                      color="indigo"
+                    >
+                      mdi-email
+                    </v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title
+                      v-if="data.user"
+                    >
+                      {{ data.user.email }}
+                    </v-list-item-title>
+                    <v-list-item-subtitle>Email</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-divider inset />
+                <v-list-item>
+                  <v-list-item-icon>
+                    <v-icon color="indigo">
+                      mdi-calendar-account
+                    </v-icon>
+                  </v-list-item-icon>
+
+                  <v-list-item-content>
+                    <v-list-item-title v-if="customer_activity">
+                      {{ customer_activity.causer ? customer_activity.causer.full_name : "" }}
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      {{ data.created_at }}
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+
+                  <v-spacer />
+                  <v-list-item-icon>
+                    <v-icon
+                      class="mr-6"
+                      color="indigo"
+                    >
+                      mdi-truck
+                    </v-icon>
+                  </v-list-item-icon>
+
+                  <v-list-item-content v-if="data.package">
+                    <v-list-item-title>
+                      <v-chip
+                        label
+                        :color="statusColor(data.status)"
+                      >
+                        {{
+                          data.status
+                        }}
+                      </v-chip>
+                      <v-chip
+                        class="ml-2"
+                        :color="data.can_collect ? 'success' : 'error'"
+                      >
+                        {{
+                          data.can_collect ? 'ເກັບໄດ້' : 'ເກັບບໍ່ໄດ້'
+                        }}
+                      </v-chip>
+                    </v-list-item-title>
                   </v-list-item-content>
                   <!--                  <v-list-item-action>-->
                   <!--                    <v-btn>ປ່ຽນແພກເກຈ</v-btn>-->
@@ -662,6 +750,11 @@ export default {
     // this.customerCollection();
   },
   methods: {
+    statusColor(value) {
+      if (value == 'active') return 'primary';
+      if (value == 'inactive') return 'error';
+      return 'info';
+    },
     getBgColorFn(status) {
       return getBgColor(status);
     },
