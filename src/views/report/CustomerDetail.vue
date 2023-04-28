@@ -735,14 +735,6 @@ export default {
       });
       window.open(route.href);
     },
-    statusColor(value) {
-      console.log(value);
-      if (value == 'pending') return 'info';
-      if (value == 'success') return 'success';
-      if (value == 'reject') return 'error';
-      if (value == 'cancel') return 'orange';
-      return 'error';
-    },
     ViewInvoice(id) {
       const route = this.$router.resolve({
         name: 'billing-detail',
