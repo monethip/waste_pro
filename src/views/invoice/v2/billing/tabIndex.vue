@@ -194,6 +194,7 @@ export default {
   },
   created() {
     this.tab = this.$route.query.tab;
+    if (!this.lastMonthBillPaid) this.lastMonthBillPaid = new Date().toISOString().substr(0, 7);
     this.countBilling();
   },
   methods: {

@@ -796,6 +796,9 @@ export default {
         else this.hasBillingOnly = 'has_billing';
       }
     },
+    created() {
+      if (!this.lastMonthBillPaid) this.lastMonthBillPaid = new Date().toISOString().substr(0, 7);
+    },
     openBilling(id) {
       const options = {
         name: 'billing-detail',

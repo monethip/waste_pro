@@ -133,6 +133,9 @@ export default {
       return this.$store.getters['auth/getLastMonthBillPaid'];
     },
   },
+  created() {
+    if (!this.lastMonthBillPaid) this.lastMonthBillPaid = new Date().toISOString().substr(0, 7);
+  },
   watch: {
     lastMonthBill(value) {
       this.$store.dispatch('auth/saveLastMonthBill', value);
