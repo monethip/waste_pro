@@ -538,6 +538,7 @@ export default {
         { page: this.pagination.current_page },
         { per_page: this.per_page },
         { without_month_info: true },
+            { without_billing_summary: true },
         { only_billings: this.only_billings },
         { with_billings: true },
         { with_created_user: true },

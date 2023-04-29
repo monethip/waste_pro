@@ -77,8 +77,8 @@
         </h4>
         <h4>ຂີ້ເຫຍື້ອຄາດໝາຍ:</h4>
         <h5
-          v-for="(item,index) in countExpectTrash"
-          :key="index"
+          v-for="item in countExpectTrash"
+          :key="item.cost_by"
         >
           <div v-if="item">
             {{
@@ -657,6 +657,7 @@ export default {
           { per_page: this.per_page },
           { without: this.selectedCustomerStatus },
           { without_month_info: true },
+          { without_billing_summary: true },
           { villages: this.selectedVillage },
           { district_id: this.selectedDistrict },
           { filter: this.search },

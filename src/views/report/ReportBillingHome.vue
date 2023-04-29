@@ -816,6 +816,7 @@ export default {
         { per_page: 100 },
         { page },
         { without_month_info: true },
+            { without_billing_summary: true },
         { sale_id: this.selectedSale },
         { payment_method: this.selectedPaymentMethod },
         { date_method: this.selectedBillDate },

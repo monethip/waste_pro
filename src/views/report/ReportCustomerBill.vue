@@ -638,6 +638,7 @@ export default {
       return queryOptions([
         { order_by: 'customers.id' },
         { without_month_info: true },
+        { without_billing_summary: true },
         { has_billing_only: this.hasBillingOnly },
         { customer_id: this.customer_id },
         { phone: this.phone },

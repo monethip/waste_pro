@@ -567,6 +567,7 @@ export default {
           { per_page: this.per_page },
           { without: this.selectedCustomerStatus },
           { without_month_info: true },
+          { without_billing_summary: true },
           { villages: this.selectedVillage },
           { district_id: this.selectedDistrict },
           { filter: this.search },

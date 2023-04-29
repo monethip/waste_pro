@@ -441,6 +441,7 @@ export default {
               date_method: this.selectedBillDate,
             },
             { without_month_info: true },
+            { without_billing_summary: true },
             { download: this.exportMode },
             { sale_active_status: this.is_active_only ? 'active' : null },
           ]),
