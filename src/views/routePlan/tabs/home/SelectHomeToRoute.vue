@@ -215,7 +215,7 @@
               style="width:100%"
               @click="fetchData()"
             >
-              Load More..
+              ກຳລັງໂຫຼດຂໍ້ມູນໃຫ້ທ່ານ ກະລຸນາລໍຖ້າຈົນກ່ວາຂໍ້ຄວາມນິ້ຈະຫາຍໄປ...
             </v-btn>
             <v-data-table
               :disable-pagination="true"
@@ -335,7 +335,7 @@
                 style="width:100%"
                 @click="fetchData()"
               >
-                Load More..
+                ກຳລັງໂຫຼດຂໍ້ມູນໃຫ້ທ່ານ ກະລຸນາລໍຖ້າຈົນກ່ວາຂໍ້ຄວາມນິ້ຈະຫາຍໄປ...
               </v-btn>
             </template>
           </v-card-text>

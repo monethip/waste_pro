@@ -77,16 +77,18 @@
         </h4>
         <h4>ຂີ້ເຫຍື້ອຄາດໝາຍ:</h4>
         <h5
-          v-for="item in countExpectTrash"
-          :key="item.cost_by"
+          v-for="(item,index) in countExpectTrash"
+          :key="index"
         >
-          {{
-            getLaoCompanyCostByFunc(item.cost_by) +
-              ": " +
-              Intl.NumberFormat().format(item.expect_trash) +
-              " " +
-              getCustomerUnitFunc(item.cost_by)
-          }}
+          <div v-if="item">
+            {{
+              getLaoCompanyCostByFunc(item.cost_by) +
+                ": " +
+                Intl.NumberFormat().format(item.expect_trash) +
+                " " +
+                getCustomerUnitFunc(item.cost_by)
+            }}
+          </div>
         </h5>
       </v-col>
       <v-col>
@@ -235,6 +237,14 @@
                 </p>
               </v-col>
             </v-row>
+            <v-btn
+              v-if="next_page_url"
+              dark
+              style="width:100%"
+              @click="fetchData()"
+            >
+              ກຳລັງໂຫຼດຂໍ້ມູນໃຫ້ທ່ານ ກະລຸນາລໍຖ້າຈົນກ່ວາຂໍ້ຄວາມນິ້ຈະຫາຍໄປ...
+            </v-btn>
             <v-data-table
               :disable-pagination="true"
               :headers="headers"
@@ -349,6 +359,14 @@
                 :pagination="pagination"
                 @paginate="fetchData()"
               />
+              <v-btn
+                v-if="next_page_url"
+                dark
+                style="width:100%"
+                @click="fetchData()"
+              >
+                ກຳລັງໂຫຼດຂໍ້ມູນໃຫ້ທ່ານ ກະລຸນາລໍຖ້າຈົນກ່ວາຂໍ້ຄວາມນິ້ຈະຫາຍໄປ...
+              </v-btn>
             </template>
           </v-card-text>
         </v-card>
@@ -622,65 +640,87 @@ export default {
     chooseStyle() {
       return 'check';
     },
-    fetchData(countexpect = false) {
-      this.$store.commit('Loading_State', true);
-      this.per_page = this.selectedDistrict ? null : 100;
+    async fetchData(countexpect = false) {
+      try {
+        if (this.selectedDistrict) {
+          this.per_page = 0;
+          this.cursor_paginate = 500;
+        } else {
+          this.per_page = 100;
+          this.cursor_paginate = 0;
+          this.next_page_url = "";
+        }
 
-      const options = [
-        { page: this.pagination.current_page },
-        { per_page: this.per_page },
-        { without: this.selectedCustomerStatus },
-        { villages: this.selectedVillage },
-        { district_id: this.selectedDistrict },
-        { filter: this.search },
-        { without_month_info: true },
-        { cost_by: this.selectedCost },
-        { favorite_dates: this.selectedFavoriteDate },
-        { village_details: this.selectedDetails },
-        { customer_can_collect: this.selectedCustomerCanCollects },
-      ];
+        const options = [
+          { page: this.pagination.current_page },
+          { cursor_paginate: this.cursor_paginate },
+          { per_page: this.per_page },
+          { without: this.selectedCustomerStatus },
+          { without_month_info: true },
+          { villages: this.selectedVillage },
+          { district_id: this.selectedDistrict },
+          { filter: this.search },
+          { cost_by: this.selectedCost },
+          { favorite_dates: this.selectedFavoriteDate },
+          { village_details: this.selectedDetails },
+          { customer_can_collect: this.selectedCustomerCanCollects },
+        ];
 
-      if (countexpect) options.push({ count_expact_trash: '1' });
+        if (countexpect) options.push({ count_expact_trash: '1' });
 
-      this.$axios
-        .get('company', {
+        this.$store.commit('Loading_State', true);
+
+        const res = await this.$axios.get(this.next_page_url ? this.next_page_url : 'company', {
           params: queryOption(options),
-        })
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.$store.commit('Loading_State', false);
-              if (countexpect) {
-                this.countExpectTrash = res.data.data;
-              } else {
-                this.customers = this.per_page
-                  ? res.data.data.data
-                  : res.data.data;
-                this.selectedAllCustomer = res.data.data;
-                if (res.data.data.pagination) this.pagination = res.data.data.pagination;
-                else this.pagination = {};
-              }
-
-              // this.getCenter();
-            }, 100);
-          }
-        })
-        .catch((error) => {
-          this.$store.commit('Loading_State', false);
-          this.$store.commit('Toast_State', {
-            value: true,
-            color: 'error',
-            msg: error.response
-              ? error.response.data.message
-              : 'Something went wrong',
-          });
-          if (error.response && error.response.status == 422) {
-            const obj = error.response.data.errors;
-            for (const [key, message] of Object.entries(obj)) {
-              this.server_errors[key] = message[0];
-            }
-          }
         });
+
+        if (res.data.code == 200) {
+          setTimeout(() => {
+            this.$store.commit('Loading_State', false);
+            if (!this.next_page_url && countexpect) {
+              console.log('sdsds', res.data.data);
+              this.countExpectTrash = res.data.data;
+            } else {
+              if (this.next_page_url) {
+                this.customers = this.customers.concat(res.data.data.data);
+              } else {
+                this.customers = res.data.data.data;
+              }
+              this.selectedAllCustomer = this.customers;
+              if (!this.cursor_paginate) this.pagination = res.data.data.pagination;
+              this.next_page_url = res.data.data.next_page_url;
+              if (this.next_page_url) {
+                setTimeout(async () => {
+                  await this.fetchData();
+                }, 1000);
+              }
+            }
+            // this.getCenter();
+          }, 100);
+        }
+      } catch (error) {
+        this.$store.commit('Loading_State', false);
+
+        this.$store.commit('Toast_State', {
+          value: true,
+          color: 'error',
+          msg: error.response ? error.response.data.message : 'Something went wrong',
+        });
+
+        if (error.response && error.response.status == 422) {
+          const obj = error.response.data.error;
+          for (const [key, message] of Object.entries(obj)) {
+            this.server_errors[key] = message[0];
+          }
+        }
+
+        if (error.response && error.response.status == 422) {
+          const obj = error.response.data.errors;
+          for (const [key, message] of Object.entries(obj)) {
+            this.server_errors[key] = message[0];
+          }
+        }
+      }
     },
 
     fetchAddress() {
