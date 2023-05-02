@@ -148,7 +148,7 @@
           </v-col>
           <v-col v-if="selectedCustomerType == 'home'">
             <v-select
-              v-model="filteredPackage"
+              v-model="selectedPackage"
               :items="packageList"
               dense
               item-text="name"
@@ -508,7 +508,8 @@ export default {
       lastMonthBillPaid: '',
       created_by: '',
       saleData: null,
-      filteredPackage: '',
+      packages: [],
+      selectedPackage: null,
       selectedCustomerType: '',
       selectedCompanyType: '',
       comapnyTypes: getCompanyCostBy,
@@ -572,6 +573,7 @@ export default {
   },
   computed: {
     packageList() {
+      console.log(this.packages);
       return concatPackage(this.packages);
     },
     allMonths() {
@@ -643,7 +645,7 @@ export default {
         { customer_id: this.customer_id },
         { phone: this.phone },
         { customer_type: this.selectedCustomerType },
-        { package_id: this.package_id },
+        { package_id: this.selectedPackage },
         { cost_by: this.selectedCompanyType },
         { villages: this.selectedVillage },
         { district_id: this.selectedDistrict.id },
@@ -665,6 +667,9 @@ export default {
     created_by() {
       if (!this.firstLoad) this.fetchData();
     },
+    selectedPackage(value) {
+      console.log(value, typeof value);
+    },
   },
   async created() {
     await this.fetchAddress();
@@ -674,7 +679,7 @@ export default {
   },
   methods: {
     billRoute(billMonth, showOne) {
-      const items = {
+      const items = queryOptions({
         selectedCustomerType: this.selectedCustomerType,
         package_id: this.selectedPackage,
         selectedVillage: this.selectedVillage,
@@ -684,10 +689,9 @@ export default {
         end_date: this.end_date,
         created_by: this.selectedSale,
         selectedCompanyType: this.selectedCompanyType,
-      };
-
-      if (billMonth) items.billMonth = billMonth;
-      if (showOne) items.showOne = showOne;
+        billMonth,
+        showOne,
+      });
 
       const options = this.$router.resolve(
         {
@@ -772,7 +776,7 @@ export default {
       if (this.$route.query.customer_id) this.customer_id = this.$route.query.customer_id;
       if (this.$route.query.phone) this.phone = this.$route.query.phone;
       if (this.$route.query.selectedCustomerType) this.selectedCustomerType = this.$route.query.selectedCustomerType;
-      if (this.$route.query.package_id) this.package_id = this.$route.query.package_id;
+      if (this.$route.query.package_id) this.selectedPackage = parseInt(this.$route.query.package_id);
       if (this.$route.query.selectedCompanyType) this.selectedCompanyType = this.$route.query.selectedCompanyType;
 
       if (this.$route.query.selectedDistrict) {

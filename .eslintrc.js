@@ -48,7 +48,8 @@ module.exports = {
     'vue/prop-name-casing': 'off',
     'import/prefer-default-export': 'off',
     'no-lonely-if': 'off',
-    'no-await-in-loop': 'off'
+    'no-await-in-loop': 'off',
+    'no-prototype-builtins': 'off'
   },
 
 };
