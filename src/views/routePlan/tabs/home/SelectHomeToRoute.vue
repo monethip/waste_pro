@@ -69,7 +69,7 @@
         </v-btn>
       </v-col>
       <v-col>
-        <h4 v-if="pagination && pagination.total">
+        <h4 v-if="!cursor_paginate">
           ລູກຄ້າທັງໝົດ {{ pagination.total }} ຄົນ
         </h4>
         <h4 v-else>
@@ -78,10 +78,7 @@
         <h4 v-if="countExpectTrash">
           ຂີ້ເຫຍື້ອຄາດໝາຍ:
           {{
-            Intl.NumberFormat().format(countExpectTrash.expect_bag) +
-              " " +
-              getCustomerUnitFunc(countExpectTrash.cost_by)
-          }}
+            Intl.NumberFormat().format(countExpectTrash.expect_bag) }} ຖົງ
         </h4>
       </v-col>
       <v-col>
@@ -445,6 +442,13 @@ export default {
     };
   },
   computed: {
+    bagTrashed() {
+      let bags = 0;
+      if (this.customers.length) {
+        bags += this.customers.package ? this.customers.package.package_size.bag : 0;
+      }
+      return bags;
+    },
     selectedTrash() {
       let count = 0;
       for (const selected of this.selectedRows) {
@@ -554,7 +558,7 @@ export default {
       try {
         if (this.selectedDistrict) {
           this.per_page = 0;
-          this.cursor_paginate = 500;
+          this.cursor_paginate = 1500;
         } else {
           this.per_page = 100;
           this.cursor_paginate = 0;
@@ -563,7 +567,7 @@ export default {
 
         const options = [
           { page: this.pagination.current_page },
-          { cursor_paginate: this.cursor_paginate },
+          { cursor_paginate: countexpect ? "" : this.cursor_paginate },
           { per_page: this.per_page },
           { without: this.selectedCustomerStatus },
           { without_month_info: true },

@@ -69,18 +69,18 @@
         </v-btn>
       </v-col>
       <v-col>
-        <h4 v-if="pagination && pagination.total">
+        <h4 v-if="!cursor_paginate">
           ລູກຄ້າທັງໝົດ {{ pagination.total }} ຄົນ
         </h4>
         <h4 v-else>
-          ລູກຄ້າທັງໝົດ {{ customers.length }} ຄົນ
+          ລູກຄ້າທັງໝົດ {{ customers ? customers.length : 0 }} ຄົນ
         </h4>
         <h4>ຂີ້ເຫຍື້ອຄາດໝາຍ:</h4>
         <h5
           v-for="item in countExpectTrash"
           :key="item.cost_by"
         >
-          <div v-if="item">
+          <div>
             {{
               getLaoCompanyCostByFunc(item.cost_by) +
                 ": " +
@@ -644,7 +644,7 @@ export default {
       try {
         if (this.selectedDistrict) {
           this.per_page = 0;
-          this.cursor_paginate = 500;
+          this.cursor_paginate = 1500;
         } else {
           this.per_page = 100;
           this.cursor_paginate = 0;
@@ -653,7 +653,7 @@ export default {
 
         const options = [
           { page: this.pagination.current_page },
-          { cursor_paginate: this.cursor_paginate },
+          { cursor_paginate: countexpect ? "" : this.cursor_paginate },
           { per_page: this.per_page },
           { without: this.selectedCustomerStatus },
           { without_month_info: true },
@@ -679,7 +679,6 @@ export default {
           setTimeout(() => {
             this.$store.commit('Loading_State', false);
             if (!this.next_page_url && countexpect) {
-              console.log('sdsds', res.data.data);
               this.countExpectTrash = res.data.data;
             } else {
               if (this.next_page_url) {
@@ -790,7 +789,7 @@ export default {
 
     // Google map
     getCenter() {
-      if (this.customers.length) {
+      if (this.customers && this.customers.length) {
         if (parseFloat(this.customers[0].lat) == null) {
           return this.latlng;
         }
