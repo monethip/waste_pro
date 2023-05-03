@@ -283,7 +283,7 @@ export default {
       formData.append('name', this.editVillagevariation.name);
       formData.append('_method', 'PUT');
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post(
             `address/village-variation/${this.editVillagevariation.id}`,
@@ -292,7 +292,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.closeUpdate();
                 this.editVillagevariation = {};
                 this.reset();
@@ -306,7 +306,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -334,7 +334,7 @@ export default {
     //     .then((res) => {
     //       if (res.data.code == 200) {
     //         setTimeout(() => {
-    //           this.loading = false;
+    //           this.$store.commit('Loading_State', false);;
     //           this.variation = res.data.data;
     //           console.log(this.variation);
     //           // this.villagedetail = res.data.data;
@@ -349,7 +349,7 @@ export default {
     //       }
     //     })
     //     .catch((error) => {
-    //       this.loading = false;
+    //       this.$store.commit('Loading_State', false);;
     //       this.fetchData();
     //       if (error.response && error.response.status == 422) {
     //         this.$store.commit("Toast_State", {
@@ -370,13 +370,13 @@ export default {
     },
 
     DeleteItemConfirm() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .delete(`address/village-variation/${this.VillageVariation_id}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.$store.commit('Toast_State', {
                 value: true,
                 color: 'success',
@@ -390,13 +390,13 @@ export default {
         .catch(() => {
           this.fetchData();
           this.$store.commit('modalDelete_State', false);
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
         });
     },
 
     AddItem() {
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post('address/village-variation/', {
             name: this.addvillagevariation,
@@ -404,7 +404,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.closeAddModal();
                 this.fetchData();
                 this.reset();
@@ -417,7 +417,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',

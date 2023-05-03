@@ -579,7 +579,7 @@ export default {
       formData.append('_method', 'PUT');
 
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post(`collection-event/${this.$route.params.id}`, formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
@@ -587,7 +587,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.$store.commit('Toast_State', {
                   value: true,
                   color: 'success',
@@ -611,7 +611,7 @@ export default {
                 this.server_errors[key] = data[0];
               }
             }
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
           });
       }
     },

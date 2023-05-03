@@ -263,7 +263,7 @@ export default {
         )
         .then((res) => {
           if (res.data.code == 200) {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Loading_State', false);
             this.data = res.data.data.members;
             // this.pagination = res.data.data.pagination;
@@ -285,7 +285,7 @@ export default {
     },
     AddItem() {
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post(`team/${this.$route.params.id}/team_member`, {
             employees: this.selectedMember,
@@ -293,7 +293,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.closeAddModal();
                 this.selectedMember = '';
                 this.fetchData();
@@ -307,7 +307,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -338,13 +338,13 @@ export default {
     },
 
     deleteItemConfirm() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .delete(`team/${this.$route.params.id}/team_member/${this.userID}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.$store.commit('modalDelete_State', false);
               this.fetchData();
               this.$store.commit('Toast_State', {
@@ -365,7 +365,7 @@ export default {
               : 'Something went wrong',
           });
           this.$store.commit('modalDelete_State', false);
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
         });
     },
     reset() {

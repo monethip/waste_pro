@@ -324,13 +324,13 @@ export default {
     },
     AddItem() {
       if (this.$refs.form.validate() === true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post('auth/register-pre-customer', this.user)
           .then((res) => {
             if (res.data.code === 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.closeAddModal();
                 this.reset();
                 this.createPage(res.data.data);
@@ -343,7 +343,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -377,7 +377,7 @@ export default {
         })
         .then((res) => {
           if (res.data.code === 200) {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Loading_State', false);
             this.users = res.data.data.data;
             this.pagination = res.data.data.pagination;

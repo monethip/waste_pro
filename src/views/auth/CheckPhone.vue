@@ -152,7 +152,7 @@ export default {
       this.initReCaptcha();
       if (this.phone.length == 8) {
         // Check Phone number
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post("auth/check-phone", {
             credential: this.user.credential,
@@ -163,7 +163,7 @@ export default {
             if (res.data.code === 200) {
               if (res.data.data.collect === true) {
                 // Send OTP
-                this.loading = true;
+                this.$store.commit('Loading_State', true);
                 const countryCode = "+85620"; // laos
                 const phoneNumber = countryCode + this.phone;
                 const appVerifier = this.appVerifier;
@@ -177,26 +177,26 @@ export default {
                       window.confirmationResult = confirmationResult;
                       this.verifyCode = true;
                       this.verifyPhone = false;
-                      this.loading = false;
+                      this.$store.commit('Loading_State', false);
                     })
                     .catch((error) => {
                       this.error = error;
-                      this.loading = false;
+                      this.$store.commit('Loading_State', false);
                     }, 15000);
                 });
               } else if (res.data.data.collect === false) {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.error = "ເບີໂທບໍ່ຖືກຕ້ອງ";
               } else {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.error = "ມີບາງຢ່າງຜິດພາດ ກະລຸນາລອງໃໝ່";
               }
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
             }
           })
           .catch((error) => {
             this.error = error;
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
           });
       }
     },

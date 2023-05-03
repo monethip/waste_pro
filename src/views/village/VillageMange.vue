@@ -23,7 +23,7 @@
         <v-row>
           <v-col>
             <v-autocomplete
-              v-model="selectedDistrict"
+              v-model="selectedFilteredDistrict"
               required
               :items="districts"
               item-text="name"
@@ -272,6 +272,7 @@ export default {
       loading: false,
       districts: [],
       selectedDistrict: '',
+      selectedFilteredDistrict: '',
       selectedVillage: '',
       listVillage: [],
       village_details: [],
@@ -321,7 +322,7 @@ export default {
     };
   },
   watch: {
-    selectedDistrict() {
+    selectedFilteredDistrict() {
       this.pagination.current_page = '';
       this.fetchVillage();
       this.server_errors.district_id = '';
@@ -355,13 +356,13 @@ export default {
       this.$store.commit('modalDelete_State', true);
     },
     DeleteItemConfirm() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .delete(`address/village/${this.village_id}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.$store.commit('Toast_State', {
                 value: true,
                 color: 'success',
@@ -375,7 +376,7 @@ export default {
         .catch(() => {
           this.fetchData();
           this.$store.commit('modalDelete_State', false);
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
         });
     },
 
@@ -385,35 +386,31 @@ export default {
 
     OpenModalEdit(item) {
       this.update_village = item;
+      this.selectedDistrict = this.update_village.district_id;
       this.$store.commit('modalEdit_State', true);
     },
 
     updateItem() {
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .put(`address/village/${this.update_village.id}`, {
             name: this.update_village.name,
             district_id: this.selectedDistrict,
           })
           .then((res) => {
-            if (res.data.success == true) {
-              setTimeout(() => {
-                this.loading = false;
-                this.CloseModalEdit();
-                this.update_village = {};
-                this.reset();
-                this.fetchData();
-                this.$store.commit('Toast_State', {
-                  value: true,
-                  color: 'success',
-                  msg: res.data.message,
-                });
-              }, 300);
-            }
+            this.$store.commit('Loading_State', false);
+            this.update_village = {};
+            this.reset();
+            this.closeUpdateVillage();
+            this.$store.commit('Toast_State', {
+              value: true,
+              color: 'success',
+              msg: res.data.message,
+            });
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.fetchVillage();
             if (error.response && error.response.status == 422) {
               this.$store.commit('Toast_State', {
@@ -439,7 +436,7 @@ export default {
             this.getVillage = res.data.data;
             this.getVillage.map((item) => {
               this.districts = item.districts;
-              this.selectedDistrict = this.districts[0].id;
+              this.selectedFilteredDistrict = this.districts[0].id;
               this.$store.commit('Loading_State', false);
               this.fetchVillage();
             });
@@ -451,7 +448,7 @@ export default {
     fetchVillage() {
       this.$store.commit('Loading_State', true);
       this.$axios
-        .get(`info/district/${this.selectedDistrict}/village`, {
+        .get(`info/district/${this.selectedFilteredDistrict}/village`, {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
@@ -475,7 +472,7 @@ export default {
     //     .then((res) => {
     //       if (res.data.code == 200) {
     //         setTimeout(() => {
-    //           this.loading = false;
+    //           this.$store.commit('Loading_State', false);;
     //           this.variation = res.data.data;
     //           this.edit_villagevariation.variation.map((item) => {
     //             variation.push(item.name);
@@ -484,7 +481,7 @@ export default {
     //       }
     //     })
     //     .catch((error) => {
-    //       this.loading = false;
+    //       this.$store.commit('Loading_State', false);;
     //       this.fetchData();
     //       if (error.response && error.response.status == 422) {
     //         var obj = error.response.data.errors;
@@ -498,7 +495,7 @@ export default {
     closeUpdateVillage() {
       this.reset(),
       (this.update_village = {}),
-      this.fetchData(),
+      this.fetchVillage(),
       this.$store.commit('modalEdit_State', false);
     },
 
@@ -515,7 +512,7 @@ export default {
 
     AddItem() {
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post('address/village', {
             name: this.ban,
@@ -525,7 +522,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.closeAddModal();
                 this.fetchData();
                 this.reset();
@@ -538,7 +535,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             if (error.response && error.response.status == 422) {
               this.$store.commit('Toast_State', {
                 value: true,

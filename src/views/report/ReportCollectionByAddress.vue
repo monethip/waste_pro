@@ -407,7 +407,7 @@ export default {
     },
 
     exportData() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .get(
           'report-address-collection/',
@@ -426,12 +426,12 @@ export default {
             if (res.data.data.download_link != null) {
               window.open(res.data.data.download_link);
             }
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
           }
         })
         .catch(() => {
           this.$store.commit('modalDelete_State', false);
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
         });
     },
   },

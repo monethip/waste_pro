@@ -286,7 +286,7 @@ export default {
 
     deleteItemConfirm() {
       this.selectedCustomer = [];
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       for (let i = 0; i < this.selectedRows.length; i++) {
         const index = this.customers.indexOf(this.selectedRows[i]);
         this.selectedCustomer.push(this.customers[index]);
@@ -302,13 +302,13 @@ export default {
       });
       this.selectedRows = [];
       this.fetchData();
-      this.loading = false;
+      this.$store.commit('Loading_State', false);
       this.$store.commit('modalDelete_State', false);
     },
 
     exportRoutePlan() {
       if (this.customers.length) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post(
             'export-company-location',
@@ -324,7 +324,7 @@ export default {
             if (res.status == 200) {
               console.log('Success');
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 const fileUrl = window.URL.createObjectURL(
                   new Blob([res.data]),
                 );
@@ -348,7 +348,7 @@ export default {
                 ? error.response.data.message
                 : 'Something went wrong',
             });
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
           });
       } else {
         this.$store.commit('Toast_State', {

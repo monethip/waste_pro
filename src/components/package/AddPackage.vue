@@ -394,14 +394,14 @@ export default {
     },
     AddItem() {
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.addpackage.package_size_id = this.selectedPackageSize;
         this.$axios
           .post('package', this.addpackage)
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.$store.commit('Toast_State', {
                   value: true,
                   color: 'success',
@@ -414,7 +414,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -432,13 +432,13 @@ export default {
       }
     },
     switchPublic(id) {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .post(`package-status/${id}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.$store.commit('Toast_State', {
                 value: true,
                 color: 'success',
@@ -451,7 +451,7 @@ export default {
           }
         })
         .catch((error) => {
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status == 422) {
             this.$store.commit('Toast_State', {
               value: true,
@@ -489,13 +489,13 @@ export default {
       formData.append('package_size_id', this.editPackage.package_size_id);
       formData.append('_method', 'PUT');
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post(`package/${this.editPackage.id}`, formData)
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.closeUpdate();
                 this.fetchData();
                 this.reset();
@@ -508,7 +508,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -533,13 +533,13 @@ export default {
       this.$store.commit('modalDelete_State', false);
     },
     deleteItemConfirm() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .delete(`package/${this.package_id}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.closeDelete();
               this.$store.commit('Toast_State', {
                 value: true,
@@ -552,7 +552,7 @@ export default {
         })
         .catch(() => {
           this.$store.commit('modalDelete_State', false);
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
         });
     },
 

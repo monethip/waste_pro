@@ -447,7 +447,7 @@ export default {
     },
     async updateInvoice() {
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         await this.$axios
           .put(`billing-detail/${this.formData.id}`, {
             qty: this.formData.quantity,
@@ -455,7 +455,7 @@ export default {
           })
           .then((res) => {
             if (res.data.code == 200) {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.fetchData();
               this.formData = {};
               this.$store.commit('Toast_State', {
@@ -467,7 +467,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',

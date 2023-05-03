@@ -1361,14 +1361,14 @@ export default {
     },
     AddItem() {
       if (this.$refs.form.validate() === true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.user.id_token = this.id_token;
         this.$axios
           .post('user-setting/user', this.user)
           .then((res) => {
             if (res.data.code === 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.closeAddModal();
                 this.user = {};
                 this.fetchData();
@@ -1382,7 +1382,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -1401,7 +1401,7 @@ export default {
     },
     verifyPhone() {
       // this.btnVerify = true;
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       if (this.$refs.phone.validate() === true) {
         this.$axios
           .post('unique-phone', { phone: this.phone })
@@ -1410,7 +1410,7 @@ export default {
               if (res.data.data.exists === false) {
                 this.initReCaptcha();
                 this.sendOtp();
-                this.loading = true;
+                this.$store.commit('Loading_State', true);
               } else if (res.data.data.exists === true) {
                 this.btnVerify = false;
                 this.$store.commit('Toast_State', {
@@ -1420,7 +1420,7 @@ export default {
                 });
               }
               // this.btnVerify = false;
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
             }
           })
           .catch(() => {
@@ -1440,7 +1440,7 @@ export default {
           window.confirmationResult = confirmationResult;
           this.stepValue = 2;
           // this.btnVerify = false;
-          // this.loading = true;
+          // this.$store.commit('Loading_State', true);;
         })
         .catch(function () {
           this.$store.commit('Toast_State', {
@@ -1448,7 +1448,7 @@ export default {
             color: 'error',
             msg: 'SMS not sent',
           });
-          // this.loading = true;
+          // this.$store.commit('Loading_State', true);;
         });
     },
 
@@ -1510,7 +1510,7 @@ export default {
         })
         .then((res) => {
           if (res.data.code === 200) {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Loading_State', false);
             this.users = res.data.data.data;
             this.pagination = res.data.data.pagination;
@@ -1533,7 +1533,7 @@ export default {
         .get('user-setting/role')
         .then((res) => {
           if (res.data.code === 200) {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.roles = res.data.data;
             this.edit_user.roles.map((item) => {
               roles.push(item.name);
@@ -1542,7 +1542,7 @@ export default {
           }
         })
         .catch((error) => {
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status === 422) {
             const obj = error.response.data.errors;
             for (const [key, message] of Object.entries(obj)) {
@@ -1558,7 +1558,7 @@ export default {
         .get('user-setting/permission')
         .then((res) => {
           if (res.data.code === 200) {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.permissions = res.data.data;
             this.edit_user.permissions.map((item) => {
               permissions.push(item.name);
@@ -1567,7 +1567,7 @@ export default {
           }
         })
         .catch((error) => {
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
           this.$store.commit('Toast_State', {
             value: true,
             color: 'error',
@@ -1595,7 +1595,7 @@ export default {
     },
     resetPasswordAction() {
       if (this.$refs.form.validate() === true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .put(`user-setting/reset-password/${this.edit_user.id}`, {
             password: this.password,
@@ -1604,7 +1604,7 @@ export default {
           .then((res) => {
             if (res.data.code === 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.edit_user = {};
                 this.reset();
                 this.fetchData();
@@ -1618,7 +1618,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -1642,13 +1642,13 @@ export default {
     },
     updateItem() {
       if (this.$refs.form.validate() === true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .put(`user-setting/user/${this.edit_user.id}`, this.edit_user)
           .then((res) => {
             if (res.data.code === 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.closeUpdateModal();
                 this.edit_user = {};
                 this.reset();
@@ -1662,7 +1662,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -1693,13 +1693,13 @@ export default {
     },
 
     deleteItemConfirm() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .delete(`user-setting/user/${this.userID}`)
         .then((res) => {
           if (res.data.code === 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.$store.commit('modalDelete_State', false);
               this.fetchData();
               this.$store.commit('Toast_State', {
@@ -1711,7 +1711,7 @@ export default {
           }
         })
         .catch((error) => {
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
           // setTimeout(() =>{
           this.$store.commit('Toast_State', {
             value: true,
@@ -1733,7 +1733,7 @@ export default {
     },
     AddRole() {
       if (this.$refs.form.validate() === true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post(`user-setting/user/${this.userID}/give-role`, {
             roles: this.edit_user.roles,
@@ -1741,7 +1741,7 @@ export default {
           .then((res) => {
             if (res.data.code === 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.selectedRole = '';
                 this.fetchData();
                 this.reset();
@@ -1766,7 +1766,7 @@ export default {
                 : 'Something went wrong',
             });
           });
-        this.loading = false;
+        this.$store.commit('Loading_State', false);
       }
     },
     openModalUpdateRole(item) {
@@ -1778,7 +1778,7 @@ export default {
     // Update Role
     UpdateRole() {
       if (this.$refs.form.validate() === true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         // this.roles = this.edit_user.roles;
         this.$axios
           .post(`user-setting/user/${this.userID}/revoke-role`, {
@@ -1787,7 +1787,7 @@ export default {
           .then((res) => {
             if (res.data.code === 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.selectedRole = '';
                 this.fetchData();
                 this.reset();
@@ -1812,7 +1812,7 @@ export default {
                 : 'Something went wrong',
             });
           });
-        this.loading = false;
+        this.$store.commit('Loading_State', false);
         this.updateRoleDialog = false;
       }
     },
@@ -1825,7 +1825,7 @@ export default {
     },
     AddPermission() {
       if (this.$refs.form.validate() === true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         // this.roles = this.edit_user.roles;
         this.$axios
           .post(`user-setting/user/${this.userID}/give-permission`, {
@@ -1834,7 +1834,7 @@ export default {
           .then((res) => {
             if (res.data.code === 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 // this.selectedPermission = "";
                 this.fetchData();
                 this.reset();
@@ -1859,7 +1859,7 @@ export default {
                 : 'Something went wrong',
             });
           });
-        this.loading = false;
+        this.$store.commit('Loading_State', false);
         this.permissionDialog = false;
       }
     },
@@ -1873,7 +1873,7 @@ export default {
     // Update Role
     UpdatePermission() {
       if (this.$refs.form.validate() === true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post(`user-setting/user/${this.userID}/revoke-permission`, {
             permissions: this.selectedPermission,
@@ -1881,7 +1881,7 @@ export default {
           .then((res) => {
             if (res.data.code === 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.fetchData();
                 this.reset();
                 this.updatePermissionDialog = false;
@@ -1905,7 +1905,7 @@ export default {
                 : 'Something went wrong',
             });
           });
-        this.loading = false;
+        this.$store.commit('Loading_State', false);
         this.updatePermissionDialog = false;
       }
     },
@@ -1929,7 +1929,7 @@ export default {
       this.stepValue = 1;
     },
     switchStatus() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .put(`user-setting/update-status/${this.edit_user.id}`, {
           status: this.edit_user.status,
@@ -1937,7 +1937,7 @@ export default {
         .then((res) => {
           if (res.data.code === 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.fetchData();
               this.$store.commit('Toast_State', {
                 value: true,
@@ -1949,7 +1949,7 @@ export default {
           }
         })
         .catch((error) => {
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
           this.$store.commit('Toast_State', {
             value: true,
             color: 'error',

@@ -437,13 +437,13 @@ export default {
     },
 
     deleteItemConfirm() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .delete(`plan-month/${this.calendarId}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.toast.msg = res.data.message;
               this.$store.commit('Toast_State', this.toast);
               this.$store.commit('modalDelete_State', false);
@@ -455,13 +455,13 @@ export default {
           this.fetchData();
           this.$store.commit('Toast_State', this.toast_error);
           this.$store.commit('modalDelete_State', false);
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
         });
     },
     SubmitPlan() {
       const date = this.moment(`${this.start_date} ${1}`).format('YYYY-MM-DD');
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post('plan-month/', {
             name: this.plan.name,
@@ -470,7 +470,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.closeAddModal();
                 this.fetchData();
                 this.reset();
@@ -479,7 +479,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', this.toast_error);
             this.fetchData();
             if (error.response && error.response.status == 422) {
@@ -502,7 +502,7 @@ export default {
     UpdatePlan() {
       const date = this.moment(`${this.calendarEdit.month} ${1}`).format('YYYY-MM-DD');
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .put(`plan-month/${this.calendarEdit.id}`, {
             name: this.calendarEdit.name,
@@ -511,7 +511,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.closeEditModal();
                 this.fetchData();
                 this.reset();
@@ -520,7 +520,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', this.toast_error);
             if (error.response && error.response.status == 422) {
               const obj = error.response.data.errors;

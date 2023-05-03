@@ -301,7 +301,7 @@ export default {
     },
 
     exportData() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .post(
           'export-driver/',
@@ -317,7 +317,7 @@ export default {
             if (res.data.data.download_link != null) {
               window.open(res.data.data.download_link);
             }
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
           }
         })
         .catch((error) => {
@@ -326,7 +326,7 @@ export default {
             color: 'error',
             msg: error.response ? error.response.data.message : 'Something went wrong',
           });
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
         });
     },
   },

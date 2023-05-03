@@ -171,7 +171,7 @@ export default {
       this.selectedPaymentStatus.map((item) => {
         data.append('payment_statuses[]', item);
       });
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .post(
           'report-event-collection-payment', data,
@@ -189,9 +189,9 @@ export default {
             if (res.data.data.download_link != null) {
               window.open(res.data.data.download_link);
             }
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             // setTimeout(() => {
-            //     this.loading = false;
+            //     this.$store.commit('Loading_State', false);;
             //     const fileUrl = window.URL.createObjectURL(
             //         new Blob([res.data])
             //     );
@@ -213,7 +213,7 @@ export default {
             color: 'error',
             msg: error.response.data.message,
           });
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
         });
     },
 

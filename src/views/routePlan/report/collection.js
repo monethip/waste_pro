@@ -138,7 +138,7 @@ export default {
         data.append('date_from', this.moment(this.date_from).format('YYYY-MM-DD'));
         data.append('date_to', this.moment(this.date_to).format('YYYY-MM-DD'));
       }
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .post(
           'report-collection',
@@ -148,7 +148,7 @@ export default {
         .then((res) => {
           if (res.status == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               const fileUrl = window.URL.createObjectURL(
                 new Blob([res.data]),
               );
@@ -173,7 +173,7 @@ export default {
             color: 'error',
             msg: error.response.data.message,
           });
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
         });
     },
     viewPage(id) {

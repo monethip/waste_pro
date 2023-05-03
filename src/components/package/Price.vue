@@ -146,12 +146,12 @@ export default {
       formData.append('price', this.editPackageSize.price);
       formData.append('_method', 'PUT');
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post(`price-setting/${this.editPackageSize.id}`, formData)
           .then((res) => {
             if (res.data.code == 200) {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.closeUpdate();
               this.editPackageSize = {};
               this.reset();
@@ -164,7 +164,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',

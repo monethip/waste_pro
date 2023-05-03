@@ -263,7 +263,7 @@ export default {
     },
     AddItem() {
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post('reject-reason', {
             name: this.name,
@@ -271,7 +271,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.closeAddModal();
                 this.fetchData();
                 this.reset();
@@ -284,7 +284,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -311,7 +311,7 @@ export default {
     },
     UpdateItem() {
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .put(`reject-reason/${this.editItem.id}`, {
             name: this.editItem.name,
@@ -319,7 +319,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.closeEditModal();
                 this.fetchData();
                 this.reset();
@@ -332,7 +332,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -360,13 +360,13 @@ export default {
       this.$store.commit('modalDelete_State', true);
     },
     deleteItemConfirm() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .delete(`reject-reason/${this.editItem}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.$store.commit('Toast_State', {
                 value: true,
                 color: 'success',
@@ -380,7 +380,7 @@ export default {
         .catch(() => {
           this.fetchData();
           this.$store.commit('modalDelete_State', false);
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
         });
     },
     reset() {

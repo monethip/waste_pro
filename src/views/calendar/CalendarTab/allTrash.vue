@@ -437,7 +437,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.round = 0;
             this.dialog = false;
             this.selectedRound = '';

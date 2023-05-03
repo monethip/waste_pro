@@ -356,7 +356,7 @@ export default {
 
     deleteItemConfirm() {
       this.selectedCustomer = [];
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.customers.splice(this.customerIndex, 1);
       // for (var i = 0; i < this.selectedRows.length; i++) {
       //   const index = this.customers.indexOf(this.selectedRows[i]);
@@ -373,7 +373,7 @@ export default {
       });
       this.selectedRows = [];
       this.fetchData();
-      this.loading = false;
+      this.$store.commit('Loading_State', false);
       this.$store.commit('modalDelete_State', false);
     },
     createRoutePlan() {
@@ -391,7 +391,7 @@ export default {
         selectedCustomer.push(item.id);
       });
       if (this.customers.length) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post(
             'create-route-plan',
@@ -404,7 +404,7 @@ export default {
           .then((res) => {
             if (res.status == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
               }, 300);
               this.$router.push({
                 name: 'Plan',
@@ -419,7 +419,7 @@ export default {
                 ? error.response.data.message
                 : 'Something went wrong',
             });
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
           });
       } else {
         this.$store.commit('Toast_State', {

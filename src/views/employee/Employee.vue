@@ -539,7 +539,7 @@ export default {
       formData.append('phone', this.user.phone);
       formData.append('image', this.image);
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post('employee', formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
@@ -547,7 +547,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.closeAddModal();
                 this.user = {};
                 this.imageUrl = '';
@@ -563,7 +563,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -593,7 +593,7 @@ export default {
         })
         .then((res) => {
           if (res.data.code == 200) {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Loading_State', false);
             this.data = res.data.data.data;
             this.pagination = res.data.data.pagination;
@@ -633,7 +633,7 @@ export default {
       formData.append('image', this.image);
       formData.append('_method', 'PUT');
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post(`employee/${this.edit_user.id}`, formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
@@ -641,7 +641,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.closeUpdateModal();
                 this.imageUrl = '';
                 this.imageUrl = '';
@@ -656,7 +656,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -687,13 +687,13 @@ export default {
     },
 
     deleteItemConfirm() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .delete(`employee/${this.userID}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.$store.commit('modalDelete_State', false);
               this.fetchData();
               this.$store.commit('Toast_State', {
@@ -714,7 +714,7 @@ export default {
               : 'Something went wrong',
           });
           this.$store.commit('modalDelete_State', false);
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
         });
     },
     reset() {

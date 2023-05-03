@@ -480,13 +480,13 @@ export default {
     },
 
     deleteItemConfirm() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .delete(`coordinator/${this.item.id}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.$store.commit('modalDelete_State', false);
               this.fetchData();
               this.$store.commit('Toast_State', {
@@ -505,7 +505,7 @@ export default {
             msg: error.response ? error.response.data.message : 'Something went wrong',
           });
           this.$store.commit('modalDelete_State', false);
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
         });
     },
     editItem(data) {
@@ -517,7 +517,7 @@ export default {
     },
     UpdateItem() {
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .put(`coordinator/${this.item.id}`, {
             name: this.item.name,
@@ -527,7 +527,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.closeEditModal();
                 this.item = {};
                 this.fetchData();
@@ -540,7 +540,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',

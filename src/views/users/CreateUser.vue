@@ -329,14 +329,14 @@ export default {
   methods: {
     AddItem() {
       if (this.$refs.form.validate() === true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.user.id_token = this.id_token;
         this.$axios
           .post('user-setting/user', this.user)
           .then((res) => {
             if (res.data.code === 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.user = {};
                 this.reset();
                 this.$router.push({
@@ -351,7 +351,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -408,7 +408,7 @@ export default {
           window.confirmationResult = confirmationResult;
           this.stepValue = 2;
           // this.btnVerify = false;
-          // this.loading = true;
+          // this.$store.commit('Loading_State', true);;
         })
         .catch(function () {
           this.$store.commit('Toast_State', {
@@ -416,7 +416,7 @@ export default {
             color: 'error',
             msg: 'SMS not sent',
           });
-          // this.loading = true;
+          // this.$store.commit('Loading_State', true);;
         });
     },
 

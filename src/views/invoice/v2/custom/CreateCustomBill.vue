@@ -272,12 +272,12 @@ export default {
       };
       if (this.data.unit) formData.unit = this.data.unit;
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post('custom-bill', formData)
           .then((res) => {
             if (res.data.code == 200) {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.$store.commit('Toast_State', {
                 value: true,
                 color: 'success',
@@ -300,7 +300,7 @@ export default {
                 this.server_errors[key] = customer[0];
               }
             }
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
           });
       }
     },

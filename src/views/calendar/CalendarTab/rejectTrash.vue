@@ -307,7 +307,7 @@ export default {
     },
 
     confirmStatus() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       const formData = new FormData();
       formData.append('status', this.confirm_status);
       if (this.confirm_status == 'reject') {
@@ -319,7 +319,7 @@ export default {
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.$store.commit('Toast_State', {
                 value: true,
                 color: 'success',
@@ -331,7 +331,7 @@ export default {
           }
         })
         .catch((error) => {
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
           this.$store.commit('Toast_State', {
             value: true,
             color: 'error',

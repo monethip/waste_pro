@@ -198,7 +198,7 @@ export default {
       this.selectedPaymentStatus.map((item) => {
         data.append('payment_statuses[]', item);
       });
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .post(
           'report-event-collection',
@@ -209,11 +209,11 @@ export default {
             if (res.data.data != null) {
               window.open(res.data.data.download_link);
             }
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
           }
         })
         .catch((error) => {
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
           this.$store.commit('Toast_State', {
             value: true,
             color: 'error',

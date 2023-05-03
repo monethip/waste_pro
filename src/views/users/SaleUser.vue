@@ -751,13 +751,13 @@ export default {
   methods: {
     AddItem() {
       if (this.$refs.form.validate() === true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post('user-setting/user-create', this.user)
           .then((res) => {
             if (res.data.code === 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.closeAddModal();
                 this.user = {};
                 this.fetchData();
@@ -771,7 +771,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -804,7 +804,7 @@ export default {
         })
         .then((res) => {
           if (res.data.code === 200) {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Loading_State', false);
             this.users = res.data.data.data;
             this.pagination = res.data.data.pagination;
@@ -834,7 +834,7 @@ export default {
     },
     resetPasswordAction() {
       if (this.$refs.form.validate() === true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .put(`user-setting/reset-password/${this.edit_user.id}`, {
             password: this.password,
@@ -843,7 +843,7 @@ export default {
           .then((res) => {
             if (res.data.code === 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.edit_user = {};
                 this.reset();
                 this.fetchData();
@@ -857,7 +857,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -882,13 +882,13 @@ export default {
     },
     updateItem() {
       if (this.$refs.form.validate() === true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .put(`user-setting/user-update/${this.edit_user.id}`, this.edit_user)
           .then((res) => {
             if (res.data.code === 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.closeUpdateModal();
                 this.edit_user = {};
                 this.reset();
@@ -902,7 +902,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -933,13 +933,13 @@ export default {
     },
 
     deleteItemConfirm() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .delete(`user-setting/user/${this.userID}`)
         .then((res) => {
           if (res.data.code === 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.$store.commit('modalDelete_State', false);
               this.fetchData();
               this.$store.commit('Toast_State', {
@@ -951,7 +951,7 @@ export default {
           }
         })
         .catch((error) => {
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
           // setTimeout(() =>{
           this.$store.commit('Toast_State', {
             value: true,
@@ -973,7 +973,7 @@ export default {
       this.edit_user = item;
     },
     switchStatus() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .put(`user-setting/update-status/${this.edit_user.id}`, {
           status: this.edit_user.status,
@@ -981,7 +981,7 @@ export default {
         .then((res) => {
           if (res.data.code === 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.fetchData();
               this.$store.commit('Toast_State', {
                 value: true,
@@ -993,7 +993,7 @@ export default {
           }
         })
         .catch((error) => {
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
           this.$store.commit('Toast_State', {
             value: true,
             color: 'error',

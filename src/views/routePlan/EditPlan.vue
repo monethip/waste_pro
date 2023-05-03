@@ -136,7 +136,7 @@ export default {
       formData.append('description', this.plan.description);
       formData.append('_method', 'PUT');
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post(`route-plan/${this.$route.params.id}`, formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
@@ -144,7 +144,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.$store.commit('Toast_State', res.data.message);
                 this.$router.push({
                   name: 'Plan',
@@ -159,7 +159,7 @@ export default {
                 this.server_errors[key] = data[0];
               }
             }
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', this.toast_error);
           });
       }

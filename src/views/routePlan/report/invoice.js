@@ -111,7 +111,7 @@ export default {
         data.append('month_from', this.moment(this.month_from).format('YYYY-MM'));
         data.append('month_to', this.moment(this.month_to).format('YYYY-MM'));
       }
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .post(
           'report-invoice', data,
@@ -127,7 +127,7 @@ export default {
         .then((res) => {
           if (res.status == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               const fileUrl = window.URL.createObjectURL(
                 new Blob([res.data]),
               );
@@ -152,7 +152,7 @@ export default {
             color: 'error',
             msg: error.response.data.message,
           });
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
         });
     },
 

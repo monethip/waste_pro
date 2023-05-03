@@ -290,7 +290,7 @@ export default {
     },
 
     exportData() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .post(
           'export-driver/',
@@ -305,7 +305,7 @@ export default {
         .then((res) => {
           if (res.status == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
               const fileLink = document.createElement('a');
               fileLink.href = fileUrl;
@@ -323,7 +323,7 @@ export default {
             msg: error.response ? error.response.data.message : 'Something went wrong',
           });
           this.$store.commit('modalDelete_State', false);
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
         });
     },
   },

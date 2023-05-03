@@ -942,7 +942,7 @@ export default {
     },
 
     deleteItemConfirm() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .delete(
           `plan-month/${
@@ -957,7 +957,7 @@ export default {
         )
         .then((res) => {
           if (res.data.code == 200) {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.delete_description = '';
             this.$store.commit('Toast_State', {
               value: true,
@@ -970,7 +970,7 @@ export default {
         })
         .catch((error) => {
           this.$store.commit('modalDelete_State', false);
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
           this.$store.commit('Toast_State', {
             value: true,
             color: 'error',
@@ -983,7 +983,7 @@ export default {
 
     SubmitPlan() {
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post(`plan-month/${this.$route.params.id}/plan-calendar`, {
             driver_id: this.selectedDriver,
@@ -994,7 +994,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.dates = [];
                 this.menu = false;
                 this.closeAddModal();
@@ -1011,7 +1011,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.menu = false;
             this.$store.commit('Toast_State', {
               value: true,
@@ -1035,12 +1035,12 @@ export default {
       this.cancelDialog = true;
     },
     cancelItem() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .post(`plan-calendar/${this.calendarId}/cancel`)
         .then((res) => {
           if (res.data.code == 200) {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'success',
@@ -1055,7 +1055,7 @@ export default {
         .catch((error) => {
           this.cancelDialog = false;
           this.$store.commit('modalDelete_State', false);
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
           this.$store.commit('Toast_State', {
             value: true,
             color: 'error',
@@ -1080,7 +1080,7 @@ export default {
     },
     UpdatePlan() {
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .put(
             `plan-month/${
@@ -1096,7 +1096,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.closeEditModal();
                 this.fetchData();
                 this.edit_menu = false;
@@ -1110,7 +1110,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.menu = false;
             this.$store.commit('Toast_State', {
               value: true,

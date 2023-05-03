@@ -499,12 +499,12 @@ export default {
     },
     AddItem() {
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post('user-setting/role', { name: this.role })
           .then((res) => {
             if (res.data.code == 200) {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.closeAddModal();
               this.role = '';
               this.fetchData();
@@ -517,7 +517,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -566,7 +566,7 @@ export default {
         .get('user-setting/permission')
         .then((res) => {
           if (res.data.code == 200) {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.permissions = res.data.data;
             this.edit_role.permissions.map((item) => {
               permissions.push(item.name);
@@ -576,7 +576,7 @@ export default {
           }
         })
         .catch((error) => {
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status == 422) {
             const obj = error.response.data.errors;
             for (const [key, message] of Object.entries(obj)) {
@@ -594,13 +594,13 @@ export default {
     },
     updateItem() {
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .put(`user-setting/role/${this.edit_role.id}`, this.edit_role)
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.closeUpdateModal();
                 this.edit_user = {};
                 this.reset();
@@ -614,7 +614,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -644,13 +644,13 @@ export default {
     },
 
     deleteItemConfirm() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .delete(`user-setting/role/${this.roleID}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.$store.commit('modalDelete_State', false);
               this.fetchData();
               this.$store.commit('Toast_State', {
@@ -669,7 +669,7 @@ export default {
             msg: error.response ? error.response.data.message : 'Something went wrong',
           });
           this.$store.commit('modalDelete_State', false);
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
         });
     },
     openModalPermissionRole(item) {
@@ -679,7 +679,7 @@ export default {
     },
     AddPermissionRole() {
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post(`user-setting/role/${this.edit_role.id}/give-permission`, {
             permissions: this.selectedPermission,
@@ -687,7 +687,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.fetchData();
                 this.selectedPermission = '';
                 this.reset();
@@ -711,7 +711,7 @@ export default {
               msg: error.response ? error.response.data.message : 'Something went wrong',
             });
           });
-        this.loading = false;
+        this.$store.commit('Loading_State', false);
       }
     },
     openModalUpdatePermissionRole(item) {
@@ -721,7 +721,7 @@ export default {
     },
     updatePermissionRole() {
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post(
             `user-setting/role/${this.edit_role.id}/revoke-permission`,
@@ -732,7 +732,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.selectRevokePermission = '';
                 this.fetchData();
                 this.reset();

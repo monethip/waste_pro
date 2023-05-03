@@ -213,7 +213,7 @@ export default {
         data.set('date_from', this.moment(this.date_from).format('YYYY-MM-DD'));
         data.set('date_to', this.moment(this.date_to).format('YYYY-MM-DD'));
       }
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .post(
           'report-collection',
@@ -222,11 +222,11 @@ export default {
         .then((res) => {
           if (res.status == 200) {
             window.open(res.data.data.download_link);
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
           }
         })
         .catch((error) => {
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
           this.$store.commit('Toast_State', {
             value: true,
             color: 'error',

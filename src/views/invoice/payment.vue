@@ -407,13 +407,13 @@ export default {
         .catch(() => {});
     },
     confirmPayment() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .put(`confirm-payment/${this.$route.params.id}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.$store.commit('Toast_State', {
                 value: true,
                 color: 'success',
@@ -430,7 +430,7 @@ export default {
         })
         .catch(() => {
           this.closeConfirmModal();
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
         });
     },
 
@@ -447,13 +447,13 @@ export default {
       // formData.append("bcel_reference_number", this.bcel_reference_number);
       formData.append('_method', 'PUT');
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post(`pay-invoice/${this.$route.params.id}`, formData)
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.paymentModal();
                 this.fetchData();
                 this.$refs.form.reset();
@@ -466,7 +466,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -484,7 +484,7 @@ export default {
     },
 
     confirmReject() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .put(`reject-payment/${this.$route.params.id}`, {
           reject_reason_id: this.reject_reason_id,
@@ -493,7 +493,7 @@ export default {
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.$store.commit('Toast_State', {
                 value: true,
                 color: 'success',
@@ -509,7 +509,7 @@ export default {
           }
         })
         .catch((error) => {
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
           this.$store.commit('Toast_State', {
             value: true,
             color: 'error',

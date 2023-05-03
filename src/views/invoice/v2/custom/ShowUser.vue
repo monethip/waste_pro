@@ -225,7 +225,7 @@ export default {
         })
         .then((res) => {
           if (res.data.code === 200) {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Loading_State', false);
             this.users = res.data.data.data;
             console.log(this.users);
@@ -248,12 +248,12 @@ export default {
         .get('user-setting/role')
         .then((res) => {
           if (res.data.code === 200) {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.roles = res.data.data;
           }
         })
         .catch(() => {
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
         });
     },
 

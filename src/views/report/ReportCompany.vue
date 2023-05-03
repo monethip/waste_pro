@@ -778,7 +778,7 @@ export default {
     },
 
     exportData() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .post(
           'export-company/',
@@ -792,9 +792,9 @@ export default {
             if (res.data.data.download_link != null) {
               window.open(res.data.data.download_link);
             }
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             // setTimeout(() => {
-            //   this.loading = false;
+            //   this.$store.commit('Loading_State', false);;
             //   const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
             //   const fileLink = document.createElement("a");
             //   fileLink.href = fileUrl;
@@ -807,7 +807,7 @@ export default {
         })
         .catch(() => {
           this.$store.commit('Toast_State', this.toast_error);
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
         });
     },
     costBy(value) {

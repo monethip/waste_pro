@@ -515,7 +515,7 @@ export default {
         .then((res) => {
           this.$store.commit('Loading_State', false);
           setTimeout(() => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('modalDelete_State', false);
             this.fetchData();
             this.$store.commit('Toast_State', {

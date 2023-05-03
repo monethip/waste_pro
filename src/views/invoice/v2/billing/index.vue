@@ -858,12 +858,12 @@ export default {
         if (this.image instanceof File) formData.append('image_payments[]', this.image);
         formData.append('_method', 'PUT');
         if (this.$refs.form.validate() == true) {
-          this.loading = true;
+          this.$store.commit('Loading_State', true);
           this.$axios
             .post(`pay-billing/${this.payment.id}`, formData)
             .then((res) => {
               if (res.data.code == 200) {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.paymentConfirmModal(this.payment);
                 this.closeAddModal();
                 this.fetchData();
@@ -876,7 +876,7 @@ export default {
               }
             })
             .catch((error) => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.$store.commit('Toast_State', {
                 value: true,
                 color: 'error',
@@ -904,13 +904,13 @@ export default {
     },
     async confirmPayment() {
       if (this.confirmType == '0') {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         await this.$axios
           .put(`confirm-billing/${this.confirm.id}`)
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.fetchData();
                 this.$store.commit('Toast_State', {
                   value: true,
@@ -922,7 +922,7 @@ export default {
             }
           })
           .catch(() => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.closeConfirmModal();
           });
       } else if (this.confirmType == '1') {
@@ -930,13 +930,13 @@ export default {
         data.append('reject_reason_id', this.reject_reason_id);
         data.append('description', this.description);
         data.append('_method', 'PUT');
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post(`reject-billing/${this.confirm.id}`, data)
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.fetchData();
                 this.$store.commit('Toast_State', {
                   value: true,
@@ -948,7 +948,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -998,14 +998,14 @@ export default {
     },
 
     deleteInvoice() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .delete(`billing/${this.billingId}`)
 
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.$store.commit('modalDelete_State', false);
               this.fetchData();
               this.$store.commit('Toast_State', {
@@ -1017,7 +1017,7 @@ export default {
           }
         })
         .catch((error) => {
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
           this.$store.commit('Toast_State', {
             value: true,
             color: 'error',
@@ -1124,12 +1124,12 @@ export default {
     async approveAny() {
       if (this.selectedRows.length) {
         const id = this.selectedRows.map((row) => row.id);
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         await this.$axios
           .post('approve-billings', { billing_ids: id })
           .then((res) => {
             if (res.data.code == 200) {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.fetchData();
               this.selectedRows = [];
               this.$store.commit('Toast_State', {
@@ -1140,7 +1140,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',

@@ -180,7 +180,7 @@ export default {
       formData.append('file', this.filename);
 
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post('route-plan', formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
@@ -189,7 +189,7 @@ export default {
             if (res.data.code == 200) {
               setTimeout(() => {
                 this.plan = res.data.data;
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.$store.commit('Toast_State', {
                   value: true,
                   color: 'success',
@@ -211,7 +211,7 @@ export default {
               color: 'error',
               msg: error.response ? error.response.data.message : 'Something went wrong',
             });
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
           });
       }
     },
@@ -222,7 +222,7 @@ export default {
       formData.append('embed', this.plan.embed);
       formData.append('_method', 'PUT');
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post(`route-plan/${this.plan.id}`, formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
@@ -230,7 +230,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.$store.commit('Toast_State', {
                   value: true,
                   color: 'success',
@@ -249,7 +249,7 @@ export default {
                 this.server_errors[key] = data[0];
               }
             }
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',

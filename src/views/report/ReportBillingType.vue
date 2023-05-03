@@ -607,7 +607,7 @@ export default {
     },
   },
   beforeCreate() {
-    this.loading = true;
+    this.$store.commit('Loading_State', true);
   },
   async created() {
     await this.fetchDistrict();
@@ -634,7 +634,7 @@ export default {
           : this.$route.query.selected_sale;
       })
       .finally(() => {
-        this.loading = false;
+        this.$store.commit('Loading_State', false);
         this.fetchData();
       });
   },
@@ -737,7 +737,7 @@ export default {
         this.salesData = res.data.data;
       }
 
-      this.loading = false;
+      this.$store.commit('Loading_State', false);
       this.$store.commit('Loading_State', false);
     },
     ViewInvoice(id) {

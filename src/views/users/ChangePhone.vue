@@ -220,13 +220,13 @@ export default {
   },
   methods: {
     getUser() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .get(`user-setting/user/${this.$route.params.id}`)
         .then((res) => {
           if (res.data.code === 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.user = res.data.data;
             }, 300);
           }
@@ -235,14 +235,14 @@ export default {
     },
 
     changePhone() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.user.id_token = this.id_token;
       this.$axios
         .put(`user-setting/user/${this.$route.params.id}`, this.user)
         .then((res) => {
           if (res.data.code === 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.edit_user = {};
               this.$router.push({
                 name: 'User',
@@ -256,7 +256,7 @@ export default {
           }
         })
         .catch((error) => {
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
           this.$store.commit('Toast_State', {
             value: true,
             color: 'error',
@@ -275,7 +275,7 @@ export default {
 
     verifyPhone() {
       // this.btnVerify = true;
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       if (this.$refs.phone.validate() === true) {
         this.$axios
           .post('unique-phone', { phone: this.phone })
@@ -285,7 +285,7 @@ export default {
               if (res.data.data.exists === false) {
                 this.initReCaptcha();
                 this.sendOtp();
-                this.loading = true;
+                this.$store.commit('Loading_State', true);
               } else if (res.data.data.exists === true) {
                 this.btnVerify = false;
                 this.$store.commit('Toast_State', {
@@ -295,7 +295,7 @@ export default {
                 });
               }
               // this.btnVerify = false;
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
             }
           })
           .catch(() => {
@@ -315,7 +315,7 @@ export default {
           window.confirmationResult = confirmationResult;
           this.stepValue = 2;
           // this.btnVerify = false;
-          // this.loading = true;
+          // this.$store.commit('Loading_State', true);;
         })
         .catch(function () {
           this.$store.commit('Toast_State', {
@@ -323,7 +323,7 @@ export default {
             color: 'error',
             msg: 'SMS not sent',
           });
-          // this.loading = true;
+          // this.$store.commit('Loading_State', true);;
         });
     },
 

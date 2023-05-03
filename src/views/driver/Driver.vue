@@ -764,7 +764,7 @@ export default {
       formData.append('password', this.user.password);
       formData.append('password_confirmation', this.user.password_confirmation);
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post('driver', formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
@@ -772,7 +772,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.closeAddModal();
                 this.user = {};
                 this.imageUrl = '';
@@ -788,7 +788,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -818,7 +818,7 @@ export default {
         })
         .then((res) => {
           if (res.data.code == 200) {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Loading_State', false);
             this.data = res.data.data.data;
             this.pagination = res.data.data.pagination;
@@ -865,7 +865,7 @@ export default {
       formData.append('_method', 'PUT');
 
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post(`driver/${this.edit_driver.id}`, formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
@@ -873,7 +873,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.closeUpdateModal();
                 this.imageUrl = '';
                 this.imageUrl = '';
@@ -888,7 +888,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -917,13 +917,13 @@ export default {
     },
 
     deleteItemConfirm() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .delete(`driver/${this.userID}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.$store.commit('modalDelete_State', false);
               this.fetchData();
               this.$store.commit('Toast_State', {
@@ -941,17 +941,17 @@ export default {
             msg: error.response ? error.response.data.message : 'Something went wrong',
           });
           this.$store.commit('modalDelete_State', false);
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
         });
     },
     switchStatus(id) {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .post(`driver/${id}/switch-status`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.fetchData();
               this.$store.commit('Toast_State', {
                 value: true,
@@ -962,7 +962,7 @@ export default {
           }
         })
         .catch((error) => {
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
           this.$store.commit('Toast_State', {
             value: true,
             color: 'error',

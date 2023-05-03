@@ -112,13 +112,13 @@ export default {
       this.$store.commit('modalDelete_State', false);
     },
     deleteItemConfirm() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .delete(`request-company/${this.itemId}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.closeDelete();
               this.$store.commit('Toast_State', {
                 value: true,
@@ -131,7 +131,7 @@ export default {
         })
         .catch(() => {
           this.$store.commit('modalDelete_State', false);
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
         });
     },
 

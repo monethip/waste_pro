@@ -755,7 +755,7 @@ export default {
       }
       formData.append('_method', 'PUT');
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post(`customer/${this.$route.params.id}`, formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
@@ -764,7 +764,7 @@ export default {
             if (res.data.code == 200) {
               setTimeout(() => {
                 this.data = {};
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.$store.commit('Toast_State', {
                   value: true,
                   color: 'success',
@@ -789,7 +789,7 @@ export default {
                 this.server_errors[key] = customer[0];
               }
             }
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
           });
       }
     },
@@ -886,7 +886,7 @@ export default {
     addMoreVillageDetail() {
       if (this.itemDetailValue != '') {
         this.itemDetailValues.push(this.itemDetailValue);
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post(`address/village/${this.selectedVillage}/village-detail`, {
             name: this.itemDetailValue,
@@ -895,7 +895,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.addItemDetail = false;
                 this.selectedDetail = '';
                 this.fetchVillageDetail();
@@ -909,7 +909,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',

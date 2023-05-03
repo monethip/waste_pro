@@ -113,12 +113,12 @@ export default {
     async submitLogin() {
       if (this.$refs.form.validate() === true) {
         try {
-          this.loading = true;
+          this.$store.commit('Loading_State', true);
           await this.$store.dispatch('auth/login', this.user);
         } catch (error) {
           this.$store.commit('Toast_State', this.errors);
         } finally {
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
         }
       }
     },

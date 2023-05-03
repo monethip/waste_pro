@@ -601,7 +601,7 @@ export default {
         })
         .then((res) => {
           if (res.data.code === 200) {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Loading_State', false);
             this.salesData = res.data.data;
           }

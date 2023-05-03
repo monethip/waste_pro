@@ -1000,13 +1000,13 @@ export default {
     },
 
     deleteItemConfirm() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .delete(`customer/${this.customerId}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.$store.commit('modalDelete_State', false);
               this.fetchData();
               this.$store.commit('Toast_State', {
@@ -1018,7 +1018,7 @@ export default {
           }
         })
         .catch((error) => {
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
           this.$store.commit('Toast_State', {
             value: true,
             color: 'error',
@@ -1036,14 +1036,14 @@ export default {
       const data = new FormData();
       data.append('file', this.file);
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post('import-customer', data, {
             headers: { 'Content-Type': 'multipart/form-data' },
           })
           .then((res) => {
             if (res.data.code == 200) {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.errors = res.data.data.errors;
               this.successes = res.data.data.data;
               this.file = null;
@@ -1057,7 +1057,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -1075,7 +1075,7 @@ export default {
       }
     },
     exportData() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .get('import-example', {
           params: queryOption([{ example_type: 'import_customer' }]),
@@ -1083,11 +1083,11 @@ export default {
         .then((res) => {
           if (res.data.code == 200) {
             window.open(res.data.data.download_link);
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
           }
         })
         .catch((error) => {
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status == 422) {
             this.$store.commit('Toast_State', {
               value: true,
@@ -1116,13 +1116,13 @@ export default {
     },
     // Change package status
     switchStatus(id) {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .post(`customer/${id}/switch-status`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.fetchData();
               this.$store.commit('Toast_State', {
                 value: true,
@@ -1133,7 +1133,7 @@ export default {
           }
         })
         .catch((error) => {
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
           this.$store.commit('Toast_State', {
             value: true,
             color: 'error',
@@ -1154,7 +1154,7 @@ export default {
         'YYYY-MM-DD',
       );
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post(`customer/${this.customerId}/add-package`, {
             package_id: this.selectedPackage,
@@ -1164,7 +1164,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.closeAddModal();
                 this.selectedPackage = '';
                 this.customerId = '';
@@ -1179,7 +1179,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -1211,7 +1211,7 @@ export default {
     },
     changePackage() {
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post(`customer/${this.change_package.id}/change-package`, {
             package_id: this.change_package.package_id,
@@ -1219,7 +1219,7 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.closeChangeModal();
                 this.selectedPackage = '';
                 this.customerId = '';
@@ -1234,7 +1234,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',

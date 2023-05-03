@@ -495,13 +495,13 @@ export default {
       this.confirmDialog = false;
     },
     confirmPayment() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .put(`confirm-payment/${this.editItem.id}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.$store.commit('Toast_State', {
                 value: true,
                 color: 'success',
@@ -514,11 +514,11 @@ export default {
         })
         .catch(() => {
           this.closeConfirmModal();
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
         });
     },
     confirmReject() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .put(`reject-payment/${this.editItem.id}`, {
           reject_reason_id: this.reject_reason_id,
@@ -527,7 +527,7 @@ export default {
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.$store.commit('Toast_State', {
                 value: true,
                 color: 'success',
@@ -539,7 +539,7 @@ export default {
           }
         })
         .catch((error) => {
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
           this.$store.commit('Toast_State', {
             value: true,
             color: 'error',

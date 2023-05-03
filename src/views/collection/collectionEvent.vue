@@ -978,13 +978,13 @@ export default {
         // formData.append("bcel_reference_number", this.bcel_reference_number);
         formData.append('_method', 'PUT');
         if (this.$refs.form.validate() == true) {
-          this.loading = true;
+          this.$store.commit('Loading_State', true);
           this.$axios
             .post(`pay-collection-event/${this.payment.id}`, formData)
             .then((res) => {
               if (res.data.code == 200) {
                 setTimeout(() => {
-                  this.loading = false;
+                  this.$store.commit('Loading_State', false);
                   this.paymentConfirmModal(this.payment);
                   this.closeAddModal();
                   this.fetchData();
@@ -998,7 +998,7 @@ export default {
               }
             })
             .catch((error) => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.$store.commit('Toast_State', {
                 value: true,
                 color: 'error',
@@ -1024,13 +1024,13 @@ export default {
 
     confirmPayment() {
       if (this.confirmType == '0') {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .put(`confirm-collection-event-payment/${this.confirm.id}`)
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.fetchData();
                 this.$store.commit('Toast_State', {
                   value: true,
@@ -1043,20 +1043,20 @@ export default {
           })
           .catch(() => {
             this.closeConfirmModal();
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
           });
       } else if (this.confirmType == '1') {
         const data = new FormData();
         data.append('reject_reason_id', this.reject_reason_id);
         data.append('description', this.description);
         data.append('_method', 'PUT');
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post(`reject-collection-event-payment/${this.confirm.id}`, data)
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.fetchData();
                 this.$store.commit('Toast_State', {
                   value: true,
@@ -1068,7 +1068,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',
@@ -1101,13 +1101,13 @@ export default {
     //   data.append("reject_reason_id", this.reject_reason_id);
     //   data.append("description", this.description);
     //   data.append("_method", "PUT");
-    //   this.loading = true;
+    //   this.$store.commit('Loading_State', true);;
     //   this.$axios
     //     .post("reject-collection-event-payment/" + this.payment.id, data)
     //     .then((res) => {
     //       if (res.data.code == 200) {
     //         setTimeout(() => {
-    //           this.loading = false;
+    //           this.$store.commit('Loading_State', false);;
     //           this.$store.commit("Toast_State", {
     //             value: true,
     //             color: "success",
@@ -1119,7 +1119,7 @@ export default {
     //       }
     //     })
     //     .catch((error) => {
-    //       this.loading = false;
+    //       this.$store.commit('Loading_State', false);;
     //       this.$store.commit("Toast_State", {
     //         value: true,
     //         color: "error",

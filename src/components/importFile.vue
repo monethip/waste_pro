@@ -59,13 +59,13 @@ export default {
       const formData = new FormData();
       formData.append('file', this.filename);
       if (this.$refs.form.validate() == true) {
-        this.loading = true;
+        this.$store.commit('Loading_State', true);
         this.$axios
           .post('import-driver', formData)
           .then((res) => {
             if (res.data.code == 200) {
               setTimeout(() => {
-                this.loading = false;
+                this.$store.commit('Loading_State', false);
                 this.filename = null;
                 this.reset();
                 this.$store.commit('Toast_State', {
@@ -77,7 +77,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.loading = false;
+            this.$store.commit('Loading_State', false);
             this.$store.commit('Toast_State', {
               value: true,
               color: 'error',

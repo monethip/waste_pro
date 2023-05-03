@@ -261,13 +261,13 @@ export default {
     },
 
     deleteItemConfirm() {
-      this.loading = true;
+      this.$store.commit('Loading_State', true);
       this.$axios
         .delete(`customer/${this.customerId}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.toast.msg = res.data.message;
               this.$store.commit('Toast_State', this.toast);
               this.$store.commit('modalDelete_State', false);
@@ -279,7 +279,7 @@ export default {
           this.fetchData();
           this.$store.commit('Toast_State', this.toast_error);
           this.$store.commit('modalDelete_State', false);
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
         });
     },
     createPage() {

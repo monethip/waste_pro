@@ -221,13 +221,13 @@ export default {
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.loading = false;
+              this.$store.commit('Loading_State', false);
               this.variation = res.data.data;
             }, 300);
           }
         })
         .catch((error) => {
-          this.loading = false;
+          this.$store.commit('Loading_State', false);
           this.fetchData();
           if (error.response && error.response.status == 422) {
             const obj = error.response.data.errors;
