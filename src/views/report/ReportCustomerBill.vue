@@ -155,6 +155,7 @@
               item-value="id"
               label="ເລືອກແພັກເກດ"
               outlined
+              clearable
             />
           </v-col>
         </v-row>
@@ -573,7 +574,6 @@ export default {
   },
   computed: {
     packageList() {
-      console.log(this.packages);
       return concatPackage(this.packages);
     },
     allMonths() {
@@ -666,9 +666,6 @@ export default {
   watch: {
     created_by() {
       if (!this.firstLoad) this.fetchData();
-    },
-    selectedPackage(value) {
-      console.log(value, typeof value);
     },
   },
   async created() {
@@ -767,7 +764,6 @@ export default {
         this.pagination = res.data.data.data.pagination;
         this.sumData = res.data.data.sum;
       } else {
-        console.log(res.data);
         window.open(res.data.data.download_link);
       }
       this.$store.commit('Loading_State', false);
