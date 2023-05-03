@@ -23,7 +23,7 @@ export default (roles, allrequired = false) => {
     if (allrequired) canEnter = roles.every((role) => roleUsers.includes(role));
 
     // Permission ຖືກຕ້ອງອັນໃດອັນໜ່ິງກະເຮັດວຽກ Function ນີ້
-    else canEnter = roleUsers.filter((role) => roles.includes(role)).length > 0;
+    else canEnter = roleUsers.filter((role) => roles.includes(role)).length;
   }
 
   // ກໍລະນີ Permission ບໍ່ຖືກຕ້ອງອັນໃດເລີຍລະບົບຈະ (Return True) ອອກໄປ

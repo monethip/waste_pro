@@ -279,7 +279,7 @@ export default {
       this.$store.commit('modalDelete_State', false);
     },
     deleteItem() {
-      if (this.selectedRows.length > 0) {
+      if (this.selectedRows.length) {
         this.$store.commit('modalDelete_State', true);
       }
     },
@@ -307,7 +307,7 @@ export default {
     },
 
     exportRoutePlan() {
-      if (this.customers.length > 0) {
+      if (this.customers.length) {
         this.loading = true;
         this.$axios
           .post(

@@ -645,7 +645,7 @@ export default {
     },
     // deleteItem(index) {
     //   this.customerIndex = index;
-    //   // if (this.selectedRows.length > 0) {
+    //   // if (this.selectedRows.length) {
     //   this.$store.commit("modalDelete_State", true);
     //   // }
     // },
@@ -716,7 +716,7 @@ export default {
       formData.append('name', this.plan.name);
       formData.append('_method', 'PUT');
 
-      if (this.customers.length > 0) {
+      if (this.customers.length) {
         this.loading = true;
         this.$axios
           .post(`update-route-plan/${this.$route.params.id}`, formData, {

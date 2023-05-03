@@ -489,7 +489,7 @@ export default {
     },
     detailStatuses() {
       const data = [];
-      if (this.summaryDetails.length > 0) {
+      if (this.summaryDetails.length) {
         for (const [key, value] of Object.entries(this.summaryDetails[0])) {
           if (value.count_billing !== undefined) {
             data.push({
@@ -509,7 +509,7 @@ export default {
           value: 'billing_type',
         },
       ];
-      if (this.detailStatuses.length > 0) {
+      if (this.detailStatuses.length) {
         header = [header, ...this.detailStatuses];
       }
       return header;

@@ -290,7 +290,7 @@
           class="group-menu"
         >
           <v-list-group
-            v-if="item.menu.length > 0"
+            v-if="item.menu.length"
             class="group-menu-icon"
             :prepend-icon="item.icon"
             no-action

@@ -530,7 +530,7 @@ export default {
       return this.selectedVillage.length === this.villages.length;
     },
     selectedSomeVillage() {
-      return this.selectedVillage.length > 0 && !this.selectedAllVillage;
+      return this.selectedVillage.length && !this.selectedAllVillage;
     },
     icon() {
       if (this.selectedAllVillage) return 'mdi-close-box';
@@ -759,7 +759,7 @@ export default {
 
     createPage() {
       //  var a = [];
-      if (this.selectedRows.length > 0) {
+      if (this.selectedRows.length) {
         this.$router.push({
           name: 'CreateRoutePlanCompany',
           params: {

@@ -349,7 +349,7 @@ export default {
     },
     deleteItem(index) {
       this.customerIndex = index;
-      // if (this.selectedRows.length > 0) {
+      // if (this.selectedRows.length) {
       this.$store.commit('modalDelete_State', true);
       // }
     },
@@ -390,7 +390,7 @@ export default {
       this.customers.map((item) => {
         selectedCustomer.push(item.id);
       });
-      if (this.customers.length > 0) {
+      if (this.customers.length) {
         this.loading = true;
         this.$axios
           .post(

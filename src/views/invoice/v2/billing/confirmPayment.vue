@@ -112,7 +112,7 @@
           vertical
         />
         <v-spacer />
-        <!--        <v-btn v-if="selectedRows.length > 0" class="btn-primary" :loading="loading" :disabled="loading" @click="approveAny">ອະນຸມັດບິນ</v-btn>-->
+        <!--        <v-btn v-if="selectedRows.length" class="btn-primary" :loading="loading" :disabled="loading" @click="approveAny">ອະນຸມັດບິນ</v-btn>-->
         <!--          <v-text-field-->
         <!--            outlined-->
         <!--            dense-->
@@ -722,7 +722,7 @@ export default {
       }
     },
     async approveAny() {
-      if (this.selectedRows.length > 0) {
+      if (this.selectedRows.length) {
         const id = this.selectedRows.map((row) => row.id);
         this.loading = true;
         await this.$axios

@@ -124,7 +124,7 @@
         />
         <v-spacer />
         <v-btn
-          v-if="selectedRows.length > 0"
+          v-if="selectedRows.length"
           class="btn-primary elevation-0"
           :loading="loading"
           :disabled="loading"
@@ -1122,7 +1122,7 @@ export default {
       window.open(route.href, '_blank');
     },
     async approveAny() {
-      if (this.selectedRows.length > 0) {
+      if (this.selectedRows.length) {
         const id = this.selectedRows.map((row) => row.id);
         this.loading = true;
         await this.$axios

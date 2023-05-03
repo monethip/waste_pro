@@ -263,7 +263,7 @@
                             </tr>
                           </tbody>
 
-                          <v-simple-table v-if="date.events.length > 0">
+                          <v-simple-table v-if="date.events.length">
                             <thead>
                               <tr>
                                 <th

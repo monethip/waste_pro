@@ -762,7 +762,7 @@ export default {
       }
     },
     async approveAny() {
-      if (this.selectedRows.length > 0) {
+      if (this.selectedRows.length) {
         const id = this.selectedRows.map((row) => row.id);
         this.loading = true;
         await this.$axios

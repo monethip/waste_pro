@@ -625,7 +625,7 @@ export default {
     detailStatuses() {
       const data = [];
 
-      if (this.summaryDetails.length > 0) {
+      if (this.summaryDetails.length) {
         for (const [key, value] of Object.entries(this.summaryDetails[0])) {
           if (value.count_billing !== undefined) {
             data.push({
@@ -645,7 +645,7 @@ export default {
           value: 'package_name',
         },
       ];
-      if (this.detailStatuses.length > 0) {
+      if (this.detailStatuses.length) {
         header = [header, ...this.detailStatuses];
       }
       return header;
@@ -816,7 +816,7 @@ export default {
         { per_page: 100 },
         { page },
         { without_month_info: true },
-            { without_billing_summary: true },
+        { without_billing_summary: true },
         { sale_id: this.selectedSale },
         { payment_method: this.selectedPaymentMethod },
         { date_method: this.selectedBillDate },

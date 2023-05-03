@@ -352,7 +352,7 @@
                 </v-icon>
 
                 <v-icon
-                  v-if="item.user.billings.length > 0"
+                  v-if="item.user.billings"
                   small
                   class="mr-2"
                   @click="viewCustomerBill(item.id)"

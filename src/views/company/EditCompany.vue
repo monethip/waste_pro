@@ -59,7 +59,7 @@
 
             <v-row>
               <div
-                v-if="image_list.length > 0"
+                v-if="image_list.length"
                 style="display: inline-flex"
               >
                 <v-col

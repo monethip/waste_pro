@@ -305,7 +305,7 @@
             </v-col>
           </v-row>
 
-          <v-row v-if="invoice.image_payments.length > 0">
+          <v-row v-if="invoice.image_payments.length">
             <v-col>
               <h3
                 v-if="invoice.image_payments"

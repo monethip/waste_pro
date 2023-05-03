@@ -125,7 +125,7 @@
             <v-list-item ripple @click="toggle">
               <v-list-item-action>
                 <v-icon
-                  :color="selectedVillage.length > 0 ? 'indigo darken-4' : ''"
+                  :color="selectedVillage.length ? 'indigo darken-4' : ''"
                 >
                   {{ icon }}
                 </v-icon>
@@ -171,7 +171,7 @@
             <v-list-item ripple @click="toggle">
               <v-list-item-action>
                 <v-icon
-                  :color="selectedVillage.length > 0 ? 'indigo darken-4' : ''"
+                  :color="selectedVillage.length ? 'indigo darken-4' : ''"
                 >
                   {{ icon }}
                 </v-icon>
@@ -376,7 +376,7 @@ export default {
 
     createPage() {
       //  var a = [];
-      if (this.customers.length > 0 && this.selectedVillage.length > 0) {
+      if (this.customers.length && this.selectedVillage.length) {
         this.$router.push({
           name: 'CreateExportPlanCompany',
           params: {

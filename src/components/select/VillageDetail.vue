@@ -1,5 +1,5 @@
 <template>
-  <v-row v-if="selectedVillage.length > 0">
+  <v-row v-if="selectedVillage.length">
     <v-col
       v-for="detail in filteredDetails"
       :key="detail.variation_id"
@@ -89,8 +89,6 @@ export default {
           details: variationItem,
         });
       }
-
-      console.log('dd', this.villageDetail);
     },
     async fetchVillageVariation() {
       this.$store.commit('Loading_State', true);

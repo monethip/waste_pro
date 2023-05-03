@@ -378,7 +378,7 @@
                           </v-list>
                         </td>
 
-                        <template v-if="customer.user.billings && customer.user.billings.length > 0">
+                        <template v-if="customer.user.billings && customer.user.billings.length">
                           <td>
                             <v-row>
                               <a
