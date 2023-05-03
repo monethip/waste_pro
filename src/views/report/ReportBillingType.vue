@@ -418,7 +418,7 @@ export default {
         { text: 'ສະຖານະ', value: 'status' },
         { text: 'ປະເພດການຈ່າຍ', value: 'payment_method_la' },
         { text: 'ຜູ້ຈ່າຍ', value: 'paided_by_user.full_name' },
-        { text: 'ປະເພດບິນ', value: 'display_type' },
+        { text: 'ປະເພດບິນ', value: 'display_type_la' },
         { text: 'ຈຳນວນ', value: 'total' },
 
         { text: 'ລູກຄ້າ', value: 'display_customer_name' },
