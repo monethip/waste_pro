@@ -437,11 +437,21 @@ export default {
       customerStatus: [
         {
           id: 1,
+          value: 'no_calendar',
+          name: 'ມີແຜນເດີນລົດເກັບ',
+        },
+        {
+          id: 2,
           value: 'calendar',
           name: 'ຍັງບໍ່ມີແຜນເດີນລົດເກັບ',
         },
         {
-          id: 2,
+          id: 3,
+          value: 'no_route_plan',
+          name: 'ມີເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ',
+        },
+        {
+          id: 4,
           value: 'route_plan',
           name: 'ຍັງບໍ່ມີເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ',
         },

@@ -12,6 +12,7 @@
         :route="card.route"
         :icon="card.icon"
         :icon_color="card.icon_color"
+        :unit_count="card.unit_count"
       />
     </v-col>
   </v-row>

@@ -42,7 +42,7 @@
         :color="bg_color"
         outlined
       >
-        {{ Intl.NumberFormat().format(billing_count) }} ບິນ
+        {{ Intl.NumberFormat().format(billing_count) }} {{ unit_count ? unit_count : "ບິນ" }}
       </v-chip>
     </v-card-title>
     <v-card-text v-if="total">
@@ -63,6 +63,7 @@ export default {
     'route',
     'icon',
     'icon_color',
+    'unit_count',
   ],
   data() {
     return {};
