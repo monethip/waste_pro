@@ -67,7 +67,7 @@
                 ລາຍລະອຽດ:
                 <span>{{ invoice.content }}</span>
               </h3>
-              <h3>ປະເພດບິນ: {{ filterBillingType(invoice.display_type) }}</h3>
+              <h3>ປະເພດບິນ: {{ filterBillingType(invoice.display_type_la) }}</h3>
               <h3>
                 ເດືອນ:
                 {{ invoice.bill_month }}
