@@ -282,7 +282,7 @@ export default {
   created() {
     this.fetchData();
   },
-   methods: {
+  methods: {
     openRoute(item) {
       const name = item.route_plan_detail.customer.customer_type == 'home'
         ? 'ViewClient'
