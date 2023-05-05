@@ -53,8 +53,30 @@
         </v-row>
       </v-col>
     </v-row>
+    <v-row>
+      <v-col>
+        <v-text-field
+          v-model="search"
+          outlined
+          dense
+          clearable
+          prepend-inner-icon="mdi-magnify"
+          label="ຄົ້ນຫາ"
+          type="text"
+        />
+      </v-col>
+    </v-row>
     <div>
       <v-simple-table v-if="dragEnabled">
+        <thead>
+          <tr>
+            <td />
+            <td>priority</td>
+            <td>customer_id</td>
+            <td>full_name</td>
+            <td>phone</td>
+          </tr>
+        </thead>
         <draggable
           :list="allCalendars"
           tag="tbody"
@@ -67,8 +89,17 @@
             <td>{{ calendar.priority }}</td>
             <td>
               {{
-                calendar.route_plan_detail.customer.customer_type = 'company' ?
-                    calendar.route_plan_detail.customer.company_name : calendar.route_plan_detail.customer.name
+                calendar.route_plan_detail.customer.customer_id
+              }}
+            </td>
+            <td>
+              {{
+                calendar.route_plan_detail.customer.full_name
+              }}
+            </td>
+            <td>
+              {{
+                calendar.route_plan_detail.customer.user.phone
               }}
             </td>
           </tr>
@@ -242,6 +273,7 @@ export default {
         { name: 'Joao', id: 1 },
         { name: 'Jean', id: 2 },
       ],
+      search: "",
       dragging: false,
       dragEnabled: false,
       dialog: false,
@@ -447,6 +479,12 @@ export default {
         this.dialog = false;
       }
     },
+  },
+  computed: {
+    filteredData() {
+      return this.calendars.filter((item) => item.route_plan_detail.customer.customer_id.includes(this.search) || item.route_plan_detail.customer.full_name.includes(this.search) || item.route_plan_detail.customer.user.phone.includes(this.search));
+    },
+
   },
 };
 </script>

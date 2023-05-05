@@ -23,6 +23,19 @@
       <!--        </v-text-field>-->
       <!--      </v-col>-->
     </v-row>
+    <v-row>
+      <v-col>
+        <v-text-field
+          v-model="search"
+          outlined
+          dense
+          clearable
+          prepend-inner-icon="mdi-magnify"
+          label="ຄົ້ນຫາ"
+          type="text"
+        />
+      </v-col>
+    </v-row>
     <div>
       <v-data-table
         v-if="successes"
@@ -32,14 +45,11 @@
         :disable-pagination="true"
         hide-default-footer
       >
-        <template v-slot:item.customer="{ item }">
-          <div v-if="(item.route_plan_detail.customer.customer_type = 'company')">
-            {{ item.route_plan_detail.customer.company_name }}
-          </div>
-          <div>
-            {{ item.route_plan_detail.customer.name }}
-            {{ item.route_plan_detail.customer.surname }}
-          </div>
+        <template v-slot:item.route_plan_detail.customer.full_name="{ item }">
+          <a
+            href="#"
+            @click="openRoute(item)"
+          >{{ item.route_plan_detail.customer.full_name }}</a>
         </template>
         <template v-slot:item.created_at="{ item }">
           <div>
