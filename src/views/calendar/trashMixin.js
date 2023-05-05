@@ -51,8 +51,6 @@ export default {
       this.$axios
         .get(`plan-calendar/${this.$route.params.id}/detail`, {
           params: {
-            page: this.pagination.current_page,
-            per_page: this.per_page,
             statuses: this.statuses,
           },
         })
@@ -61,11 +59,9 @@ export default {
             setTimeout(() => {
               this.$store.commit('Loading_State', false);
               this.calendars = [],
-              this.pagination = [],
               this.calendars = res.data.data.data;
               this.summary = res.data.data.summary;
-              this.countPause = res.data.data.count_pause;
-              this.pagination = res.data.data.pagination;
+              this.countPause = res.data.count_pause;
             }, 100);
           }
         })

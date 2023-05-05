@@ -52,20 +52,6 @@
           </v-col>
         </v-row>
       </v-col>
-
-      <!--      <v-col>-->
-      <!--        <v-text-field-->
-      <!--          outlined-->
-      <!--          dense-->
-      <!--          clearable-->
-      <!--          prepend-inner-icon="mdi-magnify"-->
-      <!--          label="Search"-->
-      <!--          type="text"-->
-      <!--          v-model="search"-->
-      <!--          @keyup.enter="Search()"-->
-      <!--        >-->
-      <!--        </v-text-field>-->
-      <!--      </v-col>-->
     </v-row>
     <div>
       <v-simple-table v-if="dragEnabled">
@@ -264,7 +250,9 @@ export default {
 
       headers: [
         { text: 'ລຳດັບຄວາມສຳຄັນ', value: 'priority' },
+        { text: 'ໄອດີ', value: 'route_plan_detail.customer.customer_id' },
         { text: 'ລູກຄ້າ', value: 'route_plan_detail.customer.full_name' },
+        { text: 'ເບີໂທ', value: 'route_plan_detail.customer.user.phone' },
         {
           text: 'ສະຖານະເກັບ',
           value: 'item.route_plan_detail.customer.can_collect',

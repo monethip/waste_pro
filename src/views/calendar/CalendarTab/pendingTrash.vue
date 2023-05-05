@@ -120,8 +120,10 @@ export default {
       statuses: ['pending'],
 
       headers: [
-        { text: 'ລຳດັບ', value: 'route_plan_detail.priority' },
-        { text: 'ລູກຄ້າ', value: 'customer' },
+        { text: 'ລຳດັບຄວາມສຳຄັນ', value: 'priority' },
+        { text: 'ໄອດີ', value: 'route_plan_detail.customer.customer_id' },
+        { text: 'ລູກຄ້າ', value: 'route_plan_detail.customer.full_name' },
+        { text: 'ເບີໂທ', value: 'route_plan_detail.customer.user.phone' },
         // { text: "ເລີ່ມວັນທີ", value: "route_plan_detail.customer.start_month" },
 
         {
