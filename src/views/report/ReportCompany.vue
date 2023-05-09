@@ -363,7 +363,7 @@
                   </v-icon>
 
                   <v-icon
-                    v-if="item.user.billings.length"
+                    v-if="item.user && item.user.billings_count"
                     small
                     class="mr-2"
                     @click="viewCustomerBill(item.id)"
@@ -553,6 +553,7 @@ export default {
         { without: this.selectedCustomerStatus },
         { district_id: this.selectedDistrict },
         { month_bill: this.selected_month },
+        { with_count_billing: true },
       ]);
     },
     allMonths() {
