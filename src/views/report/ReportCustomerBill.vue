@@ -317,6 +317,9 @@
                           </v-row>
                         </td>
                         <td :rowspan="customer.user.billings && customer.user.billings.length ? customer.user.billings.length : 1">
+                          {{ customer.customer_cost }}
+                        </td>
+                        <td :rowspan="customer.user.billings && customer.user.billings.length ? customer.user.billings.length : 1">
                           <v-icon>
                             {{ customer.customer_type == 'home' ? 'mdi-account-group' : 'mdi-office-building' }}
                           </v-icon>
@@ -507,6 +510,7 @@ export default {
       hasBillingOnly: '',
       start_paid_month: false,
       lastMonthBillPaid: '',
+      showNoBill: false,
       created_by: '',
       saleData: null,
       packages: [],
@@ -558,6 +562,7 @@ export default {
         {
           text: 'ລູກຄ້າ', value: 'full_name', align: 'center', divider: true,
         },
+        { text: 'ມູນຄ່າສັນຍາ', value: 'customer_cost' },
         { text: 'ປະເພດບໍລິການ', value: 'cost_by_la' },
         { text: 'ຍອດລວມ', value: '' },
         { text: 'ໄອດີບິນ', value: 'billings_id' },
@@ -605,7 +610,7 @@ export default {
         }];
       }
 
-      return [
+      const all = [
         {
           status_la: 'ລວມ',
           total: this.sumData.all?.total?.total,
@@ -627,14 +632,21 @@ export default {
           bg_color: 'orange',
           route: this.billRoute(this.lastMonthBillPaid, 'unpaid'),
         },
-        {
-          status_la: 'ບິນຍັງບໍ່ອອກ',
-          total: this.sumData.no_bill?.package_price,
-          count_billing: this.sumData.no_bill?.count_customers,
-          bg_color: 'red',
-          route: this.billRoute(this.lastMonthBillPaid, 'noBill'),
-        },
       ];
+
+      if (this.showNoBill) {
+        all.push(
+          {
+            status_la: 'ບິນຍັງບໍ່ອອກ',
+            total: this.sumData.no_bill?.package_price,
+            count_billing: this.sumData.no_bill?.count_customers,
+            bg_color: 'red',
+            route: this.billRoute(this.lastMonthBillPaid, 'noBill'),
+          },
+        );
+      }
+
+      return all;
     },
     param() {
       return queryOptions([
@@ -755,6 +767,7 @@ export default {
     },
     async fetchData(isExport = false) {
       this.$store.commit('Loading_State', true);
+      this.showNoBill = !!this.lastMonthBillPaid;
       const res = await this.$axios.get('v2/report-billing-for-customer', {
         params: { ...this.param, ...{ download: isExport ? 'excel' : null } },
       }).catch((err) => console.log(err));

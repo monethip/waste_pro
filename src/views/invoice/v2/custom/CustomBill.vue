@@ -25,8 +25,32 @@
           outlined
           dense
           clearable
-          prepend-inner-icon="mdi-magnify"
+          prepend-inner-icon="mdi-account"
           label="ຊື່"
+          type="text"
+          @keyup.enter="Search()"
+        />
+      </v-col>
+      <v-col>
+        <v-text-field
+          v-model="searchCustomerId"
+          outlined
+          dense
+          clearable
+          prepend-inner-icon="mdi-account"
+          label="ໄອດີລູກຄ້າ"
+          type="text"
+          @keyup.enter="Search()"
+        />
+      </v-col>
+      <v-col>
+        <v-text-field
+          v-model="searchPhone"
+          outlined
+          dense
+          clearable
+          prepend-inner-icon="mdi-phone"
+          label="ເບີໂທ"
           type="text"
           @keyup.enter="Search()"
         />
@@ -37,12 +61,13 @@
           outlined
           dense
           clearable
-          prepend-inner-icon="mdi-magnify"
-          label="ໄອດີ"
+          prepend-inner-icon="mdi-note-text-outline"
+          label="ໄອດີບິນ"
           type="text"
           @keyup.enter="Search()"
         />
       </v-col>
+
       <v-col class="align-end text-end">
         <v-btn
           class="btn-primary mr-4"
@@ -283,6 +308,8 @@ export default {
       tab: null,
       invoices: [],
       billId: null,
+      searchPhone: "",
+      searchCustomerId: "",
       billingId: '',
       loading: false,
       calendarId: '',
@@ -409,6 +436,8 @@ export default {
             { page: this.pagination.current_page },
             { per_page: this.per_page },
             { filter: this.search },
+            { phone: this.searchPhone },
+            { customer_id: this.searchCustomerId },
             { billing_status: this.selectedPaymentStatus },
             { order_by: 'newest' },
             { id: this.billId },
