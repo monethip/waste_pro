@@ -767,7 +767,6 @@ export default {
     },
     async fetchData(isExport = false) {
       this.$store.commit('Loading_State', true);
-      this.showNoBill = !!this.lastMonthBillPaid;
       const res = await this.$axios.get('v2/report-billing-for-customer', {
         params: { ...this.param, ...{ download: isExport ? 'excel' : null } },
       }).catch((err) => console.log(err));
@@ -776,6 +775,7 @@ export default {
         this.customers = res.data.data.data.data;
         this.pagination = res.data.data.data.pagination;
         this.sumData = res.data.data.sum;
+        this.showNoBill = !!this.lastMonthBillPaid;
       } else {
         window.open(res.data.data.download_link);
       }
