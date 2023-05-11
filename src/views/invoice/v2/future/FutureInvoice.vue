@@ -557,6 +557,7 @@ export default {
             { page: this.pagination.current_page },
             { per_page: this.per_page },
             { filter: this.search },
+            { bill_id: this.billId },
             { phone: this.searchPhone },
             { customer_id: this.searchCustomerId },
             { billing_status: this.selectedPaymentStatus },

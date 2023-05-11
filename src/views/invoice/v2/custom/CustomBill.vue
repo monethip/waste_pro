@@ -440,7 +440,7 @@ export default {
             { customer_id: this.searchCustomerId },
             { billing_status: this.selectedPaymentStatus },
             { order_by: 'newest' },
-            { id: this.billId },
+            { bill_id: this.billId },
           ]),
         })
         .then((res) => {
