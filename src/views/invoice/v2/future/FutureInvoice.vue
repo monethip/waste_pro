@@ -22,10 +22,46 @@
           outlined
           dense
           clearable
-          prepend-inner-icon="mdi-magnify"
+          prepend-inner-icon="mdi-account"
           label="ຊື່"
           type="text"
-          @keyup.enter="Search()"
+          @keyup.enter="searchFunc()"
+        />
+      </v-col>
+      <v-col>
+        <v-text-field
+          v-model="searchCustomerId"
+          outlined
+          dense
+          clearable
+          prepend-inner-icon="mdi-account"
+          label="ໄອດີລູກຄ້າ"
+          type="text"
+          @keyup.enter="searchFunc()"
+        />
+      </v-col>
+      <v-col>
+        <v-text-field
+          v-model="searchPhone"
+          outlined
+          dense
+          clearable
+          prepend-inner-icon="mdi-phone"
+          label="ເບີໂທ"
+          type="text"
+          @keyup.enter="searchFunc()"
+        />
+      </v-col>
+      <v-col>
+        <v-text-field
+          v-model="billId"
+          outlined
+          dense
+          clearable
+          prepend-inner-icon="mdi-note-text-outline"
+          label="ໄອດີບິນ"
+          type="text"
+          @keyup.enter="searchFunc()"
         />
       </v-col>
       <v-col>
@@ -275,6 +311,9 @@ export default {
   },
   data() {
     return {
+      billId: null,
+      searchPhone: "",
+      searchCustomerId: "",
       billingId: '',
       tab: null,
       file: null,
@@ -327,31 +366,35 @@ export default {
           text: 'ລວມທັງໝົດ',
           value: 'total',
           align: 'center',
-          sortable: false,
+
         }, {
-          text: 'ລູກຄ້າ',
-          value: 'user',
+          text: 'ໄອດີລູກຄ້າ',
+          value: 'billing.user.customer.customer_id',
           width: '130',
-          sortable: false,
+        },
+        {
+          text: 'ລູກຄ້າ',
+          value: 'billing.user.customer.full_name',
+          width: '130',
         },
         {
           text: 'ເບີໂທ',
           value: 'billing.user.phone',
           width: '130',
-          sortable: false,
+
         },
         {
           text: 'ປະເພດລູກຄ້າ',
           value: 'customerType',
           width: '130',
-          sortable: false,
+
         },
         { text: 'ວັນທີສ້າງ', value: 'created_at', width: '120' },
 
         {
           text: 'ສະຖານະ',
           value: 'status',
-          sortable: false,
+
         },
         { text: '', value: 'actions', sortable: false },
       ],
@@ -361,11 +404,7 @@ export default {
     file() {
       this.errors = [];
     },
-    search(value) {
-      if (value == '') {
-        this.fetchData();
-      }
-    },
+
     selectedPaymentStatus() {
       this.pagination.current_page = '';
       this.fetchData();
@@ -375,6 +414,10 @@ export default {
     this.fetchData();
   },
   methods: {
+    searchFunc() {
+      this.pagination.current_page = '';
+      this.fetchData();
+    },
     openAddModal() {
       this.$store.commit('modalAdd_State', true);
     },
@@ -514,6 +557,8 @@ export default {
             { page: this.pagination.current_page },
             { per_page: this.per_page },
             { filter: this.search },
+            { phone: this.searchPhone },
+            { customer_id: this.searchCustomerId },
             { billing_status: this.selectedPaymentStatus },
             { order_by: 'newest' },
           ]),

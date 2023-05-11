@@ -361,32 +361,32 @@ export default {
           text: 'ລວມທັງໝົດ',
           value: 'total',
           align: 'center',
-          sortable: false,
         }, {
-          text: 'ລູກຄ້າ',
-          value: 'user',
+          text: 'ໄອດີລູກຄ້າ',
+          value: 'billing.user.customer.customer_id',
           width: '130',
-          sortable: false,
+        },
+        {
+          text: 'ລູກຄ້າ',
+          value: 'billing.user.customer.full_name',
+          width: '130',
         },
 
         {
           text: 'ເບີໂທ',
           value: 'billing.user.phone',
           width: '130',
-          sortable: false,
         },
         {
           text: 'ປະເພດລູກຄ້າ',
           value: 'customerType',
           width: '130',
-          sortable: false,
         },
         { text: 'ວັນທີສ້າງ', value: 'created_at', width: '120' },
 
         {
           text: 'ສະຖານະ',
           value: 'status',
-          sortable: false,
         },
         { text: '', value: 'actions', sortable: false },
       ],
