@@ -84,7 +84,7 @@
             <v-col>
               <h3>ຂໍ້ມູນລູກຄ້າ</h3>
               <a
-                v-if="invoice.user.customer"
+                v-if="invoice.user && invoice.user.customer"
                 href="#"
                 @click="viewCustomerDetail(invoice.user.customer)"
               >ໄອດີ: {{ customerDisplayId }}</a>
@@ -264,12 +264,12 @@
           <!--            </v-col>-->
           <!--          </v-row>-->
           <v-row>
-            <c-vo>
+            <v-col>
               <h3>
                 ເຄື່ອນໄຫວລ່າສຸດ:
                 {{ moment(invoice.updated_at).format("DD-MM-YY HH:mm:ss") }}
               </h3>
-            </c-vo>
+            </v-col>
           </v-row>
           <v-row>
             <v-col>
@@ -1186,6 +1186,7 @@ export default {
       this.$axios
         .post(`reject-billing/${this.invoice.id}`, data)
         .then((res) => {
+          this.paymentDialog = false;
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit('Loading_State', false);
@@ -1199,6 +1200,7 @@ export default {
           }
         })
         .catch((error) => {
+          this.paymentDialog = false;
           this.$store.commit('Loading_State', false);
           this.$store.commit('Toast_State', {
             value: true,
