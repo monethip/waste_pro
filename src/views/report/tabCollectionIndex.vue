@@ -156,7 +156,7 @@
                 <div v-if="summary">
                   <v-row
                     v-for="(sum, index) in summary"
-                    :key="index.id"
+                    :key="index"
                     class="mb-n6 mt-0"
                   >
                     <v-col class="sum-title">
@@ -252,7 +252,15 @@
                 </template>
                 <template v-slot:item.expect_trash="{ item }">
                   <v-chip
-                    v-if="item.expect_trash"
+                    v-if="item.package"
+                    outlined
+                    color="green"
+                  >
+                    {{ Intl.NumberFormat().format(item.package.package_size.bag) }}
+                    {{ getCustomerUnitFunc(item.cost_by) }}
+                  </v-chip>
+                  <v-chip
+                    v-else-if="item.expect_trash"
                     outlined
                     color="green"
                   >
