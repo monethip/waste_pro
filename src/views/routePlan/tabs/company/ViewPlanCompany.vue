@@ -448,7 +448,7 @@ export default {
       },
       markers: [],
       markerOptions: {
-        // eslint-disable-next-line global-require
+
         url: require('@coms/../../src/assets/pin1.svg'),
         zoomControl: true,
         mapTypeControl: false,
