@@ -67,6 +67,18 @@
 
         <v-col>
           <v-autocomplete
+            v-model="selectedRole"
+            :items="roles"
+            dense
+            item-text="name"
+            item-value="name"
+            label="ເລືອກບົດບາດຂອງເຊວ"
+            outlined
+          />
+        </v-col>
+
+        <v-col>
+          <v-autocomplete
             v-model="selectedSale"
             :items="employees"
             dense
@@ -257,6 +269,8 @@ export default {
       is_active_only: true,
       summary: [],
       summaryMoney: [],
+      selectedRole: "",
+      roles: [],
       defaultMoney: [
         {
           status_la: 'ລວມ',
@@ -340,7 +354,8 @@ export default {
     },
     employees() {
       const data = [];
-      for (const item of this.salesData) {
+      console.log(this.filteredEmployees);
+      for (const item of this.filteredEmployees) {
         let name = '';
         if (item.name) name += `${item.name} `;
         if (item.phone) name += `${item.phone} `;
@@ -353,6 +368,9 @@ export default {
         });
       }
       return data;
+    },
+    filteredEmployees() {
+      return this.salesData.filter((sale) => sale.roles.some((role) => role.name === this.selectedRole));
     },
   },
   watch: {
@@ -371,8 +389,12 @@ export default {
     selectedBillDate() {
       if (this.date_from || this.date_to) this.fetchData();
     },
+    selectedRole() {
+      if (!this.firstLoad) this.fetchData();
+    },
   },
   created() {
+    this.fetchRole();
     this.fetchSale();
     this.fetchData();
   },
@@ -396,6 +418,31 @@ export default {
             this.$store.commit('Loading_State', false);
             this.$store.commit('Loading_State', false);
             this.salesData = res.data.data;
+          }
+        })
+        .catch((error) => {
+          this.$store.commit('Loading_State', false);
+          if (error.response && error.response.status === 422) {
+            const obj = error.response.data.errors;
+            for (const [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
+            }
+          }
+        });
+    },
+    fetchRole() {
+      this.$store.commit('Loading_State', true);
+      this.$axios
+        .get('user-setting/role', {
+          params: queryOptions([
+            { only_sale: true },
+          ]),
+        })
+        .then((res) => {
+          if (res.data.code === 200) {
+            this.$store.commit('Loading_State', false);
+            this.$store.commit('Loading_State', false);
+            this.roles = res.data.data;
           }
         })
         .catch((error) => {
@@ -443,6 +490,7 @@ export default {
             { without_month_info: true },
             { without_billing_summary: true },
             { download: this.exportMode },
+            { selected_role: this.selectedRole },
             { sale_active_status: this.is_active_only ? 'active' : null },
           ]),
         })

@@ -16,7 +16,7 @@ import queryOptions from '../../Helpers/queryOption';
 export default {
   props: {
     label: {
-      default: 'ເລືອກເຊວທີ່ກ່ຽວຂ້ອງ',
+      default: 'ເລືອກເຊວທີ່ກ່ຽວຂ້ອງss',
       type: String,
     },
     firstSale: {
