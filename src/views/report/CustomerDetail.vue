@@ -676,7 +676,7 @@ export default {
       markers: [],
       currentPlace: null,
       markerOptions: {
-        // eslint-disable-next-line global-require
+
         url: require('@coms/../../src/assets/pin1.svg'),
         size: {
           width: 35,
