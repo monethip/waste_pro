@@ -782,11 +782,7 @@ export default {
       this.$store.commit('Loading_State', true);
       this.$axios
         .post(
-          'export-company/',
-          {
-            params: this.params,
-          },
-          // { responseType: "blob" }
+          'export-company', this.params,
         )
         .then((res) => {
           if (res.status == 200) {
