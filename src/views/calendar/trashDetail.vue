@@ -35,18 +35,19 @@
                 </v-icon>
               </v-list-item-icon>
               <v-list-item-content v-if="detail.route_plan_detail">
-                <v-list-item-title v-if="detail.route_plan_detail.customer.customer_type =='home'">
-                  {{ detail.route_plan_detail.customer.name }}
-                  {{
-                    detail.route_plan_detail.customer.surname
-                  }}
+                <v-list-item-title>
+                  {{ detail.route_plan_detail.customer.full_name }}
                 </v-list-item-title>
-                <v-list-item-title
-                  v-if="detail.route_plan_detail.customer.customer_type =='company'"
-                >
-                  {{ detail.route_plan_detail.customer.company_name }}
-                </v-list-item-title>
-                <v-list-item-subtitle>ຊື່</v-list-item-subtitle>
+                <v-list-item-subtitle>
+                  <v-icon x-small>
+                    mdi-account
+                  </v-icon> {{ detail.route_plan_detail.customer.customer_id }}
+                </v-list-item-subtitle>
+                <v-list-item-subtitle>
+                  <v-icon x-small>
+                    mdi-phone
+                  </v-icon> {{ detail.route_plan_detail.customer.user.phone }}
+                </v-list-item-subtitle>
               </v-list-item-content>
               <v-spacer />
               <v-list-item-icon>
