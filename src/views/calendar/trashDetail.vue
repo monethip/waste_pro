@@ -72,7 +72,7 @@
                 <v-list-item-title v-else-if="detail.collection_type == 'fix_cost'">
                   ມອບເໝົາ
                 </v-list-item-title>
-                <v-list-item-subtitle>ຈຳນວນ</v-list-item-subtitle>
+                <v-list-item-subtitle>{{ `${detail.plan_calendar.driver.name} ${detail.plan_calendar.driver.surname} (${detail.plan_calendar.driver.vehicle.car_id})` }}</v-list-item-subtitle>
                 <!--                <v-list-item-subtitle v-if="detail.route_plan_detail.customer.fix_cost">{{Intl.NumberFormat().format(detail.route_plan_detail.customer.fix_cost)}}</v-list-item-subtitle>-->
               </v-list-item-content>
             </v-list-item>
@@ -152,6 +152,9 @@
                         detail.status
                       }}
                     </v-chip>
+                  </v-list-item-subtitle>
+                  <v-list-item-subtitle>
+                    {{ detail.collected_at }}
                   </v-list-item-subtitle>
                 </div>
               </v-list-item-content>
