@@ -367,7 +367,7 @@
                               <td>
                                 <a
                                   href="#"
-                                  @click="openRoute(item)"
+                                  @click="openRoute(item, 'PlanCalendarDetail')"
                                 >{{ moment(item.date).format("DD-MM-YYYY") }}
                                 </a>
                               </td>
@@ -394,28 +394,35 @@
                               >
                                 -
                               </td>
+
                               <td>
-                                <div v-if="item.collection_type === 'bag' || item.collection_type === 'infect' || item.collection_type === '32km'">
-                                  {{ item.bag }} ຖົງ
-                                </div>
-                                <div v-if="item.collection_type === 'container'">
-                                  {{ item.container }} ຄອນເທັນເນີ
-                                </div>
-                                <div v-else-if="item.collection_type === 'chartered'">
-                                  {{ item.bag }} ຖົງ(ມອບເໝົາ)
-                                </div>
-                                <div v-else-if="item.collection_type === 'fix_cost'">
-                                  ບໍລິການເປັນຖ້ຽວ
-                                </div>
-                                <div v-else>
-                                  {{ item.collection_type }}
-                                </div>
+                                <a
+                                  href="#"
+                                  @click="openRoute(item, 'TrashDetail')"
+                                >
+                                  <div v-if="item.collection_type === 'bag' || item.collection_type === 'infect' || item.collection_type === '32km'">
+                                    {{ item.bag }} ຖົງ
+                                  </div>
+                                  <div v-if="item.collection_type === 'container'">
+                                    {{ item.container }} ຄອນເທັນເນີ
+                                  </div>
+                                  <div v-else-if="item.collection_type === 'chartered'">
+                                    {{ item.bag }} ຖົງ(ມອບເໝົາ)
+                                  </div>
+                                  <div v-else-if="item.collection_type === 'fix_cost'">
+                                    ບໍລິການເປັນຖ້ຽວ
+                                  </div>
+                                  <div v-else>
+                                    {{ item.collection_type }}
+                                  </div>
+                                </a>
                               </td>
 
                               <td>
                                 <v-chip
                                   :color="statusColor(item.status)"
                                   label
+                                  @click="openRoute(item, 'TrashDetail')"
                                 >
                                   {{
                                     item.status_la
@@ -843,13 +850,19 @@ export default {
     getBgColorFn(status) {
       return getBgColor(status);
     },
-    openRoute(item) {
+    openRoute(item, routeMode) {
+      const option = {};
+      if (routeMode == 'TrashDetail') {
+        option.plan_calendar = item.plan_calendar_id;
+        option.id = item.id;
+      } else {
+        option.id = item.plan_calendar_id;
+        option.planMonthId = item.plan_calendar.plan_month_id;
+      }
+
       const route = this.$router.resolve({
-        name: 'PlanCalendarDetail',
-        params: {
-          id: item.plan_calendar_id,
-          planMonthId: item.plan_calendar.plan_month_id,
-        },
+        name: routeMode,
+        params: option,
       });
       window.open(route.href);
     },

@@ -1,6 +1,7 @@
 import { GetOldValueOnInput } from '@/Helpers/GetValue';
 import moment from 'moment';
 import { getCustomerUnit } from '@/Helpers/Customer';
+import queryOptions from '../../Helpers/queryOption';
 
 export default {
   title() {
@@ -83,12 +84,11 @@ export default {
         { text: 'Id', value: 'customer_id', sortable: false },
         { text: 'ບໍລິສັດ', value: 'company_name' },
         { text: 'ປະເພດບໍລິການ', value: 'collection_type' },
-        // {
-        //     text: "Container",
-        //     value: "container",
-        //     sortable: false,
-        //     align: "center",
-        // },
+        {
+          text: "ຈຳນວນ",
+          value: "trash_amount",
+          align: "right",
+        },
         { text: 'ສະຖານທີ່', value: 'name', sortable: false },
         { text: 'ສະຖານະ', value: 'status', sortable: false },
         { text: 'ຂີ້ເຫຍື້ອຄາດໝາຍ', value: 'expect_trash', width: '200px' },
@@ -116,6 +116,12 @@ export default {
         default: return costBy;
       }
     },
+    getUnit(value) {
+      if (value == 'bag' || value == 'chartered' || value == '32km' || value == 'infect') return 'ຖົງ';
+      if (value == 'fix_cost') return 'ຖ້ຽວ';
+      if (value == 'container') return 'ຄອນເທັນເນີ';
+      return '';
+    },
     getTrashColor(item, amount) {
       if (!item.expect_trash || item.expect_trash > amount) return 'blue';
 
@@ -125,6 +131,42 @@ export default {
     },
     getCustomerUnitFunc(costBy) {
       return getCustomerUnit(costBy);
+    },
+    openRoute(item, routeMode) {
+      const option = {};
+      if (routeMode == 'TrashDetail') {
+        option.plan_calendar = item.plan_calendar_id;
+        option.id = item.key;
+      } else {
+        option.id = item.plan_calendar_id;
+        option.planMonthId = item.plan_month_id;
+      }
+
+      const route = this.$router.resolve({
+        name: routeMode,
+        params: option,
+      });
+      window.open(route.href);
+    },
+    viewCustomerDetail(item) {
+      const routeName = item.customer_type == 'home'
+        ? 'ViewClient'
+        : 'ViewCompanyDetail';
+
+      const options = {
+        name: routeName,
+        params: queryOptions([
+          {
+            id: item.id,
+          },
+        ]),
+      };
+
+      const routeData = this.$router.resolve({
+        ...options,
+      });
+
+      window.open(routeData.href);
     },
     fetchData() {
       const data = new FormData();

@@ -222,6 +222,7 @@
                 :items="homeCollection"
                 :search="search"
                 :disable-pagination="true"
+                item-key="key"
                 hide-default-footer
               >
                 <!--        <template v-slot:item.status="{ item }">-->
@@ -249,6 +250,37 @@
                       item.date_deleted_at
                     }}
                   </v-chip>
+                </template>
+                <template v-slot:item.date="{ item }">
+                  <a
+                    href="#"
+                    @click="openRoute(item,'PlanCalendarDetail')"
+                  >
+                    {{
+                      item.date
+                    }}
+                  </a>
+                </template>
+                <template v-slot:item.customer_id="{ item }">
+                  <a
+                    href="#"
+                    @click="viewCustomerDetail(item)"
+                  >
+                    {{
+                      item.customer_id
+                    }}
+                  </a>
+                </template>
+                <template v-slot:item.bag="{ item }">
+                  <a
+                    v-if="!item.date_deleted_at && item.status == 'success'"
+                    href="#"
+                    @click="openRoute(item,'TrashDetail')"
+                  >
+                    {{
+                      item.bag
+                    }} ຖົງ
+                  </a>
                 </template>
                 <template v-slot:item.expect_trash="{ item }">
                   <v-chip
@@ -464,6 +496,7 @@
                     :search="search"
                     :disable-pagination="true"
                     hide-default-footer
+                    item-key="key"
                   >
                     <template v-slot:item.status="{ item }">
                       <v-chip
@@ -488,6 +521,46 @@
                     </template>
                     <template v-slot:item.collection_type="{ item }">
                       <div>{{ costBy(item.collection_type) }}</div>
+                    </template>
+                    <template v-slot:item.date="{ item }">
+                      <a
+                        href="#"
+                        @click="openRoute(item,'PlanCalendarDetail')"
+                      >
+                        {{
+                          item.date
+                        }}
+                      </a>
+                    </template>
+                    <template v-slot:item.customer_id="{ item }">
+                      <a
+                        href="#"
+                        @click="viewCustomerDetail(item)"
+                      >
+                        {{
+                          item.customer_id
+                        }}
+                      </a>
+                    </template>
+
+                    <template v-slot:item.trash_amount="{ item }">
+                      <a
+                        v-if="!item.date_deleted_at && item.status == 'success'"
+                        href="#"
+                        @click="openRoute(item,'TrashDetail')"
+                      >
+                        <div v-if="item.collection_type == 'bag' || item.collection_type == 'chartered' || item.collection_type == '32km' || item.collection_type == 'infect'">
+                          {{ item.bag }}
+                          <span> {{ getUnit(item.collection_type) }}</span>
+                        </div>
+                        <div v-else-if="item.collection_type == 'fix_cost'">
+                          <span>1 {{ getUnit(item.collection_type) }}</span>
+                        </div>
+                        <div v-else>
+                          {{ item.container }}
+                          <span>{{ getUnit(item.collection_type) }}</span>
+                        </div>
+                      </a>
                     </template>
 
                     <template v-slot:item.expect_trash="{ item }">
