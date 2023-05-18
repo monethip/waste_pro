@@ -70,7 +70,7 @@ export default {
         {
           text: 'ຈຳນວນຖົງ', value: 'bag', sortable: false, align: 'center',
         },
-        { text: 'ສະຖານທີ່', value: 'name', sortable: false },
+        { text: 'ສະຖານທີ່', value: 'village_name', sortable: false },
         { text: 'ສະຖານະ', value: 'status', sortable: false },
         { text: 'ຂີ້ເຫຍື້ອຄາດໝາຍ', value: 'expect_trash', width: '200px' },
         { text: 'ຂີ້ເຫຍື້ອປັດຈຸບັນ', value: 'current_month_info', width: '200px' },
@@ -89,7 +89,7 @@ export default {
           value: "trash_amount",
           align: "right",
         },
-        { text: 'ສະຖານທີ່', value: 'name', sortable: false },
+        { text: 'ສະຖານທີ່', value: 'village_name', sortable: false },
         { text: 'ສະຖານະ', value: 'status', sortable: false },
         { text: 'ຂີ້ເຫຍື້ອຄາດໝາຍ', value: 'expect_trash', width: '200px' },
         { text: 'ຂີ້ເຫຍື້ອປັດຈຸບັນ', value: 'current_month_info', width: '200px' },

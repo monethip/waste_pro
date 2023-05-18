@@ -545,7 +545,7 @@
 
                     <template v-slot:item.trash_amount="{ item }">
                       <a
-                        v-if="!item.date_deleted_at && item.status == 'success'"
+                        v-if="!item.date_deleted_at && item.collected_at"
                         href="#"
                         @click="openRoute(item,'TrashDetail')"
                       >
