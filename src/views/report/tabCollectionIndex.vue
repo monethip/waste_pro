@@ -273,7 +273,7 @@
                 </template>
                 <template v-slot:item.bag="{ item }">
                   <a
-                    v-if="!item.date_deleted_at && item.status == 'success'"
+                    v-if="!item.date_deleted_at && item.collected_at"
                     href="#"
                     @click="openRoute(item,'TrashDetail')"
                   >
@@ -281,6 +281,11 @@
                       item.bag
                     }} ຖົງ
                   </a>
+                  <p v-if="item.date_deleted_at && item.collected_at">
+                    {{
+                      item.bag
+                    }} ຖົງ
+                  </p>
                 </template>
                 <template v-slot:item.expect_trash="{ item }">
                   <v-chip
@@ -561,6 +566,21 @@
                           <span>{{ getUnit(item.collection_type) }}</span>
                         </div>
                       </a>
+                      <div
+                        v-if="item.date_deleted_at && item.collected_at"
+                      >
+                        <div v-if="item.collection_type == 'bag' || item.collection_type == 'chartered' || item.collection_type == '32km' || item.collection_type == 'infect'">
+                          {{ item.bag }}
+                          <span> {{ getUnit(item.collection_type) }}</span>
+                        </div>
+                        <div v-else-if="item.collection_type == 'fix_cost'">
+                          <span>1 {{ getUnit(item.collection_type) }}</span>
+                        </div>
+                        <div v-else>
+                          {{ item.container }}
+                          <span>{{ getUnit(item.collection_type) }}</span>
+                        </div>
+                      </div>
                     </template>
 
                     <template v-slot:item.expect_trash="{ item }">

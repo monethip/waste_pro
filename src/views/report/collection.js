@@ -15,7 +15,7 @@ export default {
       loading: false,
       customerId: '',
       // Year
-      year_from: '',
+      year_from: new Date(),
       year_to: '',
       // Month
       month_from: '',
