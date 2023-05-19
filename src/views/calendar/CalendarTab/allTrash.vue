@@ -340,14 +340,13 @@ export default {
     openRoute(item) {
       const name = item.route_plan_detail.customer.customer_type == 'home'
         ? 'ViewClient'
-        : 'ViewCompanyDetail/';
+        : 'ViewCompanyDetail';
       const routeData = this.$router.resolve({
         name,
         params: {
           id: item.route_plan_detail.customer.id,
         },
       });
-
       window.open(routeData.href);
     },
     switchPause(id) {
