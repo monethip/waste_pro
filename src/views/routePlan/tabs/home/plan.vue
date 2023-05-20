@@ -225,7 +225,7 @@ export default {
       // Pagination
       offset: 12,
       pagination: {},
-      per_page: 1000,
+      per_page: 100,
       search: '',
       oldVal: '',
       selectedCustomerType: '',

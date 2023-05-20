@@ -354,7 +354,6 @@ export default {
     },
     employees() {
       const data = [];
-      console.log(this.filteredEmployees);
       for (const item of this.filteredEmployees) {
         let name = '';
         if (item.name) name += `${item.name} `;
@@ -370,7 +369,10 @@ export default {
       return data;
     },
     filteredEmployees() {
-      return this.salesData.filter((sale) => sale.roles.some((role) => role.name === this.selectedRole));
+      if (this.selectedRole) {
+        return this.salesData.filter((sale) => sale.roles.some((role) => role.name === this.selectedRole));
+      }
+      return this.salesData;
     },
   },
   watch: {

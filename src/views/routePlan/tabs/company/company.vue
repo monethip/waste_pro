@@ -255,7 +255,7 @@ export default {
       // Pagination
       offset: 12,
       pagination: {},
-      per_page: 9,
+      per_page: 100,
       search: '',
       oldVal: '',
       selectedCustomerType: '',
@@ -311,8 +311,8 @@ export default {
       this.$axios
         .get('route-plan', {
           params: {
-            // page: this.pagination.current_page,
-            // per_page: this.per_page,
+            page: this.pagination.current_page,
+            per_page: this.per_page,
             customer_type: 'company',
           },
         })
@@ -320,8 +320,8 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit('Loading_State', false);
-              this.plans = res.data.data;
-              // this.pagination = res.data.data.pagination;
+              this.plans = res.data.data.data;
+              this.pagination = res.data.data.pagination;
             }, 100);
           }
         })
