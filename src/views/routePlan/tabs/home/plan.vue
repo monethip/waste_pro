@@ -105,7 +105,7 @@
             label="Search"
             prepend-inner-icon="mdi-magnify"
             single-line
-            @keyup.enter="Search()"
+            @keyup.enter="fetchData()"
           />
           <v-data-table
             :disable-pagination="true"

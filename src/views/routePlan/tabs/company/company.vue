@@ -107,7 +107,7 @@
             label="Search"
             single-line
             hide-details
-            @keyup.enter="Search()"
+            @keyup.enter="fetchData()"
           />
         </v-card-title>
         <v-card-text>
