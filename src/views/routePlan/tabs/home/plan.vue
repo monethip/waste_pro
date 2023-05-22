@@ -279,6 +279,7 @@ export default {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
+            filter: this.search,
             customer_type: 'home',
             without_month_info: true,
           },
