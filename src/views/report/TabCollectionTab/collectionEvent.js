@@ -117,16 +117,25 @@ export default {
       data.append('page', this.pagination.current_page);
       data.append('per_page', this.per_page);
       data.append('duration', this.selectedDuration);
-      if ((this.year_from !== '' && this.year_to !== '') && (this.selectedDuration == 'year')) {
+      if (this.year_from !== '' && this.selectedDuration == 'year') {
         data.append('year_from', this.moment(this.year_from).format('YYYY'));
+      }
+      if (this.year_to !== '' && this.selectedDuration == 'year') {
         data.append('year_to', this.moment(this.year_to).format('YYYY'));
       }
-      if ((this.month_from !== '' && this.month_to !== '') && (this.selectedDuration == 'month')) {
+
+      if ((this.month_from !== '') && (this.selectedDuration == 'month')) {
         data.append('month_from', this.moment(this.month_from).format('YYYY-MM'));
+      }
+
+      if ((this.month_to !== '') && (this.selectedDuration == 'month')) {
         data.append('month_to', this.moment(this.month_to).format('YYYY-MM'));
       }
-      if ((this.date_from !== '' && this.date_to !== '') && (this.selectedDuration == 'date')) {
+
+      if ((this.date_from !== '') && (this.selectedDuration == 'date')) {
         data.append('date_from', this.moment(this.date_from).format('YYYY-MM-DD'));
+      }
+      if ((this.date_to !== '') && (this.selectedDuration == 'date')) {
         data.append('date_to', this.moment(this.date_to).format('YYYY-MM-DD'));
       }
       this.selectedCollectionStatus.map((item) => {
