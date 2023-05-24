@@ -640,12 +640,12 @@ export default {
               to: '/report/invoice',
               permissions: ['report'],
             },
-            {
-              icon: 'mdi-cash',
-              title: 'ຂໍ້ມູນບັນຊີເກັບພິເສດ',
-              to: '/report/event/invoice',
-              permissions: ['report'],
-            },
+            // {
+            //   icon: 'mdi-cash',
+            //   title: 'ຂໍ້ມູນບັນຊີເກັບພິເສດ',
+            //   to: '/report/event/invoice',
+            //   permissions: ['report'],
+            // },
             {
               icon: 'mdi-chart-areaspline',
               title: 'ລາຍງານຂໍ້ມູນຄົນຂັບລົດ',
