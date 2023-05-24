@@ -631,6 +631,10 @@ export default {
           text: 'Editor Sale',
           value: 'sale_editor',
         },
+        {
+          text: 'Sale Register',
+          value: 'sale_register',
+        },
       ],
       headers: [
         { text: 'ຊື່', value: 'name', width: '150px' },
@@ -798,7 +802,7 @@ export default {
             { per_page: this.per_page },
             { filter: this.search },
             { phone: this.searchPhone },
-            { roles: ['sale', 'sale_admin', 'sale_partner', 'sale_editor'] },
+            { roles: ['sale', 'sale_admin', 'sale_register', 'sale_partner', 'sale_editor'] },
             { order_by: 'newest' },
           ]),
         })
