@@ -134,14 +134,14 @@ export default {
     },
   },
   created() {
-    if (!this.lastMonthBillPaid) this.lastMonthBillPaid = new Date().toISOString().substr(0, 7);
+    if (!this.lastMonthBillPaid && !this.$route.query.from_sale) this.lastMonthBillPaid = new Date().toISOString().substr(0, 7);
+    else this.lastMonthBillPaid = '';
   },
   watch: {
     lastMonthBill(value) {
       this.$store.dispatch('auth/saveLastMonthBill', value);
     },
     lastMonthBillPaid(value) {
-      console.log(this.$store.state.auth.month);
       this.$store.dispatch('auth/saveLastMonthBillPaid', value);
     },
   },

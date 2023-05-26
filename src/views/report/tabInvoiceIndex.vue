@@ -4,7 +4,7 @@
       class="pt-0"
       large
     >
-      ລາຍງານຂໍ້ມູນເຊວ{{ date_from }}
+      ລາຍງານຂໍ້ມູນເຊວ
     </v-breadcrumbs>
     <v-col>
       <v-row>
@@ -555,6 +555,9 @@ export default {
           },
           {
             date_method: this.selectedBillDate,
+          },
+          {
+            from_sale: true,
           },
         ]),
       });
