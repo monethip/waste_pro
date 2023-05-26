@@ -4,7 +4,7 @@
       class="pt-0"
       large
     >
-      ລາຍງານຂໍ້ມູນເຊວ
+      ລາຍງານຂໍ້ມູນເຊວ{{ date_from }}
     </v-breadcrumbs>
     <v-col>
       <v-row>
@@ -302,7 +302,7 @@ export default {
       salesData: [],
       selectedSale: '',
       search: '',
-      date_from: `${new Date().toISOString().substr(0, 8)}01`,
+      date_from: this.getLastDateTime(),
       date_to: '',
       start_menu: false,
       end_menu: false,
@@ -368,6 +368,7 @@ export default {
       }
       return data;
     },
+
     filteredEmployees() {
       if (this.selectedRole) {
         return this.salesData.filter((sale) => sale.roles.some((role) => role.name === this.selectedRole));
@@ -405,6 +406,15 @@ export default {
       this.exportMode = 'excel';
       this.fetchData();
       this.exportMode = '';
+    },
+    getLastDateTime() {
+      const currentDate = new Date();
+      currentDate.setHours(currentDate.getHours() - 20);
+
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+      const day = String(currentDate.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
     },
     fetchSale() {
       this.$store.commit('Loading_State', true);
