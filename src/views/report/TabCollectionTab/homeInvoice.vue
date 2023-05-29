@@ -94,50 +94,16 @@
     </v-row>
 
     <div>
-      <v-row
-        v-for="(sum, index) in summary"
-        :key="index"
-      >
-        <v-col>
-          <p v-if="sum.year">
-            ປີ {{ sum.year }}
-          </p>
-          <p v-if="sum.month">
-            ເດືອນ {{ sum.month }}
-          </p>
-        </v-col>
-        <v-col>
-          <p>
-            ຍອດທີ່ປະຕິເສດ
-            <span class="success--text">{{
-              Intl.NumberFormat().format(sum.rejected_total)
-            }}</span>
-          </p>
-        </v-col>
-        <v-col>
-          <p>
-            ຍອດທີ່ຈ່າຍແລ້ວ(ລໍຖ້າການຢືນຢັນ)
-            <span class="success--text">{{
-              Intl.NumberFormat().format(sum.to_confirm_payment_total)
-            }}</span>
-          </p>
-        </v-col>
-        <v-col>
-          <p>
-            ຍອດທີ່ຈ່າຍແລ້ວ
-            <span class="success--text">{{
-              Intl.NumberFormat().format(sum.success_total)
-            }}</span>
-          </p>
-        </v-col>
-        <v-col>
-          <p>
-            ຍອດທີ່ຍັງບໍ່ຈ່າຍ
-            <span
-              class="success--text"
-            >{{ Intl.NumberFormat().format(sum.pending_total) }}
-            </span>
-          </p>
+      <v-row>
+        <v-col
+          v-for="(sum, index) in summary"
+          :key="index"
+        >
+          <MoneyCard
+            :title="sum.status_la"
+            :total="sum.total"
+            :bg_color="getBgColorFunc(sum.status)"
+          />
         </v-col>
       </v-row>
       <v-card>
@@ -160,13 +126,25 @@
                 {{ Intl.NumberFormat().format(item.total) }}
               </div>
             </template>
-            <template v-slot:item.status="{ item }">
+            <template v-slot:item.status_la="{ item }">
               <v-chip
                 label
-                :color="statusColor(item.payment_status)"
+                :color="statusColor(item.status)"
               >
                 {{
-                  paymentStatusText(item.payment_status)
+                  item.status_la
+                }}
+              </v-chip>
+            </template>
+
+            <template v-slot:item.billingable.collect_status_la="{ item }">
+              <v-chip
+                label
+                dark
+                :color="findEventStatus(item.billingable.collect_status) ? findEventStatus(item.billingable.collect_status).color : ''"
+              >
+                {{
+                  item.billingable.collect_status_la
                 }}
               </v-chip>
             </template>
@@ -193,7 +171,10 @@
 
 <script>
 import { GetOldValueOnInput } from '@/Helpers/GetValue';
+import { getEventStatus } from '@/Helpers/Customer';
+import { getBgColor } from '@/Helpers/BillingStatus';
 import invoice from '@views/report/TabCollectionTab/invoiceEvent';
+import MoneyCard from '@/components/card/MoneyCard';
 
 export default {
   name: 'InvoiceCollectionEvent',
@@ -201,6 +182,9 @@ export default {
   // props: ["tab"],
   title() {
     return `Vientiane Waste Co-Dev|Report Invoice Collection Event`;
+  },
+  components: {
+    MoneyCard,
   },
   data() {
     return {
@@ -215,15 +199,19 @@ export default {
       oldVal: '',
       headers: [
         { text: 'ວັນທີ', value: 'date', sortable: false },
-        { text: 'ລູກຄ້າ', value: 'full_name' },
+        { text: 'ໄອດີການເກັບ', value: 'billingable.display_id' },
+        { text: 'ລູກຄ້າ', value: 'display_customer_name' },
+        { text: 'ໄອດີບິນ', value: 'billing_display_id' },
         // { text: "ຈຳນວນຖົງ", value: "total_bag", sortable: false },
         { text: 'ສ່ວນຫຼຸດ', value: 'discount' },
         { text: 'SubTotal', value: 'sub_total', sortable: false },
         { text: 'Total', value: 'total', sortable: false },
-        { text: 'ຊຳລະ', value: 'status', sortable: false },
-        { text: 'Type', value: 'type', sortable: false },
+        { text: 'ສະຖານະຊຳລະ', value: 'status_la', sortable: false },
+        { text: 'ສະຖານະເກັບ', value: 'billingable.collect_status_la', sortable: false },
+        // { text: 'Type', value: 'type', sortable: false },
         // { text: "", value: "actions", sortable: false },
       ],
+      getEventStatus,
     };
   },
   watch: {
@@ -240,6 +228,10 @@ export default {
     Search() {
       GetOldValueOnInput(this);
     },
+    getBgColorFunc(status) {
+      return getBgColor(status);
+    },
+
     statusColor(value) {
       if (value == 'success') return 'success';
       if (value == 'pending') return 'primary';
@@ -252,6 +244,9 @@ export default {
       if (status == 'rejected') return 'ປະຕິເສດການຊຳລະ';
       if (status == 'success') return 'ຊຳລະສຳເລັດ';
       return '';
+    },
+    findEventStatus(status) {
+      return this.getEventStatus.find((item) => item.en == status);
     },
   },
 };

@@ -528,6 +528,7 @@ export default {
           }
         })
         .finally(() => {
+          this.$store.commit('Loading_State', false);
           this.firstLoad = false;
         });
     },

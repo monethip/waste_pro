@@ -1,5 +1,6 @@
 import { GetOldValueOnInput } from '@/Helpers/GetValue';
 import moment from 'moment';
+import queryOptions from '@/Helpers/queryOption';
 
 export default {
   title() {
@@ -119,26 +120,49 @@ export default {
       this.selectedPaymentStatus.map((item) => {
         data.append('payment_statuses[]', item);
       });
+
+      const queryArray = [
+        { per_page: this.per_page },
+        { page: this.pagination.current_page },
+        { duration: this.selectedDuration },
+      ];
+
+      if (this.year_from !== '' && (this.selectedDuration == 'year')) {
+        queryArray.push({ year_from: this.moment(this.year_from).format('YYYY') });
+      }
+
+      if (this.year_to !== '' && (this.selectedDuration == 'year')) {
+        queryArray.push({ year_to: this.moment(this.year_to).format('YYYY') });
+      }
+      if (this.month_from !== '' && (this.selectedDuration == 'month')) {
+        queryArray.push({ month_from: this.moment(this.month_from).format('YYYY-MM') });
+      }
+
+      if (this.month_to !== '' && (this.selectedDuration == 'month')) {
+        queryArray.push({ month_to: this.moment(this.month_to).format('YYYY-MM') });
+      }
+
+      this.selectedCollectionStatus.map((item) => {
+        queryArray.push({ 'collect_statuses[]': item });
+      });
+
+      this.selectedPaymentStatus.map((item) => {
+        queryArray.push({ 'payment_statuses[]': item });
+      });
+
       this.$store.commit('Loading_State', true);
       this.$axios
-        .post('report-event-collection-payment', data,
-          //  {
-          //     params: {
-          //         page: this.pagination.current_page,
-          //         per_page: this.per_page,
-          //         filter: this.search,
-          //         duration: this.selectedDuration,
-          //         type: this.selectedInvoceType,
-          //     },
-          // }
+        .get('v2/report-billing-collection-event',
+          { params: queryOptions(queryArray) },
+
         )
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit('Loading_State', false);
-              this.invoices = res.data.data.details.data;
+              this.invoices = res.data.data.data.data;
               this.summary = res.data.data.summary;
-              this.pagination = res.data.data.details.pagination;
+              this.pagination = res.data.data.data.pagination;
             }, 300);
           }
         })

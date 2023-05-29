@@ -5,12 +5,12 @@
     @click="openNewTab(route)"
   >
     <v-card-title
-      class="d-flex justify-between w-full"
+      class="d-flex justify-between w-full text-wrap"
       style="position: relative"
     >
       <v-chip
         v-if="icon"
-        class="text-caption"
+        class="text-caption text-wrap"
         :color="icon_color"
         dark
       >
@@ -26,7 +26,7 @@
       </v-chip>
       <v-chip
         v-else
-        class="text-caption"
+        class="text-caption text-wrap"
         :color="bg_color"
         dark
       >
@@ -41,14 +41,15 @@
         style="position: absolute;right: 10px; !important"
         :color="bg_color"
         outlined
+        class="text-caption text-wrap"
       >
         {{ Intl.NumberFormat().format(billing_count) }} {{ unit_count ? unit_count : "ບິນ" }}
       </v-chip>
     </v-card-title>
     <v-card-text v-if="total">
-      <p class="text-h5">
+      <div class="text-h5 text-wrap">
         {{ Intl.NumberFormat().format(total) }} K
-      </p>
+      </div>
     </v-card-text>
   </v-card>
 </template>
