@@ -79,52 +79,35 @@ export default {
       paymentStatus: [
         {
           id: 1,
-          name: 'pending',
-          dis_play: 'ລໍຖ້າເກັບເງິນ',
+          name: 'approved',
+          dis_play: 'ອະນຸມັດແລ້ວ (ລໍຖ້າເກັບເງິນ)',
         },
         {
           id: 2,
           name: 'to_confirm_payment',
-          dis_play: 'ລໍຖ້າຢືນຢັນຊຳລະ',
+          dis_play: 'ຈ່າຍແລ້ວ ລໍຖ້າກວດສອບ',
         },
         {
           id: 3,
           name: 'rejected',
-          dis_play: 'ປະຕິເສດການຊຳລະ',
+          dis_play: 'ການຈ່າຍຖືກປະຕິເສດ',
         },
         {
           id: 4,
           name: 'success',
-          dis_play: 'ຊຳລະສຳເລັດ',
+          dis_play: 'ຈ່າຍແລ້ວ ກວດສອບສຳເລັດ',
         },
       ],
     };
   },
   methods: {
-    fetchData() {
-      const data = new FormData();
-      data.append('page', this.pagination.current_page);
-      data.append('per_page', this.per_page);
-      data.append('duration', this.selectedDuration);
-      if ((this.year_from !== '' && this.year_to !== '') && (this.selectedDuration == 'year')) {
-        data.append('year_from', this.moment(this.year_from).format('YYYY'));
-        data.append('year_to', this.moment(this.year_to).format('YYYY'));
-      }
-      if ((this.month_from !== '' && this.month_to !== '') && (this.selectedDuration == 'month')) {
-        data.append('month_from', this.moment(this.month_from).format('YYYY-MM'));
-        data.append('month_to', this.moment(this.month_to).format('YYYY-MM'));
-      }
-      this.selectedCollectionStatus.map((item) => {
-        data.append('collect_statuses[]', item);
-      });
-      this.selectedPaymentStatus.map((item) => {
-        data.append('payment_statuses[]', item);
-      });
-
+    fetchData(exportMode = false) {
       const queryArray = [
         { per_page: this.per_page },
         { page: this.pagination.current_page },
         { duration: this.selectedDuration },
+        { download: exportMode },
+        { export_from: 'collect_event' },
       ];
 
       if (this.year_from !== '' && (this.selectedDuration == 'year')) {
@@ -141,14 +124,21 @@ export default {
       if (this.month_to !== '' && (this.selectedDuration == 'month')) {
         queryArray.push({ month_to: this.moment(this.month_to).format('YYYY-MM') });
       }
+      if (this.selectedCollectionStatus) {
+        this.selectedCollectionStatus.map((item, index) => {
+          queryArray.push({ [`collect_statuses[${index}]`]: item });
+        });
+      }
 
-      this.selectedCollectionStatus.map((item) => {
-        queryArray.push({ 'collect_statuses[]': item });
-      });
+      console.log(this.selectedPaymentStatus);
 
-      this.selectedPaymentStatus.map((item) => {
-        queryArray.push({ 'payment_statuses[]': item });
-      });
+      if (this.selectedPaymentStatus) {
+        this.selectedPaymentStatus.map((item, index) => {
+          queryArray.push({ [`payment_statuses[${index}]`]: item });
+        });
+      }
+
+      console.log(queryArray);
 
       this.$store.commit('Loading_State', true);
       this.$axios
@@ -160,9 +150,13 @@ export default {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit('Loading_State', false);
-              this.invoices = res.data.data.data.data;
-              this.summary = res.data.data.summary;
-              this.pagination = res.data.data.data.pagination;
+              this.summary = res.data.data.count_event_status;
+              if (res.data.data.data.pagination) {
+                this.invoices = res.data.data.data.data;
+                this.pagination = res.data.data.data.pagination;
+              } else { this.invoices = res.data.data.data; }
+
+              if (res.data.data.download_link) window.open(res.data.data.download_link);
             }, 300);
           }
         })
@@ -177,68 +171,7 @@ export default {
     },
 
     exportData() {
-      const data = new FormData();
-      data.append('type', this.invoiceType);
-      data.append('duration', this.selectedDuration);
-      data.append('download', 1);
-      if ((this.year_from !== '' && this.year_to !== '') && (this.selectedDuration == 'year')) {
-        data.append('year_from', this.moment(this.year_from).format('YYYY'));
-        data.append('year_to', this.moment(this.year_to).format('YYYY'));
-      }
-      if ((this.month_from !== '' && this.month_to !== '') && (this.selectedDuration == 'month')) {
-        data.append('month_from', this.moment(this.month_from).format('YYYY-MM'));
-        data.append('month_to', this.moment(this.month_to).format('YYYY-MM'));
-      }
-      this.selectedCollectionStatus.map((item) => {
-        data.append('collect_statuses[]', item);
-      });
-      this.selectedPaymentStatus.map((item) => {
-        data.append('payment_statuses[]', item);
-      });
-      this.$store.commit('Loading_State', true);
-      this.$axios
-        .post(
-          'report-event-collection-payment', data,
-          // {
-          //     params: {
-          //         duration: this.selectedDuration,
-          //         type: this.selectedInvoceType,
-          //         download: 1,
-          //     }
-          // },
-          // { responseType: "blob" }
-        )
-        .then((res) => {
-          if (res.status == 200) {
-            if (res.data.data.download_link != null) {
-              window.open(res.data.data.download_link);
-            }
-            this.$store.commit('Loading_State', false);
-            // setTimeout(() => {
-            //     this.$store.commit('Loading_State', false);;
-            //     const fileUrl = window.URL.createObjectURL(
-            //         new Blob([res.data])
-            //     );
-            //     const fileLink = document.createElement("a");
-            //     fileLink.href = fileUrl;
-            //     fileLink.setAttribute(
-            //         "download",
-            //         "Report_Invoice" + ".xlsx"
-            //     );
-            //     document.body.appendChild(fileLink);
-            //     fileLink.click();
-            //     document.body.removeChild(fileLink);
-            // }, 300);
-          }
-        })
-        .catch((error) => {
-          this.$store.commit('Toast_State', {
-            value: true,
-            color: 'error',
-            msg: error.response.data.message,
-          });
-          this.$store.commit('Loading_State', false);
-        });
+      this.fetchData('excel');
     },
 
     editPage(id) {

@@ -100,9 +100,10 @@
           :key="index"
         >
           <MoneyCard
-            :title="sum.status_la"
-            :total="sum.total"
-            :bg_color="getBgColorFunc(sum.status)"
+            :title="sum.collect_status_la"
+            :total="sum.count_event"
+            :bg_color="findEventColorByStatus(sum.collect_status)"
+            :unit_total="'ຄັ້ງ'"
           />
         </v-col>
       </v-row>
@@ -121,6 +122,31 @@
                 {{ Intl.NumberFormat().format(item.sub_total) }}
               </div>
             </template>
+
+            <template v-slot:item.billingable.display_id="{ item }">
+              <a
+                href="#"
+                @click="openEventRoute(item.billingable.id)"
+              >
+                {{ item.billingable.display_id }}
+              </a>
+            </template>
+
+            <template v-slot:item.billing_display_id="{ item }">
+              <a
+                href="#"
+                @click="openBillDetailRoute(item.id)"
+              >
+                {{ item.billing_display_id }}
+              </a>
+            </template>
+
+            <template v-slot:item.billingable.driver="{ item }">
+              <div v-if="item.billingable.driver">
+                {{ item.billingable.driver.full_name }} {{ item.billingable.driver.vehicle ? item.billingable.driver.vehicle.car_id +' ' +item.billingable.driver.vehicle.vehicle_type.name : '' }}
+              </div>
+            </template>
+
             <template v-slot:item.total="{ item }">
               <div>
                 {{ Intl.NumberFormat().format(item.total) }}
@@ -159,7 +185,7 @@
       <br>
       <template>
         <Pagination
-          v-if="pagination.total_pages > 1"
+          v-if="pagination && pagination.total_pages > 1"
           :pagination="pagination"
           :offset="offset"
           @paginate="fetchData()"
@@ -198,16 +224,18 @@ export default {
       search: '',
       oldVal: '',
       headers: [
-        { text: 'ວັນທີ', value: 'date', sortable: false },
+        { text: 'ວັນທີ', value: 'date', width: '120px' },
         { text: 'ໄອດີການເກັບ', value: 'billingable.display_id' },
-        { text: 'ລູກຄ້າ', value: 'display_customer_name' },
+        { text: 'ລູກຄ້າ', value: 'display_customer_name', width: '120px' },
+        { text: 'ຄົນຂັບ', value: 'billingable.driver', width: '120px' },
+        { text: 'ສະຖານະເກັບ', value: 'billingable.collect_status_la', sortable: false },
+        { text: 'ເວລາລົງເກັບ', value: 'billingable.collected_at', width: '120px' },
         { text: 'ໄອດີບິນ', value: 'billing_display_id' },
         // { text: "ຈຳນວນຖົງ", value: "total_bag", sortable: false },
         { text: 'ສ່ວນຫຼຸດ', value: 'discount' },
         { text: 'SubTotal', value: 'sub_total', sortable: false },
         { text: 'Total', value: 'total', sortable: false },
         { text: 'ສະຖານະຊຳລະ', value: 'status_la', sortable: false },
-        { text: 'ສະຖານະເກັບ', value: 'billingable.collect_status_la', sortable: false },
         // { text: 'Type', value: 'type', sortable: false },
         // { text: "", value: "actions", sortable: false },
       ],
@@ -228,6 +256,32 @@ export default {
     Search() {
       GetOldValueOnInput(this);
     },
+
+    openEventRoute(id) {
+      const route = {
+        name: 'EventInvoiceDetail',
+        params: {
+          id,
+        },
+      };
+      this.openRoute(route);
+    },
+
+    openBillDetailRoute(id) {
+      const route = {
+        name: 'billing-detail',
+        params: {
+          id,
+        },
+      };
+      this.openRoute(route);
+    },
+
+    openRoute(route) {
+      const routeData = this.$router.resolve(route);
+      window.open(routeData.href);
+    },
+
     getBgColorFunc(status) {
       return getBgColor(status);
     },
@@ -247,6 +301,9 @@ export default {
     },
     findEventStatus(status) {
       return this.getEventStatus.find((item) => item.en == status);
+    },
+    findEventColorByStatus(status) {
+      return this.findEventStatus(status) ? this.findEventStatus(status).color : '';
     },
   },
 };

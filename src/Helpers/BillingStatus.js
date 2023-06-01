@@ -62,17 +62,17 @@ export const getLaoBillingType = function (type) {
 export const getLaoCollectStatus = function (status) {
   switch (status) {
     case 'requested':
-      return 'ຮ້ອງຂໍເກັບຂີ້ເຫື້ຍອ';
+      return 'ລູກຄ້າຮ້ອງຂໍເຂົ້າມາ';
     case 'rejected':
-      return 'ປະຕິເສດເກັບຂີ້ເຫື້ຍອ';
+      return 'ປະຕິເສດລູກຄ້າແລ້ວ';
     case 'approved':
-      return 'ອະນຸມັດເກັບຂີ້ເຫື້ຍອ';
+      return 'ອະນຸມັດແລ້ວ ລໍຖ້າລົງເກັບ';
     case 'collected':
-      return 'ເກັບຂີເຫື້ຍອສຳເລັດ';
+      return 'ເກັບແລ້ວ ລໍຖ້າຢືນຢັນ';
     case 'collect_confirm':
-      return 'ລູກຄ້າຢືນຢັນການເກັບ';
+      return 'ລູກຄ້າຢືນຢັນການເກັບແລ້ວ';
     case 'collect_reject':
-      return 'ການເກັບຖືກປະຕິເສດ';
+      return 'ລູກຄ້າປະຕິເສດການເກັບ';
     default:
       return status;
   }

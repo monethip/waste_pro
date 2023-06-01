@@ -1,7 +1,7 @@
 <template>
   <v-card
     outlined
-    style="height:100px"
+    min-width="200px"
     @click="openNewTab(route)"
   >
     <v-card-title
@@ -19,18 +19,22 @@
         </v-icon>
         <div
           :color="icon_color"
-          class="ml-1"
+          class="ml-1 text-caption"
         >
-          {{ title }}
+          <p class="ma-0">
+            {{ title }}
+          </p>
         </div>
       </v-chip>
       <v-chip
         v-else
         class="text-caption text-wrap"
         :color="bg_color"
-        dark
+        :dark="isContrastingWithWhite(bg_color)"
       >
-        {{ title }}
+        <p class="ma-0">
+          {{ title }}
+        </p>
       </v-chip>
       <v-chip
         v-if="
@@ -43,13 +47,15 @@
         outlined
         class="text-caption text-wrap"
       >
-        {{ Intl.NumberFormat().format(billing_count) }} {{ unit_count ? unit_count : "ບິນ" }}
+        <p class="ma-0">
+          {{ Intl.NumberFormat().format(billing_count) }} {{ unit_count ? unit_count : "ບິນ" }}
+        </p>
       </v-chip>
     </v-card-title>
     <v-card-text v-if="total">
-      <div class="text-h5 text-wrap">
-        {{ Intl.NumberFormat().format(total) }} K
-      </div>
+      <p class="ma-0 text-h4 font-weight-bold">
+        {{ Intl.NumberFormat().format(total) }} {{ unit_total ? unit_total : 'k' }}
+      </p>
     </v-card-text>
   </v-card>
 </template>
@@ -65,6 +71,7 @@ export default {
     'icon',
     'icon_color',
     'unit_count',
+    'unit_total',
   ],
   data() {
     return {};
@@ -83,6 +90,18 @@ export default {
     },
     openNewTab(route) {
       if (route) window.open(route.href, '_blank');
+    },
+    isContrastingWithWhite(color) {
+      if (color) {
+        const relativeLuminance = (color) => {
+          const [r, g, b] = color.match(/\w\w/g).map((x) => parseInt(x, 16) / 255);
+          const gamma = (c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+          return 0.2126 * gamma(r) + 0.7152 * gamma(g) + 0.0722 * gamma(b);
+        };
+
+        const contrast = Math.abs(relativeLuminance(color) - relativeLuminance('#ffffff'));
+        return contrast >= 0.5;
+      }
     },
   },
 };

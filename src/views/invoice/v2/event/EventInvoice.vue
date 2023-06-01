@@ -109,6 +109,9 @@
                     ອະນຸມັດ
                   </th>
                   <th class="text-left">
+                    ໄອດີການເກັບ
+                  </th>
+                  <th class="text-left">
                     ບິນ
                   </th>
                   <th class="text-left">
@@ -128,6 +131,9 @@
                   </th>
                   <th class="text-left">
                     ຜູ້ຮ້ອງຂໍ
+                  </th>
+                  <th class="text-left">
+                    ໄອດີບິນ
                   </th>
                   <th class="text-left">
                     ຄ່າບໍລິການ
@@ -179,6 +185,9 @@
                     </v-menu>
                   </td>
                   <td>
+                    {{ data.display_id }}
+                  </td>
+                  <td>
                     <div v-if="data.billing">
                       {{ data.billing.content }}
                     </div>
@@ -225,6 +234,9 @@
                     <div v-if="data.requested_by">
                       {{ data.requested_by.name }}
                     </div>
+                  </td>
+                  <td style="width: 380px;">
+                    {{ data.billing ? data.billing.billing_display_id: '' }}
                   </td>
                   <td>{{ Intl.NumberFormat().format(data.billing ? data.billing.sub_total : 0) }}</td>
                   <td>{{ Intl.NumberFormat().format(data.billing ? data.billing.total : 0 ) }}</td>
