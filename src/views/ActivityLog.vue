@@ -184,9 +184,7 @@
                 {{ item.properties.attributes }}
               </td>
             </template>
-            <template v-slot:item.properties="{ item }">
-              <pre v-text="item.properties.old" />
-            </template>
+
             <template v-slot:item.attributes="{ item }">
               <pre
                 :style="
@@ -194,8 +192,34 @@
                     ? { color: 'red' }
                     : { color: 'green' }
                 "
-                v-text="item.properties.attributes"
-              />
+              >{{ item.properties.attributes }}</pre>
+            </template>
+            <template v-slot:item.properties="{ item }">
+              <pre>{{ item.properties.old }}</pre>
+            </template>
+            <template v-slot:item.changed="{ item }">
+              <div
+                v-for="(value, key) in item.properties.attributes"
+                :key="key"
+                class="mb-4"
+              >
+                <v-row v-if="item.properties.old && (value !== item.properties.old[key])">
+                  <div style="display: inline-block; color: green;">
+                    <b style="color: blue">{{ key }}:</b> "{{ value }}"
+                  </div>
+                  <span v-if="item.properties.old[key]"> <v-icon
+                    small
+                    color="primary"
+                  >mdi-arrow-left-box</v-icon> "{{ item.properties.old[key] }}"</span>
+                  <v-icon
+                    v-else
+                    color="primary"
+                    small
+                  >
+                    mdi-new-box
+                  </v-icon>
+                </v-row>
+              </div>
             </template>
           </v-data-table>
           <br>
@@ -268,6 +292,7 @@ export default {
         },
         { text: 'User', value: 'user.name', sortable: false },
         { text: 'Created', value: 'created_at', sortable: false },
+
         {
           text: 'ຂໍ້ມູນທີ່ອັບເດດ',
           value: 'attributes',
@@ -278,6 +303,11 @@ export default {
           text: 'ຂໍ້ມູນເກົ່າ',
           value: 'properties',
           sortable: false,
+          width: '350px',
+        },
+        {
+          text: 'ຈຸດຕ່າງ',
+          value: 'changed',
           width: '350px',
         },
 
