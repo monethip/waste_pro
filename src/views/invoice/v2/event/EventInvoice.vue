@@ -72,6 +72,18 @@
       </v-col>
       <v-col>
         <v-text-field
+          v-model="searchIDBill"
+          outlined
+          dense
+          clearable
+          prepend-inner-icon="mdi-identifier"
+          label="ໄອດີບິນ..."
+          type="text"
+          @keyup.enter="fetchSearch()"
+        />
+      </v-col>
+      <v-col>
+        <v-text-field
           v-model="searchName"
           outlined
           dense
@@ -574,6 +586,7 @@ export default {
       searchName: "",
       searchPhone: "",
       searchID: "",
+      searchIDBill: "",
 
       // Payment
       image: '',
@@ -831,6 +844,7 @@ export default {
             { filter_name: this.searchName },
             { filter_phone: this.searchPhone },
             { filter_id: this.searchID },
+            { filter_id_bill: this.searchIDBill },
             { month: date },
             { order_by: 'newest' },
           ]),
@@ -864,6 +878,7 @@ export default {
             { filter_name: this.searchName },
             { filter_phone: this.searchPhone },
             { filter_id: this.searchID },
+            { filter_id_bill: this.searchIDBill },
           ]),
         })
         .then((res) => {
