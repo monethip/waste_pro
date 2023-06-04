@@ -1,76 +1,95 @@
 <template>
   <v-container>
-    <v-row>
+    <v-row class="mb-n6">
       <v-col>
-        <p class="text-caption">
-          ແພກເກຈ
-        </p>
-        <v-select
-          v-model="filteredPackage"
-          :items="packageList"
+        <v-menu
+          v-model="start_menu"
+          :close-on-content-click="true"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="start_date"
+              label="ເລີ່ມວັນທີ"
+              readonly
+              outlined
+              v-bind="attrs"
+              dense
+              clearable
+              v-on="on"
+            />
+          </template>
+          <v-date-picker v-model="start_date" />
+        </v-menu>
+      </v-col>
+      <v-col>
+        <v-menu
+          v-model="end_menu"
+          :close-on-content-click="true"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="end_date"
+              label="ຫາວັນທີ"
+              readonly
+              outlined
+              v-bind="attrs"
+              dense
+              clearable
+              v-on="on"
+            />
+          </template>
+          <v-date-picker v-model="end_date" />
+        </v-menu>
+      </v-col>
+
+      <v-col>
+        <v-autocomplete
+          v-model="selectedDistrict"
+          outlined
           dense
+          :items="districts"
           item-text="name"
           item-value="id"
-          label="ເລືອກແພັກເກດ"
-          outlined
+          label="ເມືອງ"
+          clearable
         />
       </v-col>
       <v-col>
-        <p class="text-caption">
-          ວັນທີເພີ່ມຂໍ້ມູນ
-        </p>
-        <v-row name="date">
-          <v-col>
-            <v-menu
-              v-model="start_menu"
-              :close-on-content-click="true"
-              :nudge-right="40"
-              min-width="auto"
-              offset-y
-              transition="scale-transition"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  v-model="start_date"
-                  clearable
-                  dense
-                  label="ເລີ່ມວັນທີ"
-                  outlined
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                />
-              </template>
-              <v-date-picker v-model="start_date" />
-            </v-menu>
-          </v-col>
-          <v-col>
-            <v-menu
-              v-model="end_menu"
-              :close-on-content-click="true"
-              :nudge-right="40"
-              min-width="auto"
-              offset-y
-              transition="scale-transition"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  v-model="end_date"
-                  clearable
-                  dense
-                  label="ຫາວັນທີ"
-                  outlined
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                />
-              </template>
-              <v-date-picker v-model="end_date" />
-            </v-menu>
-          </v-col>
-        </v-row>
+        <v-autocomplete
+          v-model="selectedVillage"
+          outlined
+          dense
+          :items="villages"
+          item-text="name"
+          item-value="id"
+          label="ບ້ານ"
+          multiple
+          clearable
+        />
+      </v-col>
+      <v-col>
+        <v-select
+          v-model="selectedStatus"
+          outlined
+          dense
+          :items="status"
+          item-text="name"
+          item-value="name"
+          label="ສະຖານະ"
+          multiple
+          clearable
+        />
       </v-col>
     </v-row>
+
     <v-row class="mb-n6">
       <v-col>
         <v-autocomplete
@@ -241,7 +260,7 @@
             >
               <v-tab href="#tab-1">
                 <v-icon>mdi-account</v-icon>
-                ລູກຄ້າ ({{ pagination.total }})
+                ຂໍ້ມູນຫົວໜ່ວຍທຸລະກິດ ({{ pagination.total }})
               </v-tab>
             </v-tabs>
             <v-tabs-items v-model="tab">
@@ -250,10 +269,10 @@
                   <v-card-text>
                     <v-data-table
                       v-model="selected"
-                      :disable-pagination="true"
                       :headers="headers"
                       :items="customers"
                       :search="search"
+                      :disable-pagination="true"
                       show-select
                       hide-default-footer
                     >
@@ -261,7 +280,6 @@
                         <v-avatar
                           v-for="(img, index) in item.media"
                           :key="index"
-                          class="mr-1"
                           size="36px"
                         >
                           <img
@@ -269,23 +287,6 @@
                             :src="img.url"
                           >
                         </v-avatar>
-                      </template>
-                      <!--Role -->
-                      <template v-slot:item.status="{ item }">
-                        <v-chip
-                          :color="statusColor(item.status)"
-                          label
-                          @click="switchStatus(item.id)"
-                        >
-                          {{ item.status }}
-                        </v-chip>
-                      </template>
-                      <template v-slot:item.can_collect="{ item }">
-                        <v-chip :color="Can_Collect(item.can_collect)">
-                          {{
-                            CanCollect(item.can_collect)
-                          }}
-                        </v-chip>
                       </template>
                       <template v-slot:item.village_detail="{ item }">
                         <div
@@ -295,37 +296,36 @@
                           <div>{{ data.name }}</div>
                         </div>
                       </template>
-                      <template v-slot:item.price="{ item }">
-                        <div v-if="item.package">
-                          <div>
-                            {{ Intl.NumberFormat().format(item.package.price) }}
-                          </div>
+                      <template v-slot:item.favorite_dates="{ item }">
+                        <div
+                          v-for="(data, index) in item.favorite_dates"
+                          :key="index"
+                        >
+                          <div>{{ data.name }}</div>
                         </div>
                       </template>
 
-                      <template v-slot:item.expect_trash_package="{ item }">
-                        <v-chip
-                          v-if="item.package && item.package.package_size"
-                          color="green"
-                          dark
-                        >
-                          {{
-                            Intl.NumberFormat().format(
-                              item.package.package_size.bag
-                            )
-                          }}
-                          {{ getCustomerUnitFunc(item.cost_by) }}
-                        </v-chip>
-                        <div v-else>
-                          -
+                      <template v-slot:item.cost_by="{ item }">
+                        <div>{{ costBy(item.cost_by) }}</div>
+                      </template>
+                      <template v-slot:item.price="{ item }">
+                        <div v-if="item.cost_by !== 'bag'">
+                          {{ Intl.NumberFormat().format(item.fix_cost) }}
+                        </div>
+                        <div v-if="item.cost_by == 'bag'">
+                          <div
+                            v-if="item.current_bag_price"
+                          >
+                            {{ Intl.NumberFormat().format(item.current_bag_price.price) }}
+                          </div>
                         </div>
                       </template>
 
                       <template v-slot:item.expect_trash="{ item }">
                         <v-chip
                           v-if="item.expect_trash"
-                          color="green"
                           outlined
+                          color="green"
                         >
                           {{ Intl.NumberFormat().format(item.expect_trash) }}
                           {{ getCustomerUnitFunc(item.cost_by) }}
@@ -338,19 +338,11 @@
                       <template v-slot:item.current_month_info="{ item }">
                         <v-chip
                           v-if="item.current_month_info"
-                          :color="
-                            getTrashColor(
-                              item,
-                              getTrash(item.cost_by, item.last_month_info)
-                            )
-                          "
                           outlined
+                          :color="getTrashColor(item, getTrash(item.cost_by, item.last_month_info))"
                         >
                           {{
-                            Intl.NumberFormat().format(
-                              getTrash(item.cost_by, item.current_month_info)
-                            )
-                          }}
+                            Intl.NumberFormat().format(getTrash(item.cost_by, item.current_month_info)) }}
                           {{ getCustomerUnitFunc(item.cost_by) }}
                         </v-chip>
                         <div v-else>
@@ -361,19 +353,11 @@
                       <template v-slot:item.last_month_info="{ item }">
                         <v-chip
                           v-if="item.last_month_info"
-                          :color="
-                            getTrashColor(
-                              item,
-                              getTrash(item.cost_by, item.last_month_info)
-                            )
-                          "
                           dark
+                          :color="getTrashColor(item, getTrash(item.cost_by, item.last_month_info))"
                         >
                           {{
-                            Intl.NumberFormat().format(
-                              getTrash(item.cost_by, item.last_month_info)
-                            )
-                          }}
+                            Intl.NumberFormat().format(getTrash(item.cost_by, item.last_month_info)) }}
                           {{ getCustomerUnitFunc(item.cost_by) }}
                         </v-chip>
                         <div v-else>
@@ -381,13 +365,10 @@
                         </div>
                       </template>
 
-                      <template v-slot:item.favorite_dates="{ item }">
-                        <div
-                          v-for="(data, index) in item.favorite_dates"
-                          :key="index"
-                        >
-                          <div>{{ data.name }}</div>
-                        </div>
+                      <template v-slot:item.can_collect="{ item }">
+                        <v-chip :color="statusColor(item.can_collect)">
+                          {{ CanCollect(item.can_collect) }}
+                        </v-chip>
                       </template>
 
                       <template v-slot:item.actions="{ item }">
@@ -398,8 +379,8 @@
                           >
                             <v-list-item-title>
                               <v-icon
-                                class="mr-2"
                                 small
+                                class="mr-2"
                               >
                                 mdi-eye
                               </v-icon>
@@ -430,27 +411,24 @@
 
 <script>
 import { GetOldValueOnInput } from '@/Helpers/GetValue';
-import { getCustomerUnit, concatPackage } from '@/Helpers/Customer';
-import moment from 'moment';
+import { getCustomerUnit } from '@/Helpers/Customer';
 import queryOption from '@/Helpers/queryOption';
 
 export default {
   name: 'Customer',
   title() {
-    return `Vientiane Waste Co-Dev| Customer`;
+    return `Vientiane Waste Co-Dev|${this.title}`;
   },
   data() {
     return {
-      tab: null,
-      del_dialog: false,
-      customers: [],
-      filteredPackage: '',
+      title: 'Company',
+      start_date: '',
+      end_date: '',
+      start_menu: false,
+      end_menu: false,
       selected: [],
+      customers: [],
       loading: false,
-      importFile: false,
-      file: null,
-      errors: [],
-      successes: [],
       customerId: '',
       // Pagination
       offset: 12,
@@ -459,21 +437,9 @@ export default {
       search: '',
       oldVal: '',
       // Add Package
-      package_date: moment()
-        .add('1', 'months')
-        .format('YYYY-MM'),
-      min_date: moment()
-        .add('1', 'months')
-        .startOf('month')
-        .format('YYYY-MM-DD'),
-      package_menu: false,
-      change_package_menu: false,
-      change_package: {},
-
-      start_date: '',
-      start_menu: false,
-      end_date: '',
-      end_menu: false,
+      // start_date: "",
+      // start_menu: false,
+      // allowedDates: (val) => new Date(val).getDate() === 1,
       packages: [],
       selectedPackage: '',
       start_collect: false,
@@ -490,12 +456,25 @@ export default {
           name: 'active',
         },
         {
-          id: 1,
+          id: 2,
           name: 'inactive',
         },
         {
-          id: 1,
+          id: 3,
           name: 'trial',
+        },
+      ],
+      selectedCanCollect: '',
+      can_collects: [
+        {
+          id: 1,
+          name: 'ເກັບໄດ້',
+          value: '1',
+        },
+        {
+          id: 2,
+          name: 'ເກັບບໍໄດ້',
+          value: '0',
         },
       ],
       selectedCustomerStatus: [],
@@ -521,41 +500,68 @@ export default {
           name: 'ຍັງບໍ່ມີເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ',
         },
       ],
+      selectedCost: [],
+      costs: [
+        {
+          id: 1,
+          value: 'container',
+          name: 'ຄອນເທັນເນີ',
+        },
+        {
+          id: 2,
+          value: 'fix_cost',
+          name: 'ທຸລະກິດເປັນຖ້ຽວ',
+        },
+        {
+          id: 3,
+          value: 'chartered',
+          name: 'ມອບເໝົາ',
+        },
+        {
+          id: 4,
+          value: 'bag',
+          name: 'ບໍລິມາດ',
+        },
+        {
+          id: 5,
+          value: '32km',
+          name: 'ຫຼັກ32',
+        },
+        {
+          id: 6,
+          value: 'infect',
+          name: 'ຂີ້ເຫຍື້ອຕິດເຊື້ອ',
+        },
+      ],
+      user: {},
+      item: {},
       favorite_dates: [],
       selectedFavoriteDate: [],
-
       headers: [
-        { text: 'ລະຫັດ', value: 'customer_id', width: '90px' },
-        { text: 'ຊື່', value: 'name', width: '150px' },
-        { text: 'ນາມສະກຸນ', value: 'surname', width: '150px' },
-        {
-          text: 'Phone', value: 'user.phone', width: '200px', sortable: false,
-        },
+        { text: 'ລະຫັດ', value: 'customer_id', width: '150px' },
+        { text: 'ບໍລິສັດ', value: 'company_name', width: '150px' },
+        { text: 'ເບີໂທ', value: 'user.phone', width: '100px' },
         {
           text: 'ບ້ານ',
           value: 'village.name',
-          width: '120px',
           sortable: false,
+          width: '150px',
         },
         {
           text: 'ເມືອງ',
           value: 'district.name',
-          width: '120px',
           sortable: false,
+          width: '100px',
         },
         {
           text: 'ລາຍລະອຽດທີ່ຢູ່',
           value: 'village_detail',
-          width: '200px',
           sortable: false,
-        },
-        {
-          text: 'ມູນຄ່າສັນຍາ',
-          value: 'price',
           width: '200px',
-          sortable: false,
         },
-        { text: 'ຂີ້ເຫຍື້ອຄາດໝາຍ', value: 'expect_trash_package', width: '200px' },
+        { text: 'ປະເພດບໍລິການ', value: 'cost_by_la', width: '200px' },
+        { text: 'ມູນຄ່າສັນຍາ', value: 'price', width: '150px' },
+        { text: 'ຂີ້ເຫຍື້ອຄາດໝາຍ', value: 'expect_trash', width: '200px' },
         {
           text: 'ຂີ້ເຫຍື້ອປັດຈຸບັນ',
           value: 'current_month_info',
@@ -566,34 +572,31 @@ export default {
           value: 'last_month_info',
           width: '200px',
         },
-        { text: 'ສະຖານະແພັກເກດ', value: 'status', width: '200px' },
-        { text: 'ມື້ບໍລິການ', value: 'favorite_dates', width: '100px' },
         {
           text: 'ສະຖານະເກັບ',
           value: 'can_collect',
           align: 'center',
+          width: '100px',
+        },
+        { text: 'ມື້ບໍລິການ', value: 'favorite_dates', width: '120px' },
+        {
+          text: 'ໝາຍເຫດ',
+          value: 'collect_description',
+          sortable: false,
           width: '200px',
         },
-        { text: 'Profile', value: 'media' },
+        { text: '', value: 'media' },
         { text: '', value: 'actions', sortable: false },
       ],
     };
   },
-  computed: {
-    packageList() {
-      return concatPackage(this.packages);
-    },
-  },
   watch: {
-    filteredPackage() {
-      this.pagination.current_page = '';
-      this.fetchData();
-    },
     selectedFavoriteDate() {
       this.pagination.current_page = '';
       this.fetchData();
     },
     start_date() {
+      this.server_errors.start_month = '';
       this.pagination.current_page = '';
       if (this.end_date != '') {
         if (this.start_date > this.end_date) {
@@ -621,10 +624,8 @@ export default {
     },
     selectedDistrict() {
       this.pagination.current_page = '';
-      if (this.selectedDistrict) {
-        this.fetchData();
-      }
       this.fetchVillage();
+      this.fetchData();
     },
     selectedStatus() {
       this.pagination.current_page = '';
@@ -633,19 +634,33 @@ export default {
     selectedPackage() {
       this.server_errors.package_id = '';
     },
-    package_date() {
-      this.server_errors.start_month = '';
-    },
+
     selectedCustomerStatus() {
       this.pagination.current_page = '';
       this.fetchData();
+    },
+    selectedCost() {
+      this.pagination.current_page = '';
+      this.fetchData();
+    },
+    selectedCanCollect() {
+      this.pagination.current_page = '';
+      this.fetchData();
+    },
+    'user.name': function () {
+      this.server_errors.name = '';
+    },
+    'user.surname': function () {
+      this.server_errors.name = '';
+    },
+    'user.phone': function () {
+      this.server_errors.phone = '';
     },
   },
   created() {
     this.fetchData();
     this.fetchAddress();
     this.fetchFavorite();
-    this.fetchPackage();
   },
   methods: {
     removeSelectedItem(id) {
@@ -654,67 +669,6 @@ export default {
       if (index !== -1) {
         this.selected.splice(index, 1);
       }
-    },
-    getTrashColor(item, amount) {
-      if (!item.expect_trash || item.expect_trash > amount) return 'blue';
-
-      if (item.expect_trash == amount) return 'green';
-
-      return 'red';
-    },
-    getCustomerUnitFunc(costBy) {
-      return getCustomerUnit(costBy);
-    },
-    getTrash(costBy, info) {
-      if (!info) return 0;
-      switch (costBy) {
-        case 'bag':
-        case 'chartered':
-        case 'infect':
-        case '32km':
-          return info.bag_sum;
-        case 'container':
-          return info.container_sum;
-        case 'fix_cost':
-          return info.count_time;
-        default:
-          return costBy;
-      }
-    },
-    fetchData() {
-      this.$store.commit('Loading_State', true);
-      this.$axios
-        .get('customer', {
-          params: queryOption([
-            { page: this.pagination.current_page },
-            { per_page: this.per_page },
-            { filter: this.search },
-            { date_from: this.start_date },
-            { date_end: this.end_date },
-            { without: this.selectedCustomerStatus },
-            { villages: this.selectedVillage },
-            { statuses: this.selectedStatus },
-            { district_id: this.selectedDistrict },
-            { favorite_dates: this.selectedFavoriteDate },
-            { package_id: this.filteredPackage },
-          ]),
-        })
-        .then((res) => {
-          if (res.data.code == 200) {
-            this.$store.commit('Loading_State', false);
-            this.customers = res.data.data.data;
-            this.pagination = res.data.data.pagination;
-          }
-        })
-        .catch((error) => {
-          this.$store.commit('Loading_State', false);
-          if (error.response && error.response.status == 422) {
-            const obj = error.response.data.errors;
-            for (const [key, message] of Object.entries(obj)) {
-              this.server_errors[key] = message[0];
-            }
-          }
-        });
     },
     deleteCustomer() {
       const customerIds = [];
@@ -759,6 +713,69 @@ export default {
           this.$store.commit('Loading_State', false);
         });
     },
+    getTrashColor(item, amount) {
+      if (!item.expect_trash || item.expect_trash > amount) return 'blue';
+
+      if (item.expect_trash == amount) return 'green';
+
+      return 'red';
+    },
+    getCustomerUnitFunc(costBy) {
+      return getCustomerUnit(costBy);
+    },
+    getTrash(costBy, info) {
+      if (!info) return 0;
+      switch (costBy) {
+        case 'bag':
+        case 'chartered':
+        case 'infect':
+        case '32km':
+          return info.bag_sum;
+        case 'container':
+          return info.container_sum;
+        case 'fix_cost':
+          return info.count_time;
+        default:
+          return costBy;
+      }
+    },
+    fetchData() {
+      this.$store.commit('Loading_State', true);
+      this.$axios
+        .get('company', {
+          params: queryOption([
+            { page: this.pagination.current_page },
+            { per_page: this.per_page },
+            { filter: this.search },
+            { date_from: this.start_date },
+            { date_end: this.end_date },
+            { statuses: this.selectedStatus },
+            { without: this.selectedCustomerStatus },
+            { villages: this.selectedVillage },
+            { can_collect: this.selectedCanCollect },
+            { district_id: this.selectedDistrict },
+            { cost_by: this.selectedCost },
+            { favorite_dates: this.selectedFavoriteDate },
+          ]),
+        })
+        .then((res) => {
+          if (res.data.code == 200) {
+            this.$store.commit('Loading_State', false);
+            this.customers = res.data.data.data;
+            this.pagination = res.data.data.pagination;
+          }
+        })
+        .catch((error) => {
+          this.$store.commit('Loading_State', false);
+          if (error.response && error.response.status == 422) {
+            const obj = error.response.data.errors;
+            for (const [key, message] of Object.entries(obj)) {
+              this.server_errors[key] = message[0];
+            }
+          }
+        });
+    },
+
     fetchAddress() {
       this.$axios
         .get('info/address', { params: { filter: 'ນະຄອນຫລວງວຽງຈັນ' } })
@@ -770,8 +787,7 @@ export default {
             });
           }
         })
-        .catch(() => {
-        });
+        .catch(() => {});
     },
 
     fetchVillage() {
@@ -782,20 +798,7 @@ export default {
             this.villages = res.data.data;
           }
         })
-        .catch(() => {
-        });
-    },
-
-    fetchPackage() {
-      this.$axios
-        .get('package')
-        .then((res) => {
-          if (res.data.code == 200) {
-            this.packages = res.data.data;
-          }
-        })
-        .catch(() => {
-        });
+        .catch(() => {});
     },
 
     closeDelete() {
@@ -809,7 +812,7 @@ export default {
     deleteItemConfirm() {
       this.$store.commit('Loading_State', true);
       this.$axios
-        .delete(`customer/${this.customerId}`)
+        .delete(`company/${this.customerId}`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
@@ -825,7 +828,7 @@ export default {
           }
         })
         .catch((error) => {
-          this.$store.commit('Loading_State', false);
+          this.fetchData();
           this.$store.commit('Toast_State', {
             value: true,
             color: 'error',
@@ -834,40 +837,83 @@ export default {
               : 'Something went wrong',
           });
           this.$store.commit('modalDelete_State', false);
+          this.$store.commit('Loading_State', false);
         });
     },
+    addUser(data) {
+      this.item = data;
+      this.$store.commit('modalAdd_State', true);
+    },
     closeAddModal() {
-      this.selectedPackage = '';
-      this.customerId = '';
-      this.start_date = '';
       this.$store.commit('modalAdd_State', false);
     },
-
-    openChangePackage(data) {
-      this.change_package = data;
-      this.fetchPackage();
-      this.$store.commit('modalEdit_State', true);
-      // this.customerId = id;
+    AddItem() {
+      if (this.$refs.form.validate() == true) {
+        this.$store.commit('Loading_State', true);
+        this.$axios
+          .post(`company/${this.item.id}/coordinator`, this.user)
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.$store.commit('Loading_State', false);
+                this.closeAddModal();
+                this.user = {};
+                this.fetchData();
+                this.reset();
+                this.$store.commit('Toast_State', {
+                  value: true,
+                  color: 'success',
+                  msg: res.data.message,
+                });
+              }, 300);
+            }
+          })
+          .catch((error) => {
+            this.$store.commit('Loading_State', false);
+            this.$store.commit('Toast_State', {
+              value: true,
+              color: 'error',
+              msg: error.response
+                ? error.response.data.message
+                : 'Something went wrong',
+            });
+            this.fetchData();
+            if (error.response && error.response.status == 422) {
+              const obj = error.response.data.errors;
+              for (const [key, customer] of Object.entries(obj)) {
+                this.server_errors[key] = customer[0];
+              }
+            }
+          });
+      }
     },
-    closeChangeModal() {
-      this.selectedPackage = '';
-      this.customerId = '';
-      this.start_date = '';
-      this.$store.commit('modalEdit_State', false);
+    reset() {
+      this.$refs.form.reset();
     },
 
+    createPage() {
+      this.$router.push({
+        name: 'CreateCompany',
+      });
+    },
+    editPage(id) {
+      this.$router.push({
+        name: 'EditCompany',
+        params: { id },
+      });
+    },
     viewPage(id) {
-      const router = this.$router.resolve({
-        name: 'ViewClient',
+      const route = this.$router.resolve({
+        name: 'ViewCompanyDetail',
         params: { id },
       });
 
-      window.open(router.href);
+      window.open(route.href);
     },
     Search() {
       GetOldValueOnInput(this);
     },
-    Can_Collect(value) {
+    statusColor(value) {
       if (value == '1') return 'success';
       if (value == '0') return 'error';
       return 'info';
@@ -876,10 +922,15 @@ export default {
       if (value == '1') return 'ເກັບໄດ້';
       if (value == '0') return 'ເກັບບໍ່ໄດ້';
     },
-    statusColor(value) {
-      if (value == 'active') return 'primary';
-      if (value == 'inactive') return 'error';
-      return 'info';
+
+    costBy(value) {
+      if (value == 'container') return 'ຄອນເທັນເນີ';
+      if (value == 'fix_cost') return 'ທຸລະກິດເປັນຖ້ຽວ';
+      if (value == 'chartered') return 'ມອບເໝົາ';
+      if (value == 'bag') return 'ບໍລິມາດ';
+      if (value == 'infect') return 'ຂີ້ເຫຍື້ອຕິດເຊື້ອ';
+      if (value == '32km') return 'ຫຼັກ32';
+      return value;
     },
     fetchFavorite() {
       this.$axios
@@ -891,8 +942,7 @@ export default {
             }, 100);
           }
         })
-        .catch(() => {
-        });
+        .catch(() => {});
     },
   },
 };

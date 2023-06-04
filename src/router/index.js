@@ -32,14 +32,25 @@ const routes = [
       middleware: [Middlewares.auth],
       breadcrumb: [
         {
-          text: 'Home Customer',
-          disabled: true,
-          href: '/customer',
-        },
-        {
-          text: 'Home Customer',
+          text: 'Delete Home Customer',
           disabled: false,
-          href: '/customer',
+          href: '/delete-home',
+        },
+      ],
+    },
+  },
+  {
+    path: '/delete-company',
+    name: 'DeleteCompany',
+    component: () => import('@/views/deleteCompany/Company.vue'),
+    meta: {
+      layout: 'admin',
+      middleware: [Middlewares.auth],
+      breadcrumb: [
+        {
+          text: 'Delete Company Customer',
+          disabled: false,
+          href: '/delete-company',
         },
       ],
     },
