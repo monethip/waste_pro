@@ -290,7 +290,7 @@
           class="group-menu"
         >
           <v-list-group
-            v-if="item.menu.length"
+            v-if="item.menu.length && (item.group_permissions.length <= 0 || $can(item.group_permissions))"
             class="group-menu-icon"
             :prepend-icon="item.icon"
             no-action
@@ -322,7 +322,7 @@
             </div>
           </v-list-group>
           <v-list-item
-            v-else
+            v-if="!item.menu.length"
             :to="item.to"
             router
             exact
@@ -361,27 +361,27 @@ export default {
       group_menu: [
         {
           title: 'ຈັດການຂັ້ນສູງ',
-          icon: 'mdi-credit-card',
-          group_permissions: [],
+          icon: 'mdi-account-supervisor-circle',
+          group_permissions: ['delete_any_customers', 'delete_any_bills'],
           menu: [
             {
               icon: 'mdi-delete-alert',
               title: 'ລົບລູກຄ້າສາຍບ້ານ',
               to: '/delete-home',
-              permissions: ['get_invoice'],
+              permissions: ['delete_any_customers'],
             },
             {
               icon: 'mdi-delete-alert',
               title: 'ລົບລູກຄ້າສາຍທຸລະກິດ',
               to: '/delete-company',
-              permissions: ['get_invoice'],
+              permissions: ['delete_any_customers'],
             },
-            {
-              icon: 'mdi-delete-alert',
-              title: 'ລົບບີນ',
-              to: '/delete-billing',
-              permissions: ['get_invoice'],
-            },
+            // {
+            //   icon: 'mdi-delete-alert',
+            //   title: 'ລົບບີນ',
+            //   to: '/delete-billing',
+            //   permissions: ['delete_any_bills'],
+            // },
           ],
         },
         {
