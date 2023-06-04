@@ -58,6 +58,46 @@
     </v-row>
 
     <v-row>
+      <v-col>
+        <v-text-field
+          v-model="searchID"
+          outlined
+          dense
+          clearable
+          prepend-inner-icon="mdi-identifier"
+          label="ໄອດີການເກັບ..."
+          type="text"
+          @keyup.enter="fetchSearch()"
+        />
+      </v-col>
+      <v-col>
+        <v-text-field
+          v-model="searchName"
+          outlined
+          dense
+          clearable
+          prepend-inner-icon="mdi-account"
+          label="ຊື່, ນາມສະກຸນ..."
+          type="text"
+          @keyup.enter="fetchSearch()"
+        />
+      </v-col>
+
+      <v-col>
+        <v-text-field
+          v-model="searchPhone"
+          outlined
+          dense
+          clearable
+          prepend-inner-icon="mdi-phone"
+          label="ເບີໂທ"
+          type="text"
+          @keyup.enter="fetchSearch()"
+        />
+      </v-col>
+    </v-row>
+
+    <v-row>
       <v-tabs>
         <v-tab
           v-for="collectStatus in collectStatuses"
@@ -531,6 +571,10 @@ export default {
       user: {},
       item: {},
 
+      searchName: "",
+      searchPhone: "",
+      searchID: "",
+
       // Payment
       image: '',
       imageUrl: '',
@@ -784,6 +828,9 @@ export default {
             { per_page: this.per_page },
             { collect_status: this.selectedStatus },
             { payment_status: this.selectedPaymentStatus },
+            { filter_name: this.searchName },
+            { filter_phone: this.searchPhone },
+            { filter_id: this.searchID },
             { month: date },
             { order_by: 'newest' },
           ]),
@@ -813,6 +860,10 @@ export default {
           params: queryOption([
             { payment_status: this.selectedPaymentStatus },
             { month: date },
+            { collect_status: this.selectedStatus },
+            { filter_name: this.searchName },
+            { filter_phone: this.searchPhone },
+            { filter_id: this.searchID },
           ]),
         })
         .then((res) => {
@@ -906,6 +957,10 @@ export default {
 
     Search() {
       GetOldValueOnInput(this);
+    },
+    fetchSearch() {
+      this.fetchData();
+      this.fetchCountData();
     },
     statusColor(value) {
       if (value == 'active') return 'success';
