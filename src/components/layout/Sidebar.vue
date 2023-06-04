@@ -360,6 +360,31 @@ export default {
       items: [],
       group_menu: [
         {
+          title: 'ຈັດການຂັ້ນສູງ',
+          icon: 'mdi-credit-card',
+          group_permissions: [],
+          menu: [
+            {
+              icon: 'mdi-delete-alert',
+              title: 'ລົບລູກຄ້າສາຍບ້ານ',
+              to: '/delete-home',
+              permissions: ['get_invoice'],
+            },
+            {
+              icon: 'mdi-delete-alert',
+              title: 'ລົບລູກຄ້າສາຍທຸລະກິດ',
+              to: '/delete-company',
+              permissions: ['get_invoice'],
+            },
+            {
+              icon: 'mdi-delete-alert',
+              title: 'ລົບບີນ',
+              to: '/delete-billing',
+              permissions: ['get_invoice'],
+            },
+          ],
+        },
+        {
           title: 'Home',
           icon: 'mdi-home',
           group_permissions: ['get_dashboard', 'get_activity'],

@@ -24,6 +24,27 @@ const routes = [
     },
   },
   {
+    path: '/delete-home',
+    name: 'DeleteHome',
+    component: () => import('@/views/deleteCustomer/Customer.vue'),
+    meta: {
+      layout: 'admin',
+      middleware: [Middlewares.auth],
+      breadcrumb: [
+        {
+          text: 'Home Customer',
+          disabled: true,
+          href: '/customer',
+        },
+        {
+          text: 'Home Customer',
+          disabled: false,
+          href: '/customer',
+        },
+      ],
+    },
+  },
+  {
     path: '/customer',
     name: 'Customer',
     component: () => import('@/views/customer/Customer.vue'),
