@@ -1,10 +1,16 @@
 <template>
   <v-container>
-    <v-row style="min-height: 100vh">
+    <!-- <v-row style="min-height: 100vh">
       <v-col class="text-center">
         {{ time }}
       </v-col>
-    </v-row>
+    </v-row> -->
+    <v-img
+        src="../assets/Bgwellcome.png"
+        max-height="1080px"
+        max-width="1920px"
+        class="mx-auto"
+      />
   </v-container>
 </template>
 
