@@ -210,7 +210,7 @@
               align="center"
               class="py-2"
             >
-              ຕ້ອງການລົບຂໍ້ມູນນີ້ບໍ່ ?
+              ຕ້ອງການລຶບຂໍ້ມູນນີ້ບໍ່ ?
             </h3>
             <v-card-actions>
               <v-spacer />

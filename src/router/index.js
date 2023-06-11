@@ -56,6 +56,22 @@ const routes = [
     },
   },
   {
+    path: '/delete-billing',
+    name: 'deleteBilling',
+    component: () => import('@/views/invoice/v2/billing/DeleteBill'),
+    meta: {
+      layout: 'admin',
+      middleware: [Middlewares.auth],
+      breadcrumb: [
+        {
+          text: 'ລຶບ-ແກ້ໄຂບິນ',
+          disabled: true,
+          href: '/deleteBilling',
+        },
+      ],
+    },
+  },
+  {
     path: '/customer',
     name: 'Customer',
     component: () => import('@/views/customer/Customer.vue'),

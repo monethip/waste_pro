@@ -191,7 +191,7 @@
             </v-card-title>
 
             <v-card-text>
-              ທ່ານຢືນຢັນທີ່ຈະລົບລູກຄ້າເຫຼົ່ານີ້ບໍ່
+              ທ່ານຢືນຢັນທີ່ຈະລຶບລູກຄ້າເຫຼົ່ານີ້ບໍ່
               <v-row>
                 <v-col
                   v-for="selectedItem in selected"
@@ -199,12 +199,10 @@
                 >
                   <v-chip
                     class="ma-2"
-                    close
                     color="orange"
                     label
                     outlined
                     style="width: 100%;"
-                    @click:close="removeSelectedItem(selectedItem.id)"
                   >
                     {{ selectedItem.customer_id }}: {{ selectedItem.full_name }}
                   </v-chip>

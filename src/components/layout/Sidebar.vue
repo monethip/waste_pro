@@ -366,22 +366,22 @@ export default {
           menu: [
             {
               icon: 'mdi-delete-alert',
-              title: 'ລົບລູກຄ້າສາຍບ້ານ',
+              title: 'ລຶບລູກຄ້າສາຍບ້ານ',
               to: '/delete-home',
               permissions: ['delete_any_customers'],
             },
             {
               icon: 'mdi-delete-alert',
-              title: 'ລົບລູກຄ້າສາຍທຸລະກິດ',
+              title: 'ລຶບລູກຄ້າສາຍທຸລະກິດ',
               to: '/delete-company',
               permissions: ['delete_any_customers'],
             },
-            // {
-            //   icon: 'mdi-delete-alert',
-            //   title: 'ລົບບີນ',
-            //   to: '/delete-billing',
-            //   permissions: ['delete_any_bills'],
-            // },
+            {
+              icon: 'mdi-delete-alert',
+              title: 'ລຶບ-ແກ້ໄຂບີນ',
+              to: '/delete-billing',
+              permissions: ['delete_any_bills'],
+            },
           ],
         },
         {
