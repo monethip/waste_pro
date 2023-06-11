@@ -249,6 +249,7 @@ export default {
       title: 'Collection',
       tab: 'tab-1',
       selected: [],
+      lastRemoved: [],
       del_dialog: false,
       sale_mode: "",
       paymentMethods: payment_methods,
@@ -445,6 +446,7 @@ export default {
                 color: 'success',
                 msg: res.data.message,
               });
+              this.lastRemoved = this.selected;
               this.selected = [];
               this.del_dialog = false;
               this.fetchData();
@@ -489,7 +491,13 @@ export default {
         .then((res) => {
           if (res.data.code == 200) {
             this.$store.commit('Loading_State', false);
-            this.invoices = res.data.data.data;
+            if (this.lastRemoved.length) {
+              this.invoices = res.data.data.data.filter((invoice) => !this.lastRemoved.some((removeItem) => removeItem.id === invoice.id),
+              );
+            } else {
+              this.invoices = res.data.data.data;
+            }
+
             this.pagination = res.data.data.pagination;
           }
         })
