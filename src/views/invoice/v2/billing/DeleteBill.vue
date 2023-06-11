@@ -194,19 +194,36 @@
                         </v-chip>
                       </template>
                       <template v-slot:item.actions="{ item }">
-                        <v-btn
-                          class="btn elevation-0"
-                          color="info"
-                          small
-                          @click="ViewInvoice(item.id)"
-                        >
-                          <v-icon
-                            class="mr-1"
+                        <v-col>
+                          <v-btn
+                            class="btn elevation-0"
+                            color="info"
                             small
+                            @click="ViewInvoice(item.id)"
                           >
-                            mdi-eye
-                          </v-icon>
-                        </v-btn>
+                            <v-icon
+                              class="mr-1"
+                              small
+                            >
+                              mdi-eye
+                            </v-icon>
+                          </v-btn>
+                        </v-col>
+                        <v-col>
+                          <v-btn
+                            class="btn elevation-0"
+                            color="info"
+                            small
+                            @click="EditInvoice(item)"
+                          >
+                            <v-icon
+                              class="mr-1"
+                              small
+                            >
+                              mdi-pen
+                            </v-icon>
+                          </v-btn>
+                        </v-col>
                       </template>
                     </v-data-table>
                     <br>
@@ -226,6 +243,86 @@
         </div>
       </v-col>
     </v-row>
+
+    <ModalAdd>
+      <template @close="close">
+        <v-card class="py-8 px-14">
+          <v-card-title>
+            <p>ແກ້ໄຂຂໍ້ມູນ <strong>{{ formData.billing_display_id }}: {{ `${formData.display_customer_name} ${formData.date}(${formData.total})` }}</strong></p>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-form
+                ref="form"
+                lazy-validation
+              >
+                <v-row
+                  v-for="detail in formData.billing_details"
+                  :key="detail.id"
+                >
+                  <v-row>
+                    <v-col cols="12">
+                      <h3 class="my-4">
+                        {{ detail.content }}
+                      </h3>
+                    </v-col>
+                    <v-col>
+                      <v-text-field
+                        v-model="detail.quantity"
+                        label="Quantity"
+                        outlined
+                        dense
+                        type="number"
+                        class="input-number"
+                      />
+                      <p class="errors">
+                        {{ server_errors.qty }}
+                      </p>
+                    </v-col>
+                    <v-col>
+                      <v-text-field
+                        v-model="detail.price"
+                        label="Price"
+                        outlined
+                        dense
+                        type="number"
+                        class="input-number"
+                      />
+                      <p class="errors">
+                        {{ server_errors.price }}
+                      </p>
+                    </v-col>
+                    <v-col>
+                      <span>ລວມ: {{ calculateTotal(detail) }}</span>
+                    </v-col>
+                  </v-row>
+                </v-row>
+              </v-form>
+            </v-container>
+            <v-card-actions>
+              <v-spacer />
+              <v-btn
+                color="error"
+                class="elevation-0 btn mr-4 px-12"
+                medium
+                @click="closeAddModal()"
+              >
+                ປິດ
+              </v-btn>
+              <v-btn
+                class="elevation-0 btn btn-primary px-12"
+                medium
+                :loading="loading"
+                :disabled="loading"
+                @click="updateInvoiceDetail()"
+              >
+                ອັບເດດ
+              </v-btn>
+            </v-card-actions>
+          </v-card-text>
+        </v-card>
+      </template>
+    </ModalAdd>
   </v-container>
 </template>
 
@@ -249,6 +346,7 @@ export default {
       title: 'Collection',
       tab: 'tab-1',
       selected: [],
+      formData: {},
       lastRemoved: [],
       del_dialog: false,
       sale_mode: "",
@@ -423,6 +521,59 @@ export default {
   methods: {
     filterBillingType(status) {
       return getLaoBillingType(status.name);
+    },
+    async updateInvoiceDetail() {
+      if (this.$refs.form.validate() == true) {
+        this.$store.commit('Loading_State', true);
+        const items = [];
+        for (const item of this.formData.billing_details) {
+          items.push({
+            qty: item.quantity,
+            price: item.price,
+            id: item.id,
+          });
+        }
+        await this.$axios
+          .put(`super-billing-detail/${this.formData.id}`, {
+            items,
+          })
+          .then((res) => {
+            if (res.data.code == 200) {
+              this.$store.commit('Loading_State', false);
+              this.fetchData();
+              this.formData = {};
+              this.$store.commit('Toast_State', {
+                value: true,
+                color: 'success',
+                msg: res.data.message,
+              });
+              this.closeAddModal();
+            }
+          })
+          .catch((error) => {
+            this.$store.commit('Loading_State', false);
+            this.$store.commit('Toast_State', {
+              value: true,
+              color: 'error',
+              msg: error.response ? error.response.data.message : error,
+            });
+          });
+      }
+    },
+    calculateTotal(detail) {
+      return detail.quantity * detail.price;
+    },
+    EditInvoice(item) {
+      this.formData = item;
+      if (this.formData.is_active == 1) {
+        this.is_active = true;
+      } else {
+        this.is_active = false;
+      }
+      this.$store.commit('modalAdd_State', true);
+    },
+    closeAddModal() {
+      this.$store.commit('modalAdd_State', false);
     },
     deleteBill() {
       const BillIds = [];
