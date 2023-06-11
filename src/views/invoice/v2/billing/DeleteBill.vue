@@ -533,6 +533,7 @@ export default {
             id: item.id,
           });
         }
+        this.closeAddModal();
         await this.$axios
           .put(`super-billing-detail/${this.formData.id}`, {
             items,
@@ -547,7 +548,6 @@ export default {
                 color: 'success',
                 msg: res.data.message,
               });
-              this.closeAddModal();
             }
           })
           .catch((error) => {
@@ -565,11 +565,6 @@ export default {
     },
     EditInvoice(item) {
       this.formData = item;
-      if (this.formData.is_active == 1) {
-        this.is_active = true;
-      } else {
-        this.is_active = false;
-      }
       this.$store.commit('modalAdd_State', true);
     },
     closeAddModal() {
@@ -585,6 +580,7 @@ export default {
       };
 
       this.$store.commit('Loading_State', true);
+      this.del_dialog = false;
       this.$axios
         .post(`super-billing`, body)
         .then((res) => {
@@ -599,7 +595,6 @@ export default {
               });
               this.lastRemoved = this.selected;
               this.selected = [];
-              this.del_dialog = false;
               this.fetchData();
             }, 300);
           }

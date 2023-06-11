@@ -237,6 +237,7 @@
                 color="primary"
                 text
                 :loading="loading"
+                :disabled="loading"
                 @click="deleteCustomer"
               >
                 ຢືນຢັນ
@@ -678,6 +679,7 @@ export default {
       };
 
       this.$store.commit('Loading_State', true);
+      this.del_dialog = false;
       this.$axios
         .post(`admin-delete-customer`, body)
         .then((res) => {
@@ -691,7 +693,6 @@ export default {
                 msg: res.data.message,
               });
               this.selected = [];
-              this.del_dialog = false;
               this.fetchData();
             }, 300);
           }
