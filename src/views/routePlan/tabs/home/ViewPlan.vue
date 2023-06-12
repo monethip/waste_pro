@@ -641,12 +641,12 @@ export default {
 
     viewPage(data) {
       if (data.customer.customer_type == 'company') {
-        this.$router.push({
+        this.$openRoute({
           name: 'ViewCompanyDetail',
           params: { id: data.customer_id },
         });
       } else if (data.customer.customer_type == 'home') {
-        this.$router.push({
+        this.$openRoute({
           name: 'ViewClient',
           params: { id: data.customer_id },
         });
