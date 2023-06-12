@@ -1136,7 +1136,7 @@ export default {
       GetOldValueOnInput(this);
     },
     gotoPlanCalendar(item) {
-      this.$router.push({
+      this.$openRoute({
         name: 'PlanCalendarDetail',
         params: { id: item.id, planMonthId: item.plan_month_id },
       });

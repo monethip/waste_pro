@@ -111,7 +111,7 @@ export default {
       GetOldValueOnInput(this);
     },
     viewPage(plan_calendar, id) {
-      this.$router.push({
+      this.$openRoute({
         name: 'TrashDetail',
         params: { plan_calendar, id },
       });
