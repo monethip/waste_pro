@@ -163,7 +163,7 @@ export default {
         });
     },
     viewPage(item) {
-      this.$router.push({
+      this.$openRoute({
         name: 'ViewCompanyRequest',
         params: { id: item.id, status: item.status },
       });
