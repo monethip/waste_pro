@@ -12,19 +12,6 @@
       <v-col>
         <p>ແຜນຕາຕະລາງວຽກແຕ່ລະເດືອນ</p>
       </v-col>
-      <!--      <v-col>-->
-      <!--        <v-text-field-->
-      <!--          outlined-->
-      <!--          dense-->
-      <!--          clearable-->
-      <!--          prepend-inner-icon="mdi-magnify"-->
-      <!--          label="ຊື່"-->
-      <!--          type="text"-->
-      <!--          v-model="search"-->
-      <!--          @keyup.enter="Search()"-->
-      <!--        >-->
-      <!--        </v-text-field>-->
-      <!--      </v-col>-->
     </v-row>
     <div>
       <v-card>
@@ -538,7 +525,7 @@ export default {
       GetOldValueOnInput(this);
     },
     gotoPlanCalendar(id, month) {
-      this.$router.push({
+      this.$openRoute({
         name: 'PlanCalendar',
         params: { id },
         query: {
