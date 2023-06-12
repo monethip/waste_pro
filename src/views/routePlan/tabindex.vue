@@ -6,77 +6,7 @@
     >
       ແຜນຈັດເສັ້ນທາງການເກັບຂີ້ເຫື້ຍອ
     </v-breadcrumbs>
-    <v-row class="mb-2">
-      <!--      <v-col>-->
-      <!--        <v-btn class="btn-primary" @click="exportData()">Add </v-btn>-->
-      <!--      </v-col>-->
-      <!--      <v-col>-->
-      <!--        <v-select-->
-      <!--            outlined-->
-      <!--            dense-->
-      <!--            :items="duration"-->
-      <!--            v-model="selectedDuration"-->
-      <!--            item-text="name"-->
-      <!--            item-value="duration"-->
-      <!--            label="ຊ່ວງເວລາ"-->
-      <!--        ></v-select>-->
-      <!--      </v-col>-->
-      <!--      <v-col v-if="selectedDuration == 'year'">-->
-      <!--        <section>-->
-      <!--          <date-picker-->
-      <!--              style="height: 40px"-->
-      <!--              v-model="year_from"-->
-      <!--              type="year"-->
-      <!--              placeholder="ເລີ່ມປີ"-->
-      <!--              @input="fetchData()"-->
-      <!--          ></date-picker>-->
-      <!--        </section>-->
-      <!--      </v-col>-->
-      <!--      <v-col v-if="selectedDuration == 'year'">-->
-      <!--        <section>-->
-      <!--          <date-picker-->
-      <!--              v-model="year_to"-->
-      <!--              type="year"-->
-      <!--              placeholder="ຫາປີ"-->
-      <!--              @input="fetchData()"-->
-      <!--          ></date-picker>-->
-      <!--        </section>-->
-      <!--      </v-col>-->
-      <!--      <v-col v-if="selectedDuration == 'month'">-->
-      <!--        <section>-->
-      <!--          <date-picker-->
-      <!--              v-model="month_from"-->
-      <!--              type="month"-->
-      <!--              placeholder="ເລີ່ມເດືອນ"-->
-      <!--              @input="fetchData()"-->
-      <!--          ></date-picker>-->
-      <!--        </section>-->
-      <!--      </v-col>-->
-      <!--      <v-col v-if="selectedDuration == 'month'">-->
-      <!--        <section>-->
-      <!--          <date-picker-->
-      <!--              v-model="month_to"-->
-      <!--              type="month"-->
-      <!--              placeholder="ຫາເດືອນ"-->
-      <!--              @input="fetchData()"-->
-      <!--          ></date-picker>-->
-      <!--        </section>-->
-      <!--      </v-col>-->
-
-      <!--      <v-col>-->
-      <!--        <v-text-field-->
-      <!--            outlined-->
-      <!--            dense-->
-      <!--            clearable-->
-      <!--            prepend-inner-icon="mdi-magnify"-->
-      <!--            label="ຊື່ລູກຄ້າ,ເລກບິນ"-->
-      <!--            type="text"-->
-      <!--            v-model="search"-->
-      <!--            @keyup.enter="Search()"-->
-      <!--        >-->
-      <!--        </v-text-field>-->
-      <!--      </v-col>-->
-    </v-row>
+    <v-row class="mb-2" />
     <v-card elevation="1">
       <v-card-text>
         <v-tabs v-model="tab">

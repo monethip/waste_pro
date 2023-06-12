@@ -145,7 +145,7 @@ export default {
       });
     },
     viewPage(id) {
-      this.$router.push({
+      this.$openRoute({
         name: 'ViewPlan',
         params: { id },
       });
