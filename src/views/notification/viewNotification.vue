@@ -35,7 +35,9 @@
                 ແຈ້ງເຕືອນວັນທີ:
                 {{ moment(notification.created_at).format("DD-MM-YY") }}
               </h3>
-              <h3>ປະເພດແຈ້ງເຕືອນ: {{ notification.data.type }}</h3>
+              <h3 v-if="notification.data">
+                ປະເພດແຈ້ງເຕືອນ: {{ notification.data.type }}
+              </h3>
             </v-col>
           </v-row>
           <v-row class="mb-n6">
@@ -52,7 +54,7 @@
               </p>
             </v-col>
           </v-row>
-          <v-row v-if="notification.data.url">
+          <v-row v-if="notification.data && notification.data.url">
             <v-col>
               <a
                 color="success"
@@ -93,6 +95,11 @@ export default {
   },
   created() {
     this.fetchData();
+  },
+  watch: {
+    '$route.params.id': function () {
+      this.fetchData();
+    },
   },
   methods: {
     backPrevios() {

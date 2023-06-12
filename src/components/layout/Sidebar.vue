@@ -39,7 +39,7 @@
               color="orange"
             >
               <template v-slot:badge>
-                {{ eventNotifications.length }}
+                {{ eventPagination.total }}
               </template>
               <v-icon
                 large
@@ -65,7 +65,7 @@
                   <template v-for="(item, index) in eventNotifications">
                     <v-list-item
                       :key="item.id"
-                      @click="viewPage(item.id)"
+                      @click="viewPage(item.id,'event')"
                     >
                       <v-list-item-content>
                         <v-list-item-title v-text="item.data.name" />
@@ -123,7 +123,7 @@
               color="orange"
             >
               <template v-slot:badge>
-                {{ notifications.length }}
+                {{ pagination.total }}
               </template>
               <v-icon
                 large
@@ -149,7 +149,7 @@
                   <template v-for="(item, index) in notifications">
                     <v-list-item
                       :key="item.id"
-                      @click="viewPage(item.id)"
+                      @click="viewPage(item.id,'all')"
                     >
                       <v-list-item-content>
                         <v-list-item-title v-text="item.data.name" />
@@ -353,6 +353,7 @@ export default {
       // Pagination
       offset: 12,
       pagination: {},
+      eventPagination: {},
       per_page: 20,
       notifications: [],
       eventNotifications: [],
@@ -754,7 +755,7 @@ export default {
       this.$axios
         .get('notification', {
           params: {
-            page: this.pagination.current_page,
+            page: this.eventPagination.current_page,
             per_page: this.per_page,
             status: this.selectedStatus,
             type: 'EVENT',
@@ -765,7 +766,7 @@ export default {
             setTimeout(() => {
               this.$store.commit('Loading_State', false);
               this.eventNotifications = res.data.data.data;
-              this.pagination = res.data.data.pagination;
+              this.eventPagination = res.data.data.pagination;
             }, 300);
           }
         })
@@ -791,7 +792,22 @@ export default {
         query: { types: ['EVENT', 'CUSTOMER_EVENT'] },
       });
     },
-    viewPage(id) {
+    moveObjectToLast(array, id) {
+      const index = array.findIndex((obj) => obj.id === id);
+      if (index !== -1) {
+        const objectToMove = array.splice(index, 1)[0];
+        array.push(objectToMove);
+      }
+    },
+    viewPage(id, type) {
+      if (type == 'all') {
+        this.pagination.total -= 1;
+        this.moveObjectToLast(this.notifications, id);
+      }
+      if (type == 'event') {
+        this.eventPagination.total -= 1,
+        this.moveObjectToLast(this.eventNotifications, id);
+      }
       this.$router.push({
         name: 'NotificationView',
         params: { id },
