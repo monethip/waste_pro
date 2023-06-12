@@ -8,6 +8,7 @@ import moment from 'moment';
 import * as VueGoogleMaps from 'vue2-google-maps';
 import can from '@/Helpers/Can';
 import mixin from '@/Helpers/Mixin';
+import openRoute from '@/Helpers/RouteOpen';
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 // import VueOtp2 from 'vue-otp-2';
@@ -61,6 +62,7 @@ Vue.use(VueApexCharts);
 Vue.component('apexchart', VueApexCharts);
 Vue.prototype.$can = can;
 Vue.mixin(mixin);
+Vue.prototype.$openRoute = openRoute;
 // Vue.use(VueBreadcrumbs,{
 //   template: '<nav class="breadcrumb" v-if="$breadcrumbs.length"> ' +
 //       '<router-link class="breadcrumb-item" v-for="(crumb, key) in $breadcrumbs" :to="linkProp(crumb)" :key="key">{{ crumb | crumbText }}</router-link> ' +

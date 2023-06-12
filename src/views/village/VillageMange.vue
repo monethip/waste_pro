@@ -504,7 +504,7 @@ export default {
     },
 
     ViewVillage(id) {
-      this.$router.push({
+      this.$openRoute({
         name: 'ViewVillage',
         params: { id },
       });
