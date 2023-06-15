@@ -2,12 +2,12 @@
   <v-container>
     <v-row class="mb-n6">
       <v-col cols>
-        <v-btn
+        <!-- <v-btn
           class="btn-primary mr-2 elevation-0"
           @click="createPage"
         >
           <v-icon>mdi-plus</v-icon>
-        </v-btn>
+        </v-btn> -->
         <v-btn
           class="btn-primary elevation-0"
           @click="choseCustomer"
