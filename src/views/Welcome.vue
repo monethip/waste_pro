@@ -6,11 +6,11 @@
       </v-col>
     </v-row> -->
     <v-img
-        src="../assets/Bgwellcome.png"
-        max-height="1080px"
-        max-width="1920px"
-        class="mx-auto"
-      />
+      src="../assets/NewBg.jpg"
+      max-height="1080px"
+      max-width="1920px"
+      class="mx-auto"
+    />
   </v-container>
 </template>
 
