@@ -711,7 +711,7 @@ export default {
       return concatPackage(this.packages);
     },
     billStatus() {
-      return this.$route.query.tab || 'billing-approved';
+      return this.$route.query.tab || 'created';
     },
     lastMonthCreated() {
       return this.$store.getters['auth/getLastMonthBill'];
