@@ -157,11 +157,11 @@ export default {
     lastMonthCreated() {
       return this.$store.getters['auth/getLastMonthBill'];
     },
-    callFetch() {
-      return this.$store.getters['auth/getCallFetch'];
-    },
     lastMonthBillPaidCreated() {
       return this.$store.getters['auth/getLastMonthBillPaid'];
+    },
+    callFetch() {
+      return this.$store.getters['auth/getCallFetch'];
     },
   },
   watch: {
@@ -170,16 +170,26 @@ export default {
     },
     lastMonthBill(value) {
       this.$store.dispatch('auth/saveLastMonthBill', value);
+      this.lastMonthBill = value;
     },
     lastMonthBillPaid(value) {
       this.$store.dispatch('auth/saveLastMonthBillPaid', value);
+      this.lastMonthBillPaid = value;
     },
 
     lastMonthCreated(val, old) {
-      if (old !== null || old !== '') this.countBilling();
+      if (old !== null || old !== '') {
+        this.lastMonthBill = this.$store.getters['auth/getLastMonthBill'];
+
+        this.countBilling();
+      }
     },
     lastMonthBillPaidCreated(val, old) {
-      if (old !== null || old !== '') this.countBilling();
+      if (old !== null || old !== '') {
+        this.lastMonthBillPaid = this.$store.getters['auth/getLastMonthBillPaid'];
+
+        this.countBilling();
+      }
     },
     tab(value, old) {
       if (old !== null || old !== '') this.countBilling();
@@ -194,7 +204,7 @@ export default {
   },
   created() {
     this.tab = this.$route.query.tab;
-    if (!this.lastMonthBillPaid) this.lastMonthBillPaid = new Date().toISOString().substr(0, 7);
+    // if (!this.lastMonthBillPaid) this.lastMonthBillPaid = new Date().toISOString().substr(0, 7);
     this.countBilling();
   },
   methods: {
