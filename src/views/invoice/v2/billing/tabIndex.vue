@@ -118,8 +118,8 @@
 </template>
 
 <script>
-import allInvoice from '@views/invoice/v2/billing/index';
-import { getBgColor, normal, red } from '@/Helpers/BillingStatus';
+import allInvoice from "@views/invoice/v2/billing/index";
+import { getBgColor, normal, red } from "@/Helpers/BillingStatus";
 
 export default {
   title() {
@@ -132,8 +132,8 @@ export default {
     return {
       tab: null,
       counts: [],
-      lastMonthBill: localStorage.getItem('lastMonthBill'),
-      lastMonthBillPaid: localStorage.getItem('lastMonthBillPaid'),
+      lastMonthBill: localStorage.getItem("lastMonthBill"),
+      lastMonthBillPaid: localStorage.getItem("lastMonthBillPaid"),
       start_menu: false,
       start_created: false,
       start_paid_month: false,
@@ -155,51 +155,50 @@ export default {
       return tabs;
     },
     lastMonthCreated() {
-      return this.$store.getters['auth/getLastMonthBill'];
+      return this.$store.getters["auth/getLastMonthBill"];
     },
     lastMonthBillPaidCreated() {
-      return this.$store.getters['auth/getLastMonthBillPaid'];
+      return this.$store.getters["auth/getLastMonthBillPaid"];
     },
     callFetch() {
-      return this.$store.getters['auth/getCallFetch'];
+      return this.$store.getters["auth/getCallFetch"];
     },
   },
   watch: {
     callFetch(val, old) {
-      if (old !== null || old !== '') this.countBilling();
+      if (old !== null || old !== "") this.countBilling();
     },
     lastMonthBill(value) {
-      this.$store.dispatch('auth/saveLastMonthBill', value);
+      this.$store.dispatch("auth/saveLastMonthBill", value);
       this.lastMonthBill = value;
     },
     lastMonthBillPaid(value) {
-      this.$store.dispatch('auth/saveLastMonthBillPaid', value);
+      this.$store.dispatch("auth/saveLastMonthBillPaid", value);
       this.lastMonthBillPaid = value;
     },
 
     lastMonthCreated(val, old) {
-      if (old !== null || old !== '') {
-        this.lastMonthBill = this.$store.getters['auth/getLastMonthBill'];
+      if (old !== null || old !== "") {
+        this.lastMonthBill = this.$store.getters["auth/getLastMonthBill"];
 
         this.countBilling();
       }
     },
     lastMonthBillPaidCreated(val, old) {
-      if (old !== null || old !== '') {
-        this.lastMonthBillPaid = this.$store.getters['auth/getLastMonthBillPaid'];
+      if (old !== null || old !== "") {
+        this.lastMonthBillPaid = this.$store.getters["auth/getLastMonthBillPaid"];
 
         this.countBilling();
       }
     },
     tab(value, old) {
-      if (old !== null || old !== '') this.countBilling();
+      if (old !== null || old !== "") this.countBilling();
       this.$router
         .push({
-          name: 'billing',
+          name: "billing",
           query: { ...this.$route.query, ...{ tab: value } },
         })
-        .catch(() => {
-        });
+        .catch(() => {});
     },
   },
   created() {
@@ -215,7 +214,7 @@ export default {
       const option = {};
       if (this.lastMonthCreated) option.created_month = this.lastMonthCreated;
       if (this.lastMonthBillPaid) option.bill_month = this.lastMonthBillPaid;
-      await this.$axios.get('count-billing', { params: option }).then((res) => {
+      await this.$axios.get("count-billing", { params: option }).then((res) => {
         this.counts = res.data.data;
       });
     },
