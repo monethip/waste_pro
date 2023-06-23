@@ -814,7 +814,7 @@ export default {
       const collectedArray = ['requested', 'approved'];
       return isSuperAdmin
         && collectedArray.indexOf(data.collect_status) != -1
-        && billingArray.indexOf(data.billing.status) != -1;
+        && (data.billing && billingArray.indexOf(data.billing.status) != -1);
     },
     getCollectStatus(status) {
       return getLaoCollectStatus(status);
