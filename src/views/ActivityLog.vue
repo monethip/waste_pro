@@ -166,7 +166,7 @@
             show-expand
           >
             <template v-slot:item.created_at="{ item }">
-              <div>{{ moment(item.created_at).format("hh:mm DD-MM-YY") }}</div>
+              <div>{{ moment(item.created_at).format("hh:mm:ss DD-MM-YY") }}</div>
             </template>
             <template v-slot:expanded-item="{ headers, item }">
               <td
@@ -291,7 +291,9 @@ export default {
           width: '150px',
         },
         { text: 'User', value: 'user.name', sortable: false },
-        { text: 'Created', value: 'created_at', sortable: false },
+        {
+          text: 'Created', value: 'created_at', sortable: false, width: '120px',
+        },
 
         {
           text: 'ຂໍ້ມູນທີ່ອັບເດດ',
