@@ -1,17 +1,11 @@
 <template>
-  <v-container>
-    <!-- <v-row style="min-height: 100vh">
-      <v-col class="text-center">
-        {{ time }}
-      </v-col>
-    </v-row> -->
-    <v-img
-      src="../assets/NewBg.jpg"
-      max-height="1080px"
-      max-width="1920px"
-      class="mx-auto"
-    />
-  </v-container>
+  <v-img
+    src="../assets/NewBg.jpg"
+    backgound-size="cover"
+    width="120rem"
+    height="61rem"
+    content="center"
+  />
 </template>
 
 <script>
