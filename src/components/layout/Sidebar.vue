@@ -656,6 +656,12 @@ export default {
             },
             {
               icon: 'mdi-cash',
+              title: 'ການເຄື່ອນໄຫວ Bcel-bill-payment',
+              to: '/report/transaction',
+              permissions: ['report'],
+            },
+            {
+              icon: 'mdi-cash',
               title: 'ລາຍງານບິນລູກຄ້າ',
               to: '/report/billing/customer',
               permissions: ['report'],

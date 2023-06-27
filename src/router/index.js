@@ -1585,6 +1585,23 @@ const routes = [
   },
 
   {
+    path: '/report/transaction',
+    name: 'Bcel-Transaction',
+    component: () => import('@/views/report/BcelTransaction.vue'),
+    meta: {
+      layout: 'admin',
+      middleware: [Middlewares.auth],
+      breadcrumb: [
+        {
+          text: 'ການເຄື່ອນໄຫວ Bcel Bill Payment',
+          disabled: true,
+          href: '/report/transaction',
+        },
+      ],
+    },
+  },
+
+  {
     path: '/report/customer',
     name: 'Report-Customer',
     component: () => import('@/views/report/Customer.vue'),
