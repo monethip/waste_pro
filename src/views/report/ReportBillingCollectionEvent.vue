@@ -182,6 +182,7 @@
                   hide-details
                   placeholder="ຊື່ຫົວບິນ, ລູກຄ້າ..."
                   single-line
+                  @keyup.enter="fetchData"
                 />
               </v-col>
             </v-row>
@@ -193,7 +194,7 @@
                   :headers="billingListHeader"
                   :items="billings.data.data"
                   :items-per-page="100"
-                  :search="billingListsearch"
+
                   hide-default-footer
                 >
                   <template v-slot:item.status="{ item }">
@@ -540,6 +541,7 @@ export default {
         { created_month: this.lastMonthCreated },
         { bill_month: this.lastMonthBillCreated },
         { sale_mode: this.sale_mode },
+        { filter: this.billingListsearch },
       ];
 
       if (this.selectedVillage) queryArray.push({ village_id: this.selectedVillage });

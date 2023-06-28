@@ -412,6 +412,7 @@
                   hide-details
                   placeholder="ຊື່ຫົວບິນ, ລູກຄ້າ..."
                   single-line
+                  @keyup.enter="fetchData"
                 />
               </v-col>
             </v-row>
@@ -423,7 +424,7 @@
                   :headers="billingListHeader"
                   :items="billings.data.data"
                   :items-per-page="100"
-                  :search="billingListsearch"
+
                   hide-default-footer
                 >
                   <template v-slot:item.status="{ item }">
