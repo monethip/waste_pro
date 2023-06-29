@@ -341,7 +341,7 @@
     <v-row>
       <v-col>
         <v-card outlined>
-          <v-card-title>ຕາມບ້ານ ({{ billings.villages.length }})</v-card-title>
+          <v-card-title>ຕາມບ້ານ ({{ billings.villages ? billings.villages.length : 0 }})</v-card-title>
           <v-card-text>
             <v-simple-table>
               <template v-slot:default>
@@ -442,7 +442,7 @@
                   <template v-slot:item.paided_by_user.full_name="{ item }">
                     <p
                       v-if="item.paided_by_user"
-                      :class="item.paided_by_user.roles.length ? '':'text-decoration-line-through'"
+                      :class="item.paided_by_user && item.paided_by_user.roles && item.paided_by_user.roles.length ? '':'text-decoration-line-through'"
                     >
                       {{ item.paided_by_user.full_name }}
                     </p>

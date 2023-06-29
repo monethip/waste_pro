@@ -212,7 +212,7 @@
                   <template v-slot:item.paided_by_user.full_name="{ item }">
                     <p
                       v-if="item.paided_by_user"
-                      :class="item.paided_by_user.roles.length ? '':'text-decoration-line-through'"
+                      :class="item.paided_by_user && item.paided_by_user.roles && item.paided_by_user.roles.length ? '':'text-decoration-line-through'"
                     >
                       {{ item.paided_by_user.full_name }}
                     </p>
