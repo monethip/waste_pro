@@ -72,10 +72,7 @@
               v-on="on"
             />
           </template>
-          <v-date-picker
-            v-model="start_date"
-            @input="fetchData()"
-          />
+          <v-date-picker v-model="start_date" @input="fetchData()" />
         </v-menu>
       </v-col>
 
@@ -99,10 +96,7 @@
               v-on="on"
             />
           </template>
-          <v-date-picker
-            v-model="end_date"
-            @input="fetchData()"
-          />
+          <v-date-picker v-model="end_date" @input="fetchData()" />
         </v-menu>
       </v-col>
       <v-col>
@@ -130,13 +124,7 @@
         />
       </v-col>
       <v-col>
-        <v-btn
-          color="green"
-          dark
-          @click="handleExport"
-        >
-          Export
-        </v-btn>
+        <v-btn color="green" dark @click="handleExport"> Export </v-btn>
       </v-col>
     </v-row>
 
@@ -159,7 +147,7 @@
     </v-row>
 
     <!-- Section Table Billingable Summary-->
-    <v-row>
+    <v-row v-if="billings.summary && billings.summary.total.length">
       <v-col>
         <v-card outlined>
           <v-card-title>ຕາມປະເພດບິນ</v-card-title>
@@ -170,15 +158,12 @@
                   <tr>
                     <th>ປະເພດບິນ</th>
                     <th
-                      v-for="detailStatus in detailStatuses"
-                      :key="detailStatus.text"
+                      v-for="detailStatus in billings.summary.total"
+                      :key="detailStatus.status"
                       class="text-left"
                     >
-                      <v-chip
-                        :color="getBgColorFunc(detailStatus.text)"
-                        dark
-                      >
-                        {{ detailStatus.text }}
+                      <v-chip :color="getBgColorFunc(detailStatus.status)" dark>
+                        {{ detailStatus.status_la }}
                       </v-chip>
                     </th>
                   </tr>
@@ -248,27 +233,25 @@
           <v-card-text>
             <v-row>
               <v-col>
-                <v-alert
-                  outlined
-                  color="purple"
-                >
+                <v-alert outlined color="purple">
                   <v-row>
                     <v-col @click="changeSaleMode('sale')">
-                      <span class="text-title mt-2 font-weight-bold">ບິນທີ່ເປັນຂອງເຊວ</span>
+                      <span class="text-title mt-2 font-weight-bold"
+                        >ບິນທີ່ເປັນຂອງເຊວ</span
+                      >
                       <RowSection :cards="sectionSale" />
                     </v-col>
 
                     <v-col @click="changeSaleMode('sale_inactive')">
-                      <span class="text-title mt-2 font-weight-bold">ຊະເພາະ (inactive)</span>
+                      <span class="text-title mt-2 font-weight-bold"
+                        >ຊະເພາະ (inactive)</span
+                      >
                       <RowSection :cards="sectionSaleInactive" />
                     </v-col>
                   </v-row>
                 </v-alert>
               </v-col>
-              <v-col
-                cols="4"
-                @click="changeSaleMode('not_sale')"
-              >
+              <v-col cols="4" @click="changeSaleMode('not_sale')">
                 <span class="text-title mt-2">ບິນທີ່ບໍ່ເປັນຂອງເຊວ</span>
                 <RowSection :cards="sectionNotSale" />
               </v-col>
@@ -279,10 +262,12 @@
     </v-row>
 
     <!-- Section Table Village Summary-->
-    <v-row>
+    <v-row v-if="billings.summary && billings.summary.total.length">
       <v-col>
         <v-card outlined>
-          <v-card-title>ຕາມບ້ານ ({{ billings.villages ? billings.villages.length : 0 }})</v-card-title>
+          <v-card-title>
+            ຕາມບ້ານ ({{ billings.villages ? billings.villages.length : 0 }})
+          </v-card-title>
           <v-card-text>
             <v-simple-table>
               <template v-slot:default>
@@ -290,15 +275,12 @@
                   <tr>
                     <th>ບ້ານ</th>
                     <th
-                      v-for="detailStatus in detailStatuses"
+                      v-for="detailStatus in billings.summary.total"
                       :key="detailStatus.text"
                       class="text-left"
                     >
-                      <v-chip
-                        :color="getBgColorFunc(detailStatus.text)"
-                        dark
-                      >
-                        {{ detailStatus.text }}
+                      <v-chip :color="getBgColorFunc(detailStatus.status)" dark>
+                        {{ detailStatus.status_la }}
                       </v-chip>
                     </th>
                   </tr>
@@ -339,76 +321,22 @@
       </v-col>
     </v-row>
 
-    <!-- Section Table Summary-->
-    <v-row>
-      <v-col>
-        <v-card outlined>
-          <v-card-title>ຕາມປະເພດສັນຍາ</v-card-title>
-          <v-card-text>
-            <v-simple-table>
-              <template v-slot:default>
-                <thead>
-                  <tr>
-                    <th>ປະເພດສັນຍາ</th>
-                    <th
-                      v-for="detailStatus in detailStatuses"
-                      :key="detailStatus.text"
-                      class="text-left"
-                    >
-                      <v-chip
-                        :color="getBgColorFunc(detailStatus.text)"
-                        dark
-                      >
-                        {{ detailStatus.text }}
-                      </v-chip>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="item in summaryDetails"
-                    :key="item.package_id"
-                  >
-                    <td>
-                      <span class="font-weight-medium">
-                        {{ item.package_name }}
-                      </span>
-                      <span class="font-weight-medium text-caption">
-                        {{ ` (${formatNumber(item.count_billing)} ບິນ)` }}
-                      </span>
-                    </td>
-                    <td
-                      v-for="detailStatus in detailStatuses"
-                      :key="detailStatus.text"
-                    >
-                      <span class="font-weight-medium">
-                        {{ formatNumber(item[detailStatus.text].total) }}
-                      </span>
-                      <span class="font-weight-medium text-caption">
-                        {{
-                          `
-                        (${formatNumber(
-                            item[detailStatus.text].count_billing
-                          )} ບິນ)`
-                        }}
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </template>
-            </v-simple-table>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-
     <!-- Section Table Detail-->
     <v-row>
       <v-col>
         <v-card outlined>
           <v-card-title>
             <v-row>
-              <v-col>ລາຍການບິນທັງໝົດ <strong>{{ sale_mode ? (sale_mode == 'sale' ? 'ທີ່ເປັນຂອງເຊວ' : 'ທີ່ບໍ່ເປັນຂອງເຊວ') :'' }}</strong></v-col>
+              <v-col>
+                ລາຍການບິນທັງໝົດ
+                <strong>{{
+                  sale_mode
+                    ? sale_mode == "sale"
+                      ? "ທີ່ເປັນຂອງເຊວ"
+                      : "ທີ່ບໍ່ເປັນຂອງເຊວ"
+                    : ""
+                }}</strong>
+              </v-col>
               <v-col>
                 <v-text-field
                   v-model="billingListsearch"
@@ -428,14 +356,10 @@
                   :headers="billingListHeader"
                   :items="billings.data.data"
                   :items-per-page="100"
-
                   hide-default-footer
                 >
                   <template v-slot:item.status="{ item }">
-                    <v-chip
-                      :color="getBgColorFunc(item.status)"
-                      dark
-                    >
+                    <v-chip :color="getBgColorFunc(item.status)" dark>
                       {{ getLaoStatusFunc(item.status) }}
                     </v-chip>
                   </template>
@@ -446,7 +370,13 @@
                   <template v-slot:item.paided_by_user.full_name="{ item }">
                     <p
                       v-if="item.paided_by_user"
-                      :class="item.paided_by_user && item.paided_by_user.roles && item.paided_by_user.roles.length ? '':'text-decoration-line-through'"
+                      :class="
+                        item.paided_by_user &&
+                        item.paided_by_user.roles &&
+                        item.paided_by_user.roles.length
+                          ? ''
+                          : 'text-decoration-line-through'
+                      "
                     >
                       {{ item.paided_by_user.full_name }}
                     </p>
@@ -468,12 +398,7 @@
                       small
                       @click="ViewInvoice(item.id)"
                     >
-                      <v-icon
-                        class="mr-1"
-                        small
-                      >
-                        mdi-eye
-                      </v-icon>
+                      <v-icon class="mr-1" small> mdi-eye </v-icon>
                     </v-btn>
                   </template>
                 </v-data-table>
@@ -496,18 +421,18 @@
 </template>
 
 <script>
-import RowSection from '../../components/card/RowSection.vue';
+import RowSection from "../../components/card/RowSection.vue";
 import {
   getBgColor,
   getLaoStatus,
   payment_methods,
-} from '../../Helpers/BillingStatus';
-import { getLaoCompanyCostBy, billDateList } from '../../Helpers/Customer';
-import numberFormat from '../../Helpers/formatNumber';
-import queryOptions from '../../Helpers/queryOption';
+} from "../../Helpers/BillingStatus";
+import { getLaoCompanyCostBy, billDateList } from "../../Helpers/Customer";
+import numberFormat from "../../Helpers/formatNumber";
+import queryOptions from "../../Helpers/queryOption";
 
 export default {
-  name: 'ReportBillingType',
+  name: "ReportBillingType",
   title() {
     return `Vientiane Waste Co-Dev|Report Invoice`;
   },
@@ -519,19 +444,19 @@ export default {
       loading: false,
       sale_mode: "",
       paymentMethods: payment_methods,
-      selectedPaymentMethod: '',
-      billingListsearch: '',
-      exportMode: '',
+      selectedPaymentMethod: "",
+      billingListsearch: "",
+      exportMode: "",
       start_date: `${new Date().toISOString().substr(0, 8)}01`,
-      end_date: '',
+      end_date: "",
       start_menu: false,
       end_menu: false,
       villages: [],
-      selectedVillage: '',
+      selectedVillage: "",
       districts: [],
       selectedDistrict: null,
       packageList: [],
-      selectedPackage: '',
+      selectedPackage: "",
       selectedSale: null,
       salesData: [],
       current_page: 1,
@@ -554,36 +479,36 @@ export default {
           },
         },
       },
-      selectedBillDate: '',
+      selectedBillDate: "",
       billingListHeader: [
-        { text: 'ໄອດີ', value: 'billing_display_id' },
+        { text: "ໄອດີ", value: "billing_display_id" },
         {
-          text: 'ຊື່ຫົວບິນ',
-          align: 'start',
-          value: 'content',
-          width: '150px',
+          text: "ຊື່ຫົວບິນ",
+          align: "start",
+          value: "content",
+          width: "150px",
         },
-        { text: 'ສະຖານະ', value: 'status' },
-        { text: 'ປະເພດການຈ່າຍ', value: 'payment_method_la' },
-        { text: 'ຜູ້ຈ່າຍ', value: 'paided_by_user.full_name' },
-        { text: 'ປະເພດສັນຍາ', value: 'user.customer.package' },
-        { text: 'ຈຳນວນ', value: 'total' },
+        { text: "ສະຖານະ", value: "status" },
+        { text: "ປະເພດການຈ່າຍ", value: "payment_method_la" },
+        { text: "ຜູ້ຈ່າຍ", value: "paided_by_user.full_name" },
+        { text: "ປະເພດສັນຍາ", value: "user.customer.package" },
+        { text: "ຈຳນວນ", value: "total" },
 
-        { text: 'ລູກຄ້າ', value: 'display_customer_name' },
-        { text: 'ບ້ານ', value: 'display_customer_village', width: '100px' },
-        { text: 'ເມືອງ', value: 'display_customer_district' },
-        { text: 'action', value: 'action' },
+        { text: "ລູກຄ້າ", value: "display_customer_name" },
+        { text: "ບ້ານ", value: "display_customer_village", width: "100px" },
+        { text: "ເມືອງ", value: "display_customer_district" },
+        { text: "action", value: "action" },
       ],
-      lastMonthBill: localStorage.getItem('lastMonthBill'),
-      lastMonthBillPaid: localStorage.getItem('lastMonthBillPaid'),
+      lastMonthBill: localStorage.getItem("lastMonthBill"),
+      lastMonthBillPaid: localStorage.getItem("lastMonthBillPaid"),
     };
   },
   computed: {
     lastMonthCreated() {
-      return this.$store.getters['auth/getLastMonthBill'];
+      return this.$store.getters["auth/getLastMonthBill"];
     },
     lastMonthBillCreated() {
-      return this.$store.getters['auth/getLastMonthBillPaid'];
+      return this.$store.getters["auth/getLastMonthBillPaid"];
     },
     billDates() {
       return billDateList;
@@ -591,7 +516,7 @@ export default {
     sales() {
       const data = [];
       for (const item of this.salesData) {
-        let name = '';
+        let name = "";
         if (item.name) name += `${item.name} `;
         if (item.phone) name += `${item.phone} `;
         if (item.emp_name) name += `${item.emp_name} `;
@@ -643,9 +568,9 @@ export default {
     headers() {
       let header = [
         {
-          text: 'ປະເພດບິນ',
-          align: 'start',
-          value: 'package_name',
+          text: "ປະເພດບິນ",
+          align: "start",
+          value: "package_name",
         },
       ];
       if (this.detailStatuses.length) {
@@ -655,11 +580,11 @@ export default {
     },
     defaultStatus() {
       return {
-        status: '',
-        status_la: '',
+        status: "",
+        status_la: "",
         total: 0,
         count_billing: 0,
-        bg_color: '',
+        bg_color: "",
       };
     },
     sectionSuccess() {
@@ -671,52 +596,46 @@ export default {
     },
     sectionSale() {
       let item = this.defaultStatus;
-      if (this.billings.sum_sale && this.billings.sum_sale.total) {
-        item = this.billings.sum_sale.total.find((item) => item.status == 'success');
+      if (this.billings.sum_sale && this.billings.sum_sale.length) {
+        item = this.billings.sum_sale.find(
+          (item) => item.display_type == "by_sale",
+        );
       }
-      return [
-        { ...item, bg_color: 'teal' },
-      ];
+      return [{ ...item, bg_color: "teal" }];
     },
     sectionSaleInactive() {
-      let item = this.defaultStatus;
-      if (this.billings.sum_inactive_sale && this.billings.sum_inactive_sale.total) {
-        item = this.billings.sum_inactive_sale.total.find((item) => item.status == 'success');
-      }
-      return [
-        { ...item, bg_color: 'indigo' },
-      ];
+      const item = this.defaultStatus;
+      return [{ ...item, bg_color: "indigo" }];
     },
     sectionNotSale() {
       let item = this.defaultStatus;
-      if (this.billings.sum_not_sale && this.billings.sum_not_sale.total) {
-        item = this.billings.sum_not_sale.total.find((item) => item.status == 'success');
+      if (this.billings.sum_sale && this.billings.sum_sale.length) {
+        item = this.billings.sum_sale.find(
+          (item) => item.display_type == "by_not_sale",
+        );
       }
-      return [
-        { ...item, bg_color: 'teal darken-4' },
-
-      ];
+      return [{ ...item, bg_color: "teal darken-4" }];
     },
     sectionPending() {
       return [this.approvedStatus, this.createdStatus];
     },
     successStatus() {
-      return this.getCard('success');
+      return this.getCard("success");
     },
     createdStatus() {
-      return this.getCard('created');
+      return this.getCard("created");
     },
     cancelStatus() {
-      return this.getCard('cancel');
+      return this.getCard("cancel");
     },
     rejectedStatus() {
-      return this.getCard('rejected');
+      return this.getCard("rejected");
     },
     toConfirmPaymentStatus() {
-      return this.getCard('to_confirm_payment');
+      return this.getCard("to_confirm_payment");
     },
     approvedStatus() {
-      return this.getCard('approved');
+      return this.getCard("approved");
     },
   },
   watch: {
@@ -730,7 +649,7 @@ export default {
       this.fetchData();
     },
     selectedDistrict(old, value) {
-      if (value != old) this.selectedVillage = '';
+      if (value != old) this.selectedVillage = "";
       this.fetchData();
     },
     selectedVillage() {
@@ -768,24 +687,24 @@ export default {
 
       const options = additionalOption
         ? {
-          ...defaultOption,
-          ...additionalOption,
-        }
+            ...defaultOption,
+            ...additionalOption,
+          }
         : defaultOption;
 
       const routeData = this.$router.resolve({
-        path: '/billing',
+        path: "/billing",
         query: options,
       });
 
-      window.open(routeData.href, '_blank');
+      window.open(routeData.href, "_blank");
     },
     changeSaleMode(mode) {
       this.sale_mode = mode;
       this.fetchData();
     },
     handleExport() {
-      this.exportMode = 'excel';
+      this.exportMode = "excel";
     },
     customerType(item) {
       if (!item.user || !item.user.customer) return false;
@@ -796,7 +715,7 @@ export default {
     },
     async fetchDistrict() {
       try {
-        const result = await this.$axios.get('info/district', {
+        const result = await this.$axios.get("info/district", {
           params: { province_id: 1 },
         });
         this.districts = result.data.data;
@@ -806,7 +725,7 @@ export default {
     },
     async fetchPackage() {
       try {
-        const result = await this.$axios.get('all-package');
+        const result = await this.$axios.get("all-package");
         this.packageList = result.data.data;
       } catch (error) {
         console.log(error);
@@ -832,21 +751,25 @@ export default {
         { package_id: this.selectedPackage },
       ];
 
-      if (this.selectedVillage) queryArray.push({ village_id: this.selectedVillage });
-      else if (this.selectedDistrict) queryArray.push({ district_id: this.selectedDistrict.id });
+      if (this.selectedVillage) {
+        queryArray.push({ village_id: this.selectedVillage });
+      } else if (this.selectedDistrict) {
+        queryArray.push({ district_id: this.selectedDistrict.id });
+      }
 
-      this.$store.commit('Loading_State', true);
+      this.$store.commit("Loading_State", true);
       this.$axios
-        .get('v2/report-billing-home', {
+        .get("v2/report-billing-home", {
           params: queryOptions(queryArray),
         })
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.$store.commit('Loading_State', false);
-              this.exportMode = '';
-              if (res.data.data.download_link) window.open(res.data.data.download_link);
-              else {
+              this.$store.commit("Loading_State", false);
+              this.exportMode = "";
+              if (res.data.data.download_link) {
+                window.open(res.data.data.download_link);
+              } else {
                 this.billings = res.data.data;
                 this.billings.data.pagination.current_page;
               }
@@ -854,7 +777,7 @@ export default {
           }
         })
         .catch((error) => {
-          this.$store.commit('Loading_State', false);
+          this.$store.commit("Loading_State", false);
           if (error.response && error.response.status == 422) {
             const obj = error.response.data.errors;
             for (const [key, message] of Object.entries(obj)) {
@@ -864,23 +787,31 @@ export default {
         });
     },
     fetchSale() {
-      this.$store.commit('Loading_State', true);
+      this.$store.commit("Loading_State", true);
       this.$axios
-        .get('user-setting/user', {
+        .get("user-setting/user", {
           params: queryOptions([
-            { roles: ['sale', 'sale_admin', 'sale_register', 'sale_partner', 'sale_editor'] },
-            { order_by: 'newest' },
+            {
+              roles: [
+                "sale",
+                "sale_admin",
+                "sale_register",
+                "sale_partner",
+                "sale_editor",
+              ],
+            },
+            { order_by: "newest" },
           ]),
         })
         .then((res) => {
           if (res.data.code === 200) {
-            this.$store.commit('Loading_State', false);
-            this.$store.commit('Loading_State', false);
+            this.$store.commit("Loading_State", false);
+            this.$store.commit("Loading_State", false);
             this.salesData = res.data.data;
           }
         })
         .catch((error) => {
-          this.$store.commit('Loading_State', false);
+          this.$store.commit("Loading_State", false);
           if (error.response && error.response.status === 422) {
             const obj = error.response.data.errors;
             for (const [key, message] of Object.entries(obj)) {
@@ -891,10 +822,10 @@ export default {
     },
     ViewInvoice(id) {
       const route = this.$router.resolve({
-        name: 'billing-detail',
+        name: "billing-detail",
         params: { id },
       });
-      window.open(route.href, '_blank');
+      window.open(route.href, "_blank");
     },
     getCard(statusItem) {
       const data = this.billings.summary.total.find(
@@ -902,7 +833,7 @@ export default {
       );
       if (data) {
         const routeData = this.$router.resolve({
-          path: '/billing',
+          path: "/billing",
           query: {
             tab: statusItem,
           },
