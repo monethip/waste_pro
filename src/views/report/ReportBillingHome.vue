@@ -72,7 +72,10 @@
               v-on="on"
             />
           </template>
-          <v-date-picker v-model="start_date" @input="fetchData()" />
+          <v-date-picker
+            v-model="start_date"
+            @input="fetchData()"
+          />
         </v-menu>
       </v-col>
 
@@ -96,7 +99,10 @@
               v-on="on"
             />
           </template>
-          <v-date-picker v-model="end_date" @input="fetchData()" />
+          <v-date-picker
+            v-model="end_date"
+            @input="fetchData()"
+          />
         </v-menu>
       </v-col>
       <v-col>
@@ -124,7 +130,13 @@
         />
       </v-col>
       <v-col>
-        <v-btn color="green" dark @click="handleExport"> Export </v-btn>
+        <v-btn
+          color="green"
+          dark
+          @click="handleExport"
+        >
+          Export
+        </v-btn>
       </v-col>
     </v-row>
 
@@ -162,7 +174,10 @@
                       :key="detailStatus.status"
                       class="text-left"
                     >
-                      <v-chip :color="getBgColorFunc(detailStatus.status)" dark>
+                      <v-chip
+                        :color="getBgColorFunc(detailStatus.status)"
+                        dark
+                      >
                         {{ detailStatus.status_la }}
                       </v-chip>
                     </th>
@@ -233,25 +248,31 @@
           <v-card-text>
             <v-row>
               <v-col>
-                <v-alert outlined color="purple">
+                <v-alert
+                  outlined
+                  color="purple"
+                >
                   <v-row>
                     <v-col @click="changeSaleMode('sale')">
-                      <span class="text-title mt-2 font-weight-bold"
-                        >ບິນທີ່ເປັນຂອງເຊວ</span
-                      >
+                      <span
+                        class="text-title mt-2 font-weight-bold"
+                      >ບິນທີ່ເປັນຂອງເຊວ</span>
                       <RowSection :cards="sectionSale" />
                     </v-col>
 
                     <v-col @click="changeSaleMode('sale_inactive')">
-                      <span class="text-title mt-2 font-weight-bold"
-                        >ຊະເພາະ (inactive)</span
-                      >
+                      <span
+                        class="text-title mt-2 font-weight-bold"
+                      >ຊະເພາະ (inactive)</span>
                       <RowSection :cards="sectionSaleInactive" />
                     </v-col>
                   </v-row>
                 </v-alert>
               </v-col>
-              <v-col cols="4" @click="changeSaleMode('not_sale')">
+              <v-col
+                cols="4"
+                @click="changeSaleMode('not_sale')"
+              >
                 <span class="text-title mt-2">ບິນທີ່ບໍ່ເປັນຂອງເຊວ</span>
                 <RowSection :cards="sectionNotSale" />
               </v-col>
@@ -279,7 +300,10 @@
                       :key="detailStatus.text"
                       class="text-left"
                     >
-                      <v-chip :color="getBgColorFunc(detailStatus.status)" dark>
+                      <v-chip
+                        :color="getBgColorFunc(detailStatus.status)"
+                        dark
+                      >
                         {{ detailStatus.status_la }}
                       </v-chip>
                     </th>
@@ -359,7 +383,10 @@
                   hide-default-footer
                 >
                   <template v-slot:item.status="{ item }">
-                    <v-chip :color="getBgColorFunc(item.status)" dark>
+                    <v-chip
+                      :color="getBgColorFunc(item.status)"
+                      dark
+                    >
                       {{ getLaoStatusFunc(item.status) }}
                     </v-chip>
                   </template>
@@ -372,8 +399,8 @@
                       v-if="item.paided_by_user"
                       :class="
                         item.paided_by_user &&
-                        item.paided_by_user.roles &&
-                        item.paided_by_user.roles.length
+                          item.paided_by_user.roles &&
+                          item.paided_by_user.roles.length
                           ? ''
                           : 'text-decoration-line-through'
                       "
@@ -398,7 +425,12 @@
                       small
                       @click="ViewInvoice(item.id)"
                     >
-                      <v-icon class="mr-1" small> mdi-eye </v-icon>
+                      <v-icon
+                        class="mr-1"
+                        small
+                      >
+                        mdi-eye
+                      </v-icon>
                     </v-btn>
                   </template>
                 </v-data-table>

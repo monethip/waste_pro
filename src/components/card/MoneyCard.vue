@@ -4,6 +4,13 @@
     min-width="200px"
     @click="openNewTab(route)"
   >
+    <v-skeleton-loader
+      v-if="!billing_count && billing_count != 0"
+      class="mx-auto"
+      max-width="300"
+      type="card"
+    />
+
     <v-card-title
       class="d-flex justify-between w-full text-wrap"
       style="position: relative"
@@ -48,13 +55,15 @@
         class="text-caption text-wrap"
       >
         <p class="ma-0">
-          {{ Intl.NumberFormat().format(billing_count) }} {{ unit_count ? unit_count : "ບິນ" }}
+          {{ Intl.NumberFormat().format(billing_count) }}
+          {{ unit_count ? unit_count : "ບິນ" }}
         </p>
       </v-chip>
     </v-card-title>
     <v-card-text v-if="total">
       <p class="ma-0 text-h4 font-weight-bold">
-        {{ Intl.NumberFormat().format(total) }} {{ unit_total ? unit_total : 'k' }}
+        {{ Intl.NumberFormat().format(total) }}
+        {{ unit_total ? unit_total : "k" }}
       </p>
     </v-card-text>
   </v-card>
@@ -63,43 +72,46 @@
 <script>
 export default {
   props: [
-    'title',
-    'billing_count',
-    'total',
-    'bg_color',
-    'route',
-    'icon',
-    'icon_color',
-    'unit_count',
-    'unit_total',
+    "title",
+    "billing_count",
+    "total",
+    "bg_color",
+    "route",
+    "icon",
+    "icon_color",
+    "unit_count",
+    "unit_total",
   ],
   data() {
     return {};
   },
-  created() {
-  },
+  created() {},
   beforeUpdate() {
-    this.$store.commit('Loading_State', true);
+    this.$store.commit("Loading_State", true);
   },
   updated() {
-    this.$store.commit('Loading_State', false);
+    this.$store.commit("Loading_State", false);
   },
   methods: {
     getColor(value) {
       return `background-color: ${value}`;
     },
     openNewTab(route) {
-      if (route) window.open(route.href, '_blank');
+      if (route) window.open(route.href, "_blank");
     },
     isContrastingWithWhite(color) {
       if (color) {
         const relativeLuminance = (color) => {
-          const [r, g, b] = color.match(/\w\w/g).map((x) => parseInt(x, 16) / 255);
+          const [r, g, b] = color
+            .match(/\w\w/g)
+            .map((x) => parseInt(x, 16) / 255);
           const gamma = (c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
           return 0.2126 * gamma(r) + 0.7152 * gamma(g) + 0.0722 * gamma(b);
         };
 
-        const contrast = Math.abs(relativeLuminance(color) - relativeLuminance('#ffffff'));
+        const contrast = Math.abs(
+          relativeLuminance(color) - relativeLuminance("#ffffff"),
+        );
         return contrast >= 0.5;
       }
     },
