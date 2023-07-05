@@ -5,7 +5,7 @@
     @click="openNewTab(route)"
   >
     <v-skeleton-loader
-      v-if="!billing_count && billing_count != 0"
+      v-if="(!billing_count && billing_count != 0) && (!total && total != 0)"
       class="mx-auto"
       max-width="300"
       type="card"
@@ -81,6 +81,7 @@ export default {
     "icon_color",
     "unit_count",
     "unit_total",
+    "loading",
   ],
   data() {
     return {};
