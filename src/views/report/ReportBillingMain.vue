@@ -116,34 +116,20 @@ export default {
         { tab: 'ຫົວໜ່ວຍທຸລະກິດ', content: 'ReportBillingCompany' },
         { tab: 'ຄົວເຮືອນ', content: 'ReportBillingHome' },
         { tab: 'ຖ້ຽວພິເສດ', content: 'ReportBillingCollectionEvent' },
-        { tab: 'ຈ່າຍລ່ວງໜ້າ', content: 'ReportBillingFutureInvoice' },
-        { tab: 'ບິນຍ້ອນຫຼັງ', content: 'ReportBillingCustomBill' },
       ],
-      lastMonthBill: localStorage.getItem('lastMonthBill'),
-      lastMonthBillPaid: localStorage.getItem('lastMonthBillPaid'),
+      lastMonthBill: '',
+      lastMonthBillPaid: '',
       start_menu_created: false,
       start_menu: false,
     };
   },
   computed: {
-    lastMonthCreated() {
-      return this.$store.getters['auth/getLastMonthBill'];
-    },
-    lastMonthBillPaidCreated() {
-      return this.$store.getters['auth/getLastMonthBillPaid'];
-    },
   },
   created() {
-    if (!this.lastMonthBillPaid && !this.$route.query.from_sale) this.lastMonthBillPaid = new Date().toISOString().substr(0, 7);
+    if (this.$route.query.from_sale) this.lastMonthBillPaid = new Date().toISOString().substr(0, 7);
     else this.lastMonthBillPaid = '';
   },
   watch: {
-    lastMonthBill(value) {
-      this.$store.dispatch('auth/saveLastMonthBill', value);
-    },
-    lastMonthBillPaid(value) {
-      this.$store.dispatch('auth/saveLastMonthBillPaid', value);
-    },
   },
 };
 </script>
