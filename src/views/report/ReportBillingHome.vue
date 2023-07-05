@@ -409,7 +409,7 @@
                     </p>
                   </template>
                   <template v-slot:item.user.customer.package="{ item }">
-                    {{ `${item.user.customer.package.name}` }}
+                    {{ item.user.customer.package ? `${item.user.customer.package.name}` : '' }}
                   </template>
 
                   <template v-slot:item.custom_type="{ item }">
@@ -633,11 +633,11 @@ export default {
           (item) => item.display_type == "by_sale",
         );
       }
-      return [{ ...item, bg_color: "teal" }];
+      return [{ ...item, title: "ຈ່າຍແລ້ວ ກວດສອບສຳເລັດ", bg_color: "teal" }];
     },
     sectionSaleInactive() {
       const item = this.defaultStatus;
-      return [{ ...item, bg_color: "indigo" }];
+      return [{ ...item, title: "ຈ່າຍແລ້ວ ກວດສອບສຳເລັດ", bg_color: "indigo" }];
     },
     sectionNotSale() {
       let item = this.defaultStatus;
