@@ -511,7 +511,7 @@ export default {
           },
         },
       },
-      selectedBillDate: "",
+      selectedBillDate: "paided_at",
       billingListHeader: [
         { text: "ໄອດີ", value: "billing_display_id" },
         {

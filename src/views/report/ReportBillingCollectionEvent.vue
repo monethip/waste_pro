@@ -331,7 +331,7 @@ export default {
         { text: 'ເມືອງ', value: 'display_customer_district' },
         { text: 'action', value: 'action' },
       ],
-      selectedBillDate: '',
+      selectedBillDate: 'paided_at',
     };
   },
   computed: {

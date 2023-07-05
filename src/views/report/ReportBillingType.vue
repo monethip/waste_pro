@@ -407,7 +407,7 @@ export default {
         },
         download_link: '',
       },
-      selectedBillDate: '',
+      selectedBillDate: 'paided_at',
       billingListHeader: [
         { text: 'ໄອດີ', value: 'billing_display_id' },
         {
@@ -637,6 +637,8 @@ export default {
       })
       .finally(() => {
         this.$store.commit('Loading_State', false);
+        this.selectedBillDate = 'paided_at';
+        this.start_date = new Date().toISOString().substr(0, 10);
         this.fetchData();
       });
   },
