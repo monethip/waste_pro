@@ -719,9 +719,9 @@ export default {
 
       const options = additionalOption
         ? {
-            ...defaultOption,
-            ...additionalOption,
-          }
+          ...defaultOption,
+          ...additionalOption,
+        }
         : defaultOption;
 
       const routeData = this.$router.resolve({

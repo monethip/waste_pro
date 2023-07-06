@@ -11,8 +11,6 @@ module.exports = {
     parser: '@babel/eslint-parser',
   },
   rules: {
-    indent: 'off',
-    'operator-linebreak': 'off',
     'vue/multi-word-component-names': 'off',
     'vue/require-prop-types': 'off',
     'max-len': 'off',
