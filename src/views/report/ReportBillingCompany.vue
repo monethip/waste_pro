@@ -629,14 +629,12 @@ export default {
     detailStatuses() {
       const data = [];
 
-      if (this.summaryDetails.length) {
-        for (const [key, value] of Object.entries(this.summaryDetails[0])) {
-          if (value.count_billing !== undefined) {
-            data.push({
-              text: key,
-              value: `${key}.total`,
-            });
-          }
+      if (this.billings.summary && this.billings.summary.total.length) {
+        for (const item of this.billings.summary.total) {
+          data.push({
+            text: item.status_la,
+            value: item.total,
+          });
         }
       }
       return data;
