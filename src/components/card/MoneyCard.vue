@@ -5,7 +5,7 @@
     @click="openNewTab(route)"
   >
     <v-skeleton-loader
-      v-if="(!billing_count && billing_count != 0) && (!total && total != 0)"
+      v-if="(!title)"
       class="mx-auto"
       max-width="300"
       type="card"
