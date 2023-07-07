@@ -609,7 +609,7 @@ export default {
     },
   },
   beforeCreate() {
-    this.$store.commit('Loading_State', true);
+    // this.$store.commit('Loading_State', true);
   },
   async created() {
     await this.fetchDistrict();
@@ -696,7 +696,6 @@ export default {
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.$store.commit('Loading_State', false);
               this.exportMode = '';
               if (res.data.data.download_link) window.open(res.data.data.download_link);
               else {
@@ -707,7 +706,6 @@ export default {
           }
         })
         .catch((error) => {
-          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status == 422) {
             const obj = error.response.data.errors;
             for (const [key, message] of Object.entries(obj)) {
@@ -717,6 +715,7 @@ export default {
         })
         .finally(() => {
           this.firstLoad = false;
+          this.$store.commit('Loading_State', false);
         });
     },
     async fetchSale() {
@@ -729,20 +728,17 @@ export default {
           ]),
         })
         .catch((error) => {
-          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status === 422) {
             const obj = error.response.data.errors;
             for (const [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
           }
-        });
+        }).finally(() => { this.$store.commit('Loading_State', false); });
 
       if (res.data.code === 200) {
         this.salesData = res.data.data;
       }
-
-      this.$store.commit('Loading_State', false);
       this.$store.commit('Loading_State', false);
     },
     ViewInvoice(id) {

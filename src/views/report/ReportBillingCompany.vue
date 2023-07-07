@@ -812,7 +812,6 @@ export default {
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.$store.commit('Loading_State', false);
               this.exportMode = '';
               if (res.data.data.download_link) window.open(res.data.data.download_link);
               else {
@@ -823,14 +822,13 @@ export default {
           }
         })
         .catch((error) => {
-          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status == 422) {
             const obj = error.response.data.errors;
             for (const [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
           }
-        });
+        }).finally(() => { this.$store.commit('Loading_State', false); });
     },
     fetchSale() {
       this.$store.commit('Loading_State', true);
@@ -843,20 +841,17 @@ export default {
         })
         .then((res) => {
           if (res.data.code === 200) {
-            this.$store.commit('Loading_State', false);
-            this.$store.commit('Loading_State', false);
             this.salesData = res.data.data;
           }
         })
         .catch((error) => {
-          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status === 422) {
             const obj = error.response.data.errors;
             for (const [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
           }
-        });
+        }).finally(() => { this.$store.commit('Loading_State', false); });
     },
     openRoute(additionalOption = null) {
       const defaultOption = queryOptions([
