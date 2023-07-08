@@ -52,6 +52,7 @@ export default {
         .get(`plan-calendar/${this.$route.params.id}/detail`, {
           params: {
             statuses: this.statuses,
+            without_month_info: true,
           },
         })
         .then((res) => {
@@ -77,7 +78,7 @@ export default {
     fetchAllData() {
       this.$store.commit('Loading_State', true);
       this.$axios
-        .get(`plan-calendar/${this.$route.params.id}/detail`)
+        .get(`plan-calendar/${this.$route.params.id}/detail?without_month_info=true`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
@@ -118,11 +119,11 @@ export default {
     },
   },
   watch: {
-    search(value) {
-      if (value == '') {
-        this.fetchData();
-      }
-    },
+    // search(value) {
+    //   if (value == '') {
+    //     this.fetchData();
+    //   }
+    // },
   },
   created() {
     this.fetchData();
