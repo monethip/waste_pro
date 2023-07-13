@@ -13,13 +13,14 @@
       </v-btn>
       ລາຍລະອຽດ
       <router-link
+        v-if="$can('update_customer')"
         class="ml-4"
         :to="`/edit/customer/${data.id}`"
       >
         ແກ້ໄຂ
       </router-link>
     </v-breadcrumbs>
-    <v-row>
+    <v-row v-if="!$role('kbt')">
       <v-col>
         <v-card>
           <v-card-text>
@@ -33,7 +34,7 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row v-if="!$role('kbt')">
       <v-col>
         <v-card>
           <v-card-text>
@@ -75,10 +76,16 @@
               <v-tab href="#tab-1">
                 ຂໍ້ມູນກ່ຽວກັບ
               </v-tab>
-              <v-tab href="#tab-2">
+              <v-tab
+                v-if="!$role('kbt')"
+                href="#tab-2"
+              >
                 ຂໍ້ມູນການບໍລິການ
               </v-tab>
-              <v-tab href="#tab-3">
+              <v-tab
+                v-if="!$role('kbt')"
+                href="#tab-3"
+              >
                 ຂໍ້ມູນການຊຳລະ
               </v-tab>
             </v-tabs>
@@ -289,7 +296,10 @@
               </v-tab-item>
             </v-tabs-items>
 
-            <v-tabs-items v-model="tab">
+            <v-tabs-items
+              v-if="!$role('kbt')"
+              v-model="tab"
+            >
               <v-tab-item value="tab-2">
                 <v-container>
                   <v-row>
@@ -447,7 +457,10 @@
               </v-tab-item>
             </v-tabs-items>
 
-            <v-tabs-items v-model="tab">
+            <v-tabs-items
+              v-if="!$role('kbt')"
+              v-model="tab"
+            >
               <v-tab-item value="tab-3">
                 <v-container>
                   <v-row>
