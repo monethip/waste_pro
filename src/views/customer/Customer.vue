@@ -3,18 +3,21 @@
     <v-row>
       <v-col>
         <v-btn
+          v-if="$can('create_customer')"
           class="btn-primary mr-4"
           @click="createPage()"
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
         <v-btn
+          v-if="!$role('kbt')"
           class="btn-primary mr-4"
           @click="importData()"
         >
           <v-icon>mdi-file-import</v-icon>
         </v-btn>
         <v-btn
+          v-if="!$role('kbt')"
           class="btn-success"
           @click="exportData()"
         >
@@ -343,6 +346,7 @@
                       </template>
                       <v-list>
                         <v-list-item
+                          v-if="$can('update_customer')"
                           link
                           @click="addPackage(item.id)"
                         >
@@ -357,7 +361,7 @@
                           </v-list-item-title>
                         </v-list-item>
                         <v-list-item
-                          link
+                          v-if="$can('update_customer')"
                           @click="openChangePackage(item)"
                         >
                           <v-list-item-title>
@@ -385,6 +389,7 @@
                           </v-list-item-title>
                         </v-list-item>
                         <v-list-item
+                          v-if="$can('update_customer')"
                           link
                           @click="editPage(item.id)"
                         >
@@ -399,6 +404,7 @@
                           </v-list-item-title>
                         </v-list-item>
                         <v-list-item
+                          v-if="$can('delete_customer')"
                           link
                           @click="deleteItem(item.id)"
                         >
