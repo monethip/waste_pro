@@ -514,7 +514,7 @@ export default {
         { text: 'ປະເພດບໍລິການ', value: 'cost_by_la' },
         { text: 'ມູນຄ່າສັນຍາ', value: 'fix_cost' },
         { text: 'ເລີ່ມບໍລິການ', value: 'start_month', sortable: false },
-        { text: 'ຜູ້ສ້າງ', value: 'customer_activity.causer.full_name' },
+        { text: 'ຜູ້ສ້າງ', value: 'customer_activity.user.full_name' },
         { text: 'Created', value: 'created_at', sortable: false },
         { text: 'ສະຖານະ', value: 'status', sortable: false },
         { text: '', value: 'actions', sortable: false },

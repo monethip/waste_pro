@@ -466,7 +466,7 @@ export default {
         { text: 'ປະເພດບໍລິການ', value: 'package.name' },
         { text: 'ບ້ານ', value: 'village.name' },
         { text: 'ມູນຄ່າແພັກເກຈ', value: 'package.price' },
-        { text: 'ຜູ້ສ້າງ', value: 'customer_activity.causer.full_name' },
+        { text: 'ຜູ້ສ້າງ', value: 'customer_activity.user.full_name' },
         { text: 'ວັນທີສະໝັກ', value: 'created_at', sortable: false },
         { text: 'ສະຖານະ', value: 'status', sortable: false },
         { text: '', value: 'actions', sortable: false },

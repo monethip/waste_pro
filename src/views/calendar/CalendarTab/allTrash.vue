@@ -67,47 +67,6 @@
       </v-col>
     </v-row>
     <div>
-      <v-simple-table v-if="dragEnabled">
-        <thead>
-          <tr>
-            <td />
-            <td>priority</td>
-            <td>customer_id</td>
-            <td>full_name</td>
-            <td>phone</td>
-          </tr>
-        </thead>
-        <draggable
-          :list="allCalendars"
-          tag="tbody"
-        >
-          <!-- eslint-disable -->
-          <tr v-for="(calendar,index) in allCalendars" v-if="!calendar.is_pause" :key="index">
-            <td>
-              <v-icon small>mdi-arrow-all</v-icon>
-            </td>
-            <td>{{ calendar.priority }}</td>
-            <td>
-              {{
-                calendar.route_plan_detail.customer.customer_id
-              }}
-            </td>
-            <td>
-              {{
-                calendar.route_plan_detail.customer.full_name
-              }}
-            </td>
-            <td>
-              {{
-                calendar.route_plan_detail.customer.user.phone
-              }}
-            </td>
-          </tr>
-          <!-- eslint-enable -->
-        </draggable>
-      </v-simple-table>
-    </div>
-    <div v-if="!dragEnabled">
       <v-dialog
         v-model="dialog"
         max-width="300px"
@@ -115,69 +74,45 @@
       >
         <template v-slot:activator="{ on, attrs }">
           <v-data-table
-            v-if="calendars"
+            v-if="calendarTable.length"
             :disable-pagination="true"
             :headers="headers"
-            :items="calendars"
+            :items="calendarTable"
             :search="search"
             hide-default-footer
           >
-            <template v-slot:item.route_plan_detail.customer.full_name="{ item }">
+            <template v-slot:full_name="{ item }">
               <a
                 href="#"
                 @click="openRoute(item)"
-              >{{ item.route_plan_detail.customer.full_name }}</a>
+              >{{ full_name }}</a>
             </template>
-            <template v-slot:item.created_at="{ item }">
-              <div>{{ moment(item.created_at).format("DD-MM-YY hh:mm ") }}</div>
-            </template>
-            <template v-slot:item.date="{ item }">
-              <div>{{ moment(item.date).format("DD-MM-YY hh:mm:ss") }}</div>
-            </template>
-            <template v-slot:item.status="{ item }">
+            <template v-slot:status="{ item }">
               <v-chip
-                :color="statusColor(item.status)"
+                :color="item.status_color"
                 label
               >
                 {{ item.status }}
               </v-chip>
             </template>
-            <template v-slot:item.amount="{ item }">
-              <div v-if="item.collection_type == 'bag' || item.collection_type == 'chartered' || item.collection_type == '32km' || item.collection_type == 'infect'">
-                <v-chip color="primary">
-                  {{ item.bag }}
-                </v-chip>
-                <span>{{ getUnit(item.collection_type) }}</span>
-              </div>
-              <div v-else-if="item.collection_type == 'fix_cost'">
-                <span>{{ getUnit(item.collection_type) }}</span>
-              </div>
-              <div v-else>
-                <v-chip color="success">
-                  {{ item.container }}
-                </v-chip>
-                <span>{{ getUnit(item.collection_type) }}</span>
-              </div>
-            </template>
+            <!-- <template v-slot:item.amount="{ item }">
+              <div>{{ getAmountTemplate(item) }}</div>
+            </template> -->
 
-            <template v-slot:item.is_pause="{ item }">
+            <template v-slot:is_pause="{ item }">
               <v-chip
-                :color="item.is_pause?'orange':'green'"
+                :color="item.is_pause_color"
                 dark
                 label
                 @click="switchPause(item.id)"
               >
-                {{
-                  item.is_pause ? 'ຢຸດກ່ອນ' : 'ໃຫ້ເກັບ'
-                }}
+                {{ item.is_pause }}
               </v-chip>
             </template>
 
-            <template v-slot:item.route_plan_detail.customer.can_collect="{ item }">
-              <v-chip :color="item.route_plan_detail.customer.can_collect ? 'success' : 'error'">
-                {{
-                  item.route_plan_detail.customer.can_collect ? 'ເກັບໄດ້' : 'ເກັບບໍ່ໄດ້'
-                }}
+            <template v-slot:can_collect="{ item }">
+              <v-chip :color="item.can_collect_color">
+                {{ item.can_collect }}
               </v-chip>
             </template>
 
@@ -239,19 +174,69 @@
         />
       </template>
     </div>
+
+    <!-- <div >
+      <v-simple-table>
+        <thead>
+          <tr>
+            <td />
+            <td>priority</td>
+            <td>customer_id</td>
+            <td>full_name</td>
+            <td>phone</td>
+          </tr>
+        </thead>
+        <draggable
+          :list="allCalendars"
+          tag="tbody"
+        >
+          <template
+            v-for="(calendar,index) in allCalendars"
+          >
+            <tr
+              v-if="!calendar.is_pause"
+              :key="index"
+            >
+              <td>
+                <v-icon small>
+                  mdi-arrow-all
+                </v-icon>
+              </td>
+              <td>{{ calendar.priority }}</td>
+              <td>
+                {{
+                  calendar.route_plan_detail.customer.customer_id
+                }}
+              </td>
+              <td>
+                {{
+                  calendar.route_plan_detail.customer.full_name
+                }}
+              </td>
+              <td>
+                {{
+                  calendar.route_plan_detail.customer.user.phone
+                }}
+              </td>
+            </tr>
+          </template>
+        </draggable>
+      </v-simple-table>
+    </div> -->
   </v-container>
 </template>
 
 <script>
 // import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import trashMixin from '@/views/calendar/trashMixin';
-import draggable from 'vuedraggable';
+// import draggable from 'vuedraggable';
 // import queryOptions from "@/Helpers/queryOption";
+import moment from 'moment';
 
 export default {
   name: 'Trash',
   components: {
-    draggable,
+    // draggable,
   },
   mixins: [trashMixin],
   data() {
@@ -282,12 +267,12 @@ export default {
 
       headers: [
         { text: 'ລຳດັບຄວາມສຳຄັນ', value: 'priority' },
-        { text: 'ໄອດີ', value: 'route_plan_detail.customer.customer_id' },
-        { text: 'ລູກຄ້າ', value: 'route_plan_detail.customer.full_name' },
-        { text: 'ເບີໂທ', value: 'route_plan_detail.customer.user.phone' },
+        { text: 'ໄອດີ', value: 'customer_id' },
+        { text: 'ລູກຄ້າ', value: 'full_name' },
+        { text: 'ເບີໂທ', value: 'phone' },
         {
           text: 'ສະຖານະເກັບ',
-          value: 'item.route_plan_detail.customer.can_collect',
+          value: 'can_collect',
         },
         {
           text: 'ຈຳນວນຂີ້ເຫື້ຍອ',
@@ -307,11 +292,6 @@ export default {
         {
           text: 'ວັນທີເກັບ',
           value: 'collected_at',
-          align: 'center',
-        },
-        {
-          text: 'can_collect',
-          value: 'route_plan_detail.customer.can_collect',
           align: 'center',
         },
         {
@@ -478,12 +458,64 @@ export default {
         this.dialog = false;
       }
     },
+    formatDate(date, format = 'DD-MM-YY hh:mm') {
+      return moment(date).format(format);
+    },
+    getAmountTemplate(collection_type, bag, container) {
+      if (
+        collection_type === 'bag'
+      || collection_type === 'chartered'
+      || collection_type === '32km'
+      || collection_type === 'infect'
+      ) {
+        return `${bag} ${this.getUnit(collection_type)}`;
+      } if (collection_type === 'fix_cost') {
+        return `${this.getUnit(collection_type)}`;
+      }
+      return `${container} ${this.getUnit(collection_type)}
+      `;
+    },
   },
   computed: {
     filteredData() {
       return this.calendars.filter((item) => item.route_plan_detail.customer.customer_id.includes(this.search) || item.route_plan_detail.customer.full_name.includes(this.search) || item.route_plan_detail.customer.user.phone.includes(this.search));
     },
+    calendarTable() {
+      const data = [];
+      for (const item of this.calendars) {
+        const dataItem = {
+          id: item.id,
+          priority: item.priority,
+          customer_id: item.route_plan_detail.customer.customer_id,
+          full_name: item.route_plan_detail.customer.full_name,
+          phone: item.route_plan_detail.customer.user.phone,
+          can_collect: item.route_plan_detail.customer.can_collect ? 'ເກັບໄດ້' : 'ເກັບບໍ່ໄດ້',
+          can_collect_color: item.route_plan_detail.customer.can_collect ? 'success' : 'errorr',
+          amount: this.getAmountTemplate(item.collection_type, item.bag, item.container),
+          status: item.status_la,
+          status_color: this.statusColor(item.status),
+          created_at: this.formatDate(item.created_at),
+          collected_at: this.formatDate(item.collected_at),
+          is_pause: item.is_pause ? 'ຢຸດກ່ອນ' : 'ໃຫ້ເກັບ',
+          is_pause_color: item.is_pause ? 'orange' : 'green',
+        };
 
+        data.push(dataItem);
+      }
+
+      return data;
+    },
+    formattedCalendars() {
+      if (!this.calendars) {
+        return [];
+      }
+      return this.calendars.map((item) => ({
+        ...item,
+        created_at: this.formatDate(item.created_at),
+        date: this.formatDate(item.date, 'hh:mm:ss'),
+        amount: this.getAmountTemplate(item),
+      }));
+    },
   },
 };
 </script>

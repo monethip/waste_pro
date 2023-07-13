@@ -344,10 +344,12 @@ export default {
       ];
     },
     lastMonthCreated() {
-      return this.$store.getters['auth/getLastMonthBill'];
+      // return this.$store.getters['auth/getLastMonthBill'];
+      return '';
     },
     lastMonthBillCreated() {
-      return this.$store.getters['auth/getLastMonthBillPaid'];
+      // return this.$store.getters['auth/getLastMonthBillPaid'];
+      return '';
     },
     billDates() {
       return billDateList;
