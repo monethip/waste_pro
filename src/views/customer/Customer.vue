@@ -24,7 +24,7 @@
           <v-icon>mdi-file-export</v-icon>
         </v-btn>
       </v-col>
-      <v-col>
+      <v-col v-if="!$role('kbt')">
         <p class="text-caption">
           ແພກເກຈ
         </p>
@@ -120,7 +120,7 @@
           outlined
         />
       </v-col>
-      <v-col>
+      <v-col v-if="!$role('kbt')">
         <v-select
           v-model="selectedStatus"
           :items="status"
@@ -134,7 +134,7 @@
         />
       </v-col>
 
-      <v-col>
+      <v-col v-if="!$role('kbt')">
         <v-select
           v-model="selectedCustomerStatus"
           :items="customerStatus"
@@ -147,7 +147,10 @@
           outlined
         />
       </v-col>
-      <v-col cols>
+      <v-col
+        v-if="!$role('kbt')"
+        cols
+      >
         <v-select
           v-model="selectedFavoriteDate"
           :items="favorite_dates"
