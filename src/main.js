@@ -7,6 +7,7 @@ import '@/store/apis';
 import moment from 'moment';
 import * as VueGoogleMaps from 'vue2-google-maps';
 import can from '@/Helpers/Can';
+import role from '@/Helpers/Role';
 import mixin from '@/Helpers/Mixin';
 import openRoute from '@/Helpers/RouteOpen';
 import DatePicker from 'vue2-datepicker';
@@ -61,6 +62,7 @@ Vue.prototype.moment = moment;
 Vue.use(VueApexCharts);
 Vue.component('apexchart', VueApexCharts);
 Vue.prototype.$can = can;
+Vue.prototype.$role = role;
 Vue.mixin(mixin);
 Vue.prototype.$openRoute = openRoute;
 // Vue.use(VueBreadcrumbs,{

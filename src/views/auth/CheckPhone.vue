@@ -154,6 +154,7 @@ export default {
         if (this.phone.length == 8) {
         // Check Phone number
           this.$store.commit('Loading_State', true);
+          this.loading = true;
           this.$axios
             .post("auth/check-phone", {
               credential: this.user.credential,
@@ -175,12 +176,10 @@ export default {
                       this.verifyPhone = false;
                       this.$store.commit('Loading_State', false);
                     })
-                    .catch(function () {
-                      this.$store.commit('Toast_State', {
-                        value: true,
-                        color: 'error',
-                        msg: 'SMS not sent',
-                      });
+                    .catch(function (err) {
+                      console.log(err);
+                      this.error = err;
+
                       // this.$store.commit('Loading_State', true);;
                     });
                 } else if (res.data.data.collect === false) {
@@ -196,6 +195,8 @@ export default {
             .catch((error) => {
               this.error = error;
               this.$store.commit('Loading_State', false);
+            }).finally(() => {
+              this.loading = false;
             });
         }
       } catch (error) {
@@ -211,7 +212,6 @@ export default {
         .confirm(code)
         .then((res) => {
           if (res) {
-            this.btnVerify = false;
             const token = res.user;
             localStorage.setItem("id_token", token._lat);
           }
@@ -236,12 +236,11 @@ export default {
           this.$store.commit("Loading_State", false);
           // this.$store.commit("Loading_State", true);
         })
-        .catch(function () {
-          this.$store.commit("Toast_State", {
-            value: true,
-            color: "error",
-            msg: "ມີບາງຢ່າງຜິດພາດ ກະລຸນາລອງໃໝ່",
-          });
+        .catch(function (err) {
+          console.log(err);
+          this.error = err;
+        }).finally(() => {
+          this.btnVerify = false;
         });
     },
 

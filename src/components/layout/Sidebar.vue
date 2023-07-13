@@ -283,14 +283,13 @@
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </v-list-item>
-
         <div
           v-for="item in group_menu"
           :key="item.id"
           class="group-menu"
         >
           <v-list-group
-            v-if="item.menu.length && (item.group_permissions.length <= 0 || $can(item.group_permissions))"
+            v-if="(!item.except_roles || (item.except_roles.length && !$role(item.except_roles))) &&( item.menu.length && (item.group_permissions.length <= 0 || $can(item.group_permissions)))"
             class="group-menu-icon"
             :prepend-icon="item.icon"
             no-action
@@ -298,7 +297,7 @@
           >
             <template v-slot:activator>
               <v-list-item-content>
-                <v-list-item-title>{{ item.title }}</v-list-item-title>
+                <v-list-item-title> {{ item.title }}</v-list-item-title>
               </v-list-item-content>
             </template>
             <div
@@ -307,7 +306,7 @@
               style="padding-left: 22px"
             >
               <v-list-item
-                v-if="i.permissions.length <= 0 || $can(i.permissions)"
+                v-if="!i.except_roles || (i.except_roles.length && !$role(i.except_roles)) && (i.permissions.length <= 0 || $can(i.permissions))"
                 exact
                 color="primary-color"
                 :to="i.to"
@@ -322,7 +321,7 @@
             </div>
           </v-list-group>
           <v-list-item
-            v-if="!item.menu.length"
+            v-if="(!item.except_roles || (item.except_roles.length && !$role(item.except_roles))) && (!item.menu.length && (item.permissions.length <= 0 || $can(item.permissions)))"
             :to="item.to"
             router
             exact
@@ -363,6 +362,7 @@ export default {
         {
           title: 'ຈັດການຂັ້ນສູງ',
           icon: 'mdi-account-supervisor-circle',
+          except_roles: ['kbt'],
           group_permissions: ['delete_any_customers', 'delete_any_bills'],
           menu: [
             {
@@ -401,12 +401,14 @@ export default {
               title: 'dashboard',
               to: '/',
               permissions: ['get_dashboard'],
+              except_roles: ['kbt'],
             },
             {
               icon: 'mdi-apps',
               title: 'Activity Log',
               to: '/activity-log',
               permissions: ['get_activity'],
+              except_roles: ['kbt'],
             },
           ],
         },
@@ -420,6 +422,7 @@ export default {
             'get_driver',
             'get_address',
           ],
+          except_roles: ['kbt'],
           menu: [
             {
               icon: 'mdi-file-import',
@@ -462,6 +465,7 @@ export default {
         {
           title: 'ຂໍ້ມູນຜູ້ໃຊ້',
           icon: 'mdi-account-supervisor',
+          except_roles: ['kbt'],
           group_permissions: [
             'get_role',
             'get_user',
@@ -513,6 +517,7 @@ export default {
               title: 'ລູກຄ້າທີ່ຍັງບໍ່ເຂົ້າບໍລິການ',
               to: '/pre-customer',
               permissions: ['get_customer'],
+              except_roles: ['kbt'],
             },
             {
               icon: 'mdi-account-group',
@@ -525,18 +530,21 @@ export default {
               title: 'ລູກຄ້າຫົວໜ່ວຍທຸລະກິດ',
               to: '/company',
               permissions: ['get_customer'],
+              except_roles: ['kbt'],
             },
             {
               icon: 'mdi-account-group',
               title: 'ລູກຄ້າສົງຄຳຮ້ອງຂໍເຂົ້າມາ',
               to: '/company-request',
               permissions: ['get_customer'],
+              except_roles: ['kbt'],
             },
           ],
         },
         {
           title: 'ແຜນເສັ້ນທາງ',
           icon: 'mdi-map',
+          except_roles: ['kbt'],
           group_permissions: ['get_route_plan'],
           menu: [
             {
@@ -556,6 +564,7 @@ export default {
         {
           icon: 'mdi-delete',
           title: 'ເກັບຂີ້ເຫື້ຍອພິເສດ',
+          except_roles: ['kbt'],
           permissions: ['manage_event', 'get_customer'],
           to: '/v2/event-invoice',
           menu: [],
@@ -583,6 +592,7 @@ export default {
         {
           title: 'ຈັດການບິນ',
           icon: 'mdi-credit-card',
+          except_roles: ['kbt'],
           group_permissions: ['get_invoice'],
           menu: [
             {
@@ -616,6 +626,7 @@ export default {
         {
           title: 'ລາຍງານ',
           icon: 'mdi-finance',
+          except_roles: ['kbt'],
           group_permissions: ['report', 'report'],
           menu: [
             {
