@@ -999,15 +999,17 @@ export default {
     },
 
     fetchPackage() {
-      this.$axios
-        .get('package')
-        .then((res) => {
-          if (res.data.code == 200) {
-            this.packages = res.data.data;
-          }
-        })
-        .catch(() => {
-        });
+      if (!this.$role('kbt')) {
+        this.$axios
+          .get('package')
+          .then((res) => {
+            if (res.data.code == 200) {
+              this.packages = res.data.data;
+            }
+          })
+          .catch(() => {
+          });
+      }
     },
 
     closeDelete() {
@@ -1309,17 +1311,19 @@ export default {
       return 'info';
     },
     fetchFavorite() {
-      this.$axios
-        .get('favorite-date')
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.favorite_dates = res.data.data;
-            }, 100);
-          }
-        })
-        .catch(() => {
-        });
+      if (!this.$role('kbt')) {
+        this.$axios
+          .get('favorite-date')
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.favorite_dates = res.data.data;
+              }, 100);
+            }
+          })
+          .catch(() => {
+          });
+      }
     },
   },
 };

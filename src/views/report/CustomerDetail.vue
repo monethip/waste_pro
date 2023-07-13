@@ -915,71 +915,75 @@ export default {
         });
     },
     customerCollection(nobillMonth = false) {
+      if (!this.$role('kbt')) {
       // this.this.pagination.current_page = "";
-      this.$store.commit('Loading_State', true);
-      this.$axios
-        .get(`customer-collection-summary/${this.$route.params.id}`, {
-          params: {
-            page: this.pagination.current_page,
-            per_page: this.per_page,
-            bill_month: nobillMonth ? "" : this.month_collection,
-          },
-        })
-        .then((res) => {
-          if (res.data.code === 200) {
-            setTimeout(() => {
-              this.$store.commit('Loading_State', false);
-              this.services = res.data.data.all.data;
-              this.serviceSummary = res.data.data.collect_summary;
-              if (nobillMonth) this.statusSummaryNoMonth = res.data.data.status_summary;
-              else this.statusSummary = res.data.data.status_summary;
-              this.pagination = res.data.data.details.pagination;
-            }, 300);
-          }
-        })
-        .catch((error) => {
-          this.$store.commit('Loading_State', false);
-          this.fetchData();
-          if (error.response && error.response.status === 422) {
-            const obj = error.response.data.errors;
-            for (const [key, message] of Object.entries(obj)) {
-              this.server_errors[key] = message[0];
+        this.$store.commit('Loading_State', true);
+        this.$axios
+          .get(`customer-collection-summary/${this.$route.params.id}`, {
+            params: {
+              page: this.pagination.current_page,
+              per_page: this.per_page,
+              bill_month: nobillMonth ? "" : this.month_collection,
+            },
+          })
+          .then((res) => {
+            if (res.data.code === 200) {
+              setTimeout(() => {
+                this.$store.commit('Loading_State', false);
+                this.services = res.data.data.all.data;
+                this.serviceSummary = res.data.data.collect_summary;
+                if (nobillMonth) this.statusSummaryNoMonth = res.data.data.status_summary;
+                else this.statusSummary = res.data.data.status_summary;
+                this.pagination = res.data.data.details.pagination;
+              }, 300);
             }
-          }
-        });
+          })
+          .catch((error) => {
+            this.$store.commit('Loading_State', false);
+            this.fetchData();
+            if (error.response && error.response.status === 422) {
+              const obj = error.response.data.errors;
+              for (const [key, message] of Object.entries(obj)) {
+                this.server_errors[key] = message[0];
+              }
+            }
+          });
+      }
     },
     customerInvoice(nobillMonth = false) {
+      if (!this.$role('kbt')) {
       // this.this.pagination.current_page = "";
-      this.$store.commit('Loading_State', true);
-      this.$axios
-        .get(`customer-invoice-summary/${this.$route.params.id}`, {
-          params: {
-            page: this.pagination.current_page,
-            per_page: this.per_page,
-            bill_month: nobillMonth ? "" : this.month,
-          },
-        })
-        .then((res) => {
-          if (res.data.code === 200) {
-            setTimeout(() => {
-              this.$store.commit('Loading_State', false);
-              this.invoices = res.data.data.details.data;
-              if (nobillMonth) this.invoiceSummaryNoBillMonth = res.data.data.invoice_summary;
-              else this.invoiceSummary = res.data.data.invoice_summary;
-              this.pagination = res.data.data.details.pagination;
-            }, 300);
-          }
-        })
-        .catch((error) => {
-          this.$store.commit('Loading_State', false);
-          this.fetchData();
-          if (error.response && error.response.status === 422) {
-            const obj = error.response.data.errors;
-            for (const [key, message] of Object.entries(obj)) {
-              this.server_errors[key] = message[0];
+        this.$store.commit('Loading_State', true);
+        this.$axios
+          .get(`customer-invoice-summary/${this.$route.params.id}`, {
+            params: {
+              page: this.pagination.current_page,
+              per_page: this.per_page,
+              bill_month: nobillMonth ? "" : this.month,
+            },
+          })
+          .then((res) => {
+            if (res.data.code === 200) {
+              setTimeout(() => {
+                this.$store.commit('Loading_State', false);
+                this.invoices = res.data.data.details.data;
+                if (nobillMonth) this.invoiceSummaryNoBillMonth = res.data.data.invoice_summary;
+                else this.invoiceSummary = res.data.data.invoice_summary;
+                this.pagination = res.data.data.details.pagination;
+              }, 300);
             }
-          }
-        });
+          })
+          .catch((error) => {
+            this.$store.commit('Loading_State', false);
+            this.fetchData();
+            if (error.response && error.response.status === 422) {
+              const obj = error.response.data.errors;
+              for (const [key, message] of Object.entries(obj)) {
+                this.server_errors[key] = message[0];
+              }
+            }
+          });
+      }
     },
     backPrevios() {
       this.$router.go(-1);
