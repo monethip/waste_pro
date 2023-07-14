@@ -1760,7 +1760,7 @@ router.beforeEach((to, from, next) => {
     next();
   } else {
     const canActivate = protectedRoutes.every(({ menuItem }) => {
-      const hasRequiredPermissions = !menuItem.permissions || menuItem.permissions.every((permission) => hasPermission(permission));
+      const hasRequiredPermissions = !menuItem.permissions || menuItem.permissions.filter((permission) => hasPermission(permission));
       const hasNoExceptRole = !menuItem.except_roles || menuItem.except_roles.every((role) => !hasRole(role));
       return hasRequiredPermissions && hasNoExceptRole;
     });
