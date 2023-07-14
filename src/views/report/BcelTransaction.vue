@@ -77,9 +77,13 @@
 
               <template v-slot:item.billing.billing_display_id="{ item }">
                 <a
+                  v-if="!billing.deleted_at"
                   href="#"
                   @click="openRoute(item.billing.id)"
                 >{{ item.billing.billing_display_id }}</a>
+                <div v-else>
+                  {{ item.billing.billing_display_id }}
+                </div>
               </template>
             </v-data-table>
             <br>
