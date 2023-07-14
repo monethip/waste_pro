@@ -77,7 +77,7 @@
 
               <template v-slot:item.billing.billing_display_id="{ item }">
                 <a
-                  v-if="!billing.deleted_at"
+                  v-if="!item.billing.deleted_at"
                   href="#"
                   @click="openRoute(item.billing.id)"
                 >{{ item.billing.billing_display_id }}</a>
