@@ -259,7 +259,6 @@
                       >ບິນທີ່ເປັນຂອງເຊວ</span>
                       <RowSection :cards="sectionSale" />
                     </v-col>
-
                     <v-col @click="changeSaleMode('sale_inactive')">
                       <span
                         class="text-title mt-2 font-weight-bold"

@@ -5,7 +5,7 @@
       :key="index"
     >
       <MoneyCard
-        :title="card.status_la"
+        :title="card.status_la || card.title || card.display_type_la"
         :total="card.total"
         :billing_count="card.count_billing"
         :bg_color="card.bg_color"
