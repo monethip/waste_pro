@@ -66,7 +66,51 @@
         />
       </v-col>
     </v-row>
-    <div>
+    <div v-if="dragEnabled">
+      <v-simple-table>
+        <thead>
+          <tr>
+            <td />
+            <td>priority</td>
+            <td>customer_id</td>
+            <td>full_name</td>
+            <td>phone</td>
+          </tr>
+        </thead>
+        <draggable
+          :list="allCalendars"
+          tag="tbody"
+        >
+          <tr
+            v-for="(calendar,index) in dragCalendars"
+            :key="index"
+          >
+            <td>
+              <v-icon small>
+                mdi-arrow-all
+              </v-icon>
+            </td>
+            <td>{{ calendar.priority }}</td>
+            <td>
+              {{
+                calendar.route_plan_detail.customer.customer_id
+              }}
+            </td>
+            <td>
+              {{
+                calendar.route_plan_detail.customer.full_name
+              }}
+            </td>
+            <td>
+              {{
+                calendar.route_plan_detail.customer.user.phone
+              }}
+            </td>
+          </tr>
+        </draggable>
+      </v-simple-table>
+    </div>
+    <div v-else>
       <v-data-table
         v-if="optimizedCalendars.length"
         :disable-pagination="true"
@@ -145,7 +189,11 @@
           </v-icon>
         </template>
       </v-data-table>
-
+      <v-skeleton-loader
+        v-else
+        class="mx-auto"
+        type="table"
+      />
       <br>
       <template>
         <Pagination
@@ -156,55 +204,6 @@
         />
       </template>
     </div>
-
-    <!-- <div >
-      <v-simple-table>
-        <thead>
-          <tr>
-            <td />
-            <td>priority</td>
-            <td>customer_id</td>
-            <td>full_name</td>
-            <td>phone</td>
-          </tr>
-        </thead>
-        <draggable
-          :list="allCalendars"
-          tag="tbody"
-        >
-          <template
-            v-for="(calendar,index) in allCalendars"
-          >
-            <tr
-              v-if="!calendar.is_pause"
-              :key="index"
-            >
-              <td>
-                <v-icon small>
-                  mdi-arrow-all
-                </v-icon>
-              </td>
-              <td>{{ calendar.priority }}</td>
-              <td>
-                {{
-                  calendar.route_plan_detail.customer.customer_id
-                }}
-              </td>
-              <td>
-                {{
-                  calendar.route_plan_detail.customer.full_name
-                }}
-              </td>
-              <td>
-                {{
-                  calendar.route_plan_detail.customer.user.phone
-                }}
-              </td>
-            </tr>
-          </template>
-        </draggable>
-      </v-simple-table>
-    </div> -->
     <v-dialog
       v-model="dialog"
       max-width="300px"
@@ -244,14 +243,14 @@
 <script>
 // import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import trashMixin from '@/views/calendar/trashMixin';
-// import draggable from 'vuedraggable';
+import draggable from 'vuedraggable';
 // import queryOptions from "@/Helpers/queryOption";
 import moment from 'moment';
 
 export default {
   name: 'Trash',
   components: {
-    // draggable,
+    draggable,
   },
   mixins: [trashMixin],
   data() {
@@ -378,11 +377,11 @@ export default {
     },
     showDrag() {
       this.dragEnabled = true;
-      this.fetchAllData();
+      this.allCalendars = this.dragCalendars;
+      // this.fetchData();
     },
     closeDrag() {
       this.dragEnabled = false;
-      this.fetchData();
     },
     updatePriority() {
       this.$store.commit('Loading_State', true);
@@ -416,7 +415,8 @@ export default {
               });
             }, 100);
 
-            this.fetchAllData();
+            this.fetchData();
+            this.dragEnabled = false;
           }
         })
         .catch((error) => {

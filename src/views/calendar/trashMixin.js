@@ -21,34 +21,33 @@ export default {
       countPause: {},
       statuses: [],
       plan_monthId: this.$route.params.id,
-      // headers: [
-      //   { text: 'ລຳດັບຄວາມສຳຄັນ', value: 'priority' },
-      //   { text: 'ຊື່ລູກຄ້າ', value: 'customer' },
-      //   { text: 'ເລີ່ມວັນທີ', value: 'route_plan_detail.customer.start_month' },
-
-      //   {
-      //     text: 'ຈຳນວນຂີ້ເຫື້ຍອ',
-      //     value: 'amount',
-      //     align: 'center',
-      //     sortable: false,
-      //   },
-      //   {
-      //     text: 'ສະຖານະ',
-      //     value: 'status',
-      //     align: 'center',
-      //     sortable: false,
-      //   },
-      //   { text: '', value: 'actions', sortable: false },
-      // ],
-      // allCalendarHeaders: [
-      //   { text: 'ລຳດັບຄວາມສຳຄັນ', value: 'priority' },
-      //   { text: 'ຊື່ລູກຄ້າ', value: 'customer' },
-      // ],
+      dragHeaders: [
+        {
+          text: '',
+          value: 'icon',
+        },
+        {
+          text: 'priority',
+          value: 'priority',
+        },
+        {
+          text: 'customer_id',
+          value: 'route_plan_detail.customer.customer_id',
+        },
+        {
+          text: 'full_name',
+          value: 'route_plan_detail.customer.full_name',
+        },
+        {
+          text: 'phone',
+          value: 'route_plan_detail.customer.user.phone',
+        },
+      ],
     };
   },
   computed: {
     dragCalendars() {
-      return this.allCalendars.filter((calendar) => !calendar.is_pause && calendar.status == 'pending');
+      return this.calendars.filter((calendar) => !calendar.is_pause && calendar.status == 'pending');
     },
     optimizedCalendars() {
       return this.mergedCalendars;
