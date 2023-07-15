@@ -67,7 +67,98 @@
       </v-col>
     </v-row>
     <div>
-      <v-simple-table v-if="dragEnabled">
+      <v-data-table
+        v-if="optimizedCalendars.length"
+        :disable-pagination="true"
+        :headers="headers"
+        :items="optimizedCalendars"
+        :search="search"
+        hide-default-footer
+      >
+        <template v-slot:item.full_name="{ item }">
+          <a
+            href="#"
+            @click="openRoute(item)"
+          >{{ item.route_plan_detail.customer.full_name }}</a>
+        </template>
+
+        <template v-slot:item.phone="{ item }">
+          <span>{{ item.route_plan_detail.customer.user.phone }}</span>
+        </template>
+
+        <template v-slot:item.customer_id="{ item }">
+          <span>{{ item.route_plan_detail.customer.customer_id }}</span>
+        </template>
+
+        <template v-slot:item.status="{ item }">
+          <v-chip
+            :color="item.status_color"
+            label
+          >
+            {{ item.status }}
+          </v-chip>
+        </template>
+
+        <template v-slot:item.can_collect="{ item }">
+          <v-chip
+            :color="item.customer_can_collect_color"
+            label
+          >
+            {{ item.customer_can_collect_la }}
+          </v-chip>
+        </template>
+
+        <template v-slot:item.amount="{item}">
+          <v-chip :color="item.amount_color">
+            {{ item.amount }}
+          </v-chip>
+          <span>{{ item.amount_collection_type }}</span>
+        </template>
+
+        <template v-slot:item.is_pause="{ item }">
+          <v-chip
+            :color="item.is_pause_color"
+            dark
+            label
+            @click="switchPause(item.id)"
+          >
+            {{
+              item.is_pause_la
+            }}
+          </v-chip>
+        </template>
+
+        <template v-slot:item.actions="{ item }">
+          <v-icon
+            class="mr-2"
+            small
+            @click="viewPage(item.plan_calendar_id, item.id)"
+          >
+            mdi-eye
+          </v-icon>
+          <v-icon
+            class="mr-2"
+            small
+            @click="openDialog(item)"
+          >
+            mdi-plus
+          </v-icon>
+        </template>
+      </v-data-table>
+
+      <br>
+      <template>
+        <Pagination
+          v-if="pagination.total_pages > 1"
+          :offset="offset"
+          :pagination="pagination"
+          @paginate="fetchData()"
+        />
+      </template>
+    </div>
+
+    <!-- <div >
+      <v-simple-table>
         <thead>
           <tr>
             <td />
@@ -81,187 +172,86 @@
           :list="allCalendars"
           tag="tbody"
         >
-          <!-- eslint-disable -->
-          <tr v-for="(calendar,index) in dragCalendars"  :key="index">
-            <td>
-              <v-icon small>mdi-arrow-all</v-icon>
-            </td>
-            <td>{{ calendar.priority }}</td>
-            <td>
-              {{
-                calendar.route_plan_detail.customer.customer_id
-              }}
-            </td>
-            <td>
-              {{
-                calendar.route_plan_detail.customer.full_name
-              }}
-            </td>
-            <td>
-              {{
-                calendar.route_plan_detail.customer.user.phone
-              }}
-            </td>
-          </tr>
-          <!-- eslint-enable -->
+          <template
+            v-for="(calendar,index) in allCalendars"
+          >
+            <tr
+              v-if="!calendar.is_pause"
+              :key="index"
+            >
+              <td>
+                <v-icon small>
+                  mdi-arrow-all
+                </v-icon>
+              </td>
+              <td>{{ calendar.priority }}</td>
+              <td>
+                {{
+                  calendar.route_plan_detail.customer.customer_id
+                }}
+              </td>
+              <td>
+                {{
+                  calendar.route_plan_detail.customer.full_name
+                }}
+              </td>
+              <td>
+                {{
+                  calendar.route_plan_detail.customer.user.phone
+                }}
+              </td>
+            </tr>
+          </template>
         </draggable>
       </v-simple-table>
-    </div>
-    <div>
-      <v-dialog
-        v-model="dialog"
-        max-width="300px"
-        scrollable
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-skeleton-loader
-            v-if="!optimizedCalendars.length "
-            class="mx-auto"
-
-            type="table"
+    </div> -->
+    <v-dialog
+      v-model="dialog"
+      max-width="300px"
+      scrollable
+    >
+      <v-card>
+        <v-card-title>ເພີ່ມຈຳນວນຮອບໃນມື້</v-card-title>
+        <v-divider />
+        <v-card-text>
+          <v-text-field
+            v-model="round"
+            type="number"
           />
-          <v-simple-table
-            :headers="headers"
-            :items="optimizedCalendars"
-            :search="search"
-            hide-default-footer
+        </v-card-text>
+        <v-divider />
+        <v-card-actions>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="cancelDialog()"
           >
-            <template v-slot:default>
-              <thead>
-                <tr>
-                  <th
-                    v-for="(headerItem,index) in headers"
-                    :key="`title_${index}`"
-                    class="text-left"
-                  >
-                    {{ headerItem.text }}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  v-for="(item,index) in optimizedCalendars"
-                  :key="index"
-                >
-                  <td>{{ item.priority }}</td>
-                  <td>{{ item.route_plan_detail.customer.customer_id }}</td>
-                  <td>
-                    <a
-                      href="#"
-                      @click="openRoute(item)"
-                    >{{ item.route_plan_detail.customer.full_name }}</a>
-                  </td>
-                  <td>{{ item.route_plan_detail.customer.user.phone }}</td>
-
-                  <td>
-                    <v-chip
-                      :color="item.status_color"
-                      label
-                    >
-                      {{ item.status }}
-                    </v-chip>
-                  </td>
-                  <td>
-                    <v-chip :color="item.amount_color">
-                      {{ item.amount }}
-                    </v-chip>
-                    <span>{{ item.amount_collection_type }}</span>
-                  </td>
-                  <td>
-                    <v-chip
-                      :color="item.is_pause_color"
-                      dark
-                      label
-                      @click="switchPause(item.id)"
-                    >
-                      {{
-                        item.is_pause_la
-                      }}
-                    </v-chip>
-                  </td>
-                  <td>{{ item.created_at }}</td>
-                  <td>{{ item.collected_at }}</td>
-                  <td>
-                    <v-chip :color="item.customer_can_collect_color">
-                      {{
-                        item.customer_can_collect_la
-                      }}
-                    </v-chip>
-                  </td>
-                  <td>
-                    <v-icon
-                      class="mr-2"
-                      small
-                      @click="viewPage(item.plan_calendar_id, item.id)"
-                    >
-                      mdi-eye
-                    </v-icon>
-                    <v-icon
-                      class="mr-2"
-                      small
-                      v-bind="attrs"
-                      @click="selectedRound = item.id"
-                      v-on="on"
-                    >
-                      mdi-plus
-                    </v-icon>
-                  </td>
-                </tr>
-              </tbody>
-            </template>
-          </v-simple-table>
-        </template>
-        <v-card>
-          <v-card-title>ເພີ່ມຈຳນວນຮອບໃນມື້</v-card-title>
-          <v-divider />
-          <v-card-text>
-            <v-text-field
-              v-model="round"
-              type="number"
-            />
-          </v-card-text>
-          <v-divider />
-          <v-card-actions>
-            <v-btn
-              color="blue darken-1"
-              text
-              @click="cancelDialog()"
-            >
-              Close
-            </v-btn>
-            <v-btn
-              color="blue darken-1"
-              text
-              @click="addRoundDialog()"
-            >
-              Save
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <br>
-      <template>
-        <Pagination
-          v-if="pagination.total_pages > 1"
-          :offset="offset"
-          :pagination="pagination"
-          @paginate="fetchData()"
-        />
-      </template>
-    </div>
+            Close
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="addRoundDialog()"
+          >
+            Save
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script>
 // import { GetOldValueOnInput } from "@/Helpers/GetValue";
 import trashMixin from '@/views/calendar/trashMixin';
-import draggable from 'vuedraggable';
+// import draggable from 'vuedraggable';
 // import queryOptions from "@/Helpers/queryOption";
+import moment from 'moment';
 
 export default {
   name: 'Trash',
   components: {
-    draggable,
+    // draggable,
   },
   mixins: [trashMixin],
   data() {
@@ -292,12 +282,12 @@ export default {
 
       headers: [
         { text: 'ລຳດັບຄວາມສຳຄັນ', value: 'priority' },
-        { text: 'ໄອດີ', value: 'route_plan_detail.customer.customer_id' },
-        { text: 'ລູກຄ້າ', value: 'route_plan_detail.customer.full_name' },
-        { text: 'ເບີໂທ', value: 'route_plan_detail.customer.user.phone' },
+        { text: 'ໄອດີ', value: 'customer_id' },
+        { text: 'ລູກຄ້າ', value: 'full_name' },
+        { text: 'ເບີໂທ', value: 'phone' },
         {
           text: 'ສະຖານະເກັບ',
-          value: 'item.route_plan_detail.customer.can_collect',
+          value: 'can_collect',
         },
         {
           text: 'ຈຳນວນຂີ້ເຫື້ຍອ',
@@ -317,11 +307,6 @@ export default {
         {
           text: 'ວັນທີເກັບ',
           value: 'collected_at',
-          align: 'center',
-        },
-        {
-          text: 'can_collect',
-          value: 'route_plan_detail.customer.can_collect',
           align: 'center',
         },
         {
@@ -347,6 +332,10 @@ export default {
     // this.fetchData();
   },
   methods: {
+    openDialog(item) {
+      this.selectedRound = item.id;
+      this.dialog = true;
+    },
     openRoute(item) {
       const name = item.route_plan_detail.customer.customer_type == 'home'
         ? 'ViewClient'
@@ -488,12 +477,64 @@ export default {
         this.dialog = false;
       }
     },
+    formatDate(date, format = 'DD-MM-YY hh:mm') {
+      return moment(date).format(format);
+    },
+    getAmountTemplate(collection_type, bag, container) {
+      if (
+        collection_type === 'bag'
+      || collection_type === 'chartered'
+      || collection_type === '32km'
+      || collection_type === 'infect'
+      ) {
+        return `${bag} ${this.getUnit(collection_type)}`;
+      } if (collection_type === 'fix_cost') {
+        return `${this.getUnit(collection_type)}`;
+      }
+      return `${container} ${this.getUnit(collection_type)}
+      `;
+    },
   },
   computed: {
     filteredData() {
       return this.calendars.filter((item) => item.route_plan_detail.customer.customer_id.includes(this.search) || item.route_plan_detail.customer.full_name.includes(this.search) || item.route_plan_detail.customer.user.phone.includes(this.search));
     },
+    calendarTable() {
+      const data = [];
+      for (const item of this.calendars) {
+        const dataItem = {
+          id: item.id,
+          priority: item.priority,
+          customer_id: item.route_plan_detail.customer.customer_id,
+          full_name: item.route_plan_detail.customer.full_name,
+          phone: item.route_plan_detail.customer.user.phone,
+          can_collect: item.route_plan_detail.customer.can_collect ? 'ເກັບໄດ້' : 'ເກັບບໍ່ໄດ້',
+          can_collect_color: item.route_plan_detail.customer.can_collect ? 'success' : 'errorr',
+          amount: this.getAmountTemplate(item.collection_type, item.bag, item.container),
+          status: item.status_la,
+          status_color: this.statusColor(item.status),
+          created_at: this.formatDate(item.created_at),
+          collected_at: this.formatDate(item.collected_at),
+          is_pause: item.is_pause ? 'ຢຸດກ່ອນ' : 'ໃຫ້ເກັບ',
+          is_pause_color: item.is_pause ? 'orange' : 'green',
+        };
 
+        data.push(dataItem);
+      }
+
+      return data;
+    },
+    formattedCalendars() {
+      if (!this.calendars) {
+        return [];
+      }
+      return this.calendars.map((item) => ({
+        ...item,
+        created_at: this.formatDate(item.created_at),
+        date: this.formatDate(item.date, 'hh:mm:ss'),
+        amount: this.getAmountTemplate(item),
+      }));
+    },
   },
 };
 </script>
