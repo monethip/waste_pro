@@ -82,7 +82,7 @@
           tag="tbody"
         >
           <!-- eslint-disable -->
-          <tr v-for="(calendar,index) in allCalendars" v-if="!calendar.is_pause" :key="index">
+          <tr v-for="(calendar,index) in dragCalendars"  :key="index">
             <td>
               <v-icon small>mdi-arrow-all</v-icon>
             </td>

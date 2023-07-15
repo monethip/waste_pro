@@ -45,6 +45,11 @@ export default {
       ],
     };
   },
+  computed: {
+    dragCalendars() {
+      return this.allCalendars.filter((calendar) => !calendar.is_pause && calendar.status == 'pending');
+    },
+  },
   methods: {
     fetchData() {
       this.$store.commit('Loading_State', true);
