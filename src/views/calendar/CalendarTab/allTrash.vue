@@ -107,99 +107,109 @@
         </draggable>
       </v-simple-table>
     </div>
-    <div v-if="!dragEnabled">
+    <div>
       <v-dialog
         v-model="dialog"
         max-width="300px"
         scrollable
       >
         <template v-slot:activator="{ on, attrs }">
-          <v-data-table
-            v-if="calendars"
-            :disable-pagination="true"
+          <v-skeleton-loader
+            v-if="!optimizedCalendars.length "
+            class="mx-auto"
+
+            type="table"
+          />
+          <v-simple-table
             :headers="headers"
-            :items="calendars"
+            :items="optimizedCalendars"
             :search="search"
             hide-default-footer
           >
-            <template v-slot:item.route_plan_detail.customer.full_name="{ item }">
-              <a
-                href="#"
-                @click="openRoute(item)"
-              >{{ item.route_plan_detail.customer.full_name }}</a>
-            </template>
-            <template v-slot:item.created_at="{ item }">
-              <div>{{ moment(item.created_at).format("DD-MM-YY hh:mm ") }}</div>
-            </template>
-            <template v-slot:item.date="{ item }">
-              <div>{{ moment(item.date).format("DD-MM-YY hh:mm:ss") }}</div>
-            </template>
-            <template v-slot:item.status="{ item }">
-              <v-chip
-                :color="statusColor(item.status)"
-                label
-              >
-                {{ item.status }}
-              </v-chip>
-            </template>
-            <template v-slot:item.amount="{ item }">
-              <div v-if="item.collection_type == 'bag' || item.collection_type == 'chartered' || item.collection_type == '32km' || item.collection_type == 'infect'">
-                <v-chip color="primary">
-                  {{ item.bag }}
-                </v-chip>
-                <span>{{ getUnit(item.collection_type) }}</span>
-              </div>
-              <div v-else-if="item.collection_type == 'fix_cost'">
-                <span>{{ getUnit(item.collection_type) }}</span>
-              </div>
-              <div v-else>
-                <v-chip color="success">
-                  {{ item.container }}
-                </v-chip>
-                <span>{{ getUnit(item.collection_type) }}</span>
-              </div>
-            </template>
+            <template v-slot:default>
+              <thead>
+                <tr>
+                  <th
+                    v-for="(headerItem,index) in headers"
+                    :key="`title_${index}`"
+                    class="text-left"
+                  >
+                    {{ headerItem.text }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="(item,index) in optimizedCalendars"
+                  :key="index"
+                >
+                  <td>{{ item.priority }}</td>
+                  <td>{{ item.route_plan_detail.customer.customer_id }}</td>
+                  <td>
+                    <a
+                      href="#"
+                      @click="openRoute(item)"
+                    >{{ item.route_plan_detail.customer.full_name }}</a>
+                  </td>
+                  <td>{{ item.route_plan_detail.customer.user.phone }}</td>
 
-            <template v-slot:item.is_pause="{ item }">
-              <v-chip
-                :color="item.is_pause?'orange':'green'"
-                dark
-                label
-                @click="switchPause(item.id)"
-              >
-                {{
-                  item.is_pause ? 'ຢຸດກ່ອນ' : 'ໃຫ້ເກັບ'
-                }}
-              </v-chip>
+                  <td>
+                    <v-chip
+                      :color="item.status_color"
+                      label
+                    >
+                      {{ item.status }}
+                    </v-chip>
+                  </td>
+                  <td>
+                    <v-chip :color="item.amount_color">
+                      {{ item.amount }}
+                    </v-chip>
+                    <span>{{ item.amount_collection_type }}</span>
+                  </td>
+                  <td>
+                    <v-chip
+                      :color="item.is_pause_color"
+                      dark
+                      label
+                      @click="switchPause(item.id)"
+                    >
+                      {{
+                        item.is_pause_la
+                      }}
+                    </v-chip>
+                  </td>
+                  <td>{{ item.created_at }}</td>
+                  <td>{{ item.collected_at }}</td>
+                  <td>
+                    <v-chip :color="item.customer_can_collect_color">
+                      {{
+                        item.customer_can_collect_la
+                      }}
+                    </v-chip>
+                  </td>
+                  <td>
+                    <v-icon
+                      class="mr-2"
+                      small
+                      @click="viewPage(item.plan_calendar_id, item.id)"
+                    >
+                      mdi-eye
+                    </v-icon>
+                    <v-icon
+                      class="mr-2"
+                      small
+                      v-bind="attrs"
+                      @click="selectedRound = item.id"
+                      v-on="on"
+                    >
+                      mdi-plus
+                    </v-icon>
+                  </td>
+                </tr>
+              </tbody>
             </template>
-
-            <template v-slot:item.route_plan_detail.customer.can_collect="{ item }">
-              <v-chip :color="item.route_plan_detail.customer.can_collect ? 'success' : 'error'">
-                {{
-                  item.route_plan_detail.customer.can_collect ? 'ເກັບໄດ້' : 'ເກັບບໍ່ໄດ້'
-                }}
-              </v-chip>
-            </template>
-
-            <template v-slot:item.actions="{ item }">
-              <v-icon
-                class="mr-2"
-                small
-                @click="viewPage(item.plan_calendar_id, item.id)"
-              >
-                mdi-eye
-              </v-icon>
-              <v-icon
-                class="mr-2"
-                small
-                v-bind="attrs"
-                @click="selectedRound = item.id"
-                v-on="on"
-              >
-                mdi-plus
-              </v-icon>
-            </template>
-          </v-data-table>
+          </v-simple-table>
         </template>
         <v-card>
           <v-card-title>ເພີ່ມຈຳນວນຮອບໃນມື້</v-card-title>

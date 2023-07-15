@@ -1,4 +1,5 @@
 import { GetOldValueOnInput } from '@/Helpers/GetValue';
+import moment from 'moment';
 
 export default {
   name: 'Customer',
@@ -20,34 +21,80 @@ export default {
       countPause: {},
       statuses: [],
       plan_monthId: this.$route.params.id,
-      headers: [
-        { text: 'ລຳດັບຄວາມສຳຄັນ', value: 'priority' },
-        { text: 'ຊື່ລູກຄ້າ', value: 'customer' },
-        { text: 'ເລີ່ມວັນທີ', value: 'route_plan_detail.customer.start_month' },
+      // headers: [
+      //   { text: 'ລຳດັບຄວາມສຳຄັນ', value: 'priority' },
+      //   { text: 'ຊື່ລູກຄ້າ', value: 'customer' },
+      //   { text: 'ເລີ່ມວັນທີ', value: 'route_plan_detail.customer.start_month' },
 
-        {
-          text: 'ຈຳນວນຂີ້ເຫື້ຍອ',
-          value: 'amount',
-          align: 'center',
-          sortable: false,
-        },
-        {
-          text: 'ສະຖານະ',
-          value: 'status',
-          align: 'center',
-          sortable: false,
-        },
-        { text: '', value: 'actions', sortable: false },
-      ],
-      allCalendarHeaders: [
-        { text: 'ລຳດັບຄວາມສຳຄັນ', value: 'priority' },
-        { text: 'ຊື່ລູກຄ້າ', value: 'customer' },
-      ],
+      //   {
+      //     text: 'ຈຳນວນຂີ້ເຫື້ຍອ',
+      //     value: 'amount',
+      //     align: 'center',
+      //     sortable: false,
+      //   },
+      //   {
+      //     text: 'ສະຖານະ',
+      //     value: 'status',
+      //     align: 'center',
+      //     sortable: false,
+      //   },
+      //   { text: '', value: 'actions', sortable: false },
+      // ],
+      // allCalendarHeaders: [
+      //   { text: 'ລຳດັບຄວາມສຳຄັນ', value: 'priority' },
+      //   { text: 'ຊື່ລູກຄ້າ', value: 'customer' },
+      // ],
     };
   },
   computed: {
     dragCalendars() {
       return this.allCalendars.filter((calendar) => !calendar.is_pause && calendar.status == 'pending');
+    },
+    optimizedCalendars() {
+      return this.mergedCalendars;
+    },
+    mergedCalendars() {
+      return this.calendars.map((item) => {
+        let amount = 0;
+        let amountColor = 'primary';
+
+        switch (item.collection_type) {
+          case 'bag':
+          case 'chartered':
+          case '32km':
+          case 'infect':
+            amount = item.bag;
+            break;
+          case 'fix_cost':
+            amount = '';
+            break;
+          default:
+            amount = item.container;
+            amountColor = 'success';
+            break;
+        }
+
+        const statusColor = this.statusColor(item.status);
+        const amountCollectionType = this.getUnit(item.collection_type);
+        const isPauseColor = item.is_pause ? 'orange' : 'green';
+        const isPauseLa = item.is_pause ? 'ຢຸດກ່ອນ' : 'ໃຫ້ເກັບ';
+        const customerCanCollectColor = item.route_plan_detail.customer.can_collect ? 'success' : 'error';
+        const customerCanCollectLa = item.route_plan_detail.customer.can_collect ? 'ເກັບໄດ້' : 'ເກັບບໍ່ໄດ້';
+
+        return {
+          ...item,
+          created_at: moment(item.created_at).format("DD-MM-YY hh:mm"),
+          date: moment(item.date).format("DD-MM-YY hh:mm:ss"),
+          status_color: statusColor,
+          amount,
+          amount_color: amountColor,
+          amount_collection_type: amountCollectionType,
+          is_pause_color: isPauseColor,
+          is_pause_la: isPauseLa,
+          customer_can_collect_color: customerCanCollectColor,
+          customer_can_collect_la: customerCanCollectLa,
+        };
+      });
     },
   },
   methods: {
@@ -81,6 +128,7 @@ export default {
         });
     },
     fetchAllData() {
+      console.log(11);
       this.$store.commit('Loading_State', true);
       this.$axios
         .get(`plan-calendar/${this.$route.params.id}/detail?without_month_info=true`)
