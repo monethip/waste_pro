@@ -306,7 +306,7 @@ export default {
       selectedPaymentMethod: '',
       billingListsearch: '',
       exportMode: '',
-      start_date: `${new Date().toISOString().substr(0, 8)}01`,
+      start_date: `${new Date().toISOString().substr(0, 10)}`,
       end_date: '',
       start_menu: false,
       end_menu: false,
