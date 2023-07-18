@@ -47,7 +47,7 @@ export default {
   },
   computed: {
     dragCalendars() {
-      return this.calendars.filter((calendar) => !calendar.is_pause && calendar.status == 'pending');
+      return this.calendars;
     },
     optimizedCalendars() {
       return this.mergedCalendars;

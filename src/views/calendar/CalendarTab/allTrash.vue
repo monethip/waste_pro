@@ -84,6 +84,7 @@
           <tr
             v-for="(calendar,index) in dragCalendars"
             :key="index"
+            :style="calendar.is_pause ? 'background-color:#FFEF00' : (calendar.status != 'pending' ? 'background-color:#ADFF2F' : '')"
           >
             <td>
               <v-icon small>
