@@ -23,7 +23,7 @@
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
               v-model="start_date"
-              label="ວັນທີ"
+              label="ເລີ່ມວັນທີ"
               readonly
               outlined
               v-bind="attrs"
@@ -34,6 +34,33 @@
           </template>
           <v-date-picker
             v-model="start_date"
+          />
+        </v-menu>
+      </v-col>
+
+      <v-col>
+        <v-menu
+          v-model="end_menu"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="end_date"
+              label="ຫາວັນທີ"
+              readonly
+              outlined
+              v-bind="attrs"
+              dense
+              clearable
+              v-on="on"
+            />
+          </template>
+          <v-date-picker
+            v-model="end_date"
           />
         </v-menu>
       </v-col>
@@ -208,7 +235,8 @@ export default {
             { page: this.pagination.current_page },
             { per_page: this.per_page },
             { filter: this.search },
-            { date_statement: this.start_date },
+            { date_statement_start: this.start_date },
+            { date_statement_end: this.end_date },
             { download },
           ]),
         })
