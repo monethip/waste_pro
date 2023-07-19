@@ -713,6 +713,8 @@ export default {
       const defaultOption = queryOptions([
         { created_month: this.lastMonthCreated },
         { bill_month: this.lastMonthBillCreated },
+        { without_customer_activity: true },
+        { without_month_info: true },
         { sale_mode: this.sale_mode },
       ]);
 
@@ -778,6 +780,8 @@ export default {
         { download: this.exportMode },
         { created_month: this.lastMonthCreated },
         { bill_month: this.lastMonthBillCreated },
+        { without_customer_activity: true },
+        { without_month_info: true },
         { sale_mode: this.sale_mode },
         { package_id: this.selectedPackage },
       ];
