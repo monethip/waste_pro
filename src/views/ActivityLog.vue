@@ -419,6 +419,8 @@ export default {
         .get('user-setting/user', {
           params: {
             roles: this.selectedRoles,
+            user_only: true,
+            without_billing_summary: true,
           },
         })
         .then((res) => {
