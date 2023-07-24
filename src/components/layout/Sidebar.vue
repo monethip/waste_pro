@@ -22,8 +22,8 @@
       <v-menu
         bottom
         min-width="200px"
-        rounded
-        offset-y
+        rounde
+        et-y
       >
         <template v-slot:activator="{ on }">
           <v-btn
@@ -31,7 +31,7 @@
             fab
             dark
             small
-            class="mr-8"
+            class="mr-9"
             v-on="on"
           >
             <v-badge
@@ -65,7 +65,7 @@
                   <template v-for="(item, index) in eventNotifications">
                     <v-list-item
                       :key="item.id"
-                      @click="viewPage(item.id,'event')"
+                      @click="viewPage(item.id, 'event')"
                     >
                       <v-list-item-content>
                         <v-list-item-title v-text="item.data.name" />
@@ -149,7 +149,7 @@
                   <template v-for="(item, index) in notifications">
                     <v-list-item
                       :key="item.id"
-                      @click="viewPage(item.id,'all')"
+                      @click="viewPage(item.id, 'all')"
                     >
                       <v-list-item-content>
                         <v-list-item-title v-text="item.data.name" />
@@ -281,6 +281,7 @@
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title v-text="item.title" />
+            <!-- ຕົວໜັງສື່  -->
           </v-list-item-content>
         </v-list-item>
 
@@ -290,7 +291,11 @@
           class="group-menu"
         >
           <v-list-group
-            v-if="item.menu.length && (item.group_permissions.length <= 0 || $can(item.group_permissions))"
+            v-if="
+              item.menu.length &&
+                (item.group_permissions.length <= 0 ||
+                  $can(item.group_permissions))
+            "
             class="group-menu-icon"
             :prepend-icon="item.icon"
             no-action
@@ -304,7 +309,7 @@
             <div
               v-for="(i, index) in item.menu"
               :key="index"
-              style="padding-left: 22px"
+              style="padding-left: 24px"
             >
               <v-list-item
                 v-if="i.permissions.length <= 0 || $can(i.permissions)"
@@ -316,7 +321,7 @@
                   <v-icon>{{ i.icon }}</v-icon>
                 </v-list-item-action>
                 <v-list-item-content>
-                  <v-list-item-title v-text="i.title" />
+                  <v-list-item-title />
                 </v-list-item-content>
               </v-list-item>
             </div>
@@ -331,7 +336,7 @@
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-action>
-            <v-list-item-content style="padding-left: 22px">
+            <v-list-item-content style="padding-left: 24px">
               <v-list-item-title v-text="item.title" />
             </v-list-item-content>
           </v-list-item>
@@ -342,14 +347,14 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   data() {
     return {
       drawer: true,
       userProfile: {},
-      name: '',
+      name: "",
       // Pagination
       offset: 12,
       pagination: {},
@@ -357,207 +362,207 @@ export default {
       per_page: 20,
       notifications: [],
       eventNotifications: [],
-      selectedStatus: 'unread',
+      selectedStatus: "unread",
       items: [],
       group_menu: [
         {
-          title: 'ຈັດການຂັ້ນສູງ',
-          icon: 'mdi-account-supervisor-circle',
-          group_permissions: ['delete_any_customers', 'delete_any_bills'],
+          title: "ຈັດການຂັ້ນສູງ",
+          icon: "mdi-account-supervisor-circle",
+          group_permissions: ["delete_any_customers", "delete_any_bills"],
           menu: [
             {
-              icon: 'mdi-delete-alert',
-              title: 'ລຶບລູກຄ້າສາຍບ້ານ',
-              to: '/delete-home',
-              permissions: ['delete_any_customers'],
+              icon: "mdi-delete-alert",
+              title: "ລຶບລູກຄ້າສາຍບ້ານ",
+              to: "/delete-home",
+              permissions: ["delete_any_customers"],
             },
             {
-              icon: 'mdi-delete-alert',
-              title: 'ລຶບລູກຄ້າສາຍທຸລະກິດ',
-              to: '/delete-company',
-              permissions: ['delete_any_customers'],
+              icon: "mdi-delete-alert",
+              title: "ລຶບລູກຄ້າສາຍທຸລະກິດ",
+              to: "/delete-company",
+              permissions: ["delete_any_customers"],
             },
             {
-              icon: 'mdi-delete-alert',
-              title: 'ລຶບ-ແກ້ໄຂບີນ',
-              to: '/delete-billing',
-              permissions: ['delete_any_bills'],
+              icon: "mdi-delete-alert",
+              title: "ລຶບ-ແກ້ໄຂບີນ",
+              to: "/delete-billing",
+              permissions: ["delete_any_bills"],
             },
           ],
         },
         {
-          title: 'Home',
-          icon: 'mdi-home',
-          group_permissions: ['get_dashboard', 'get_activity'],
+          title: "Home",
+          icon: "mdi-home",
+          group_permissions: ["get_dashboard", "get_activity"],
           menu: [
             {
-              icon: 'mdi-home',
-              title: 'home',
-              to: '/welcome',
+              icon: "mdi-home",
+              title: "home",
+              to: "/welcome",
               permissions: [],
             },
             {
-              icon: 'mdi-monitor-dashboard',
-              title: 'dashboard',
-              to: '/',
-              permissions: ['get_dashboard'],
+              icon: "mdi-monitor-dashboard",
+              title: "dashboard",
+              to: "/",
+              permissions: ["get_dashboard"],
             },
             {
-              icon: 'mdi-apps',
-              title: 'Activity Log',
-              to: '/activity-log',
-              permissions: ['get_activity'],
-            },
-          ],
-        },
-        {
-          title: 'ຈັດການຂໍ້ມູນ',
-          icon: 'mdi-cog',
-          group_permissions: [
-            'get_role',
-            'get_user',
-            'get_customer',
-            'get_driver',
-            'get_address',
-          ],
-          menu: [
-            {
-              icon: 'mdi-file-import',
-              title: 'Import User',
-              to: '/import-file',
-              permissions: ['create_driver'],
-            },
-            {
-              icon: 'mdi-account-key',
-              title: 'Roles',
-              to: '/role',
-              permissions: ['get_role', 'create_role'],
-            },
-            {
-              icon: 'mdi-package',
-              title: 'ຈັດການຂໍ້ມູນບໍລິການ',
-              to: '/package',
-              permissions: ['get_package', 'get_customer'],
-            },
-            {
-              icon: 'mdi-home-account',
-              title: 'ຈັດການທີ່ຢູ່',
-              to: '/village',
-              permissions: ['get_address', 'get_driver'],
-            },
-            {
-              icon: 'mdi-home-account',
-              title: 'ຈັດການລາຍລະອຽດທີ່ຢູ່',
-              to: '/village-variation',
-              permissions: ['get_address', 'get_driver'],
-            },
-            {
-              icon: 'mdi-car-multiple',
-              title: 'ຈັດການພາຫະນະ',
-              to: '/vehicle',
-              permissions: ['get_vehicle'],
+              icon: "mdi-apps",
+              title: "Activity Log",
+              to: "/activity-log",
+              permissions: ["get_activity"],
             },
           ],
         },
         {
-          title: 'ຂໍ້ມູນຜູ້ໃຊ້',
-          icon: 'mdi-account-supervisor',
+          title: "ຈັດການຂໍ້ມູນ",
+          icon: "mdi-cog",
           group_permissions: [
-            'get_role',
-            'get_user',
-            'get_customer',
-            'get_driver',
-            'get_address',
+            "get_role",
+            "get_user",
+            "get_customer",
+            "get_driver",
+            "get_address",
           ],
           menu: [
             {
-              icon: 'mdi-account-group-outline',
-              title: 'ຜູ້ໃຊ້ທັງໝົດ',
-              to: '/user',
-              permissions: ['get_user'],
+              icon: "mdi-file-import",
+              title: "Import User",
+              to: "/import-file",
+              permissions: ["create_driver"],
             },
             {
-              icon: 'mdi-briefcase-account-outline',
-              title: 'Sale Users',
-              to: '/user-sale',
-              permissions: ['get_user'],
+              icon: "mdi-account-key",
+              title: "Roles",
+              to: "/role",
+              permissions: ["get_role", "create_role"],
             },
             {
-              icon: 'mdi-dump-truck',
-              title: 'Drivers',
-              to: '/driver',
-              permissions: ['get_driver'],
+              icon: "mdi-package",
+              title: "ຈັດການຂໍ້ມູນບໍລິການ",
+              to: "/package",
+              permissions: ["get_package", "get_customer"],
             },
             {
-              icon: 'mdi-badge-account',
-              title: 'ແອກລົດ',
-              to: '/employee',
-              permissions: ['get_employee'],
+              icon: "mdi-home-account",
+              title: "ຈັດການທີ່ຢູ່",
+              to: "/village",
+              permissions: ["get_address", "get_driver"],
             },
             {
-              icon: 'mdi-account-group',
-              title: 'Team',
-              to: '/team',
-              permissions: ['get_team'],
+              icon: "mdi-home-account",
+              title: "ຈັດການລາຍລະອຽດທີ່ຢູ່",
+              to: "/village-variation",
+              permissions: ["get_address", "get_driver"],
+            },
+            {
+              icon: "mdi-car-multiple",
+              title: "ຈັດການພາຫະນະ",
+              to: "/vehicle",
+              permissions: ["get_vehicle"],
+            },
+          ],
+        },
+        {
+          title: "ຂໍ້ມູນຜູ້ໃຊ້",
+          icon: "mdi-account-supervisor",
+          group_permissions: [
+            "get_role",
+            "get_user",
+            "get_customer",
+            "get_driver",
+            "get_address",
+          ],
+          menu: [
+            {
+              icon: "mdi-account-group-outline",
+              title: "ຜູ້ໃຊ້ທັງໝົດ",
+              to: "/user",
+              permissions: ["get_user"],
+            },
+            {
+              icon: "mdi-briefcase-account-outline",
+              title: "Sale Users",
+              to: "/user-sale",
+              permissions: ["get_user"],
+            },
+            {
+              icon: "mdi-dump-truck",
+              title: "Drivers",
+              to: "/driver",
+              permissions: ["get_driver"],
+            },
+            {
+              icon: "mdi-badge-account",
+              title: "ແອກລົດ",
+              to: "/employee",
+              permissions: ["get_employee"],
+            },
+            {
+              icon: "mdi-account-group",
+              title: "Team",
+              to: "/team",
+              permissions: ["get_team"],
             },
           ],
         },
 
         {
-          title: 'ຂໍ້ມູນລູກຄ້າ',
-          icon: 'mdi-database',
-          group_permissions: ['get_customer'],
+          title: "ຂໍ້ມູນລູກຄ້າ",
+          icon: "mdi-database",
+          group_permissions: ["get_customer"],
           menu: [
             {
-              icon: 'mdi-account-alert-outline',
-              title: 'ລູກຄ້າທີ່ຍັງບໍ່ເຂົ້າບໍລິການ',
-              to: '/pre-customer',
-              permissions: ['get_customer'],
+              icon: "mdi-account-alert-outline",
+              title: "ລູກຄ້າທີ່ຍັງບໍ່ເຂົ້າບໍລິການ",
+              to: "/pre-customer",
+              permissions: ["get_customer"],
             },
             {
-              icon: 'mdi-account-group',
-              title: 'ລູກຄ້າຄົວເຮືອນ',
-              to: '/customer',
-              permissions: ['get_customer'],
+              icon: "mdi-account-group",
+              title: "ລູກຄ້າຄົວເຮືອນ",
+              to: "/customer",
+              permissions: ["get_customer"],
             },
             {
-              icon: 'mdi-office-building',
-              title: 'ລູກຄ້າຫົວໜ່ວຍທຸລະກິດ',
-              to: '/company',
-              permissions: ['get_customer'],
+              icon: "mdi-office-building",
+              title: "ລູກຄ້າຫົວໜ່ວຍທຸລະກິດ",
+              to: "/company",
+              permissions: ["get_customer"],
             },
             {
-              icon: 'mdi-account-group',
-              title: 'ລູກຄ້າສົງຄຳຮ້ອງຂໍເຂົ້າມາ',
-              to: '/company-request',
-              permissions: ['get_customer'],
+              icon: "mdi-account-group",
+              title: "ລູກຄ້າສົງຄຳຮ້ອງຂໍເຂົ້າມາ",
+              to: "/company-request",
+              permissions: ["get_customer"],
             },
           ],
         },
         {
-          title: 'ແຜນເສັ້ນທາງ',
-          icon: 'mdi-map',
-          group_permissions: ['get_route_plan'],
+          title: "ແຜນເສັ້ນທາງ",
+          icon: "mdi-map",
+          group_permissions: ["get_route_plan"],
           menu: [
             {
-              icon: 'mdi-sitemap',
-              title: 'ເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ',
-              to: '/plan',
-              permissions: ['get_route_plan'],
+              icon: "mdi-sitemap",
+              title: "ເສັ້ນທາງເກັບຂີ້ເຫື້ຍອ",
+              to: "/plan",
+              permissions: ["get_route_plan"],
             },
             {
-              icon: 'mdi-calendar-month',
-              title: 'ຈັດແຜນເດີນລົດ',
-              to: '/calendar',
-              permissions: ['get_plan_calendar'],
+              icon: "mdi-calendar-month",
+              title: "ຈັດແຜນເດີນລົດ",
+              to: "/calendar",
+              permissions: ["get_plan_calendar"],
             },
           ],
         },
         {
-          icon: 'mdi-delete',
-          title: 'ເກັບຂີ້ເຫື້ຍອພິເສດ',
-          permissions: ['manage_event', 'get_customer'],
-          to: '/v2/event-invoice',
+          icon: "mdi-delete",
+          title: "ເກັບຂີ້ເຫື້ຍອພິເສດ",
+          permissions: ["manage_event", "get_customer"],
+          to: "/v2/event-invoice",
           menu: [],
         },
         // {
@@ -581,48 +586,220 @@ export default {
         // },
 
         {
-          title: 'ຈັດການບິນ',
-          icon: 'mdi-credit-card',
-          group_permissions: ['get_invoice'],
+          title: "ຈັດການບິນ",
+          icon: "mdi-credit-card",
+          group_permissions: ["get_invoice"],
           menu: [
             {
-              icon: 'mdi-note-search',
-              title: 'ຄົ້ນຫາບິນ',
-              to: '/search-billing',
-              permissions: ['get_invoice'],
+              icon: "mdi-note-search",
+              title: "ຄົ້ນຫາບິນ",
+              to: "/search-billing",
+              permissions: ["get_invoice"],
             },
             {
-              icon: 'mdi-note-outline',
-              title: 'ບິນທັງໝົດ',
-              to: '/billing',
-              permissions: ['get_invoice'],
+              icon: "mdi-note-outline",
+              title: "ບິນທັງໝົດ",
+              to: "/billing",
+              permissions: ["get_invoice"],
             },
 
             {
-              icon: 'mdi-note-outline',
-              title: 'ຈັດການບິນຢ້ອນຫຼັງ',
-              to: '/v2/custom-bill',
-              permissions: ['get_invoice'],
+              icon: "mdi-note-outline",
+              title: "ຈັດການບິນຢ້ອນຫຼັງ",
+              to: "/v2/custom-bill",
+              permissions: ["get_invoice"],
             },
             {
-              icon: 'mdi-note-outline',
-              title: 'ຈັດການບິນລ່ວງໜ້າ',
-              to: '/future-invoice',
-              permissions: ['get_invoice'],
+              icon: "mdi-note-outline",
+              title: "ຈັດການບິນລ່ວງໜ້າ",
+              to: "/future-invoice",
+              permissions: ["get_invoice"],
             },
           ],
         },
 
         {
-          title: 'ລາຍງານ',
-          icon: 'mdi-finance',
-          group_permissions: ['report', 'report'],
+          title: "ພະເເນກການຕະຫຼາດ",
+          icon: "mdi mdi-point-of-sale",
+          group_permissions: ["report", "report"],
+          menu: [
+            // {
+            //   icon: "mdi-chart-bubble",
+            //   title: "ເກັບຂີ້ເຫຍື້ອຕາມລົດໃໝ່",
+            //   to: "/report/driver/collection/v2",
+            //   permissions: ["report"],
+            // },
+            // {
+            //   icon: "mdi-chart-bubble",
+            //   title: "ເກັບຂີ້ເຫຍື້ອຕາມລົດ",
+            //   to: "/report/driver/collection",
+            //   permissions: ["report"]
+            // },
+            // {
+            //   icon: "mdi-chart-bubble",
+            //   title: "ເກັບຂີ້ເຫຍື້ອຕາມບ້ານ",
+            //   to: "/report/address/collection",
+            //   permissions: ["report"],
+            // },
+            // {
+            //   icon: "mdi-chart-bubble",
+            //   title: "ລາຍງານການເກັບຂີ້ເຫຍື້ອ",
+            //   to: "/report/trash",
+            //   permissions: ["report"],
+            // },
+            // {
+            //   icon: "mdi-chart-bubble",
+            //   title: "ລາຍງານເກັບຂີ້ເຫຍື້ອພິເສດ",
+            //   to: "/report/event/trash",
+            //   permissions: ["report"],
+            // },
+            {
+              icon: "mdi-cash",
+              title: "ລາຍງານບິນ",
+              to: "/report/billing/main",
+              permissions: ["report"],
+            },
+            {
+              icon: "mdi-cash",
+              title: "ການເຄື່ອນໄຫວ Bcel-bill-payment",
+              to: "/report/transaction",
+              permissions: ["report"],
+            },
+            {
+              icon: "mdi-cash",
+              title: "ລາຍງານບິນລູກຄ້າ",
+              to: "/report/billing/customer",
+              permissions: ["report"],
+            },
+            {
+              icon: "mdi-cash",
+              title: "ລາຍງານບິນເຊວ",
+              to: "/report/invoice",
+              permissions: ["report"],
+            },
+            {
+              icon: "mdi-cash",
+              title: "ຂໍ້ມູນບັນຊີເກັບພິເສດ",
+              to: "/report/event/invoice",
+              permissions: ["report"],
+            },
+            // {
+            //   icon: "mdi-chart-areaspline",
+            //   title: "ລາຍງານຂໍ້ມູນຄົນຂັບລົດ",
+            //   to: "/report/driver",
+            //   permissions: ["report"],
+            // },
+            {
+              icon: "mdi-chart-bar",
+              title: "ລາຍງານຂໍ້ມູນລູກຄ້າ",
+              to: "/report/customer",
+              permissions: ["report"],
+            },
+            {
+              icon: "mdi-chart-bar",
+              title: "ລາຍງານຫົວໜ່ວຍທຸລະກິດ",
+              to: "/report/company",
+              permissions: ["report"],
+            },
+          ],
+        },
+
+        {
+          title: "ລາຍງານບັນຊີ",
+          icon: "mdi mdi-account-cash",
+          group_permissions: ["report", "report"],
+          menu: [
+            // {
+            //   icon: "mdi-chart-bubble",
+            //   title: "ເກັບຂີ້ເຫຍື້ອຕາມລົດໃໝ່",
+            //   to: "/report/driver/collection/v2",
+            //   permissions: ["report"],
+            // },
+            // {
+            //   icon: "mdi-chart-bubble",
+            //   title: "ເກັບຂີ້ເຫຍື້ອຕາມລົດ",
+            //   to: "/report/driver/collection",
+            //   permissions: ["report"]
+            // },
+            // {
+            //   icon: "mdi-chart-bubble",
+            //   title: "ເກັບຂີ້ເຫຍື້ອຕາມບ້ານ",
+            //   to: "/report/address/collection",
+            //   permissions: ["report"],
+            // },
+            // {
+            //   icon: "mdi-chart-bubble",
+            //   title: "ລາຍງານການເກັບຂີ້ເຫຍື້ອ",
+            //   to: "/report/trash",
+            //   permissions: ["report"],
+            // },
+            // {
+            //   icon: "mdi-chart-bubble",
+            //   title: "ລາຍງານເກັບຂີ້ເຫຍື້ອພິເສດ",
+            //   to: "/report/event/trash",
+            //   permissions: ["report"],
+            // },
+            {
+              icon: "mdi-cash",
+              title: "ລາຍງານບິນ",
+              to: "/report/billing/main",
+              permissions: ["report"],
+            },
+            {
+              icon: "mdi-cash",
+              title: "ການເຄື່ອນໄຫວ Bcel-bill-payment",
+              to: "/report/transaction",
+              permissions: ["report"],
+            },
+            {
+              icon: "mdi-cash",
+              title: "ລາຍງານບິນລູກຄ້າ",
+              to: "/report/billing/customer",
+              permissions: ["report"],
+            },
+            // {
+            //   icon: "mdi-cash",
+            //   title: "ລາຍງານບິນເຊວ",
+            //   to: "/report/invoice",
+            //   permissions: ["report"],
+            // },
+            {
+              icon: "mdi-cash",
+              title: "ຂໍ້ມູນບັນຊີເກັບພິເສດ",
+              to: "/report/event/invoice",
+              permissions: ["report"],
+            },
+            // {
+            //   icon: "mdi-chart-areaspline",
+            //   title: "ລາຍງານຂໍ້ມູນຄົນຂັບລົດ",
+            //   to: "/report/driver",
+            //   permissions: ["report"],
+            // },
+            {
+              icon: "mdi-chart-bar",
+              title: "ລາຍງານຂໍ້ມູນລູກຄ້າ",
+              to: "/report/customer",
+              permissions: ["report"],
+            },
+            {
+              icon: "mdi-chart-bar",
+              title: "ລາຍງານຫົວໜ່ວຍທຸລະກິດ",
+              to: "/report/company",
+              permissions: ["report"],
+            },
+          ],
+        },
+
+        {
+          title: "ລາຍງານພາກສະໜາມ",
+          icon: "mdi mdi-account-hard-hat-outline",
+          group_permissions: ["report", "report"],
           menu: [
             {
-              icon: 'mdi-chart-bubble',
-              title: 'ເກັບຂີ້ເຫຍື້ອຕາມລົດໃໝ່',
-              to: '/report/driver/collection/v2',
-              permissions: ['report'],
+              icon: "mdi-chart-bubble",
+              title: "ເກັບຂີ້ເຫຍື້ອຕາມລົດໃໝ່",
+              to: "/report/driver/collection/v2",
+              permissions: ["report"],
             },
             // {
             //   icon: "mdi-chart-bubble",
@@ -631,70 +808,70 @@ export default {
             //   permissions: ["report"]
             // },
             {
-              icon: 'mdi-chart-bubble',
-              title: 'ເກັບຂີ້ເຫຍື້ອຕາມບ້ານ',
-              to: '/report/address/collection',
-              permissions: ['report'],
+              icon: "mdi-chart-bubble",
+              title: "ເກັບຂີ້ເຫຍື້ອຕາມບ້ານ",
+              to: "/report/address/collection",
+              permissions: ["report"],
             },
             {
-              icon: 'mdi-chart-bubble',
-              title: 'ລາຍງານການເກັບຂີ້ເຫຍື້ອ',
-              to: '/report/trash',
-              permissions: ['report'],
+              icon: "mdi-chart-bubble",
+              title: "ລາຍງານການເກັບຂີ້ເຫຍື້ອ",
+              to: "/report/trash",
+              permissions: ["report"],
             },
             {
-              icon: 'mdi-chart-bubble',
-              title: 'ລາຍງານເກັບຂີ້ເຫຍື້ອພິເສດ',
-              to: '/report/event/trash',
-              permissions: ['report'],
+              icon: "mdi-chart-bubble",
+              title: "ລາຍງານເກັບຂີ້ເຫຍື້ອພິເສດ",
+              to: "/report/event/trash",
+              permissions: ["report"],
+            },
+            // {
+            //   icon: "mdi-cash",
+            //   title: "ລາຍງານບິນ",
+            //   to: "/report/billing/main",
+            //   permissions: ["report"],
+            // },
+            // {
+            //   icon: "mdi-cash",
+            //   title: "ການເຄື່ອນໄຫວ Bcel-bill-payment",
+            //   to: "/report/transaction",
+            //   permissions: ["report"],
+            // },
+            // {
+            //   icon: "mdi-cash",
+            //   title: "ລາຍງານບິນລູກຄ້າ",
+            //   to: "/report/billing/customer",
+            //   permissions: ["report"],
+            // },
+            // {
+            //   icon: "mdi-cash",
+            //   title: "ລາຍງານບິນເຊວ",
+            //   to: "/report/invoice",
+            //   permissions: ["report"],
+            // },
+            // {
+            //   icon: "mdi-cash",
+            //   title: "ຂໍ້ມູນບັນຊີເກັບພິເສດ",
+            //   to: "/report/event/invoice",
+            //   permissions: ["report"],
+            // },
+            {
+              icon: "mdi-chart-areaspline",
+              title: "ລາຍງານຂໍ້ມູນຄົນຂັບລົດ",
+              to: "/report/driver",
+              permissions: ["report"],
             },
             {
-              icon: 'mdi-cash',
-              title: 'ລາຍງານບິນ',
-              to: '/report/billing/main',
-              permissions: ['report'],
+              icon: "mdi-chart-bar",
+              title: "ລາຍງານຂໍ້ມູນລູກຄ້າ",
+              to: "/report/customer",
+              permissions: ["report"],
             },
             {
-              icon: 'mdi-cash',
-              title: 'ການເຄື່ອນໄຫວ Bcel-bill-payment',
-              to: '/report/transaction',
-              permissions: ['report'],
-            },
-            {
-              icon: 'mdi-cash',
-              title: 'ລາຍງານບິນລູກຄ້າ',
-              to: '/report/billing/customer',
-              permissions: ['report'],
-            },
-            {
-              icon: 'mdi-cash',
-              title: 'ລາຍງານບິນເຊວ',
-              to: '/report/invoice',
-              permissions: ['report'],
-            },
-            {
-              icon: 'mdi-cash',
-              title: 'ຂໍ້ມູນບັນຊີເກັບພິເສດ',
-              to: '/report/event/invoice',
-              permissions: ['report'],
-            },
-            {
-              icon: 'mdi-chart-areaspline',
-              title: 'ລາຍງານຂໍ້ມູນຄົນຂັບລົດ',
-              to: '/report/driver',
-              permissions: ['report'],
-            },
-            {
-              icon: 'mdi-chart-bar',
-              title: 'ລາຍງານຂໍ້ມູນລູກຄ້າ',
-              to: '/report/customer',
-              permissions: ['report'],
-            },
-            {
-              icon: 'mdi-chart-bar',
-              title: 'ລາຍງານຫົວໜ່ວຍທຸລະກິດ',
-              to: '/report/company',
-              permissions: ['report'],
+              icon: "mdi-chart-bar",
+              title: "ລາຍງານຫົວໜ່ວຍທຸລະກິດ",
+              to: "/report/company",
+              permissions: ["report"],
             },
           ],
         },
@@ -704,32 +881,32 @@ export default {
 
   computed: {
     user() {
-      return this.$store.getters['User/getUsertype'];
+      return this.$store.getters["User/getUsertype"];
     },
     profile() {
-      return this.$store.getters['User/getUserProfile'];
+      return this.$store.getters["User/getUserProfile"];
     },
     ...mapGetters({
-      userRole: 'User/getUserRole',
+      userRole: "User/getUserRole",
     }),
   },
   created() {
-    this.userProfile = JSON.parse(window.localStorage.getItem('user'));
+    this.userProfile = JSON.parse(window.localStorage.getItem("user"));
     this.name = this.userProfile.name.slice(0, 1);
     this.fetchData();
     this.fetchEventData();
   },
   methods: {
     ...mapActions({
-      Logout: 'User/destroyToken',
+      Logout: "User/destroyToken",
     }),
     userLogout() {
-      this.$store.dispatch('auth/destroyToken');
+      this.$store.dispatch("auth/destroyToken");
     },
     fetchData() {
-      this.$store.commit('Loading_State', true);
+      this.$store.commit("Loading_State", true);
       this.$axios
-        .get('notification', {
+        .get("notification", {
           params: {
             page: this.pagination.current_page,
             per_page: this.per_page,
@@ -739,63 +916,63 @@ export default {
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.$store.commit('Loading_State', false);
+              this.$store.commit("Loading_State", false);
               this.notifications = res.data.data.data;
               this.pagination = res.data.data.pagination;
             }, 300);
           }
         })
         .catch((error) => {
-          this.$store.commit('Loading_State', false);
-          this.$store.commit('Toast_State', {
+          this.$store.commit("Loading_State", false);
+          this.$store.commit("Toast_State", {
             value: true,
-            color: 'error',
+            color: "error",
             msg: error.response
               ? error.response.data.message
-              : 'Something went wrong',
+              : "Something went wrong",
           });
         });
     },
     fetchEventData() {
-      this.$store.commit('Loading_State', true);
+      this.$store.commit("Loading_State", true);
       this.$axios
-        .get('notification', {
+        .get("notification", {
           params: {
             page: this.eventPagination.current_page,
             per_page: this.per_page,
             status: this.selectedStatus,
-            type: 'EVENT',
+            type: "EVENT",
           },
         })
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.$store.commit('Loading_State', false);
+              this.$store.commit("Loading_State", false);
               this.eventNotifications = res.data.data.data;
               this.eventPagination = res.data.data.pagination;
             }, 300);
           }
         })
         .catch((error) => {
-          this.$store.commit('Loading_State', false);
-          this.$store.commit('Toast_State', {
+          this.$store.commit("Loading_State", false);
+          this.$store.commit("Toast_State", {
             value: true,
-            color: 'error',
+            color: "error",
             msg: error.response
               ? error.response.data.message
-              : 'Something went wrong',
+              : "Something went wrong",
           });
         });
     },
     viewAllNoti() {
       this.$router.push({
-        name: 'NotificationTab',
+        name: "NotificationTab",
       });
     },
     viewEventNoti() {
       this.$router.push({
-        name: 'NotificationTab',
-        query: { types: ['EVENT', 'CUSTOMER_EVENT'] },
+        name: "NotificationTab",
+        query: { types: ["EVENT", "CUSTOMER_EVENT"] },
       });
     },
     moveObjectToLast(array, id) {
@@ -806,16 +983,16 @@ export default {
       }
     },
     viewPage(id, type) {
-      if (type == 'all') {
+      if (type == "all") {
         this.pagination.total -= 1;
         this.moveObjectToLast(this.notifications, id);
       }
-      if (type == 'event') {
-        this.eventPagination.total -= 1,
+      if (type == "event") {
+        (this.eventPagination.total -= 1),
         this.moveObjectToLast(this.eventNotifications, id);
       }
       this.$router.push({
-        name: 'NotificationView',
+        name: "NotificationView",
         params: { id },
       });
     },
@@ -842,9 +1019,9 @@ export default {
 }
 
 .v-application--is-ltr
-.v-list-group--no-action
-> .v-list-group__items
-> .v-list-item {
+  .v-list-group--no-action
+  > .v-list-group__items
+  > .v-list-item {
   padding-left: 18px !important;
 }
 
