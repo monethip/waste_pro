@@ -7,7 +7,7 @@
       class="nav"
     >
       <v-icon
-        style="padding: 4px"
+        style="padding: 2px"
         @click="drawer = !drawer"
       >
         mdi-order-bool-descending
@@ -55,7 +55,7 @@
             <v-list-item-content class="justify-center">
               <v-list
                 two-line
-                style="max-height: 650px"
+                style="max-height: 750px"
                 class="overflow-y-auto"
               >
                 <v-list-item-group
@@ -331,7 +331,7 @@
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-action>
-            <v-list-item-content style="padding-left: 22px">
+            <v-list-item-content style="padding-left: 20px">
               <v-list-item-title v-text="item.title" />
             </v-list-item-content>
           </v-list-item>
@@ -611,10 +611,161 @@ export default {
             },
           ],
         },
-
         {
-          title: 'ລາຍງານ',
-          icon: 'mdi-finance',
+          title: 'ລາຍງານການຕະຫຼາດ',
+          icon: 'mdi mdi-account-credit-card',
+          group_permissions: ['report', 'report'],
+          menu: [
+            // {
+            //   icon: 'mdi-chart-bubble',
+            //   title: 'ເກັບຂີ້ເຫຍື້ອຕາມລົດໃໝ່',
+            //   to: '/report/driver/collection/v2',
+            //   permissions: ['report'],
+            // },
+            // {
+            //   icon: "mdi-chart-bubble",
+            //   title: "ເກັບຂີ້ເຫຍື້ອຕາມລົດ",
+            //   to: "/report/driver/collection",
+            //   permissions: ["report"]
+            // },
+            // {
+            //   icon: 'mdi-chart-bubble',
+            //   title: 'ເກັບຂີ້ເຫຍື້ອຕາມບ້ານ',
+            //   to: '/report/address/collection',
+            //   permissions: ['report'],
+            // },
+            // {
+            //   icon: 'mdi-chart-bubble',
+            //   title: 'ລາຍງານການເກັບຂີ້ເຫຍື້ອ',
+            //   to: '/report/trash',
+            //   permissions: ['report'],
+            // },
+            {
+              icon: 'mdi-chart-bubble',
+              title: 'ລາຍງານເກັບຂີ້ເຫຍື້ອພິເສດ',
+              to: '/report/event/trash',
+              permissions: ['report'],
+            },
+            {
+              icon: 'mdi-cash',
+              title: 'ລາຍງານບິນ',
+              to: '/report/billing/main',
+              permissions: ['report'],
+            },
+            {
+              icon: 'mdi-cash',
+              title: 'ລາຍງານບິນລູກຄ້າ',
+              to: '/report/billing/customer',
+              permissions: ['report'],
+            },
+            {
+              icon: 'mdi-cash',
+              title: 'ລາຍງານບິນເຊວ',
+              to: '/report/invoice',
+              permissions: ['report'],
+            },
+            {
+              icon: 'mdi-cash',
+              title: 'ຂໍ້ມູນບັນຊີເກັບພິເສດ',
+              to: '/report/event/invoice',
+              permissions: ['report'],
+            },
+            {
+              icon: 'mdi-chart-bar',
+              title: 'ລາຍງານຂໍ້ມູນລູກຄ້າ',
+              to: '/report/customer',
+              permissions: ['report'],
+            },
+            {
+              icon: 'mdi-chart-bar',
+              title: 'ລາຍງານຫົວໜ່ວຍທຸລະກິດ',
+              to: '/report/company',
+              permissions: ['report'],
+            },
+          ],
+        },
+        {
+          title: 'ລາຍງານບັນຊີ',
+          icon: 'mdi mdi-file-sign',
+          group_permissions: ['report', 'report'],
+          menu: [
+            // {
+            //   icon: 'mdi-chart-bubble',
+            //   title: 'ເກັບຂີ້ເຫຍື້ອຕາມລົດໃໝ່',
+            //   to: '/report/driver/collection/v2',
+            //   permissions: ['report'],
+            // },
+            // {
+            //   icon: "mdi-chart-bubble",
+            //   title: "ເກັບຂີ້ເຫຍື້ອຕາມລົດ",
+            //   to: "/report/driver/collection",
+            //   permissions: ["report"]
+            // },
+            // {
+            //   icon: 'mdi-chart-bubble',
+            //   title: 'ເກັບຂີ້ເຫຍື້ອຕາມບ້ານ',
+            //   to: '/report/address/collection',
+            //   permissions: ['report'],
+            // },
+            // {
+            //   icon: 'mdi-chart-bubble',
+            //   title: 'ລາຍງານການເກັບຂີ້ເຫຍື້ອ',
+            //   to: '/report/trash',
+            //   permissions: ['report'],
+            // },
+            // {
+            //   icon: 'mdi-chart-bubble',
+            //   title: 'ລາຍງານເກັບຂີ້ເຫຍື້ອພິເສດ',
+            //   to: '/report/event/trash',
+            //   permissions: ['report'],
+            // },
+            {
+              icon: 'mdi-cash',
+              title: 'ລາຍງານບິນ',
+              to: '/report/billing/main',
+              permissions: ['report'],
+            },
+            {
+              icon: 'mdi-cash',
+              title: 'ລາຍງານບິນລູກຄ້າ',
+              to: '/report/billing/customer',
+              permissions: ['report'],
+            },
+            // {
+            //   icon: 'mdi-cash',
+            //   title: 'ລາຍງານບິນເຊວ',
+            //   to: '/report/invoice',
+            //   permissions: ['report'],
+            // },
+            {
+              icon: 'mdi-cash',
+              title: 'ຂໍ້ມູນບັນຊີເກັບພິເສດ',
+              to: '/report/event/invoice',
+              permissions: ['report'],
+            },
+            // {
+            //   icon: 'mdi-chart-areaspline',
+            //   title: 'ລາຍງານຂໍ້ມູນຄົນຂັບລົດ',
+            //   to: '/report/driver',
+            //   permissions: ['report'],
+            // },
+            {
+              icon: 'mdi-chart-bar',
+              title: 'ລາຍງານຂໍ້ມູນລູກຄ້າ',
+              to: '/report/customer',
+              permissions: ['report'],
+            },
+            {
+              icon: 'mdi-chart-bar',
+              title: 'ລາຍງານຫົວໜ່ວຍທຸລະກິດ',
+              to: '/report/company',
+              permissions: ['report'],
+            },
+          ],
+        },
+        {
+          title: 'ລາຍງານພາກສະໜາມ',
+          icon: 'mdi mdi-truck-fast-outline',
           group_permissions: ['report', 'report'],
           menu: [
             {
@@ -647,24 +798,24 @@ export default {
               to: '/report/event/trash',
               permissions: ['report'],
             },
-            {
-              icon: 'mdi-cash',
-              title: 'ລາຍງານບິນ',
-              to: '/report/billing/main',
-              permissions: ['report'],
-            },
-            {
-              icon: 'mdi-cash',
-              title: 'ລາຍງານບິນລູກຄ້າ',
-              to: '/report/billing/customer',
-              permissions: ['report'],
-            },
-            {
-              icon: 'mdi-cash',
-              title: 'ລາຍງານບິນເຊວ',
-              to: '/report/invoice',
-              permissions: ['report'],
-            },
+            // {
+            //   icon: 'mdi-cash',
+            //   title: 'ລາຍງານບິນ',
+            //   to: '/report/billing/main',
+            //   permissions: ['report'],
+            // },
+            // {
+            //   icon: 'mdi-cash',
+            //   title: 'ລາຍງານບິນລູກຄ້າ',
+            //   to: '/report/billing/customer',
+            //   permissions: ['report'],
+            // },
+            // {
+            //   icon: 'mdi-cash',
+            //   title: 'ລາຍງານບິນເຊວ',
+            //   to: '/report/invoice',
+            //   permissions: ['report'],
+            // },
             {
               icon: 'mdi-cash',
               title: 'ຂໍ້ມູນບັນຊີເກັບພິເສດ',
@@ -806,24 +957,24 @@ export default {
 
 .v-application--is-ltr .v-list-item__action:first-child,
 .v-application--is-ltr .v-list-item__icon:first-child {
-  margin-right: 6px !important;
+  margin-right: 20px !important;
 }
 
 .v-application--is-ltr .v-list-item__action[data-v-117f5fe7]:first-child,
 .v-application--is-ltr .v-list-item__icon[data-v-117f5fe7]:first-child {
-  margin-right: 6px !important;
+  margin-right: 8px !important;
 }
 
 .group-menu,
 .v-application--is-ltr .v-list-item__icon:first-child {
-  margin-right: 6px !important;
+  margin-right: 8px !important;
 }
 
 .v-application--is-ltr
 .v-list-group--no-action
 > .v-list-group__items
 > .v-list-item {
-  padding-left: 18px !important;
+  padding-left: 30px !important;
 }
 
 .nav {
