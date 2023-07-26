@@ -21,7 +21,7 @@ export default {
       month_from: '',
       month_to: '',
       // Date
-      date_from: '',
+      date_from: new Date(),
       date_to: '',
       // Pagination
       offset: 12,
@@ -30,7 +30,7 @@ export default {
       collections: [],
       homeCollection: [],
       summary: {},
-      selectedDuration: 'year',
+      selectedDuration: 'date',
       search: '',
       summaryMerge: {},
       duration: [
@@ -251,9 +251,10 @@ export default {
         data.set('month_from', this.moment(this.month_from).format('YYYY-MM'));
         data.set('month_to', this.moment(this.month_to).format('YYYY-MM'));
       }
-      if ((this.date_from !== '' && this.date_to !== '') && (this.selectedDuration == 'date')) {
-        data.set('date_from', this.moment(this.date_from).format('YYYY-MM-DD'));
-        data.set('date_to', this.moment(this.date_to).format('YYYY-MM-DD'));
+      if ((this.selectedDuration == 'date')) {
+        console.log(this.date_from);
+        if (this.date_from) data.set('date_from', this.moment(this.date_from).format('YYYY-MM-DD'));
+        if (this.date_to) data.set('date_to', this.moment(this.date_to).format('YYYY-MM-DD'));
       }
       this.$store.commit('Loading_State', true);
       this.$axios
@@ -429,6 +430,7 @@ export default {
     //     this.collectionType = "company";
     //     // this.fetchData();
     // }
+    this.date_from = new Date();
     this.fetchData();
     // this.company.forEach((item, index) => this.$set(item, 'key', index));
     // this.customers.forEach((item, index) => this.$set(item, 'key', index));

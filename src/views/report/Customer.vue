@@ -198,7 +198,7 @@
         <SaleAdmin
           v-model="selectedSale"
           label="ເລືອກຜູ້ສ້າງ"
-          @change="fetchData()"
+          @change="fetchAll()"
         />
       </v-col>
     </v-row>
@@ -282,7 +282,7 @@
             <v-switch
               v-model="only_billings"
               label="ມີບິນເທົ່ານັ້ນ"
-              @change="fetchData()"
+              @change="fetchAll()"
             />
           </v-card-title>
           <v-card-text>
@@ -544,7 +544,7 @@ export default {
           this.start_date = '';
         }
       }
-      this.fetchData();
+      this.fetchAll();
     },
     end_date() {
       this.pagination.current_page = '';
@@ -553,38 +553,38 @@ export default {
           this.end_date = '';
         }
       }
-      this.fetchData();
+      this.fetchAll();
     },
     search(value) {
       this.pagination.current_page = '';
       if (value == '') {
-        this.fetchData();
+        this.fetchAll();
       }
     },
 
     selectedVillage() {
       this.pagination.current_page = '';
-      this.fetchData();
+      this.fetchAll();
     },
     selectedDistrict() {
       this.pagination.current_page = '';
       this.fetchVillage();
-      this.fetchData();
+      this.fetchAll();
     },
     selectedStatus() {
       this.pagination.current_page = '';
-      this.fetchData();
+      this.fetchAll();
     },
     selectedCustomerStatus() {
       this.pagination.current_page = '';
-      this.fetchData();
+      this.fetchAll();
     },
     selectedSale() {
-      if (!this.firstLoad) this.fetchData();
+      if (!this.firstLoad) this.fetchAll();
     },
   },
   created() {
-    this.fetchData();
+    this.fetchAll();
     this.fetchAddress();
   },
   methods: {
@@ -619,8 +619,13 @@ export default {
           }
         });
     },
+    fetchAll() {
+      this.fetchSum();
+      this.fetchData();
+    },
     fetchData() {
       this.$store.commit('Loading_State', true);
+
       this.$axios
         .get('customer', {
           params: this.params,
@@ -652,7 +657,6 @@ export default {
         })
         .finally(() => {
           this.firstLoad = false;
-          this.fetchSum();
         });
     },
 
