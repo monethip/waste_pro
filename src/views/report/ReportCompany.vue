@@ -689,7 +689,7 @@ export default {
       this.$store.commit('Loading_State', true);
       this.$axios
         .get('company-billing', {
-          params: this.params,
+          params: { ...this.params, pure_data: true },
         })
         .then((res) => {
           if (res.data.code == 200) {
