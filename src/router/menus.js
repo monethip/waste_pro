@@ -263,7 +263,7 @@ export default [
     ],
   },
   {
-    title: 'ລາຍງານເຊວ',
+    title: 'ລາຍງານການຕະຫຼາດ',
     icon: 'mdi mdi-account-credit-card',
     group_permissions: ['report', 'report'],
     menu: [
