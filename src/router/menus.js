@@ -2,26 +2,27 @@ export default [
   {
     title: 'ຈັດການຂັ້ນສູງ',
     icon: 'mdi-account-supervisor-circle',
+    except_roles: ['kbt'],
     group_permissions: ['delete_any_customers', 'delete_any_bills'],
     menu: [
       {
         icon: 'mdi-delete-alert',
-        title: 'ລົບລູກຄ້າສາຍບ້ານ',
+        title: 'ລຶບລູກຄ້າສາຍບ້ານ',
         to: '/delete-home',
         permissions: ['delete_any_customers'],
       },
       {
         icon: 'mdi-delete-alert',
-        title: 'ລົບລູກຄ້າສາຍທຸລະກິດ',
+        title: 'ລຶບລູກຄ້າສາຍທຸລະກິດ',
         to: '/delete-company',
         permissions: ['delete_any_customers'],
       },
-      // {
-      //   icon: 'mdi-delete-alert',
-      //   title: 'ລົບບີນ',
-      //   to: '/delete-billing',
-      //   permissions: ['delete_any_bills'],
-      // },
+      {
+        icon: 'mdi-delete-alert',
+        title: 'ລຶບ-ແກ້ໄຂບີນ',
+        to: '/delete-billing',
+        permissions: ['delete_any_bills'],
+      },
     ],
   },
   {
@@ -40,12 +41,14 @@ export default [
         title: 'dashboard',
         to: '/',
         permissions: ['get_dashboard'],
+        except_roles: ['kbt'],
       },
       {
         icon: 'mdi-apps',
         title: 'Activity Log',
         to: '/activity-log',
         permissions: ['get_activity'],
+        except_roles: ['kbt'],
       },
     ],
   },
@@ -59,6 +62,7 @@ export default [
       'get_driver',
       'get_address',
     ],
+    except_roles: ['kbt'],
     menu: [
       {
         icon: 'mdi-file-import',
@@ -101,6 +105,7 @@ export default [
   {
     title: 'ຂໍ້ມູນຜູ້ໃຊ້',
     icon: 'mdi-account-supervisor',
+    except_roles: ['kbt'],
     group_permissions: [
       'get_role',
       'get_user',
@@ -152,6 +157,7 @@ export default [
         title: 'ລູກຄ້າທີ່ຍັງບໍ່ເຂົ້າບໍລິການ',
         to: '/pre-customer',
         permissions: ['get_customer'],
+        except_roles: ['kbt'],
       },
       {
         icon: 'mdi-account-group',
@@ -164,18 +170,21 @@ export default [
         title: 'ລູກຄ້າຫົວໜ່ວຍທຸລະກິດ',
         to: '/company',
         permissions: ['get_customer'],
+        except_roles: ['kbt'],
       },
       {
         icon: 'mdi-account-group',
         title: 'ລູກຄ້າສົງຄຳຮ້ອງຂໍເຂົ້າມາ',
         to: '/company-request',
         permissions: ['get_customer'],
+        except_roles: ['kbt'],
       },
     ],
   },
   {
     title: 'ແຜນເສັ້ນທາງ',
     icon: 'mdi-map',
+    except_roles: ['kbt'],
     group_permissions: ['get_route_plan'],
     menu: [
       {
@@ -195,6 +204,7 @@ export default [
   {
     icon: 'mdi-delete',
     title: 'ເກັບຂີ້ເຫື້ຍອພິເສດ',
+    except_roles: ['kbt'],
     permissions: ['manage_event', 'get_customer'],
     to: '/v2/event-invoice',
     menu: [],
@@ -222,6 +232,7 @@ export default [
   {
     title: 'ຈັດການບິນ',
     icon: 'mdi-credit-card',
+    except_roles: ['kbt'],
     group_permissions: ['get_invoice'],
     menu: [
       {
@@ -252,16 +263,10 @@ export default [
     ],
   },
   {
-    title: 'ລາຍງານການຕະຫຼາດ',
+    title: 'ລາຍງານເຊວ',
     icon: 'mdi mdi-account-credit-card',
     group_permissions: ['report', 'report'],
     menu: [
-      {
-        icon: 'mdi-chart-bubble',
-        title: 'ລາຍງານເກັບຂີ້ເຫຍື້ອພິເສດ',
-        to: '/report/event/trash',
-        permissions: ['report'],
-      },
       {
         icon: 'mdi-cash',
         title: 'ລາຍງານບິນ',
@@ -284,43 +289,6 @@ export default [
         icon: 'mdi-cash',
         title: 'ຂໍ້ມູນບັນຊີເກັບພິເສດ',
         to: '/report/event/invoice',
-        permissions: ['report'],
-      },
-      {
-        icon: 'mdi-chart-bar',
-        title: 'ລາຍງານຂໍ້ມູນລູກຄ້າ',
-        to: '/report/customer',
-        permissions: ['report'],
-      },
-      {
-        icon: 'mdi-chart-bar',
-        title: 'ລາຍງານຫົວໜ່ວຍທຸລະກິດ',
-        to: '/report/company',
-        permissions: ['report'],
-      },
-    ],
-  },
-  {
-    title: 'ລາຍງານເຊວ',
-    icon: 'mdi mdi-file-sign',
-    group_permissions: ['report', 'report'],
-    menu: [
-      {
-        icon: 'mdi-cash',
-        title: 'ລາຍງານບິນ',
-        to: '/report/billing/main',
-        permissions: ['report'],
-      },
-      {
-        icon: 'mdi-cash',
-        title: 'ລາຍງານບິນລູກຄ້າ',
-        to: '/report/billing/customer',
-        permissions: ['report'],
-      },
-      {
-        icon: 'mdi-cash',
-        title: 'ລາຍງານບິນເຊວ',
-        to: '/report/invoice',
         permissions: ['report'],
       },
       {
