@@ -256,30 +256,6 @@ export default [
     icon: 'mdi mdi-account-credit-card',
     group_permissions: ['report', 'report'],
     menu: [
-      // {
-      //   icon: 'mdi-chart-bubble',
-      //   title: 'ເກັບຂີ້ເຫຍື້ອຕາມລົດໃໝ່',
-      //   to: '/report/driver/collection/v2',
-      //   permissions: ['report'],
-      // },
-      // {
-      //   icon: "mdi-chart-bubble",
-      //   title: "ເກັບຂີ້ເຫຍື້ອຕາມລົດ",
-      //   to: "/report/driver/collection",
-      //   permissions: ["report"]
-      // },
-      // {
-      //   icon: 'mdi-chart-bubble',
-      //   title: 'ເກັບຂີ້ເຫຍື້ອຕາມບ້ານ',
-      //   to: '/report/address/collection',
-      //   permissions: ['report'],
-      // },
-      // {
-      //   icon: 'mdi-chart-bubble',
-      //   title: 'ລາຍງານການເກັບຂີ້ເຫຍື້ອ',
-      //   to: '/report/trash',
-      //   permissions: ['report'],
-      // },
       {
         icon: 'mdi-chart-bubble',
         title: 'ລາຍງານເກັບຂີ້ເຫຍື້ອພິເສດ',
@@ -325,40 +301,10 @@ export default [
     ],
   },
   {
-    title: 'ລາຍງານບັນຊີ',
+    title: 'ລາຍງານເຊວ',
     icon: 'mdi mdi-file-sign',
     group_permissions: ['report', 'report'],
     menu: [
-      // {
-      //   icon: 'mdi-chart-bubble',
-      //   title: 'ເກັບຂີ້ເຫຍື້ອຕາມລົດໃໝ່',
-      //   to: '/report/driver/collection/v2',
-      //   permissions: ['report'],
-      // },
-      // {
-      //   icon: "mdi-chart-bubble",
-      //   title: "ເກັບຂີ້ເຫຍື້ອຕາມລົດ",
-      //   to: "/report/driver/collection",
-      //   permissions: ["report"]
-      // },
-      // {
-      //   icon: 'mdi-chart-bubble',
-      //   title: 'ເກັບຂີ້ເຫຍື້ອຕາມບ້ານ',
-      //   to: '/report/address/collection',
-      //   permissions: ['report'],
-      // },
-      // {
-      //   icon: 'mdi-chart-bubble',
-      //   title: 'ລາຍງານການເກັບຂີ້ເຫຍື້ອ',
-      //   to: '/report/trash',
-      //   permissions: ['report'],
-      // },
-      // {
-      //   icon: 'mdi-chart-bubble',
-      //   title: 'ລາຍງານເກັບຂີ້ເຫຍື້ອພິເສດ',
-      //   to: '/report/event/trash',
-      //   permissions: ['report'],
-      // },
       {
         icon: 'mdi-cash',
         title: 'ລາຍງານບິນ',
@@ -371,24 +317,49 @@ export default [
         to: '/report/billing/customer',
         permissions: ['report'],
       },
-      // {
-      //   icon: 'mdi-cash',
-      //   title: 'ລາຍງານບິນເຊວ',
-      //   to: '/report/invoice',
-      //   permissions: ['report'],
-      // },
+      {
+        icon: 'mdi-cash',
+        title: 'ລາຍງານບິນເຊວ',
+        to: '/report/invoice',
+        permissions: ['report'],
+      },
+      {
+        icon: 'mdi-chart-bar',
+        title: 'ລາຍງານຂໍ້ມູນລູກຄ້າ',
+        to: '/report/customer',
+        permissions: ['report'],
+      },
+      {
+        icon: 'mdi-chart-bar',
+        title: 'ລາຍງານຫົວໜ່ວຍທຸລະກິດ',
+        to: '/report/company',
+        permissions: ['report'],
+      },
+    ],
+  },
+  {
+    title: 'ລາຍງານບັນຊີ',
+    icon: 'mdi mdi-file-sign',
+    group_permissions: ['report', 'report'],
+    menu: [
+      {
+        icon: 'mdi-cash',
+        title: 'ລາຍງານບິນເຊວ',
+        to: '/report/invoice',
+        permissions: ['report'],
+      },
+      {
+        icon: 'mdi-cash',
+        title: 'ລາຍງານບິນລູກຄ້າ',
+        to: '/report/billing/customer',
+        permissions: ['report'],
+      },
       {
         icon: 'mdi-cash',
         title: 'ຂໍ້ມູນບັນຊີເກັບພິເສດ',
         to: '/report/event/invoice',
         permissions: ['report'],
       },
-      // {
-      //   icon: 'mdi-chart-areaspline',
-      //   title: 'ລາຍງານຂໍ້ມູນຄົນຂັບລົດ',
-      //   to: '/report/driver',
-      //   permissions: ['report'],
-      // },
       {
         icon: 'mdi-chart-bar',
         title: 'ລາຍງານຂໍ້ມູນລູກຄ້າ',
@@ -409,17 +380,29 @@ export default [
     group_permissions: ['report', 'report'],
     menu: [
       {
+        icon: 'mdi-chart-bar',
+        title: 'ລາຍງານຂໍ້ມູນລູກຄ້າ',
+        to: '/report/customer',
+        permissions: ['report'],
+      },
+      {
+        icon: 'mdi-chart-bar',
+        title: 'ລາຍງານຫົວໜ່ວຍທຸລະກິດ',
+        to: '/report/company',
+        permissions: ['report'],
+      },
+      {
+        icon: 'mdi-chart-areaspline',
+        title: 'ລາຍງານຂໍ້ມູນຄົນຂັບລົດ',
+        to: '/report/driver',
+        permissions: ['report'],
+      },
+      {
         icon: 'mdi-chart-bubble',
         title: 'ເກັບຂີ້ເຫຍື້ອຕາມລົດໃໝ່',
         to: '/report/driver/collection/v2',
         permissions: ['report'],
       },
-      // {
-      //   icon: "mdi-chart-bubble",
-      //   title: "ເກັບຂີ້ເຫຍື້ອຕາມລົດ",
-      //   to: "/report/driver/collection",
-      //   permissions: ["report"]
-      // },
       {
         icon: 'mdi-chart-bubble',
         title: 'ເກັບຂີ້ເຫຍື້ອຕາມບ້ານ',
@@ -436,48 +419,6 @@ export default [
         icon: 'mdi-chart-bubble',
         title: 'ລາຍງານເກັບຂີ້ເຫຍື້ອພິເສດ',
         to: '/report/event/trash',
-        permissions: ['report'],
-      },
-      // {
-      //   icon: 'mdi-cash',
-      //   title: 'ລາຍງານບິນ',
-      //   to: '/report/billing/main',
-      //   permissions: ['report'],
-      // },
-      // {
-      //   icon: 'mdi-cash',
-      //   title: 'ລາຍງານບິນລູກຄ້າ',
-      //   to: '/report/billing/customer',
-      //   permissions: ['report'],
-      // },
-      // {
-      //   icon: 'mdi-cash',
-      //   title: 'ລາຍງານບິນເຊວ',
-      //   to: '/report/invoice',
-      //   permissions: ['report'],
-      // },
-      {
-        icon: 'mdi-cash',
-        title: 'ຂໍ້ມູນບັນຊີເກັບພິເສດ',
-        to: '/report/event/invoice',
-        permissions: ['report'],
-      },
-      {
-        icon: 'mdi-chart-areaspline',
-        title: 'ລາຍງານຂໍ້ມູນຄົນຂັບລົດ',
-        to: '/report/driver',
-        permissions: ['report'],
-      },
-      {
-        icon: 'mdi-chart-bar',
-        title: 'ລາຍງານຂໍ້ມູນລູກຄ້າ',
-        to: '/report/customer',
-        permissions: ['report'],
-      },
-      {
-        icon: 'mdi-chart-bar',
-        title: 'ລາຍງານຫົວໜ່ວຍທຸລະກິດ',
-        to: '/report/company',
         permissions: ['report'],
       },
     ],
