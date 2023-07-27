@@ -7,7 +7,7 @@
       class="nav"
     >
       <v-icon
-        style="padding: 4px"
+        style="padding: 2px"
         @click="drawer = !drawer"
       >
         mdi-order-bool-descending
@@ -55,7 +55,7 @@
             <v-list-item-content class="justify-center">
               <v-list
                 two-line
-                style="max-height: 650px"
+                style="max-height: 750px"
                 class="overflow-y-auto"
               >
                 <v-list-item-group
@@ -330,7 +330,7 @@
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-action>
-            <v-list-item-content style="padding-left: 22px">
+            <v-list-item-content style="padding-left: 20px">
               <v-list-item-title v-text="item.title" />
             </v-list-item-content>
           </v-list-item>
@@ -489,24 +489,24 @@ export default {
 
 .v-application--is-ltr .v-list-item__action:first-child,
 .v-application--is-ltr .v-list-item__icon:first-child {
-  margin-right: 6px !important;
+  margin-right: 20px !important;
 }
 
 .v-application--is-ltr .v-list-item__action[data-v-117f5fe7]:first-child,
 .v-application--is-ltr .v-list-item__icon[data-v-117f5fe7]:first-child {
-  margin-right: 6px !important;
+  margin-right: 8px !important;
 }
 
 .group-menu,
 .v-application--is-ltr .v-list-item__icon:first-child {
-  margin-right: 6px !important;
+  margin-right: 8px !important;
 }
 
 .v-application--is-ltr
 .v-list-group--no-action
 > .v-list-group__items
 > .v-list-item {
-  padding-left: 18px !important;
+  padding-left: 30px !important;
 }
 
 .nav {
