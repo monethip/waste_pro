@@ -376,7 +376,7 @@ export default {
       selectedPaymentMethod: '',
       billingListsearch: '',
       exportMode: '',
-      start_date: `${new Date().toISOString().substr(0, 8)}01`,
+      start_date: `${new Date().toISOString().substr(0, 10)}`,
       end_date: '',
       start_menu: false,
       end_menu: false,
@@ -407,7 +407,7 @@ export default {
         },
         download_link: '',
       },
-      selectedBillDate: '',
+      selectedBillDate: 'paided_at',
       billingListHeader: [
         { text: 'ໄອດີ', value: 'billing_display_id' },
         {
@@ -444,10 +444,12 @@ export default {
       return res;
     },
     lastMonthCreated() {
-      return this.$store.getters['auth/getLastMonthBill'];
+      // return this.$store.getters['auth/getLastMonthBill'];
+      return '';
     },
     lastMonthBillCreated() {
-      return this.$store.getters['auth/getLastMonthBillPaid'];
+      // return this.$store.getters['auth/getLastMonthBillPaid'];
+      return '';
     },
     billDates() {
       return billDateList;
@@ -491,14 +493,13 @@ export default {
     },
     detailStatuses() {
       const data = [];
-      if (this.summaryDetails.length) {
-        for (const [key, value] of Object.entries(this.summaryDetails[0])) {
-          if (value.count_billing !== undefined) {
-            data.push({
-              text: key,
-              value: `${key}.total`,
-            });
-          }
+
+      if (this.billings.summary && this.billings.summary.total.length) {
+        for (const item of this.billings.summary.total) {
+          data.push({
+            text: item.status_la,
+            value: item.total,
+          });
         }
       }
       return data;
@@ -609,7 +610,7 @@ export default {
     },
   },
   beforeCreate() {
-    this.$store.commit('Loading_State', true);
+    // this.$store.commit('Loading_State', true);
   },
   async created() {
     await this.fetchDistrict();
@@ -637,6 +638,8 @@ export default {
       })
       .finally(() => {
         this.$store.commit('Loading_State', false);
+        this.selectedBillDate = 'paided_at';
+        this.start_date = new Date().toISOString().substr(0, 10);
         this.fetchData();
       });
   },
@@ -679,6 +682,8 @@ export default {
         { download: this.exportMode },
         { created_month: this.lastMonthCreated },
         { bill_month: this.lastMonthBillCreated },
+        { without_customer_activity: true },
+        { without_month_info: true },
         { sale_mode: this.sale_mode },
         { filter: this.billingListsearch },
       ];
@@ -694,7 +699,6 @@ export default {
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.$store.commit('Loading_State', false);
               this.exportMode = '';
               if (res.data.data.download_link) window.open(res.data.data.download_link);
               else {
@@ -705,7 +709,6 @@ export default {
           }
         })
         .catch((error) => {
-          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status == 422) {
             const obj = error.response.data.errors;
             for (const [key, message] of Object.entries(obj)) {
@@ -715,6 +718,7 @@ export default {
         })
         .finally(() => {
           this.firstLoad = false;
+          this.$store.commit('Loading_State', false);
         });
     },
     async fetchSale() {
@@ -727,20 +731,17 @@ export default {
           ]),
         })
         .catch((error) => {
-          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status === 422) {
             const obj = error.response.data.errors;
             for (const [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
           }
-        });
+        }).finally(() => { this.$store.commit('Loading_State', false); });
 
       if (res.data.code === 200) {
         this.salesData = res.data.data;
       }
-
-      this.$store.commit('Loading_State', false);
       this.$store.commit('Loading_State', false);
     },
     ViewInvoice(id) {

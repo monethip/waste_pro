@@ -421,6 +421,8 @@ export default {
   data() {
     return {
       title: 'Company',
+      del_dialog: false,
+      tab: '1',
       start_date: '',
       end_date: '',
       start_menu: false,

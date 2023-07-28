@@ -165,7 +165,7 @@
 
                       <v-list-item-content>
                         <v-list-item-title v-if="data.customer_activity">
-                          {{ data.customer_activity.causer ? data.customer_activity.causer.full_name : "" }}
+                          {{ data.customer_activity.user ? data.customer_activity.user.full_name : "" }}
                         </v-list-item-title>
                         <v-list-item-subtitle>
                           {{ data.created_at }}

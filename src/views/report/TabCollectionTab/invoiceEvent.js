@@ -144,19 +144,19 @@ export default {
       this.$axios
         .get('v2/report-billing-collection-event',
           { params: queryOptions(queryArray) },
-
         )
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
               this.$store.commit('Loading_State', false);
-              this.summary = res.data.data.count_event_status;
-              if (res.data.data.data.pagination) {
-                this.invoices = res.data.data.data.data;
-                this.pagination = res.data.data.data.pagination;
-              } else { this.invoices = res.data.data.data; }
 
-              if (res.data.data.download_link) window.open(res.data.data.download_link);
+              if (exportMode) { window.open(res.data.data.download_link); } else {
+                this.summary = res.data.data.count_event_status;
+                if (res.data.data.data.pagination) {
+                  this.invoices = res.data.data.data.data;
+                  this.pagination = res.data.data.data.pagination;
+                } else { this.invoices = res.data.data.data; }
+              }
             }, 300);
           }
         })

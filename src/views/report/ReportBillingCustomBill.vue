@@ -306,7 +306,7 @@ export default {
       selectedPaymentMethod: '',
       billingListsearch: '',
       exportMode: '',
-      start_date: `${new Date().toISOString().substr(0, 8)}01`,
+      start_date: `${new Date().toISOString().substr(0, 10)}`,
       end_date: '',
       start_menu: false,
       end_menu: false,
@@ -330,7 +330,7 @@ export default {
           },
         },
       },
-      selectedBillDate: '',
+      selectedBillDate: 'paided_at',
       billingListHeader: [
         { text: 'ໄອດີ', value: 'billing_display_id' },
         {
@@ -358,10 +358,12 @@ export default {
   },
   computed: {
     lastMonthCreated() {
-      return this.$store.getters['auth/getLastMonthBill'];
+      // return this.$store.getters['auth/getLastMonthBill'];
+      return '';
     },
     lastMonthBillCreated() {
-      return this.$store.getters['auth/getLastMonthBillPaid'];
+      // return this.$store.getters['auth/getLastMonthBillPaid'];
+      return '';
     },
     billDates() {
       return billDateList;
@@ -562,6 +564,8 @@ export default {
         { download: this.exportMode },
         { created_month: this.lastMonthCreated },
         { bill_month: this.lastMonthBillCreated },
+        { without_customer_activity: true },
+        { without_month_info: true },
         { sale_mode: this.sale_mode },
         { filter: this.billingListsearch },
       ];

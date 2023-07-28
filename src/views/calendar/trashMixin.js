@@ -1,4 +1,5 @@
 import { GetOldValueOnInput } from '@/Helpers/GetValue';
+import moment from 'moment';
 
 export default {
   name: 'Customer',
@@ -20,30 +21,80 @@ export default {
       countPause: {},
       statuses: [],
       plan_monthId: this.$route.params.id,
-      headers: [
-        { text: 'ລຳດັບຄວາມສຳຄັນ', value: 'priority' },
-        { text: 'ຊື່ລູກຄ້າ', value: 'customer' },
-        { text: 'ເລີ່ມວັນທີ', value: 'route_plan_detail.customer.start_month' },
-
+      dragHeaders: [
         {
-          text: 'ຈຳນວນຂີ້ເຫື້ຍອ',
-          value: 'amount',
-          align: 'center',
-          sortable: false,
+          text: '',
+          value: 'icon',
         },
         {
-          text: 'ສະຖານະ',
-          value: 'status',
-          align: 'center',
-          sortable: false,
+          text: 'priority',
+          value: 'priority',
         },
-        { text: '', value: 'actions', sortable: false },
-      ],
-      allCalendarHeaders: [
-        { text: 'ລຳດັບຄວາມສຳຄັນ', value: 'priority' },
-        { text: 'ຊື່ລູກຄ້າ', value: 'customer' },
+        {
+          text: 'customer_id',
+          value: 'route_plan_detail.customer.customer_id',
+        },
+        {
+          text: 'full_name',
+          value: 'route_plan_detail.customer.full_name',
+        },
+        {
+          text: 'phone',
+          value: 'route_plan_detail.customer.user.phone',
+        },
       ],
     };
+  },
+  computed: {
+    dragCalendars() {
+      return this.calendars;
+    },
+    optimizedCalendars() {
+      return this.mergedCalendars;
+    },
+    mergedCalendars() {
+      return this.calendars.map((item) => {
+        let amount = 0;
+        let amountColor = 'primary';
+
+        switch (item.collection_type) {
+          case 'bag':
+          case 'chartered':
+          case '32km':
+          case 'infect':
+            amount = item.bag;
+            break;
+          case 'fix_cost':
+            amount = '';
+            break;
+          default:
+            amount = item.container;
+            amountColor = 'success';
+            break;
+        }
+
+        const statusColor = this.statusColor(item.status);
+        const amountCollectionType = this.getUnit(item.collection_type);
+        const isPauseColor = item.is_pause ? 'orange' : 'green';
+        const isPauseLa = item.is_pause ? 'ຢຸດກ່ອນ' : 'ໃຫ້ເກັບ';
+        const customerCanCollectColor = item.route_plan_detail.customer.can_collect ? 'success' : 'error';
+        const customerCanCollectLa = item.route_plan_detail.customer.can_collect ? 'ເກັບໄດ້' : 'ເກັບບໍ່ໄດ້';
+
+        return {
+          ...item,
+          created_at: moment(item.created_at).format("DD-MM-YY hh:mm"),
+          date: moment(item.date).format("DD-MM-YY hh:mm:ss"),
+          status_color: statusColor,
+          amount,
+          amount_color: amountColor,
+          amount_collection_type: amountCollectionType,
+          is_pause_color: isPauseColor,
+          is_pause_la: isPauseLa,
+          customer_can_collect_color: customerCanCollectColor,
+          customer_can_collect_la: customerCanCollectLa,
+        };
+      });
+    },
   },
   methods: {
     fetchData() {
@@ -52,6 +103,7 @@ export default {
         .get(`plan-calendar/${this.$route.params.id}/detail`, {
           params: {
             statuses: this.statuses,
+            without_month_info: true,
           },
         })
         .then((res) => {
@@ -75,9 +127,10 @@ export default {
         });
     },
     fetchAllData() {
+      console.log(11);
       this.$store.commit('Loading_State', true);
       this.$axios
-        .get(`plan-calendar/${this.$route.params.id}/detail`)
+        .get(`plan-calendar/${this.$route.params.id}/detail?without_month_info=true`)
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
@@ -118,11 +171,11 @@ export default {
     },
   },
   watch: {
-    search(value) {
-      if (value == '') {
-        this.fetchData();
-      }
-    },
+    // search(value) {
+    //   if (value == '') {
+    //     this.fetchData();
+    //   }
+    // },
   },
   created() {
     this.fetchData();

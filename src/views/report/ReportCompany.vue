@@ -150,7 +150,7 @@
             <SaleAdmin
               v-model="selectedSale"
               label="ເລືອກຜູ້ສ້າງ"
-              @change="fetchData()"
+              @change="fetchAll()"
             />
           </v-col>
         </v-row>
@@ -291,7 +291,7 @@
               <v-switch
                 v-model="only_billings"
                 label="ມີບິນເທົ່ານັ້ນ"
-                @change="fetchData()"
+                @change="fetchAll()"
               />
             </v-card-title>
             <v-card-text>
@@ -514,7 +514,7 @@ export default {
         { text: 'ປະເພດບໍລິການ', value: 'cost_by_la' },
         { text: 'ມູນຄ່າສັນຍາ', value: 'fix_cost' },
         { text: 'ເລີ່ມບໍລິການ', value: 'start_month', sortable: false },
-        { text: 'ຜູ້ສ້າງ', value: 'customer_activity.causer.full_name' },
+        { text: 'ຜູ້ສ້າງ', value: 'customer_activity.user.full_name' },
         { text: 'Created', value: 'created_at', sortable: false },
         { text: 'ສະຖານະ', value: 'status', sortable: false },
         { text: '', value: 'actions', sortable: false },
@@ -594,7 +594,7 @@ export default {
           this.start_date = '';
         }
       }
-      this.fetchData();
+      this.fetchAll();
     },
     end_date() {
       this.pagination.current_page = '';
@@ -603,49 +603,53 @@ export default {
           this.end_date = '';
         }
       }
-      this.fetchData();
+      this.fetchAll();
     },
     search(value) {
       this.pagination.current_page = '';
       if (value == '') {
-        this.fetchData();
+        this.fetchAll();
       }
     },
 
     selectedVillage() {
       this.pagination.current_page = '';
-      this.fetchData();
+      this.fetchAll();
     },
     selectedDistrict() {
       this.pagination.current_page = '';
       this.fetchVillage();
-      this.fetchData();
+      this.fetchAll();
     },
     selectedStatus() {
       this.pagination.current_page = '';
-      this.fetchData();
+      this.fetchAll();
     },
     selectedCanCollect() {
       this.pagination.current_page = '';
-      this.fetchData();
+      this.fetchAll();
     },
     selectedCustomerStatus() {
       this.pagination.current_page = '';
-      this.fetchData();
+      this.fetchAll();
     },
     selectedCost() {
       this.pagination.current_page = '';
-      this.fetchData();
+      this.fetchAll();
     },
     selectedSale() {
-      if (!this.firstLoad) this.fetchData();
+      if (!this.firstLoad) this.fetchAll();
     },
   },
   mounted() {
-    this.fetchData();
+    this.fetchAll();
     this.fetchAddress();
   },
   methods: {
+    fetchAll() {
+      this.fetchSum();
+      this.fetchData();
+    },
     fetchData() {
       this.$store.commit('Loading_State', true);
       this.$axios
@@ -679,14 +683,13 @@ export default {
         })
         .finally(() => {
           this.firstLoad = false;
-          this.fetchSum();
         });
     },
     fetchSum() {
       this.$store.commit('Loading_State', true);
       this.$axios
         .get('company-billing', {
-          params: this.params,
+          params: { ...this.params },
         })
         .then((res) => {
           if (res.data.code == 200) {

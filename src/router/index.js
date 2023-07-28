@@ -1,6 +1,9 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Middlewares from '@/Middlewares/Index';
+import hasPermission from '@/Helpers/Can.js';
+import hasRole from '@/Helpers/Role.js';
+import menu from './menus';
 
 Vue.use(VueRouter);
 
@@ -1740,6 +1743,35 @@ function nextCheck(context, middleware, index) {
 }
 
 router.beforeEach((to, from, next) => {
+  const matchedRoutes = to.matched;
+  const protectedRoutes = [];
+
+  matchedRoutes.forEach((route) => {
+    const menuGroup = menu.find((group) => group.menu.some((item) => item.to === route.path));
+    if (menuGroup) {
+      const menuItem = menuGroup.menu.find((item) => item.to === route.path);
+      if (menuItem.permissions || menuItem.except_roles) {
+        protectedRoutes.push({ route, menuItem });
+      }
+    }
+  });
+
+  if (protectedRoutes.length === 0) {
+    next();
+  } else {
+    const canActivate = protectedRoutes.every(({ menuItem }) => {
+      const hasRequiredPermissions = !menuItem.permissions || menuItem.permissions.filter((permission) => hasPermission(permission));
+      const hasNoExceptRole = !menuItem.except_roles || menuItem.except_roles.every((role) => !hasRole(role));
+      return hasRequiredPermissions && hasNoExceptRole;
+    });
+
+    if (canActivate) {
+      next();
+    } else {
+      next('/welcome'); // Redirect to a default route or an unauthorized access page
+    }
+  }
+
   if (to.meta.middleware) {
     const middleware = Array.isArray(to.meta.middleware) ? to.meta.middleware : [to.meta.middleware];
     const ctx = {
@@ -1751,6 +1783,6 @@ router.beforeEach((to, from, next) => {
     const nextMiddleware = nextCheck(ctx, middleware, 1);
     return middleware[0]({ ...ctx, nextMiddleware });
   }
-  return next();
 });
+
 export default router;

@@ -16,8 +16,8 @@ export default {
       year_from: '',
       year_to: '',
       // Month
-      month_from: '',
-      month_to: '',
+      month_from: new Date(),
+      month_to: new Date(),
       // Date
       date_from: '',
       date_to: '',
@@ -31,7 +31,7 @@ export default {
       homeCollection: [],
       summary: [],
       summaryMerge: {},
-      selectedDuration: 'year',
+      selectedDuration: 'month',
       duration: [
         {
           name: 'ປີ',

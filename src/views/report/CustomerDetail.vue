@@ -13,13 +13,14 @@
       </v-btn>
       ລາຍລະອຽດ
       <router-link
+        v-if="$can('update_customer')"
         class="ml-4"
         :to="`/edit/customer/${data.id}`"
       >
         ແກ້ໄຂ
       </router-link>
     </v-breadcrumbs>
-    <v-row>
+    <v-row v-if="!$role('kbt')">
       <v-col>
         <v-card>
           <v-card-text>
@@ -33,7 +34,7 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row v-if="!$role('kbt')">
       <v-col>
         <v-card>
           <v-card-text>
@@ -75,10 +76,16 @@
               <v-tab href="#tab-1">
                 ຂໍ້ມູນກ່ຽວກັບ
               </v-tab>
-              <v-tab href="#tab-2">
+              <v-tab
+                v-if="!$role('kbt')"
+                href="#tab-2"
+              >
                 ຂໍ້ມູນການບໍລິການ
               </v-tab>
-              <v-tab href="#tab-3">
+              <v-tab
+                v-if="!$role('kbt')"
+                href="#tab-3"
+              >
                 ຂໍ້ມູນການຊຳລະ
               </v-tab>
             </v-tabs>
@@ -216,7 +223,7 @@
 
                       <v-list-item-content>
                         <v-list-item-title v-if="data.customer_activity">
-                          {{ data.customer_activity.causer ? data.customer_activity.causer.full_name : "" }}
+                          {{ data.customer_activity.user ? data.customer_activity.user.full_name : "" }}
                         </v-list-item-title>
                         <v-list-item-subtitle>
                           {{ data.created_at }}
@@ -289,7 +296,10 @@
               </v-tab-item>
             </v-tabs-items>
 
-            <v-tabs-items v-model="tab">
+            <v-tabs-items
+              v-if="!$role('kbt')"
+              v-model="tab"
+            >
               <v-tab-item value="tab-2">
                 <v-container>
                   <v-row>
@@ -447,7 +457,10 @@
               </v-tab-item>
             </v-tabs-items>
 
-            <v-tabs-items v-model="tab">
+            <v-tabs-items
+              v-if="!$role('kbt')"
+              v-model="tab"
+            >
               <v-tab-item value="tab-3">
                 <v-container>
                   <v-row>
@@ -902,71 +915,75 @@ export default {
         });
     },
     customerCollection(nobillMonth = false) {
+      if (!this.$role('kbt')) {
       // this.this.pagination.current_page = "";
-      this.$store.commit('Loading_State', true);
-      this.$axios
-        .get(`customer-collection-summary/${this.$route.params.id}`, {
-          params: {
-            page: this.pagination.current_page,
-            per_page: this.per_page,
-            bill_month: nobillMonth ? "" : this.month_collection,
-          },
-        })
-        .then((res) => {
-          if (res.data.code === 200) {
-            setTimeout(() => {
-              this.$store.commit('Loading_State', false);
-              this.services = res.data.data.all.data;
-              this.serviceSummary = res.data.data.collect_summary;
-              if (nobillMonth) this.statusSummaryNoMonth = res.data.data.status_summary;
-              else this.statusSummary = res.data.data.status_summary;
-              this.pagination = res.data.data.details.pagination;
-            }, 300);
-          }
-        })
-        .catch((error) => {
-          this.$store.commit('Loading_State', false);
-          this.fetchData();
-          if (error.response && error.response.status === 422) {
-            const obj = error.response.data.errors;
-            for (const [key, message] of Object.entries(obj)) {
-              this.server_errors[key] = message[0];
+        this.$store.commit('Loading_State', true);
+        this.$axios
+          .get(`customer-collection-summary/${this.$route.params.id}`, {
+            params: {
+              page: this.pagination.current_page,
+              per_page: this.per_page,
+              bill_month: nobillMonth ? "" : this.month_collection,
+            },
+          })
+          .then((res) => {
+            if (res.data.code === 200) {
+              setTimeout(() => {
+                this.$store.commit('Loading_State', false);
+                this.services = res.data.data.all.data;
+                this.serviceSummary = res.data.data.collect_summary;
+                if (nobillMonth) this.statusSummaryNoMonth = res.data.data.status_summary;
+                else this.statusSummary = res.data.data.status_summary;
+                this.pagination = res.data.data.details.pagination;
+              }, 300);
             }
-          }
-        });
+          })
+          .catch((error) => {
+            this.$store.commit('Loading_State', false);
+            this.fetchData();
+            if (error.response && error.response.status === 422) {
+              const obj = error.response.data.errors;
+              for (const [key, message] of Object.entries(obj)) {
+                this.server_errors[key] = message[0];
+              }
+            }
+          });
+      }
     },
     customerInvoice(nobillMonth = false) {
+      if (!this.$role('kbt')) {
       // this.this.pagination.current_page = "";
-      this.$store.commit('Loading_State', true);
-      this.$axios
-        .get(`customer-invoice-summary/${this.$route.params.id}`, {
-          params: {
-            page: this.pagination.current_page,
-            per_page: this.per_page,
-            bill_month: nobillMonth ? "" : this.month,
-          },
-        })
-        .then((res) => {
-          if (res.data.code === 200) {
-            setTimeout(() => {
-              this.$store.commit('Loading_State', false);
-              this.invoices = res.data.data.details.data;
-              if (nobillMonth) this.invoiceSummaryNoBillMonth = res.data.data.invoice_summary;
-              else this.invoiceSummary = res.data.data.invoice_summary;
-              this.pagination = res.data.data.details.pagination;
-            }, 300);
-          }
-        })
-        .catch((error) => {
-          this.$store.commit('Loading_State', false);
-          this.fetchData();
-          if (error.response && error.response.status === 422) {
-            const obj = error.response.data.errors;
-            for (const [key, message] of Object.entries(obj)) {
-              this.server_errors[key] = message[0];
+        this.$store.commit('Loading_State', true);
+        this.$axios
+          .get(`customer-invoice-summary/${this.$route.params.id}`, {
+            params: {
+              page: this.pagination.current_page,
+              per_page: this.per_page,
+              bill_month: nobillMonth ? "" : this.month,
+            },
+          })
+          .then((res) => {
+            if (res.data.code === 200) {
+              setTimeout(() => {
+                this.$store.commit('Loading_State', false);
+                this.invoices = res.data.data.details.data;
+                if (nobillMonth) this.invoiceSummaryNoBillMonth = res.data.data.invoice_summary;
+                else this.invoiceSummary = res.data.data.invoice_summary;
+                this.pagination = res.data.data.details.pagination;
+              }, 300);
             }
-          }
-        });
+          })
+          .catch((error) => {
+            this.$store.commit('Loading_State', false);
+            this.fetchData();
+            if (error.response && error.response.status === 422) {
+              const obj = error.response.data.errors;
+              for (const [key, message] of Object.entries(obj)) {
+                this.server_errors[key] = message[0];
+              }
+            }
+          });
+      }
     },
     backPrevios() {
       this.$router.go(-1);

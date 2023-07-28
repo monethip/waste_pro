@@ -3,25 +3,28 @@
     <v-row>
       <v-col>
         <v-btn
+          v-if="$can('create_customer')"
           class="btn-primary mr-4"
           @click="createPage()"
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
         <v-btn
+          v-if="!$role('kbt')"
           class="btn-primary mr-4"
           @click="importData()"
         >
           <v-icon>mdi-file-import</v-icon>
         </v-btn>
         <v-btn
+          v-if="!$role('kbt')"
           class="btn-success"
           @click="exportData()"
         >
           <v-icon>mdi-file-export</v-icon>
         </v-btn>
       </v-col>
-      <v-col>
+      <v-col v-if="!$role('kbt')">
         <p class="text-caption">
           ແພກເກຈ
         </p>
@@ -117,7 +120,7 @@
           outlined
         />
       </v-col>
-      <v-col>
+      <v-col v-if="!$role('kbt')">
         <v-select
           v-model="selectedStatus"
           :items="status"
@@ -131,7 +134,7 @@
         />
       </v-col>
 
-      <v-col>
+      <v-col v-if="!$role('kbt')">
         <v-select
           v-model="selectedCustomerStatus"
           :items="customerStatus"
@@ -144,7 +147,10 @@
           outlined
         />
       </v-col>
-      <v-col cols>
+      <v-col
+        v-if="!$role('kbt')"
+        cols
+      >
         <v-select
           v-model="selectedFavoriteDate"
           :items="favorite_dates"
@@ -343,6 +349,7 @@
                       </template>
                       <v-list>
                         <v-list-item
+                          v-if="$can('update_customer')"
                           link
                           @click="addPackage(item.id)"
                         >
@@ -357,7 +364,7 @@
                           </v-list-item-title>
                         </v-list-item>
                         <v-list-item
-                          link
+                          v-if="$can('update_customer')"
                           @click="openChangePackage(item)"
                         >
                           <v-list-item-title>
@@ -385,6 +392,7 @@
                           </v-list-item-title>
                         </v-list-item>
                         <v-list-item
+                          v-if="$can('update_customer')"
                           link
                           @click="editPage(item.id)"
                         >
@@ -399,6 +407,7 @@
                           </v-list-item-title>
                         </v-list-item>
                         <v-list-item
+                          v-if="$can('delete_customer')"
                           link
                           @click="deleteItem(item.id)"
                         >
@@ -990,15 +999,17 @@ export default {
     },
 
     fetchPackage() {
-      this.$axios
-        .get('package')
-        .then((res) => {
-          if (res.data.code == 200) {
-            this.packages = res.data.data;
-          }
-        })
-        .catch(() => {
-        });
+      if (!this.$role('kbt')) {
+        this.$axios
+          .get('package')
+          .then((res) => {
+            if (res.data.code == 200) {
+              this.packages = res.data.data;
+            }
+          })
+          .catch(() => {
+          });
+      }
     },
 
     closeDelete() {
@@ -1300,17 +1311,19 @@ export default {
       return 'info';
     },
     fetchFavorite() {
-      this.$axios
-        .get('favorite-date')
-        .then((res) => {
-          if (res.data.code == 200) {
-            setTimeout(() => {
-              this.favorite_dates = res.data.data;
-            }, 100);
-          }
-        })
-        .catch(() => {
-        });
+      if (!this.$role('kbt')) {
+        this.$axios
+          .get('favorite-date')
+          .then((res) => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                this.favorite_dates = res.data.data;
+              }, 100);
+            }
+          })
+          .catch(() => {
+          });
+      }
     },
   },
 };

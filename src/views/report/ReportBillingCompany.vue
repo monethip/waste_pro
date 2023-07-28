@@ -523,7 +523,7 @@ export default {
       selectedPaymentMethod: '',
       billingListsearch: '',
       exportMode: '',
-      start_date: `${new Date().toISOString().substr(0, 8)}01`,
+      start_date: `${new Date().toISOString().substr(0, 10)}`,
       end_date: '',
       start_menu: false,
       end_menu: false,
@@ -555,7 +555,7 @@ export default {
           },
         },
       },
-      selectedBillDate: '',
+      selectedBillDate: 'paided_at',
       billingListHeader: [
         { text: 'ໄອດີ', value: 'billing_display_id' },
         {
@@ -581,10 +581,12 @@ export default {
   },
   computed: {
     lastMonthCreated() {
-      return this.$store.getters['auth/getLastMonthBill'];
+      // return this.$store.getters['auth/getLastMonthBill'];
+      return '';
     },
     lastMonthBillCreated() {
-      return this.$store.getters['auth/getLastMonthBillPaid'];
+      // return this.$store.getters['auth/getLastMonthBillPaid'];
+      return '';
     },
     billDates() {
       return billDateList;
@@ -629,14 +631,12 @@ export default {
     detailStatuses() {
       const data = [];
 
-      if (this.summaryDetails.length) {
-        for (const [key, value] of Object.entries(this.summaryDetails[0])) {
-          if (value.count_billing !== undefined) {
-            data.push({
-              text: key,
-              value: `${key}.total`,
-            });
-          }
+      if (this.billings.summary && this.billings.summary.total.length) {
+        for (const item of this.billings.summary.total) {
+          data.push({
+            text: item.status_la,
+            value: item.total,
+          });
         }
       }
       return data;
@@ -797,6 +797,8 @@ export default {
         { download: this.exportMode },
         { created_month: this.lastMonthCreated },
         { bill_month: this.lastMonthBillCreated },
+        { without_customer_activity: true },
+        { without_month_info: true },
         { sale_mode: this.sale_mode },
         { cost_by: this.selectedCostBy },
       ];
@@ -812,7 +814,6 @@ export default {
         .then((res) => {
           if (res.data.code == 200) {
             setTimeout(() => {
-              this.$store.commit('Loading_State', false);
               this.exportMode = '';
               if (res.data.data.download_link) window.open(res.data.data.download_link);
               else {
@@ -823,14 +824,13 @@ export default {
           }
         })
         .catch((error) => {
-          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status == 422) {
             const obj = error.response.data.errors;
             for (const [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
           }
-        });
+        }).finally(() => { this.$store.commit('Loading_State', false); });
     },
     fetchSale() {
       this.$store.commit('Loading_State', true);
@@ -843,25 +843,24 @@ export default {
         })
         .then((res) => {
           if (res.data.code === 200) {
-            this.$store.commit('Loading_State', false);
-            this.$store.commit('Loading_State', false);
             this.salesData = res.data.data;
           }
         })
         .catch((error) => {
-          this.$store.commit('Loading_State', false);
           if (error.response && error.response.status === 422) {
             const obj = error.response.data.errors;
             for (const [key, message] of Object.entries(obj)) {
               this.server_errors[key] = message[0];
             }
           }
-        });
+        }).finally(() => { this.$store.commit('Loading_State', false); });
     },
     openRoute(additionalOption = null) {
       const defaultOption = queryOptions([
         { created_month: this.lastMonthCreated },
         { bill_month: this.lastMonthBillCreated },
+        { without_customer_activity: true },
+        { without_month_info: true },
         { sale_mode: this.sale_mode },
       ]);
 

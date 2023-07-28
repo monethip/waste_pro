@@ -527,30 +527,30 @@ export default {
       this.fetchVillageDetail();
     },
     latlng(value) {
-      this.latlng(value);
+      this.latlng = value;
     },
     // Clear error change
-    'data.name': function () {
-      this.server_errors.name = '';
-    },
-    'data.surname': function () {
-      this.server_errors.surname = '';
-    },
-    'data.house_number': function () {
-      this.server_errors.house_number = '';
-    },
-    'data.phone': function () {
-      this.server_errors.phone = '';
-    },
-    'data.email': function () {
-      this.server_errors.email = '';
-    },
-    'data.password': function () {
-      this.server_errors.password = '';
-    },
-    'data.password_confirmation': function () {
-      this.server_errors.password = '';
-    },
+    // 'data.name': function () {
+    //   this.server_errors.name = '';
+    // },
+    // 'data.surname': function () {
+    //   this.server_errors.surname = '';
+    // },
+    // 'data.house_number': function () {
+    //   this.server_errors.house_number = '';
+    // },
+    // 'data.phone': function () {
+    //   this.server_errors.phone = '';
+    // },
+    // 'data.email': function () {
+    //   this.server_errors.email = '';
+    // },
+    // 'data.password': function () {
+    //   this.server_errors.password = '';
+    // },
+    // 'data.password_confirmation': function () {
+    //   this.server_errors.password = '';
+    // },
   },
   mounted() {
     this.geolocate();
@@ -683,8 +683,11 @@ export default {
             });
             if (error.response && error.response.status == 422) {
               const obj = error.response.data.errors;
+              console.log(obj);
               for (const [key, customer] of Object.entries(obj)) {
+                console.log(customer);
                 this.server_errors[key] = customer[0];
+                console.log(this.server_errors);
               }
             }
             this.$store.commit('Loading_State', false);

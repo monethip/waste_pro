@@ -21,8 +21,8 @@ export default {
       month_from: '',
       month_to: '',
       // Date
-      date_from: '',
-      date_to: '',
+      date_from: new Date(),
+      date_to: new Date(),
       // Pagination
       offset: 12,
       pagination: {},
@@ -30,7 +30,7 @@ export default {
       collections: [],
       homeCollection: [],
       summary: {},
-      selectedDuration: 'year',
+      selectedDuration: 'date',
       search: '',
       summaryMerge: {},
       duration: [
@@ -170,31 +170,34 @@ export default {
     },
     fetchData() {
       const data = new FormData();
-      data.set('page', this.pagination.current_page);
-      data.set('per_page', this.per_page);
-      data.set('type', this.collectionType);
-      data.set('duration', this.selectedDuration);
-      data.set('filter', this.search);
-      // Check for yearn null or not
-      if ((this.selectedDuration == 'year')) {
+      data.append('page', this.pagination.current_page);
+      data.append('per_page', this.per_page);
+      data.append('type', this.collectionType);
+      data.append('duration', this.selectedDuration);
+      data.append('filter', this.search);
+
+      // Check for year not null
+      if (this.selectedDuration === 'year') {
         if (this.year_from !== '' && this.year_to !== '') {
-          data.set('year_from', this.moment(this.year_from).format('YYYY'));
-          data.set('year_to', this.moment(this.year_to).format('YYYY'));
+          data.append('year_from', moment(this.year_from).format('YYYY'));
+          data.append('year_to', moment(this.year_to).format('YYYY'));
         } else if (this.year_from !== '') {
-          data.set('year_from', this.moment(this.year_from).format('YYYY'));
+          data.append('year_from', moment(this.year_from).format('YYYY'));
         } else if (this.year_to !== '') {
-          data.set('year_to', this.moment(this.year_to).format('YYYY'));
+          data.append('year_to', moment(this.year_to).format('YYYY'));
         }
       }
-      // Check year and month null or not
-      if ((this.month_from !== '' && this.month_to !== '') && (this.selectedDuration == 'month')) {
-        data.set('month_from', this.moment(this.month_from).format('YYYY-MM'));
-        data.set('month_to', this.moment(this.month_to).format('YYYY-MM'));
+
+      // Check year and month not null
+      if (this.selectedDuration === 'month') {
+        if (this.month_from) data.append('month_from', moment(this.month_from).format('YYYY-MM'));
+        if (this.month_to) data.append('month_to', moment(this.month_to).format('YYYY-MM'));
       }
-      // Check date null or not
-      if ((this.date_from !== '' && this.date_to !== '') && (this.selectedDuration == 'date')) {
-        data.set('date_from', this.moment(this.date_from).format('YYYY-MM-DD'));
-        data.set('date_to', this.moment(this.date_to).format('YYYY-MM-DD'));
+
+      // Check date not null
+      if (this.selectedDuration === 'date') {
+        if (this.date_from) data.append('date_from', moment(this.date_from).format('YYYY-MM-DD'));
+        if (this.date_to) data.append('date_to', moment(this.date_to).format('YYYY-MM-DD'));
       }
 
       this.$store.commit('Loading_State', true);
@@ -251,9 +254,10 @@ export default {
         data.set('month_from', this.moment(this.month_from).format('YYYY-MM'));
         data.set('month_to', this.moment(this.month_to).format('YYYY-MM'));
       }
-      if ((this.date_from !== '' && this.date_to !== '') && (this.selectedDuration == 'date')) {
-        data.set('date_from', this.moment(this.date_from).format('YYYY-MM-DD'));
-        data.set('date_to', this.moment(this.date_to).format('YYYY-MM-DD'));
+      if ((this.selectedDuration == 'date')) {
+        console.log(this.date_from);
+        if (this.date_from) data.set('date_from', this.moment(this.date_from).format('YYYY-MM-DD'));
+        if (this.date_to) data.set('date_to', this.moment(this.date_to).format('YYYY-MM-DD'));
       }
       this.$store.commit('Loading_State', true);
       this.$axios
@@ -429,6 +433,7 @@ export default {
     //     this.collectionType = "company";
     //     // this.fetchData();
     // }
+    this.date_from = new Date();
     this.fetchData();
     // this.company.forEach((item, index) => this.$set(item, 'key', index));
     // this.customers.forEach((item, index) => this.$set(item, 'key', index));
