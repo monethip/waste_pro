@@ -306,10 +306,16 @@ export default [
     ],
   },
   {
-    title: 'ລາຍງານບັນຊີ',
+    title: 'ບັນຊີລາຍງານ',
     icon: 'mdi mdi-file-sign',
     group_permissions: ['report', 'report'],
     menu: [
+      {
+        icon: 'mdi-cash',
+        title: 'ລາຍງານບິນ',
+        to: '/report/billing/main',
+        permissions: ['report'],
+      },
       {
         icon: 'mdi-cash',
         title: 'ລາຍງານບິນເຊວ',
@@ -343,7 +349,7 @@ export default [
     ],
   },
   {
-    title: 'ລາຍງານພາກສະໜາມ',
+    title: 'ພາກສະໜາມລາຍງານ',
     icon: 'mdi mdi-truck-fast-outline',
     group_permissions: ['report', 'report'],
     menu: [
