@@ -407,7 +407,7 @@
             </v-btn>
 
             <v-btn
-              v-if="invoice.status === 'approved'"
+              v-if="invoice.status === 'approved' && this.invoice.user && this.invoice.user.customer && this.invoice.user.customer.customer_type == 'company'"
               color="info"
               :loading="loading"
               :disabled="loading"
