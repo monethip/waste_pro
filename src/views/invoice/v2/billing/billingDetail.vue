@@ -403,7 +403,18 @@
               class="white--text px-12 btn-primary elevation-0"
               @click="Download(invoice)"
             >
-              Download
+              Download Receipt
+            </v-btn>
+
+            <v-btn
+              v-if="invoice.status === 'approved'"
+              color="info"
+              :loading="loading"
+              :disabled="loading"
+              class="white--text px-12 btn-primary elevation-0"
+              @click="Download(invoice)"
+            >
+              Download Invoice
             </v-btn>
           </v-card-actions>
         </v-card-text>
