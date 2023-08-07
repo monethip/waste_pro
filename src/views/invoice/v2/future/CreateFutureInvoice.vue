@@ -424,7 +424,7 @@ export default {
       formData.append('total', this.data.total);
       formData.append('quantity', this.data.quantity);
 
-      if (this.vat.useVat) formData.vat = this.vat.valueText;
+      if (this.vat.useVat) { formData.append('vat', this.vat.valueText); }
       if (this.data.unit) formData.append('unit', this.data.unit);
       if (this.is_instantly == true) {
         formData.append('is_instantly', 1);
