@@ -141,10 +141,100 @@
                     </v-row>
                   </v-col>
                 </v-row>
+
+                <v-row>
+                  <v-col>
+                    <v-btn
+                      v-if="!vat.useVat"
+                      class="indigo"
+                      dark
+                      @click="vat.useVat = true"
+                    >
+                      <v-icon>mdi-percent</v-icon>
+                      ເພີ່ມ vat
+                    </v-btn>
+                  </v-col>
+                </v-row>
+
+                <v-row />
+                <v-row
+                  v-if="vat.useVat"
+                >
+                  <v-col cols="10">
+                    <v-alert
+                      text
+                      outlined
+                      color="indigo darken-1"
+                      icon="mdi-percent"
+                    >
+                      <v-row>
+                        <v-col cols="8">
+                          <v-text-field
+                            v-model="vat.value"
+                            :label="vat.selectedVatUnit == 'percent' ? `%` : ''"
+                            required
+                            type="number"
+                            class="input-number"
+                            outlined
+                            dense
+                          />
+                          <p class="errors">
+                            {{ server_errors.vat }}
+                          </p>
+                        </v-col>
+                        <v-col cols="4">
+                          <v-autocomplete
+                            v-model="vat.selectedVatUnit"
+                            label="ຫົວໜ່ວຍ"
+                            :items="vatUnits"
+                            outlined
+                            dense
+                          />
+                        </v-col>
+                      </v-row>
+
+                      <v-col cols="12">
+                        <v-text-field
+                          v-model="vat.valueText"
+                          label="ມູນຄ່າ vat"
+                          required
+                          type="number"
+                          class="input-number"
+                          outlined
+                          dense
+                          disabled
+                        />
+                        <p class="errors">
+                          {{ server_errors.vat }}
+                        </p>
+                      </v-col>
+                    </v-alert>
+                  </v-col>
+
+                  <v-col>
+                    <v-btn
+                      color="red lighten-3"
+                      dark
+                      @click="vat.useVat = false"
+                    >
+                      <v-icon>
+                        mdi-minus
+                      </v-icon>
+                    </v-btn>
+                  </v-col>
+                </v-row>
               </v-col>
             </v-row>
           </v-form>
           <v-card-actions>
+            <v-alert
+              v-if="totalFinal"
+              outlined
+              type="success"
+              text
+            >
+              {{ Intl.NumberFormat().format(totalFinal) }} lak
+            </v-alert>
             <v-spacer />
             <v-btn
               class="elevation-0 btn-warning mr-4"
@@ -197,6 +287,21 @@ export default {
         email: '',
       },
       customer: {},
+      vat: {
+        valueText: 0,
+        value: 7,
+        useVat: false,
+        selectedVatUnit: "percent",
+      },
+      vatUnits: [
+        {
+          text: "ຈຳນວນ",
+          value: "flat",
+        },
+        {
+          text: "%",
+          value: "percent",
+        }],
       calendarId: '',
       // Pagination
       offset: 12,
@@ -218,6 +323,15 @@ export default {
     };
   },
   watch: {
+    'vat.selectedVatUnit': function () {
+      this.watchAndChangeVat();
+    },
+    'vat.value': function () {
+      this.watchAndChangeVat();
+    },
+    total() {
+      this.watchAndChangeVat();
+    },
     is_instantly(value) {
       console.log(value);
     },
@@ -247,11 +361,28 @@ export default {
       this.server_errors.payment_method = '';
     },
   },
+  computed: {
+    total() {
+      return this.data.total * this.data.quantity;
+    },
+    totalFinal() {
+      return this.vat.useVat ? this.total + (typeof this.vat.valueText != 'number' ? parseInt(this.vat.valueText) : this.vat.valueText) : this.total;
+    },
+  },
   created() {
     this.fetchData();
     if (!this.customer) this.$router.push('/future-invoice');
   },
   methods: {
+    watchAndChangeVat() {
+      if (this.vat.selectedVatUnit == 'percent') {
+        this.vat.valueText = Math.round(this.total * (this.vat.value / 100));
+      }
+      if (this.vat.selectedVatUnit == 'flat') {
+        this.vat.valueText = this.vat.value;
+      }
+    },
+
     RemoveItem(item) {
       this.preview_list.splice(this.preview_list.indexOf(item), 1);
     },
@@ -292,6 +423,8 @@ export default {
       formData.append('date', this.billDate);
       formData.append('total', this.data.total);
       formData.append('quantity', this.data.quantity);
+
+      if (this.vat.useVat) formData.vat = this.vat.valueText;
       if (this.data.unit) formData.append('unit', this.data.unit);
       if (this.is_instantly == true) {
         formData.append('is_instantly', 1);
