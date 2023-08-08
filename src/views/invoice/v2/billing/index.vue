@@ -146,7 +146,7 @@
         >
           <template v-slot:item.display_customer_name="{ item }">
             <a
-              v-if="item.user.customer"
+              v-if="item.user && item.user.customer"
               href="#"
               @click="openCustomer(item.user.customer)"
             >{{ item.display_customer_name }}</a>
