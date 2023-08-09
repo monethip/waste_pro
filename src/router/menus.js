@@ -346,6 +346,12 @@ export default [
         to: '/report/company',
         permissions: ['report'],
       },
+      {
+        icon: 'mdi-cash',
+        title: 'ການເຄື່ອນໄຫວ Bcel-bill-payment',
+        to: '/report/transaction',
+        permissions: ['report'],
+      },
     ],
   },
   {
