@@ -224,6 +224,43 @@
                   </v-col>
                 </v-row>
               </v-col>
+
+              <v-col cols="6">
+                <v-menu
+                  v-model="start_menu"
+                  :close-on-content-click="true"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="start_date"
+                      label="ວັນທີເລີ່ມຈ່າຍ"
+                      readonly
+                      outlined
+                      v-bind="attrs"
+                      dense
+                      clearable
+                      v-on="on"
+                    />
+                  </template>
+                  <v-date-picker v-model="start_date" />
+                </v-menu>
+              </v-col>
+
+              <v-col cols="6">
+                <v-text-field
+                  v-model="due_date"
+                  label="due date"
+                  readonly
+                  outlined
+                  disabled
+                  dense
+                  clearable
+                />
+              </v-col>
             </v-row>
           </v-form>
           <v-card-actions>
@@ -272,6 +309,8 @@ export default {
       tab: null,
       now: new Date().toISOString().substr(0, 7),
       billDate: new Date().toISOString().substr(0, 7),
+      start_date: new Date().toISOString().substr(0, 10),
+      due_date: moment(this.start_date).add(7, 'days').format('YYYY-MM-DD'),
       units,
       disabledUnit: true,
       start_menu: false,
@@ -334,6 +373,9 @@ export default {
     },
     is_instantly(value) {
       console.log(value);
+    },
+    start_date(value) {
+      this.due_date = moment(value).add(7, 'days').format('YYYY-MM-DD');
     },
     search(value) {
       if (value == '') {
@@ -414,6 +456,7 @@ export default {
     backPrevios() {
       this.$router.go(-1);
     },
+
     AddData() {
       const formData = new FormData();
       formData.append('customer_id', this.customer.customer.id);
@@ -421,6 +464,7 @@ export default {
       formData.append('description', this.data.description);
       formData.append('start_month', this.billDate);
       formData.append('date', this.billDate);
+      formData.append('date_in_bill', this.start_date);
       formData.append('total', this.data.total);
       formData.append('quantity', this.data.quantity);
 

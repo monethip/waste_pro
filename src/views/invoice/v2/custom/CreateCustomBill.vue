@@ -224,6 +224,42 @@
                   </v-col>
                 </v-row>
               </v-col>
+              <v-col cols="6">
+                <v-menu
+                  v-model="start_menu"
+                  :close-on-content-click="true"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="start_date"
+                      label="ວັນທີເລີ່ມຈ່າຍ"
+                      readonly
+                      outlined
+                      v-bind="attrs"
+                      dense
+                      clearable
+                      v-on="on"
+                    />
+                  </template>
+                  <v-date-picker v-model="start_date" />
+                </v-menu>
+              </v-col>
+
+              <v-col cols="6">
+                <v-text-field
+                  v-model="due_date"
+                  label="due date"
+                  readonly
+                  outlined
+                  disabled
+                  dense
+                  clearable
+                />
+              </v-col>
             </v-row>
           </v-form>
           <v-card-actions>
@@ -271,7 +307,8 @@ export default {
     return {
       tab: null,
       now: new Date().toISOString().substr(0, 7),
-      start_date: new Date().toISOString().substr(0, 7),
+      start_date: new Date().toISOString().substr(0, 10),
+      due_date: moment(this.start_date).add(7, 'days').format('YYYY-MM-DD'),
       billDate: new Date().toISOString().substr(0, 7),
       end_date: '',
       disabledTitle: true,
@@ -342,8 +379,8 @@ export default {
     'plan.name': function () {
       this.server_errors.name = '';
     },
-    start_date() {
-      this.server_errors.month = '';
+    start_date(value) {
+      this.due_date = moment(value).add(7, 'days').format('YYYY-MM-DD');
     },
     billDate(value) {
       this.data.title = `ຄ່າບໍລິການປະຈຳເດືອນ ${moment(value).format(
@@ -399,6 +436,7 @@ export default {
         price: this.data.price,
         date: this.billDate,
         quantity: this.data.quantity,
+        date_in_bill: this.start_date,
       };
       if (this.vat.useVat) formData.vat = this.vat.valueText;
       if (this.data.unit) formData.unit = this.data.unit;
