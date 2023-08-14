@@ -19,7 +19,6 @@
         <v-icon style="color: #49a3da">mdi-map-marker</v-icon>ຢູ່ໃນແຜນແລ້ວ
       </span>
     </v-breadcrumbs>
-
     <v-row>
       <v-col
         cols="12"
@@ -67,7 +66,7 @@
         </v-btn>
       </v-col>
       <v-col cols="2">
-        <h4 v-if="customers">
+        <h4 v-if="addCustomers">
           ລວມ {{ customers.length }}
         </h4>
       </v-col>
@@ -113,7 +112,6 @@
                   v-model="selectedRows"
                   :headers="headers"
                   :items="customers"
-                  :search="search"
                   :disable-pagination="true"
                   hide-default-footer
                   item-key="id"
@@ -195,7 +193,6 @@
                   v-model="selectedRows"
                   :headers="newHeaders"
                   :items="newCustomer"
-                  :search="search"
                   :disable-pagination="true"
                   hide-default-footer
                   item-key="id"
@@ -653,7 +650,6 @@ export default {
       if (exists) return exists.round;
     },
     onInputRound(e, user) {
-      console.log(1, this.customerRounds);
       if (e.target.innerText && !Number.isNaN(e.target.innerText)) {
         for (const [index, cus] of this.customerRounds.entries()) {
           if (cus.customer_id == user.customer_id) {
@@ -662,7 +658,6 @@ export default {
           }
         }
       }
-      console.log(2, this.customerRounds);
     },
     afterAdd(evt) {
       const { oldIndex } = evt.moved;
@@ -1022,7 +1017,6 @@ export default {
       }
     },
     toggleInfo(m, key) {
-      console.log(m);
       this.infoPosition = this.getMarkers(m);
       this.infoContent = m.customer.company_name;
       if (this.infoCurrentKey == key) {

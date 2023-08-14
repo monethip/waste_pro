@@ -115,7 +115,6 @@
                   :disable-pagination="true"
                   :headers="headers"
                   :items="customers"
-                  :search="search"
                   class="page__table"
                   hide-default-footer
                   item-key="id"
@@ -197,7 +196,6 @@
                   :disable-pagination="true"
                   :headers="newHeaders"
                   :items="newCustomer"
-                  :search="search"
                   class="page__table"
                   hide-default-footer
                   item-key="id"
