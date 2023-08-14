@@ -127,7 +127,7 @@
                     <td>{{ index + 1 }}</td>
                     <td>{{ user.id }}</td>
                     <td>{{ user.company_name }}</td>
-                    <td>{{ user.user.phone }}</td>
+                    <td>{{ user.user ? user.user.phone : '' }}</td>
                     <td>
                       {{ user.expect_trash ? Intl.NumberFormat().format(user.expect_trash) +
                         getCustomerUnitFunc(user.cost_by) : '-'

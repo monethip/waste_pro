@@ -353,7 +353,7 @@
                       <td>{{ index + 1 }}</td>
                       <td>{{ user.id }}</td>
                       <td>{{ user.name }} {{ user.surname }}</td>
-                      <td>{{ user.user.phone }}</td>
+                      <td>{{ user.user ? user.user.phone : '' }}</td>
                       <!-- <td>{{ user.address_detail }}</td> -->
                       <td>{{ user.village.name }}</td>
                       <td>{{ user.district.name }}</td>
