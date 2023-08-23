@@ -193,6 +193,15 @@
                 >
               </v-avatar>
             </template>
+            <template v-slot:item.status="{ item }">
+              <v-chip
+                :color="customerStatusColor(item.status)"
+                label
+                @click="switchStatus(item.id)"
+              >
+                {{ item.status }}
+              </v-chip>
+            </template>
             <template v-slot:item.village_detail="{ item }">
               <div
                 v-for="(data, index) in item.village_details"
@@ -627,6 +636,8 @@ export default {
           align: 'center',
           width: '100px',
         },
+        { text: 'ສະຖານະອອກບິນ', value: 'status', width: '200px' },
+
         { text: 'ມື້ບໍລິການ', value: 'favorite_dates', width: '120px' },
         {
           text: 'ໝາຍເຫດ',
@@ -712,6 +723,40 @@ export default {
     this.fetchFavorite();
   },
   methods: {
+    customerStatusColor(value) {
+      if (value == 'active') return 'primary';
+      if (value == 'inactive') return 'error';
+      return 'info';
+    },
+    switchStatus(id) {
+      this.$store.commit('Loading_State', true);
+      this.$axios
+        .post(`customer/${id}/switch-status`)
+        .then((res) => {
+          if (res.data.code == 200) {
+            setTimeout(() => {
+              this.$store.commit('Loading_State', false);
+              this.fetchData();
+              this.$store.commit('Toast_State', {
+                value: true,
+                color: 'success',
+                msg: res.data.message,
+              });
+            }, 300);
+          }
+        })
+        .catch((error) => {
+          this.$store.commit('Loading_State', false);
+          this.$store.commit('Toast_State', {
+            value: true,
+            color: 'error',
+            msg: error.response
+              ? error.response.data.message
+              : 'Something went wrong',
+          });
+        });
+    },
+
     getTrashColor(item, amount) {
       if (!item.expect_trash || item.expect_trash > amount) return 'blue';
 
