@@ -186,7 +186,7 @@
                         <v-list-item-title>
                           <v-chip
                             label
-                            :color="statusColor(data.status)"
+                            :color="customerStatusColor(data.status)"
                           >
                             {{
                               data.status
@@ -794,6 +794,11 @@ export default {
     },
   },
   methods: {
+    customerStatusColor(value) {
+      if (value == 'active') return 'primary';
+      if (value == 'inactive') return 'error';
+      return 'info';
+    },
     getBgColorFn(status) {
       return getBgColor(status);
     },
