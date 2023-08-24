@@ -505,9 +505,11 @@ export default {
             });
             if (error.response && error.response.status == 422) {
               const obj = error.response.data.errors;
+              const errMsg = {};
               for (const [key, customer] of Object.entries(obj)) {
-                this.server_errors[key] = customer[0];
+                errMsg[key] = customer[0];
               }
+              this.server_errors = errMsg;
             }
             this.$store.commit('Loading_State', false);
           });
