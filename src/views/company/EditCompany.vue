@@ -56,7 +56,6 @@
                 </div>
               </v-col>
             </v-row>
-
             <v-row>
               <div
                 v-if="image_list.length"
@@ -967,9 +966,12 @@ export default {
           .catch((error) => {
             if (error.response && error.response.status == 422) {
               const obj = error.response.data.errors;
+              const err = {};
               for (const [key, customer] of Object.entries(obj)) {
-                this.server_errors[key] = customer[0];
+                console.log(key);
+                err[key] = customer[0];
               }
+              this.server_errors = err;
             }
             this.$store.commit('Toast_State', {
               value: true,
