@@ -204,7 +204,14 @@
       <v-col
         cols="12"
       >
-        <v-card outlined>
+        <v-skeleton-loader
+          v-if="!districts.length"
+          type="article"
+        />
+        <v-card
+          v-else
+          outlined
+        >
           <v-card-title>ພາບລວມ: <strong>{{ total.total_format }}</strong></v-card-title>
           <v-card-text>
             <v-row
@@ -240,7 +247,14 @@
       <v-col
         cols="12"
       >
-        <v-card outlined>
+        <v-skeleton-loader
+          v-if="!displayData.length"
+          type="table"
+        />
+        <v-card
+          v-else
+          outlined
+        >
           <v-card-title>ລາຍການແຜນ: <strong>{{ total.total_format }}</strong></v-card-title>
           <v-card-text>
             <v-row>
