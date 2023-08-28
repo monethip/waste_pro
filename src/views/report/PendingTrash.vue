@@ -205,7 +205,7 @@
         cols="12"
       >
         <v-card outlined>
-          <v-card-title>ພາບລວມ: <strong>{{ total }}</strong></v-card-title>
+          <v-card-title>ພາບລວມ: <strong>{{ total.total_format }}</strong></v-card-title>
           <v-card-text>
             <v-row
               v-for="district in districts"
@@ -241,7 +241,7 @@
         cols="12"
       >
         <v-card outlined>
-          <v-card-title>ລາຍການແຜນ {{ 0 }}</v-card-title>
+          <v-card-title>ລາຍການແຜນ: <strong>{{ total.total_format }}</strong></v-card-title>
           <v-card-text>
             <v-row>
               <v-col cols="12">
@@ -272,6 +272,43 @@
                     </v-icon>
                   </template>
                 </v-data-table>
+              </v-col>
+            </v-row>
+            <v-row v-if="paginate.next_page_url || paginate.prev_page_url">
+              <v-col cols="4">
+                <v-btn
+                  color="primary"
+                  outlined
+                  :disabled="!paginate.prev_page_url"
+                  @click="fetchData({url:paginate.prev_page_url,type:'prev'})"
+                >
+                  <v-icon left>
+                    mdi-arrow-left
+                  </v-icon>
+                  Previous
+                </v-btn>
+              </v-col>
+              <v-col
+                cols="4"
+                align="center"
+              >
+                {{ paginate.current_page }} / {{ total.count_pages_format }}
+              </v-col>
+              <v-col
+                cols="4"
+                align="right"
+              >
+                <v-btn
+                  color="primary"
+                  dark
+                  :disabled="!paginate.next_page_url"
+                  @click="fetchData({url:paginate.next_page_url,type:'next'})"
+                >
+                  Next
+                  <v-icon right>
+                    mdi-arrow-right
+                  </v-icon>
+                </v-btn>
               </v-col>
             </v-row>
           </v-card-text>
@@ -310,6 +347,13 @@ export default {
       rawData: [],
       rawSum: [],
       startDate: `${new Date().toISOString().substr(0, 4)}-07-01`,
+      paginate: {
+        next_page_url: null,
+        prev_page_url: null,
+        cursor_paginate: 25,
+        current_page: 1,
+        total_pages: 1,
+      },
     };
   },
   watch: { },
@@ -318,10 +362,10 @@ export default {
     this.fetchSum();
   },
   methods: {
-    async fetchData() {
+    async fetchData(path = null) {
       this.$store.commit('Loading_State', true);
       const res = await this.$axios
-        .get('report-pending-collection', {
+        .get(path && path.url ? path.url : 'report-pending-collection', {
           params: this.params,
         })
         .catch((error) => {
@@ -335,13 +379,24 @@ export default {
               : 'Something went wrong',
           });
         });
-
-      if (this.$store.state.isLoading) {
-        this.rawData = res.data.data.data;
+      try {
         this.$store.commit('Loading_State', false);
+        if (res.data && !res.data.error) {
+          this.rawData = res.data.data.data;
+          console.log(this.rawData);
+          this.paginate.next_page_url = res.data.data.next_page_url;
+          this.paginate.prev_page_url = res.data.data.prev_page_url;
+          if (path) {
+            if (path.type == 'next') this.paginate.current_page += 1;
+            else this.paginate.current_page -= 1;
+          } else {
+            this.paginate.current_page = 1;
+          }
+        }
+      } catch (error) {
+        console.log(error);
       }
     },
-
     async fetchSum() {
       const res = await this.$axios
         .get('report-pending-collection-summary', {
@@ -416,11 +471,17 @@ export default {
     },
     total() {
       const totalPlans = this.districts.reduce((accumulator, dItem) => accumulator + dItem.count_plans, 0);
-      return Intl.NumberFormat().format(totalPlans);
+      const contPages = Math.ceil(totalPlans / this.paginate.cursor_paginate);
+      return {
+        total: totalPlans,
+        total_format: Intl.NumberFormat().format(totalPlans),
+        count_pages: contPages,
+        count_pages_format: Intl.NumberFormat().format(contPages),
+      };
     },
     params() {
       const option = {
-        cursor_paginate: 25,
+        cursor_paginate: this.paginate.cursor_paginate,
         start_date: this.startDate,
         no_append: true,
       };
