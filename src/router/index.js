@@ -1722,6 +1722,16 @@ const routes = [
       middleware: [Middlewares.auth],
     },
   },
+
+  {
+    path: '/report/pending-trash',
+    name: 'Report-Pending-Trash',
+    component: () => import('@views/report/PendingTrash.vue'),
+    meta: {
+      layout: 'admin',
+      middleware: [Middlewares.auth],
+    },
+  },
 ];
 
 const router = new VueRouter({
