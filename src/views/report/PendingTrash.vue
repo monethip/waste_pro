@@ -265,25 +265,20 @@
                   :disable-pagination="true"
                   hide-default-footer
                 >
-                  <template v-slot:[`item.created_at`]="{ item }">
-                    <div>{{ moment(item.created_at).format("DD-MM-YY hh:mm") }}</div>
+                  <template v-slot:[`item.date`]="{ item }">
+                    <a href="#">{{ item.date }}</a>
                   </template>
-                  <template v-slot:[`item.actions`]="{ item }">
-                    <v-icon
-                      small
-                      color="green"
-                      class="mr-2"
-                      @click="OpenModalEdit(item)"
-                    >
-                      mdi-account-edit
-                    </v-icon>
-                    <v-icon
-                      small
-                      color="red"
-                      @click="deleteItem(item.id)"
-                    >
-                      mdi-trash-can-outline
-                    </v-icon>
+
+                  <template v-slot:[`item.display_customer_id`]="{ item }">
+                    <a href="#">{{ item.display_customer_id }}</a>
+                  </template>
+
+                  <template v-slot:[`item.customer_name`]="{ item }">
+                    <a href="#">{{ item.customer_name }}</a>
+                  </template>
+
+                  <template v-slot:[`item.route_plan_name`]="{ item }">
+                    <a href="#">{{ item.route_plan_name }}</a>
                   </template>
                 </v-data-table>
               </v-col>
@@ -336,6 +331,7 @@
 
 <script>
 import queryOptions from '../../Helpers/queryOption';
+import { getFullName, getLaoCompanyCostBy, getDisplayId } from '../../Helpers/Customer';
 
 export default {
   name: 'Customer',
@@ -345,18 +341,16 @@ export default {
   data() {
     return {
       headers: [
-        { text: 'ວັນທີ', value: 'date' },
-        { text: 'ບ້ານ', value: 'village_name' },
-        { text: 'ເມືອງ', value: 'district_name' },
-        { text: 'ໄອດີລູກຄ້າ', value: 'c_id' },
-        { text: 'ຊື່ລູກຄ້າ', value: 'customer_name' },
+        { text: 'ວັນທີ', value: 'date', width: '120px' },
+        { text: 'ບ້ານ', value: 'village_name', width: '120px' },
+        { text: 'ເມືອງ', value: 'district_name', width: '120px' },
+        { text: 'ໄອດີລູກຄ້າ', value: 'display_customer_id' },
+        { text: 'ຊື່ລູກຄ້າ', value: 'customer_name', width: '120px' },
         { text: 'ປະເພດບໍລິການ', value: 'customer_cost_by' },
         { text: 'ຄົນຂັບ', value: 'driver_name' },
-        { text: 'ລົດ', value: 'vehicle_car_number' },
+        { text: 'ລົດ', value: 'vehicle_car_number', width: '120px' },
         { text: 'ປະເພດລົດ', value: 'vehicle_type_name' },
         { text: 'ແຜນ', value: 'route_plan_name' },
-
-        { text: 'actions', value: 'actions' },
       ],
       rawData: [],
       rawSum: [],
@@ -397,7 +391,6 @@ export default {
         this.$store.commit('Loading_State', false);
         if (res.data && !res.data.error) {
           this.rawData = res.data.data.data;
-          console.log(this.rawData);
           this.paginate.next_page_url = res.data.data.next_page_url;
           this.paginate.prev_page_url = res.data.data.prev_page_url;
           if (path) {
@@ -468,20 +461,38 @@ export default {
         }
 
         const district = districtMap.get(dItem.district_id);
+
         district.count_plans += dItem.count_plan_calendar_details;
-        district.count_plans_format = Intl.NumberFormat().format(district.count_plans),
+        district.count_plans_format = Intl.NumberFormat().format(district.count_plans);
         district.villages.push({
           village_id: dItem.village_id,
           village_name: dItem.village_name,
           count_plans: dItem.count_plan_calendar_details,
           count_plans_format: Intl.NumberFormat().format(dItem.count_plan_calendar_details),
         });
+
+        const totalPlans = district.villages.reduce((accumulator, village) => accumulator + village.count_plans, 0);
+        district.count_plans = totalPlans;
+        district.count_plans_format = Intl.NumberFormat().format(totalPlans);
       }
 
       return Array.from(districtMap.values());
     },
     displayData() {
-      return this.rawData;
+      const modifiedData = [];
+
+      for (const item of this.rawData) {
+        const modifiedItem = {
+          ...item,
+          customer_name: getFullName(item.customer_name, item.customer_surname, item.customer_company_name, item.customer_type),
+          customer_cost_by: getLaoCompanyCostBy(item.customer_cost_by, item.customer_type),
+          display_customer_id: getDisplayId(item.customer_type, item.c_id),
+          driver_name: `${item.driver_name} (${item.driver_card_id})`,
+        };
+        modifiedData.push(modifiedItem);
+      }
+
+      return modifiedData;
     },
     total() {
       const totalPlans = this.districts.reduce((accumulator, dItem) => accumulator + dItem.count_plans, 0);

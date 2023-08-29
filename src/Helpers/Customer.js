@@ -1,4 +1,4 @@
-export const getLaoCompanyCostBy = function (costBy) {
+export const getLaoCompanyCostBy = function (costBy, type = null) {
   switch (costBy) {
     case 'container':
       return 'ຄອນເທນເນີ';
@@ -7,7 +7,8 @@ export const getLaoCompanyCostBy = function (costBy) {
     case 'chartered':
       return 'ມອບເໝົາ';
     case 'bag':
-      return 'ບໍລິມາດ';
+      if (type == 'company') { return 'ບໍລິມາດ'; }
+      return 'ຄົວເຮືອນ';
     case 'infect':
       return 'ຂີ້ເຫຍື້ອຕິດເຊື້ອ';
     case '32km':
@@ -176,3 +177,15 @@ export const getCustomerCanCollect = [
     text: 'ເກັບບໍ່ໄດ້',
   },
 ];
+
+export const getFullName = function (name, surname, company_name, customerType) {
+  if (customerType === 'company') return company_name;
+
+  return `${name} ${surname}`;
+};
+
+export const getDisplayId = function (customerType, id) {
+  if (customerType === 'company') return `COM_${id}`;
+
+  return `CUS_${id}`;
+};
