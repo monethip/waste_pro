@@ -388,7 +388,7 @@
                                 {{ data.customer_id }}
                               </td>
                               <td class="text-left">
-                                {{ data.user.phone }}
+                                {{ data.user ? data.user.phone :'' }}
                               </td>
                               <td
                                 v-if="data.package"
@@ -838,17 +838,18 @@ export default {
       this.customerCollection();
     },
   },
-  created() {
+  async created() {
     this.customerInvoice(true);
     this.customerCollection(true);
 
-    if (this.tab == 'tab-1') {
-      this.fetchData();
-    } else if (this.tab == 'tab-2') {
-      this.customerCollection();
-    } else if (this.tab == 'tab-3') {
-      this.customerInvoice();
-    }
+    this.fetchData().then(() => {
+      if (this.tab == 'tab-2') {
+        this.customerCollection();
+      } else if (this.tab == 'tab-3') {
+        this.customerInvoice();
+      }
+    });
+
     if (this.$route.query.tab) this.tab = this.$route.query.tab;
 
     // this.customerInvoice();

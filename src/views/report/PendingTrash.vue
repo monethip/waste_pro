@@ -270,11 +270,18 @@
                   </template>
 
                   <template v-slot:[`item.display_customer_id`]="{ item }">
-                    <a href="#">{{ item.display_customer_id }}</a>
+                    <a
+                      href="#"
+                      @click="routeOpen(item.route_data)"
+                    >{{ item.display_customer_id }}</a>
                   </template>
 
                   <template v-slot:[`item.customer_name`]="{ item }">
-                    <a href="#">{{ item.customer_name }}</a>
+                    <a
+                      href="#"
+
+                      @click="routeOpen(item.route_data)"
+                    >{{ item.customer_name }}</a>
                   </template>
 
                   <template v-slot:[`item.route_plan_name`]="{ item }">
@@ -332,6 +339,7 @@
 <script>
 import queryOptions from '../../Helpers/queryOption';
 import { getFullName, getLaoCompanyCostBy, getDisplayId } from '../../Helpers/Customer';
+import routeOpen from '../../Helpers/RouteOpen';
 
 export default {
   name: 'Customer',
@@ -346,7 +354,7 @@ export default {
         { text: 'ເມືອງ', value: 'district_name', width: '120px' },
         { text: 'ໄອດີລູກຄ້າ', value: 'display_customer_id' },
         { text: 'ຊື່ລູກຄ້າ', value: 'customer_name', width: '120px' },
-        { text: 'ປະເພດບໍລິການ', value: 'customer_cost_by' },
+        { text: 'ປະເພດລູກຄ້າ', value: 'customer_cost_by' },
         { text: 'ຄົນຂັບ', value: 'driver_name' },
         { text: 'ລົດ', value: 'vehicle_car_number', width: '120px' },
         { text: 'ປະເພດລົດ', value: 'vehicle_type_name' },
@@ -370,6 +378,9 @@ export default {
     this.fetchSum();
   },
   methods: {
+    routeOpen(route) {
+      return routeOpen.call(this, route);
+    },
     async fetchData(path = null) {
       this.$store.commit('Loading_State', true);
       const res = await this.$axios
@@ -488,6 +499,15 @@ export default {
           customer_cost_by: getLaoCompanyCostBy(item.customer_cost_by, item.customer_type),
           display_customer_id: getDisplayId(item.customer_type, item.c_id),
           driver_name: `${item.driver_name} (${item.driver_card_id})`,
+          route_data: {
+            name: item.customer_type == 'ViewCompanyDetail' ? '' : 'ViewClient',
+            params: {
+              id: item.c_id,
+            },
+            query: {
+              view_tab: 'tab-2',
+            },
+          },
         };
         modifiedData.push(modifiedItem);
       }
