@@ -325,10 +325,10 @@
                 <template v-slot:item.status="{ item }">
                   <v-chip
                     label
-                    :color="statusColor(item.user.status)"
+                    :color="statusColor(item.status)"
                   >
                     {{
-                      item.user.status
+                      item.status
                     }}
                   </v-chip>
                 </template>
