@@ -13,7 +13,7 @@
       </v-btn>
       ລາຍລະອຽດ
       <router-link
-        v-if="$can('update_customer')"
+        v-if="$can(['update_customer','update_customer_home'])"
         class="ml-4"
         :to="`/edit/customer/${data.id}`"
       >

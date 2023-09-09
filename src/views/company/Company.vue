@@ -301,6 +301,7 @@
                 </template>
                 <v-list>
                   <v-list-item
+                    v-if="$can(['update_customer','update_customer_company'])"
                     link
                     @click="addUser(item)"
                   >
@@ -327,6 +328,7 @@
                     </v-list-item-title>
                   </v-list-item>
                   <v-list-item
+                    v-if="$can(['update_customer','update_customer_company'])"
                     link
                     @click="editPage(item.id)"
                   >
@@ -340,6 +342,7 @@
                     </v-list-item-title>
                   </v-list-item>
                   <v-list-item
+                    v-if="$can(['update_customer','update_customer_company'])"
                     link
                     @click="deleteItem(item.id)"
                   >
