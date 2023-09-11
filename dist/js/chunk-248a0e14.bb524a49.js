@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-248a0e14"],{2012:function(e,t,n){e.exports=n.p+"img/NewBg.ace44948.jpg"},eec5:function(e,t,n){"use strict";n.r(t);var r=n("adda"),c=function(){var e=this,t=e._self._c;return t(r["a"],{attrs:{src:n("2012"),"backgound-size":"cover",width:"120rem",height:"61rem",content:"center"}})},a=[],u={data(){return{}},computed:{time(){return(new Date).toISOString().substr(0,15)}}},o=u,s=n("2877"),i=Object(s["a"])(o,c,a,!1,null,null,null);t["default"]=i.exports}}]);
+//# sourceMappingURL=chunk-248a0e14.bb524a49.js.map
