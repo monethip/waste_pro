@@ -266,13 +266,16 @@
                   hide-default-footer
                 >
                   <template v-slot:[`item.date`]="{ item }">
-                    <a href="#">{{ item.date }}</a>
+                    <a
+                      href="#"
+                      @click="routeOpen(item.route_plan_calendar_detail)"
+                    >{{ item.date }}</a>
                   </template>
 
                   <template v-slot:[`item.display_customer_id`]="{ item }">
                     <a
                       href="#"
-                      @click="routeOpen(item.route_data)"
+                      @click="routeOpen(item.route_customer)"
                     >{{ item.display_customer_id }}</a>
                   </template>
 
@@ -280,12 +283,16 @@
                     <a
                       href="#"
 
-                      @click="routeOpen(item.route_data)"
+                      @click="routeOpen(item.route_customer)"
                     >{{ item.customer_name }}</a>
                   </template>
 
                   <template v-slot:[`item.route_plan_name`]="{ item }">
-                    <a href="#">{{ item.route_plan_name }}</a>
+                    <a
+                      href="#"
+
+                      @click="routeOpen(item.route_plan_calendar)"
+                    >{{ item.route_plan_name }}</a>
                   </template>
                 </v-data-table>
               </v-col>
@@ -499,10 +506,30 @@ export default {
           customer_cost_by: getLaoCompanyCostBy(item.customer_cost_by, item.customer_type),
           display_customer_id: getDisplayId(item.customer_type, item.c_id),
           driver_name: `${item.driver_name} (${item.driver_card_id})`,
-          route_data: {
-            name: item.customer_type == 'ViewCompanyDetail' ? '' : 'ViewClient',
+          route_customer: {
+            name: item.customer_type == 'company' ? 'ViewCompanyDetail' : 'ViewClient',
             params: {
               id: item.c_id,
+            },
+            query: {
+              view_tab: 'tab-2',
+            },
+          },
+          route_plan_calendar_detail: {
+            name: 'TrashDetail',
+            params: {
+              plan_calendar: item.plan_calendar_id,
+              id: item.id,
+            },
+            query: {
+              view_tab: 'tab-2',
+            },
+          },
+          route_plan_calendar: {
+            name: 'PlanCalendarDetail',
+            params: {
+              id: item.plan_calendar_id,
+              planMonthId: item.plan_month_id,
             },
             query: {
               view_tab: 'tab-2',
