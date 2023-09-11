@@ -314,6 +314,15 @@
                     >
                   </v-avatar>
                 </template>
+
+                <template v-slot:item.fix_cost="{item}">
+                  <div v-if="item.cost_by == 'bag' && item.customer_type =='company'">
+                    {{ item.current_bag_price.price }}
+                  </div>
+                  <div v-else>
+                    {{ item.fix_cost }}
+                  </div>
+                </template>
                 <!--              <template v-slot:item.status="{ item }">-->
                 <!--                <v-chip label :color="statusColor(item.status)">{{-->
                 <!--                  item.status-->
