@@ -407,12 +407,12 @@ export default [
         to: '/report/event/trash',
         permissions: ['report'],
       },
-      {
-        icon: 'mdi-chart-bubble',
-        title: 'ລາຍງານເກັບຂີ້ເຫຍື້ອຄ້າງ',
-        to: '/report/pending-trash',
-        permissions: ['report'],
-      },
+      // {
+      //   icon: 'mdi-chart-bubble',
+      //   title: 'ລາຍງານເກັບຂີ້ເຫຍື້ອຄ້າງ',
+      //   to: '/report/pending-trash',
+      //   permissions: ['report'],
+      // },
     ],
   },
 ];
