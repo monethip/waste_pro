@@ -357,6 +357,7 @@
                       <div style="display: flex; flex-direction: row;">
                         <v-otp-input
                           ref="otpInput"
+                          v-model="code"
                           input-classes="otp-input"
                           separator
                           :num-inputs="6"
@@ -674,6 +675,7 @@
                       <div style="display: flex; flex-direction: row;">
                         <v-otp-input
                           ref="otpInput"
+                          v-model="code"
                           input-classes="otp-input"
                           separator
                           :num-inputs="6"
@@ -1442,7 +1444,7 @@ export default {
           // this.btnVerify = false;
           // this.$store.commit('Loading_State', true);;
         })
-        .catch(function () {
+        .catch(() => {
           this.$store.commit('Toast_State', {
             value: true,
             color: 'error',
@@ -1465,7 +1467,7 @@ export default {
             this.stepValue = 3;
           }
         })
-        .catch(function () {
+        .catch(() => {
           this.$store.commit('Toast_State', {
             value: true,
             color: 'error',

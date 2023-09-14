@@ -68,6 +68,7 @@
                   <div style="display: flex; flex-direction: row;">
                     <v-otp-input
                       ref="otpInput"
+                      v-model="code"
                       input-classes="otp-input"
                       separator
                       :num-inputs="6"
@@ -317,7 +318,7 @@ export default {
           // this.btnVerify = false;
           // this.$store.commit('Loading_State', true);;
         })
-        .catch(function () {
+        .catch(() => {
           this.$store.commit('Toast_State', {
             value: true,
             color: 'error',
@@ -329,18 +330,17 @@ export default {
 
     verifyOtp() {
       // this.btnVerify = true;
-      const { code } = this;
+      const code = this.code;
       window.confirmationResult
         .confirm(code)
         .then((res) => {
           if (res) {
             const token = res.user;
             this.id_token = token._lat;
-            console.log(this.id_token);
             this.stepValue = 3;
           }
         })
-        .catch(function () {
+        .catch(() => {
           this.$store.commit('Toast_State', {
             value: true,
             color: 'error',

@@ -81,6 +81,7 @@
                     <div style="display: flex; flex-direction: row">
                       <v-otp-input
                         ref="otpInput"
+                        v-model="code"
                         input-classes="otp-input"
                         separator=""
                         :num-inputs="6"
