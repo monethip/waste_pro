@@ -807,14 +807,14 @@ export default {
           status_la: 'ເກັບແລ້ວ',
           total: 0,
           unit_count: "ຄັ້ງ",
-          count_billing: this.statusSummary.pending_count,
+          count_billing: this.statusSummary.success_count,
           bg_color: '#02a38a',
         },
         {
           status_la: 'ລໍຖ້າເກັບ',
           total: 0,
           unit_count: "ຄັ້ງ",
-          count_billing: this.statusSummary.success_count,
+          count_billing: this.statusSummary.pending_count,
           bg_color: '#0080fc',
         },
       ];
