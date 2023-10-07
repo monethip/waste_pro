@@ -4,6 +4,7 @@ export default (roleArray, allrequired = false) => {
   // const userPermissions = store.getters['User/getUserType'];
   const user_role = window.localStorage.getItem('user');
   const getRoles = JSON.parse(user_role);
+  if (!getRoles.roles) return false;
   const allRoles = getRoles.roles.map((i) => i.name);
   const roleUsers = JSON.parse(JSON.stringify(allRoles));
   const roles = JSON.parse(JSON.stringify(roleArray));
